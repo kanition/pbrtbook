@@ -66,7 +66,7 @@
     {\fontsize{30pt}{15pt}\textrm{从理论到实现}}\\[15pt]
     {\fontsize{60pt}{15pt}\textrm{基于物理的渲染}}\\[25pt]
     {\fontsize{21pt}{15pt}第三版}\\[20pt]
-    {\Large\begin{tabular}{rcl}原作 && Matt Pharr\\ && Wenzel Jakob\\ && Greg Humphreys\\ 翻译 && Kanition\end{tabular}}}};
+    {\Large\begin{tabular}{rcl}原著 && Matt Pharr\\ && Wenzel Jakob\\ && Greg Humphreys\\ 翻译 && Kanition\end{tabular}}}};
 \end{tikzpicture}
 \vfill
 \endgroup
@@ -79,15 +79,7 @@
 ~\vfill
 \thispagestyle{empty}
 
-\noindent Copyright \copyright\ 2019 John Smith\\ % Copyright notice
-
-\noindent \textsc{Published by Publisher}\\ % Publisher
-
-\noindent \textsc{book-website.com}\\ % URL
-
-\noindent Licensed under the Creative Commons Attribution-NonCommercial 3.0 Unported License (the ``License''). You may not use this file except in compliance with the License. You may obtain a copy of the License at \url{http://creativecommons.org/licenses/by-nc/3.0}. Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an \textsc{``as is'' basis, without warranties or conditions of any kind}, either express or implied. See the License for the specific language governing permissions and limitations under the License.\\ % License information, replace this with your own license (if any)
-
-\noindent \textit{First printing, March 2019} % Printing/edition date
+\input{content/readme.tex}
 
 %----------------------------------------------------------------------------------------
 %	TABLE OF CONTENTS
@@ -268,8 +260,7 @@ This is an example of examples.
 \begin{example}
     Let $G=\{x\in\mathbb{R}^2:|x|<3\}$ and denoted by: $x^0=(1,1)$; consider the function:
     \begin{equation}
-        f(x)=\left\{\begin{aligned}                    & \mathrm{e}^{|x|} &  & \text{si $|x-x^0|\leq 1/2$} \\
-             & 0                &  & \text{si $|x-x^0|> 1/2$}\end{aligned}\right.
+        f(x)=\left\{\begin{aligned}& \mathrm{e}^{|x|} &  & \text{si $|x-x^0|\leq 1/2$} \\ & 0  &  & \text{si $|x-x^0|> 1/2$}\end{aligned}\right.
     \end{equation}
     The function $f$ has bounded support, we can take $A=\{x\in\mathbb{R}^2:|x-x^0|\leq 1/2+\epsilon\}$ for all $\epsilon\in\intoo{0}{5/2-\sqrt{2}}$.
 \end{example}

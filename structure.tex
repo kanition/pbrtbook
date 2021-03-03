@@ -41,13 +41,12 @@
 %----------------------------------------------------------------------------------------
 
 \usepackage{geometry} % Required for adjusting page dimensions and margins
-
 \geometry{
 	paper=a4paper, % Paper size, change to letterpaper for US letter size
 	top=3cm, % Top margin
 	bottom=3cm, % Bottom margin
-	left=3cm, % Left margin
-	right=3cm, % Right margin
+	inner=3cm, % Left margin
+	outer=5cm, % Right margin
 	headheight=14pt, % Header height
 	footskip=1.4cm, % Space from the bottom margin to the baseline of the footer
 	headsep=10pt, % Space from the top margin to the baseline of the header
@@ -67,6 +66,19 @@
 \usepackage{microtype} % Slightly tweak font spacing for aesthetics
 \usepackage[utf8]{inputenc} % Required for including letters with accents
 \usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
+
+%---------------------------------------------------------------------------------------
+% use sidenotes but fix its bug to change font size
+% see: https://tex.stackexchange.com/questions/532245/how-to-modify-fonts-in-sidenotes
+%---------------------------------------------------------------------------------------
+\usepackage{sidenotes}
+\usepackage{xparse}
+\let\oldmarginpar\marginpar
+\RenewDocumentCommand{\marginpar}{om}{%
+	\IfNoValueTF{#1}
+	{\oldmarginpar{\mymparsetup #2}}
+	{\oldmarginpar[\mymparsetup #1]{\mymparsetup #2}}}
+\newcommand{\mymparsetup}{\scriptsize\itshape}
 
 %----------------------------------------------------------------------------------------
 %	BIBLIOGRAPHY AND INDEX

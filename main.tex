@@ -42,7 +42,7 @@
 %	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
 %----------------------------------------------------------------------------------------
 
-\documentclass[11pt,fleqn]{book} % Default font size and left-justified equations
+\documentclass[11pt,fleqn,twoside]{book} % Default font size and left-justified equations
 
 \input{structure.tex} % Insert the commands.tex file which contains the majority of the structure behind the template
 
@@ -59,10 +59,14 @@
 \begingroup
 \thispagestyle{empty} % Suppress headers and footers on the title page
 \begin{tikzpicture}[remember picture,overlay]
-\node[inner sep=0pt] (background) at (current page.center) {\includegraphics[width=\paperwidth]{background.pdf}};
-\draw (current page.center) node [fill=ocre!30!white,fill opacity=0.6,text opacity=1,inner sep=1cm]{\Huge\centering\bfseries\sffamily\parbox[c][][t]{\paperwidth}{\centering The Search for a Title\\[15pt] % Book title
-{\Large A Profound Subtitle}\\[20pt] % Subtitle
-{\huge Dr. John Smith}}}; % Author name
+    \node[inner sep=0pt] (background) at (current page.center) {\includegraphics[height=\paperheight]{view-3.png}};
+    \draw (current page.center) node [fill=yellow!80!green!40,fill opacity=0.1,text opacity=1,inner sep=1cm]
+    {\centering\bfseries\sffamily\parbox[c][][t]{\paperwidth}{\color{white}\centering
+    {\Large Physically Based Rendering: From Theory To Implementation}\\[25pt]
+    {\fontsize{30pt}{15pt}\textrm{从理论到实现}}\\[15pt]
+    {\fontsize{60pt}{15pt}\textrm{基于物理的渲染}}\\[25pt]
+    {\fontsize{21pt}{15pt}第三版}\\[20pt]
+    {\Large\begin{tabular}{rcl}原著 && Matt Pharr\\ && Wenzel Jakob\\ && Greg Humphreys\\ 翻译 && Kanition\end{tabular}}}};
 \end{tikzpicture}
 \vfill
 \endgroup
@@ -75,15 +79,7 @@
 ~\vfill
 \thispagestyle{empty}
 
-\noindent Copyright \copyright\ 2019 John Smith\\ % Copyright notice
-
-\noindent \textsc{Published by Publisher}\\ % Publisher
-
-\noindent \textsc{book-website.com}\\ % URL
-
-\noindent Licensed under the Creative Commons Attribution-NonCommercial 3.0 Unported License (the ``License''). You may not use this file except in compliance with the License. You may obtain a copy of the License at \url{http://creativecommons.org/licenses/by-nc/3.0}. Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an \textsc{``as is'' basis, without warranties or conditions of any kind}, either express or implied. See the License for the specific language governing permissions and limitations under the License.\\ % License information, replace this with your own license (if any)
-
-\noindent \textit{First printing, March 2019} % Printing/edition date
+\input{content/readme.tex}
 
 %----------------------------------------------------------------------------------------
 %	TABLE OF CONTENTS
@@ -134,25 +130,25 @@ Lists are useful to present information in a concise and/or ordered way\footnote
 \subsection{Numbered List}\index{Lists!Numbered List}
 
 \begin{enumerate}
-\item The first item
-\item The second item
-\item The third item
+    \item The first item
+    \item The second item
+    \item The third item
 \end{enumerate}
 
 \subsection{Bullet Points}\index{Lists!Bullet Points}
 
 \begin{itemize}
-\item The first item
-\item The second item
-\item The third item
+    \item The first item
+    \item The second item
+    \item The third item
 \end{itemize}
 
 \subsection{Descriptions and Definitions}\index{Lists!Descriptions and Definitions}
 
 \begin{description}
-\item[Name] Description
-\item[Word] Definition
-\item[Comment] Elaboration
+    \item[Name] Description
+    \item[Word] Definition
+    \item[Comment] Elaboration
 \end{description}
 
 %----------------------------------------------------------------------------------------
@@ -169,18 +165,18 @@ This is an example of theorems.
 This is a theorem consisting of several equations.
 
 \begin{theorem}[Name of the theorem]
-In $E=\mathbb{R}^n$ all norms are equivalent. It has the properties:
-\begin{align}
-& \big| ||\mathbf{x}|| - ||\mathbf{y}|| \big|\leq || \mathbf{x}- \mathbf{y}||\\
-&  ||\sum_{i=1}^n\mathbf{x}_i||\leq \sum_{i=1}^n||\mathbf{x}_i||\quad\text{where $n$ is a finite integer}
-\end{align}
+    In $E=\mathbb{R}^n$ all norms are equivalent. It has the properties:
+    \begin{align}
+         & \big| ||\mathbf{x}|| - ||\mathbf{y}|| \big|\leq || \mathbf{x}- \mathbf{y}||                            \\
+         & ||\sum_{i=1}^n\mathbf{x}_i||\leq \sum_{i=1}^n||\mathbf{x}_i||\quad\text{where $n$ is a finite integer}
+    \end{align}
 \end{theorem}
 
 \subsection{Single Line}\index{Theorems!Single Line}
 This is a theorem consisting of just one line.
 
 \begin{theorem}
-A set $\mathcal{D}(G)$ in dense in $L^2(G)$, $|\cdot|_0$. 
+    A set $\mathcal{D}(G)$ in dense in $L^2(G)$, $|\cdot|_0$.
 \end{theorem}
 
 %------------------------------------------------
@@ -190,12 +186,12 @@ A set $\mathcal{D}(G)$ in dense in $L^2(G)$, $|\cdot|_0$.
 This is an example of a definition. A definition could be mathematical or it could define a concept.
 
 \begin{definition}[Definition name]
-Given a vector space $E$, a norm on $E$ is an application, denoted $||\cdot||$, $E$ in $\mathbb{R}^+=[0,+\infty[$ such that:
-\begin{align}
-& ||\mathbf{x}||=0\ \Rightarrow\ \mathbf{x}=\mathbf{0}\\
-& ||\lambda \mathbf{x}||=|\lambda|\cdot ||\mathbf{x}||\\
-& ||\mathbf{x}+\mathbf{y}||\leq ||\mathbf{x}||+||\mathbf{y}||
-\end{align}
+    Given a vector space $E$, a norm on $E$ is an application, denoted $||\cdot||$, $E$ in $\mathbb{R}^+=[0,+\infty[$ such that:
+    \begin{align}
+         & ||\mathbf{x}||=0\ \Rightarrow\ \mathbf{x}=\mathbf{0}        \\
+         & ||\lambda \mathbf{x}||=|\lambda|\cdot ||\mathbf{x}||        \\
+         & ||\mathbf{x}+\mathbf{y}||\leq ||\mathbf{x}||+||\mathbf{y}||
+    \end{align}
 \end{definition}
 
 %------------------------------------------------
@@ -203,12 +199,12 @@ Given a vector space $E$, a norm on $E$ is an application, denoted $||\cdot||$, 
 \section{Notations}\index{Notations}
 
 \begin{notation}
-Given an open subset $G$ of $\mathbb{R}^n$, the set of functions $\varphi$ are:
-\begin{enumerate}
-\item Bounded support $G$;
-\item Infinitely differentiable;
-\end{enumerate}
-a vector space is denoted by $\mathcal{D}(G)$. 
+    Given an open subset $G$ of $\mathbb{R}^n$, the set of functions $\varphi$ are:
+    \begin{enumerate}
+        \item Bounded support $G$;
+        \item Infinitely differentiable;
+    \end{enumerate}
+    a vector space is denoted by $\mathcal{D}(G)$.
 \end{notation}
 
 %------------------------------------------------
@@ -218,7 +214,7 @@ a vector space is denoted by $\mathcal{D}(G)$.
 This is an example of a remark.
 
 \begin{remark}
-The concepts presented here are now in conventional employment in mathematics. Vector spaces are taken over the field $\mathbb{K}=\mathbb{R}$, however, established properties are easily extended to $\mathbb{K}=\mathbb{C}$.
+    The concepts presented here are now in conventional employment in mathematics. Vector spaces are taken over the field $\mathbb{K}=\mathbb{R}$, however, established properties are easily extended to $\mathbb{K}=\mathbb{C}$.
 \end{remark}
 
 %------------------------------------------------
@@ -228,7 +224,7 @@ The concepts presented here are now in conventional employment in mathematics. V
 This is an example of a corollary.
 
 \begin{corollary}[Corollary name]
-The concepts presented here are now in conventional employment in mathematics. Vector spaces are taken over the field $\mathbb{K}=\mathbb{R}$, however, established properties are easily extended to $\mathbb{K}=\mathbb{C}$.
+    The concepts presented here are now in conventional employment in mathematics. Vector spaces are taken over the field $\mathbb{K}=\mathbb{R}$, however, established properties are easily extended to $\mathbb{K}=\mathbb{C}$.
 \end{corollary}
 
 %------------------------------------------------
@@ -240,17 +236,17 @@ This is an example of propositions.
 \subsection{Several equations}\index{Propositions!Several Equations}
 
 \begin{proposition}[Proposition name]
-It has the properties:
-\begin{align}
-& \big| ||\mathbf{x}|| - ||\mathbf{y}|| \big|\leq || \mathbf{x}- \mathbf{y}||\\
-&  ||\sum_{i=1}^n\mathbf{x}_i||\leq \sum_{i=1}^n||\mathbf{x}_i||\quad\text{where $n$ is a finite integer}
-\end{align}
+    It has the properties:
+    \begin{align}
+         & \big| ||\mathbf{x}|| - ||\mathbf{y}|| \big|\leq || \mathbf{x}- \mathbf{y}||                            \\
+         & ||\sum_{i=1}^n\mathbf{x}_i||\leq \sum_{i=1}^n||\mathbf{x}_i||\quad\text{where $n$ is a finite integer}
+    \end{align}
 \end{proposition}
 
 \subsection{Single Line}\index{Propositions!Single Line}
 
-\begin{proposition} 
-Let $f,g\in L^2(G)$; if $\forall \varphi\in\mathcal{D}(G)$, $(f,\varphi)_0=(g,\varphi)_0$ then $f = g$. 
+\begin{proposition}
+    Let $f,g\in L^2(G)$; if $\forall \varphi\in\mathcal{D}(G)$, $(f,\varphi)_0=(g,\varphi)_0$ then $f = g$.
 \end{proposition}
 
 %------------------------------------------------
@@ -262,18 +258,17 @@ This is an example of examples.
 \subsection{Equation and Text}\index{Examples!Equation and Text}
 
 \begin{example}
-Let $G=\{x\in\mathbb{R}^2:|x|<3\}$ and denoted by: $x^0=(1,1)$; consider the function:
-\begin{equation}
-f(x)=\left\{\begin{aligned} & \mathrm{e}^{|x|} & & \text{si $|x-x^0|\leq 1/2$}\\
-& 0 & & \text{si $|x-x^0|> 1/2$}\end{aligned}\right.
-\end{equation}
-The function $f$ has bounded support, we can take $A=\{x\in\mathbb{R}^2:|x-x^0|\leq 1/2+\epsilon\}$ for all $\epsilon\in\intoo{0}{5/2-\sqrt{2}}$.
+    Let $G=\{x\in\mathbb{R}^2:|x|<3\}$ and denoted by: $x^0=(1,1)$; consider the function:
+    \begin{equation}
+        f(x)=\left\{\begin{aligned}& \mathrm{e}^{|x|} &  & \text{si $|x-x^0|\leq 1/2$} \\ & 0  &  & \text{si $|x-x^0|> 1/2$}\end{aligned}\right.
+    \end{equation}
+    The function $f$ has bounded support, we can take $A=\{x\in\mathbb{R}^2:|x-x^0|\leq 1/2+\epsilon\}$ for all $\epsilon\in\intoo{0}{5/2-\sqrt{2}}$.
 \end{example}
 
 \subsection{Paragraph of Text}\index{Examples!Paragraph of Text}
 
 \begin{example}[Example name]
-\lipsum[2]
+    \lipsum[2]
 \end{example}
 
 %------------------------------------------------
@@ -283,7 +278,7 @@ The function $f$ has bounded support, we can take $A=\{x\in\mathbb{R}^2:|x-x^0|\
 This is an example of an exercise.
 
 \begin{exercise}
-This is a good place to ask a question to test learning progress or further cement ideas into students' minds.
+    This is a good place to ask a question to test learning progress or further cement ideas into students' minds.
 \end{exercise}
 
 %------------------------------------------------
@@ -301,7 +296,7 @@ What is the average airspeed velocity of an unladen swallow?
 Define a word to improve a students' vocabulary.
 
 \begin{vocabulary}[Word]
-Definition of word.
+    Definition of word.
 \end{vocabulary}
 
 %----------------------------------------------------------------------------------------
@@ -321,19 +316,19 @@ Definition of word.
 \section{Table}\index{Table}
 
 \begin{table}[h]
-\centering
-\begin{tabular}{l l l}
-\toprule
-\textbf{Treatments} & \textbf{Response 1} & \textbf{Response 2}\\
-\midrule
-Treatment 1 & 0.0003262 & 0.562 \\
-Treatment 2 & 0.0015681 & 0.910 \\
-Treatment 3 & 0.0009271 & 0.296 \\
-\bottomrule
-\end{tabular}
-\caption{Table caption}
-\label{tab:example} % Unique label used for referencing the table in-text
-%\addcontentsline{toc}{table}{Table \ref{tab:example}} % Uncomment to add the table to the table of contents
+    \centering
+    \begin{tabular}{l l l}
+        \toprule
+        \textbf{Treatments} & \textbf{Response 1} & \textbf{Response 2} \\
+        \midrule
+        Treatment 1         & 0.0003262           & 0.562               \\
+        Treatment 2         & 0.0015681           & 0.910               \\
+        Treatment 3         & 0.0009271           & 0.296               \\
+        \bottomrule
+    \end{tabular}
+    \caption{Table caption}
+    \label{tab:example} % Unique label used for referencing the table in-text
+    %\addcontentsline{toc}{table}{Table \ref{tab:example}} % Uncomment to add the table to the table of contents
 \end{table}
 
 Referencing Table \ref{tab:example} in-text automatically.
@@ -343,10 +338,10 @@ Referencing Table \ref{tab:example} in-text automatically.
 \section{Figure}\index{Figure}
 
 \begin{figure}[h]
-\centering\includegraphics[scale=0.5]{placeholder.jpg}
-\caption{Figure caption}
-\label{fig:placeholder} % Unique label used for referencing the figure in-text
-%\addcontentsline{toc}{figure}{Figure \ref{fig:placeholder}} % Uncomment to add the figure to the table of contents
+    \centering\includegraphics[scale=0.5]{placeholder.jpg}
+    \caption{Figure caption}
+    \label{fig:placeholder} % Unique label used for referencing the figure in-text
+    %\addcontentsline{toc}{figure}{Figure \ref{fig:placeholder}} % Uncomment to add the figure to the table of contents
 \end{figure}
 
 Referencing Figure \ref{fig:placeholder} in-text automatically.

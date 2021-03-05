@@ -545,3 +545,47 @@
 			\fi
 		}
 }
+
+
+%----------------------------------------------------------------------------------------
+% code show
+%----------------------------------------------------------------------------------------
+\usepackage{listings}
+\lstset{% 
+	language={C++}, %language为，还有{[Visual]C++}{[ISO]C++}
+	alsolanguage=[ANSI]C, %可以添加很多个alsolanguage,如alsolanguage=matlab,alsolanguage=VHDL等
+	tabsize=4, %
+	basicstyle=\ttfamily\footnotesize, % 设置代码的大小
+	keywordstyle=\color[RGB]{0,84,166}\bfseries, %代码关键字
+	stringstyle=\ttfamily\color[RGB]{33,166,86}, % 代码字符串的特殊格式
+	commentstyle=\color[RGB]{115,48,11}\scriptsize\rmfamily, %注释
+	rulecolor=\color[RGB]{243,102,25},%代码边框
+	frame=leftline, %代码框
+	framerule=2pt,
+	showstringspaces=false,%不显示代码字符串中间的空格标记
+	keepspaces=true,
+	breakindent=20pt,
+	numbers=left,%左侧显示行号 往左靠,还可以为right，或none，即不加行号
+	stepnumber=1,%若设置为2，则显示行号为1,3,5，即stepnumber为公差,默认stepnumber=1
+	numberstyle={\color[RGB]{33,166,86}\scriptsize} ,%设置行号的大小，大小有tiny,scriptsize,footnotesize,small,normalsize,large等
+	numbersep=8pt, %设置行号与代码的距离，默认是5pt
+	showspaces=false, %
+	flexiblecolumns=true, %
+	breaklines=true, %对过长的代码自动换行
+	breakautoindent=true,
+	aboveskip=1em, %代码块边框
+	tabsize=2,
+	showstringspaces=false, %不显示字符串中的空格
+	backgroundcolor=\color{black!5}, %代码背景色，或\color[rgb]{0.91,0.91,0.91}
+	escapeinside=``, %在``里显示中文 %% added by http://bbs.ctex.org/viewthread.php?tid=53451
+	fontadjust,
+	captionpos=t,
+	framextopmargin=2pt,framexbottommargin=2pt,abovecaptionskip=-3pt,belowcaptionskip=3pt,
+	xleftmargin=4em,xrightmargin=4em, % 设定listing左右的空白
+	texcl=true, % 设定中文冲突，断行，listing数字的样式
+	extendedchars=false,% 设定中文冲突
+	columns=flexible, % 列模式
+	mathescape=true % 设定数学环境输入
+}
+\newcommand\initcode[2]{\color[RGB]{142,12,242}\itshape{<<{#1}>>#2}\label{code:#1}} %代码段名称定义
+\newcommand\refcode[2]{\color[RGB]{142,12,242}\itshape{<<\hyperref[code:#1]{#1}>>#2}} %代码段引用跳转

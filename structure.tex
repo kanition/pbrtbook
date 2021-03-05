@@ -587,5 +587,5 @@
 	columns=flexible, % 列模式
 	mathescape=true % 设定数学环境输入
 }
-\newcommand\initcode[2]{\color[RGB]{142,12,242}\itshape{<<{#1}>>#2}\label{code:#1}} %代码段名称定义
-\newcommand\refcode[2]{\color[RGB]{142,12,242}\itshape{<<\hyperref[code:#1]{#1}>>#2}} %代码段引用跳转
+\newcommand\initcode[2]{{\color[RGB]{243,102,25}\itshape{<<{#1}>>#2}\label{code:#1}}} %代码段名称定义
+\newcommand\refcode[2]{{\color[RGB]{142,12,242}\itshape{<<\hyperref[code:#1]{#1}>>#2}}} %代码段引用跳转

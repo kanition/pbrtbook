@@ -58,7 +58,7 @@
 第二个是该语言提供了向读者展示程序代码的机制，
 其与输入编译器的顺序完全不同。
 因此可以按逻辑顺序阐述程序。
-每一段具有名称的代码块作\keyindex{代码片}{fragment}{}，
+每一段具有名称的代码块叫作\keyindex{代码片}{fragment}{}，
 且每个代码片可以通过名称引用其他代码片。
 
 例如，考虑一个负责初始化程序全部全局变量的函数
@@ -71,6 +71,7 @@ void InitGlobals() {
     dielectric = true;
 }
 \end{lstlisting}
+
 虽然很简短，但没有任何上下文的情况下很难搞懂这个函数。
 比如为什么变量{\ttfamily nMarbles}采用浮点值？
 刚看这段代码时，
@@ -81,15 +82,24 @@ void InitGlobals() {
 每个变量的初始化代码是分开呈现的，
 且紧挨着实际声明和使用这些变量的代码。
 
-在文学程序中，可以把{\ttfamily InitGlobals()}改成这样的写法：
+在文学程序中，可以把{\ttfamily InitGlobals()}写成这样：
 \begin{lstlisting}[language=C++]
 `\initcode{Function Definitions}{=}`
 void InitGlobals() {
-    `\refcode{Initialize Global Variables}{}`
+    `\refcode{Initialize Global Variables}{\dag}`
 }
 \end{lstlisting}
 
-oooooooooooooooooooooooooooooo
+这就定义了称作\refcode{Function Definitions}{}的代码片，
+包含了函数{\ttfamily InitGlobals()}的定义。
+函数{\ttfamily InitGlobals()}自己又引用了另一代码片
+\refcode{Initialize Global Variables}{}。
+因为初始化的代码片还没有定义，
+所以我们只知道这个函数可能会对全局变量赋值。
+（然而我们可以通过单击右边的加号向前跳转；
+这样可以展开代码片最终全部的代码。）
+
+
 
 \begin{lstlisting}[language=C++]
 `\initcode{Initialize Global Variables}{}`

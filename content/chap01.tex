@@ -1,0 +1,43 @@
+\chapterimage{Pictures/chap01/nightsnow-cut1368.png}
+
+\chapter{绪论}\label{chap:绪论}
+
+\keyindex{渲染}{rendering}{render渲染}是由
+3D\keyindex{场景}{scene}{}
+描述生成图像的过程。
+显然，这是一项十分庞大的任务，有许多解决方案。
+\keyindex{基于物理的}{physically based}{physics物理}
+的技术便是要模拟现实，
+即运用物理学规律对光与物质的
+\keyindex{相互作用}{interaction}{}建模。
+尽管基于物理的方法看上去是实现渲染最显然的办法，
+但最近十年它才在实践中得到广泛运用。
+本章末的\ref{sec:基于物理的渲染简史}节
+将给出基于物理的渲染的简史
+以及它近来在电影
+\keyindex{离线渲染}{offline rendering}{render渲染}和
+游戏\keyindex{交互式渲染}{interactive rendering}{render渲染}方面的应用。
+
+本书将介绍\emph{pbrt}这一基于
+\keyindex{光线追踪}{ray-tracing}{ray光线}算法的基于物理的渲染系统。
+大多数计算机\keyindex{图形学}{graphics}{}书籍都主讲算法和理论，
+偶尔附上一小段代码。
+相反，本书将理论和一个功能齐全的渲染系统的完整实现结合起来。
+系统的完整代码\footnote{\url{https://github.com/mmp/pbrt-v3}}
+可在BSD许可证下获取。
+在pbrt网站\url{https://pbrt.org}还可获取示例场景、渲染数据等更多信息。
+
+
+\section{文学编程}\label{sec:文学编程}
+
+在编写\TeX 排版系统时，Donald Knuth提出了一种新的
+简单但具有革命性的编程方法论：
+\emph{程序应该写得更便于人类使用而不是更便于计算机理解}。
+他把这套方法论称作\keyindex{文学编程}{literate programming}{}。
+本书（包括你正在阅读的本章）就是一个长长的文学程序。
+这意味着在阅读本书的过程中，
+你会读到pbrt渲染系统的\emph{完整}实现，
+而不仅仅是高层叙述。
+
+\section{基于物理的渲染简史}\label{sec:基于物理的渲染简史}
+

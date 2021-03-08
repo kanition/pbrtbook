@@ -64,7 +64,7 @@
 例如，考虑一个负责初始化程序全部全局变量的函数
 \footnote{本节的代码仅用作示例，不属于pbrt的一部分。}
 {\ttfamily InitGlobals()}：
-\begin{lstlisting}[language=C++]
+\begin{lstlisting}
 void InitGlobals() {
     nMarbles = 25.7;
     shoeSize = 13;
@@ -83,7 +83,7 @@ void InitGlobals() {
 且紧挨着实际声明和使用这些变量的代码。
 
 在文学程序中，可以把{\ttfamily InitGlobals()}写成这样：
-\begin{lstlisting}[language=C++]
+\begin{lstlisting}
 `\initcode{Function Definitions}{=}`
 void InitGlobals() {
     `\refcode{Initialize Global Variables}{\dag}`
@@ -95,13 +95,27 @@ void InitGlobals() {
 函数{\ttfamily InitGlobals()}自己又引用了另一代码片
 \refcode{Initialize Global Variables}{}。
 因为初始化的代码片还没有定义，
-所以我们只知道这个函数可能会对全局变量赋值。
-（然而我们可以通过单击右边的加号向前跳转；
-这样可以展开代码片最终全部的代码。）
+所以我们只知道这个函数可能会对全局变量赋值
+（然而我们可以通过单击右边的加号
+\sidenote{译者注：本中译版改为直接点击代码片名称。}
+向前跳转；
+这样可以展开代码片最终全部的代码）。
 
+现在有了代码片名称仅仅是有了正确的抽象层级，
+因为还没有声明过任何变量。
+之后在程序某处引入全局变量{\ttfamily shoeSize}时，
+我们可以这样写：
+\begin{lstlisting}
+    `\refcode{Initialize Global Variables}{=}`
+    shoeSize = 13;
+\end{lstlisting}
 
+这里我们开始定义\refcode{Initialize Global Variables}{}的内容了。
+当文学程序整合成待编译的源码时，
+文学编程系统会把代码{\ttfamily shoeSize = 13;}
+替换到函数{\ttfamily InitGlobals()}的定义内。
 
-\begin{lstlisting}[language=C++]
+\begin{lstlisting}
 `\initcode{Initialize Global Variables}{}`
 shoeSize = 13;
 dielectric = true;

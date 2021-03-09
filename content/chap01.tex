@@ -114,16 +114,52 @@ void InitGlobals() {
 当文学程序整合成待编译的源码时，
 文学编程系统会把代码{\ttfamily shoeSize = 13;}
 替换到函数{\ttfamily InitGlobals()}的定义内。
+等号后的符号{\codecolor $\downarrow$}表示后续还有代码添加到该代码片。
+点击它即可跳转到下一处。
 
+后文我们也许定义了另一个全局变量{\ttfamily dielectric}，
+可以这样把它的初始化添到代码片之后：
 \begin{lstlisting}
     `\refcode{Initialize Global Variables}{+=}\lastcode{InitializeGlobalVariables}`
     dielectric = true;
 \end{lstlisting}
 
+代码片名后的符号{\codecolor +=}表示我们之前已经定义过该代码片了。
+此外符号{\codecolor $\uparrow$}回链到
+之前\refcode{Initialize Global Variables}{}添加代码的地方。
+
+当整合时，这三个代码片转换为代码：
 \begin{lstlisting}
-`\initcode{Initialize Global Variables}{}`
-shoeSize = 13;
-dielectric = true;
+void InitGlobals() {
+    `\hypertarget{code:Initialize Global Variables}{\color[RGB]{115,48,11}\scriptsize\rmfamily// Initialize Global Variables}`
+    shoeSize = 13;
+    dielectric = true;
+}
 \end{lstlisting}
+
+这样，我们可以把复杂函数分解为逻辑不同的部分，使之易懂。
+例如我们可以这样把一个复杂函数写作一系列代码片：
+\begin{lstlisting}
+`\refcode{Function Definitions}{+=}`
+void complexFunc(int x, int y, double *values) {
+    `\refcode{Check validity of arguments}{}`
+    if (x < y) {
+        `\refcode{Swap parameter values}{}`
+    }
+    `\refcode{Do precomputation before loop}{}`
+    `\refcode{Loop through and update \textbackslash mono\{values\} array}{}`
+\end{lstlisting}
+
+同样，编译时{\ttfamily complexFunc()}内每段代码片的内容都内联展开。
+在文档中，我们可以依次介绍每个代码片及其实现。
+这种分解让我们每次只展示一小段代码，使之更易于理解。
+这种编程风格的另一优点是，通过把函数分解为逻辑片，
+每片有了单一且明确的目的，可以独立编写、验证、阅读。
+总之，我们尽量让每段代码片少于10行。
+
+在某种意义上，文学编程系统只是个增强了的宏替换包，
+完成重排程序源码的任务。
+这看起来是微不足道的变化，但事实上文学编程和其他软件构建系统方法迥然不同。
+
 \section{基于物理的渲染简史}\label{sec:基于物理的渲染简史}
 

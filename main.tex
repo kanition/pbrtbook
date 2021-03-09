@@ -91,10 +91,11 @@
 %----------------------------------------------------------------------------------------
 %	TABLE OF CONTENTS
 %----------------------------------------------------------------------------------------
+\renewcommand{\contentsname}{目录}
 
 %\usechapterimagefalse % If you don't want to include a chapter image, use this to toggle images off - it can be enabled later with \usechapterimagetrue
 
-\chapterimage{chapter_head_1.pdf} % Table of contents heading image
+\chapterimage{Pictures/measure-one180-cut1260.png} % Table of contents heading image
 
 \pagestyle{empty} % Disable headers and footers for the following pages
 
@@ -108,54 +109,13 @@
 %	PART
 %----------------------------------------------------------------------------------------
 
-\part{Part One}
+\part{绪论}
 
 %----------------------------------------------------------------------------------------
 %	CHAPTER 1
 %----------------------------------------------------------------------------------------
 
-\chapterimage{chapter_head_2.pdf} % Chapter heading image
-
-\chapter{Text Chapter}
-
-\section{Paragraphs of Text}\index{Paragraphs of Text}
-
-
-%------------------------------------------------
-
-\section{Citation}\index{Citation}
-
-This statement requires citation.
-
-%------------------------------------------------
-
-\section{Lists}\index{Lists}
-
-Lists are useful to present information in a concise and/or ordered way\footnote{Footnote example...}.
-
-\subsection{Numbered List}\index{Lists!Numbered List}
-
-\begin{enumerate}
-    \item The first item
-    \item The second item
-    \item The third item
-\end{enumerate}
-
-\subsection{Bullet Points}\index{Lists!Bullet Points}
-
-\begin{itemize}
-    \item The first item
-    \item The second item
-    \item The third item
-\end{itemize}
-
-\subsection{Descriptions and Definitions}\index{Lists!Descriptions and Definitions}
-
-\begin{description}
-    \item[Name] Description
-    \item[Word] Definition
-    \item[Comment] Elaboration
-\end{description}
+\input{content/chap01.tex}
 
 %----------------------------------------------------------------------------------------
 %	CHAPTER 2
@@ -319,6 +279,26 @@ Define a word to improve a students' vocabulary.
 
 \chapter{Presenting Information}
 
+
+\begin{enumerate}
+    \item The first item
+    \item The second item
+    \item The third item
+\end{enumerate}
+
+
+\begin{itemize}
+    \item The first item
+    \item The second item
+    \item The third item
+\end{itemize}
+
+\begin{description}
+    \item[Name] Description
+    \item[Word] Definition
+    \item[Comment] Elaboration
+\end{description}
+
 \section{Table}\index{Table}
 
 \begin{table}[h]
@@ -355,30 +335,31 @@ Referencing Figure \ref{fig:placeholder} in-text automatically.
 %----------------------------------------------------------------------------------------
 %	BIBLIOGRAPHY
 %----------------------------------------------------------------------------------------
-
-\chapter*{Bibliography}
-\addcontentsline{toc}{chapter}{\textcolor{ocre}{Bibliography}} % Add a Bibliography heading to the table of contents
-
-%------------------------------------------------
-
-\section*{Articles}
-\addcontentsline{toc}{section}{Articles}
-\printbibliography[heading=bibempty,type=article]
+\renewcommand{\bibname}{参考文献}
+\chapter*{参考文献}
+\addcontentsline{toc}{chapter}{\textcolor{ocre}{参考文献}} % Add a Bibliography heading to the table of contents
+\printbibliography[heading=bibempty]
 
 %------------------------------------------------
 
-\section*{Books}
-\addcontentsline{toc}{section}{Books}
-\printbibliography[heading=bibempty,type=book]
+% \section*{论文}
+% \addcontentsline{toc}{section}{论文}
+% \printbibliography[heading=bibempty,type=article]
+
+%------------------------------------------------
+
+% \section*{书籍}
+% \addcontentsline{toc}{section}{书籍}
+% \printbibliography[heading=bibempty,type=book]
 
 %----------------------------------------------------------------------------------------
 %	INDEX
 %----------------------------------------------------------------------------------------
-
+\renewcommand{\indexname}{索引}
 \cleardoublepage % Make sure the index starts on an odd (right side) page
 \phantomsection
 \setlength{\columnsep}{0.75cm} % Space between the 2 columns of the index
-\addcontentsline{toc}{chapter}{\textcolor{ocre}{Index}} % Add an Index heading to the table of contents
+\addcontentsline{toc}{chapter}{\textcolor{ocre}{索引}} % Add an Index heading to the table of contents
 \printindex % Output the index
 
 %----------------------------------------------------------------------------------------

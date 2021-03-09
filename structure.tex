@@ -104,6 +104,8 @@
 \usepackage{calc} % For simpler calculation - used for spacing the index letter headings correctly
 \usepackage{makeidx} % Required to make an index
 \makeindex % Tells LaTeX to create the files required for indexing
+\usepackage{xifthen} % provides \isempty test
+\newcommand\keyindex[3]{\ifthenelse{\isempty{#1}}{}{\ifthenelse{\isempty{#2}}{\ifthenelse{\isempty{#3}}{{\sffamily#1}}{{\sffamily#1}\index{#3!#1}}}{\ifthenelse{\isempty{#3}}{{\sffamily#1}(#2)\index{#2#1}}{{\sffamily#1}(#2)\index{#3!#2#1}}}}}
 
 %----------------------------------------------------------------------------------------
 %	MAIN TABLE OF CONTENTS
@@ -197,7 +199,7 @@
 
 \pagestyle{fancy} % Enable the custom headers and footers
 
-\renewcommand{\chaptermark}[1]{\markboth{\sffamily\normalsize\bfseries\chaptername\ \thechapter.\ #1}{}} % Styling for the current chapter in the header
+\renewcommand{\chaptermark}[1]{\markboth{\sffamily\normalsize\bfseries 第\thechapter 章\ #1}{}} % Styling for the current chapter in the header
 \renewcommand{\sectionmark}[1]{\markright{\sffamily\normalsize\thesection\hspace{5pt}#1}{}} % Styling for the current section in the header
 
 \fancyhf{} % Clear default headers and footers
@@ -543,3 +545,54 @@
 			\fi
 		}
 }
+
+
+%----------------------------------------------------------------------------------------
+% code show
+%----------------------------------------------------------------------------------------
+\usepackage{listings}
+\lstset{% 
+	language={C++}, %language为，还有{[Visual]C++}{[ISO]C++}
+	alsolanguage=[ANSI]C, %可以添加很多个alsolanguage,如alsolanguage=matlab,alsolanguage=VHDL等
+	tabsize=4, %
+	basicstyle=\ttfamily\footnotesize, % 设置代码的大小
+	keywordstyle=\color[RGB]{0,84,166}\bfseries, %代码关键字
+	stringstyle=\ttfamily\color[RGB]{33,166,86}, % 代码字符串的特殊格式
+	commentstyle=\color[RGB]{115,48,11}\scriptsize\rmfamily, %注释
+	rulecolor=\color[RGB]{243,102,25},%代码边框
+	frame=leftline, %代码框
+	framerule=2pt,
+	showstringspaces=false,%不显示代码字符串中间的空格标记
+	keepspaces=true,
+	breakindent=20pt,
+	numbers=left,%左侧显示行号 往左靠,还可以为right，或none，即不加行号
+	stepnumber=1,%若设置为2，则显示行号为1,3,5，即stepnumber为公差,默认stepnumber=1
+	numberstyle={\color[RGB]{33,166,86}\scriptsize} ,%设置行号的大小，大小有tiny,scriptsize,footnotesize,small,normalsize,large等
+	numbersep=8pt, %设置行号与代码的距离，默认是5pt
+	showspaces=false, %
+	flexiblecolumns=true, %
+	breaklines=true, %对过长的代码自动换行
+	breakautoindent=true,
+	aboveskip=1em, %代码块边框
+	tabsize=2,
+	showstringspaces=false, %不显示字符串中的空格
+	backgroundcolor=\color{black!5}, %代码背景色，或\color[rgb]{0.91,0.91,0.91}
+	escapeinside=``, %在``里显示中文 %% added by http://bbs.ctex.org/viewthread.php?tid=53451
+	fontadjust,
+	captionpos=t,
+	framextopmargin=2pt,framexbottommargin=2pt,abovecaptionskip=-3pt,belowcaptionskip=3pt,
+	xleftmargin=4em,xrightmargin=4em, % 设定listing左右的空白
+	texcl=true, % 设定中文冲突，断行，listing数字的样式
+	extendedchars=false,% 设定中文冲突
+	columns=flexible, % 列模式
+	mathescape=true % 设定数学环境输入
+}
+\newcommand\codecolor[0]{\color[RGB]{142,12,242}} %设置格式
+\newcommand\initcode[2]{\hypertarget{code:#1}{\codecolor\itshape{<<{#1}>>#2}}} %代码段名称定义
+\newcommand\refcode[2]{\hyperlink{code:#1}{\codecolor\itshape{<<{#1}>>#2}}} %代码段引用跳转
+\newcommand\initcnt[1]{\newcounter{#1}\newcounter{#1last}\newcounter{#1next}\setcounter{#1}{0}\setcounter{#1last}{-1}\setcounter{#1next}{1}} %设置三个计数器，记住当前以及前后的编号
+\newcommand\addcnt[1]{\stepcounter{#1last}\stepcounter{#1next}\stepcounter{#1}} %三个各自计数器加1
+\newcommand\nextcode[1]{\hyperlink{code:#1:\arabic{#1next}}{\hypertarget{code:#1:\arabic{#1}}{\codecolor $\downarrow$}}} %引用下一段代码
+\newcommand\lastcode[1]{\hyperlink{code:#1:\arabic{#1last}}{\hypertarget{code:#1:\arabic{#1}}{\codecolor $\uparrow$}}} %引用上一段代码
+\newcommand\initnext[1]{\initcnt{#1}\nextcode{#1}\addcnt{#1}} %初始化且引用下一段代码
+\newcommand\lastnext[1]{\lastcode{#1}\nextcode{#1}\addcnt{#1}} %引用前后代码

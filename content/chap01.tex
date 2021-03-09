@@ -106,7 +106,7 @@ void InitGlobals() {
 之后在程序某处引入全局变量{\ttfamily shoeSize}时，
 我们可以这样写：
 \begin{lstlisting}
-    `\refcode{Initialize Global Variables}{=}`
+    `\refcode{Initialize Global Variables}{=}\initnext{InitializeGlobalVariables}`
     shoeSize = 13;
 \end{lstlisting}
 
@@ -114,6 +114,11 @@ void InitGlobals() {
 当文学程序整合成待编译的源码时，
 文学编程系统会把代码{\ttfamily shoeSize = 13;}
 替换到函数{\ttfamily InitGlobals()}的定义内。
+
+\begin{lstlisting}
+    `\refcode{Initialize Global Variables}{+=}\lastcode{InitializeGlobalVariables}`
+    dielectric = true;
+\end{lstlisting}
 
 \begin{lstlisting}
 `\initcode{Initialize Global Variables}{}`

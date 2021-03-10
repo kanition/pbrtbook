@@ -2,24 +2,20 @@
 
 \chapter{绪论}\label{chap:绪论}
 
-\keyindex{渲染}{rendering}{render渲染}是由
-3D\keyindex{场景}{scene}{}
-描述生成图像的过程。
-显然，这是一项十分庞大的任务，有许多解决方案。
-\keyindex{基于物理的}{physically based}{physics物理}
-的技术便是要模拟现实，
-即运用物理学规律对光与物质的
-\keyindex{相互作用}{interaction}{}建模。
-尽管基于物理的方法看上去是实现渲染最显然的办法，
-但最近十年它才在实践中得到广泛运用。
+\keyindex{渲染}{rendering}{render渲染}是
+由3D\keyindex{场景}{scene}{}描述生成图像的过程。
+显然，这是一项十分庞大的任务，
+有许多解决方案。\keyindex{基于物理的}{physically based}{physics物理}
+的技术采用模拟现实，
+即运用物理学规律对光与物质的\keyindex{相互作用}{interaction}{}建模。
+尽管基于物理的方法是实现渲染最容易想到的办法，
+但它最近十年才在实践中得到广泛运用。
 本章末的\ref{sec:基于物理的渲染简史}节
 将给出基于物理的渲染的简史
-以及它近来在电影
-\keyindex{离线渲染}{offline rendering}{render渲染}和
+以及它近来在电影\keyindex{离线渲染}{offline rendering}{render渲染}和
 游戏\keyindex{交互式渲染}{interactive rendering}{render渲染}方面的应用。
 
-本书将介绍\emph{pbrt}这一基于
-\keyindex{光线追踪}{ray-tracing}{ray光线}算法的基于物理的渲染系统。
+本书将介绍\emph{pbrt}这一基于\keyindex{光线追踪}{ray-tracing}{ray光线}算法的基于物理的渲染系统。
 大多数计算机\keyindex{图形学}{graphics}{}书籍都主讲算法和理论，
 偶尔附上一小段代码。
 相反，本书将理论和一个功能齐全的渲染系统的完整实现结合起来。
@@ -30,36 +26,31 @@
 
 \section{文学编程}\label{sec:文学编程}
 
-在编写\TeX 排版系统时，Donald Knuth提出了一种新的
-简单但具有革命性的编程方法论：
-\emph{程序应该写得更便于人类使用而不是更便于计算机理解}。
-他把这套方法论称作\keyindex{文学编程}{literate programming}{}。
-本书（包括你正在阅读的本章）就是一个长长的文学程序。
+在编写\TeX 排版系统时，Donald Knuth新提出一种简单但具有革命性的
+编程方法论：\emph{程序应该写得更便于人类使用而不是更便于计算机理解}。
+他将其称作\keyindex{文学编程}{literate programming}{}。
+本书（包括本章）就是一个长长的文学程序。
 这意味着在阅读本书的过程中，
 你会读到pbrt渲染系统的\emph{完整}实现，
 而不仅仅是高层叙述。
 
-文学程序是\keyindex{元语言}{metalanguage}{}
+文学程序是由\keyindex{元语言}{metalanguage}{}
 写成的，该语言把文档格式语言（例如\TeX 或HTML）
 和编程语言（例如C++）结合起来。
-两套分离的系统会这样处理程序：
-\keyindex{编排器}{weaver}{literate programming文学编程}
-把文学程序转换成适合排版的文档，
-\keyindex{整合器}{tangler}{literate programming文学编程}
-则生成可供编译的源码
-\sidenote{译者注：我不太确定编排器和整合器的翻译是否合适。}。
+两套分离的系统会这样处理程序：\keyindex{编排器}{weaver}{literate programming文学编程}
+把文学程序转换成适合排版的文档，\keyindex{整合器}{tangler}{literate programming文学编程}
+则生成可供编译的源码\sidenote{译者注：我不太确定编排器和整合器的翻译是否合适。}。
 虽然我们的文学编程系统是自研的，
 但很大程度上受到了Norman Ramsey的\emph{noweb}系统的影响。
 
 文学编程元语言提供了两个重要功能。
-第一个是把行文与源码结合的能力。
-这个功能让对程序的阐述和它实际的源码一样重要，
+第一个是把行文与源码结合起来。
+这个功能让程序的说明和实际源码一样重要，
 促使设计和文档做得更细致。
-第二个是该语言提供了向读者展示程序代码的机制，
-其与输入编译器的顺序完全不同。
+第二个是提供了与输入编译器的顺序完全不同的向读者展示程序代码的机制。
 因此可以按逻辑顺序阐述程序。
 每一段具有名称的代码块叫作\keyindex{代码片}{fragment}{}，
-且每个代码片可以通过名称引用其他代码片。
+每个代码片可以通过名称引用其他代码片。
 
 例如，考虑一个负责初始化程序全部全局变量的函数
 \footnote{本节的代码仅用作示例，不属于pbrt的一部分。}
@@ -72,19 +63,19 @@ void InitGlobals() {
 }
 \end{lstlisting}
 
-虽然很简短，但没有任何上下文的情况下很难搞懂这个函数。
+这个函数虽然很简短，但很难在没有任何上下文的情况下搞懂它。
 比如为什么变量{\ttfamily nMarbles}采用浮点值？
 刚看这段代码时，
 就得在整个程序里寻找每个变量是在哪里声明的、怎么用的，
-好搞清楚它的目的和合法值的含义。
+好弄清它的目的和合法值的含义。
 尽管这样的系统结构对编译器来说没问题，
 但人类阅读者更愿意看到
 每个变量的初始化代码是分开呈现的，
-且紧挨着实际声明和使用这些变量的代码。
+而且最好紧挨着实际声明和使用这些变量的代码。
 
 在文学程序中，可以把{\ttfamily InitGlobals()}写成这样：
 \begin{lstlisting}
-`\initcode{Function Definitions}{=}`
+`\codecolor\itshape{<<Function Definitions>>=}`
 void InitGlobals() {
     `\refcode{Initialize Global Variables}{\dag}`
 }
@@ -92,13 +83,11 @@ void InitGlobals() {
 
 这就定义了称作\refcode{Function Definitions}{}的代码片，
 包含了函数{\ttfamily InitGlobals()}的定义。
-函数{\ttfamily InitGlobals()}自己又引用了另一代码片
-\refcode{Initialize Global Variables}{}。
+函数{\ttfamily InitGlobals()}自己又引用了另一
+代码片\refcode{Initialize Global Variables}{}。
 因为初始化的代码片还没有定义，
 所以我们只知道这个函数可能会对全局变量赋值
-（然而我们可以通过单击右边的加号
-\sidenote{译者注：本中译版改为直接点击代码片名称。}
-向前跳转；
+（然而我们可以通过单击右边的加号\sidenote{译者注：本中译版改为直接点击代码片名称。}向前跳转；
 这样可以展开代码片最终全部的代码）。
 
 现在有了代码片名称仅仅是有了正确的抽象层级，
@@ -117,7 +106,7 @@ void InitGlobals() {
 等号后的符号{\codecolor $\downarrow$}表示后续还有代码添加到该代码片。
 点击它即可跳转到下一处。
 
-后文我们也许定义了另一个全局变量{\ttfamily dielectric}，
+后文我们也许又定义了另一个全局变量{\ttfamily dielectric}，
 可以这样把它的初始化添到代码片之后：
 \begin{lstlisting}
     `\refcode{Initialize Global Variables}{+=}\lastcode{InitializeGlobalVariables}`
@@ -137,10 +126,10 @@ void InitGlobals() {
 }
 \end{lstlisting}
 
-这样，我们可以把复杂函数分解为逻辑不同的部分，使之易懂。
+这样，我们可以把复杂函数分解为逻辑不同的部分，使之更容易理解。
 例如我们可以这样把一个复杂函数写作一系列代码片：
 \begin{lstlisting}
-`\refcode{Function Definitions}{+=}`
+`\codecolor\itshape{<<Function Definitions>>+=}`
 void complexFunc(int x, int y, double *values) {
     `\refcode{Check validity of arguments}{}`
     if (x < y) {
@@ -151,15 +140,107 @@ void complexFunc(int x, int y, double *values) {
 \end{lstlisting}
 
 同样，编译时{\ttfamily complexFunc()}内每段代码片的内容都内联展开。
-在文档中，我们可以依次介绍每个代码片及其实现。
+在文档中，我们可以依次介绍每个代码片的实现。
 这种分解让我们每次只展示一小段代码，使之更易于理解。
 这种编程风格的另一优点是，通过把函数分解为逻辑片，
 每片有了单一且明确的目的，可以独立编写、验证、阅读。
-总之，我们尽量让每段代码片少于10行。
+一般我们尽量让每段代码片少于10行。
 
 在某种意义上，文学编程系统只是个增强了的宏替换包，
 完成重排程序源码的任务。
-这看起来是微不足道的变化，但事实上文学编程和其他软件构建系统方法迥然不同。
+这变化看似微不足道，但事实上文学编程和其他软件构建系统方法迥然不同。
 
+\section{逼真渲染和光线追踪算法}\label{sec:逼真渲染和光线追踪算法}
+
+逼真渲染的目标是创建3D场景的图像且与同一场景的照片难以区分。
+在我们介绍渲染流程之前要重点理解的是，
+此处的{\itshape 难以区分}一词不是精确说法，
+因为它涉及人类观察者，
+不同观察者对同一图像的感知可能是不同的。
+尽管本书会涉及少量感知问题，
+但明确给出观察者的精确特性是非常困难且远未解决的问题。
+绝大多数时候，我们都对针对光及其与物质相互作用的物理仿真感到满意，
+并以我们对显示技术的理解尽可能向观察者展示最好的图像。
+
+几乎所有逼真渲染系统都基于光线追踪算法。
+光线追踪算法其实很简单；
+它跟随光线\sidenote{译者注：原文a ray of light。
+    此外会按个人理解把ray译作“光线”或“射线”，把light译作“光”或“光线”。}路径
+穿过场景与环境中的物体相互作用并反射。
+虽然编写光线追踪器的方法有很多，
+但所有这些系统都必须模拟至少一项以下对象和现象：
+\begin{itemize}
+    \item \keyindex{相机}{cameras}{camera相机}： 相机模型决定了从哪里、怎样观察场景，
+          包括场景的图像是怎样记录到传感器上的。
+          许多渲染系统从相机处开始生成视线并追踪到场景中。
+    \item \keyindex{光线-物体交点}{ray–object intersections}{ray光线}： 此外，我们需要确定
+          交点处物体的特定属性，例如表面法线或材质。
+          多数光线追踪器都有测试光线与多个物体相交的功能，
+          典型的例如沿光线返回最近交点。
+    \item \keyindex{光源}{light sources}{light光}： 没有光，渲染场景就没有意义。
+          光线追踪器必须对整个场景的光分布建模，
+          不仅包括灯光自身的位置，还包括它们向整个场景发散能量的方式。
+    \item \keyindex{可见性}{visibility}{}：为了知道给定光是否在表面上一点积累能量，
+          必须确认从该点到光源是否存在一条不中断的路径。
+          幸运的是，在光线追踪器中这个问题很容易回答，
+          因为我们可以构造从表面到光源\sidenote{译者注：原文为light，我按个人理解译作“光源”。}的射线，
+          寻找最近的光线-物体交点，
+          并比较交点距离和光源距离。
+    \item \keyindex{表面散射}{surface scattering}{}：每个物体都必须提供外观描述，
+          包括光如何与物体表面相互作用等信息，
+          以及再辐射\sidenote{译者注：原文reradiated。}（或散射\sidenote{译者注：原文scattered。}）光的性质。
+          表面散射模型是典型的参数化模型，
+          因此可以模拟各种外观。
+    \item \keyindex{间接光传输}{indirect light transport}{light光}\sidenote{译者注：这里把transport译作“传输”是为了
+              与下一段propagation译作“传播”区分开，但个人理解似乎就是“传播”的意思。}：因为
+          光在一个物体上反射或折射后可能遇到另一个物体，
+          所以通常有必要追踪从表面发出的额外光线来捕捉这种效应。
+    \item \keyindex{光线传播}{ray propagation}{ray光线}：我们需要知道光在空间中沿光线传播时发生了什么。
+          如果渲染真空中的场景，则光能量沿光线保持恒定。
+          真正的真空虽然在地球上是罕见的，
+          但对许多环境而言是合理的近似。
+          更多复杂模型可用于追踪穿过雾、烟、大气等的光线。
+\end{itemize}
+
+本节我们将简要讨论以上每个仿真任务。
+后续章节我们会展示pbrt底层仿真组件的高级接口，
+了解贯穿主渲染循环的单个光线处理过程。
+我们还会介绍基于Turner Whitted的
+原始光线追踪算法的表面散射模型实现。
+
+\subsection{相机}\label{sub:相机}
+
+几乎每个人都用过\keyindex{相机}{camera}{}，熟悉它的基本功能：
+你表达记下世界的一张图像的愿望（通常是按按钮或点击屏幕），
+然后图像就被记录到\keyindex{胶片}{film}{}或电子传感器上。
+最简单的拍照设备之一称作\keyindex{针孔相机}{pinhole camera}{camera相机}。
+针孔相机由一端打有小孔的遮光盒组成（\reffig{1.1}）。
+当孔未被遮挡时，光射进孔落到固定在盒子另一端的相纸上。
+虽然它很简单，但这种相机至今仍在使用，常用于艺术目的。
+要在胶片上获得足够的光以形成图像需要非常长的曝光时间。
+\begin{figure}[h]
+    \centering\input{Pictures/chap01/PinholeCamera.tex}
+    \caption{针孔相机}\label{fig:1.1}
+\end{figure}
+
+虽然大多数相机都比针孔相机复杂得多，
+但针孔相机是仿真的便捷起点。
+相机最重要的功能是定义会被记录到胶片上的场景部分。
+在\reffig{1.1}中，我们可以看见从针孔到胶片边的连线
+是如何构造出延伸到场景中的双锥体的。
+不在该锥体内的物体不会在胶片上成像。
+因为实际的相机成像形状比锥体更复杂，
+我们把这个可能在胶片上成像的空间区域称为\keyindex{视见体}{viewing volume}{}。
+
+针孔相机也可以看作是把胶片平面放置在针孔的\emph{前方}但距离不变（\reffig{1.2}）。
+注意从孔到胶片的连线正好定义了和之前一样的视见体。
+当然，这不是真实相机的实际构建方法，
+但对于仿真目的而言它是个方便的抽象。
+当胶片（或成像）平面在针孔前时，
+针孔也常常改称作\keyindex{眼睛}{eye}{}。
+\begin{figure}[h]
+    \centering\input{Pictures/chap01/Filminfront.tex}
+    \caption{当仿真针孔相机时，我们把胶片放在孔前的平面，并把孔改称为\emph{眼睛}。}\label{fig:1.2}
+\end{figure}
 \section{基于物理的渲染简史}\label{sec:基于物理的渲染简史}
 

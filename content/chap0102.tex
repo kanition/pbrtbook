@@ -262,3 +262,46 @@ $\mathrm{d}E$为
 方法是沿射线方向比较交点和光源位置的相应参数值$t$。
 如果光源与表面之间没有遮挡物，
 就应考虑该光源的作用。
+
+\subsection{表面散射}\label{sub:表面散射}
+我们可以计算两种对着色点至关重要的信息了：位置和入射光。
+现在需要确定入射光是如何在表面上\keyindex{散射}{scattered}{}的。
+特别地，我们关注沿着原来追踪寻找交点的射线散射回来的光的能量大小，
+因为这条光线会通向相机（\reffig{1.6}）。
+\begin{remark}
+      已经熟悉渲染的读者可能会反对本节只考虑直接照明的讨论。
+      但请放心，pbrt支持全局照明。
+\end{remark}
+\begin{figure}[h]
+      \centering\input{Pictures/chap01/Surfacescatteringgeometry.tex}
+      \caption{表面散射的几何结构。
+            入射光沿$\omega_\mathrm{i}$方向与表面交于点p并沿方向$\omega_\mathrm{o}$散射回相机。
+            朝相机散射的光量由入射光能量与BRDF的积给定。}\label{fig:1.6}
+\end{figure}
+
+场景中每个物体都提供了\keyindex{材质}{material}{}，
+即对表面每点外观属性的描述。
+这个描述由\keyindex{双向反射分布函数}{bidirectional reflectance distribution function}{}(BRDF)给定。
+该函数告诉我们从\keyindex{入射}{incoming}{}方向$\omega_\mathrm{i}$
+到\keyindex{出射}{outgoing}{}方向$\omega_\mathrm{o}$会反射多少能量。
+我们把p处的BRDF写作$f_r({\mathrm p},\omega_\mathrm{o},\omega_\mathrm{i})$。
+现在计算散射回相机的光量$L$就很直接了：
+\begin{lstlisting}
+for each light:
+      if light is not blocked:
+            incident_light = light.L(point)
+            amount_reflected =
+                  surface.BRDF(hit_point, camera_vector, light_vector)
+            L += amount_reflected * incident_light
+\end{lstlisting}
+这里我们用符号$L$代表光照；
+在光度量中它用的单位和前面的$\mathrm{d}E$有一点不同。
+$L$即\keyindex{辐亮度}{radiance}{}，是后文经常见到的光度量单位。
+
+很容易从BRDF的表示推广到\keyindex{透射光}{transmitted light}{light光}
+（得到BTDF），或者得到到达表面任意一侧的光的一般散射。
+描述一般散射的函数称作\keyindex{双向散射分布函数}{bidirectional scattering distribution function}{}(BSFD)。
+pbrt支持各种BSDF模型；它们将于第\refchap{反射模型}介绍。
+更复杂的还有\keyindex{双向散射表面反射分布函数}{bidirectional scattering surface reflectance distribution function}{}(BSSRDF)，
+它建模的光在离开表面时的点和进入时不同。
+BSSRDF将在\refsub{BSSRDF}、\refsec{BSSRDF}和\refsec{使用扩散方程的次表面散射}介绍。

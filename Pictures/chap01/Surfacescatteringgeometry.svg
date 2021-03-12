@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="Layer_1"
+   data-name="Layer 1"
+   viewBox="0 0 435.51 280.66"
+   version="1.1"
+   sodipodi:docname="Surfacescatteringgeometry.svg"
+   inkscape:version="1.0.1 (3bc2e813f5, 2020-09-07)">
+  <metadata
+     id="metadata94">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>Surface scattering geometry</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1141"
+     inkscape:window-height="696"
+     id="namedview92"
+     showgrid="false"
+     inkscape:zoom="7.7426465"
+     inkscape:cx="232.76933"
+     inkscape:cy="160.17869"
+     inkscape:window-x="2216"
+     inkscape:window-y="196"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="Layer_1"
+     showguides="true"
+     inkscape:guide-bbox="true" />
+  <defs
+     id="defs55">
+    <rect
+       x="20.274425"
+       y="83.472182"
+       width="31.416226"
+       height="33.97336"
+       id="rect110" />
+    <rect
+       x="223.38398"
+       y="115.98432"
+       width="19.90912"
+       height="28.676439"
+       id="rect104" />
+    <rect
+       x="225.24598"
+       y="196.3153"
+       width="20.923078"
+       height="27.639128"
+       id="rect98" />
+    <style
+       id="style53">.cls-1,.cls-2,.cls-6{fill:none;}.cls-1,.cls-2,.cls-5,.cls-6,.cls-7{stroke:#000;stroke-miterlimit:10;}.cls-1{stroke-width:0.5px;}.cls-3{fill:#a6a6a6;}.cls-4{fill:#666;}.cls-6{stroke-dasharray:4;}.cls-7{fill:#fcee21;stroke-width:0.3px;}</style>
+    <rect
+       x="20.274426"
+       y="83.472183"
+       width="31.416225"
+       height="33.973358"
+       id="rect110-2" />
+    <rect
+       x="20.274426"
+       y="83.472183"
+       width="31.416225"
+       height="33.973358"
+       id="rect127" />
+  </defs>
+  <title
+     id="title57">Surface scattering geometry</title>
+  <polygon
+     class="cls-1"
+     points="435.09 93.92 98.11 92.08 0.41 278.57 337.39 280.41 435.09 93.92"
+     id="polygon59" />
+  <line
+     class="cls-2"
+     x1="217.75"
+     y1="185.86"
+     x2="217.75"
+     y2="16.36"
+     id="line61" />
+  <polygon
+     points="220.5 18.81 217.75 16.68 215 18.81 217.75 12.3 220.5 18.81"
+     id="polygon63" />
+  <polygon
+     class="cls-3"
+     points="219.9 18.03 217.75 12.96 217.75 16.37 219.9 18.03"
+     id="polygon65" />
+  <polygon
+     class="cls-4"
+     points="215.6 18.03 217.75 12.96 217.75 16.37 215.6 18.03"
+     id="polygon67" />
+  <circle
+     class="cls-5"
+     cx="217.63"
+     cy="185.57"
+     r="2.25"
+     id="circle69" />
+  <line
+     class="cls-6"
+     x1="217.5"
+     y1="185.47"
+     x2="61.24"
+     y2="79.84"
+     id="line71" />
+  <line
+     class="cls-2"
+     x1="217.79"
+     y1="185.57"
+     x2="338.27"
+     y2="37.44"
+     id="line73" />
+  <polygon
+     class="cls-7"
+     points="356.9 0.6 355.32 10.27 360.27 1.81 356.94 11.03 363.37 3.63 358.4 12.08 366.07 5.98 359.64 13.38 368.3 8.79 360.62 14.88 369.98 11.96 361.31 16.53 371.04 15.39 361.68 18.29 371.46 18.95 361.72 20.08 371.21 22.53 361.44 21.85 370.31 26 360.83 23.54 368.79 29.25 359.92 25.09 366.7 32.16 358.74 26.44 364.11 34.64 357.34 27.55 361.1 36.6 355.75 28.39 357.79 37.98 354.04 28.92 354.28 38.72 352.26 29.13 350.7 38.81 350.47 29.01 347.16 38.23 348.73 28.56 343.78 37.02 347.11 27.8 340.69 35.2 345.65 26.75 337.98 32.85 344.41 25.46 335.75 30.04 343.43 23.95 334.07 26.87 342.75 22.3 333.01 23.44 342.37 20.54 332.6 19.88 342.33 18.75 332.84 16.3 342.62 16.98 333.74 12.83 343.23 15.29 335.26 9.58 344.13 13.75 337.35 6.67 345.31 12.39 339.94 4.19 346.71 11.28 342.95 2.23 348.3 10.44 346.26 0.85 350.01 9.91 349.77 0.11 351.79 9.7 353.36 0.02 353.58 9.82 356.9 0.6"
+     id="polygon75" />
+  <text
+     xml:space="preserve"
+     id="text96"
+     style="font-size:21.3333px;line-height:1.25;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;shape-inside:url(#rect98);"
+     transform="translate(-11.623932,-10.849004)"><tspan
+       x="225.24609"
+       y="215.25033"><tspan
+         style="shape-inside:url(#rect98)">p</tspan></tspan></text>
+  <text
+     xml:space="preserve"
+     id="text102"
+     style="font-size:21.3333px;line-height:1.25;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;shape-inside:url(#rect104);"
+     transform="translate(3.0997153,6.7160498)"><tspan
+       x="223.38477"
+       y="134.92569"><tspan
+         style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:21.3333px;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic'">θ</tspan></tspan></text>
+  <text
+     xml:space="preserve"
+     id="text108"
+     style="font-size:21.3333px;line-height:1.25;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;shape-inside:url(#rect110);"
+     transform="translate(29.772354,-4.0183545)"><tspan
+       x="20.275391"
+       y="102.41397"><tspan
+         style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman,  Italic'">ω</tspan><tspan
+         style="font-size:65%;letter-spacing:0px;word-spacing:0px;baseline-shift:sub">o</tspan></tspan></text>
+  <text
+     xml:space="preserve"
+     id="text108-7"
+     style="font-size:21.3333px;line-height:1.25;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;shape-inside:url(#rect110-2);"
+     transform="translate(298.71176,-29.668345)"><tspan
+       x="20.275391"
+       y="102.41397"><tspan
+         style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman,  Italic'">ω</tspan><tspan
+         style="font-size:65%;letter-spacing:0px;word-spacing:0px;baseline-shift:sub">i</tspan></tspan></text>
+  <path
+     style="fill:none;stroke:#000000;stroke-width:1.00157;stroke-opacity:1"
+     id="path977"
+     sodipodi:type="arc"
+     sodipodi:cx="-185.88519"
+     sodipodi:cy="217.48569"
+     sodipodi:rx="40"
+     sodipodi:ry="40"
+     sodipodi:start="0"
+     sodipodi:end="0.67195176"
+     sodipodi:open="true"
+     sodipodi:arc-type="arc"
+     d="m -145.88519,217.48569 a 40,40 0 0 1 -8.69568,24.90058"
+     transform="rotate(-90)" />
+</svg>

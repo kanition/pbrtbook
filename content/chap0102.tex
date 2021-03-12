@@ -124,7 +124,7 @@
 我们想要模拟光在该点与物体的相互作用。
 为了找到交点，我们必须把场景中的所有物体拿来和该射线测试，
 并选出与该射线首先相交的那个。
-给定一射线$\mathrm{r}$，我们首先将其写成\keyindex{参数形式}{parametric form}{}：
+给定一射线$\mathrm{r}$，首先将其写成\keyindex{参数形式}{parametric form}{}：
 \begin{align*}
       \mathrm{r}(t)=\mathrm{o}+t\mathbf{d},
 \end{align*}
@@ -162,8 +162,8 @@
 暴力法指依次用每个物体对射线测试，
 从所有交点中选出$t$的最小正值来求得最近交点。
 该方法虽然正确但对哪怕适度复杂的场景也很慢。
-更好的方法是并入一个\keyindex{加速结构}{acceleration structure}{}在
-射线交点处理中快速否决整组物体。
+更好的方法是在射线交点处理中
+并入一个\keyindex{加速结构}{acceleration structure}{}快速否决整组物体。
 快速剔除无关几何体的能力意味着光线追踪常能以$O(I\log{N})$的时间运行，
 其中$I$是图像像素数目，
 $N$是场景中物体的数量
@@ -183,3 +183,60 @@ $N$是场景中物体的数量
 
 pbrt为各种形状实现的几何接口将在第\refchap{形状}介绍，
 加速接口和实现在第\refchap{图元和交点加速}说明。
+
+\subsection{光分布}\label{sub:光分布}
+
+光线-物体交点阶段给出了要着色的点和该点的局部几何信息。
+回想我们的最终目标是找出从该点出发朝相机方向传播的光量。
+为此需要知道有多少光\emph{到达}了该点。
+这同时涉及到场景中光的\emph{几何}和\emph{辐射}分布。
+对于非常简单的光源（例如\keyindex{点光源}{point light}{light光}），
+光的\keyindex{几何分布}{geometric distribution}{distribution分布}只需
+知道光源位置即可。
+然而真实世界并不存在点光源，
+所以基于物理的光照常基于\keyindex{面光源}{area light sources}{light光}。
+这意味着光源和表面发光的几何体关联。
+但本节我们用点光源说明光分布的构成；
+光度量和分布的严格讨论是第\refchap{颜色和辐射学}和第\refchap{光源}的主题。
+
+我们常常想知道光在交点附近的微分面积上积累的功率（\reffig{1.3}）。
+假设点光源具有功率$\varPhi$并向所有方向均匀辐射光
+\sidenote{译者注：原文使用正体字母$\Phi$，
+      我把标量统一改为了斜体；
+      此外原文正确使用了$\pi$的正体表示圆周率，
+      但我因为字体环境冲突无法打出正体，
+      所以全书被迫用的斜体。}。
+这意味着围绕光源的单位球面在单位面积上的光量
+为$\displaystyle\frac{\varPhi}{4\mathrm{\pi}}$
+（这些度量将在\refsec{辐射学}解释和形式化）。
+\begin{figure}[h]
+      \centering\input{Pictures/chap01/Basicreflectionsetting.tex}
+      \caption{确定由点光源到达一点的单位面积功率的几何结构。
+            该点到光源的距离记作$r$。}\label{fig:1.3}
+\end{figure}
+
+如果考虑两个这样的球面（\reffig{1.4}），
+很明显大球上一点的单位面积功率必然比小球低，
+因为相同的总功率分布在了更大的面积上。
+特别地，到达半径为$r$的球面上一点的单位面积功率正比于$\displaystyle\frac{1}{r^2}$。
+\begin{figure}
+      \centering\input{Pictures/chap01/Lightspheresequalpower.tex}
+      \caption{因为点光源向所有方向均匀辐射光，
+            所以以光源为球心的任意球面所积累的总功率相同。}
+      \label{fig:1.4}
+\end{figure}
+
+此外可以看出，如果一小块曲面$\mathrm{d}A$相对于
+从曲面指向光源的向量倾斜了角度$\theta$，
+则$\mathrm{d}A$上积累的功率正比于$\cos{\theta}$。
+综上所述，单位面积上的微分功率
+（\keyindex{微分辐照度}{differential irradiance}{irradiance辐照度}）
+$\mathrm{d}E$为
+\begin{align*}
+      \mathrm{d}E=\frac{\varPhi\cos{\theta}}{4\mathrm{\pi}r^2}.
+\end{align*}
+
+熟悉计算机图形学中基本光照的读者会注意到
+该方程包含了两个熟悉的定律：
+上述面的光照随倾斜按余弦衰减，
+随距离按$\displaystyle\frac{1}{r^2}$衰减。

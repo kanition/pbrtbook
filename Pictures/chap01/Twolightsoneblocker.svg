@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="Layer_1"
+   data-name="Layer 1"
+   viewBox="0 0 435.51 325.66"
+   version="1.1"
+   sodipodi:docname="Twolightsoneblocker.svg"
+   inkscape:version="1.0.1 (3bc2e813f5, 2020-09-07)">
+  <metadata
+     id="metadata947">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>Two lights one blocker</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1010"
+     inkscape:window-height="836"
+     id="namedview945"
+     showgrid="false"
+     inkscape:zoom="0.88487795"
+     inkscape:cx="147.87487"
+     inkscape:cy="203.22903"
+     inkscape:window-x="2428"
+     inkscape:window-y="127"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="Layer_1"
+     inkscape:document-rotation="0" />
+  <defs
+     id="defs924">
+    <rect
+       x="177.4256"
+       y="239.58106"
+       width="27.122385"
+       height="32.207832"
+       id="rect951" />
+    <style
+       id="style922">.cls-1,.cls-6{fill:none;}.cls-1,.cls-2,.cls-3{stroke:#000;}.cls-1,.cls-2,.cls-3,.cls-4,.cls-6{stroke-miterlimit:10;}.cls-1{stroke-width:0.5px;}.cls-3{fill:#fcee21;stroke-width:0.3px;}.cls-4{fill:gray;}.cls-4,.cls-6{stroke:#fcee21;}.cls-5{fill:#b3b3b3;}</style>
+  </defs>
+  <title
+     id="title926">Two lights one blocker</title>
+  <polygon
+     class="cls-1"
+     points="435.09 138.92 98.11 137.08 0.41 323.57 337.39 325.41 435.09 138.92"
+     id="polygon928" />
+  <circle
+     class="cls-2"
+     cx="217.63"
+     cy="230.57"
+     r="2.25"
+     id="circle930" />
+  <polygon
+     class="cls-3"
+     points="356.9 45.6 355.32 55.27 360.27 46.81 356.94 56.03 363.37 48.63 358.4 57.08 366.07 50.98 359.64 58.38 368.3 53.79 360.62 59.88 369.98 56.96 361.31 61.53 371.04 60.39 361.68 63.29 371.46 63.95 361.72 65.08 371.21 67.53 361.44 66.85 370.31 71 360.83 68.54 368.79 74.25 359.92 70.08 366.7 77.16 358.74 71.44 364.11 79.64 357.34 72.55 361.1 81.6 355.75 73.39 357.79 82.98 354.04 73.92 354.28 83.72 352.26 74.13 350.7 83.81 350.47 74.01 347.16 83.23 348.73 73.56 343.78 82.02 347.11 72.8 340.69 80.2 345.65 71.75 337.98 77.85 344.41 70.46 335.75 75.04 343.43 68.95 334.07 71.87 342.75 67.3 333.01 68.44 342.37 65.54 332.6 64.88 342.33 63.75 332.84 61.3 342.62 61.98 333.74 57.83 343.23 60.29 335.26 54.58 344.13 58.75 337.35 51.67 345.31 57.39 339.94 49.19 346.71 56.28 342.95 47.23 348.3 55.44 346.26 45.85 350.01 54.91 349.77 45.11 351.79 54.7 353.36 45.02 353.58 54.82 356.9 45.6"
+     id="polygon932" />
+  <path
+     id="path968"
+     style="fill:#b3b3b3;fill-opacity:1;stroke:none;stroke-width:1.00157;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     d="m 261.70555,93.894357 c 6.15599,-2.740689 12.42563,-6.718782 19.43788,-5.934792 3.08182,-1.390698 6.76841,-0.217605 10.14827,-0.458015 8.4305,0.01605 16.8617,0.04194 25.28612,-0.257079 3.75301,0.802055 8.42789,0.614101 11.45311,2.254831 3.53426,0.941973 6.03286,4.006529 9.58921,4.794606 3.15171,2.267231 7.75098,1.931685 11.36243,4.212533 4.48269,0.897247 8.12616,3.478739 10.5877,7.250249 3.13147,2.90325 4.13178,6.81327 5.90958,10.8864 0.71675,4.69602 -3.89355,8.65177 -7.15657,11.42887 -4.68012,2.56788 -9.76243,4.61988 -15.18129,3.3237 -4.25497,-1.0861 -8.73668,-1.31194 -12.73515,-2.85879 -4.98035,-0.30163 -10.19655,-0.53073 -14.74286,1.39116 -4.7504,0.33622 -9.44749,1.87005 -14.30969,1.12825 -5.16071,-0.0169 -10.59145,0.86822 -15.44494,-1.27988 -3.06849,-0.12564 -7.98424,-1.36304 -9.42043,-3.918 -3.29928,-2.8545 -6.71954,-5.78051 -9.98876,-7.99101 -2.90166,-0.12221 -5.00369,-2.08263 -8.06892,-2.35174 -3.16351,-1.39532 -7.28048,-2.52667 -8.69837,-5.402 -1.45122,-3.6492 -0.27412,-7.84531 2.38347,-10.226032 1.33612,-2.675024 4.15433,-2.808099 5.59371,-4.395059 1.73827,0.481351 2.378,-1.498015 3.9955,-1.598202 z" />
+  <line
+     class="cls-4"
+     x1="100.44"
+     y1="19.81"
+     x2="216.87"
+     y2="229.46"
+     id="line936" />
+  <polygon
+     class="cls-3"
+     points="104.97 0.6 103.39 10.27 108.34 1.81 105.01 11.03 111.44 3.63 106.47 12.08 114.14 5.98 107.71 13.38 116.37 8.79 108.69 14.88 118.05 11.96 109.38 16.53 119.11 15.39 109.75 18.29 119.53 18.95 109.79 20.08 119.28 22.53 109.51 21.85 118.39 26 108.9 23.54 116.86 29.25 107.99 25.09 114.77 32.16 106.81 26.44 112.18 34.64 105.41 27.55 109.17 36.6 103.82 28.39 105.86 37.98 102.11 28.92 102.35 38.72 100.33 29.13 98.77 38.81 98.54 29.01 95.23 38.23 96.81 28.56 91.85 37.02 95.18 27.8 88.76 35.2 93.72 26.75 86.05 32.85 92.48 25.46 83.82 30.04 91.5 23.95 82.15 26.87 90.82 22.3 81.08 23.44 90.44 20.54 80.67 19.88 90.4 18.75 80.91 16.3 90.69 16.98 81.81 12.83 91.3 15.29 83.33 9.58 92.2 13.75 85.42 6.67 93.38 12.39 88.02 4.19 94.78 11.28 91.02 2.23 96.37 10.44 94.33 0.85 98.08 9.91 97.84 0.11 99.86 9.7 101.43 0.02 101.65 9.82 104.97 0.6"
+     id="polygon938" />
+  <line
+     class="cls-6"
+     x1="351.16"
+     y1="65.17"
+     x2="316.87"
+     y2="110.17"
+     id="line942" />
+  <text
+     xml:space="preserve"
+     id="text949"
+     style="font-size:21.3333px;line-height:1.25;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;shape-inside:url(#rect951);"
+     transform="translate(35.880655,-7.063121)"><tspan
+       x="177.42578"
+       y="258.51791"><tspan
+         style="shape-inside:url(#rect951)">p</tspan></tspan></text>
+</svg>

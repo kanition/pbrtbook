@@ -37,13 +37,14 @@
      inkscape:window-height="1017"
      id="namedview887"
      showgrid="false"
-     inkscape:zoom="2.9588973"
-     inkscape:cx="112.63879"
-     inkscape:cy="142.34009"
+     inkscape:zoom="8.3690254"
+     inkscape:cx="73.129251"
+     inkscape:cy="98.180494"
      inkscape:window-x="1912"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
-     inkscape:current-layer="Layer_1" />
+     inkscape:current-layer="Layer_1"
+     inkscape:document-rotation="0" />
   <defs
      id="defs864">
     <rect
@@ -105,8 +106,8 @@
      style="font-size:21.3333px;line-height:1.25;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;shape-inside:url(#rect899);"
      transform="translate(1.9118116,-7.6472464)"><tspan
        x="100.36914"
-       y="97.320647"><tspan
-         style="shape-inside:url(#rect899)">r</tspan><tspan
+       y="97.32608"><tspan
+         style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman,  Italic';shape-inside:url(#rect899)">r</tspan><tspan
          style="font-size:65%;baseline-shift:sub">1</tspan></tspan></text>
   <text
      xml:space="preserve"
@@ -114,7 +115,7 @@
      style="font-size:21.3333px;line-height:1.25;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;shape-inside:url(#rect899-2);"
      transform="translate(-78.558244,19.351253)"><tspan
        x="100.36914"
-       y="97.320647"><tspan
-         style="shape-inside:url(#rect899-2)">r</tspan><tspan
+       y="97.32608"><tspan
+         style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman,  Italic';shape-inside:url(#rect899-2)">r</tspan><tspan
          style="font-size:65%;baseline-shift:sub">2</tspan></tspan></text>
 </svg>

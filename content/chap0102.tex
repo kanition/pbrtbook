@@ -219,7 +219,7 @@ pbrt为各种形状实现的几何接口将在第\refchap{形状}介绍，
 很明显大球上一点的单位面积功率必然比小球低，
 因为相同的总功率分布在了更大的面积上。
 特别地，到达半径为$r$的球面上一点的单位面积功率正比于$\displaystyle\frac{1}{r^2}$。
-\begin{figure}
+\begin{figure}[h]
       \centering\input{Pictures/chap01/Lightspheresequalpower.tex}
       \caption{因为点光源向所有方向均匀辐射光，
             所以以光源为球心的任意球面所积累的总功率相同。}
@@ -240,3 +240,25 @@ $\mathrm{d}E$为
 该方程包含了两个熟悉的定律：
 上述面的光照随倾斜按余弦衰减，
 随距离按$\displaystyle\frac{1}{r^2}$衰减。
+
+\subsection{可见性}\label{sub:可见性}
+
+上节所述的光分布忽略了一个重要部分：\keyindex{阴影}{shadow}{}。
+对于着色点，只有当该点到光源位置的路径畅通时，
+该光源才会照亮该点（\reffig{1.5}）。
+\begin{figure}[h]
+      \centering\input{Pictures/chap01/Twolightsoneblocker.tex}
+      \caption{只有在视点处能无障碍地看到光源时，
+            该光源才能对其表面积累能量。
+            左边的光源照亮了点p，但右边的不行。}\label{fig:1.5}
+\end{figure}
+
+幸运的是，在光线追踪器中很容易确定光对于着色点是否可见。
+我们简单构造一条新射线，
+其端点是表面上的点，方向指向光源。
+这种特殊射线称为\keyindex{阴影射线}{shadow ray}{ray射线}。
+如果追踪这些射线穿过环境，
+我们就能检查在射线原点与光源之间能否找到交点，
+方法是沿射线方向比较交点和光源位置的相应参数值$t$。
+如果光源与表面之间没有遮挡物，
+就应考虑该光源的作用。

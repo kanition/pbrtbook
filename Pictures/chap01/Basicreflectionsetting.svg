@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="Layer_1"
+   data-name="Layer 1"
+   viewBox="0 0 435.51 280.66"
+   version="1.1"
+   sodipodi:docname="Basicreflectionsetting.svg"
+   inkscape:version="1.0.1 (3bc2e813f5, 2020-09-07)">
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1537"
+     inkscape:window-height="938"
+     id="namedview34"
+     showgrid="false"
+     inkscape:zoom="6.8425525"
+     inkscape:cx="339.08374"
+     inkscape:cy="82.551437"
+     inkscape:window-x="2165"
+     inkscape:window-y="50"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="Layer_1"
+     inkscape:document-rotation="0"
+     inkscape:snap-object-midpoints="true"
+     inkscape:snap-center="true"
+     inkscape:snap-page="true"
+     showguides="true"
+     inkscape:guide-bbox="true" />
+  <metadata
+     id="metadata55">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>Basic reflection setting</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs12">
+    <rect
+       x="222.38687"
+       y="111.60679"
+       width="24.388151"
+       height="30.588528"
+       id="rect52" />
+    <rect
+       x="201.71894"
+       y="197.99872"
+       width="40.509132"
+       height="39.682415"
+       id="rect46" />
+    <rect
+       x="332.03984"
+       y="63.134336"
+       width="10.376245"
+       height="26.452118"
+       id="rect38" />
+    <style
+       id="style10">.cls-1,.cls-2,.cls-6{fill:none;}.cls-1,.cls-2,.cls-5,.cls-6,.cls-7{stroke:#000;stroke-miterlimit:10;}.cls-1{stroke-width:0.5px;}.cls-3{fill:#a6a6a6;}.cls-4{fill:#666;}.cls-6{stroke-dasharray:4;}.cls-7{fill:#fcee21;stroke-width:0.3px;}.cls-8{fill:#bbbdbf;}.cls-9{fill:#fff;}.cls-10{fill:#212121;}</style>
+  </defs>
+  <title
+     id="title14">Basic reflection setting</title>
+  <polygon
+     class="cls-1"
+     points="435.09 93.92 98.11 92.08 0.41 278.57 337.39 280.41 435.09 93.92"
+     id="polygon16" />
+  <line
+     class="cls-2"
+     x1="217.75"
+     y1="185.86"
+     x2="217.75"
+     y2="16.36"
+     id="line18" />
+  <polygon
+     points="220.5 18.81 217.75 16.68 215 18.81 217.75 12.3 220.5 18.81"
+     id="polygon20" />
+  <polygon
+     class="cls-3"
+     points="219.9 18.03 217.75 12.96 217.75 16.37 219.9 18.03"
+     id="polygon22" />
+  <polygon
+     class="cls-4"
+     points="215.6 18.03 217.75 12.96 217.75 16.37 215.6 18.03"
+     id="polygon24" />
+  <circle
+     class="cls-5"
+     cx="217.63"
+     cy="185.57"
+     r="2.25"
+     id="circle26" />
+  <line
+     class="cls-6"
+     x1="217.5"
+     y1="185.47"
+     x2="61.24"
+     y2="79.84"
+     id="line28" />
+  <line
+     class="cls-2"
+     x1="217.79"
+     y1="185.57"
+     x2="338.27"
+     y2="37.44"
+     id="line30" />
+  <polygon
+     class="cls-7"
+     points="356.9 0.6 355.32 10.27 360.27 1.81 356.94 11.03 363.37 3.63 358.4 12.08 366.07 5.98 359.64 13.38 368.3 8.79 360.62 14.88 369.98 11.96 361.31 16.53 371.04 15.39 361.68 18.29 371.46 18.95 361.72 20.08 371.21 22.53 361.44 21.85 370.31 26 360.83 23.54 368.79 29.25 359.92 25.09 366.7 32.16 358.74 26.44 364.11 34.64 357.34 27.55 361.1 36.6 355.75 28.39 357.79 37.98 354.04 28.92 354.28 38.72 352.26 29.13 350.7 38.81 350.47 29.01 347.16 38.23 348.73 28.56 343.78 37.02 347.11 27.8 340.69 35.2 345.65 26.75 337.98 32.85 344.41 25.46 335.75 30.04 343.43 23.95 334.07 26.87 342.75 22.3 333.01 23.44 342.37 20.54 332.6 19.88 342.33 18.75 332.84 16.3 342.62 16.98 333.74 12.83 343.23 15.29 335.26 9.58 344.13 13.75 337.35 6.67 345.31 12.39 339.94 4.19 346.71 11.28 342.95 2.23 348.3 10.44 346.26 0.85 350.01 9.91 349.77 0.11 351.79 9.7 353.36 0.02 353.58 9.82 356.9 0.6"
+     id="polygon32" />
+  <g
+     id="Eye">
+    <g
+       id="_Group_"
+       data-name="&lt;Group&gt;">
+      <path
+         class="cls-8"
+         d="M53.36,54.76c.45,13.09-5.87,21.38-17.5,23.06-5.33-15.12-13.64-25.35-20-32.66.36.15.71.32,1.1.48C27.2,50.17,37.78,54.87,53.36,54.76Z"
+         id="path42" />
+      <path
+         d="M35.86,77.82c11.63-1.68,18-10,17.5-23.06C37.78,54.87,27.2,50.17,17,45.64c-.39-.16-.74-.33-1.1-.48C22.22,52.47,30.53,62.7,35.86,77.82ZM55.58,54.71C56,68.7,49,78,36.58,80c.61,1.9,1.2,3.86,1.7,5.91l-2.16.52C31,65.71,19.78,53,12.39,44.63l-1.52-1.76a2.88,2.88,0,0,0,.83-.72,3.27,3.27,0,0,0,.45-1c1.92.82,3.81,1.64,5.69,2.48C30,49,41.47,54.08,60.94,52.13l.22,2.21C59.23,54.54,57.38,54.64,55.58,54.71Z"
+         id="path44" />
+    </g>
+    <path
+       class="cls-9"
+       d="M48.29,69.57c-3,3.82-7.45,5.35-9.87,3.43s-1.93-6.58,1.1-10.4,7.45-5.35,9.87-3.42S51.32,65.75,48.29,69.57Z"
+       id="path47" />
+    <path
+       class="cls-10"
+       d="M47,69.78a3.27,3.27,0,1,1-4.88-4.25A3.27,3.27,0,1,1,47,69.78Z"
+       id="path49" />
+  </g>
+  <text
+     xml:space="preserve"
+     id="text36"
+     style="font-size:21.3333px;line-height:1.25;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;shape-inside:url(#rect38);"
+     transform="translate(-11.983832,-0.58457718)"><tspan
+       x="332.03906"
+       y="82.07608"><tspan
+         style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman,  Italic';shape-inside:url(#rect38)">r</tspan></tspan></text>
+  <text
+     xml:space="preserve"
+     id="text44"
+     style="font-size:13.3333px;line-height:1.25;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;shape-inside:url(#rect46);"
+     transform="translate(11.574038,-10.747321)"><tspan
+       x="201.71875"
+       y="216.93393"><tspan
+         style="font-size:21.3333px">p</tspan></tspan></text>
+  <text
+     xml:space="preserve"
+     id="text50"
+     style="font-size:13.3333px;line-height:1.25;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;shape-inside:url(#rect52);"
+     transform="translate(5.5448791,14.697519)"><tspan
+       x="222.38672"
+       y="130.54874"><tspan
+         style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:21.3333px;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic'">θ</tspan></tspan></text>
+  <path
+     style="fill:none;stroke:#000000"
+     id="path872"
+     sodipodi:type="arc"
+     sodipodi:cx="-185.86"
+     sodipodi:cy="217.75"
+     sodipodi:rx="40"
+     sodipodi:ry="40"
+     sodipodi:start="0"
+     sodipodi:end="0.67195176"
+     sodipodi:arc-type="arc"
+     d="m -145.86,217.75 a 40,40 0 0 1 -8.69567,24.90059"
+     sodipodi:open="true"
+     transform="rotate(-90)" />
+</svg>

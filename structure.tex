@@ -21,9 +21,9 @@
 
 \usepackage{graphicx} % Required for including pictures
 \graphicspath{{Pictures/}} % Specifies the directory where pictures are stored
-
+\usepackage{subfig}
 \usepackage{tikz} % Required for drawing custom shapes
-
+\usepackage{PSTricks}
 \usepackage[english]{babel} % English language/hyphenation
 
 \usepackage{enumitem} % Customize lists
@@ -530,7 +530,8 @@
 %----------------------------------------------------------------------------------------
 
 \usepackage{hyperref}
-\hypersetup{hidelinks,backref=true,pagebackref=true,hyperindex=true,colorlinks=false,breaklinks=true,urlcolor=ocre,bookmarks=true,bookmarksopen=false}
+% \hypersetup{hidelinks,backref=true,pagebackref=true,hyperindex=true,colorlinks=false,breaklinks=true,urlcolor=ocre,bookmarks=true,bookmarksopen=false}
+\hypersetup{hidelinks,colorlinks=false,breaklinks=true,urlcolor=ocre,bookmarksopen=false}
 
 \usepackage{bookmark}
 \bookmarksetup{
@@ -564,7 +565,7 @@
 	framerule=2pt,
 	showstringspaces=false,%不显示代码字符串中间的空格标记
 	keepspaces=true,
-	breakindent=20pt,
+	breakindent=10pt,
 	numbers=left,%左侧显示行号 往左靠,还可以为right，或none，即不加行号
 	stepnumber=1,%若设置为2，则显示行号为1,3,5，即stepnumber为公差,默认stepnumber=1
 	numberstyle={\color[RGB]{33,166,86}\scriptsize} ,%设置行号的大小，大小有tiny,scriptsize,footnotesize,small,normalsize,large等
@@ -581,7 +582,7 @@
 	fontadjust,
 	captionpos=t,
 	framextopmargin=2pt,framexbottommargin=2pt,abovecaptionskip=-3pt,belowcaptionskip=3pt,
-	xleftmargin=4em,xrightmargin=4em, % 设定listing左右的空白
+	xleftmargin=0em,xrightmargin=0em, % 设定listing左右的空白
 	texcl=true, % 设定中文冲突，断行，listing数字的样式
 	extendedchars=false,% 设定中文冲突
 	columns=flexible, % 列模式
@@ -596,3 +597,8 @@
 \newcommand\lastcode[1]{\hyperlink{code:#1:\arabic{#1last}}{\hypertarget{code:#1:\arabic{#1}}{\codecolor $\uparrow$}}} %引用上一段代码
 \newcommand\initnext[1]{\initcnt{#1}\nextcode{#1}\addcnt{#1}} %初始化且引用下一段代码
 \newcommand\lastnext[1]{\lastcode{#1}\nextcode{#1}\addcnt{#1}} %引用前后代码
+
+\newcommand\reffig[1]{图\ref{fig:#1}}
+\newcommand\refsec[1]{\ref{sec:#1}节}
+\newcommand\refchap[1]{\ref{chap:#1}章}
+\newcommand\refsub[1]{\ref{sub:#1}节}

@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="Layer_1"
+   data-name="Layer 1"
+   viewBox="0 0 719.89 221.23"
+   version="1.1"
+   sodipodi:docname="Pinhole Camera.svg"
+   inkscape:version="1.0.1 (3bc2e813f5, 2020-09-07)">
+  <metadata
+     id="metadata97">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     id="namedview95"
+     showgrid="false"
+     inkscape:zoom="1.0348803"
+     inkscape:cx="357.96308"
+     inkscape:cy="140.50691"
+     inkscape:window-x="1912"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="Layer_1" />
+  <defs
+     id="defs12">
+    <rect
+       x="351.20282"
+       y="200.54091"
+       width="33.480424"
+       height="23.231315"
+       id="rect101" />
+    <style
+       id="style10">.cls-1,.cls-3{fill:none;}.cls-1,.cls-2,.cls-3{stroke:#000;stroke-miterlimit:10;}.cls-2{fill:#b8b5b5;}.cls-3{stroke-width:0.5px;}</style>
+    <rect
+       x="351.20282"
+       y="200.54091"
+       width="33.480423"
+       height="23.231316"
+       id="rect101-5" />
+    <rect
+       x="351.20282"
+       y="200.54091"
+       width="33.480423"
+       height="23.231316"
+       id="rect114" />
+    <rect
+       x="351.20282"
+       y="200.54091"
+       width="50.390591"
+       height="21.298725"
+       id="rect101-0" />
+    <rect
+       x="351.20282"
+       y="200.54091"
+       width="33.480423"
+       height="23.231316"
+       id="rect143" />
+  </defs>
+  <title
+     id="title14">Pinhole Camera</title>
+  <polygon
+     class="cls-1"
+     points="180.38 0.91 54.38 81.03 54.38 220.04 180.38 139.92 180.38 0.91"
+     id="polygon16" />
+  <polygon
+     class="cls-1"
+     points="393.38 0.91 267.38 81.03 267.38 220.04 393.38 139.92 393.38 0.91"
+     id="polygon18" />
+  <line
+     class="cls-1"
+     x1="180.02"
+     y1="0.66"
+     x2="393.24"
+     y2="0.66"
+     id="line20" />
+  <polygon
+     class="cls-2"
+     points="153.14 59.97 96.9 95.73 96.9 157.78 153.14 122.02 153.14 59.97"
+     id="polygon22" />
+  <line
+     class="cls-1"
+     x1="53.95"
+     y1="80.66"
+     x2="266.81"
+     y2="80.66"
+     id="line24" />
+  <line
+     class="cls-1"
+     x1="180.02"
+     y1="139.23"
+     x2="393.59"
+     y2="139.23"
+     id="line26" />
+  <line
+     class="cls-1"
+     x1="54.31"
+     y1="220.73"
+     x2="267.16"
+     y2="220.73"
+     id="line28" />
+  <ellipse
+     class="cls-1"
+     cx="336.15"
+     cy="108.12"
+     rx="7.03"
+     ry="3.88"
+     transform="translate(71.89 342.33) rotate(-59.38)"
+     id="ellipse30" />
+  <polygon
+     class="cls-1"
+     points="576.36 58.91 520.12 94.67 520.12 156.72 576.36 120.96 576.36 58.91"
+     id="polygon32" />
+  <line
+     class="cls-1"
+     x1="153.71"
+     y1="59.27"
+     x2="631.82"
+     y2="187.25"
+     id="line34" />
+  <line
+     class="cls-1"
+     x1="97.04"
+     y1="95.48"
+     x2="617.3"
+     y2="122.45"
+     id="line36" />
+  <line
+     class="cls-1"
+     x1="96.43"
+     y1="158.06"
+     x2="673.24"
+     y2="38.51"
+     id="line38" />
+  <line
+     class="cls-1"
+     x1="152.84"
+     y1="121.88"
+     x2="622.56"
+     y2="87.62"
+     id="line40" />
+  <line
+     class="cls-3"
+     x1="379.01"
+     y1="173.85"
+     x2="338.2"
+     y2="118"
+     id="line90" />
+  <line
+     class="cls-3"
+     x1="47.15"
+     y1="134.83"
+     x2="91.18"
+     y2="130.53"
+     id="line92" />
+  <text
+     xml:space="preserve"
+     id="text99"
+     style="font-size:16px;line-height:1.25;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;shape-inside:url(#rect101);"
+     transform="translate(11.615657,-24.9395)"><tspan
+       x="351.20312"
+       y="216.62102"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16px;font-family:'Source Han Sans SC';-inkscape-font-specification:'Source Han Sans SC'">针孔</tspan></tspan></text>
+  <text
+     xml:space="preserve"
+     id="text99-9"
+     style="font-size:16px;line-height:1.25;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;shape-inside:url(#rect101-5);"
+     transform="translate(-341.12114,-76.243765)"><tspan
+       x="351.20312"
+       y="216.62102"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16px;font-family:'Source Han Sans SC';-inkscape-font-specification:'Source Han Sans SC'">胶片</tspan></tspan></text>
+  <text
+     xml:space="preserve"
+     id="text99-6"
+     style="font-size:16px;line-height:1.25;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;shape-inside:url(#rect101-0);"
+     transform="translate(276.34156,-100.40115)"><tspan
+       x="351.20312"
+       y="216.62102"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16px;font-family:'Source Han Sans SC';-inkscape-font-specification:'Source Han Sans SC'">视见体</tspan></tspan></text>
+</svg>

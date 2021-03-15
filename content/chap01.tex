@@ -2,24 +2,20 @@
 
 \chapter{绪论}\label{chap:绪论}
 
-\keyindex{渲染}{rendering}{render渲染}是由
-3D\keyindex{场景}{scene}{}
-描述生成图像的过程。
-显然，这是一项十分庞大的任务，有许多解决方案。
-\keyindex{基于物理的}{physically based}{physics物理}
-的技术便是要模拟现实，
-即运用物理学规律对光与物质的
-\keyindex{相互作用}{interaction}{}建模。
-尽管基于物理的方法看上去是实现渲染最显然的办法，
-但最近十年它才在实践中得到广泛运用。
-本章末的\ref{sec:基于物理的渲染简史}节
+\keyindex{渲染}{rendering}{render渲染}是
+由3D\keyindex{场景}{scene}{}描述生成图像的过程。
+显然，这是一项十分庞大的任务，
+有许多解决方案。\keyindex{基于物理的}{physically based}{physics物理}
+的技术采用模拟现实，
+即运用物理学规律对光与物质的\keyindex{相互作用}{interaction}{}建模。
+尽管基于物理的方法是实现渲染最容易想到的办法，
+但它最近十年才在实践中得到广泛运用。
+本章末的\refsec{基于物理的渲染简史}
 将给出基于物理的渲染的简史
-以及它近来在电影
-\keyindex{离线渲染}{offline rendering}{render渲染}和
+以及它近来在电影\keyindex{离线渲染}{offline rendering}{render渲染}和
 游戏\keyindex{交互式渲染}{interactive rendering}{render渲染}方面的应用。
 
-本书将介绍\emph{pbrt}这一基于
-\keyindex{光线追踪}{ray-tracing}{ray光线}算法的基于物理的渲染系统。
+本书将介绍\emph{pbrt}这一基于\keyindex{光线追踪}{ray-tracing}{}算法的基于物理的渲染系统。
 大多数计算机\keyindex{图形学}{graphics}{}书籍都主讲算法和理论，
 偶尔附上一小段代码。
 相反，本书将理论和一个功能齐全的渲染系统的完整实现结合起来。
@@ -27,139 +23,9 @@
 可在BSD许可证下获取。
 在pbrt网站\url{https://pbrt.org}还可获取示例场景、渲染数据等更多信息。
 
+\input{content/chap0101.tex}
 
-\section{文学编程}\label{sec:文学编程}
-
-在编写\TeX 排版系统时，Donald Knuth提出了一种新的
-简单但具有革命性的编程方法论：
-\emph{程序应该写得更便于人类使用而不是更便于计算机理解}。
-他把这套方法论称作\keyindex{文学编程}{literate programming}{}。
-本书（包括你正在阅读的本章）就是一个长长的文学程序。
-这意味着在阅读本书的过程中，
-你会读到pbrt渲染系统的\emph{完整}实现，
-而不仅仅是高层叙述。
-
-文学程序是\keyindex{元语言}{metalanguage}{}
-写成的，该语言把文档格式语言（例如\TeX 或HTML）
-和编程语言（例如C++）结合起来。
-两套分离的系统会这样处理程序：
-\keyindex{编排器}{weaver}{literate programming文学编程}
-把文学程序转换成适合排版的文档，
-\keyindex{整合器}{tangler}{literate programming文学编程}
-则生成可供编译的源码
-\sidenote{译者注：我不太确定编排器和整合器的翻译是否合适。}。
-虽然我们的文学编程系统是自研的，
-但很大程度上受到了Norman Ramsey的\emph{noweb}系统的影响。
-
-文学编程元语言提供了两个重要功能。
-第一个是把行文与源码结合的能力。
-这个功能让对程序的阐述和它实际的源码一样重要，
-促使设计和文档做得更细致。
-第二个是该语言提供了向读者展示程序代码的机制，
-其与输入编译器的顺序完全不同。
-因此可以按逻辑顺序阐述程序。
-每一段具有名称的代码块叫作\keyindex{代码片}{fragment}{}，
-且每个代码片可以通过名称引用其他代码片。
-
-例如，考虑一个负责初始化程序全部全局变量的函数
-\footnote{本节的代码仅用作示例，不属于pbrt的一部分。}
-{\ttfamily InitGlobals()}：
-\begin{lstlisting}
-void InitGlobals() {
-    nMarbles = 25.7;
-    shoeSize = 13;
-    dielectric = true;
-}
-\end{lstlisting}
-
-虽然很简短，但没有任何上下文的情况下很难搞懂这个函数。
-比如为什么变量{\ttfamily nMarbles}采用浮点值？
-刚看这段代码时，
-就得在整个程序里寻找每个变量是在哪里声明的、怎么用的，
-好搞清楚它的目的和合法值的含义。
-尽管这样的系统结构对编译器来说没问题，
-但人类阅读者更愿意看到
-每个变量的初始化代码是分开呈现的，
-且紧挨着实际声明和使用这些变量的代码。
-
-在文学程序中，可以把{\ttfamily InitGlobals()}写成这样：
-\begin{lstlisting}
-`\initcode{Function Definitions}{=}`
-void InitGlobals() {
-    `\refcode{Initialize Global Variables}{\dag}`
-}
-\end{lstlisting}
-
-这就定义了称作\refcode{Function Definitions}{}的代码片，
-包含了函数{\ttfamily InitGlobals()}的定义。
-函数{\ttfamily InitGlobals()}自己又引用了另一代码片
-\refcode{Initialize Global Variables}{}。
-因为初始化的代码片还没有定义，
-所以我们只知道这个函数可能会对全局变量赋值
-（然而我们可以通过单击右边的加号
-\sidenote{译者注：本中译版改为直接点击代码片名称。}
-向前跳转；
-这样可以展开代码片最终全部的代码）。
-
-现在有了代码片名称仅仅是有了正确的抽象层级，
-因为还没有声明过任何变量。
-之后在程序某处引入全局变量{\ttfamily shoeSize}时，
-我们可以这样写：
-\begin{lstlisting}
-    `\refcode{Initialize Global Variables}{=}\initnext{InitializeGlobalVariables}`
-    shoeSize = 13;
-\end{lstlisting}
-
-这里我们开始定义\refcode{Initialize Global Variables}{}的内容了。
-当文学程序整合成待编译的源码时，
-文学编程系统会把代码{\ttfamily shoeSize = 13;}
-替换到函数{\ttfamily InitGlobals()}的定义内。
-等号后的符号{\codecolor $\downarrow$}表示后续还有代码添加到该代码片。
-点击它即可跳转到下一处。
-
-后文我们也许定义了另一个全局变量{\ttfamily dielectric}，
-可以这样把它的初始化添到代码片之后：
-\begin{lstlisting}
-    `\refcode{Initialize Global Variables}{+=}\lastcode{InitializeGlobalVariables}`
-    dielectric = true;
-\end{lstlisting}
-
-代码片名后的符号{\codecolor +=}表示我们之前已经定义过该代码片了。
-此外符号{\codecolor $\uparrow$}回链到
-之前\refcode{Initialize Global Variables}{}添加代码的地方。
-
-当整合时，这三个代码片转换为代码：
-\begin{lstlisting}
-void InitGlobals() {
-    `\hypertarget{code:Initialize Global Variables}{\color[RGB]{115,48,11}\scriptsize\rmfamily// Initialize Global Variables}`
-    shoeSize = 13;
-    dielectric = true;
-}
-\end{lstlisting}
-
-这样，我们可以把复杂函数分解为逻辑不同的部分，使之易懂。
-例如我们可以这样把一个复杂函数写作一系列代码片：
-\begin{lstlisting}
-`\refcode{Function Definitions}{+=}`
-void complexFunc(int x, int y, double *values) {
-    `\refcode{Check validity of arguments}{}`
-    if (x < y) {
-        `\refcode{Swap parameter values}{}`
-    }
-    `\refcode{Do precomputation before loop}{}`
-    `\refcode{Loop through and update \textbackslash mono\{values\} array}{}`
-\end{lstlisting}
-
-同样，编译时{\ttfamily complexFunc()}内每段代码片的内容都内联展开。
-在文档中，我们可以依次介绍每个代码片及其实现。
-这种分解让我们每次只展示一小段代码，使之更易于理解。
-这种编程风格的另一优点是，通过把函数分解为逻辑片，
-每片有了单一且明确的目的，可以独立编写、验证、阅读。
-总之，我们尽量让每段代码片少于10行。
-
-在某种意义上，文学编程系统只是个增强了的宏替换包，
-完成重排程序源码的任务。
-这看起来是微不足道的变化，但事实上文学编程和其他软件构建系统方法迥然不同。
+\input{content/chap0102.tex}
 
 \section{基于物理的渲染简史}\label{sec:基于物理的渲染简史}
 

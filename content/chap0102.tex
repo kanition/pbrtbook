@@ -348,14 +348,14 @@ Turner Whitted在关于光线追踪
 该点沿该方向的发光亮度加上
 点p的邻域球面$\mathrm{S}^2$所有方向上
 经BSDF$f(\mathrm{p},\omega_\mathrm{o},\omega_\mathrm{i})$和
-余弦项调制的的入射亮度：
+余弦项调制的入射亮度：
 \begin{align}
       L_{\mathrm{o}}(\mathrm{p},\omega_\mathrm{o})=L_{\mathrm{e}}(\mathrm{p},\omega_\mathrm{o})+\int_{\mathrm{S}^2}f(\mathrm{p},\omega_\mathrm{o},\omega_\mathrm{i})L_{\mathrm{i}}(\mathrm{p},\omega_\mathrm{i})|\cos{\theta_{\mathrm{i}}}| \,\mathrm{d}\omega_\mathrm{i}\, .
 \end{align}
 \refsub{BRDF}和\refsec{光传输方程}将展示其更完整的推导。
 除了最简单的场景，
-解析求解该方程是几乎不可能的，
-所以必须做简化假设或使用数值积分技术。
+解析地求解该方程是几乎不可能的，
+所以必须简化假设或使用数值积分技术。
 
 Whitted算法通过忽略绝大多数方向的入射光来简化积分，
 只计算到光源方向以及
@@ -390,7 +390,7 @@ Whitted的方法可以扩展到实现镜面和玻璃外的更多效果。
 
 \subsection{光线传播}\label{sub:光线传播}
 
-目前的讨论都假设光线是在\keyindex{真空}{vacuum}{}中传播。
+目前的讨论都假设光线是在\keyindex{真空}{vacuum}{}中传播的。
 例如在描述点光源的光分布时，
 我们假设光的功率朝着
 以光源为球心的球面均匀发散且不随路线衰减
@@ -400,7 +400,7 @@ Whitted的方法可以扩展到实现镜面和玻璃外的更多效果。
 例如烟、雾、尘会破坏该假设。
 模拟这些效果很重要：
 即使我们不渲染充满烟气的房间，
-几乎所有室外场景都会受到介质的实质影响。
+几乎所有室外场景也都会受到介质的实质影响。
 例如，地球大气使得远处物体显得不够饱和（\reffig{1.9}）。
 \begin{figure}
       \centering

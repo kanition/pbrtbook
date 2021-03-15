@@ -1,0 +1,36 @@
+\section{pbrt：系统概述}\label{sec:pbrt：系统概述}
+
+pbrt是使用标准的\keyindex{面向对象}{object-oriented}{}技术构建的：
+重要实体都定义了抽象\keyindex{基类}{base class}{class类}（例如
+抽象基类{\ttfamily Shape}定义了所有几何形状必须实现的接口，
+光源的抽象基类{\ttfamily Light}也有相似设计）。
+系统大部分都是纯粹由这些抽象基类提供的接口来实现的；
+例如检查光源与着色点之间遮挡物体的代码
+调用{\ttfamily Shape}的相交方法
+而不要考虑场景中出现的特定类型的形状。
+这种方式使得扩展系统变得很容易，
+新增一种形状只需要实现一个完成{\ttfamily Shape}接口的类并链接到系统。
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{l l l}
+        \toprule
+        \textbf{基类}                                           & \textbf{目录}           & \textbf{章节}         \\
+        \midrule
+        \hyperref[code:overview_Shape]{\ttfamily Shape}         & \ttfamily shapes/       & \refsec{基本形状接口} \\
+        \hyperref[code:overview_Aggregate]{\ttfamily Aggregate} & \ttfamily accelerators/ & \refsec{聚合}         \\
+        \hyperref[code:overview_Camera]{\ttfamily Camera}       & \ttfamily cameras/      & \refsec{相机模型}     \\
+        \ttfamily Sampler                                       & \ttfamily samplers/     & 0.296                 \\
+        \ttfamily Filter                                        & \ttfamily filters/      & 0.296                 \\
+        \ttfamily Material                                      & \ttfamily materials/    & 0.296                 \\
+        \ttfamily Texture                                       & \ttfamily textures/     & 0.296                 \\
+        \ttfamily Medium                                        & \ttfamily media/        & 0.296                 \\
+        \ttfamily Light                                         & \ttfamily lights/       & 0.296                 \\
+        \ttfamily Integrator                                    & \ttfamily integrators/  & 0.296                 \\
+        \bottomrule
+    \end{tabular}
+    \caption{主要接口类型。}
+    \label{tab:1.1}
+\end{table}
+
+的盛世嫡妃

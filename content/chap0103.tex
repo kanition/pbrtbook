@@ -11,26 +11,38 @@ pbrt是使用标准的\keyindex{面向对象}{object-oriented}{}技术构建的�
 这种方式使得扩展系统变得很容易，
 新增一种形状只需要实现一个完成{\ttfamily Shape}接口的类并链接到系统。
 
+pbrt用10个关键抽象基类写成，列于\reftab{1.1}。
+
 \begin{table}[h]
     \centering
     \begin{tabular}{l l l}
         \toprule
-        \textbf{基类}                                           & \textbf{目录}           & \textbf{章节}         \\
+        \textbf{基类}                                             & \textbf{目录}           & \textbf{章节}                   \\
         \midrule
-        \hyperref[code:overview_Shape]{\ttfamily Shape}         & \ttfamily shapes/       & \refsec{基本形状接口} \\
-        \hyperref[code:overview_Aggregate]{\ttfamily Aggregate} & \ttfamily accelerators/ & \refsec{聚合}         \\
-        \hyperref[code:overview_Camera]{\ttfamily Camera}       & \ttfamily cameras/      & \refsec{相机模型}     \\
-        \hyperref[code:overview_Sampler]{\ttfamily Sampler}     & \ttfamily samplers/     & \refsec{采样接口}     \\
-        \ttfamily Filter                                        & \ttfamily filters/      & 0.296                 \\
-        \ttfamily Material                                      & \ttfamily materials/    & 0.296                 \\
-        \ttfamily Texture                                       & \ttfamily textures/     & 0.296                 \\
-        \ttfamily Medium                                        & \ttfamily media/        & 0.296                 \\
-        \ttfamily Light                                         & \ttfamily lights/       & 0.296                 \\
-        \ttfamily Integrator                                    & \ttfamily integrators/  & 0.296                 \\
+        \hyperref[code:overview_Shape]{\ttfamily Shape}           & \ttfamily shapes/       & \refsec{基本形状接口}           \\
+        \hyperref[code:overview_Aggregate]{\ttfamily Aggregate}   & \ttfamily accelerators/ & \refsec{聚合}                   \\
+        \hyperref[code:overview_Camera]{\ttfamily Camera}         & \ttfamily cameras/      & \refsec{相机模型}               \\
+        \hyperref[code:overview_Sampler]{\ttfamily Sampler}       & \ttfamily samplers/     & \refsec{采样接口}               \\
+        \hyperref[code:overview_Filter]{\ttfamily Filter}         & \ttfamily filters/      & \refsec{图像重构}               \\
+        \hyperref[code:overview_Material]{\ttfamily Material}     & \ttfamily materials/    & \refsec{材质接口与实现}         \\
+        \hyperref[code:overview_Texture]{\ttfamily Texture}       & \ttfamily textures/     & \refsec{纹理接口与基本纹理}     \\
+        \hyperref[code:overview_Medium]{\ttfamily Medium}         & \ttfamily media/        & \refsec{介质}                   \\
+        \hyperref[code:overview_Light]{\ttfamily Light}           & \ttfamily lights/       & \refsec{光源接口}               \\
+        \hyperref[code:overview_Integrator]{\ttfamily Integrator} & \ttfamily integrators/  & \refsub{积分器接口与采样积分器} \\
         \bottomrule
     \end{tabular}
-    \caption{主要接口类型。}
+    \caption{主要接口类型。pbrt大部分由此处列出的10个关键抽象基类实现。
+        每个的实现都很容易添加到系统中扩展其功能。}
     \label{tab:1.1}
 \end{table}
 
-的盛世嫡妃
+\subsection{积分器接口与采样积分器}\label{sub:积分器接口与采样积分器}
+
+\label{code:overview_Integrator}
+\begin{lstlisting}
+`\refcode{Integrator Declarations}{=}`
+class Integrator {
+public:
+    `\refcode{Integrator Interface}{}`
+};
+\end{lstlisting}

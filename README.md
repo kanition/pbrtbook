@@ -1,4 +1,4 @@
-# pbrtbook
+# pbrt book
 ## 基于物理的渲染：从理论到实现
 ## Physically Based Rendering: From Theory To Implementation
 ### 中文整合翻译计划
@@ -20,7 +20,7 @@
 
 **欢迎提出宝贵意见和建议。如果你发现本书存在错误，请一定要告诉我们！**
 
-### 全书进度
+### 翻译进度
 [https://github.com/kanition/pbrtbook/projects](https://github.com/kanition/pbrtbook/projects)
 ## 简介
 本中译版（以下简称“本书”）系译者（笔名Kanition）自学英文经典书籍《Physically Based Rendering: From Theory To Implementation》第三版时自行翻译而成。使用本书及其源码须遵循相关许可证协议。

@@ -1,7 +1,5 @@
-# pbrt book
-## 基于物理的渲染：从理论到实现
-## Physically Based Rendering: From Theory To Implementation
-### 中文整合翻译计划
+# 基于物理的渲染：从理论到实现 中文整合翻译计划
+## Physically Based Rendering: From Theory To Implementation (pbrt book) 
 
 ![Landscape view-3 @pbrt-v3-scenes/landscape](Pictures/view-3.png)
 
@@ -9,6 +7,7 @@
 - 原著 Matt Pharr, Wenzel Jakob & Greg Humphreys
 - 翻译 Kanition
 
+## 下载地址：[https://github.com/kanition/pbrtbook/releases](https://github.com/kanition/pbrtbook/releases)
 ## 友情链接
 ### 第三版
 * 原书官网：[http://www.pbr-book.org/](http://www.pbr-book.org/)
@@ -17,11 +16,17 @@
 * 原书源码：[https://github.com/mmp/pbrt-v4](https://github.com/mmp/pbrt-v4)
 ### 中译版讨论区
 [https://github.com/kanition/pbrtbook/discussions](https://github.com/kanition/pbrtbook/discussions)
+### 我要报错
+[https://github.com/kanition/pbrtbook/issues/new/choose](https://github.com/kanition/pbrtbook/issues/new/choose)
 
 **欢迎提出宝贵意见和建议。如果你发现本书存在错误，请一定要告诉我们！**
 
 ### 翻译进度
 [https://github.com/kanition/pbrtbook/projects](https://github.com/kanition/pbrtbook/projects)
+
+### 编译指南
+[https://github.com/kanition/pbrtbook/blob/main/CONTRIBUTING.md](https://github.com/kanition/pbrtbook/blob/main/CONTRIBUTING.md)
+
 ## 简介
 本中译版（以下简称“本书”）系译者（笔名Kanition）自学英文经典书籍《Physically Based Rendering: From Theory To Implementation》第三版时自行翻译而成。使用本书及其源码须遵循相关许可证协议。
 

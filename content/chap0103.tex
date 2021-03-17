@@ -15,9 +15,9 @@ pbrt用10个关键抽象基类写成，列于\reftab{1.1}。
 向系统添加这些类的新实现很简单；
 实现必须从适当的基类继承，
 编译和链接到可执行文件，
-且必须修改附录B中的对象创建例程
+且必须修改附录第\refchap{场景描述接口}中的对象创建例程
 以创建解析场景描述文件所需要的对象。
-
+\refsec{添加新物体的实现}将讨论这种扩展系统的方法的更多细节。
 
 
 \begin{table}[h]
@@ -43,11 +43,17 @@ pbrt用10个关键抽象基类写成，列于\reftab{1.1}。
     \label{tab:1.1}
 \end{table}
 
+pbrt源码发布于\url{https://pbrt.org/}。
+（大量场景示例\footnote{\url{http://pbrt.org/scenes-v3.html}}也可分开下载。）
+所有的pbrt核心代码均在目录{\ttfamily src/core}内，
+函数{\ttfamily main()}在短文件\hyperlink{https://github.com/mmp/pbrt-v3/tree/master/src/main/pbrt.cpp}{\ttfamily  main/pbrt.cpp}
+
+
 \subsection{积分器接口与采样积分器}\label{sub:积分器接口与采样积分器}
 
 \label{code:overview_Integrator}
 \begin{lstlisting}
-`\refcode{Integrator Declarations}{=}`
+`\initcode{Integrator Declarations}{=}`
 class Integrator {
 public:
     `\refcode{Integrator Interface}{}`

@@ -106,6 +106,26 @@ pbrt在概念上可分为两个执行阶段。
 这些例程包含了描述场景的程序接口。
 场景文件格式的文档详见pbrt网站\href{https://pbrt.org/}{pbrt.org}。
 
+解析阶段的最终结果是类\refvar{Scene}{}和\refvar{Integrator}{}的实例。
+\refvar{Scene}{}包含了场景内容（几何物体、光源等）的表示，
+\refvar{Integrator}{}则实现渲染它的算法。\keyindex{积分器}{integrator}{}这样命名的原因是
+它的主要任务就是计算\refeq{1.1}的积分。
+
+一旦指定好场景，第二执行阶段就开始了，执行主渲染循环。
+pbrt通常把绝大部分运行时间都花在这个阶段，
+本书大部分都在讲解执行这一阶段的代码。
+渲染循环由\refvar{Integrator}{::}\refvar{Render}{()}的
+实现来执行，它是\refsub{主渲染循环}的重点。
+
+本章将介绍\refvar{Integrator}{}的一个特定子类，
+称为\refvar{SamplerIntegrator}{}，
+其{\ttfamily Render()}方法为大量建模成像过程的光线
+决定到达虚拟胶片平面的光量。
+在计算完所有这些胶片样本的贡献后，最终图像被写入文件。
+内存里的场景描述数据被释放，
+系统从场景描述文件恢复处理语句直达没有剩余，
+如果需要，用户可以指定下一个要渲染的场景。
+
 \begin{figure}[ht]
     \centering\includegraphics[width=\linewidth]{chap01/furrydog.png}
     \caption{Jared Jacobs和Michael Turitzin为pbrt增加了
@@ -122,12 +142,23 @@ pbrt在概念上可分为两个执行阶段。
 int `\initvar{main}{}`(int argc, char *argv[]) {
     Options options;
     std::vector<std::string> filenames;
-    `\refcode{Process command-line arguments}{}` 
+    `\refcode{Process command-line arguments}{}`
     `\refvar{pbrtInit}{}`(options);
-    `\refcode{Process scene description}{}` 
+    `\refcode{Process scene description}{}`
     `\refvar{pbrtCleanup}{}`();
     return 0;
 }
+\end{lstlisting}
+
+\begin{lstlisting}
+`\initcode{Scene Declarations}{=}`
+class `\initvar{Scene}{}` {
+public:
+    `\refcode{Scene Public Methods}{}`
+    `\refcode{Scene Public Data}{}`
+private:
+    `\refcode{Scene Private Data}{}`
+};
 \end{lstlisting}
 
 \subsection{积分器接口与采样积分器}\label{sub:积分器接口与采样积分器}
@@ -139,3 +170,23 @@ public:
     `\refcode{Integrator Interface}{}`
 };
 \end{lstlisting}
+
+\begin{lstlisting}
+    `\initcode{Integrator Interface}{=}`
+    virtual void `\initvar{Render}{(const \refvar{Scene}{} \&scene)}` = 0;
+\end{lstlisting}
+
+\begin{lstlisting}
+`\initcode{SamplerIntegrator Declarations}{=}`
+class `\initvar{SamplerIntegrator}{}` : public `\refvar{Integrator}{}` {
+public:
+    `\refcode{SamplerIntegrator Public Methods}{}`
+protected:
+    `\refcode{SamplerIntegrator Protected Data}{}`
+private:
+    `\refcode{SamplerIntegrator Private Data}{}`
+};
+\end{lstlisting}
+
+
+\subsection{主渲染循环}\label{sub:主渲染循环}

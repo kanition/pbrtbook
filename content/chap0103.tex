@@ -56,7 +56,7 @@ pbrt源码发布于\href{https://pbrt.org/}{\ttfamily pbrt.org}。
 
 本节有许多pbrt扩展版本渲染的图像。
 其中从\reffig{1.11}到\reffig{1.14}
-\sidenote{译者注：原书\reffig{1.14}引用文献似乎遗漏了链接，推测是\citep{10.1145/74333.74361}。}
+\sidenote{译者注：原书\reffig{1.14}引用文献似乎遗漏了链接，推测是\citep{10.1145/74334.74361}。}
 都引人瞩目：
 它们不仅令人过目不忘，而且每张都是渲染课程的学生在
 最后的课程作业中对pbrt扩展新功能渲染得到的有趣图像。
@@ -129,11 +129,37 @@ pbrt通常把绝大部分运行时间都花在这个阶段，
 \begin{figure}[ht]
     \centering\includegraphics[width=\linewidth]{chap01/furrydog.png}
     \caption{Jared Jacobs和Michael Turitzin为pbrt增加了
-        Kajiya和Kay基于纹素的毛发渲染算法\citep{10.1145/74333.74361}并渲染了该图像，
+        Kajiya和Kay基于纹素的毛发渲染算法\citep{10.1145/74334.74361}并渲染了该图像，
         狗毛和粗毛地毯都是用纹素毛发算法渲染的。}
     \label{fig:1.14}
 \end{figure}
 
+\reffig{1.15}和\reffig{1.16}由\emph{LuxRender}渲染，
+它是最初基于本书第一版pbrt源码的GPL许可的基于物理的渲染系统
+（关于\emph{LuxRender}的更多信息详见\url{https://luxcorerender.org}
+\sidenote{译者注：\emph{LuxRender}已更名为\emph{LuxCoreRender}且
+    迁移到了新网址。此处已更正了网址，原书所给网址已经与\emph{LuxRender}无关了。}）。
+
+\begin{figure}[ht]
+    \centering\includegraphics[width=\linewidth]{chap01/measure-one180-cut1260.png}
+    \caption{Florent Boyer渲染了这个当代室内场景。
+        该图像由\emph{LuxRender}渲染，它是最初
+        基于pbrt源码的GPL许可的基于物理的渲染系统。
+        建模和纹理由Blender完成。}
+    \label{fig:1.15}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering\includegraphics[width=\linewidth]{chap01/crown.png}
+    \caption{Martin Lubich构建了这个奥地利皇冠的场景
+        并用pbrt代码库的开源分支\emph{LuxRender}渲染了它。
+        该场景由Blender建模，包含约一百八十万个顶点。
+        它由具备基于真实世界光源测量数据的发射光谱的六个面光源照明，
+        在四核CPU上对每个像素做1280次采样经73小时的计算完成渲染。
+        包括可下载的Blender场景文件在内的更多信息
+        详见Martin的网站\url{www.loramel.net}。}
+    \label{fig:1.16}
+\end{figure}
 
 \subsection{场景表示}\label{sub:场景表示}
 

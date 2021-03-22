@@ -104,7 +104,7 @@ pbrt在概念上可分为两个执行阶段。
 \sidenote{译者注：原书此处似乎链接错误，已纠正。}
 中的一个例程；
 这些例程包含了描述场景的程序接口。
-场景文件格式的文档详见pbrt网站\href{https://pbrt.org/}{pbrt.org}。
+场景文件格式的文档详见pbrt网站\href{https://pbrt.org/}{\ttfamily pbrt.org}。
 
 解析阶段的最终结果是类\refvar{Scene}{}和\refvar{Integrator}{}的实例。
 \refvar{Scene}{}包含了场景内容（几何物体、光源等）的表示，
@@ -216,3 +216,5 @@ private:
 
 
 \subsection{主渲染循环}\label{sub:主渲染循环}
+pbrt的函数\refvar{main}{()}可在
+文件\href{https://github.com/mmp/pbrt-v3/tree/master/src/main/pbrt.cpp}{\ttfamily main/pbrt.cpp}内找到。

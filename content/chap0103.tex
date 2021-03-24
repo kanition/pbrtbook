@@ -162,7 +162,23 @@ pbrt通常把绝大部分运行时间都花在这个阶段，
 \end{figure}
 
 \subsection{场景表示}\label{sub:场景表示}
+pbrt的函数\refvar{main}{()}可在
+文件\href{https://github.com/mmp/pbrt-v3/tree/master/src/main/pbrt.cpp}{\ttfamily main/pbrt.cpp}内找到。
+该函数很简单；
+它首先循环读取{\ttfamily argv}中的命令行参数，
+初始化结构体{\ttfamily Options}中的值并
+保存参数中的文件名。
+运行pbrt时带命令行参数{\ttfamily -help}会
+打印所有可指定的命令行选项。
+解析命令行参数的代码片\refcode{Process command-line arguments}{}很简单，
+故本书不再介绍\sidenote{译者注：我还是把它搬上来了。}。
 
+选项结构体随后传入函数\refvar{pbrtInit}{()}，做全系统初始化。
+函数\refvar{main}{()}再解析给定场景描述，
+创建\refvar{Scene}{}和\refvar{Integrator}{}。
+\refvar{pbrtCleanup}{()}在系统完成所有渲染后退出前做最后的清理工作。
+
+函数\refvar{pbrtInit}{()}和\refvar{pbrtCleanup}{()}位于
 \begin{lstlisting}
 `\initcode{Main program}{=}`
 int `\initvar{main}{}`(int argc, char *argv[]) {
@@ -173,6 +189,24 @@ int `\initvar{main}{}`(int argc, char *argv[]) {
     `\refcode{Process scene description}{}`
     `\refvar{pbrtCleanup}{}`();
     return 0;
+}
+\end{lstlisting}
+
+\begin{lstlisting}
+`\initcode{Process command-line arguments}{=}`
+for (int i = 1; i < argc; ++i) {
+    if (!strcmp(argv[i], "--ncores") || !strcmp(argv[i], "--nthreads"))
+        options.nThreads = atoi(argv[++i]);
+    else if (!strcmp(argv[i], "--outfile")) options.imageFile = argv[++i];
+    else if (!strcmp(argv[i], "--quick")) options.quickRender = true;
+    else if (!strcmp(argv[i], "--quiet")) options.quiet = true;
+    else if (!strcmp(argv[i], "--verbose")) options.verbose = true;
+    else if (!strcmp(argv[i], "--help") || !strcmp(argv[i], "-h")) {
+        printf("usage: pbrt [--nthreads n] [--outfile filename] [--quick] [--quiet] "
+               "[--verbose] [--help] <filename.pbrt> ...\n");
+        return 0;
+    }
+    else filenames.push_back(argv[i]);
 }
 \end{lstlisting}
 
@@ -216,5 +250,3 @@ private:
 
 
 \subsection{主渲染循环}\label{sub:主渲染循环}
-pbrt的函数\refvar{main}{()}可在
-文件\href{https://github.com/mmp/pbrt-v3/tree/master/src/main/pbrt.cpp}{\ttfamily main/pbrt.cpp}内找到。

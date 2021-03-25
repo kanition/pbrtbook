@@ -178,7 +178,14 @@ pbrt的函数\refvar{main}{()}可在
 创建\refvar{Scene}{}和\refvar{Integrator}{}。
 \refvar{pbrtCleanup}{()}在系统完成所有渲染后退出前做最后的清理工作。
 
-函数\refvar{pbrtInit}{()}和\refvar{pbrtCleanup}{()}位于
+函数\refvar{pbrtInit}{()}和\refvar{pbrtCleanup}{()}出现在
+页边空白处的迷你索引内，还注明了真正定义它们的页数。
+每页的迷你索引都指向了所用的几乎所有函数、类、方法和成员变量的定义
+\sidenote{译者注：我不太理解所谓的迷你索引是什么，
+    不过翻译时竭力还原了在线版的跳转功能。
+    例如这里的\refvar{main}{()}的函数体内
+    有不少地方是可以单击跳转的。
+    此外正文部分也有这种功能。试试看吧！}。
 \begin{lstlisting}
 `\initcode{Main program}{=}`
 int `\initvar{main}{}`(int argc, char *argv[]) {
@@ -210,6 +217,45 @@ for (int i = 1; i < argc; ++i) {
 }
 \end{lstlisting}
 
+如果运行pbrt时没有提供输入文件名，
+则它会从标准输入读取场景描述。
+否则它就遍历提供的文件名，依次处理每个文件。
+\begin{lstlisting}
+`\initcode{Process scene description}{=}`
+if (filenames.size() == 0) {
+    `\refcode{Parse scene from standard input}{}`
+} else {
+    `\refcode{Parse scene from input files}{}`
+}
+\end{lstlisting}
+函数{\initvar{ParseFile}{()}}或从标准输入或磁盘文件读入并解析场景描述文件；
+如果无法打开文件则返回{\ttfamily false}。
+本书不介绍解析场景描述文件的机制；
+解析器的实现可在文件\href{https://github.com/mmp/pbrt-v3/blob/master/src/core/parser.h}{\ttfamily core/parser.h}和
+\href{https://github.com/mmp/pbrt-v3/blob/master/src/core/parser.cpp}{\ttfamily core/parser.cpp}中找到
+\sidenote{译者注：此处已更正文件名，因为原书给出的文件名已经失效了。}。
+想要了解解析子系统但不熟悉这些工具的读者可以参阅Levine、Mason和Brown的著作\citep{10.5555/136311}。
+
+我们遵循的UNIX习惯用法，以名为“{\ttfamily -}”的文件表示标准输入：
+\begin{lstlisting}
+`\initcode{Parse scene from standard input}{=}`
+`\refvar{ParseFile}{}`("-");
+\end{lstlisting}
+
+如果无法打开特定的输入文件，则\refvar{Error}{()}例程会将此信息报告给用户。
+\refvar{Error}{()}使用和{\ttfamily printf()}相同的格式化字符串语义。
+\begin{lstlisting}
+`\initcode{Parse scene from input files}{=}`
+for (const std::string &f : filenames)
+    if (!`\refvar{ParseFile}{}`(f))
+        `\refvar{Error}{}`("Couldn't open scene file \"%s\"", f.c_str());
+\end{lstlisting}
+
+解析完场景文件后就创建表示场景中光源和几何图元的对象。
+它们都存与\refvar{Scene}{}对象中，
+由附录\refsub{世界端和渲染}的方法\refvar{RenderOptions::MakeScene}{()}创建。
+类\refvar{Scene}{}在\href{https://github.com/mmp/pbrt-v3/tree/master/src/core/scene.h}{\ttfamily core/scene.h}中
+声明并在\href{https://github.com/mmp/pbrt-v3/tree/master/src/core/scene.cpp}{\ttfamily core/scene.cpp}中定义。
 \begin{lstlisting}
 `\initcode{Scene Declarations}{=}`
 class `\initvar{Scene}{}` {
@@ -219,6 +265,15 @@ public:
 private:
     `\refcode{Scene Private Data}{}`
 };
+\end{lstlisting}
+
+\begin{lstlisting}
+`\initcode{Scene Public Methods}{=}\initnext{ScenePublicMethods}`
+`\refvar{Scene}{}`(std::shared_ptr<`\refvar{Primitive}{}`> `\refvar{aggregate}{}`,
+      const std::vector<std::shared_ptr<`\refvar{Light}{}`>> &`\refvar{lights}{}`)
+    : `\refvar{lights}{}`(`\refvar{lights}{}`), `\refvar{aggregate}{}`(`\refvar{aggregate}{}`) {
+    `\refcode{Scene Constructor Implementation}{}`
+}
 \end{lstlisting}
 
 \subsection{积分器接口与采样积分器}\label{sub:积分器接口与采样积分器}

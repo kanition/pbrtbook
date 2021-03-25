@@ -1,0 +1,25 @@
+\section{场景定义}\label{sec:场景定义}
+
+\subsection{世界端和渲染}\label{sub:世界端和渲染}
+\begin{lstlisting}
+`\refcode{API Function Definitions}{+=}\lastnext{APIFunctionDefinitions}`
+void pbrtWorldEnd() {
+    VERIFY_WORLD("WorldEnd");
+    `\refcode{Ensure there are no pushed graphics states}{}`
+    `\refcode{Create scene and render}{}`
+    `\refcode{Clean up after rendering}{}`
+}
+\end{lstlisting}
+
+\begin{lstlisting}
+`\refcode{API Function Definitions}{+=}\lastcode{APIFunctionDefinitions}`
+`\refvar{Scene}{}` *`\initvar{RenderOptions::MakeScene}{()}` {
+    std::shared_ptr<`\refvar{Primitive}{}`> accelerator =
+        MakeAccelerator(AcceleratorName, primitives, AcceleratorParams);
+    if (!accelerator)
+        accelerator = std::make_shared<`\refvar{BVHAccel}{}`>(primitives);
+    `\refvar{Scene}{}` *scene = new `\refvar{Scene}{}`(accelerator, lights);
+    `\refcode{Erase primitives and lights from RenderOptions}{}`
+    return scene;
+}
+\end{lstlisting}

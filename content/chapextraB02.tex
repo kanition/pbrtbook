@@ -1,0 +1,17 @@
+\section{初始化和渲染选项}\label{sec:初始化和渲染选项}
+
+\begin{lstlisting}
+`\initcode{API Function Definitions}{=}\initnext{APIFunctionDefinitions}`
+void `\initvar{pbrtInit}{(const Options \&opt)}` {
+    PbrtOptions = opt;
+    `\refcode{API Initialization}{}`
+    `\refcode{General pbrt Initialization}{}`
+}
+\end{lstlisting}
+
+\begin{lstlisting}
+`\refcode{API Function Definitions}{+=}\lastnext{APIFunctionDefinitions}` 
+void `\initvar{pbrtCleanup}{()}` {
+    `\refcode{API Cleanup}{}`
+}
+\end{lstlisting}

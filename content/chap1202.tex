@@ -1,13 +1,40 @@
 \section{光源接口}\label{sec:光源接口}
 
-\label{code:overview_Light}
 \begin{lstlisting}
-`\refcode{Light Declarations}{=}\initnext{LightDeclarations}`
-class Light {
+`\initcode{Light Declarations}{=}\initnext{LightDeclarations}`
+class `\initvar{Light}{}` {
 public:
     `\refcode{Light Interface}{}`
     `\refcode{Light Public Data}{}`
 protected:
     `\refcode{Light Protected Data}{}`
 };
+\end{lstlisting}
+
+\begin{lstlisting}
+`\initcode{Light Interface}{=}\initnext{LightInterface}`
+`\refvar{Light}{}`(int `\refvar{flags}{}`, const `\refvar{Transform}{}` &`\refvar{LightToWorld}{}`,
+      const MediumInterface &`\refvar{mediumInterface}{}`, int `\refvar{nSamples}{}` = 1)
+    : `\refvar{flags}{}`(`\refvar{flags}{}`), `\refvar{nSamples}{}`(std::max(1, `\refvar{nSamples}{}`)),
+    `\refvar{mediumInterface}{}`(`\refvar{mediumInterface}{}`), `\refvar{LightToWorld}{}`(`\refvar{LightToWorld}{}`),
+    `\refvar{WorldToLight}{}`(`\refvar{Inverse}{}`(`\refvar{LightToWorld}{}`))  { 
+        `\refcode{Warn if light has transformation with non-uniform scale}{}`
+}
+\end{lstlisting}
+
+\begin{lstlisting}
+`\initcode{Light Public Data}{=}`
+const int `\initvar{flags}{}`;
+const int `\initvar{nSamples}{}`;
+const MediumInterface `\initvar{mediumInterface}{}`;
+\end{lstlisting}
+
+\begin{lstlisting}
+`\initcode{Light Protected Data}{=}`
+const `\refvar{Transform}{}` `\initvar{LightToWorld}{}`, `\initvar{WorldToLight}{}`;
+\end{lstlisting}
+
+\begin{lstlisting}
+`\refcode{Light Interface}{+=}\lastnext{LightInterface}`
+virtual void `\initvar{Preprocess}{}`(const `\refvar{Scene}{}` &scene) { }
 \end{lstlisting}

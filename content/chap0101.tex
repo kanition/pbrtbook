@@ -47,17 +47,17 @@ void InitGlobals() {
 每个变量的初始化代码是分开呈现的，
 而且最好紧挨着实际声明和使用这些变量的代码。
 
-在文学程序中，可以把{\ttfamily InitGlobals()}写成这样：
+在文学程序中，可以把\refvar{InitGlobals}{()}写成这样：
 \begin{lstlisting}
 `\codecolor\itshape{<<Function Definitions>>=}`
-void InitGlobals() {
+void `\initvar{InitGlobals}{()}` {
     `\refcode{Initialize Global Variables}{\dag}`
 }
 \end{lstlisting}
 
 这就定义了称作\refcode{Function Definitions}{}的代码片，
-包含了函数{\ttfamily InitGlobals()}的定义。
-函数{\ttfamily InitGlobals()}自己又引用了另一
+包含了函数\refvar{InitGlobals}{()}的定义。
+函数\refvar{InitGlobals}{()}自己又引用了另一
 代码片\refcode{Initialize Global Variables}{}。
 因为初始化的代码片还没有定义，
 所以我们只知道这个函数可能会对全局变量赋值
@@ -69,14 +69,14 @@ void InitGlobals() {
 之后在程序某处引入全局变量{\ttfamily shoeSize}时，
 我们可以这样写：
 \begin{lstlisting}
-    `\refcode{Initialize Global Variables}{=}\initnext{InitializeGlobalVariables}`
+    `\initcode{Initialize Global Variables}{=}\initnext{InitializeGlobalVariables}`
     shoeSize = 13;
 \end{lstlisting}
 
 这里我们开始定义\refcode{Initialize Global Variables}{}的内容了。
 当文学程序整合成待编译的源码时，
 文学编程系统会把代码{\ttfamily shoeSize = 13;}
-替换到函数{\ttfamily InitGlobals()}的定义内。
+替换到函数\refvar{InitGlobals}{()}的定义内。
 等号后的符号{\codecolor $\downarrow$}表示后续还有代码添加到该代码片。
 点击它即可跳转到下一处。
 
@@ -104,7 +104,7 @@ void InitGlobals() {
 例如我们可以这样把一个复杂函数写作一系列代码片：
 \begin{lstlisting}
 `\codecolor\itshape{<<Function Definitions>>+=}`
-void complexFunc(int x, int y, double *values) {
+void `\initvar{complexFunc}{(int x, int y, double *values)}` {
     `\refcode{Check validity of arguments}{}`
     if (x < y) {
         `\refcode{Swap parameter values}{}`
@@ -113,7 +113,7 @@ void complexFunc(int x, int y, double *values) {
     `\refcode{Loop through and update \textbackslash mono\{values\} array}{}`
 \end{lstlisting}
 
-同样，编译时{\ttfamily complexFunc()}内每段代码片的内容都内联展开。
+同样，编译时\refvar{complexFunc}{()}内每段代码片的内容都内联展开。
 在文档中，我们可以依次介绍每个代码片的实现。
 这种分解让我们每次只展示一小段代码，使之更易于理解。
 这种编程风格的另一优点是，通过把函数分解为逻辑片，

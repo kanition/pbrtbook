@@ -351,6 +351,7 @@ Turner Whitted在关于光线追踪
 余弦项调制的入射亮度：
 \begin{align}
       L_{\mathrm{o}}(\mathrm{p},\omega_\mathrm{o})=L_{\mathrm{e}}(\mathrm{p},\omega_\mathrm{o})+\int_{\mathrm{S}^2}f(\mathrm{p},\omega_\mathrm{o},\omega_\mathrm{i})L_{\mathrm{i}}(\mathrm{p},\omega_\mathrm{i})|\cos{\theta_{\mathrm{i}}}| \,\mathrm{d}\omega_\mathrm{i}\, .
+      \label{eq:1.1}
 \end{align}
 \refsub{BRDF}和\refsec{光传输方程}将展示其更完整的推导。
 除了最简单的场景，
@@ -430,6 +431,6 @@ Whitted的方法可以扩展到实现镜面和玻璃外的更多效果。
       \centering
       \includegraphics[width=\linewidth]{chap01/spotfog.png}
       \caption{聚光灯通过雾气照在球上。
-      注意因为介质增加了散射，聚光灯的光分布形状和球的阴影清晰可见。}
+            注意因为介质增加了散射，聚光灯的光分布形状和球的阴影清晰可见。}
       \label{fig:1.10}
 \end{figure}

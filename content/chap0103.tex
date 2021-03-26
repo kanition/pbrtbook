@@ -114,7 +114,7 @@ pbrt在概念上可分为两个执行阶段。
 一旦指定好场景，第二执行阶段就开始了，执行主渲染循环。
 pbrt通常把绝大部分运行时间都花在这个阶段，
 本书大部分都在讲解执行这一阶段的代码。
-渲染循环由\refvar{Integrator}{::}\refvar{Render}{()}的
+渲染循环由{\ttfamily Integrator::}\refvar{Render}{()}的
 实现来执行，它是\refsub{主渲染循环}的重点。
 
 本章将介绍\refvar{Integrator}{}的一个特定子类，
@@ -311,7 +311,7 @@ std::vector<std::shared_ptr<`\refvar{Light}{}`>> `\initvar{lights}{}`;
 `\initcode{Scene Private Data}{=}\initnext{ScenePrivateData}`
 std::shared_ptr<`\refvar{Primitive}{}`> `\initvar{aggregate}{}`;
 \end{lstlisting}
-构造函数把场景几何的边框缓存到成员变量\refvar{worldBound}{}中。
+构造函数把场景几何的边框缓存到成员变量{\ttfamily worldBound}中。
 \begin{lstlisting}
 `\initcode{Scene Constructor Implementation}{=}\initnext{SceneConstructorImplementation}`
 `\refvar{worldBound}{}` = aggregate->`\refvar{WorldBound}{}`();
@@ -327,11 +327,34 @@ const `\refvar{Bounds3f}{}` &WorldBound() const { return `\refvar{worldBound}{}`
 \end{lstlisting}
 
 一些光源实现发现在定义场景后开始渲染前做一些额外的初始化很有用。
-\refvar{Scene}{}的构造函数调用其方法\refvar{Preprocess}{()}来允许它们这么做。
+{\ttfamily Scene}的构造函数调用其方法{\ttfamily Preprocess()}来允许它们这么做。
 \begin{lstlisting}
 `\refcode{Scene Constructor Implementation}{+=}\lastcode{SceneConstructorImplementation}`
 for (const auto &light : `\refvar{lights}{}`)
     light->`\refvar{Preprocess}{}`(*this);
+\end{lstlisting}
+
+\refvar{Scene}{}类提供两个与光线-图元交点相关的方法。
+它的{\ttfamily Intersect()}方法跟随给定光线到场景中并
+返回表示光线是否与某一图元相交的布尔值。
+如果是，它便把沿光线最近交点的信息填入提供的结构体\refvar{SurfaceInteraction}{}。
+结构体\refvar{SurfaceInteraction}{}将在\refsec{图元接口与几何图元}定义。
+\begin{lstlisting}
+`\initcode{Scene Method Definitions}{=}\initnext{SceneMethodDefinitions}\htarget{codevar:Scene::Intersect}{}`
+bool `\refvar{Scene}{}`::`\refvar{Intersect}{}`(const `\refvar{Ray}{}` &ray, `\refvar{SurfaceInteraction}{}` *isect) const {
+    return `\refvar{aggregate}{}`->`\refvar{Intersect}{}`(ray, isect);
+}
+\end{lstlisting}
+一个紧密相关的方法是\refvar{Scene::IntersectP}{()}，
+它沿光线检查交点的存在性但不返回任何关于这些交点的信息。
+因为这个例程不需要搜索最近的交点或计算任何关于交点的额外信息，
+所以它一般比\refvar{Scene::Intersect}{()}更高效。
+这个例程用于阴影射线。
+\begin{lstlisting}
+`\refcode{Scene Method Definitions}{+=}\lastnext{SceneMethodDefinitions}\htarget{codevar:Scene::IntersectP}{}`
+bool `\refvar{Scene}{}`::`\refvar{IntersectP}{}`(const `\refvar{Ray}{}` &ray) const {
+    return `\refvar{aggregate}{}`->`\refvar{IntersectP}{}`(ray);
+}
 \end{lstlisting}
 
 \subsection{积分器接口与采样积分器}\label{sub:积分器接口与采样积分器}

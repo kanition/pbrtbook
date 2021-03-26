@@ -11,3 +11,9 @@ public:
 `\initcode{Primitive Interface}{=}\initnext{PrimitiveInterface}`
 virtual `\refvar{Bounds3f}{}` `\initvar{WorldBound}{()}` const = 0;
 \end{lstlisting}
+
+\begin{lstlisting}
+`\refcode{Primitive Interface}{+=}\lastnext{PrimitiveInterface}`
+virtual bool `\initvar{Intersect}{}`(const `\refvar{Ray}{}` &r, `\refvar{SurfaceInteraction}{}` *) const = 0;
+virtual bool `\initvar{IntersectP}{}`(const `\refvar{Ray}{}` &r) const = 0;
+\end{lstlisting}

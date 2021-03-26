@@ -1,0 +1,13 @@
+\section{图元接口与几何图元}\label{sec:图元接口与几何图元}
+
+\begin{lstlisting}
+`\initcode{Primitive Declarations}{=}`
+class `\initvar{Primitive}{}` {
+public:
+    `\refcode{Primitive Interface}{}`};
+\end{lstlisting}
+
+\begin{lstlisting}
+`\initcode{Primitive Interface}{=}\initnext{PrimitiveInterface}`
+virtual `\refvar{Bounds3f}{}` `\initvar{WorldBound}{()}` const = 0;
+\end{lstlisting}

@@ -276,6 +276,64 @@ private:
 }
 \end{lstlisting}
 
+场景中每个光源都由\refvar{Light}{}对象表示，
+指定灯光的形状和发射能量的分布。
+\refvar{Scene}{}用C++标准库中{\ttfamily shared\_ptr}实例
+的一个{\ttfamily vector}来存储所有光源。
+pbrt用共享指针\sidenote{译者注：原文shared pointers，是一种智能指针。}跟踪
+其他实例对对象的引用计数。
+当最后一个持有引用的实例（例如这里的\refvar{Scene}{}）被销毁时，
+引用计数减到零，\refvar{Light}{}就可以安全释放了，而且是自动的。
+
+尽管一些渲染器支持每个几何对象有单独的光源列表，
+允许一个光源只照明场景中一部分物体，
+但这种做法不符合pbrt采用的基于物理的渲染方法，
+所以对于每个场景pbrt只支持单个全局列表。
+系统的许多部分都需要获取光源，
+所以\refvar{Scene}{}把它们置为公有成员变量。
+\begin{lstlisting}
+`\initcode{Scene Public Data}{=}`
+std::vector<std::shared_ptr<`\refvar{Light}{}`>> `\initvar{lights}{}`;
+\end{lstlisting}
+
+场景中每个几何对象都由\refvar{Primitive}{}表示，结合了两个对象：
+指定其几何结构的\refvar{Shape}{}和描述其外观
+例如物体的颜色、是否具有暗淡或光泽饰面）的\refvar{Material}{}。
+所有几何图元都集中到\refvar{Scene}{}的
+成员变量\refvar{Scene}{::}\refvar{aggregate}{}这一
+单个\refvar{Primitive}{}聚合体中。
+这个聚合体是一种特殊的图元，它自己持有许多对其他图元的引用。
+因为它实现了\refvar{Primitive}{}接口，
+所以从单个图元到系统其余部分似乎没什么区别。
+聚合体的实现以加速的数据结构存储了所有场景图元，
+减少对远离给定光线的图元做不必要的光线交点测试的数量。
+\begin{lstlisting}
+`\initcode{Scene Private Data}{=}\initnext{ScenePrivateData}`
+std::shared_ptr<`\refvar{Primitive}{}`> `\initvar{aggregate}{}`;
+\end{lstlisting}
+构造函数把场景几何的边框缓存到成员变量\refvar{worldBound}{}中。
+\begin{lstlisting}
+`\initcode{Scene Constructor Implementation}{=}\initnext{SceneConstructorImplementation}`
+`\refvar{worldBound}{}` = aggregate->`\refvar{WorldBound}{}`();
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{Scene Private Data}{+=}\lastcode{ScenePrivateData}`
+`\refvar{Bounds3f}{}` `\initvar{worldBound}{}`;
+\end{lstlisting}
+可通过方法{\ttfamily WorldBound()}获取该边界。
+\begin{lstlisting}
+`\refcode{Scene Public Methods}{+=}\lastcode{ScenePublicMethods}`
+const `\refvar{Bounds3f}{}` &WorldBound() const { return `\refvar{worldBound}{}`; }
+\end{lstlisting}
+
+一些光源实现发现在定义场景后开始渲染前做一些额外的初始化很有用。
+\refvar{Scene}{}的构造函数调用其方法\refvar{Preprocess}{()}来允许它们这么做。
+\begin{lstlisting}
+`\refcode{Scene Constructor Implementation}{+=}\lastcode{SceneConstructorImplementation}`
+for (const auto &light : `\refvar{lights}{}`)
+    light->`\refvar{Preprocess}{}`(*this);
+\end{lstlisting}
+
 \subsection{积分器接口与采样积分器}\label{sub:积分器接口与采样积分器}
 
 \begin{lstlisting}

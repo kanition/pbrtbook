@@ -325,7 +325,7 @@ Turner Whitted在关于光线追踪
 很长一段时间大多数早期光线追踪示例都拿
 镜子和玻璃球举例（\reffig{1.7}），
 因为这种效果很难用其他渲染技术实现。
-\begin{figure}
+\begin{figure}[htbp]
       \centering
       \subfloat[Whitted光线追踪]{\includegraphics[width=\linewidth]{chap01/spheres-whitted.png}\label{fig:1.7.1}}\\
       \subfloat[随机渐进光子映射。]{\includegraphics[width=\linewidth]{chap01/spheres-sppm.png}\label{fig:1.7.2}}
@@ -403,7 +403,7 @@ Whitted的方法可以扩展到实现镜面和玻璃外的更多效果。
 即使我们不渲染充满烟气的房间，
 几乎所有室外场景也都会受到介质的实质影响。
 例如，地球大气使得远处物体显得不够饱和（\reffig{1.9}）。
-\begin{figure}
+\begin{figure}[htbp]
       \centering
       \subfloat[无大气散射]{\includegraphics[width=\linewidth]{chap01/ecosys-nofog.png}\label{fig:1.9.1}}\\
       \subfloat[有大气散射]{\includegraphics[width=\linewidth]{chap01/ecosys-fog.png}\label{fig:1.9.2}}
@@ -427,7 +427,7 @@ Whitted的方法可以扩展到实现镜面和玻璃外的更多效果。
 该方法还能计算光传输方程求得从表面反射回的光量。
 介质的描述和体积渲染会留到第\refchap{体积散射}和\refchap{光传输II：体积渲染}。
 现在我们就能计算介质效应并将其合并到光线所含的光量中了。
-\begin{figure}
+\begin{figure}[htbp]
       \centering
       \includegraphics[width=\linewidth]{chap01/spotfog.png}
       \caption{聚光灯通过雾气照在球上。

@@ -61,7 +61,7 @@ pbrt源码发布于\href{https://pbrt.org/}{\ttfamily pbrt.org}。
 它们不仅令人过目不忘，而且每张都是渲染课程的学生在
 最后的课程作业中对pbrt扩展新功能渲染得到的有趣图像。
 这些是课程中最佳图像的一部分。
-\begin{figure}[ht]
+\begin{figure}[htbp]
     \centering\includegraphics[width=\linewidth]{chap01/nightsnow.jpg}
     \caption{Guillaume Poncin和Pramod Sharma用许多方法扩展了pbrt，
         实现了一系列复杂渲染算法，
@@ -73,7 +73,7 @@ pbrt源码发布于\href{https://pbrt.org/}{\ttfamily pbrt.org}。
         赋予了雪逼真的外观。}
     \label{fig:1.11}
 \end{figure}
-\begin{figure}[ht]
+\begin{figure}[htbp]
     \centering\includegraphics[width=\linewidth]{chap01/icecave.png}
     \caption{Abe Davis、David Jacobs和Jongmin Baek渲染了这张惊艳的冰窟图像，
         夺得2009斯坦福大学CS348b渲染竞赛大奖。
@@ -83,7 +83,7 @@ pbrt源码发布于\href{https://pbrt.org/}{\ttfamily pbrt.org}。
         冰的蓝色完全取决于在冰体中对依赖于波长的光吸收的建模。}
     \label{fig:1.12}
 \end{figure}
-\begin{figure}[ht]
+\begin{figure}[htbp]
     \centering\includegraphics[width=\linewidth]{chap01/cloth.png}
     \caption{Lingfeng Yang实现了双向纹理函数来模拟布料的外观，
         添加了解析的自阴影模型，
@@ -126,7 +126,7 @@ pbrt通常把绝大部分运行时间都花在这个阶段，
 系统从场景描述文件恢复处理语句直达没有剩余，
 如果需要，用户可以指定下一个要渲染的场景。
 
-\begin{figure}[ht]
+\begin{figure}[htbp]
     \centering\includegraphics[width=\linewidth]{chap01/furrydog.png}
     \caption{Jared Jacobs和Michael Turitzin为pbrt增加了
         Kajiya和Kay基于纹素的毛发渲染算法\citep{10.1145/74334.74361}并渲染了该图像，
@@ -138,9 +138,9 @@ pbrt通常把绝大部分运行时间都花在这个阶段，
 它是最初基于本书第一版pbrt源码的GPL许可的基于物理的渲染系统
 （关于\emph{LuxRender}的更多信息详见\url{https://luxcorerender.org}
 \sidenote{译者注：\emph{LuxRender}已更名为\emph{LuxCoreRender}且
-    迁移到了新网址。此处已更正了网址，原书所给网址已经与\emph{LuxRender}无关了。}）。
+    迁移到了新网址。此处已更正了网址。}）。
 
-\begin{figure}[ht]
+\begin{figure}[htbp]
     \centering\includegraphics[width=\linewidth]{chap01/measure-one180-cut1260.png}
     \caption{Florent Boyer渲染了这个当代室内场景。
         该图像由\emph{LuxRender}渲染，它是最初
@@ -149,7 +149,7 @@ pbrt通常把绝大部分运行时间都花在这个阶段，
     \label{fig:1.15}
 \end{figure}
 
-\begin{figure}[ht]
+\begin{figure}[htbp]
     \centering\includegraphics[width=\linewidth]{chap01/crown.png}
     \caption{Martin Lubich构建了这个奥地利皇冠的场景
         并用pbrt代码库的开源分支\emph{LuxRender}渲染了它。
@@ -181,11 +181,7 @@ pbrt的函数\refvar{main}{()}可在
 函数\refvar{pbrtInit}{()}和\refvar{pbrtCleanup}{()}出现在
 页边空白处的迷你索引内，还注明了真正定义它们的页数。
 每页的迷你索引都指向了所用的几乎所有函数、类、方法和成员变量的定义
-\sidenote{译者注：我不太理解所谓的迷你索引是什么，
-    不过翻译时竭力还原了在线版的跳转功能。
-    例如这里的\refvar{main}{()}的函数体内
-    有不少地方是可以单击跳转的。
-    此外正文部分也有这种功能。试试看吧！}。
+\sidenote{译者注：翻译时尽力还原了在线版的跳转功能。试试看吧！}。
 \begin{lstlisting}
 `\initcode{Main program}{=}`
 int `\initvar{main}{}`(int argc, char *argv[]) {
@@ -198,7 +194,7 @@ int `\initvar{main}{}`(int argc, char *argv[]) {
     return 0;
 }
 \end{lstlisting}
-
+其中
 \begin{lstlisting}
 `\initcode{Process command-line arguments}{=}`
 for (int i = 1; i < argc; ++i) {
@@ -460,7 +456,7 @@ virtual void Preprocess`\htarget{codevar:SamplerIntegrator::Preprocess}{}`(const
 再用方法{\ttfamily Li()}决定沿该光线到达图像平面的光量。
 这个值传入\refvar{Film}{}，记录下光的贡献度。
 \reffig{1.17}总结了该方法用到的主要类和它们之间的数据流。
-\begin{figure}[h]
+\begin{figure}[htbp]
     \centering\input{Pictures/chap01/ClassRelationships.tex}
     \caption{\protect\href{https://github.com/mmp/pbrt-v3/tree/master/src/core/integrator.cpp}{\ttfamily core/integrator.cpp}里
         方法\protect\refvar{SamplerIntegrator::Render}{()}中主渲染循环的类关系。

@@ -3,7 +3,7 @@
 \subsection{世界端和渲染}\label{sub:世界端和渲染}
 \begin{lstlisting}
 `\refcode{API Function Definitions}{+=}\lastnext{APIFunctionDefinitions}`
-void pbrtWorldEnd() {
+void `\initvar{pbrtWorldEnd}{()}` {
     VERIFY_WORLD("WorldEnd");
     `\refcode{Ensure there are no pushed graphics states}{}`
     `\refcode{Create scene and render}{}`
@@ -22,4 +22,9 @@ void pbrtWorldEnd() {
     `\refcode{Erase primitives and lights from RenderOptions}{}`
     return scene;
 }
+\end{lstlisting}
+
+\begin{lstlisting}
+`\initcode{RenderOptions Public Methods}{=}` 
+`\refvar{Integrator}{}` *`\initvar{MakeIntegrator}{()}\htarget{codevar:RenderOptions::MakeIntegrator}{}` const;
 \end{lstlisting}

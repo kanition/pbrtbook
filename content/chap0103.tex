@@ -358,7 +358,13 @@ bool `\refvar{Scene}{}`::`\refvar{IntersectP}{}`(const `\refvar{Ray}{}` &ray) co
 \end{lstlisting}
 
 \subsection{积分器接口与采样积分器}\label{sub:积分器接口与采样积分器}
-
+渲染一幅场景图像由实现了{\ttfamily Integrator}接口的类的实例负责。
+抽象基类\refvar{Integrator}{}定义了任何积分器必须提供的方法{\ttfamily Render()}。
+本节我们将定义一个\refvar{Integrator}{}的实现，即\refvar{SamplerIntegrator}{}。
+在\href{https://github.com/mmp/pbrt-v3/tree/master/src/core/integrator.h}{core/integrator.h}中
+定义了基本积分器接口，
+积分器使用的一些实用函数在\href{https://github.com/mmp/pbrt-v3/blob/master/src/core/integrator.cpp}{core/integrator.cpp}中。
+不同积分器的实现在目录\href{https://github.com/mmp/pbrt-v3/tree/master/src/integrators}{integrators}中。
 \begin{lstlisting}
 `\initcode{Integrator Declarations}{=}`
 class `\initvar{Integrator}{}` {
@@ -367,11 +373,26 @@ public:
 };
 \end{lstlisting}
 
+\refvar{Integrator}{}必须提供方法{\ttfamily Render()}；
+它利用传入的\refvar{Scene}{}引用计算一幅场景图像，
+或者更一般地说，一组场景光照的度量。
+其接口有意保持高度一般性以便允许各种实现——
+例如可以把\refvar{Integrator}{}实现成只度量
+分布于场景中的一组稀疏位置，而不是生成常规的2D图像。
 \begin{lstlisting}
     `\initcode{Integrator Interface}{=}`
     virtual void `\initvar{Render}{(const \refvar{Scene}{} \&scene)}` = 0;
 \end{lstlisting}
 
+本章中，我们的重点是\refvar{Integrator}{}的一个子类\refvar{SamplerIntegrator}{}，
+以及实现了\refvar{SamplerIntegrator}{}接口的\refvar{WhittedIntegrator}{}。
+（\refvar{SamplerIntegrator}{}的其他实现
+会在第\refchap{光传输I：表面反射}和\refchap{光传输II：体积渲染}介绍；
+第\refchap{光传输III：双向方法}的积分器直接从\refvar{Integrator}{}继承。）
+{\ttfamily SamplerIntegrator}的名字源自其渲染过程
+由来自\refvar{Sampler}{}的\keyindex{样本}{sample}{}流驱动的；
+每个这样的样本都标识了图像上的一点，
+让积分器计算到达该点以构成图像的光量。
 \begin{lstlisting}
 `\initcode{SamplerIntegrator Declarations}{=}`
 class `\initvar{SamplerIntegrator}{}` : public `\refvar{Integrator}{}` {
@@ -384,5 +405,49 @@ private:
 };
 \end{lstlisting}
 
+\refvar{SamplerIntegrator}{}保存了指向\refvar{Sampler}{}的指针。
+采样器看似存在感低，但其实现会极大影响系统生成图像的质量。
+首先，采样器负责选取光线要追踪的图像平面上的点。
+其次，它负责为积分器提供用于计算光传输积分的值即\refeq{1.1}所需的采样位置。
+例如，一些积分器需要对光源选取随机位置来计算来自面光源的照明。
+生成分布良好的样本在渲染过程中很重要，会极大影响整体效率；
+这是第\refchap{采样与重构}的主要内容。
+\begin{lstlisting}
+`\initcode{SamplerIntegrator Private Data}{=}`
+std::shared_ptr<`\refvar{Sampler}{}`> `\initvar{sampler}{}`;
+\end{lstlisting}
+
+\refvar{Camera}{}对象控制视角和透镜参数，例如位置、朝向、焦点和视野。
+\refvar{Camera}{}内的成员变量\refvar{Film}{}执行图像存储。
+\refvar{Camera}{}类将在第\refchap{相机模型}介绍，
+\refvar{Film}{}将在\refsec{胶片与成像管道}介绍。
+\refvar{Film}{}负责把最终图像写入文件并可能在完成计算后在屏幕上将其显示出来。
+\begin{lstlisting}
+`\initcode{SamplerIntegrator Protected Data}{=}`
+std::shared_ptr<const `\refvar{Camera}{}`> `\initvar{camera}{}`;
+\end{lstlisting}
+
+\refvar{SamplerIntegrator}{}构造函数在成员变量中保存了指向这些对象的指针。
+它在被\refvar{pbrtWorldEnd}{()}调用的
+方法\refvar{RenderOptions::MakeIntegrator}{()}里创建，
+而\refvar{pbrtWorldEnd}{()}在输入文件解析器
+完成对输入文件的场景描述解析并准备渲染场景时被调用。
+\begin{lstlisting}
+`\initcode{SamplerIntegrator Public Methods}{=}\initnext{SamplerIntegratorPublicMethods}`
+`\refvar{SamplerIntegrator}{}`(std::shared_ptr<const `\refvar{Camera}{}`> `\refvar{camera}{}`,
+        std::shared_ptr<`\refvar{Sampler}{}`> `\refvar{sampler}{}`)
+    : `\refvar{camera}{}`(`\refvar{camera}{}`), `\refvar{sampler}{}`(`\refvar{sampler}{}`) { }
+\end{lstlisting}
+
+\refvar{SamplerIntegrator}{}可选实现方法{\ttfamily Preprocess()}。
+它在\refvar{Scene}{}完全初始化后被调用，
+并给积分器机会完成依赖于场景的计算，
+例如分配依赖于场景光源数目的额外数据结构，
+或者预计算场景中辐射分布的大致表示。
+在这里不需要做任何事的实现可以将这个方法留为未实现状态。
+\begin{lstlisting}
+`\refcode{SamplerIntegrator Public Methods}{=}\lastnext{SamplerIntegratorPublicMethods}`
+virtual void Preprocess(const `\refvar{Scene}{}` &scene, `\refvar{Sampler}{}` &sampler) { }
+\end{lstlisting}
 
 \subsection{主渲染循环}\label{sub:主渲染循环}

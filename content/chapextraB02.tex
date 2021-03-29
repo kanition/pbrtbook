@@ -15,3 +15,21 @@ void `\initvar{pbrtCleanup}{()}` {
     `\refcode{API Cleanup}{}`
 }
 \end{lstlisting}
+
+\subsection{变换}\label{sub:变换}
+\begin{lstlisting}
+`\initcode{API Local Classes}{=}\initnext{APILocalClasses}` 
+constexpr int `\initvar{MaxTransforms}{}` = 2;
+constexpr int `\initvar{StartTransformBits}{}` = 1 << 0;
+constexpr int `\initvar{EndTransformBits}{}` =   1 << 1;
+constexpr int `\initvar{AllTransformsBits}{}` = (1 << MaxTransforms) - 1;
+\end{lstlisting}
+
+\subsection{选项}\label{sub:选项}
+\begin{lstlisting}
+`\refcode{API Local Classes}{+=}\lastnext{APILocalClasses}` 
+struct `\initvar{RenderOptions}{}` {
+    `\refcode{RenderOptions Public Methods}{}`
+    `\refcode{RenderOptions Public Data}{}`
+};
+\end{lstlisting}

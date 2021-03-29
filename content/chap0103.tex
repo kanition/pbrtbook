@@ -381,7 +381,7 @@ public:
 分布于场景中的一组稀疏位置，而不是生成常规的2D图像。
 \begin{lstlisting}
     `\initcode{Integrator Interface}{=}`
-    virtual void `\initvar{Render}{(const \refvar{Scene}{} \&scene)}` = 0;
+    virtual void `\initvar{Render}{(const \refvar{Scene}{} \&scene)}\htarget{codevar:Integrator::Render}{}` = 0;
 \end{lstlisting}
 
 本章中，我们的重点是\refvar{Integrator}{}的一个子类\refvar{SamplerIntegrator}{}，
@@ -447,7 +447,36 @@ std::shared_ptr<const `\refvar{Camera}{}`> `\initvar{camera}{}`;
 在这里不需要做任何事的实现可以将这个方法留为未实现状态。
 \begin{lstlisting}
 `\refcode{SamplerIntegrator Public Methods}{=}\lastnext{SamplerIntegratorPublicMethods}`
-virtual void Preprocess(const `\refvar{Scene}{}` &scene, `\refvar{Sampler}{}` &sampler) { }
+virtual void Preprocess`\htarget{codevar:SamplerIntegrator::Preprocess}{}`(const `\refvar{Scene}{}` &scene, `\refvar{Sampler}{}` &sampler) { }
 \end{lstlisting}
 
 \subsection{主渲染循环}\label{sub:主渲染循环}
+完成\refvar{Scene}{}和\refvar{Integrator}{}的分配与初始化后，
+调用方法\refvar{Integrator::Render}{()}，
+开始pbrt的第二执行阶段：主渲染循环。
+在\refvar{SamplerIntegrator}{}对该方法的实现中，
+对于图像平面上一系列位置中的每一个位置，
+该方法用\refvar{Camera}{}和\refvar{Sampler}{}生成到场景中的光线，
+再用方法{\ttfamily Li()}决定沿该光线到达图像平面的光量。
+这个值传入\refvar{Film}{}，记录下光的贡献度。
+\reffig{1.17}总结了该方法用到的主要类和它们之间的数据流。
+\begin{figure}[h]
+    \centering\input{Pictures/chap01/ClassRelationships.tex}
+    \caption{\protect\href{https://github.com/mmp/pbrt-v3/tree/master/src/core/integrator.cpp}{\ttfamily core/integrator.cpp}里
+        方法\protect\refvar{SamplerIntegrator::Render}{()}中主渲染循环的类关系。
+        \protect\refvar{Sampler}{}提供了一采样值序列，每张图像样本取一个。
+        \protect\refvar{Camera}{}把样本转为来自胶片平面的相应光线，
+        方法{\ttfamily Li()}的实现计算沿光线到达胶片的辐射。
+        样本和其辐射传给\protect\refvar{Film}{}，
+        保存它们在图像中的贡献。
+        重复这个过程直到\protect\refvar{Sampler}{}提供足够多样本生成最终图像。}
+    \label{fig:1.17}
+\end{figure}
+\begin{lstlisting}
+`\initcode{SamplerIntegrator Method Definitions}{=}\initnext{SamplerIntegratorMethodDefinitions}`
+void `\refvar{SamplerIntegrator}{}`::Render(const `\refvar{Scene}{}` &scene) {
+    `\hyperlink{codevar:SamplerIntegrator::Preprocess}{Preprocess}`(scene, *sampler);
+    `\refcode{Render image tiles in parallel}{}`
+    `\refcode{Save final image after rendering}{}`
+}
+\end{lstlisting}

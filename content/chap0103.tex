@@ -476,3 +476,43 @@ void `\refvar{SamplerIntegrator}{}`::Render(const `\refvar{Scene}{}` &scene) {
     `\refcode{Save final image after rendering}{}`
 }
 \end{lstlisting}
+
+为了让多处理核系统能并行渲染，图像会被分解为像素小块。
+每个图块可并行独立处理。
+\refsec{并行化}详细介绍的函数\refvar{ParallelFor}{()}实现了并行for循环，
+其中多个迭代可并行运行。
+C++ lambda表达式提供循环体。
+这里使用在2D域上循环的\refvar{ParallelFor}{()}的变体来在图块间迭代。
+\begin{lstlisting}
+`\initcode{Render image tiles in parallel}{=}`
+`\refcode{Compute number of tiles, nTiles, to use for parallel rendering}{}`
+`\refvar{ParallelFor2D}{}`(
+    [&](`\refvar{Point2i}{}` tile) {
+        `\refcode{Render section of image corresponding to tile}{}`
+    }, nTiles);
+\end{lstlisting}
+
+决定图块要做多大时应权衡两点：负载平衡和每块的开销。
+一方面，我们希望图块明显比系统的处理器多：
+考虑四核计算机和仅仅四个图块。
+一般某些图块耗时可能比其他的少；
+负责场景相对简单的图像部分的图块通常比相对复杂部分的图块消耗更少处理时间。
+因此，如果图块数目等于处理器数目，
+一些处理器就会先完工并坐等负责最耗时图块的那个处理器。
+\reffig{1.18}说明了该问题。
+它展示了渲染\reffig{1.7}的光泽球场景时执行时间关于图块数的分布。
+最长耗时是最短耗时的151倍。
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap01/bucket-time.tex}
+    \caption{渲染\protect\reffig{1.7}场景中每个图块的耗时直方图。横轴表示时间秒数。
+    注意执行时间变动范围很宽，说明图像不同部分所需计算量差别极大。}
+    \label{fig:1.18}
+\end{figure}
+
+另一方面，图块太小也会很低效。
+处理核决定接下来该执行哪次迭代时会有一小部分固定开销；
+图块越多，这类开销耗时就越多。
+
+为了简化，pbrt固定使用$16\times16$的图块；
+这个粒度\sidenote{译者注：原文granularity。}对绝大多数图像都适用，
+除了分辨率非常低的图像。

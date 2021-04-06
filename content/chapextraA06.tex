@@ -1,0 +1,31 @@
+\section{并行化}\label{sec:并行化}
+
+\subsection{原子浮点值}\label{sub:原子浮点值}
+\begin{lstlisting}
+`\initcode{Parallel Declarations}{=}\initnext{ParallelDeclarations}`
+class `\initvar{AtomicFloat}{}` {
+public:
+    `\refcode{AtomicFloat Public Methods}{}`
+private:
+    `\refcode{AtomicFloat Private Data}{}`
+};
+\end{lstlisting}
+
+\subsection{并行的for循环}\label{sub:并行的for循环}
+\begin{lstlisting}
+`\initcode{Parallel Definitions}{=}\initnext{ParallelDefinitions}`
+void `\initvar{ParallelFor}{}`(const std::function<void(int)> &func,
+        int count, int chunkSize) {
+    `\refcode{Run iterations immediately if not using threads or if count is small}{}`
+    `\refcode{Launch worker threads if needed}{}`
+    `\refcode{Create and enqueue ParallelForLoop for this loop}{}`
+    `\refcode{Notify worker threads of work to be done}{}`
+    `\refcode{Help out with parallel loop iterations in the current thread}{}`
+}
+\end{lstlisting}
+
+\begin{lstlisting}
+`\refcode{Parallel Declarations}{+=}\lastcode{ParallelDeclarations}{}`
+void `\initvar{ParallelFor2D}{}`(std::function<void(`\refvar{Point2i}{}`)> func,
+                   const `\refvar{Point2i}{}` &count);
+\end{lstlisting}

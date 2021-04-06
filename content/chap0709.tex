@@ -13,3 +13,52 @@ private:
     `\refcode{Film Private Methods}{}`
 };
 \end{lstlisting}
+
+\begin{lstlisting}
+`\initcode{Film Method Definitions}{=}\initnext{FilmMethodDefinitions}`
+`\refvar{Film}{}`::`\refvar{Film}{}`(const `\refvar{Point2i}{}` &resolution, const `\refvar{Bounds2f}{}` &cropWindow,
+        std::unique_ptr<Filter> filt, Float `\refvar{diagonal}{}`,
+        const std::string &`\refvar{filename}{}`, Float `\refvar{scale}{}`)
+    : `\refvar{fullResolution}{}`(resolution), `\refvar{diagonal}{}`(`\refvar{diagonal}{}` * .001),
+    `\refvar{filter}{}`(std::move(filt)), `\refvar{filename}{}`(`\refvar{filename}{}`), `\refvar{scale}{}`(`\refvar{scale}{}`) {
+    `\refcode{Compute film image bounds}{}`
+    `\refcode{Allocate film image storage}{}`
+    `\refcode{Precompute filter weight table}{}`
+}
+\end{lstlisting}
+
+\begin{lstlisting}
+`\initcode{Film Public Data}{=}\initnext{FilmPublicData}`
+const `\refvar{Point2i}{}` `\initvar{fullResolution}{}`;
+const Float `\initvar{diagonal}{}`;
+std::unique_ptr<Filter> `\initvar{filter}{}`;
+const std::string `\initvar{filename}{}`;
+\end{lstlisting}
+
+\begin{lstlisting}
+`\initcode{Film Private Data}{=}\initnext{FilmPrivateData}`
+struct `\initvar{Pixel}{}` {
+    Float `\initvar[Pixel:xyz]{xyz}{}`[3] = { 0, 0, 0 };
+    Float `\initvar[Pixel:filterWeightSum]{filterWeightSum}{}` = 0;
+    AtomicFloat `\initvar[Pixel:splatXYZ]{splatXYZ}{}`[3];
+    Float `\initvar[Pixel:pad]{pad}{}`;
+};
+std::unique_ptr<`\refvar{Pixel}{}`[]> `\initvar{pixels}{}`;
+\end{lstlisting}
+
+\begin{lstlisting}
+`\refcode{Film Method Definitions}{+=}\lastnext{FilmMethodDefinitions}`
+Bounds2i `\refvar{Film}{}`::`\initvar{GetSampleBounds}{()}` const {
+    `\refvar{Bounds2f}{}` floatBounds(
+        `\refvar{Floor}{}`(`\refvar{Point2f}{}`(croppedPixelBounds.pMin) + `\refvar{Vector2f}{}`(0.5f, 0.5f) -
+              `\refvar{filter}{}`->`\refvar[Filter::radius]{radius}{}`),
+        `\refvar{Ceil}{}`( `\refvar{Point2f}{}`(croppedPixelBounds.pMax) - `\refvar{Vector2f}{}`(0.5f, 0.5f) +
+              `\refvar{filter}{}`->`\refvar[Filter::radius]{radius}{}`));
+    return (Bounds2i)floatBounds;
+}
+\end{lstlisting}
+
+\begin{lstlisting}
+`\refcode{Film Private Data}{+=}\lastcode{FilmPrivateData}`
+const Float `\initvar{scale}{}`;
+\end{lstlisting}

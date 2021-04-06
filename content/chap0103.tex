@@ -114,7 +114,7 @@ pbrt在概念上可分为两个执行阶段。
 一旦指定好场景，第二执行阶段就开始了，执行主渲染循环。
 pbrt通常把绝大部分运行时间都花在这个阶段，
 本书大部分都在讲解执行这一阶段的代码。
-渲染循环由{\ttfamily Integrator::}\refvar{Render}{()}的
+渲染循环由\refvar{Integrator::Render}{()}的
 实现来执行，它是\refsub{主渲染循环}的重点。
 
 本章将介绍\refvar{Integrator}{}的一个特定子类，
@@ -296,7 +296,7 @@ std::vector<std::shared_ptr<`\refvar{Light}{}`>> `\initvar{lights}{}`;
 指定其几何结构的\refvar{Shape}{}和描述其外观
 例如物体的颜色、是否具有暗淡或光泽饰面）的\refvar{Material}{}。
 所有几何图元都集中到\refvar{Scene}{}的
-成员变量\refvar{Scene}{::}\refvar{aggregate}{}这一
+成员变量\refvar[aggregate]{Scene::aggregate}{}这一
 单个\refvar{Primitive}{}聚合体中。
 这个聚合体是一种特殊的图元，它自己持有许多对其他图元的引用。
 因为它实现了\refvar{Primitive}{}接口，
@@ -336,8 +336,8 @@ for (const auto &light : `\refvar{lights}{}`)
 如果是，它便把沿光线最近交点的信息填入提供的结构体\refvar{SurfaceInteraction}{}。
 结构体\refvar{SurfaceInteraction}{}将在\refsec{图元接口与几何图元}定义。
 \begin{lstlisting}
-`\initcode{Scene Method Definitions}{=}\initnext{SceneMethodDefinitions}\htarget{codevar:Scene::Intersect}{}`
-bool `\refvar{Scene}{}`::`\refvar{Intersect}{}`(const `\refvar{Ray}{}` &ray, `\refvar{SurfaceInteraction}{}` *isect) const {
+`\initcode{Scene Method Definitions}{=}\initnext{SceneMethodDefinitions}`
+bool `\refvar{Scene}{}`::`\refvar[Intersect]{\initvar[Scene::Intersect]{Intersect}{}}{}`(const `\refvar{Ray}{}` &ray, `\refvar{SurfaceInteraction}{}` *isect) const {
     return `\refvar{aggregate}{}`->`\refvar{Intersect}{}`(ray, isect);
 }
 \end{lstlisting}
@@ -347,8 +347,8 @@ bool `\refvar{Scene}{}`::`\refvar{Intersect}{}`(const `\refvar{Ray}{}` &ray, `\r
 所以它一般比\refvar{Scene::Intersect}{()}更高效。
 这个例程用于阴影射线。
 \begin{lstlisting}
-`\refcode{Scene Method Definitions}{+=}\lastnext{SceneMethodDefinitions}\htarget{codevar:Scene::IntersectP}{}`
-bool `\refvar{Scene}{}`::`\refvar{IntersectP}{}`(const `\refvar{Ray}{}` &ray) const {
+`\refcode{Scene Method Definitions}{+=}\lastnext{SceneMethodDefinitions}`
+bool `\refvar{Scene}{}`::`\refvar[IntersectP]{\initvar[Scene::IntersectP]{IntersectP}{}}{}`(const `\refvar{Ray}{}` &ray) const {
     return `\refvar{aggregate}{}`->`\refvar{IntersectP}{}`(ray);
 }
 \end{lstlisting}
@@ -376,8 +376,8 @@ public:
 例如可以把\refvar{Integrator}{}实现成只度量
 分布于场景中的一组稀疏位置，而不是生成常规的2D图像。
 \begin{lstlisting}
-    `\initcode{Integrator Interface}{=}`
-    virtual void `\initvar{Render}{(const \refvar{Scene}{} \&scene)}\htarget{codevar:Integrator::Render}{}` = 0;
+`\initcode{Integrator Interface}{=}`
+virtual void `\initvar[Integrator::Render]{Render}{}`(const `\refvar{Scene}{}` &scene) = 0;
 \end{lstlisting}
 
 本章中，我们的重点是\refvar{Integrator}{}的一个子类\refvar{SamplerIntegrator}{}，
@@ -443,7 +443,7 @@ std::shared_ptr<const `\refvar{Camera}{}`> `\initvar{camera}{}`;
 在这里不需要做任何事的实现可以将这个方法留为未实现状态。
 \begin{lstlisting}
 `\refcode{SamplerIntegrator Public Methods}{=}\lastnext{SamplerIntegratorPublicMethods}`
-virtual void Preprocess`\htarget{codevar:SamplerIntegrator::Preprocess}{}`(const `\refvar{Scene}{}` &scene, `\refvar{Sampler}{}` &sampler) { }
+virtual void `\initvar[SamplerIntegrator::Preprocess]{Preprocess}{}`(const `\refvar{Scene}{}` &scene, `\refvar{Sampler}{}` &sampler) { }
 \end{lstlisting}
 
 \subsection{主渲染循环}\label{sub:主渲染循环}
@@ -471,7 +471,7 @@ virtual void Preprocess`\htarget{codevar:SamplerIntegrator::Preprocess}{}`(const
 \begin{lstlisting}
 `\initcode{SamplerIntegrator Method Definitions}{=}\initnext{SamplerIntegratorMethodDefinitions}`
 void `\refvar{SamplerIntegrator}{}`::Render(const `\refvar{Scene}{}` &scene) {
-    `\hyperlink{codevar:SamplerIntegrator::Preprocess}{Preprocess}`(scene, *sampler);
+    `\refvar[SamplerIntegrator::Preprocess]{Preprocess}{}`(scene, *sampler);
     `\refcode{Render image tiles in parallel}{}`
     `\refcode{Save final image after rendering}{}`
 }
@@ -489,7 +489,7 @@ C++ lambda表达式提供循环体。
 `\refvar{ParallelFor2D}{}`(
     [&](`\refvar{Point2i}{}` tile) {
         `\refcode{Render section of image corresponding to tile}{}`
-    }, nTiles);
+    }, `\refvar{nTiles}{}`);
 \end{lstlisting}
 
 决定图块要做多大时应权衡两点：负载平衡和每块的开销。
@@ -516,3 +516,36 @@ C++ lambda表达式提供循环体。
 为了简化，pbrt固定使用$16\times16$的图块；
 这个粒度\sidenote{译者注：原文granularity。}对绝大多数图像都适用，
 除了分辨率非常低的图像。
+我们隐含假设小图像的情况对于渲染的最大效率并不重要。
+\refvar{Film}{}的方法\refvar{GetSampleBounds}{()}返回像素范围
+以供在其上生成必需的样本来渲染图像。
+计算{\ttfamily nTiles}时加上{\ttfamily tileSize - 1}使得
+许多图块在样本框沿某轴不能被16整除时向下一个更大整数取整。
+这意味着\refvar{ParallelFor}{()}调用的lambda函数必须能
+处理包含无用像素的局部图块。
+\begin{lstlisting}
+`\initcode{Compute number of tiles, nTiles, to use for parallel rendering}{=}`
+Bounds2i `\initvar{sampleBounds}{}` = `\refvar{camera}{}`->`\refvar{film}{}`->`\refvar{GetSampleBounds}{}`();
+Vector2i `\initvar{sampleExtent}{}` = sampleBounds.`\refvar{Diagonal}{}`();
+const int `\initvar{tileSize}{}` = 16;
+`\refvar{Point2i}{}` `\initvar{nTiles}{}`((sampleExtent.x + tileSize - 1) / tileSize,
+               (sampleExtent.y + tileSize - 1) / tileSize);
+\end{lstlisting}
+
+当附录\refsub{并行的for循环}定义的并行for循环实现决定
+在某一处理器上执行一次循环迭代时，
+会带上图块的坐标调用lambda。
+它启动时会做一点设置工作，决定负责哪部分胶片平面，
+并在使用\refvar{Sampler}{}生成图像样本、
+用\refvar{Camera}{}决定离开胶片平面的相应光线以及
+用方法{\ttfamily Li()}计算沿这些光线到达胶片平面的光量之前
+为一些临时数据分配空间。
+\begin{lstlisting}
+`\initcode{Render section of image corresponding to tile}{=}`
+`\refcode{Allocate MemoryArena for tile}{}`
+`\refcode{Get sampler instance for tile}{}`
+`\refcode{Compute sample bounds for tile}{}`
+`\refcode{Get FilmTile for tile}{}`
+`\refcode{Loop over pixels in tile to render them}{}`
+`\refcode{Merge image tile into Film}{}`
+\end{lstlisting}

@@ -49,7 +49,7 @@ void InitGlobals() {
 
 在文学程序中，可以把\refvar{InitGlobals}{()}写成这样：
 \begin{lstlisting}
-`\codecolor\itshape{<<Function Definitions>>=}`
+`\initcode{Function Definitions}{=}`
 void `\initvar{InitGlobals}{()}` {
     `\refcode{Initialize Global Variables}{\dag}`
 }
@@ -103,7 +103,7 @@ void InitGlobals() {
 这样，我们可以把复杂函数分解为逻辑不同的部分，使之更容易理解。
 例如我们可以这样把一个复杂函数写作一系列代码片：
 \begin{lstlisting}
-`\codecolor\itshape{<<Function Definitions>>+=}`
+`\refcode{Function Definitions}{+=}`
 void `\initvar{complexFunc}{(int x, int y, double *values)}` {
     `\refcode{Check validity of arguments}{}`
     if (x < y) {

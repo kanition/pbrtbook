@@ -13,7 +13,7 @@ void `\initvar{pbrtWorldEnd}{()}` {
 
 \begin{lstlisting}
 `\refcode{API Function Definitions}{+=}\lastcode{APIFunctionDefinitions}`
-`\refvar{Scene}{}` *`\refvar{RenderOptions}{}`::`\initvar{MakeScene}{()}\htarget{codevar:RenderOptions::MakeScene}{}` {
+`\refvar{Scene}{}` *`\refvar{RenderOptions}{}`::`\initvar[RenderOptions::MakeScene]{MakeScene}{()}` {
     std::shared_ptr<`\refvar{Primitive}{}`> accelerator =
         MakeAccelerator(AcceleratorName, primitives, AcceleratorParams);
     if (!accelerator)
@@ -26,5 +26,5 @@ void `\initvar{pbrtWorldEnd}{()}` {
 
 \begin{lstlisting}
 `\initcode{RenderOptions Public Methods}{=}` 
-`\refvar{Integrator}{}` *`\initvar{MakeIntegrator}{()}\htarget{codevar:RenderOptions::MakeIntegrator}{}` const;
+`\refvar{Integrator}{}` *`\initvar[RenderOptions::MakeIntegrator]{MakeIntegrator}{()}` const;
 \end{lstlisting}

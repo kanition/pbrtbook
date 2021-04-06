@@ -604,8 +604,9 @@
 \newcommand\initnext[1]{\initcnt{#1}\nextcode{#1}\addcnt{#1}} %初始化且引用下一段代码
 \newcommand\lastnext[1]{\lastcode{#1}\nextcode{#1}\addcnt{#1}} %引用前后代码
 
-\newcommand\initvar[2]{\htarget{codevar:#1}{\ttfamily #1#2}} %代码变量定义
-\newcommand\refvar[2]{\hyperlink{codevar:#1}{\ttfamily #1#2}} %代码变量引用跳转
+% 代码变量定义、引用跳转
+\newcommand\refvar[3][]{\ifthenelse{\isempty{#1}}{\hyperlink{codevar:#2}{\ttfamily #2#3}}{\hyperlink{codevar:#1}{\ttfamily #2#3}}}
+\newcommand\initvar[3][]{\ifthenelse{\isempty{#1}}{\htarget{codevar:#2}{\ttfamily #2#3}}{\htarget{codevar:#1}{\ttfamily #2#3}}}
 
 \newcommand\reffig[1]{图\ref{fig:#1}}
 \newcommand\reftab[1]{表\ref{tab:#1}}

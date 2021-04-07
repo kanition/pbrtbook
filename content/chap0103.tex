@@ -538,7 +538,7 @@ const int `\initvar{tileSize}{}` = 16;
 它启动时会做一点设置工作，决定负责哪部分胶片平面，
 并在使用\refvar{Sampler}{}生成图像样本、
 用\refvar{Camera}{}决定离开胶片平面的相应光线以及
-用方法{\ttfamily Li()}计算沿这些光线到达胶片平面的光量之前
+用方法{\ttfamily Li()}计算沿这些光线到达胶片平面的辐射之前
 为一些临时数据分配空间。
 \begin{lstlisting}
 `\initcode{Render section of image corresponding to tile}{=}`
@@ -548,4 +548,23 @@ const int `\initvar{tileSize}{}` = 16;
 `\refcode{Get FilmTile for tile}{}`
 `\refcode{Loop over pixels in tile to render them}{}`
 `\refcode{Merge image tile into Film}{}`
+\end{lstlisting}
+
+方法{\ttfamily Li()}的实现一般需要为每次辐射计算临时分配少量内存。
+系统常规内存分配例程（例如{\ttfamily malloc()}或{\ttfamily new}）
+必须维护和同步精巧的内部数据结构以跟踪处理器间的空闲内存区域集合，
+而大量进行这样的分配容易让其崩溃。
+简单的实现可能让大量计算时间花在内存分配器上。
+
+为了解决这个问题，我们把类\refvar{MemoryArena}{}的一个实例传给方法{\ttfamily Li()}。
+\refvar{MemoryArena}{}的实例管理内存池来启用比标准库例程更高性能的分配。
+
+arena\sidenote{译者注：arena，竞技场。}的内存池总是整体释放，
+消解了对复杂内部数据结构的需求。
+该类的实例只能用于单个线程——不允许没有额外同步的并行存取。
+我们为每个循环迭代创建可直接使用的唯一的\refvar{MemoryArena}{}，
+也保证了arena只被单个线程访问。
+\begin{lstlisting}
+`\initcode{Allocate MemoryArena for tile}{=}`
+`\refvar{MemoryArena}{}` arena;
 \end{lstlisting}

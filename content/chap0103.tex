@@ -568,3 +568,18 @@ arena\sidenote{译者注：arena，竞技场。}的内存池总是整体释放�
 `\initcode{Allocate MemoryArena for tile}{=}`
 `\refvar{MemoryArena}{}` arena;
 \end{lstlisting}
+
+多数\refvar{Sampler}{}实现发现保持一些状态很有用，
+例如当前渲染的像素坐标。
+这意味着多处理线程不能兼用单个{\ttfamily Sampler}。
+因此，{\ttfamily Sampler}提供了方法{\ttfamily Clone()}来
+创建给定{\ttfamily Sampler}的新实例；
+它取用的种子也用于伪随机数生成器的一些实现，
+这样每个图块就不会生成一样的伪随机数序列。
+（注意不是所有{\ttfamily Sampler}都使用伪随机数；
+不需要会忽略种子。）
+\begin{lstlisting}
+`\initcode{Get sampler instance for tile}{=}`
+int seed = tile.y * nTiles.x + tile.x;
+std::unique_ptr<`\refvar{Sampler}{}`> tileSampler = sampler->`\refvar{Clone}{}`(seed);
+\end{lstlisting}

@@ -14,3 +14,13 @@ private:
     `\refcode{Sampler Private Data}{}`
 };
 \end{lstlisting}
+
+\begin{lstlisting}
+`\initcode{Sampler Interface}{=}\initnext{SamplerInterface}`
+virtual void `\initvar{StartPixel}{}`(const `\refvar{Point2i}{}` &p);
+\end{lstlisting}
+
+\begin{lstlisting}
+`\refcode{Sampler Interface}{+=}\lastnext{SamplerInterface}`
+virtual std::unique_ptr<`\refvar{Sampler}{}`> `\initvar{Clone}{}`(int seed) = 0;
+\end{lstlisting}

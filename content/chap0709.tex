@@ -62,3 +62,24 @@ Bounds2i `\refvar{Film}{}`::`\initvar{GetSampleBounds}{()}` const {
 `\refcode{Film Private Data}{+=}\lastcode{FilmPrivateData}`
 const Float `\initvar{scale}{}`;
 \end{lstlisting}
+
+\subsection{为胶片提供像素值}\label{sub:为胶片提供像素值}
+\begin{lstlisting}
+`\refcode{Film Method Definitions}{+=}\lastnext{FilmMethodDefinitions}`
+std::unique_ptr<FilmTile> `\refvar{Film}{}`::`\initvar{GetFilmTile}{}`(
+        const Bounds2i &sampleBounds) {
+    `\refcode{Bound image pixels that samples in sampleBounds contribute to}{}`
+    return std::unique_ptr<FilmTile>(new FilmTile(tilePixelBounds,
+        filter->radius, filterTable, filterTableWidth));
+}
+\end{lstlisting}
+
+\begin{lstlisting}
+`\refcode{Film Declarations}{+=}\lastcode{FilmDeclarations}`
+class `\initvar{FilmTile}{}` {
+public:
+    `\refcode{FilmTile Public Methods}{}`
+private:
+    `\refcode{FilmTile Private Data}{}`
+};
+\end{lstlisting}

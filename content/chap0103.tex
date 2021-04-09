@@ -583,3 +583,31 @@ arena\sidenote{译者注：arena，竞技场。}的内存池总是整体释放�
 int seed = tile.y * nTiles.x + tile.x;
 std::unique_ptr<`\refvar{Sampler}{}`> tileSampler = sampler->`\refvar{Clone}{}`(seed);
 \end{lstlisting}
+
+接下来，本次循环迭代的像素采样范围会基于图块索引计算出来。
+该计算中必须考虑两个问题：
+第一，要采样的全部像素边界可能不等于全图分辨率。
+例如，用户可能指定采样一个像素子集的“裁窗”。
+第二，如果图像分辨率不是16的倍数，则图像右边和底部的图块不是完整的$16\times16$。
+\begin{lstlisting}
+`\initcode{Compute sample bounds for tile}{=}`
+int x0 = sampleBounds.pMin.x + tile.x * tileSize;
+int x1 = std::min(x0 + tileSize, sampleBounds.pMax.x);
+int y0 = sampleBounds.pMin.y + tile.y * tileSize;
+int y1 = std::min(y0 + tileSize, sampleBounds.pMax.y);
+Bounds2i tileBounds(`\refvar{Point2i}{}`(x0, y0), `\refvar{Point2i}{}`(x1, y1));
+\end{lstlisting}
+
+最后，从\refvar{Film}{}获取\refvar{FilmTile}{}。
+该类提供了一个小内存缓冲区来存储当前图块的像素值。
+它的存储对循环迭代是私有的，
+所以可以更新像素值而不用担心其他线程同时修改同一像素。
+一旦该图块完成渲染工作就被合并到胶片的存储中；
+然后序列化对图像的并发更新。
+\begin{lstlisting}
+`\initcode{Get FilmTile for tile}{=}`
+std::unique_ptr<FilmTile> filmTile =
+    `\refvar{camera}{}`->`\refvar{film}{}`->`\refvar{GetFilmTile}{}`(tileBounds);
+\end{lstlisting}
+
+现在可以进行渲染了。

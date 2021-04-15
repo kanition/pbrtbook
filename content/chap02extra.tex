@@ -1,0 +1,56 @@
+\section{译者补充：四元组}\label{sec:译者补充：四元组}
+\emph{本节内容不是原书内容，而是译者自学补充的，请酌情参考和斧正。}
+
+本节内容主要依据文献\citep{10.5555/90767.90913}整理而成，
+给出四元组相关数学推导，具体介绍
+四元组的定义、性质及其在几何变换中的运用。
+
+\subsection{四元组的定义}\label{sub:四元组的定义}
+\begin{definition}
+    \keyindex{四元组}{quaternion}{}记作
+    \begin{align}
+        {\bm q}=c+x{\rm i}+y{\rm j}+z{\rm k}\, ,
+    \end{align}
+    其中$c$，$x$，$y$，$z$是实数，${\rm i}$，${\rm j}$，${\rm k}$是虚数。
+    也可简记为
+    \begin{align}
+        {\bm q}=c+{\bm u}\, ,
+    \end{align}
+    其中${\bm u}=x{\rm i}+y{\rm j}+z{\rm k}$称为四元组的\keyindex{纯部}{pure part}{}，
+    $c$称为\keyindex{实部}{real part}{}。
+\end{definition}
+
+设$Q$为四元组集合，且在基$\{1,{\rm i},{\rm j},{\rm k}\}$上定义了加法和乘法两种运算。
+这里基满足
+\begin{align}
+    \left\{
+    \begin{aligned}
+        {\rm i}^2={\rm j}^2={\rm k}^2=-1\, ,         \\
+        {\rm ij}={\rm k},\quad {\rm ji}={\rm -k}\, , \\
+        {\rm jk}={\rm i},\quad {\rm kj}={\rm -i}\, , \\
+        {\rm ki}={\rm j},\quad {\rm ik}={\rm -j}\, .
+    \end{aligned}
+    \right.
+\end{align}
+四元组加法为
+\begin{align}
+    {\bm q}+{\bm q}'=(c+c')+(x+x'){\rm i}+(y+y'){\rm j}+(z+z'){\rm k}\, .
+\end{align}
+乘法展开可得
+\begin{align}
+    {\bm q}{\bm q}' & =(c+x{\rm i}+y{\rm j}+z{\rm k})(c'+x'{\rm i}+y'{\rm j}+z'{\rm k})\nonumber \\
+                    & =(cc'-xx'-yy'-zz')+(yz'-y'z+cx'+c'x){\rm i}\nonumber                       \\
+                    & \quad+(zx'-z'x+cy'+c'y){\rm j}+(xy'-x'y+cz'+c'z){\rm k}\, .
+\end{align}
+也可以简记为
+\begin{align}
+    {\bm q}{\bm q}' & =(c+{\bm u})(c'+{\bm u}')\nonumber                                                                        \\
+                    & =(cc'-{\bm u}\cdot{\bm u}')+({\bm u}\times{\bm u}'+\langle c{\bm u}'\rangle+\langle c'{\bm u}\rangle)\, ,
+\end{align}
+其中
+\begin{align*}
+    {\bm u}\cdot{\bm u}'    & =xx'+yy'+zz'\, ,                                      \\
+    \langle c{\bm u}\rangle & =cx{\rm i}+cy{\rm j}+cz{\rm k}\, ,                    \\
+    {\bm u}\times{\bm u}'   & =(yz'-zy'){\rm i}+(zx'-xz'){\rm j}+(xy'-yx'){\rm k}\,
+\end{align*}
+分别为\keyindex{内积}{inner product}{}、数乘、\keyindex{叉积}{cross product}{}。

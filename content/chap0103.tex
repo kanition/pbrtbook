@@ -4,18 +4,18 @@ pbrt是使用标准的\keyindex{面向对象}{object-oriented}{}技术构建的�
 重要实体都定义了抽象\keyindex{基类}{base class}{class类}（例如
 抽象基类\refvar{Shape}{}定义了所有几何形状必须实现的接口，
 光源的抽象基类\refvar{Light}{}也有相似设计）。
-系统大部分都是纯粹由这些抽象基类提供的接口来实现的；
+系统大部分都纯粹是由这些抽象基类提供的接口来实现的；
 例如检查光源与着色点之间遮挡物体的代码
 调用\refvar{Shape}{}的相交方法
-而不要考虑场景中出现的特定类型的形状。
+而不用考虑场景中出现的特定类型的形状。
 这种方式使得扩展系统变得很容易，
 新增一种形状只需要实现一个完成\refvar{Shape}{}接口的类并链接到系统。
 
 pbrt用10个关键抽象基类写成，列于\reftab{1.1}。
 向系统添加这些类的新实现很简单；
 实现必须从适当的基类继承，
-编译和链接到可执行文件，
-且必须修改附录第\refchap{场景描述接口}中的对象创建例程
+再编译和链接到可执行文件，
+并且必须修改附录第\refchap{场景描述接口}中的对象创建例程
 以创建解析场景描述文件所需要的对象。
 \refsec{添加新物体的实现}
 \sidenote{译者注：原书此处似乎链接错误，已纠正。}
@@ -47,19 +47,19 @@ pbrt用10个关键抽象基类写成，列于\reftab{1.1}。
 
 pbrt源码发布于\href{https://pbrt.org/}{\ttfamily pbrt.org}。
 （大量场景示例\footnote{\url{http://pbrt.org/scenes-v3.html}}也可分开下载。）
-所有的pbrt核心代码均在目录{\ttfamily src/core}内，
+所有的pbrt核心代码均在目录\href{https://github.com/mmp/pbrt-v3/tree/master/src/core}{\ttfamily src/core}内，
 函数\refvar{main}{()}在
 短文件\href{https://github.com/mmp/pbrt-v3/tree/master/src/main/pbrt.cpp}{\ttfamily main/pbrt.cpp}内。
 抽象基类实例的各种实现在分开的目录下：
-{\ttfamily src/shapes}有基类\refvar{Shape}{}的实现，
-{\ttfamily src/materials}有基类\refvar{Material}{}的实现，以此类推。
+\href{https://github.com/mmp/pbrt-v3/tree/master/src/shapes}{\ttfamily src/shapes}有基类\refvar{Shape}{}的实现，
+\href{https://github.com/mmp/pbrt-v3/tree/master/src/materials}{\ttfamily src/materials}有基类\refvar{Material}{}的实现，以此类推。
 
 本节有许多pbrt扩展版本渲染的图像。
 其中从\reffig{1.11}到\reffig{1.14}
 \sidenote{译者注：原书\reffig{1.14}引用文献似乎遗漏了链接，推测是\citep{10.1145/74334.74361}。}
 都引人瞩目：
 它们不仅令人过目不忘，而且每张都是渲染课程的学生在
-最后的课程作业中对pbrt扩展新功能渲染得到的有趣图像。
+最后的课程作业中为pbrt扩展新功能渲染得到的有趣图像。
 这些是课程中最佳图像的一部分。
 \begin{figure}[htbp]
     \centering\includegraphics[width=\linewidth]{chap01/nightsnow.jpg}
@@ -108,8 +108,8 @@ pbrt在概念上可分为两个执行阶段。
 
 解析阶段的最终结果是类\refvar{Scene}{}和\refvar{Integrator}{}的实例。
 \refvar{Scene}{}包含了场景内容（几何物体、光源等）的表示，
-\refvar{Integrator}{}则实现渲染它的算法。\keyindex{积分器}{integrator}{}这样命名的原因是
-它的主要任务就是计算\refeq{1.1}的积分。
+\refvar{Integrator}{}则实现渲染它的算法。称之为\keyindex{积分器}{integrator}{}就是因为
+它的主要任务是计算\refeq{1.1}的积分。
 
 一旦指定好场景，第二执行阶段就开始了，执行主渲染循环。
 pbrt通常把绝大部分运行时间都花在这个阶段，
@@ -120,10 +120,10 @@ pbrt通常把绝大部分运行时间都花在这个阶段，
 本章将介绍\refvar{Integrator}{}的一个特定子类，
 称为\refvar{SamplerIntegrator}{}，
 其{\ttfamily Render()}方法为大量建模成像过程的光线
-决定到达虚拟胶片平面的光量。
-在计算完所有这些胶片样本的贡献后，最终图像被写入文件。
+确定到达虚拟胶片平面的光量。
+在计算完所有这些胶片样本的贡献后，把最终图像写入文件。
 内存里的场景描述数据被释放，
-系统从场景描述文件恢复处理语句直达没有剩余，
+系统从场景描述文件恢复处理语句直到没有剩余，
 如果需要，用户可以指定下一个要渲染的场景。
 
 \begin{figure}[htbp]
@@ -168,7 +168,7 @@ pbrt的函数\refvar{main}{()}可在
 它首先循环读取{\ttfamily argv}中的命令行参数，
 初始化结构体{\ttfamily Options}中的值并
 保存参数中的文件名。
-运行pbrt时带命令行参数{\ttfamily -help}会
+运行pbrt时带命令行参数{\ttfamily {-}{-}help}会
 打印所有可指定的命令行选项。
 解析命令行参数的代码片\refcode{Process command-line arguments}{}很简单，
 故本书不再介绍\sidenote{译者注：我还是把它搬上来了。}。
@@ -181,7 +181,7 @@ pbrt的函数\refvar{main}{()}可在
 函数\refvar{pbrtInit}{()}和\refvar{pbrtCleanup}{()}出现在
 页边空白处的迷你索引内，还注明了真正定义它们的页数。
 每页的迷你索引都指向了所用的几乎所有函数、类、方法和成员变量的定义
-\sidenote{译者注：翻译时尽力还原了在线版的跳转功能。试试看吧！}。
+\sidenote{译者注：在线版已经全部改用超链接了。翻译时尽力还原了在线版的跳转功能。试试看吧！}。
 \begin{lstlisting}
 `\initcode{Main program}{=}`
 int `\initvar{main}{}`(int argc, char *argv[]) {
@@ -248,7 +248,7 @@ for (const std::string &f : filenames)
 \end{lstlisting}
 
 解析完场景文件后就创建表示场景中光源和几何图元的对象。
-它们都存与\refvar{Scene}{}对象中，
+它们都存于\refvar{Scene}{}对象中，
 由附录\refsub{世界端和渲染}的方法\refvar{RenderOptions::MakeScene}{()}创建。
 类\refvar{Scene}{}在\href{https://github.com/mmp/pbrt-v3/tree/master/src/core/scene.h}{\ttfamily core/scene.h}中
 声明并在\href{https://github.com/mmp/pbrt-v3/tree/master/src/core/scene.cpp}{\ttfamily core/scene.cpp}中定义。
@@ -277,7 +277,7 @@ private:
 \refvar{Scene}{}用C++标准库中{\ttfamily shared\_ptr}实例
 的一个{\ttfamily vector}来存储所有光源。
 pbrt用共享指针\sidenote{译者注：原文shared pointers，是一种智能指针。}跟踪
-其他实例对对象的引用计数。
+其他实例对于对象的引用计数。
 当最后一个持有引用的实例（例如这里的\refvar{Scene}{}）被销毁时，
 引用计数减到零，\refvar{Light}{}就可以安全释放了，而且是自动的。
 
@@ -294,15 +294,15 @@ std::vector<std::shared_ptr<`\refvar{Light}{}`>> `\initvar{lights}{}`;
 
 场景中每个几何对象都由\refvar{Primitive}{}表示，结合了两个对象：
 指定其几何结构的\refvar{Shape}{}和描述其外观
-例如物体的颜色、是否具有暗淡或光泽饰面）的\refvar{Material}{}。
+（例如物体的颜色、是否具有暗淡或光泽饰面）的\refvar{Material}{}。
 所有几何图元都集中到\refvar{Scene}{}的
 成员变量\refvar[aggregate]{Scene::aggregate}{}这一
 单个\refvar{Primitive}{}聚合体中。
 这个聚合体是一种特殊的图元，它自己持有许多对其他图元的引用。
 因为它实现了\refvar{Primitive}{}接口，
 所以从单个图元到系统其余部分似乎没什么区别。
-聚合体的实现以加速的数据结构存储了所有场景图元，
-减少对远离给定光线的图元做不必要的光线交点测试的数量。
+聚合体的实现用加速的数据结构存储了所有场景图元，
+减少对远离给定光线的图元做不必要的光线交点测试量。
 \begin{lstlisting}
 `\initcode{Scene Private Data}{=}\initnext{ScenePrivateData}`
 std::shared_ptr<`\refvar{Primitive}{}`> `\initvar{aggregate}{}`;
@@ -323,7 +323,7 @@ const `\refvar{Bounds3f}{}` &WorldBound() const { return `\refvar{worldBound}{}`
 \end{lstlisting}
 
 一些光源实现发现在定义场景后开始渲染前做一些额外的初始化很有用。
-{\ttfamily Scene}的构造函数调用其方法{\ttfamily Preprocess()}来允许它们这么做。
+\refvar{Scene}{}的构造函数调用其方法\refvar{Preprocess}{()}来允许它们这么做。
 \begin{lstlisting}
 `\refcode{Scene Constructor Implementation}{+=}\lastcode{SceneConstructorImplementation}`
 for (const auto &light : `\refvar{lights}{}`)
@@ -331,7 +331,7 @@ for (const auto &light : `\refvar{lights}{}`)
 \end{lstlisting}
 
 \refvar{Scene}{}类提供两个与光线-图元交点相关的方法。
-它的{\ttfamily Intersect()}方法跟随给定光线到场景中并
+它的\refvar[Scene::Intersect]{Intersect}{()}方法跟随给定光线到场景中并
 返回表示光线是否与某一图元相交的布尔值。
 如果是，它便把沿光线最近交点的信息填入提供的结构体\refvar{SurfaceInteraction}{}。
 结构体\refvar{SurfaceInteraction}{}将在\refsec{图元接口与几何图元}定义。
@@ -354,13 +354,13 @@ bool `\refvar{Scene}{}`::`\refvar[IntersectP]{\initvar[Scene::IntersectP]{Inters
 \end{lstlisting}
 
 \subsection{积分器接口与采样积分器}\label{sub:积分器接口与采样积分器}
-渲染一幅场景图像由实现了{\ttfamily Integrator}接口的类的实例负责。
-抽象基类\refvar{Integrator}{}定义了任何积分器必须提供的方法{\ttfamily Render()}。
+渲染一幅场景图像由实现了\refvar{Integrator}{}接口的类的实例负责。
+抽象基类\refvar{Integrator}{}定义了任何积分器必须提供的方法\refvar[Integrator::Render]{Render}{()}。
 本节我们将定义一个\refvar{Integrator}{}的实现，即\refvar{SamplerIntegrator}{}。
-在\href{https://github.com/mmp/pbrt-v3/tree/master/src/core/integrator.h}{core/integrator.h}中
+在\href{https://github.com/mmp/pbrt-v3/tree/master/src/core/integrator.h}{\ttfamily core/integrator.h}中
 定义了基本积分器接口，
-积分器使用的一些实用函数在\href{https://github.com/mmp/pbrt-v3/blob/master/src/core/integrator.cpp}{core/integrator.cpp}中。
-不同积分器的实现在目录\href{https://github.com/mmp/pbrt-v3/tree/master/src/integrators}{integrators}中。
+积分器使用的一些实用函数在\href{https://github.com/mmp/pbrt-v3/blob/master/src/core/integrator.cpp}{\ttfamily core/integrator.cpp}中。
+不同积分器的实现在目录\href{https://github.com/mmp/pbrt-v3/tree/master/src/integrators}{\ttfamily integrators}中。
 \begin{lstlisting}
 `\initcode{Integrator Declarations}{=}`
 class `\initvar{Integrator}{}` {
@@ -369,10 +369,10 @@ public:
 };
 \end{lstlisting}
 
-\refvar{Integrator}{}必须提供方法{\ttfamily Render()}；
+\refvar{Integrator}{}必须提供方法\refvar[Integrator::Render]{Render}{()}；
 它利用传入的\refvar{Scene}{}引用计算一幅场景图像，
 或者更一般地说，一组场景光照的度量。
-其接口有意保持高度一般性以便允许各种实现——
+其接口专门保持高度一般性以便允许各种实现——
 例如可以把\refvar{Integrator}{}实现成只度量
 分布于场景中的一组稀疏位置，而不是生成常规的2D图像。
 \begin{lstlisting}
@@ -385,7 +385,7 @@ virtual void `\initvar[Integrator::Render]{Render}{}`(const `\refvar{Scene}{}` &
 （\refvar{SamplerIntegrator}{}的其他实现
 会在第\refchap{光传输I：表面反射}和\refchap{光传输II：体积渲染}介绍；
 第\refchap{光传输III：双向方法}的积分器直接从\refvar{Integrator}{}继承。）
-{\ttfamily SamplerIntegrator}的名字源自其渲染过程
+\refvar{SamplerIntegrator}{}的名字源自其渲染过程
 由来自\refvar{Sampler}{}的\keyindex{样本}{sample}{}流驱动的；
 每个这样的样本都标识了图像上的一点，
 让积分器计算到达该点以构成图像的光量。
@@ -402,9 +402,9 @@ private:
 \end{lstlisting}
 
 \refvar{SamplerIntegrator}{}保存了指向\refvar{Sampler}{}的指针。
-采样器看似存在感低，但其实现会极大影响系统生成图像的质量。
+采样器看似存在感低，但它的实现会极大影响系统生成图像的质量。
 首先，采样器负责选取光线要追踪的图像平面上的点。
-其次，它负责为积分器提供用于计算光传输积分的值即\refeq{1.1}所需的采样位置。
+其次，它负责为积分器提供用于计算光传输积分即\refeq{1.1}的值所需的采样位置。
 例如，一些积分器需要对光源选取随机位置来计算来自面光源的照明。
 生成分布良好的样本在渲染过程中很重要，会极大影响整体效率；
 这是第\refchap{采样与重构}的主要内容。
@@ -413,7 +413,7 @@ private:
 std::shared_ptr<`\refvar{Sampler}{}`> `\initvar{sampler}{}`;
 \end{lstlisting}
 
-\refvar{Camera}{}对象控制视角和透镜参数，例如位置、朝向、焦点和视野。
+对象\refvar{Camera}{}控制视角和透镜参数，例如位置、朝向、焦点和视野。
 \refvar{Camera}{}内的成员变量\refvar{Film}{}执行图像存储。
 \refvar{Camera}{}类将在第\refchap{相机模型}介绍，
 \refvar{Film}{}将在\refsec{胶片与成像管道}介绍。
@@ -435,7 +435,7 @@ std::shared_ptr<const `\refvar{Camera}{}`> `\initvar{camera}{}`;
     : `\refvar{camera}{}`(`\refvar{camera}{}`), `\refvar{sampler}{}`(`\refvar{sampler}{}`) { }
 \end{lstlisting}
 
-\refvar{SamplerIntegrator}{}可选实现方法{\ttfamily Preprocess()}。
+\refvar{SamplerIntegrator}{}可选实现方法\refvar[SamplerIntegrator::Preprocess]{Preprocess}{()}。
 它在\refvar{Scene}{}完全初始化后被调用，
 并给积分器机会完成依赖于场景的计算，
 例如分配依赖于场景光源数目的额外数据结构，
@@ -451,26 +451,26 @@ virtual void `\initvar[SamplerIntegrator::Preprocess]{Preprocess}{}`(const `\ref
 调用方法\refvar{Integrator::Render}{()}，
 开始pbrt的第二执行阶段：主渲染循环。
 在\refvar{SamplerIntegrator}{}对该方法的实现中，
-对于图像平面上一系列位置中的每一个位置，
+对于图像平面上一系列位置中的每一个，
 该方法用\refvar{Camera}{}和\refvar{Sampler}{}生成到场景中的光线，
-再用方法{\ttfamily Li()}决定沿该光线到达图像平面的光量。
-这个值传入\refvar{Film}{}，记录下光的贡献度。
+再用方法{\ttfamily Li()}确定沿该光线到达图像平面的光量。
+该值传入\refvar{Film}{}，记录下光的贡献度。
 \reffig{1.17}总结了该方法用到的主要类和它们之间的数据流。
 \begin{figure}[htbp]
     \centering\input{Pictures/chap01/ClassRelationships.tex}
     \caption{\protect\href{https://github.com/mmp/pbrt-v3/tree/master/src/core/integrator.cpp}{\ttfamily core/integrator.cpp}里
-        方法\protect\refvar{SamplerIntegrator::Render}{()}中主渲染循环的类关系。
-        \protect\refvar{Sampler}{}提供了一采样值序列，每张图像样本取一个。
-        \protect\refvar{Camera}{}把样本转为来自胶片平面的相应光线，
-        方法{\ttfamily Li()}的实现计算沿光线到达胶片的辐射。
-        样本和其辐射传给\protect\refvar{Film}{}，
-        保存它们在图像中的贡献。
-        重复这个过程直到\protect\refvar{Sampler}{}提供足够多样本生成最终图像。}
+    方法\protect\refvar{SamplerIntegrator::Render}{()}中主渲染循环的类关系。
+    \protect\refvar{Sampler}{}提供了一采样值序列，每张图像样本取一个。
+    \protect\refvar{Camera}{}把样本转为来自胶片平面的相应光线，
+    方法{\ttfamily Li()}的实现计算沿光线到达胶片的辐射。
+    样本和其辐射传给\protect\refvar{Film}{}，
+    保存它们在图像中的贡献。
+    重复这个过程直到\protect\refvar{Sampler}{}提供足够多样本生成最终图像。}
     \label{fig:1.17}
 \end{figure}
 \begin{lstlisting}
 `\initcode{SamplerIntegrator Method Definitions}{=}\initnext{SamplerIntegratorMethodDefinitions}`
-void `\refvar{SamplerIntegrator}{}`::Render(const `\refvar{Scene}{}` &scene) {
+void `\initvar{SamplerIntegrator::Render}{}`(const `\refvar{Scene}{}` &scene) {
     `\refvar[SamplerIntegrator::Preprocess]{Preprocess}{}`(scene, *sampler);
     `\refcode{Render image tiles in parallel}{}`
     `\refcode{Save final image after rendering}{}`
@@ -505,7 +505,7 @@ C++ lambda表达式提供循环体。
 \begin{figure}[htbp]
     \centering\input{Pictures/chap01/bucket-time.tex}
     \caption{渲染\protect\reffig{1.7}场景中每个图块的耗时直方图。横轴表示时间秒数。
-    注意执行时间变动范围很宽，说明图像不同部分所需计算量差别极大。}
+        注意执行时间变动范围很宽，说明图像不同部分所需计算量差别极大。}
     \label{fig:1.18}
 \end{figure}
 
@@ -514,19 +514,19 @@ C++ lambda表达式提供循环体。
 图块越多，这类开销耗时就越多。
 
 为了简化，pbrt固定使用$16\times16$的图块；
-这个粒度\sidenote{译者注：原文granularity。}对绝大多数图像都适用，
-除了分辨率非常低的图像。
+除了分辨率非常低的图像，
+这个粒度\sidenote{译者注：原文granularity。}对绝大多数图像都适用。
 我们隐含假设小图像的情况对于渲染的最大效率并不重要。
 \refvar{Film}{}的方法\refvar{GetSampleBounds}{()}返回像素范围
 以供在其上生成必需的样本来渲染图像。
-计算{\ttfamily nTiles}时加上{\ttfamily tileSize - 1}使得
+计算\refvar{nTiles}{}时加上\refvar{tileSize}{-1}使得
 许多图块在样本框沿某轴不能被16整除时向下一个更大整数取整。
 这意味着\refvar{ParallelFor}{()}调用的lambda函数必须能
 处理包含无用像素的局部图块。
 \begin{lstlisting}
 `\initcode{Compute number of tiles, nTiles, to use for parallel rendering}{=}`
-Bounds2i `\initvar{sampleBounds}{}` = `\refvar{camera}{}`->`\refvar{film}{}`->`\refvar{GetSampleBounds}{}`();
-Vector2i `\initvar{sampleExtent}{}` = sampleBounds.`\refvar{Diagonal}{}`();
+`\refvar{Bounds2i}{}` `\initvar{sampleBounds}{}` = `\refvar{camera}{}`->`\refvar{film}{}`->`\refvar{GetSampleBounds}{}`();
+`\refvar{Vector2i}{}` `\initvar{sampleExtent}{}` = sampleBounds.`\refvar{Diagonal}{}`();
 const int `\initvar{tileSize}{}` = 16;
 `\refvar{Point2i}{}` `\initvar{nTiles}{}`((sampleExtent.x + tileSize - 1) / tileSize,
                (sampleExtent.y + tileSize - 1) / tileSize);
@@ -557,31 +557,31 @@ const int `\initvar{tileSize}{}` = 16;
 简单的实现可能让大量计算时间花在内存分配器上。
 
 为了解决这个问题，我们把类\refvar{MemoryArena}{}的一个实例传给方法{\ttfamily Li()}。
-\refvar{MemoryArena}{}的实例管理内存池来启用比标准库例程更高性能的分配。
+\refvar{MemoryArena}{}的实例管理内存池以启用比标准库例程更高性能的分配。
 
-arena\sidenote{译者注：arena，竞技场。}的内存池总是整体释放，
+arena\sidenote{译者注：arena，竞技场。}内存池总是整体释放，
 消解了对复杂内部数据结构的需求。
 该类的实例只能用于单个线程——不允许没有额外同步的并行存取。
-我们为每个循环迭代创建可直接使用的唯一的\refvar{MemoryArena}{}，
+我们为每个循环迭代创建可直接使用的唯一\refvar{MemoryArena}{}，
 也保证了arena只被单个线程访问。
 \begin{lstlisting}
 `\initcode{Allocate MemoryArena for tile}{=}`
 `\refvar{MemoryArena}{}` arena;
 \end{lstlisting}
 
-多数\refvar{Sampler}{}实现发现保持一些状态很有用，
+多数\refvar{Sampler}{}实现发现保留一些状态很有用，
 例如当前渲染的像素坐标。
-这意味着多处理线程不能兼用单个{\ttfamily Sampler}。
-因此，{\ttfamily Sampler}提供了方法{\ttfamily Clone()}来
-创建给定{\ttfamily Sampler}的新实例；
+这意味着多处理线程不能兼用单个\refvar{Sampler}{}。
+因此，\refvar{Sampler}{}提供了方法\refvar{Clone}{()}来
+创建给定\refvar{Sampler}{}的新实例；
 它取用的种子也用于伪随机数生成器的一些实现，
 这样每个图块就不会生成一样的伪随机数序列。
-（注意不是所有{\ttfamily Sampler}都使用伪随机数；
+（注意不是所有\refvar{Sampler}{}都使用伪随机数；
 不需要会忽略种子。）
 \begin{lstlisting}
 `\initcode{Get sampler instance for tile}{=}`
 int seed = tile.y * nTiles.x + tile.x;
-std::unique_ptr<`\refvar{Sampler}{}`> tileSampler = sampler->`\refvar{Clone}{}`(seed);
+std::unique_ptr<`\refvar{Sampler}{}`> `\initvar{tileSampler}{}` = sampler->`\refvar{Clone}{}`(seed);
 \end{lstlisting}
 
 接下来，本次循环迭代的像素采样范围会基于图块索引计算出来。
@@ -595,7 +595,7 @@ int x0 = sampleBounds.pMin.x + tile.x * tileSize;
 int x1 = std::min(x0 + tileSize, sampleBounds.pMax.x);
 int y0 = sampleBounds.pMin.y + tile.y * tileSize;
 int y1 = std::min(y0 + tileSize, sampleBounds.pMax.y);
-Bounds2i tileBounds(`\refvar{Point2i}{}`(x0, y0), `\refvar{Point2i}{}`(x1, y1));
+`\refvar{Bounds2i}{}` `\initvar{tileBounds}{}`(`\refvar{Point2i}{}`(x0, y0), `\refvar{Point2i}{}`(x1, y1));
 \end{lstlisting}
 
 最后，从\refvar{Film}{}获取\refvar{FilmTile}{}。
@@ -606,8 +606,8 @@ Bounds2i tileBounds(`\refvar{Point2i}{}`(x0, y0), `\refvar{Point2i}{}`(x1, y1));
 然后序列化对图像的并发更新。
 \begin{lstlisting}
 `\initcode{Get FilmTile for tile}{=}`
-std::unique_ptr<FilmTile> filmTile =
-    `\refvar{camera}{}`->`\refvar{film}{}`->`\refvar{GetFilmTile}{}`(tileBounds);
+std::unique_ptr<`\refvar{FilmTile}{}`> `\initvar{filmTile}{}` =
+    `\refvar{camera}{}`->`\refvar{film}{}`->`\refvar{GetFilmTile}{}`(`\refvar{tileBounds}{}`);
 \end{lstlisting}
 
 现在可以进行渲染了。

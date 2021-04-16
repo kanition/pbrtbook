@@ -1,56 +1,78 @@
-\section{译者补充：四元组}\label{sec:译者补充：四元组}
-\emph{本节内容不是原书内容，而是译者自学补充的，请酌情参考和斧正。}
+\section{译者补充：四元数}\label{sec:译者补充：四元数}
+\begin{remark}
+    本节内容不是原书内容，而是译者自学补充的，请酌情参考和斧正。
+\end{remark}
 
-本节内容主要依据文献\citep{10.5555/90767.90913}整理而成，
-给出四元组相关数学推导，具体介绍
-四元组的定义、性质及其在几何变换中的运用。
+本节内容主要依据文献\citep{10.5555/90767.90913,enwiki:1014110231,enwiki:1013104981}整理而成，
+给出四元数相关数学推导，具体介绍
+四元数的定义、性质及其在几何变换中的运用。
 
-\subsection{四元组的定义}\label{sub:四元组的定义}
+\subsection{四元数的定义}\label{sub:四元数的定义}
 \begin{definition}
-    \keyindex{四元组}{quaternion}{}记作
+    \keyindex{四元数}{quaternion}{}记作
     \begin{align}
-        {\bm q}=c+x{\rm i}+y{\rm j}+z{\rm k}\, ,
+        {\bm q}=c+x\mathbf{i}+y\mathbf{j}+z\mathbf{k}\, ,
     \end{align}
-    其中$c$，$x$，$y$，$z$是实数，${\rm i}$，${\rm j}$，${\rm k}$是虚数。
-    也可简记为
-    \begin{align}
-        {\bm q}=c+{\bm u}\, ,
-    \end{align}
-    其中${\bm u}=x{\rm i}+y{\rm j}+z{\rm k}$称为四元组的\keyindex{纯部}{pure part}{}，
-    $c$称为\keyindex{实部}{real part}{}。
-\end{definition}
+    其中$c,x,y,z$是实数，
+    $\mathbf{i},\mathbf{j},\mathbf{k}$是\keyindex{基四元数}{basic quaternion}{quaternion四元数}，
+    也称\keyindex{基元}{basis element}{quaternion四元数}。
 
-设$Q$为四元组集合，且在基$\{1,{\rm i},{\rm j},{\rm k}\}$上定义了加法和乘法两种运算。
-这里基满足
+    基四元数可视为分别指向三个空间轴向的单位向量。
+    此时${\bm q}$可以看作由一个标量和一个向量构成：
+    其中$c$称为\keyindex{实部}{real part}{}或\keyindex{标量部}{scalar part}{quaternion四元数}，
+    $x\mathbf{i}+y\mathbf{j}+z\mathbf{k}$称为\keyindex{虚部}{imaginary part}{quaternion四元数}、\keyindex{纯部}{pure part}{quaternion四元数}或\keyindex{向量部}{vector part}{quaternion四元数}。
+\end{definition}
+\begin{definition}
+    当$c=0$且$xyz\neq 0$时，${\bm q}$称为\keyindex{向量四元数}{vector quaternion}{quaternion四元数}。
+\end{definition}
+\begin{definition}
+    当$x=y=z=0$时，${\bm q}$称为\keyindex{标量四元数}{scalar quaternion}{quaternion四元数}。
+    其中，当$c=x=y=z=0$时，${\bm q}$称为\keyindex{零四元数}{zero quaternion}{quaternion四元数}，记作$0$。
+\end{definition}
+\begin{notation}
+    在实际书写时，我们做如下约定：
+    \begin{itemize}
+        \item $c,x,y,z$之一等于$0$时，略写相应项；
+        \item $x,y,z$之一等于$1$时，相应项简写为$\mathbf{i,j}$或$\mathbf{k}$；
+        \item 也可写作${\bm q}=c+{\bm u}$，其中$c$为标量，${\bm u}=x\mathbf{i}+y\mathbf{j}+z\mathbf{k}$为向量；
+        \item 所有四元数构成的集合记作$\mathbb{H}$。
+    \end{itemize}
+\end{notation}
+\begin{remark}
+    因为实数域$\mathbb{R}$、向量空间$\mathbb{R}^3$分别
+    与$\mathbb{H}$的子集\keyindex{同构}{isomorphic}{}，
+    所以即便在这种记法下
+    实数与标量四元数、三维向量与向量四元数记号一样，
+    其逻辑也是自洽的。
+\end{remark}
+\subsection{四元数的运算}\label{sub:四元数的运算}
+分别记四元数为
 \begin{align}
-    \left\{
-    \begin{aligned}
-        {\rm i}^2={\rm j}^2={\rm k}^2=-1\, ,         \\
-        {\rm ij}={\rm k},\quad {\rm ji}={\rm -k}\, , \\
-        {\rm jk}={\rm i},\quad {\rm kj}={\rm -i}\, , \\
-        {\rm ki}={\rm j},\quad {\rm ik}={\rm -j}\, .
-    \end{aligned}
-    \right.
+    {\bm q}   & =c+{\bm u}=c+x\mathbf{i}+y\mathbf{j}+z\mathbf{k}\, ,             \\
+    {\bm q}_1 & =c_1+{\bm u}_1=c_1+x_1\mathbf{i}+y_1\mathbf{j}+z_1\mathbf{k}\, , \\
+    {\bm q}_2 & =c_2+{\bm u}_2=c_2+x_2\mathbf{i}+y_2\mathbf{j}+z_2\mathbf{k}\, ,
 \end{align}
-四元组加法为
-\begin{align}
-    {\bm q}+{\bm q}'=(c+c')+(x+x'){\rm i}+(y+y'){\rm j}+(z+z'){\rm k}\, .
-\end{align}
-乘法展开可得
-\begin{align}
-    {\bm q}{\bm q}' & =(c+x{\rm i}+y{\rm j}+z{\rm k})(c'+x'{\rm i}+y'{\rm j}+z'{\rm k})\nonumber \\
-                    & =(cc'-xx'-yy'-zz')+(yz'-y'z+cx'+c'x){\rm i}\nonumber                       \\
-                    & \quad+(zx'-z'x+cy'+c'y){\rm j}+(xy'-x'y+cz'+c'z){\rm k}\, .
-\end{align}
-也可以简记为
-\begin{align}
-    {\bm q}{\bm q}' & =(c+{\bm u})(c'+{\bm u}')\nonumber                                                                        \\
-                    & =(cc'-{\bm u}\cdot{\bm u}')+({\bm u}\times{\bm u}'+\langle c{\bm u}'\rangle+\langle c'{\bm u}\rangle)\, ,
-\end{align}
-其中
-\begin{align*}
-    {\bm u}\cdot{\bm u}'    & =xx'+yy'+zz'\, ,                                      \\
-    \langle c{\bm u}\rangle & =cx{\rm i}+cy{\rm j}+cz{\rm k}\, ,                    \\
-    {\bm u}\times{\bm u}'   & =(yz'-zy'){\rm i}+(zx'-xz'){\rm j}+(xy'-yx'){\rm k}\,
-\end{align*}
-分别为\keyindex{内积}{inner product}{}、数乘、\keyindex{叉积}{cross product}{}。
+其中$c,x,y,z,c_1,x_1,y_1,z_1,c_2,x_2,y_2,z_2\in\mathbb{R}$，${\bm u},{\bm u}_1,{\bm u}_2\in\mathbb{R}_3$。
+\begin{definition}
+    四元数\keyindex{加法}{addition}{}为
+    \begin{align}
+        {\bm q}_1+{\bm q}_2 & =(c_1+c_2)+({\bm u}_1+{\bm u}_2)\nonumber                                  \\
+                            & =(c_1+c_2)+(x_1+x_2)\mathbf{i}+(y_1+y_2)\mathbf{j}+(z_1+z_2)\mathbf{k}\, .
+    \end{align}
+\end{definition}
+\begin{definition}
+    基元$\mathbf{i},\mathbf{j},\mathbf{k}$的乘法为
+    \begin{align}
+        1\mathbf{i}  & =\mathbf{i}1=\mathbf{i}, & 1\mathbf{j}  & =\mathbf{j}1=\mathbf{j}, & 1\mathbf{k}  & =\mathbf{k}1=\mathbf{k}\, , \\
+        \mathbf{i}^2 & =-1,                     & \mathbf{j}^2 & =-1,                     & \mathbf{k}^2 & =-1\, ,                     \\
+        \mathbf{ij}  & =\mathbf{k},             & \mathbf{jk}  & =\mathbf{i},             & \mathbf{ki}  & =\mathbf{j}\, ,             \\
+        \mathbf{ji}  & =-\mathbf{k},            & \mathbf{kj}  & =-\mathbf{i},            & \mathbf{ik}  & =-\mathbf{j}\, .
+    \end{align}
+\end{definition}
+\begin{definition}
+    对于$\lambda\in\mathbb{R}$，四元数的\keyindex{数乘}{scalar multiplication}{}为
+    \begin{align}
+        \lambda{\bm q} & =\lambda c+\lambda {\bm u}\nonumber                                              \\
+                       & =\lambda c+(\lambda x)\mathbf{i}+(\lambda y)\mathbf{j}+(\lambda z)\mathbf{k}\, .
+    \end{align}
+\end{definition}

@@ -234,7 +234,7 @@
 \newcommand{\ud}{\mathop{\mathrm{{}d}}\mathopen{}}
 \newcommand{\intff}[2]{\mathopen{[}#1\,;#2\mathclose{]}}
 \renewcommand{\qedsymbol}{$\blacksquare$}
-\newtheorem{notation}{Notation}[chapter]
+\newtheorem{notation}{记号}[section]
 
 % Boxed/framed environments
 \newtheoremstyle{ocrenumbox}% Theorem style name
@@ -292,12 +292,14 @@
 \newtheorem{exerciseT}{Exercise}[chapter]
 \theoremstyle{blacknumex}
 \newtheorem{exampleT}{Example}[chapter]
+\newtheorem{proveT}{证明}[section]
+\newenvironment{prove}{\begin{proveT}}{\hfill{\tiny\ensuremath{\qedhere\blacksquare}}\end{proveT}}
 \theoremstyle{blacknumbox}
 \newtheorem{vocabulary}{Vocabulary}[chapter]
 \newtheorem{definitionT}{定义}[section]
-\newtheorem{corollaryT}[dummy]{Corollary}
+\newtheorem{corollaryT}[dummy]{推论}
 \theoremstyle{ocrenum}
-\newtheorem{proposition}[dummy]{Proposition}
+\newtheorem{proposition}[dummy]{定理}
 
 %----------------------------------------------------------------------------------------
 %	DEFINITION OF COLORED BOXES

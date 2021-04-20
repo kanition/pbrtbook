@@ -1,0 +1,50 @@
+\section{内存管理}\label{sec:内存管理}
+
+\subsection{基于Arena的分配}\label{sub:基于Arena的分配}
+\begin{lstlisting}
+`\refcode{Memory Declarations}{+=}\lastnext{MemoryDeclarations}`
+class `\initvar{MemoryArena}{}` {
+public:
+    `\refcode{MemoryArena Public Methods}{}`
+private:
+    `\refcode{MemoryArena Private Data}{}`
+};
+\end{lstlisting}
+
+\begin{lstlisting}
+`\initcode{MemoryArena Public Methods}{=}\initnext{MemoryArenaPublicMethods}`
+`\refvar{MemoryArena}{}`(size_t `\refvar{blockSize}{}` = 262144) : `\refvar{blockSize}{}`(`\refvar{blockSize}{}`) { }
+\end{lstlisting}
+
+\begin{lstlisting}
+`\initcode{MemoryArena Private Data}{=}\initnext{MemoryArenaPrivateData}`
+const size_t `\initvar{blockSize}{}`;
+\end{lstlisting}
+
+\begin{lstlisting}
+`\refcode{MemoryArena Private Data}{+=}\lastnext{MemoryArenaPrivateData}`
+size_t `\initvar{currentBlockPos}{}` = 0, `\initvar{currentAllocSize}{}` = 0;
+uint8_t *`\initvar{currentBlock}{}` = nullptr;
+\end{lstlisting}
+
+\begin{lstlisting}
+`\refcode{MemoryArena Public Methods}{+=}\lastnext{MemoryArenaPublicMethods}`
+void *`\initvar{Alloc}{}`(size_t nBytes) {
+    `\refcode{Round up nBytes to minimum machine alignment}{}`
+    if (`\refvar{currentBlockPos}{}` + nBytes > `\refvar{currentAllocSize}{}`) {
+        `\refcode{Add current block to usedBlocks list}{}`
+        `\refcode{Get new block of memory for MemoryArena}{}`
+    }
+    void *ret = `\refvar{currentBlock}{}` + `\refvar{currentBlockPos}{}`;
+    `\refvar{currentBlockPos}{}` += nBytes;
+    return ret;
+}
+\end{lstlisting}
+
+\begin{lstlisting}
+`\refcode{MemoryArena Public Methods}{+=}\lastcode{MemoryArenaPublicMethods}`
+void `\initvar{Reset}{}`() {
+    `\refvar{currentBlockPos}{}` = 0;
+    availableBlocks.splice(availableBlocks.begin(), usedBlocks);
+}
+\end{lstlisting}

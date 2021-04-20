@@ -30,7 +30,7 @@
 \setlist{nolistsep} % Reduce spacing between bullet points and numbered lists
 
 \usepackage{booktabs} % Required for nicer horizontal rules in tables
-
+\usepackage{bm}
 \usepackage{xcolor} % Required for specifying colors by name
 \definecolor{ocre}{RGB}{243,102,25} % Define the orange color used for highlighting throughout the book
 
@@ -234,7 +234,7 @@
 \newcommand{\ud}{\mathop{\mathrm{{}d}}\mathopen{}}
 \newcommand{\intff}[2]{\mathopen{[}#1\,;#2\mathclose{]}}
 \renewcommand{\qedsymbol}{$\blacksquare$}
-\newtheorem{notation}{Notation}[chapter]
+\newtheorem{notation}{记号}[section]
 
 % Boxed/framed environments
 \newtheoremstyle{ocrenumbox}% Theorem style name
@@ -291,13 +291,15 @@
 \newtheorem{problem}{Problem}[chapter]
 \newtheorem{exerciseT}{Exercise}[chapter]
 \theoremstyle{blacknumex}
-\newtheorem{exampleT}{Example}[chapter]
+\newtheorem{exampleT}{例}[section]
+\newtheorem{proveT}{证明}[section]
+\newenvironment{prove}{\begin{proveT}}{\hfill{\tiny\ensuremath{\qedhere\blacksquare}}\end{proveT}}
 \theoremstyle{blacknumbox}
 \newtheorem{vocabulary}{Vocabulary}[chapter]
-\newtheorem{definitionT}{Definition}[section]
-\newtheorem{corollaryT}[dummy]{Corollary}
+\newtheorem{definitionT}{定义}[section]
+\newtheorem{corollaryT}[dummy]{推论}
 \theoremstyle{ocrenum}
-\newtheorem{proposition}[dummy]{Proposition}
+\newtheorem{proposition}[dummy]{定理}
 
 %----------------------------------------------------------------------------------------
 %	DEFINITION OF COLORED BOXES
@@ -604,8 +606,9 @@
 \newcommand\initnext[1]{\initcnt{#1}\nextcode{#1}\addcnt{#1}} %初始化且引用下一段代码
 \newcommand\lastnext[1]{\lastcode{#1}\nextcode{#1}\addcnt{#1}} %引用前后代码
 
-\newcommand\initvar[2]{\htarget{codevar:#1}{\ttfamily #1#2}} %代码变量定义
-\newcommand\refvar[2]{\hyperlink{codevar:#1}{\ttfamily #1#2}} %代码变量引用跳转
+% 代码变量定义、引用跳转
+\newcommand\refvar[3][]{\ifthenelse{\isempty{#1}}{\hyperlink{codevar:#2}{\ttfamily #2#3}}{\hyperlink{codevar:#1}{\ttfamily #2#3}}}
+\newcommand\initvar[3][]{\ifthenelse{\isempty{#1}}{\htarget{codevar:#2}{\ttfamily #2#3}}{\htarget{codevar:#1}{\ttfamily #2#3}}}
 
 \newcommand\reffig[1]{图\ref{fig:#1}}
 \newcommand\reftab[1]{表\ref{tab:#1}}

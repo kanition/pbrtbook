@@ -1,0 +1,475 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="Layer_1"
+   data-name="Layer 1"
+   viewBox="0 0 893.08 262.91"
+   version="1.1"
+   sodipodi:docname="ClassRelationships.svg"
+   inkscape:version="1.0.1 (3bc2e813f5, 2020-09-07)">
+  <metadata
+     id="metadata1669">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     id="namedview1667"
+     showgrid="false"
+     inkscape:snap-object-midpoints="true"
+     inkscape:snap-bbox="true"
+     inkscape:snap-bbox-midpoints="true"
+     inkscape:zoom="0.80283964"
+     inkscape:cx="197.06899"
+     inkscape:cy="189.83377"
+     inkscape:window-x="1912"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="Layer_1"
+     inkscape:document-rotation="0"
+     showguides="true"
+     inkscape:guide-bbox="true">
+    <sodipodi:guide
+       position="205.21643,202.57813"
+       orientation="0,-1"
+       id="guide3785" />
+    <sodipodi:guide
+       position="487.18999,132"
+       orientation="1,0"
+       id="guide3787" />
+  </sodipodi:namedview>
+  <defs
+     id="defs1254">
+    <rect
+       x="2.862461"
+       y="66.71736"
+       width="81.690233"
+       height="34.789911"
+       id="rect3718" />
+    <rect
+       x="136.51737"
+       y="21.138173"
+       width="95.817902"
+       height="26.582997"
+       id="rect2823" />
+    <style
+       id="style1252">.cls-1{fill:#ccc;}.cls-2{fill:#231f20;}.cls-3{fill:none;stroke:#000;stroke-miterlimit:10;}.cls-4{fill:#a6a6a6;}.cls-5{fill:#666;}</style>
+    <rect
+       x="136.51736"
+       y="21.138172"
+       width="95.817902"
+       height="26.582996"
+       id="rect2823-1" />
+    <rect
+       x="136.51736"
+       y="21.138172"
+       width="95.817902"
+       height="26.582996"
+       id="rect2842" />
+    <rect
+       x="136.51736"
+       y="21.138172"
+       width="373.6968"
+       height="36.271325"
+       id="rect2823-1-1" />
+    <rect
+       x="136.51736"
+       y="21.138172"
+       width="95.817902"
+       height="26.582996"
+       id="rect2871" />
+    <rect
+       x="136.51736"
+       y="21.138172"
+       width="373.69681"
+       height="36.271324"
+       id="rect2823-1-1-8" />
+    <rect
+       x="136.51736"
+       y="21.138172"
+       width="373.69681"
+       height="36.271324"
+       id="rect2900" />
+    <rect
+       x="136.51736"
+       y="21.138172"
+       width="95.817902"
+       height="26.582996"
+       id="rect2823-1-5" />
+    <rect
+       x="136.51736"
+       y="21.138172"
+       width="95.817902"
+       height="26.582996"
+       id="rect2971" />
+    <rect
+       x="2.8624611"
+       y="66.717361"
+       width="81.690231"
+       height="34.789909"
+       id="rect3718-3" />
+    <rect
+       x="2.8624611"
+       y="66.717361"
+       width="81.690231"
+       height="34.789909"
+       id="rect3735" />
+    <rect
+       x="2.8624611"
+       y="66.717361"
+       width="81.690231"
+       height="34.789909"
+       id="rect3718-3-6" />
+    <rect
+       x="2.8624611"
+       y="66.717361"
+       width="81.690231"
+       height="34.789909"
+       id="rect3764" />
+    <rect
+       x="2.8624611"
+       y="66.717361"
+       width="81.690231"
+       height="34.789909"
+       id="rect3718-3-6-5" />
+    <rect
+       x="2.8624611"
+       y="66.717361"
+       width="81.690231"
+       height="34.789909"
+       id="rect3798" />
+    <rect
+       x="2.8624611"
+       y="66.717361"
+       width="98.81694"
+       height="39.149435"
+       id="rect3718-3-6-5-6" />
+    <rect
+       x="2.8624611"
+       y="66.717361"
+       width="81.690231"
+       height="34.789909"
+       id="rect3827" />
+    <rect
+       x="2.8624611"
+       y="66.717361"
+       width="151.22199"
+       height="55.883821"
+       id="rect3718-3-6-5-6-0" />
+    <rect
+       x="2.8624611"
+       y="66.717361"
+       width="98.81694"
+       height="39.149433"
+       id="rect3857" />
+  </defs>
+  <title
+     id="title1256">Class Relationships</title>
+  <rect
+     class="cls-1"
+     x="6.65"
+     width="108.16"
+     height="31.16"
+     rx="5"
+     ry="5"
+     id="rect1270" />
+  <rect
+     class="cls-1"
+     x="248.15"
+     width="95.57"
+     height="31.16"
+     rx="5"
+     ry="5"
+     id="rect1300" />
+  <rect
+     class="cls-1"
+     x="40.439999"
+     y="123"
+     width="360.06"
+     height="31.16"
+     rx="5"
+     ry="5"
+     id="rect1326"
+     style="display:inline" />
+  <rect
+     class="cls-1"
+     x="184.28"
+     y="231.75"
+     width="70.650002"
+     height="31.16"
+     rx="5"
+     ry="5"
+     id="rect1436"
+     style="display:inline" />
+  <rect
+     class="cls-1"
+     x="583.40002"
+     y="119.25"
+     width="309.67999"
+     height="31.16"
+     rx="5"
+     ry="5"
+     id="rect1454"
+     style="display:inline" />
+  <line
+     class="cls-3"
+     x1="58.490002"
+     y1="31.91"
+     x2="139.81"
+     y2="114.64"
+     id="line1548"
+     style="display:inline" />
+  <polygon
+     points="132.44,114.99 139.35,114.17 140.29,107.28 145.49,120.41 "
+     id="polygon1550"
+     style="display:inline" />
+  <polygon
+     class="cls-4"
+     points="144.57,119.48 139.8,114.62 134.39,115.26 "
+     id="polygon1552"
+     style="display:inline" />
+  <polygon
+     class="cls-5"
+     points="139.8,114.62 140.53,109.23 144.57,119.48 "
+     id="polygon1554"
+     style="display:inline" />
+  <line
+     class="cls-3"
+     x1="251.97"
+     y1="121.39"
+     x2="287.12"
+     y2="40.93"
+     id="line1556"
+     style="display:inline" />
+  <polygon
+     points="290.2,47.63 286.86,41.53 280.11,43.23 290.37,33.51 "
+     id="polygon1558"
+     style="display:inline" />
+  <polygon
+     class="cls-4"
+     points="289.84,34.71 287.11,40.95 289.72,45.72 "
+     id="polygon1560"
+     style="display:inline" />
+  <polygon
+     class="cls-5"
+     points="289.84,34.71 287.11,40.95 281.84,42.28 "
+     id="polygon1562"
+     style="display:inline" />
+  <line
+     class="cls-3"
+     x1="285.20999"
+     y1="113.96"
+     x2="320.35999"
+     y2="33.5"
+     id="line1564"
+     style="display:inline" />
+  <polygon
+     points="292.22,111.67 285.47,113.37 282.13,107.26 281.96,121.39 "
+     id="polygon1566"
+     style="display:inline" />
+  <polygon
+     class="cls-4"
+     points="282.49,120.19 285.22,113.95 290.49,112.61 "
+     id="polygon1568"
+     style="display:inline" />
+  <polygon
+     class="cls-5"
+     points="282.61,109.17 282.49,120.19 285.22,113.95 "
+     id="polygon1570"
+     style="display:inline" />
+  <line
+     class="cls-3"
+     x1="220.03999"
+     y1="154.91"
+     x2="220.03999"
+     y2="222.56"
+     id="line1572"
+     style="display:inline" />
+  <polygon
+     points="214.53,217.65 220.04,221.91 225.54,217.65 220.04,230.66 "
+     id="polygon1574"
+     style="display:inline" />
+  <polygon
+     class="cls-4"
+     points="220.04,229.35 220.04,222.54 215.73,219.21 "
+     id="polygon1576"
+     style="display:inline" />
+  <polygon
+     class="cls-5"
+     points="224.33,219.21 220.04,229.35 220.04,222.54 "
+     id="polygon1578"
+     style="display:inline" />
+  <line
+     class="cls-3"
+     x1="404.23999"
+     y1="130.91"
+     x2="570.14001"
+     y2="130.91"
+     id="line1580"
+     style="display:inline" />
+  <polygon
+     points="565.23,136.42 569.49,130.91 565.23,125.41 578.24,130.91 "
+     id="polygon1582"
+     style="display:inline" />
+  <polygon
+     class="cls-4"
+     points="576.93,130.91 570.12,130.91 566.79,135.22 "
+     id="polygon1584"
+     style="display:inline" />
+  <polygon
+     class="cls-5"
+     points="566.79,126.62 576.93,130.91 570.12,130.91 "
+     id="polygon1586"
+     style="display:inline" />
+  <line
+     class="cls-3"
+     x1="413.84"
+     y1="145.16"
+     x2="579.73999"
+     y2="145.16"
+     id="line1588"
+     style="display:inline" />
+  <polygon
+     points="418.75,150.67 414.5,145.16 418.75,139.66 405.74,145.16 "
+     id="polygon1590"
+     style="display:inline" />
+  <polygon
+     class="cls-4"
+     points="413.87,145.16 417.2,149.47 407.05,145.16 "
+     id="polygon1592"
+     style="display:inline" />
+  <polygon
+     class="cls-5"
+     points="413.87,145.16 417.2,140.87 407.05,145.16 "
+     id="polygon1594"
+     style="display:inline" />
+  <text
+     xml:space="preserve"
+     id="text2821"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:21.3333px;line-height:1.25;font-family:'Tiger Expert';-inkscape-font-specification:'Tiger Expert';white-space:pre;shape-inside:url(#rect2823);display:inline;"
+     x="43.854095"
+     y="0"
+     transform="translate(-124.06655,-19.739468)"><tspan
+       x="139.61954"
+       y="39.845502"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:21.3333px;font-family:'Courier New';-inkscape-font-specification:'Courier New Bold';text-align:center;text-anchor:middle">Sampler</tspan></tspan></text>
+  <text
+     xml:space="preserve"
+     id="text2821-4"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:21.3333px;line-height:1.25;font-family:'Tiger Expert';-inkscape-font-specification:'Tiger Expert';white-space:pre;shape-inside:url(#rect2823-1);display:inline;"
+     x="81.650909"
+     y="0"
+     transform="translate(111.45094,-17.968637)"><tspan
+       x="146.02057"
+       y="39.845502"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'Courier New';-inkscape-font-specification:'Courier New Bold';text-align:center;text-anchor:middle">Camera</tspan></tspan></text>
+  <text
+     xml:space="preserve"
+     id="text2821-4-0"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:21.3333px;line-height:1.25;font-family:'Tiger Expert';-inkscape-font-specification:'Tiger Expert';white-space:pre;shape-inside:url(#rect2823-1-1);display:inline;"
+     x="250.44231"
+     y="0"
+     transform="translate(-100.81288,103.35428)"><tspan
+       x="150.53836"
+       y="39.845502"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'Courier New';-inkscape-font-specification:'Courier New Bold';text-align:center;text-anchor:middle">SamplerIntegrator::Render()</tspan></tspan></text>
+  <text
+     xml:space="preserve"
+     id="text2821-4-0-5"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:21.3333px;line-height:1.25;font-family:'Tiger Expert';-inkscape-font-specification:'Tiger Expert';white-space:pre;shape-inside:url(#rect2823-1-1-8);display:inline;"
+     x="394.2598"
+     y="0"
+     transform="translate(416.95714,99.604282)"><tspan
+       x="176.14249"
+       y="39.845502"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'Courier New';-inkscape-font-specification:'Courier New Bold';text-align:center;text-anchor:middle">SamplerIntegrator::Li()</tspan></tspan></text>
+  <text
+     xml:space="preserve"
+     id="text2821-4-8"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:21.3333px;line-height:1.25;font-family:'Tiger Expert';-inkscape-font-specification:'Tiger Expert';white-space:pre;shape-inside:url(#rect2823-1-5);display:inline;"
+     x="107.00504"
+     y="0"
+     transform="translate(34.386576,214.2397)"><tspan
+       x="158.82263"
+       y="39.845502"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'Courier New';-inkscape-font-specification:'Courier New Bold';text-align:center;text-anchor:middle">Film</tspan></tspan></text>
+  <text
+     xml:space="preserve"
+     id="text3716"
+     style="font-size:21.3333px;line-height:1.25;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;shape-inside:url(#rect3718);display:inline;"
+     transform="translate(6.1653006,-19.916798)"><tspan
+       x="2.8632812"
+       y="85.652678"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18.6667px;font-family:'Adobe Heiti Std';-inkscape-font-specification:'Adobe Heiti Std'">Sample</tspan></tspan></text>
+  <text
+     xml:space="preserve"
+     id="text3716-6"
+     style="font-size:21.3333px;line-height:1.25;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;shape-inside:url(#rect3718-3);display:inline;"
+     transform="translate(205.44703,-19.916798)"><tspan
+       x="2.8632812"
+       y="85.652678"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18.6667px;font-family:'Adobe Heiti Std';-inkscape-font-specification:'Adobe Heiti Std'">Sample</tspan></tspan></text>
+  <text
+     xml:space="preserve"
+     id="text3716-6-8"
+     style="font-size:18.6667px;line-height:1.25;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;shape-inside:url(#rect3718-3-6);display:inline;"
+     transform="translate(312.64578,-18.506911)"><tspan
+       x="2.8632812"
+       y="85.476831"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18.6667px;font-family:'Adobe Heiti Std';-inkscape-font-specification:'Adobe Heiti Std'">Ray</tspan></tspan></text>
+  <text
+     xml:space="preserve"
+     id="text3716-6-8-9"
+     style="font-size:18.6667px;line-height:1.25;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;shape-inside:url(#rect3718-3-6-5);display:inline;"
+     transform="translate(442.84853,40.736784)"
+     x="16.173857"
+     y="0"><tspan
+       x="28.35466"
+       y="85.476831"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18.6667px;font-family:'Adobe Heiti Std';-inkscape-font-specification:'Adobe Heiti Std';text-align:center;text-anchor:middle">Ray</tspan></tspan></text>
+  <text
+     xml:space="preserve"
+     id="text3716-6-8-9-4"
+     style="font-size:18.6667px;line-height:1.25;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;shape-inside:url(#rect3718-3-6-5-6);display:inline;"
+     transform="translate(434.46279,79.661119)"
+     x="40.85619"
+     y="0"><tspan
+       x="13.528792"
+       y="85.476831"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18.6667px;font-family:'Adobe Heiti Std';-inkscape-font-specification:'Adobe Heiti Std';text-align:center;text-anchor:middle">Radiance</tspan></tspan></text>
+  <text
+     xml:space="preserve"
+     id="text3716-6-8-9-4-3"
+     style="font-size:18.6667px;line-height:1.25;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;shape-inside:url(#rect3718-3-6-5-6-0);display:inline;"
+     transform="translate(225.59208,99.354335)"
+     x="81.712379"
+     y="0"><tspan
+       x="2.8632812"
+       y="85.476831"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18.6667px;font-family:'Adobe Heiti Std';-inkscape-font-specification:'Adobe Heiti Std';text-align:start;text-anchor:start">Sample,
+</tspan></tspan><tspan
+       x="2.8632812"
+       y="111.00129"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18.6667px;font-family:'Adobe Heiti Std';-inkscape-font-specification:'Adobe Heiti Std';text-align:start;text-anchor:start">Radiance</tspan></tspan></text>
+</svg>

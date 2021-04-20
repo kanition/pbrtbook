@@ -14,11 +14,11 @@ protected:
 \begin{lstlisting}
 `\initcode{Light Interface}{=}\initnext{LightInterface}`
 `\refvar{Light}{}`(int `\refvar{flags}{}`, const `\refvar{Transform}{}` &`\refvar{LightToWorld}{}`,
-      const MediumInterface &`\refvar{mediumInterface}{}`, int `\refvar{nSamples}{}` = 1)
+      const `\refvar{MediumInterface}{}` &`\refvar{mediumInterface}{}`, int `\refvar{nSamples}{}` = 1)
     : `\refvar{flags}{}`(`\refvar{flags}{}`), `\refvar{nSamples}{}`(std::max(1, `\refvar{nSamples}{}`)),
     `\refvar{mediumInterface}{}`(`\refvar{mediumInterface}{}`), `\refvar{LightToWorld}{}`(`\refvar{LightToWorld}{}`),
     `\refvar{WorldToLight}{}`(`\refvar{Inverse}{}`(`\refvar{LightToWorld}{}`))  { 
-        `\refcode{Warn if light has transformation with non-uniform scale}{}`
+    `\refcode{Warn if light has transformation with non-uniform scale}{}`
 }
 \end{lstlisting}
 
@@ -26,7 +26,7 @@ protected:
 `\initcode{Light Public Data}{=}`
 const int `\initvar{flags}{}`;
 const int `\initvar{nSamples}{}`;
-const MediumInterface `\initvar{mediumInterface}{}`;
+const `\refvar{MediumInterface}{}` `\initvar{mediumInterface}{}`;
 \end{lstlisting}
 
 \begin{lstlisting}

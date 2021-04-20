@@ -8,3 +8,42 @@ public:
     `\refcode{Camera Public Data}{}`
 };
 \end{lstlisting}
+\begin{lstlisting}
+`\initcode{Camera Interface}{=}\initnext{CameraInterface}`
+`\refvar{Camera}{}`(const `\refvar{AnimatedTransform}{}` &CameraToWorld, Float shutterOpen,
+    Float shutterClose, `\refvar{Film}{}` *film, const `\refvar{Medium}{}` *medium);
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{Camera Public Data}{=}`
+`\refvar{AnimatedTransform}{}` `\initvar{CameraToWorld}{}`;
+const Float `\initvar{shutterOpen}{}`, `\initvar{shutterClose}{}`;
+`\refvar{Film}{}` *`\initvar{film}{}`;
+const `\refvar{Medium}{}` *`\initvar{medium}{}`;
+\end{lstlisting}
+相机子类首先要实现的方法是\refvar[GenerateRay]{Camera::GenerateRay}{()}，
+它计算给定样本相应的光线。
+归一化返回光线的方向分量很重要——系统许多其他部分会依赖此行为。
+\begin{lstlisting}
+`\refcode{Camera Interface}{+=}\lastnext{CameraInterface}`
+virtual Float `\initvar{GenerateRay}{}`(const `\refvar{CameraSample}{}` &sample,
+    `\refvar{Ray}{}` *ray) const = 0;
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{Camera Declarations}{+=}\lastnext{CameraDeclarations}`
+struct `\initvar{CameraSample}{}` {
+    `\refvar{Point2f}{}` `\initvar{pFilm}{}`;
+    `\refvar{Point2f}{}` `\initvar{pLens}{}`;
+    Float `\initvar[CameraSample::time]{time}{}`;
+};
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{Camera Method Definitions}{=}`
+Float `\refvar{Camera}{}`::`\initvar{GenerateRayDifferential}{}`(const `\refvar{CameraSample}{}` &sample,
+    `\refvar{RayDifferential}{}` *rd) const {
+    Float wt = `\refvar{GenerateRay}{}`(sample, rd);
+    `\refcode{Find camera ray after shifting one pixel in the $x$ direction}{}`
+    `\refcode{Find camera ray after shifting one pixel in the $y$ direction}{}`
+    rd->`\refvar{hasDifferentials}{}` = true;
+    return wt;
+}
+\end{lstlisting}

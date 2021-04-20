@@ -10,7 +10,7 @@
 ## 下载地址：[https://github.com/kanition/pbrtbook/releases](https://github.com/kanition/pbrtbook/releases)
 ## 友情链接
 ### 第三版
-* 原书官网：[http://www.pbr-book.org/](http://www.pbr-book.org/)
+* 原书官网：[https://www.pbr-book.org/](https://www.pbr-book.org/)
 * 原书源码：[https://github.com/mmp/pbrt-v3](https://github.com/mmp/pbrt-v3)
 ### 第四版
 * 原书源码：[https://github.com/mmp/pbrt-v4](https://github.com/mmp/pbrt-v4)

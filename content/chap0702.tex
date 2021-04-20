@@ -14,3 +14,39 @@ private:
     `\refcode{Sampler Private Data}{}`
 };
 \end{lstlisting}
+\begin{lstlisting}
+`\initcode{Sampler Method Definitions}{=}\initnext{SamplerMethodDefinitions}`
+`\refvar{Sampler}{}`::`\refvar{Sampler}{}`(int64_t samplesPerPixel)
+: `\refvar{samplesPerPixel}{}`(samplesPerPixel) { }
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{Sampler Public Data}{=}`
+const int64_t `\initvar{samplesPerPixel}{}`;
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{Sampler Interface}{=}\initnext{SamplerInterface}`
+virtual void `\initvar{StartPixel}{}`(const `\refvar{Point2i}{}` &p);
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{Sampler Interface}{+=}\lastnext{SamplerInterface}`
+virtual Float `\initvar{Get1D}{}`() = 0;
+virtual `\refvar{Point2f}{}` `\initvar{Get2D}{}`() = 0;
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{Sampler Method Definitions}{+=}\lastnext{SamplerMethodDefinitions}`
+`\refvar{CameraSample}{}` `\refvar{Sampler}{}`::`\initvar{GetCameraSample}{}`(const `\refvar{Point2i}{}` &pRaster) {
+    `\refvar{CameraSample}{}` cs;
+    cs.`\refvar{pFilm}{}` = (`\refvar{Point2f}{}`)pRaster + `\refvar{Get2D}{}`();
+    cs.`\refvar[CameraSample::time]{time}{}` = `\refvar{Get1D}{}`();
+    cs.`\refvar{pLens}{}` = `\refvar{Get2D}{}`();
+    return cs;
+}
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{Sampler Interface}{+=}\lastnext{SamplerInterface}`
+virtual bool `\initvar{StartNextSample}{}`();
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{Sampler Interface}{+=}\lastnext{SamplerInterface}`
+virtual std::unique_ptr<`\refvar{Sampler}{}`> `\initvar{Clone}{}`(int seed) = 0;
+\end{lstlisting}

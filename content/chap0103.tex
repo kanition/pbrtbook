@@ -46,7 +46,7 @@ pbrt用10个关键抽象基类写成，列于\reftab{1.1}。
 \end{table}
 
 pbrt源码发布于\href{https://pbrt.org/}{\ttfamily pbrt.org}。
-（大量场景示例\footnote{\url{http://pbrt.org/scenes-v3.html}}也可分开下载。）
+（大量场景示例\footnote{\url{https://pbrt.org/scenes-v3.html}}也可分开下载。）
 所有的pbrt核心代码均在目录\href{https://github.com/mmp/pbrt-v3/tree/master/src/core}{\ttfamily src/core}内，
 函数\refvar{main}{()}在
 短文件\href{https://github.com/mmp/pbrt-v3/tree/master/src/main/pbrt.cpp}{\ttfamily main/pbrt.cpp}内。
@@ -611,3 +611,147 @@ std::unique_ptr<`\refvar{FilmTile}{}`> `\initvar{filmTile}{}` =
 \end{lstlisting}
 
 现在可以进行渲染了。
+用自动使用由类\refvar{Bounds2}{}提供的迭代器
+的范围{\ttfamily for}循环对图块中所有像素遍历。
+复制的\refvar{Sampler}{}会被通知要开始为当前像素生成样本了，
+样本被依次处理直到\refvar{StartNextSample}{()}返回{\ttfamily false}。
+（如第\refchap{采样与重构}所述，每个像素取多个样本能大幅提高最终图像的质量。）
+
+\begin{lstlisting}
+`\initcode{Loop over pixels in tile to render them}{=}`
+for (`\refvar{Point2i}{}` pixel : tileBounds) {
+    tileSampler->`\refvar{StartPixel}{}`(pixel);
+    do {
+        `\refcode{Initialize CameraSample for current sample}{}`
+        `\refcode{Generate camera ray for current sample}{}`
+        `\refcode{Evaluate radiance along camera ray}{}`
+        `\refcode{Add camera ray's contribution to image}{}`
+        `\refcode{Free MemoryArena memory from computing image sample value}{}`
+    } while (tileSampler->`\refvar{StartNextSample}{}`());
+}
+\end{lstlisting}
+
+结构体\refvar{CameraSample}{}记录了相机应生成相应光线的胶片上的位置。
+它还存储了时间和透镜位置采样值，
+分别用于渲染移动物体场景和模拟非针孔光圈的相机模型。
+\begin{lstlisting}
+`\initcode{Initialize CameraSample for current sample}{=}`
+`\refvar{CameraSample}{}` cameraSample = tileSampler->`\refvar{GetCameraSample}{}`(pixel);
+\end{lstlisting}
+
+\refvar{Camera}{}接口提供了两种方法生成光线：\refvar[GenerateRay]{Camera::GenerateRay}{()}返回
+给定图像采样位置的光线，\refvar[GenerateRayDifferential]{Camera::GenerateRayDifferential}{()}返回\keyindex{光线差分}{ray differential}{}，
+它合并了\refvar{Camera}{}为那些在$x$和$y$方向都偏离图像平面一像素的样本生成的光线信息。
+光线差分用于第\refchap{纹理}一些纹理函数以获取更好的结果，
+让计算纹理随像素空间变化有多快成为可能，这是纹理反锯齿的关键因素。
+
+返回光线差分后，方法\refvar{ScaleDifferentials}{()}对其缩放
+以兼顾每个像素取多个样本时胶片平面上样本之间的实际间距。
+
+相机还返回与光线关联的浮点权重。
+对于单个相机模型，每条光线都平等赋权，
+但更精确建模透镜系统成像过程的相机模型生成的一些光线可能比另一些作用更大。
+这样的相机模型也许模拟了到达胶片平面边缘的光比中心更少的效应，称为\keyindex{暗角}{vignetting}{}。
+返回的权重之后会用于缩放光线对图像的作用。
+\begin{lstlisting}
+`\initcode{Generate camera ray for current sample}{=}`
+`\refvar{RayDifferential}{}` ray;
+`\refvar{Float}{}` rayWeight = `\refvar{camera}{}`->`\refvar{GenerateRayDifferential}{}`(cameraSample, &ray);
+ray.`\refvar{ScaleDifferentials}{}`(1 / std::sqrt(tileSampler->`\refvar{samplesPerPixel}{}`));
+\end{lstlisting}
+
+注意大写浮点类型\refvar{Float}{}：取决于pbrt的编译选项，
+它是{\ttfamily float}或{\ttfamily double}的别名。
+\refsec{主要包含文件}提供了这些设计选项的更多细节。
+
+给定一条光线，下一个任务是确定沿其到达图像平面的辐射。
+方法\refvar{Li}{()}负责这项任务。
+\begin{lstlisting}
+`\initcode{Evaluate radiance along camera ray}{=}`
+`\refvar{Spectrum}{}` L(0.f);
+if (rayWeight > 0)
+    L = `\refvar{Li}{}`(ray, scene, *tileSampler, arena);
+`\refcode{Issue warning if unexpected radiance value is returned}{}`
+\end{lstlisting}
+其中
+\begin{lstlisting}
+`\initcode{Issue warning if unexpected radiance value is returned}{=}`
+if (L.HasNaNs()) {
+    `\refvar{Error}{}`("Not-a-number radiance value returned "
+    "for image sample. Setting to black.");
+    L = `\refvar{Spectrum}{}`(0.f);
+}
+else if (L.y() < -1e-5) {
+    `\refvar{Error}{}`("Negative luminance value, %f, returned "
+    "for image sample. Setting to black.", L.y());
+    L = `\refvar{Spectrum}{}`(0.f);
+}
+else if (std::isinf(L.y())) {
+    `\refvar{Error}{}`("Infinite luminance value returned "
+    "for image sample. Setting to black.");
+    L = `\refvar{Spectrum}{}`(0.f);
+}
+\end{lstlisting}
+\refvar{Li}{()}是纯虚方法，返回给定光线起点的入射量；
+每个\refvar{SamplerIntegrator}{}的子类必须提供该方法的一个实现。
+\refvar{Li}{()}的参数有：
+\begin{itemize}
+    \item {\ttfamily ray}：计算入射量所沿的光线。
+    \item {\ttfamily scene}：要渲染的\refvar{Scene}{}。实现会向场景索取关于光照和几何等的信息。
+    \item {\ttfamily sampler}：通过蒙特卡洛积分求解光传输方程的样本生成器。
+    \item {\ttfamily arena}：为积分器高效临时分配内存的\refvar{MemoryArena}{}。
+          积分器应假设它用{\ttfamily arena}分配的任何内存都会在方法\refvar{Li}{()}返回后不久就被释放，
+          因此不应使用{\ttfamily arena}分配任何比当前光线所需还驻留更久的内存。
+    \item {\ttfamily depth}：光线从相机出发直到当前调用\refvar{Li}{()}之间反射的次数。
+\end{itemize}
+
+该方法返回的\refvar{Spectrum}{}表示光线起点的入射量：
+\begin{lstlisting}
+`\refcode{SamplerIntegrator Public Methods}{+=}\lastcode{SamplerIntegratorPublicMethods}`
+virtual `\refvar{Spectrum}{}` `\initvar{Li}{}`(const `\refvar{RayDifferential}{}` &ray, const `\refvar{Scene}{}` &scene,
+    `\refvar{Sampler}{}` &sampler, `\refvar{MemoryArena}{}` &arena, int depth = 0) const = 0;
+\end{lstlisting}
+
+渲染过程中bug的一个常见副作用是计算出不可能的辐射值。
+例如，除以零得到的辐射值等于IEEE浮点无穷或“not a number”值。
+渲染器寻找这种可能性，以及具有负数贡献的光谱，
+并在遇到这些情况时打印错误信息。
+此处我们不会包含执行这些的
+代码片\refcode{Issue warning if unexpected radiance value is returned}{}\sidenote{译者注：我把它补充上来了。}。
+如果你对其细节感兴趣可以查看\href{https://github.com/mmp/pbrt-v3/tree/master/src/core/integrator.cpp}{\ttfamily core/integrator.cpp}里的实现。
+
+知道到达光线原点的辐射后，就能更新图像了：
+方法\refvar[AddSample]{FilmTile::AddSample}{()}
+依据样本的结果更新图块里的像素。
+样本值如何记录到胶片的细节将在\refsec{图像重构}和\refsec{胶片与成像管道}解释。
+\begin{lstlisting}
+`\initcode{Add camera ray's contribution to image}{=}`
+filmTile->`\refvar{AddSample}{}`(cameraSample.`\refvar{pFilm}{}`, L, rayWeight);
+\end{lstlisting}
+
+在处理完一个样本后，\refvar{MemoryArena}{}内所有已经分配过的内存都会在调用
+\refvar[Reset]{MemoryArena::Reset}{()}
+时一起释放。（关于如何用\refvar{MemoryArena}{}分配内存
+来表示交点处的BSDF的解释详见\refsub{BSDF内存管理}。）
+\begin{lstlisting}
+`\initcode{Free MemoryArena memory from computing image sample value}{=}`
+arena.`\refvar{Reset}{}`();
+\end{lstlisting}
+
+一旦计算完图块内所有样本的辐射值，
+\refvar{FilmTile}{}就会被传递给\refvar{Film}{}的方法\refvar{MergeFilmTile}{()}，
+它负责把图块的像素贡献加到最终图像上。
+注意函数{\ttfamily std::move()}用于把{\ttfamily unique\_ptr}的所有权
+转让给\refvar{MergeFilmTile}{()}。
+\begin{lstlisting}
+`\initcode{Merge image tile into Film}{=}`
+`\refvar{camera}{}`->`\refvar{film}{}`->`\refvar{MergeFilmTile}{}`(std::move(filmTile));
+\end{lstlisting}
+
+所有循环迭代完成后，\refvar{SamplerIntegrator}{}的
+方法\refvar[SamplerIntegrator::Render]{Render}{()}调用\refvar{Film}{}的
+方法\refvar[Film::WriteImage]{WriteImage}{()}将图像输出写入到文件。
+\begin{lstlisting}
+`\initcode{Save final image after rendering}{=}`
+`\refvar{camera}{}`->`\refvar{film}{}`->`\refvar[Film::WriteImage]{WriteImage}{}`();
+\end{lstlisting}

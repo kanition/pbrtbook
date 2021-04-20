@@ -43,7 +43,7 @@ struct `\initvar{Pixel}{}` {
     `\refvar{AtomicFloat}{}` `\initvar[Pixel:splatXYZ]{splatXYZ}{}`[3];
     Float `\initvar[Pixel:pad]{pad}{}`;
 };
-std::unique_ptr<`\refvar{Pixel}{}`[]> `\initvar{pixels}{}`;
+std::unique_ptr<`\refvar{Pixel}{}`[]> `\initvar[Pixel::pixels]{pixels}{}`;
 \end{lstlisting}
 
 \begin{lstlisting}
@@ -56,11 +56,6 @@ std::unique_ptr<`\refvar{Pixel}{}`[]> `\initvar{pixels}{}`;
               `\refvar{filter}{}`->`\refvar[Filter::radius]{radius}{}`));
     return (`\refvar{Bounds2i}{}`)floatBounds;
 }
-\end{lstlisting}
-
-\begin{lstlisting}
-`\refcode{Film Private Data}{+=}\lastcode{FilmPrivateData}`
-const Float `\initvar{scale}{}`;
 \end{lstlisting}
 
 \subsection{为胶片提供像素值}\label{sub:为胶片提供像素值}
@@ -82,4 +77,73 @@ public:
 private:
     `\refcode{FilmTile Private Data}{}`
 };
+\end{lstlisting}
+
+\begin{lstlisting}
+`\initcode{FilmTile Public Methods}{=}\initnext{FilmTilePublicMethods}`
+`\refvar{FilmTile}{}`(const `\refvar{Bounds2i}{}` &pixelBounds, const `\refvar{Vector2f}{}` &filterRadius,
+    const Float *filterTable, int filterTableSize)
+    : `\refvar{pixelBounds}{}`(pixelBounds), `\refvar{filterRadius}{}`(filterRadius),
+    `\refvar{invFilterRadius}{}`(1 / filterRadius.x, 1 / filterRadius.y),
+    `\refvar{filterTable}{}`(filterTable), `\refvar{filterTableSize}{}`(filterTableSize) {
+    `\refvar[FilmTile::pixels]{pixels}{}` = std::vector<`\refvar{FilmTilePixel}{}`>(std::max(0, pixelBounds.Area()));
+}
+\end{lstlisting}
+
+\begin{lstlisting}
+`\initcode{FilmTile Private Data}{=}`
+const `\refvar{Bounds2i}{}` `\initvar{pixelBounds}{}`;
+const `\refvar{Vector2f}{}` `\initvar{filterRadius}{}`, `\initvar{invFilterRadius}{}`;
+const Float *`\initvar{filterTable}{}`;
+const int `\initvar{filterTableSize}{}`;
+std::vector<`\refvar{FilmTilePixel}{}`> `\initvar[FilmTile::pixels]{pixels}{}`;
+\end{lstlisting}
+
+\begin{lstlisting}
+`\refcode{FilmTile Public Methods}{+=}\lastnext{FilmTilePublicMethods}`
+void `\initvar{AddSample}{}`(const `\refvar{Point2f}{}` &pFilm, const `\refvar{Spectrum}{}` &L,
+    Float sampleWeight = 1.) {
+    `\refcode{Compute sample's raster bounds}{}`
+    `\refcode{Loop over filter support and add sample to pixel arrays}{}`
+}
+\end{lstlisting}
+
+\begin{lstlisting}
+`\initcode{Compute sample's raster bounds}{=}`
+`\refvar{Point2f}{}` pFilmDiscrete = pFilm - `\refvar{Vector2f}{}`(0.5f, 0.5f);
+`\refvar{Point2i}{}` p0 = (`\refvar{Point2i}{}`)`\refvar{Ceil}{}`(pFilmDiscrete - filterRadius);
+`\refvar{Point2i}{}` p1 = (`\refvar{Point2i}{}`)`\refvar{Floor}{}`(pFilmDiscrete + filterRadius) + `\refvar{Point2i}{}`(1, 1);
+p0 = `\refvar{Max}{}`(p0, pixelBounds.pMin);
+p1 = `\refvar{Min}{}`(p1, pixelBounds.pMax);
+\end{lstlisting}
+
+\begin{lstlisting}
+`\refcode{Film Method Definitions}{+=}\lastnext{FilmMethodDefinitions}`
+void `\refvar{Film}{}`::`\initvar{MergeFilmTile}{}`(std::unique_ptr<`\refvar{FilmTile}{}`> tile) {
+    std::lock_guard<std::mutex> lock(`\refvar{mutex}{}`);
+    for (`\refvar{Point2i}{}` pixel : tile->`\refvar{GetPixelBounds}{}`()) {
+        `\refcode{Merge pixel into Film::pixels}{}`
+    }
+}
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{Film Private Data}{+=}\lastnext{FilmPrivateData}`
+std::mutex `\initvar{mutex}{}`;
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{FilmTile Public Methods}{+=}\lastcode{FilmTilePublicMethods}`
+`\refvar{Bounds2i}{}` `\initvar{GetPixelBounds}{}`() const { return `\refvar{pixelBounds}{}`; }
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{Film Private Data}{+=}\lastcode{FilmPrivateData}`
+const Float `\initvar{scale}{}`;
+\end{lstlisting}
+
+\subsection{图像输出}\label{sub:图像输出}
+\begin{lstlisting}
+`\refcode{Film Method Definitions}{+=}\lastcode{FilmMethodDefinitions}`
+void `\refvar{Film}{}`::`\initvar[Film::WriteImage]{WriteImage}{}`(Float splatScale) {
+    `\refcode{Convert image to RGB and compute final pixel values}{}`
+    `\refcode{Write RGB image}{}`
+}
 \end{lstlisting}

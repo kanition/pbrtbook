@@ -40,3 +40,11 @@ void *`\initvar{Alloc}{}`(size_t nBytes) {
     return ret;
 }
 \end{lstlisting}
+
+\begin{lstlisting}
+`\refcode{MemoryArena Public Methods}{+=}\lastcode{MemoryArenaPublicMethods}`
+void `\initvar{Reset}{}`() {
+    `\refvar{currentBlockPos}{}` = 0;
+    availableBlocks.splice(availableBlocks.begin(), usedBlocks);
+}
+\end{lstlisting}

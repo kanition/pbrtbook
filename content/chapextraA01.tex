@@ -1,0 +1,21 @@
+\section{主要包含文件}\label{sec:主要包含文件}
+\begin{lstlisting}
+`\initcode{Global Include Files}{=}\initnext{GlobalIncludeFiles}`
+#include <algorithm>
+#include <cinttypes>
+#include <cmath>
+#include <iostream>
+#include <limits>
+#include <memory>
+#include <string>
+#include <vector>
+\end{lstlisting}
+
+\begin{lstlisting}
+`\refcode{Global Forward Declarations}{+=}\lastnext{GlobalForwardDeclarations}`
+#ifdef PBRT_FLOAT_AS_DOUBLE
+typedef double `\initvar{Float}{}`;
+#else
+typedef float Float;
+#endif // PBRT\_FLOAT\_AS\_DOUBLE
+\end{lstlisting}

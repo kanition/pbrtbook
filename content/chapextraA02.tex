@@ -1,0 +1,11 @@
+\section{图像文件输入与输出}\label{sec:图像文件输入与输出}
+\begin{lstlisting}
+`\initcode{ImageIO Declarations}{=}\initnext{ImageIODeclarations}`
+std::unique_ptr<`\refvar{RGBSpectrum}{}`[]> `\initvar{ReadImage}{}`(const std::string &name,
+    `\refvar{Point2i}{}` *resolution);
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{ImageIO Declarations}{+=}\lastcode{ImageIODeclarations}`
+void `\initvar{WriteImage}{}`(const std::string &name, const Float *rgb,
+    const `\refvar{Bounds2i}{}` &outputBounds, const `\refvar{Point2i}{}` &totalResolution);
+\end{lstlisting}

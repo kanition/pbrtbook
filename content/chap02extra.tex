@@ -229,6 +229,21 @@
 \begin{definition}
     称四元数${\bm q}=c+{\bm u}$与$\bar{\bm q}=c-{\bm u}$互为\keyindex{共轭}{conjugate}{}。
 \end{definition}
+\begin{proposition}
+    四元数积的共轭等于逆序共轭的积，即
+    \begin{align}
+        \overline{{\bm q}_1{\bm q}_2}=\bar{\bm q}_2\bar{\bm q}_1, \quad\forall {\bm q}_1, {\bm q}_2\in\mathbb{H}\, .
+    \end{align}
+\end{proposition}
+\begin{prove}
+    根据定义有
+    \begin{align}
+        \overline{{\bm q}_1{\bm q}_2} & =(c_1c_2-{\bm u}_1\cdot{\bm u}_2)-(c_1{\bm u}_2+c_2{\bm u}_1+{\bm u}_1\times{\bm u}_2)\nonumber                   \\
+                                      & =(c_2c_1-(-{\bm u}_2)\cdot(-{\bm u}_1))+(c_2(-{\bm u}_1)+c_1(-{\bm u}_2)+(-{\bm u}_2)\times(-{\bm u}_1))\nonumber \\
+                                      & =(c_2-{\bm u}_2)(c_1-{\bm u}_1)\nonumber                                                                          \\
+                                      & =\bar{\bm q}_2\bar{\bm q}_1\, .
+    \end{align}
+\end{prove}
 \begin{definition}
     四元数的\keyindex{模}{magnitude}{}为
     \begin{align}
@@ -239,18 +254,33 @@
     模为$1$的四元数${\bm q}$称为\keyindex{单位四元数}{unit quaternion}{quaternion四元数}。
 \end{definition}
 \begin{definition}
-    称$、\displaystyle\frac{1}{\|{\bm q}\|}{\bm q}$为四元数${\bm q}$的\keyindex{规范化四元数}{versor}{quaternion四元数}。
+    称$、\displaystyle\frac{1}{\|{\bm q}\|}{\bm q}$为非零四元数${\bm q}$的\keyindex{规范化四元数}{versor}{quaternion四元数}。
 \end{definition}
+\begin{proposition}
+    当向量四元数${\bm q}$是单位四元数即$c=0$且$x^2+y^2+z^2=1$时，有
+    \begin{align}
+        {\bm q}^2={\bm q}{\bm q}=-1\, .
+    \end{align}
+\end{proposition}
+\begin{prove}
+    依据哈密顿积定义有
+    \begin{align}
+        {\bm q}^2={\bm q}{\bm q} & =(c^2-{\bm u}\cdot{\bm u})+(2c{\bm u}+{\bm u}\times{\bm u})\nonumber \\
+                                 & =-{\bm u}\cdot{\bm u}\nonumber                                       \\
+                                 & =-(x^2+y^2+z^2)\nonumber                                             \\
+                                 & =-1\, .
+    \end{align}
+\end{prove}
+\begin{proposition}
+    四元数取共轭后模不变，即
+    \begin{align}
+        \|\bar{\bm q}\|=\|{\bm q}\|\, .
+    \end{align}
+\end{proposition}
 \begin{proposition}
     在四元数的数乘中有
     \begin{align}
         \|\lambda{\bm q}\|=|\lambda|\|{\bm q}\|, \quad \forall \lambda\in\mathbb{R}, \forall {\bm q}\in\mathbb{H}\, .
-    \end{align}
-\end{proposition}
-\begin{proposition}
-    非零四元数哈密顿积的逆元是
-    \begin{align}
-        {\bm q}^{-1}=\frac{1}{\|{\bm q}\|^2}\bar{\bm q}\, .
     \end{align}
 \end{proposition}
 \begin{proposition}
@@ -275,18 +305,38 @@
     \end{align}
     所以$\|{\bm q}_1{\bm q}_2\|=\|{\bm q}_1\|\|{\bm q}_2\|$。
 \end{prove}
+
 \begin{proposition}
-    当向量四元数${\bm q}$是单位四元数即$c=0$且$x^2+y^2+z^2=1$时，有
+    四元数${\bm q}$与其共轭的积恒有
     \begin{align}
-        {\bm q}^2={\bm q}{\bm q}=-1\, .
+        {\bm q}\bar{\bm q}=\bar{\bm q}{\bm q}=\|{\bm q}\|^2\, .
     \end{align}
 \end{proposition}
 \begin{prove}
-    依据哈密顿积定义有
+    根据定义有
     \begin{align}
-        {\bm q}^2={\bm q}{\bm q} & =(c^2-{\bm u}\cdot{\bm u})+(2c{\bm u}+{\bm u}\times{\bm u})\nonumber \\
-                                 & =-{\bm u}\cdot{\bm u}\nonumber                                       \\
-                                 & =-(x^2+y^2+z^2)\nonumber                                             \\
-                                 & =-1\, .
+        {\bm q}\bar{\bm q} & =(c+{\bm u})(c-{\bm u})\nonumber                                                      \\
+                           & =(c^2-{\bm u}\cdot(-{\bm u}))+(c(-{\bm u})+c{\bm u}+{\bm u}\times(-{\bm u}))\nonumber \\
+                           & =c^2+{\bm u}\cdot{\bm u}\nonumber                                                     \\
+                           & =\|{\bm q}\|^2\, .
     \end{align}
+    同理有$\bar{\bm q}{\bm q}=\|{\bm q}\|^2$。
 \end{prove}
+\begin{definition}
+    非零四元数${\bm q}$的\keyindex{逆}{inverse}{}是
+    \begin{align}
+        {\bm q}^{-1}=\frac{1}{\|{\bm q}\|^2}\bar{\bm q}\, .
+    \end{align}
+\end{definition}
+\begin{corollary}
+    对于非零四元数${\bm q}$有
+    \begin{align}
+        {\bm q}{\bm q}^{-1}={\bm q}^{-1}{\bm q}=1\, .
+    \end{align}
+\end{corollary}
+\begin{corollary}
+    单位四元数的逆与共轭相等，即
+    \begin{align}
+        \|{\bm q}\|=1 \Rightarrow {\bm q}^{-1}=\bar{\bm q}\, .
+    \end{align}
+\end{corollary}

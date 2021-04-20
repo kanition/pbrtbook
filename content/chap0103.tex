@@ -755,3 +755,32 @@ arena.`\refvar{Reset}{}`();
 `\initcode{Save final image after rendering}{=}`
 `\refvar{camera}{}`->`\refvar{film}{}`->`\refvar[Film::WriteImage]{WriteImage}{}`();
 \end{lstlisting}
+
+\subsection{Whitted光线追踪积分器}\label{sub:Whitted光线追踪积分器}
+第\refchap{光传输I：表面反射}和\refchap{光传输II：体积渲染}包含了
+许多基于不同精度层级的各种算法的不同积分器实现。
+这里我们将介绍一种基于Whitted光线追踪算法的积分器。
+该积分器精确计算来自镜面表面例如玻璃、镜子和水的反射和透射光，
+但它不考虑其他类型的间接光效应例如光从墙面反射照亮房间。
+类\refvar{WhittedIntegrator}{}可在pbrt发行
+文件\href{https://github.com/mmp/pbrt-v3/tree/master/src/integrators/whitted.h}{\ttfamily integrators/whitted.h}和
+\href{https://github.com/mmp/pbrt-v3/tree/master/src/integrators/whitted.cpp}{\ttfamily integrators/whitted.cpp}中找到。
+\begin{lstlisting}
+`\initcode{WhittedIntegrator Declarations}{=}`
+class `\initvar{WhittedIntegrator}{}` : public `\refvar{SamplerIntegrator}{}` {
+public:
+    `\refcode{WhittedIntegrator Public Methods}{}`
+private:
+    `\refcode{WhittedIntegrator Private Data}{}`
+};
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{WhittedIntegrator Public Methods}{=}`
+`\refvar{WhittedIntegrator}{}`(int maxDepth, std::shared_ptr<const `\refvar{Camera}{}`> camera,
+std::shared_ptr<`\refvar{Sampler}{}`> sampler)
+: `\refvar{SamplerIntegrator}{}`(camera, sampler), `\refvar{maxDepth}{}`(maxDepth) { }
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{WhittedIntegrator Private Data}{=}`
+const int `\initvar{maxDepth}{}`;
+\end{lstlisting}

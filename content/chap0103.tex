@@ -479,7 +479,7 @@ void `\initvar{SamplerIntegrator::Render}{}`(const `\refvar{Scene}{}` &scene) {
 
 为了让多处理核系统能并行渲染，图像会被分解为像素小块。
 每个图块可并行独立处理。
-\refsec{并行化}详细介绍的函数\refvar{ParallelFor}{()}实现了并行for循环，
+\refsec{并行化}详细介绍的函数\refvar{ParallelFor}{()}实现了并行{\ttfamily for}循环，
 其中多个迭代可并行运行。
 C++ lambda表达式提供循环体。
 这里使用在2D域上循环的\refvar{ParallelFor}{()}的变体来在图块间迭代。
@@ -532,7 +532,7 @@ const int `\initvar{tileSize}{}` = 16;
                (sampleExtent.y + tileSize - 1) / tileSize);
 \end{lstlisting}
 
-当附录\refsub{并行的for循环}定义的并行for循环实现决定
+当附录\refsub{并行的for循环}定义的并行{\ttfamily for}循环实现决定
 在某一处理器上执行一次循环迭代时，
 会带上图块的坐标调用lambda。
 它启动时会做一点设置工作，决定负责哪部分胶片平面，
@@ -631,7 +631,7 @@ for (`\refvar{Point2i}{}` pixel : tileBounds) {
 }
 \end{lstlisting}
 
-结构体\refvar{CameraSample}{}记录了相机应生成相应光线的胶片上的位置。
+结构体\refvar{CameraSample}{}记录了相机应生成光线的相应胶片位置。
 它还存储了时间和透镜位置采样值，
 分别用于渲染移动物体场景和模拟非针孔光圈的相机模型。
 \begin{lstlisting}
@@ -714,7 +714,7 @@ virtual `\refvar{Spectrum}{}` `\initvar{Li}{}`(const `\refvar{RayDifferential}{}
 
 渲染过程中bug的一个常见副作用是计算出不可能的辐射值。
 例如，除以零得到的辐射值等于IEEE浮点无穷或“not a number”值。
-渲染器寻找这种可能性，以及具有负数贡献的光谱，
+渲染器寻找这种可能情况，以及具有负数贡献的光谱，
 并在遇到这些情况时打印错误信息。
 此处我们不会包含执行这些的
 代码片\refcode{Issue warning if unexpected radiance value is returned}{}\sidenote{译者注：我把它补充上来了。}。

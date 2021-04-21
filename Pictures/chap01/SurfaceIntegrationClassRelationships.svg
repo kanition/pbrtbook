@@ -1,0 +1,440 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="Layer_1"
+   data-name="Layer 1"
+   viewBox="0 0 791.16 257.15"
+   version="1.1"
+   sodipodi:docname="SurfaceIntegrationClassRelationships.svg"
+   inkscape:version="1.0.1 (3bc2e813f5, 2020-09-07)">
+  <metadata
+     id="metadata3179">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     id="namedview3177"
+     showgrid="false"
+     inkscape:snap-bbox="true"
+     inkscape:snap-bbox-midpoints="true"
+     inkscape:snap-bbox-edge-midpoints="true"
+     inkscape:snap-center="true"
+     inkscape:snap-object-midpoints="true"
+     inkscape:zoom="0.76908007"
+     inkscape:cx="816.07685"
+     inkscape:cy="162.87149"
+     inkscape:window-x="1912"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="Layer_1" />
+  <defs
+     id="defs2674">
+    <rect
+       x="97.458408"
+       y="58.383103"
+       width="42.752981"
+       height="24.824311"
+       id="rect3183" />
+    <style
+       id="style2672">.cls-1{fill:#ccc;}.cls-2{fill:#231f20;}.cls-3{fill:none;stroke:#000;stroke-miterlimit:10;}.cls-4{fill:#a6a6a6;}.cls-5{fill:#666;}</style>
+    <rect
+       x="97.458405"
+       y="58.383102"
+       width="114.46765"
+       height="24.364601"
+       id="rect3183-5" />
+    <rect
+       x="97.458405"
+       y="58.383102"
+       width="42.752979"
+       height="24.82431"
+       id="rect3198" />
+    <rect
+       x="97.458405"
+       y="58.383102"
+       width="42.752979"
+       height="24.82431"
+       id="rect3183-8" />
+    <rect
+       x="97.458405"
+       y="58.383102"
+       width="42.752979"
+       height="24.82431"
+       id="rect3227" />
+    <rect
+       x="97.458405"
+       y="58.383102"
+       width="86.885088"
+       height="22.066054"
+       id="rect3183-8-8" />
+    <rect
+       x="97.458405"
+       y="58.383102"
+       width="42.752979"
+       height="24.82431"
+       id="rect3256" />
+    <rect
+       x="97.458405"
+       y="58.383102"
+       width="74.013221"
+       height="25.284019"
+       id="rect3183-8-8-8" />
+    <rect
+       x="97.458405"
+       y="58.383102"
+       width="86.885086"
+       height="22.066053"
+       id="rect3286" />
+    <rect
+       x="97.458405"
+       y="58.383102"
+       width="86.885086"
+       height="22.066053"
+       id="rect3183-8-8-4" />
+    <rect
+       x="97.458405"
+       y="58.383102"
+       width="86.885086"
+       height="22.066053"
+       id="rect3316" />
+    <rect
+       x="97.458405"
+       y="58.383102"
+       width="57.003966"
+       height="23.445182"
+       id="rect3183-5-8" />
+    <rect
+       x="97.458405"
+       y="58.383102"
+       width="114.46765"
+       height="24.364601"
+       id="rect3346" />
+    <rect
+       x="97.458405"
+       y="58.383102"
+       width="66.198161"
+       height="25.28402"
+       id="rect3183-0" />
+    <rect
+       x="97.458405"
+       y="58.383102"
+       width="42.752979"
+       height="24.82431"
+       id="rect3376" />
+    <rect
+       x="97.458405"
+       y="58.383102"
+       width="361.79134"
+       height="58.842811"
+       id="rect3183-0-4" />
+    <rect
+       x="97.458405"
+       y="58.383102"
+       width="66.198158"
+       height="25.284019"
+       id="rect3637" />
+    <rect
+       x="97.458405"
+       y="58.383102"
+       width="231.69357"
+       height="30.800533"
+       id="rect3183-0-44" />
+    <rect
+       x="97.458405"
+       y="58.383102"
+       width="66.198158"
+       height="25.284019"
+       id="rect3637-9" />
+    <rect
+       x="97.458405"
+       y="58.383102"
+       width="243.1863"
+       height="34.018499"
+       id="rect3183-0-4-9" />
+    <rect
+       x="97.458405"
+       y="58.383102"
+       width="66.198158"
+       height="25.284019"
+       id="rect3682" />
+  </defs>
+  <title
+     id="title2676">Surface Integration Class Relationships</title>
+  <rect
+     class="cls-1"
+     x="168.13"
+     width="82.97"
+     height="31.16"
+     rx="5"
+     ry="5"
+     id="rect2690" />
+  <rect
+     class="cls-1"
+     x="98.86"
+     y="113"
+     width="221.52"
+     height="31.16"
+     rx="5"
+     ry="5"
+     id="rect2712" />
+  <rect
+     class="cls-1"
+     x="86.27"
+     y="225.99"
+     width="246.71"
+     height="31.16"
+     rx="5"
+     ry="5"
+     id="rect2778" />
+  <line
+     class="cls-3"
+     x1="237"
+     y1="151.73"
+     x2="237"
+     y2="225.26"
+     id="line2896" />
+  <polygon
+     points="231.5 156.64 237 152.38 242.5 156.64 237 143.63 231.5 156.64"
+     id="polygon2898" />
+  <polygon
+     class="cls-4"
+     points="232.7 155.09 237 144.94 237 151.75 232.7 155.09"
+     id="polygon2900" />
+  <polygon
+     class="cls-5"
+     points="241.3 155.09 237 144.94 237 151.75 241.3 155.09"
+     id="polygon2902" />
+  <line
+     class="cls-3"
+     x1="182.24"
+     y1="144.41"
+     x2="182.24"
+     y2="217.94"
+     id="line2904" />
+  <polygon
+     points="176.74 213.03 182.24 217.29 187.74 213.03 182.24 226.04 176.74 213.03"
+     id="polygon2906" />
+  <polygon
+     class="cls-4"
+     points="177.94 214.59 182.24 224.73 182.24 217.92 177.94 214.59"
+     id="polygon2908" />
+  <polygon
+     class="cls-5"
+     points="186.54 214.59 182.24 224.73 182.24 217.92 186.54 214.59"
+     id="polygon2910" />
+  <line
+     class="cls-3"
+     x1="237"
+     y1="30.32"
+     x2="237"
+     y2="103.84"
+     id="line2912" />
+  <polygon
+     points="231.5 98.93 237 103.19 242.5 98.93 237 111.94 231.5 98.93"
+     id="polygon2914" />
+  <polygon
+     class="cls-4"
+     points="232.7 100.49 237 110.63 237 103.82 232.7 100.49"
+     id="polygon2916" />
+  <polygon
+     class="cls-5"
+     points="241.3 100.49 237 110.63 237 103.82 241.3 100.49"
+     id="polygon2918" />
+  <line
+     class="cls-3"
+     x1="182.24"
+     y1="39.2"
+     x2="182.24"
+     y2="112.73"
+     id="line2920" />
+  <polygon
+     points="176.74 44.11 182.24 39.85 187.74 44.11 182.24 31.1 176.74 44.11"
+     id="polygon2922" />
+  <polygon
+     class="cls-4"
+     points="177.94 42.56 182.24 32.41 182.24 39.22 177.94 42.56"
+     id="polygon2924" />
+  <polygon
+     class="cls-5"
+     points="186.54 42.56 182.24 32.41 182.24 39.22 186.54 42.56"
+     id="polygon2926" />
+  <line
+     class="cls-3"
+     x1="91.5"
+     y1="121.71"
+     x2="0.85"
+     y2="121.71"
+     id="line2950" />
+  <polygon
+     points="86.59 116.2 90.85 121.71 86.59 127.21 99.61 121.71 86.59 116.2"
+     id="polygon2952" />
+  <polygon
+     class="cls-4"
+     points="88.15 117.41 98.29 121.71 91.48 121.71 88.15 117.41"
+     id="polygon2954" />
+  <polygon
+     class="cls-5"
+     points="88.15 126.01 98.29 121.71 91.48 121.71 88.15 126.01"
+     id="polygon2956" />
+  <line
+     class="cls-3"
+     x1="98.75"
+     y1="135.62"
+     x2="8.1"
+     y2="135.62"
+     id="line2958" />
+  <polygon
+     points="13.01 130.11 8.75 135.62 13.01 141.12 0 135.62 13.01 130.11"
+     id="polygon2960" />
+  <polygon
+     class="cls-4"
+     points="11.46 131.31 1.31 135.62 8.12 135.62 11.46 131.31"
+     id="polygon2962" />
+  <polygon
+     class="cls-5"
+     points="11.46 139.91 1.31 135.62 8.12 135.62 11.46 139.91"
+     id="polygon2964" />
+  <line
+     class="cls-3"
+     x1="419.36"
+     y1="128.57"
+     x2="328.71"
+     y2="128.57"
+     id="line2966" />
+  <polygon
+     points="333.62 123.07 329.36 128.57 333.62 134.08 320.61 128.57 333.62 123.07"
+     id="polygon2968" />
+  <polygon
+     class="cls-4"
+     points="332.06 124.27 321.92 128.57 328.73 128.57 332.06 124.27"
+     id="polygon2970" />
+  <polygon
+     class="cls-5"
+     points="332.06 132.87 321.92 128.57 328.73 128.57 332.06 132.87"
+     id="polygon2972" />
+  <rect
+     class="cls-1"
+     x="418.51"
+     y="105.22"
+     width="372.66"
+     height="49.16"
+     rx="5"
+     ry="5"
+     id="rect2982" />
+  <text
+     xml:space="preserve"
+     id="text3181"
+     style="font-size:18.6667px;line-height:1.25;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;shape-inside:url(#rect3183);"
+     transform="translate(40.914143,2.2985474)"><tspan
+       x="97.458984"
+       y="75.413009"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:sans-serif">Ray</tspan></tspan></text>
+  <text
+     xml:space="preserve"
+     id="text3181-8"
+     style="font-size:18.6667px;line-height:1.25;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;shape-inside:url(#rect3183-5);"
+     transform="translate(147.03836,4.4278461)"><tspan
+       x="97.458984"
+       y="75.413009"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:sans-serif">Interaction</tspan></tspan></text>
+  <text
+     xml:space="preserve"
+     id="text3181-2"
+     style="font-size:18.6667px;line-height:1.25;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;shape-inside:url(#rect3183-8);"
+     transform="translate(-66.726558,39.825476)"><tspan
+       x="97.458984"
+       y="75.413009"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:sans-serif">Ray</tspan></tspan></text>
+  <text
+     xml:space="preserve"
+     id="text3181-2-4"
+     style="font-size:18.6667px;line-height:1.25;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;shape-inside:url(#rect3183-8-8);"
+     transform="translate(-84.195518,80.279912)"><tspan
+       x="97.458984"
+       y="75.413009"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:sans-serif">Radiance</tspan></tspan></text>
+  <text
+     xml:space="preserve"
+     id="text3181-2-4-0"
+     style="font-size:18.6667px;line-height:1.25;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;shape-inside:url(#rect3183-8-8-8);"
+     transform="translate(8.3480644,115.42066)"><tspan
+       x="97.458984"
+       y="75.413009"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:sans-serif">Sample</tspan></tspan></text>
+  <text
+     xml:space="preserve"
+     id="text3181-2-4-1"
+     style="font-size:18.6667px;line-height:1.25;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;shape-inside:url(#rect3183-8-8-4);"
+     transform="translate(145.80119,116.34008)"><tspan
+       x="97.458984"
+       y="75.413009"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:sans-serif">Radiance</tspan></tspan></text>
+  <text
+     xml:space="preserve"
+     id="text3181-8-0"
+     style="font-size:18.6667px;line-height:1.25;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;shape-inside:url(#rect3183-5-8);"
+     transform="translate(248.74293,47.583603)"><tspan
+       x="97.458984"
+       y="75.413009"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:sans-serif">BSDF</tspan></tspan></text>
+  <text
+     xml:space="preserve"
+     id="text3181-80"
+     style="font-size:21.3333px;line-height:1.25;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;shape-inside:url(#rect3183-0);"
+     transform="translate(80.00503,-55.441829)"><tspan
+       x="97.458984"
+       y="77.318694"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:21.3333px;font-family:'Courier New';-inkscape-font-specification:'Courier New Bold'">Scene</tspan></tspan></text>
+  <text
+     xml:space="preserve"
+     id="text3181-80-3"
+     style="font-size:21.3333px;line-height:1.25;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;shape-inside:url(#rect3183-0-4);"
+     transform="translate(328.89698,43.559504)"
+     x="176.15076"
+     y="0"><tspan
+       x="150.33386"
+       y="77.318694"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:21.3333px;font-family:'Courier New';-inkscape-font-specification:'Courier New Bold';text-align:center;text-anchor:middle">SurfaceInteraction::
+</tspan></tspan><tspan
+       x="99.125609"
+       y="104.21437"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:21.3333px;font-family:'Courier New';-inkscape-font-specification:'Courier New Bold';text-align:center;text-anchor:middle">ComputeScatteringFunctions()</tspan></tspan></text>
+  <text
+     xml:space="preserve"
+     id="text3181-80-1"
+     style="font-size:21.3333px;line-height:1.25;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;shape-inside:url(#rect3183-0-44);"
+     transform="translate(-0.66193011,167.89714)"><tspan
+       x="97.458984"
+       y="77.318694"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:21.3333px;font-family:'Courier New';-inkscape-font-specification:'Courier New Bold'">Light::Sample_Li()</tspan></tspan></text>
+  <text
+     xml:space="preserve"
+     id="text3181-80-3-1"
+     style="font-size:21.3333px;line-height:1.25;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;shape-inside:url(#rect3183-0-4-9);"
+     transform="translate(5.2132716,55.881092)"><tspan
+       x="97.458984"
+       y="77.318694"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:21.3333px;font-family:'Courier New';-inkscape-font-specification:'Courier New Bold'">Intergrator::Li()</tspan></tspan></text>
+</svg>

@@ -780,7 +780,30 @@ private:
 std::shared_ptr<`\refvar{Sampler}{}`> sampler)
 : `\refvar{SamplerIntegrator}{}`(camera, sampler), `\refvar{maxDepth}{}`(maxDepth) { }
 \end{lstlisting}
+
+Whitted积分器工作时递归地计算沿反射和折射光线方向的辐射。
+它在达到预设最大深度\refvar[maxDepth]{WhittedIntegrator::maxDepth}{}时停止递归。
+默认最大递归深度为5。
+没有这项终止准则，递归可能无法停止（例如想象一下镜厅场景）。
+这个成员变量在\refvar{WhittedIntegrator}{}构造函数内
+基于场景描述文件设置的参数来初始化。
 \begin{lstlisting}
 `\initcode{WhittedIntegrator Private Data}{=}`
 const int `\initvar{maxDepth}{}`;
 \end{lstlisting}
+
+如同\refvar{SamplerIntegrator}{}的实现，
+\refvar{WhittedIntegrator}{}必须提供方法\refvar{Li}{()}的一种实现，
+返回到达给定光线起点的辐射量。
+\reffig{1.19}总结了在表面积分期间所用的主要类间的数据流。
+\begin{figure}
+    \centering\input{Pictures/chap01/SurfaceIntegrationClassRelationships.tex}
+    \caption{表面积分类间关系。
+        \protect\refvar{SamplerIntegrator}{}中的主渲染循环
+        计算一条相机光线并将其传给方法\protect\refvar{Li}{()}，
+        返回沿该光线到达光线起点的辐射量。
+        找到最近交点后，它计算交点处的材料属性，以BSDF的形式表示它们。
+        然后再用场景中的灯光来确定照明。
+        同样，它们给出了计算交点处沿光线反射回去的辐射量所需的信息。}
+    \label{fig:1.19}
+\end{figure}

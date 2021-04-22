@@ -1,0 +1,22 @@
+\section{面光源}\label{sec:面光源}
+
+\begin{lstlisting}
+`\refcode{Light Declarations}{+=}\lastcode{LightDeclarations}`
+class `\initvar{AreaLight}{}` : public `\refvar{Light}{}` {
+public:
+    `\refcode{AreaLight Interface}{}`
+};
+\end{lstlisting}
+
+\begin{lstlisting}
+`\initcode{AreaLight Interface}{=}`
+virtual `\refvar{Spectrum}{}` `\initvar[AreaLight::L]{L}{}`(const `\refvar{Interaction}{}` &intr, const `\refvar{Vector3f}{}` &w) const = 0;
+\end{lstlisting}
+
+\begin{lstlisting}
+`\refcode{SurfaceInteraction Method Definitions}{+=}\lastcode{SurfaceInteractionMethodDefinitions}`
+`\refvar{Spectrum}{}` `\refvar{SurfaceInteraction}{}`::`\initvar[SurfaceInteraction::Le]{Le}{}`(const `\refvar{Vector3f}{}` &w) const {
+    const `\refvar{AreaLight}{}` *area = primitive->`\refvar{GetAreaLight}{}`();
+    return area ? area->`\refvar[AreaLight::L]{L}{}`(*this, w) : `\refvar{Spectrum}{}`(0.f);
+}
+\end{lstlisting}

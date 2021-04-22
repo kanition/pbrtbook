@@ -3,7 +3,36 @@
 \begin{lstlisting}
 `\initcode{Material Declarations}{=}`
 class `\initvar{Material}{}` {
-    public:
+public:
     `\refcode{Material Interface}{}`
+};
+\end{lstlisting}
+
+\begin{lstlisting}
+`\initcode{Material Interface}{=}`
+virtual void `\initvar[Material::ComputeScatteringFunctions]{ComputeScatteringFunctions}{}`(`\refvar{SurfaceInteraction}{}` *si,
+    `\refvar{MemoryArena}{}` &arena, `\refvar{TransportMode}{}` mode,
+    bool allowMultipleLobes) const = 0;
+\end{lstlisting}
+
+\begin{lstlisting}
+`\refcode{SurfaceInteraction Method Definitions}{+=}\lastnext{SurfaceInteractionMethodDefinitions}`
+void `\refvar{SurfaceInteraction}{}`::`\initvar[SurfaceInteraction::ComputeScatteringFunctions]{\refvar{ComputeScatteringFunctions}{}}{}`(
+    const `\refvar{RayDifferential}{}` &ray, `\refvar{MemoryArena}{}` &arena,
+    bool allowMultipleLobes, `\refvar{TransportMode}{}` mode) {
+    `\refvar{ComputeDifferentials}{}`(ray);
+    primitive->`\refvar{ComputeScatteringFunctions}{}`(this, arena, mode,
+    allowMultipleLobes);
+}
+\end{lstlisting}
+
+\subsection{哑光材料}\label{sub:哑光材料}
+\begin{lstlisting}
+`\initcode{MatteMaterial Declarations}{=}`
+class `\initvar{MatteMaterial}{}` : public `\refvar{Material}{}` {
+public:
+    `\refcode{MatteMaterial Public Methods}{}`
+private:
+    `\refcode{MatteMaterial Private Data}{}`
 };
 \end{lstlisting}

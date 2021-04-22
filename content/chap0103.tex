@@ -462,8 +462,8 @@ virtual void `\initvar[SamplerIntegrator::Preprocess]{Preprocess}{}`(const `\ref
     方法\protect\refvar{SamplerIntegrator::Render}{()}中主渲染循环的类关系。
     \protect\refvar{Sampler}{}提供了一采样值序列，每张图像样本取一个。
     \protect\refvar{Camera}{}把样本转为来自胶片平面的相应光线，
-    方法{\ttfamily Li()}的实现计算沿光线到达胶片的辐射。
-    样本和其辐射传给\protect\refvar{Film}{}，
+    方法{\ttfamily Li()}的实现计算沿光线到达胶片的辐亮度。
+    样本和其辐亮度传给\protect\refvar{Film}{}，
     保存它们在图像中的贡献。
     重复这个过程直到\protect\refvar{Sampler}{}提供足够多样本生成最终图像。}
     \label{fig:1.17}
@@ -538,7 +538,7 @@ const int `\initvar{tileSize}{}` = 16;
 它启动时会做一点设置工作，决定负责哪部分胶片平面，
 并在使用\refvar{Sampler}{}生成图像样本、
 用\refvar{Camera}{}决定离开胶片平面的相应光线以及
-用方法{\ttfamily Li()}计算沿这些光线到达胶片平面的辐射之前
+用方法{\ttfamily Li()}计算沿这些光线到达胶片平面的辐亮度之前
 为一些临时数据分配空间。
 \begin{lstlisting}
 `\initcode{Render section of image corresponding to tile}{=}`
@@ -550,7 +550,7 @@ const int `\initvar{tileSize}{}` = 16;
 `\refcode{Merge image tile into Film}{}`
 \end{lstlisting}
 
-方法{\ttfamily Li()}的实现一般需要为每次辐射计算临时分配少量内存。
+方法{\ttfamily Li()}的实现一般需要为每次辐亮度计算临时分配少量内存。
 系统常规内存分配例程（例如{\ttfamily malloc()}或{\ttfamily new}）
 必须维护和同步精巧的内部数据结构以跟踪处理器间的空闲内存区域集合，
 而大量进行这样的分配容易让其崩溃。
@@ -664,7 +664,7 @@ ray.`\refvar{ScaleDifferentials}{}`(1 / std::sqrt(tileSampler->`\refvar{samplesP
 它是{\ttfamily float}或{\ttfamily double}的别名。
 \refsec{主要包含文件}提供了这些设计选项的更多细节。
 
-给定一条光线，下一个任务是确定沿其到达图像平面的辐射。
+给定一条光线，下一个任务是确定沿其到达图像平面的辐亮度。
 方法\refvar{Li}{()}负责这项任务。
 \begin{lstlisting}
 `\initcode{Evaluate radiance along camera ray}{=}`
@@ -712,15 +712,15 @@ virtual `\refvar{Spectrum}{}` `\initvar{Li}{}`(const `\refvar{RayDifferential}{}
     `\refvar{Sampler}{}` &sampler, `\refvar{MemoryArena}{}` &arena, int depth = 0) const = 0;
 \end{lstlisting}
 
-渲染过程中bug的一个常见副作用是计算出不可能的辐射值。
-例如，除以零得到的辐射值等于IEEE浮点无穷或“not a number”值。
+渲染过程中bug的一个常见副作用是计算出不可能的辐亮度。
+例如，除以零得到的辐亮度值等于IEEE浮点无穷或“not a number”值。
 渲染器寻找这种可能情况，以及具有负数贡献的光谱，
 并在遇到这些情况时打印错误信息。
 此处我们不会包含执行这些的
 代码片\refcode{Issue warning if unexpected radiance value is returned}{}\sidenote{译者注：我把它补充上来了。}。
 如果你对其细节感兴趣可以查看\href{https://github.com/mmp/pbrt-v3/tree/master/src/core/integrator.cpp}{\ttfamily core/integrator.cpp}里的实现。
 
-知道到达光线原点的辐射后，就能更新图像了：
+知道到达光线原点的辐亮度后，就能更新图像了：
 方法\refvar[AddSample]{FilmTile::AddSample}{()}
 依据样本的结果更新图块里的像素。
 样本值如何记录到胶片的细节将在\refsec{图像重构}和\refsec{胶片与成像管道}解释。
@@ -738,7 +738,7 @@ filmTile->`\refvar{AddSample}{}`(cameraSample.`\refvar{pFilm}{}`, L, rayWeight);
 arena.`\refvar{Reset}{}`();
 \end{lstlisting}
 
-一旦计算完图块内所有样本的辐射值，
+一旦计算完图块内所有样本的辐亮度值，
 \refvar{FilmTile}{}就会被传递给\refvar{Film}{}的方法\refvar{MergeFilmTile}{()}，
 它负责把图块的像素贡献加到最终图像上。
 注意函数{\ttfamily std::move()}用于把{\ttfamily unique\_ptr}的所有权
@@ -781,7 +781,7 @@ private:
     : `\refvar{SamplerIntegrator}{}`(camera, sampler), `\refvar{maxDepth}{}`(maxDepth) { }
 \end{lstlisting}
 
-Whitted积分器工作时递归地计算沿反射和折射光线方向的辐射。
+Whitted积分器工作时递归地计算沿反射和折射光线方向的辐亮度。
 它在达到预设最大深度\refvar[maxDepth]{WhittedIntegrator::maxDepth}{}时停止递归。
 默认最大递归深度为5。
 没有这项终止准则，递归可能无法停止（例如想象一下镜厅场景）。
@@ -794,17 +794,17 @@ const int `\initvar{maxDepth}{}`;
 
 如同\refvar{SamplerIntegrator}{}的实现，
 \refvar{WhittedIntegrator}{}必须提供方法\refvar{Li}{()}的一种实现，
-返回到达给定光线起点的辐射量。
+返回到达给定光线起点的辐亮度。
 \reffig{1.19}总结了在表面积分期间所用的主要类间的数据流。
 \begin{figure}
     \centering\input{Pictures/chap01/SurfaceIntegrationClassRelationships.tex}
     \caption{表面积分类间关系。
         \protect\refvar{SamplerIntegrator}{}中的主渲染循环
         计算一条相机光线并将其传给方法\protect\refvar{Li}{()}，
-        返回沿该光线到达光线起点的辐射量。
+        返回沿该光线到达光线起点的辐亮度。
         找到最近交点后，它计算交点处的材料属性，以BSDF的形式表示它们。
         然后再用场景中的灯光来确定照明。
-        同样，它们给出了计算交点处沿光线反射回去的辐射量所需的信息。}
+        同样，它们给出了计算交点处沿光线反射回去的辐亮度所需的信息。}
     \label{fig:1.19}
 \end{figure}
 \begin{lstlisting}
@@ -828,7 +828,7 @@ const int `\initvar{maxDepth}{}`;
 如果没有找到交点，那可能因为光源没有关联几何而就沿光线携带辐射。
 这类光源的一个例子是\refvar{InfiniteAreaLight}{}，
 它能表示来自天空的光照。
-方法\refvar[Le]{Light::Le}{()}允许这样的光源返回其沿给定光线的辐射。
+方法\refvar[Le]{Light::Le}{()}允许这样的光源返回其沿给定光线的辐亮度。
 \begin{lstlisting}
 `\initcode{Find closest ray intersection or return background radiance}{=}`
 `\refvar{SurfaceInteraction}{}` isect;
@@ -844,7 +844,7 @@ if (!scene.`\refvar[Scene::Intersect]{Intersect}{}`(ray, &isect)) {
 确定有多少光照从光源到达该点，
 并用\refeq{1.1}的近似计算有多少光沿视察方向离开表面。
 因为这个积分器忽略了诸如烟或雾等介质的影响，
-所以离开交点的辐射量和到达该光线起点的辐射量相同。
+所以离开交点的辐亮度和到达该光线起点的辐亮度相同。
 \begin{lstlisting}
 `\initcode{Compute emitted and reflected light at ray intersection point}{=}`
 `\refcode{Initialize common variables for Whitted integrator}{}`
@@ -867,7 +867,94 @@ $\bm n$是交点处的表面法向量，
     \centering\input{Pictures/chap01/Whittedintegrationsetting.tex}
     \caption{Whitted积分器的几何设置。
         $\bm p$是光线交点，$\bm n$是其表面法向量。
-        我们要计算反射辐射的方向为${\bm \omega}_\mathrm{o}$；
+        我们要计算反射辐亮度的方向为${\bm \omega}_\mathrm{o}$；
         它是指向与入射光相反方向的向量。}
     \label{fig:1.20}
 \end{figure}
+\begin{lstlisting}
+`\initcode{Initialize common variables for Whitted integrator}{=}`
+`\refvar{Normal3f}{}` n = isect.`\refvar{shading}{}`.`\refvar[shading::n]{n}{}`;
+`\refvar{Vector3f}{}` wo = isect.`\refvar[Interaction::wo]{wo}{}`;
+\end{lstlisting}
+
+如果找到交点，就需要确定表面材质如何散射光照。
+负责这项任务的是方法\refvar[SurfaceInteraction::ComputeScatteringFunctions]{ComputeScatteringFunctions}{()}，
+它求取纹理函数来确定表面属性
+然后再初始化该点处BSDF（也可能是BSSRDF）的表示。
+该方法一般需要为构成该表示的对象分配内存；
+因为这些内存只需要对当前光线可用，
+所以为其提供\refvar{MemoryArena}{}供其分配。
+\begin{lstlisting}
+`\initcode{Compute scattering functions for surface interaction}{=}`
+isect.`\refvar[SurfaceInteraction::ComputeScatteringFunctions]{ComputeScatteringFunctions}{}`(ray, arena);
+\end{lstlisting}
+
+万一光线命中自发光几何体（例如面光源），
+积分器会通过调用方法
+\refvar{SurfaceInteraction::Le}{()}计算所有出射辐亮度。
+这给出了\refeq{1.1}光传输方程的第一项。
+如果物体不发光，该方法则返回黑光谱。
+\begin{lstlisting}
+`\initcode{Compute emitted light if ray hit an area light source}{=}`
+L += isect.`\refvar[SurfaceInteraction::Le]{Le}{}`(wo);
+\end{lstlisting}
+
+对于每个光源，积分器调用方法\refvar[SampleLi]{Light::Sample\_Li}{()}计算
+从该光源落到表面上待着色点的辐亮度。
+该方法也返回从待着色点指向光源的方向向量存于变量{\ttfamily wi}中
+（表示一入射方向${\bm \omega}_\mathrm{i}$）。
+\begin{remark}
+    当考虑表面位置上的光散射时，pbrt遵循的惯例
+    是${\bm \omega}_\mathrm{i}$总表示关心的量（这里是辐亮度）到来的方向，
+    而不是\refvar{Integrator}{}接近表面的方向。
+\end{remark}
+
+该方法返回的光谱不考虑其他一些形状可能挡住来自光源的光照阻止其到达待着色点的可能性。
+代替的是，它返回一个\refvar{VisibilityTester}{}对象
+来确定是否有任何图元挡住从光源到表面点的路线。
+它通过追踪待着色点和光源之间的阴影射线验证路径是畅通的来完成该测试。
+pbrt的代码是按该方式组织的，
+所以它能避免追踪不必要的阴影射线：
+这样它能首先保证如果光没被遮挡
+那落到表面的光\emph{将会}沿方向${\bm \omega}_\mathrm{o}$散射。
+例如，如果表面不是透射的，
+那到达表面背面的光对反射无作用。
+
+方法\refvar[SampleLi]{Light::Sample\_Li}{()}也在变量{\ttfamily pdf}里
+为采样方向${\bm \omega}_\mathrm{i}$的光返回了概率密度。
+该值用于复杂面光源的蒙特卡洛积分，
+那时光是从多个方向到达一点的，尽管这里只采样一个方向；
+对于点光源那般的简单光源，{\ttfamily pdf}的值为1。
+如何在渲染中算出和使用这个概率密度的细节
+是第\refchap{蒙特卡洛积分}和\refchap{光传输I：表面反射}的主题；
+最后，光的作用必须除以{\ttfamily pdf}，这由此处的实现完成。
+
+如果达到的辐亮度非零且BSDF表明
+一些从方向${\bm \omega}_\mathrm{i}$来的入射光确实
+散射到了出射方向${\bm \omega}_\mathrm{o}$，
+则积分器将辐亮度值$L_\mathrm{i}$乘以BSDF即$f$的值以及余弦项。
+余弦项用函数\refvar{AbsDot}{()}计算，
+它返回两向量点积的绝对值。
+如果向量规范化了，例如此处的${\bm \omega}_\mathrm{i}$和$\bm n$，
+则结果等于两者间夹角的余弦绝对值（\refsub{点积与叉积}）。
+
+该积表示该光对\refeq{1.1}光传输方程积分的贡献，
+并被加到总反射辐亮度$L$上。
+考虑了所有光照后，积分器便算出了\emph{直接光照}的总量——
+从发光物体直接到达表面的光
+（相对于场景中从其他物体反射过来到达该点的光而言）。
+
+\begin{lstlisting}
+`\initcode{Add contribution of each light source}{=}`
+for (const auto &light : scene.`\refvar{lights}{}`) {
+    `\refvar{Vector3f}{}` wi;
+    Float pdf;
+    `\refvar{VisibilityTester}{}` visibility;
+    `\refvar{Spectrum}{}` Li = light->`\refvar[SampleLi]{Sample\_Li}{}`(isect, sampler.`\refvar{Get2D}{}`(), &wi,
+        &pdf, &visibility);
+    if (Li.`\refvar{IsBlack}{}`() || pdf == 0) continue;
+    `\refvar{Spectrum}{}` f = isect.`\refvar{bsdf}{}`->`\refvar[BSDF::f]{f}{}`(wo, wi);
+    if (!f.`\refvar{IsBlack}{}`() && visibility.`\refvar{Unoccluded}{}`(scene))
+        L += f * Li * `\refvar{AbsDot}{}`(wi, n) / pdf;
+}
+\end{lstlisting}

@@ -21,7 +21,16 @@ protected:
     `\refcode{Warn if light has transformation with non-uniform scale}{}`
 }
 \end{lstlisting}
-
+其中从
+\begin{lstlisting}
+`\initcode{Warn if light has transformation with non-uniform scale}{=}`
+if (WorldToLight.HasScale())
+    Warning("Scaling detected in world to light transformation!\n"
+        "The system has numerous assumptions, implicit and explicit,\n"
+        "that this transform will have no scale factors in it.\n"
+        "Proceed at your own risk; your image may have errors or\n"
+        "the system may crash as a result of this.");
+\end{lstlisting}
 \begin{lstlisting}
 `\initcode{Light Public Data}{=}`
 const int `\initvar{flags}{}`;
@@ -33,7 +42,11 @@ const `\refvar{MediumInterface}{}` `\initvar{mediumInterface}{}`;
 `\initcode{Light Protected Data}{=}`
 const `\refvar{Transform}{}` `\initvar{LightToWorld}{}`, `\initvar{WorldToLight}{}`;
 \end{lstlisting}
-
+\begin{lstlisting}
+`\refcode{Light Interface}{+=}\lastnext{LightInterface}`
+virtual `\refvar{Spectrum}{}` `\initvar[SampleLi]{Sample\_Li}{}`(const `\refvar{Interaction}{}` &ref, const `\refvar{Point2f}{}` &u,
+    `\refvar{Vector3f}{}` *wi, Float *pdf, `\refvar{VisibilityTester}{}` *vis) const = 0;
+\end{lstlisting}
 \begin{lstlisting}
 `\refcode{Light Interface}{+=}\lastnext{LightInterface}`
 virtual void `\initvar{Preprocess}{}`(const `\refvar{Scene}{}` &scene) { }

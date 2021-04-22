@@ -1,0 +1,23 @@
+\section{采样与抗锯齿}\label{sec:采样与抗锯齿}
+
+
+\subsection{寻找纹理采样率}\label{sub:寻找纹理采样率}
+\begin{lstlisting}
+`\refcode{SurfaceInteraction Public Data}{+=}\lastcode{SurfaceInteractionPublicData}`
+mutable `\refvar{Vector3f}{}` `\initvar[SurfaceInteraction::dpdx]{dpdx}{}`, `\initvar[SurfaceInteraction::dpdy]{dpdy}{}`;
+mutable Float `\initvar[SurfaceInteraction::dudx]{dudx}{}` = 0, `\initvar[SurfaceInteraction::dvdx]{dvdx}{}` = 0, `\initvar[SurfaceInteraction::dudy]{dudy}{}` = 0, `\initvar[SurfaceInteraction::dvdy]{dvdy}{}` = 0;
+\end{lstlisting}
+
+\begin{lstlisting}
+`\refcode{SurfaceInteraction Method Definitions}{+=}\lastnext{SurfaceInteractionMethodDefinitions}`
+void `\refvar{SurfaceInteraction}{}`::`\initvar{ComputeDifferentials}{}`(
+const `\refvar{RayDifferential}{}` &ray) const {
+    if (ray.`\refvar{hasDifferentials}{}`) {
+        `\refcode{Estimate screen space change in $p$ and $(u,v)$}{}`
+    } else {
+        `\refvar[SurfaceInteraction::dudx]{dudx}{}` = `\refvar[SurfaceInteraction::dvdx]{dvdx}{}` = 0;
+        `\refvar[SurfaceInteraction::dudy]{dudy}{}` = `\refvar[SurfaceInteraction::dvdy]{dvdy}{}` = 0;
+        `\refvar[SurfaceInteraction::dpdx]{dpdx}{}` = `\refvar[SurfaceInteraction::dpdy]{dpdy}{}` = `\refvar{Vector3f}{}`(0, 0, 0);
+    }
+}
+\end{lstlisting}

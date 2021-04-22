@@ -777,8 +777,8 @@ private:
 \begin{lstlisting}
 `\initcode{WhittedIntegrator Public Methods}{=}`
 `\refvar{WhittedIntegrator}{}`(int maxDepth, std::shared_ptr<const `\refvar{Camera}{}`> camera,
-std::shared_ptr<`\refvar{Sampler}{}`> sampler)
-: `\refvar{SamplerIntegrator}{}`(camera, sampler), `\refvar{maxDepth}{}`(maxDepth) { }
+    std::shared_ptr<`\refvar{Sampler}{}`> sampler)
+    : `\refvar{SamplerIntegrator}{}`(camera, sampler), `\refvar{maxDepth}{}`(maxDepth) { }
 \end{lstlisting}
 
 Whitted积分器工作时递归地计算沿反射和折射光线方向的辐射。
@@ -806,4 +806,68 @@ const int `\initvar{maxDepth}{}`;
         然后再用场景中的灯光来确定照明。
         同样，它们给出了计算交点处沿光线反射回去的辐射量所需的信息。}
     \label{fig:1.19}
+\end{figure}
+\begin{lstlisting}
+`\initcode{WhittedIntegrator Method Definitions}{=}`
+`\refvar{Spectrum}{}` `\initvar{WhittedIntegrator::Li}{}`(const `\refvar{RayDifferential}{}` &ray,
+    const `\refvar{Scene}{}` &scene, `\refvar{Sampler}{}` &sampler, `\refvar{MemoryArena}{}` &arena,
+    int depth) const {
+    `\refvar{Spectrum}{}` L(0.);
+    `\refcode{Find closest ray intersection or return background radiance}{}`
+    `\refcode{Compute emitted and reflected light at ray intersection point}{}`
+    return L;
+}
+\end{lstlisting}
+
+第一步是找到光线与场景中形状的首个交点。
+方法\refvar{Scene::Intersect}{()}取一条光线并
+返回表示它是否和形状相交的布尔值。
+对于找到交点的光线，它用交点的几何信息
+初始化提供的\refvar{SurfaceInteraction}{}。
+
+如果没有找到交点，那可能因为光源没有关联几何而就沿光线携带辐射。
+这类光源的一个例子是\refvar{InfiniteAreaLight}{}，
+它能表示来自天空的光照。
+方法\refvar[Le]{Light::Le}{()}允许这样的光源返回其沿给定光线的辐射。
+\begin{lstlisting}
+`\initcode{Find closest ray intersection or return background radiance}{=}`
+`\refvar{SurfaceInteraction}{}` isect;
+if (!scene.`\refvar[Scene::Intersect]{Intersect}{}`(ray, &isect)) {
+    for (const auto &light : scene.`\refvar{lights}{}`)
+        L += light->`\refvar{Le}{}`(ray);
+    return L;
+}
+\end{lstlisting}
+
+否则就找到可行的交点。
+积分器必须确定光在交点处如何被形状表面散射，
+确定有多少光照从光源到达该点，
+并用\refeq{1.1}的近似计算有多少光沿视察方向离开表面。
+因为这个积分器忽略了诸如烟或雾等介质的影响，
+所以离开交点的辐射量和到达该光线起点的辐射量相同。
+\begin{lstlisting}
+`\initcode{Compute emitted and reflected light at ray intersection point}{=}`
+`\refcode{Initialize common variables for Whitted integrator}{}`
+`\refcode{Compute scattering functions for surface interaction}{}`
+`\refcode{Compute emitted light if ray hit an area light source}{}`
+`\refcode{Add contribution of each light source}{}`
+if (depth + 1 < `\refvar{maxDepth}{}`) {
+    `\refcode{Trace rays for specular reflection and refraction}{}`
+}
+\end{lstlisting}
+
+\reffig{1.20}展示了在接下来的代码片中经常用到的一些量。
+$\bm n$是交点处的表面法向量，
+从命中点回指向光线起点的规范化方向存于${\bm \omega}_\mathrm{o}$中；
+\protect\refvar{Camera}{}负责规范化生成光线的方向分量，
+所以这里无需再规范化了。
+本书中规范化后的方向用符号$\bm \omega$表示，
+在pbrt代码中我们用{\ttfamily wo}表示散射光的出射方向${\bm \omega}_\mathrm{o}$。
+\begin{figure}
+    \centering\input{Pictures/chap01/Whittedintegrationsetting.tex}
+    \caption{Whitted积分器的几何设置。
+        $\bm p$是光线交点，$\bm n$是其表面法向量。
+        我们要计算反射辐射的方向为${\bm \omega}_\mathrm{o}$；
+        它是指向与入射光相反方向的向量。}
+    \label{fig:1.20}
 \end{figure}

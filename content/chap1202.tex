@@ -38,3 +38,20 @@ const `\refvar{Transform}{}` `\initvar{LightToWorld}{}`, `\initvar{WorldToLight}
 `\refcode{Light Interface}{+=}\lastnext{LightInterface}`
 virtual void `\initvar{Preprocess}{}`(const `\refvar{Scene}{}` &scene) { }
 \end{lstlisting}
+
+\subsection{可见性测试}\label{sub:可见性测试}
+\begin{lstlisting}
+`\refcode{Light Declarations}{+=}\lastnext{LightDeclarations}`
+class `\initvar{VisibilityTester}{}` {
+public:
+    `\refcode{VisibilityTester Public Methods}{}`
+private:
+    `\refvar{Interaction}{}` `\initvar[VisibilityTester::p0]{p0}{}`, `\initvar[VisibilityTester::p1]{p1}{}`;
+};
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{Light Method Definitions}{=}\initnext{LightMethodDefinitions}`
+bool `\refvar{VisibilityTester}{}`::`\initvar{Unoccluded}{}`(const `\refvar{Scene}{}` &scene) const {
+    return !scene.`\refvar[Scene::IntersectP]{IntersectP}{}`(`\refvar[VisibilityTester::p0]{p0}{}`.`\refvar{SpawnRayTo}{}`(`\refvar[VisibilityTester::p1]{p1}{}`));
+}
+\end{lstlisting}

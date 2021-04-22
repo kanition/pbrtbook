@@ -5,6 +5,7 @@
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    id="Layer_1"
@@ -34,15 +35,15 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="1010"
+     inkscape:window-width="1146"
      inkscape:window-height="836"
      id="namedview945"
      showgrid="false"
-     inkscape:zoom="0.88487795"
-     inkscape:cx="147.87487"
-     inkscape:cy="203.22903"
-     inkscape:window-x="2428"
-     inkscape:window-y="127"
+     inkscape:zoom="1.9805638"
+     inkscape:cx="217.75"
+     inkscape:cy="162.82841"
+     inkscape:window-x="2107"
+     inkscape:window-y="122"
      inkscape:window-maximized="0"
      inkscape:current-layer="Layer_1"
      inkscape:document-rotation="0" />
@@ -56,6 +57,25 @@
        id="rect951" />
     <style
        id="style922">.cls-1,.cls-6{fill:none;}.cls-1,.cls-2,.cls-3{stroke:#000;}.cls-1,.cls-2,.cls-3,.cls-4,.cls-6{stroke-miterlimit:10;}.cls-1{stroke-width:0.5px;}.cls-3{fill:#fcee21;stroke-width:0.3px;}.cls-4{fill:gray;}.cls-4,.cls-6{stroke:#fcee21;}.cls-5{fill:#b3b3b3;}</style>
+    <g
+       id="g9810">
+      <symbol
+         overflow="visible"
+         id="symbol9661">
+        <path
+           style="stroke:none;"
+           d=""
+           id="path6188" />
+      </symbol>
+      <symbol
+         overflow="visible"
+         id="symbol8172">
+        <path
+           style="stroke:none;"
+           d="M 0.515625 1.28125 C 0.484375 1.421875 0.46875 1.4375 0.453125 1.453125 C 0.40625 1.46875 0.296875 1.46875 0.203125 1.46875 C 0.03125 1.46875 -0.15625 1.46875 -0.15625 1.75 C -0.15625 1.859375 -0.0625 1.9375 0.046875 1.9375 C 0.328125 1.9375 0.65625 1.90625 0.953125 1.90625 C 1.3125 1.90625 1.6875 1.9375 2.03125 1.9375 C 2.09375 1.9375 2.28125 1.9375 2.28125 1.640625 C 2.28125 1.46875 2.125 1.46875 2.03125 1.46875 C 1.890625 1.46875 1.71875 1.46875 1.59375 1.453125 L 2.03125 -0.28125 C 2.171875 -0.140625 2.5 0.078125 3.03125 0.078125 C 4.765625 0.078125 5.84375 -1.5 5.84375 -2.859375 C 5.84375 -4.09375 4.921875 -4.5 4.09375 -4.5 C 3.390625 -4.5 2.875 -4.109375 2.71875 -3.96875 C 2.328125 -4.5 1.671875 -4.5 1.5625 -4.5 C 1.203125 -4.5 0.90625 -4.296875 0.703125 -3.9375 C 0.453125 -3.53125 0.3125 -3 0.3125 -2.953125 C 0.3125 -2.8125 0.46875 -2.8125 0.5625 -2.8125 C 0.671875 -2.8125 0.703125 -2.8125 0.75 -2.859375 C 0.78125 -2.875 0.78125 -2.90625 0.84375 -3.15625 C 1.03125 -3.953125 1.265625 -4.140625 1.515625 -4.140625 C 1.625 -4.140625 1.75 -4.109375 1.75 -3.78125 C 1.75 -3.625 1.71875 -3.484375 1.6875 -3.34375 Z M 2.8125 -3.5 C 3.09375 -3.84375 3.5625 -4.140625 4.046875 -4.140625 C 4.671875 -4.140625 4.71875 -3.609375 4.71875 -3.390625 C 4.71875 -2.875 4.375 -1.640625 4.21875 -1.25 C 3.90625 -0.53125 3.421875 -0.28125 3.015625 -0.28125 C 2.421875 -0.28125 2.1875 -0.75 2.1875 -0.859375 L 2.203125 -1 Z M 2.8125 -3.5 "
+           id="path8307" />
+      </symbol>
+    </g>
   </defs>
   <title
      id="title926">Two lights one blocker</title>
@@ -95,12 +115,23 @@
      x2="316.87"
      y2="110.17"
      id="line942" />
-  <text
-     xml:space="preserve"
-     id="text949"
-     style="font-size:21.3333px;line-height:1.25;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;shape-inside:url(#rect951);"
-     transform="translate(35.880655,-7.063121)"><tspan
-       x="177.42578"
-       y="258.51791"><tspan
-         style="shape-inside:url(#rect951)">p</tspan></tspan></text>
+  <g
+     inkscape:label=""
+     transform="matrix(2.1747573,0,0,2.1747573,9.2304268,71.482794)"
+     id="g730">
+    <g
+       id="g5862">
+      <g
+         style="fill:#000000;fill-opacity:1"
+         id="g2863">
+        <use
+           xlink:href="#symbol8172"
+           x="91.925003"
+           y="81.962997"
+           id="use5744"
+           width="100%"
+           height="100%" />
+      </g>
+    </g>
+  </g>
 </svg>

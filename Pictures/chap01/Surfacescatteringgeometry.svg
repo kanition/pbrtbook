@@ -5,6 +5,7 @@
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    id="Layer_1"
@@ -38,15 +39,16 @@
      inkscape:window-height="696"
      id="namedview92"
      showgrid="false"
-     inkscape:zoom="7.7426465"
-     inkscape:cx="232.76933"
-     inkscape:cy="160.17869"
+     inkscape:zoom="1.9356616"
+     inkscape:cx="231.01501"
+     inkscape:cy="151.30903"
      inkscape:window-x="2216"
      inkscape:window-y="196"
      inkscape:window-maximized="0"
      inkscape:current-layer="Layer_1"
      showguides="true"
-     inkscape:guide-bbox="true" />
+     inkscape:guide-bbox="true"
+     inkscape:document-rotation="0" />
   <defs
      id="defs55">
     <rect
@@ -81,6 +83,95 @@
        width="31.416225"
        height="33.973358"
        id="rect127" />
+    <g
+       id="g5788">
+      <symbol
+         overflow="visible"
+         id="symbol6989">
+        <path
+           style="stroke:none;"
+           d=""
+           id="path9209" />
+      </symbol>
+      <symbol
+         overflow="visible"
+         id="symbol6456">
+        <path
+           style="stroke:none;"
+           d="M 0.515625 1.28125 C 0.484375 1.421875 0.46875 1.4375 0.453125 1.453125 C 0.40625 1.46875 0.296875 1.46875 0.203125 1.46875 C 0.03125 1.46875 -0.15625 1.46875 -0.15625 1.75 C -0.15625 1.859375 -0.0625 1.9375 0.046875 1.9375 C 0.328125 1.9375 0.65625 1.90625 0.953125 1.90625 C 1.3125 1.90625 1.6875 1.9375 2.03125 1.9375 C 2.09375 1.9375 2.28125 1.9375 2.28125 1.640625 C 2.28125 1.46875 2.125 1.46875 2.03125 1.46875 C 1.890625 1.46875 1.71875 1.46875 1.59375 1.453125 L 2.03125 -0.28125 C 2.171875 -0.140625 2.5 0.078125 3.03125 0.078125 C 4.765625 0.078125 5.84375 -1.5 5.84375 -2.859375 C 5.84375 -4.09375 4.921875 -4.5 4.09375 -4.5 C 3.390625 -4.5 2.875 -4.109375 2.71875 -3.96875 C 2.328125 -4.5 1.671875 -4.5 1.5625 -4.5 C 1.203125 -4.5 0.90625 -4.296875 0.703125 -3.9375 C 0.453125 -3.53125 0.3125 -3 0.3125 -2.953125 C 0.3125 -2.8125 0.46875 -2.8125 0.5625 -2.8125 C 0.671875 -2.8125 0.703125 -2.8125 0.75 -2.859375 C 0.78125 -2.875 0.78125 -2.90625 0.84375 -3.15625 C 1.03125 -3.953125 1.265625 -4.140625 1.515625 -4.140625 C 1.625 -4.140625 1.75 -4.109375 1.75 -3.78125 C 1.75 -3.625 1.71875 -3.484375 1.6875 -3.34375 Z M 2.8125 -3.5 C 3.09375 -3.84375 3.5625 -4.140625 4.046875 -4.140625 C 4.671875 -4.140625 4.71875 -3.609375 4.71875 -3.390625 C 4.71875 -2.875 4.375 -1.640625 4.21875 -1.25 C 3.90625 -0.53125 3.421875 -0.28125 3.015625 -0.28125 C 2.421875 -0.28125 2.1875 -0.75 2.1875 -0.859375 L 2.203125 -1 Z M 2.8125 -3.5 "
+           id="path2047" />
+      </symbol>
+    </g>
+    <g
+       id="g1616">
+      <symbol
+         overflow="visible"
+         id="symbol1130">
+        <path
+           style="stroke:none;"
+           d=""
+           id="path7586" />
+      </symbol>
+      <symbol
+         overflow="visible"
+         id="symbol553">
+        <path
+           style="stroke:none;"
+           d="M 3.609375 -1.390625 C 3.859375 -1.859375 4 -2.34375 4 -2.515625 C 4 -2.734375 3.875 -2.953125 3.625 -2.953125 C 3 -2.953125 2.9375 -1.890625 2.921875 -1.625 C 2.90625 -1.46875 2.90625 -1.46875 2.890625 -1.453125 C 2.734375 -1.3125 2.3125 -1.015625 1.78125 -1.015625 C 1.125 -1.015625 0.75 -1.453125 0.75 -2 C 0.75 -2.3125 0.921875 -3.0625 1.609375 -4 C 1.703125 -4.109375 1.71875 -4.140625 1.71875 -4.21875 C 1.71875 -4.34375 1.625 -4.421875 1.515625 -4.421875 C 1.421875 -4.421875 1.359375 -4.359375 1.34375 -4.359375 C 1.296875 -4.3125 0.21875 -3.015625 0.21875 -1.578125 C 0.21875 -0.578125 0.734375 0.078125 1.578125 0.078125 C 2.28125 0.078125 2.84375 -0.40625 3.0625 -0.640625 C 3.1875 -0.34375 3.484375 0.078125 4.140625 0.078125 C 5 0.078125 5.765625 -0.546875 6.203125 -1.21875 C 6.8125 -2.171875 6.890625 -3.453125 6.890625 -3.59375 C 6.890625 -4.359375 6.4375 -4.515625 6.234375 -4.515625 C 5.859375 -4.515625 5.46875 -4.109375 5.46875 -3.765625 C 5.46875 -3.5 5.65625 -3.375 5.765625 -3.296875 C 6.015625 -3.125 6.234375 -2.890625 6.234375 -2.578125 C 6.234375 -1.90625 5.390625 -1.015625 4.34375 -1.015625 C 4.0625 -1.015625 3.78125 -1.09375 3.609375 -1.390625 Z M 3.609375 -1.390625 "
+           id="path9941" />
+      </symbol>
+      <symbol
+         overflow="visible"
+         id="symbol5828">
+        <path
+           style="stroke:none;"
+           d=""
+           id="path6641" />
+      </symbol>
+      <symbol
+         overflow="visible"
+         id="symbol7351">
+        <path
+           style="stroke:none;"
+           d="M 1.46875 -4.296875 C 1.46875 -4.5 1.296875 -4.703125 1.0625 -4.703125 C 0.859375 -4.703125 0.671875 -4.53125 0.671875 -4.296875 C 0.671875 -4.046875 0.875 -3.890625 1.0625 -3.890625 C 1.296875 -3.890625 1.46875 -4.0625 1.46875 -4.296875 Z M 0.40625 -3 L 0.40625 -2.75 C 0.84375 -2.75 0.90625 -2.703125 0.90625 -2.359375 L 0.90625 -0.546875 C 0.90625 -0.25 0.84375 -0.25 0.390625 -0.25 L 0.390625 0 C 0.40625 0 0.890625 -0.03125 1.171875 -0.03125 C 1.421875 -0.03125 1.671875 -0.015625 1.90625 0 L 1.90625 -0.25 C 1.5 -0.25 1.4375 -0.25 1.4375 -0.546875 L 1.4375 -3.078125 Z M 0.40625 -3 "
+           id="path7468" />
+      </symbol>
+    </g>
+    <g
+       id="g4693">
+      <symbol
+         overflow="visible"
+         id="symbol1377">
+        <path
+           style="stroke:none;"
+           d=""
+           id="path641" />
+      </symbol>
+      <symbol
+         overflow="visible"
+         id="symbol14">
+        <path
+           style="stroke:none;"
+           d="M 3.609375 -1.390625 C 3.859375 -1.859375 4 -2.34375 4 -2.515625 C 4 -2.734375 3.875 -2.953125 3.625 -2.953125 C 3 -2.953125 2.9375 -1.890625 2.921875 -1.625 C 2.90625 -1.46875 2.90625 -1.46875 2.890625 -1.453125 C 2.734375 -1.3125 2.3125 -1.015625 1.78125 -1.015625 C 1.125 -1.015625 0.75 -1.453125 0.75 -2 C 0.75 -2.3125 0.921875 -3.0625 1.609375 -4 C 1.703125 -4.109375 1.71875 -4.140625 1.71875 -4.21875 C 1.71875 -4.34375 1.625 -4.421875 1.515625 -4.421875 C 1.421875 -4.421875 1.359375 -4.359375 1.34375 -4.359375 C 1.296875 -4.3125 0.21875 -3.015625 0.21875 -1.578125 C 0.21875 -0.578125 0.734375 0.078125 1.578125 0.078125 C 2.28125 0.078125 2.84375 -0.40625 3.0625 -0.640625 C 3.1875 -0.34375 3.484375 0.078125 4.140625 0.078125 C 5 0.078125 5.765625 -0.546875 6.203125 -1.21875 C 6.8125 -2.171875 6.890625 -3.453125 6.890625 -3.59375 C 6.890625 -4.359375 6.4375 -4.515625 6.234375 -4.515625 C 5.859375 -4.515625 5.46875 -4.109375 5.46875 -3.765625 C 5.46875 -3.5 5.65625 -3.375 5.765625 -3.296875 C 6.015625 -3.125 6.234375 -2.890625 6.234375 -2.578125 C 6.234375 -1.90625 5.390625 -1.015625 4.34375 -1.015625 C 4.0625 -1.015625 3.78125 -1.09375 3.609375 -1.390625 Z M 3.609375 -1.390625 "
+           id="path838" />
+      </symbol>
+      <symbol
+         overflow="visible"
+         id="symbol6187">
+        <path
+           style="stroke:none;"
+           d=""
+           id="path9283" />
+      </symbol>
+      <symbol
+         overflow="visible"
+         id="symbol9607">
+        <path
+           style="stroke:none;"
+           d="M 3.6875 -1.484375 C 3.6875 -2.359375 2.9375 -3.109375 1.984375 -3.109375 C 1.015625 -3.109375 0.265625 -2.359375 0.265625 -1.484375 C 0.265625 -0.625 1.03125 0.0625 1.984375 0.0625 C 2.921875 0.0625 3.6875 -0.625 3.6875 -1.484375 Z M 1.984375 -0.15625 C 1.71875 -0.15625 1.34375 -0.234375 1.109375 -0.578125 C 0.921875 -0.859375 0.90625 -1.21875 0.90625 -1.546875 C 0.90625 -1.84375 0.90625 -2.265625 1.15625 -2.5625 C 1.328125 -2.765625 1.625 -2.90625 1.984375 -2.90625 C 2.390625 -2.90625 2.6875 -2.71875 2.84375 -2.5 C 3.03125 -2.234375 3.046875 -1.875 3.046875 -1.546875 C 3.046875 -1.21875 3.03125 -0.84375 2.828125 -0.5625 C 2.640625 -0.296875 2.328125 -0.15625 1.984375 -0.15625 Z M 1.984375 -0.15625 "
+           id="path8653" />
+      </symbol>
+    </g>
   </defs>
   <title
      id="title57">Surface scattering geometry</title>
@@ -132,38 +223,12 @@
      id="polygon75" />
   <text
      xml:space="preserve"
-     id="text96"
-     style="font-size:21.3333px;line-height:1.25;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;shape-inside:url(#rect98);"
-     transform="translate(-11.623932,-10.849004)"><tspan
-       x="225.24609"
-       y="215.25033"><tspan
-         style="shape-inside:url(#rect98)">p</tspan></tspan></text>
-  <text
-     xml:space="preserve"
      id="text102"
      style="font-size:21.3333px;line-height:1.25;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;shape-inside:url(#rect104);"
      transform="translate(3.0997153,6.7160498)"><tspan
        x="223.38477"
        y="134.92569"><tspan
          style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:21.3333px;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic'">θ</tspan></tspan></text>
-  <text
-     xml:space="preserve"
-     id="text108"
-     style="font-size:21.3333px;line-height:1.25;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;shape-inside:url(#rect110);"
-     transform="translate(29.772354,-4.0183545)"><tspan
-       x="20.275391"
-       y="102.41397"><tspan
-         style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman,  Italic'">ω</tspan><tspan
-         style="font-size:65%;letter-spacing:0px;word-spacing:0px;baseline-shift:sub">o</tspan></tspan></text>
-  <text
-     xml:space="preserve"
-     id="text108-7"
-     style="font-size:21.3333px;line-height:1.25;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;shape-inside:url(#rect110-2);"
-     transform="translate(298.71176,-29.668345)"><tspan
-       x="20.275391"
-       y="102.41397"><tspan
-         style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman,  Italic'">ω</tspan><tspan
-         style="font-size:65%;letter-spacing:0px;word-spacing:0px;baseline-shift:sub">i</tspan></tspan></text>
   <path
      style="fill:none;stroke:#000000;stroke-width:1.00157;stroke-opacity:1"
      id="path977"
@@ -178,4 +243,83 @@
      sodipodi:arc-type="arc"
      d="m -145.88519,217.48569 a 40,40 0 0 1 -8.69568,24.90058"
      transform="rotate(-90)" />
+  <g
+     inkscape:label=""
+     transform="matrix(2.1747573,0,0,2.1747573,10.487363,24.957703)"
+     id="g879">
+    <g
+       id="g8092">
+      <g
+         style="fill:#000000;fill-opacity:1"
+         id="g8122">
+        <use
+           xlink:href="#symbol6456"
+           x="91.925003"
+           y="81.962997"
+           id="use5808"
+           width="100%"
+           height="100%" />
+      </g>
+    </g>
+  </g>
+  <g
+     inkscape:label=""
+     transform="matrix(2.1631954,0,0,2.1631954,132.67009,-116.81142)"
+     id="g1052">
+    <g
+       id="g1793">
+      <g
+         style="fill:#000000;fill-opacity:1"
+         id="g2027">
+        <use
+           xlink:href="#symbol553"
+           x="91.925003"
+           y="81.962997"
+           id="use6158"
+           width="100%"
+           height="100%" />
+      </g>
+      <g
+         style="fill:#000000;fill-opacity:1"
+         id="g460">
+        <use
+           xlink:href="#symbol7351"
+           x="99.077003"
+           y="83.457001"
+           id="use3248"
+           width="100%"
+           height="100%" />
+      </g>
+    </g>
+  </g>
+  <g
+     inkscape:label=""
+     transform="matrix(2.1409297,0,0,2.1409297,-140.14565,-69.25368)"
+     id="g1145">
+    <g
+       id="g8767">
+      <g
+         style="fill:#000000;fill-opacity:1"
+         id="g336">
+        <use
+           xlink:href="#symbol14"
+           x="91.925003"
+           y="81.962997"
+           id="use6019"
+           width="100%"
+           height="100%" />
+      </g>
+      <g
+         style="fill:#000000;fill-opacity:1"
+         id="g6981">
+        <use
+           xlink:href="#symbol9607"
+           x="99.077003"
+           y="83.457001"
+           id="use4023"
+           width="100%"
+           height="100%" />
+      </g>
+    </g>
+  </g>
 </svg>

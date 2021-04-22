@@ -126,14 +126,14 @@
 我们想要模拟光在该点与物体的相互作用。
 为了找到交点，我们必须把场景中的所有物体拿来和该射线测试，
 并选出与该射线首先相交的那个。
-给定一射线$\mathrm{r}$，首先将其写成\keyindex{参数形式}{parametric form}{}：
+给定一射线${\bm r}$，首先将其写成\keyindex{参数形式}{parametric form}{}：
 \begin{align*}
-      \mathrm{r}(t)=\mathrm{o}+t\mathbf{d}\, ,
+      {\bm r}(t)={\bm o}+t{\bm d}\, ,
 \end{align*}
-其中$\mathrm{o}$是射线端点，$\mathbf{d}$是其方向向量，$t$是定义在$(0,\infty)$的\keyindex{参数}{parameter}{}。
+其中${\bm o}$是射线端点，${\bm d}$是其方向向量，$t$是定义在$(0,\infty)$的\keyindex{参数}{parameter}{}。
 我们可以通过指定参数$t$的值并代入上式求得射线上的一点。
 
-通常很容易寻找射线$\mathrm{r}$和由隐函数$F(x,y,z)=0$定义的\keyindex{曲面}{surface}{}的交点。
+通常很容易寻找射线${\bm r}$和由隐函数$F(x,y,z)=0$定义的\keyindex{曲面}{surface}{}的交点。
 首先把射线方程代入\keyindex{隐式方程}{implicit equation}{equation方程}，
 得到只含有参数$t$的新方程。
 然后从中解出$t$并把最小正根代入射线方程得到所需的点。
@@ -143,7 +143,7 @@
 \end{align*}
 代入射线方程，得到
 \begin{align*}
-      (\mathrm{o}_x+t\mathbf{d}_x)^2+(\mathrm{o}_y+t\mathbf{d}_y)^2+(\mathrm{o}_z+t\mathbf{d}_z)^2-r^2=0\, .
+      (o_x+td_x)^2+(o_y+td_y)^2+(o_z+td_z)^2-r^2=0\, .
 \end{align*}
 上式除了$t$外的所有值都是已知的，因此是易解的关于$t$的二次方程。
 如果没有正根，则射线与球面错开了；
@@ -154,8 +154,8 @@
 首先，必须确定该点的材质表示
 并传给光线追踪算法之后的步骤。
 其次，还需要交点处额外的几何信息来对该点\keyindex{着色}{shade}{}。
-例如，曲面\keyindex{法线}{normal}{}$\mathbf{n}$是必需的。
-虽然许多光线追踪器只对$\mathbf{n}$操作，
+例如，曲面\keyindex{法线}{normal}{}${\bm n}$是必需的。
+虽然许多光线追踪器只对${\bm n}$操作，
 但像pbrt这类更复杂的渲染系统还需要更多信息，
 比如位置的各个\keyindex{偏导数}{partial derivative}{derivative导数}以及
 关于曲面局部参数化的曲面法线。
@@ -255,7 +255,7 @@ $\mathrm{d}E$为
       \centering\input{Pictures/chap01/Twolightsoneblocker.tex}
       \caption{只有在视点处能无障碍地看到光源时，
             该光源才能对其表面积累能量。
-            左边的光源照亮了点p，但右边的不行。}\label{fig:1.5}
+            左边的光源照亮了点$\bm p$，但右边的不行。}\label{fig:1.5}
 \end{figure}
 
 幸运的是，在光线追踪器中很容易确定光对于着色点是否可见。
@@ -280,16 +280,16 @@ $\mathrm{d}E$为
 \begin{figure}
       \centering\input{Pictures/chap01/Surfacescatteringgeometry.tex}
       \caption{表面散射的几何结构。
-            入射光沿$\omega_\mathrm{i}$方向与表面交于点p并沿方向$\omega_\mathrm{o}$散射回相机。
+            入射光沿${\bm \omega}_\mathrm{i}$方向与表面交于点$\bm p$并沿方向${\bm \omega}_\mathrm{o}$散射回相机。
             朝相机散射的光量由入射光能量与BRDF的积给定。}\label{fig:1.6}
 \end{figure}
 
 场景中每个物体都提供了\keyindex{材质}{material}{}，
 即对表面每点外观属性的描述。
 这个描述由\keyindex{双向反射分布函数}{bidirectional reflectance distribution function}{}(BRDF)给定。
-该函数告诉我们从\keyindex{入射}{incoming}{}方向$\omega_\mathrm{i}$
-到\keyindex{出射}{outgoing}{}方向$\omega_\mathrm{o}$会反射多少能量。
-我们把p处的BRDF写作$f_r({\mathrm p},\omega_\mathrm{o},\omega_\mathrm{i})$。
+该函数告诉我们从\keyindex{入射}{incoming}{}方向${\bm \omega}_\mathrm{i}$
+到\keyindex{出射}{outgoing}{}方向${\bm \omega}_\mathrm{o}$会反射多少能量。
+我们把$\bm p$处的BRDF写作$f_{\mathrm{r}}({\bm p},{\bm \omega}_\mathrm{o},{\bm \omega}_\mathrm{i})$。
 现在计算散射回相机的光量$L$就很直接了：
 \begin{lstlisting}
 for each light:
@@ -343,14 +343,14 @@ Turner Whitted在关于光线追踪
 由物体的发光量（如果它自己就是光源）与反射光量之和决定。
 它被形式化为\keyindex{光传输方程}{light transport equation}{light transport光传输}
 （也称作\keyindex{渲染方程}{rendering equation}{render渲染}），
-表示从点p沿方向$\omega_\mathrm{o}$的
-出射辐亮度$L_{\mathrm{o}}(\mathrm{p},\omega_\mathrm{o})$等于
+表示从点$\bm p$沿方向${\bm \omega}_\mathrm{o}$的
+出射辐亮度$L_{\mathrm{o}}({\bm p},{\bm \omega}_\mathrm{o})$等于
 该点沿该方向的发光亮度加上
-点p的邻域球面$\mathrm{S}^2$所有方向上
-经BSDF$f(\mathrm{p},\omega_\mathrm{o},\omega_\mathrm{i})$和
+点$\bm p$的邻域球面$S^2$所有方向上
+经BSDF$f({\bm p},{\bm \omega}_\mathrm{o},{\bm \omega}_\mathrm{i})$和
 余弦项调制的入射亮度：
 \begin{align}
-      L_{\mathrm{o}}(\mathrm{p},\omega_\mathrm{o})=L_{\mathrm{e}}(\mathrm{p},\omega_\mathrm{o})+\int_{\mathrm{S}^2}f(\mathrm{p},\omega_\mathrm{o},\omega_\mathrm{i})L_{\mathrm{i}}(\mathrm{p},\omega_\mathrm{i})|\cos{\theta_{\mathrm{i}}}| \,\mathrm{d}\omega_\mathrm{i}\, .
+      L_{\mathrm{o}}({\bm p},{\bm \omega}_\mathrm{o})=L_{\mathrm{e}}({\bm p},{\bm \omega}_\mathrm{o})+\int_{S^2}f({\bm p},{\bm \omega}_\mathrm{o},{\bm \omega}_\mathrm{i})L_{\mathrm{i}}({\bm p},{\bm \omega}_\mathrm{i})|\cos{\theta_{\mathrm{i}}}| \,\mathrm{d}{\bm \omega}_\mathrm{i}\, .
       \label{eq:1.1}
 \end{align}
 \refsub{BRDF}和\refsec{光传输方程}将展示其更完整的推导。
@@ -361,7 +361,7 @@ Turner Whitted在关于光线追踪
 Whitted算法通过忽略绝大多数方向的入射光来简化积分，
 只计算到光源方向以及
 完美\keyindex{反射}{reflection}{}与\keyindex{折射}{refraction}{}方向
-的$L_{\mathrm{i}}(\mathrm{p},\omega_\mathrm{i})$。
+的$L_{\mathrm{i}}({\bm p},{\bm \omega}_\mathrm{i})$。
 换句话说，它把积分变为少量方向上的求和。
 
 Whitted的方法可以扩展到实现镜面和玻璃外的更多效果。
@@ -369,8 +369,8 @@ Whitted的方法可以扩展到实现镜面和玻璃外的更多效果。
 的递归光线并平均它们的作用，
 可以近似得到\keyindex{光泽反射}{glossy reflection}{reflection反射}。
 事实上只要命中物体我们就\emph{一直}递归地追踪光线。
-例如，随机选取反射方向$\omega_\mathrm{i}$并
-计算BRDF$f_{\mathrm{r}}(\mathrm{p},\omega_\mathrm{o},\omega_\mathrm{i})$对
+例如，随机选取反射方向${\bm \omega}_\mathrm{i}$并
+计算BRDF$f_{\mathrm{r}}({\bm p},{\bm \omega}_\mathrm{o},{\bm \omega}_\mathrm{i})$对
 这条新建光线赋权。
 这个简单有效的办法可以得到非常逼真的图像，
 因为它考虑了物体间的光所有的\keyindex{互反射}{interreflection}{reflection反射}。

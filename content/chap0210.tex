@@ -1,0 +1,73 @@
+\section{交互作用}\label{sec:交互作用}
+
+\begin{lstlisting}
+`\initcode{Interaction Declarations}{=}\initnext{InteractionDeclarations}`
+struct `\initvar{Interaction}{}` {
+    `\refcode{Interaction Public Methods}{}`
+    `\refcode{Interaction Public Data}{}`
+};
+\end{lstlisting}
+
+\begin{lstlisting}
+`\initcode{Interaction Public Data}{=}\initnext{InteractionPublicData}`
+`\refvar{Point3f}{}` `\initvar[Interaction::p]{p}{}`;
+Float `\initvar[Interaction::time]{time}{}`;
+\end{lstlisting}
+
+\begin{lstlisting}
+`\refcode{Interaction Public Data}{+=}\lastnext{InteractionPublicData}`
+`\refvar{Vector3f}{}` `\initvar{pError}{}`;
+\end{lstlisting}
+
+\begin{lstlisting}
+`\refcode{Interaction Public Data}{+=}\lastnext{InteractionPublicData}`
+`\refvar{Vector3f}{}` `\initvar[Interaction::wo]{wo}{}`;
+\end{lstlisting}
+
+\begin{lstlisting}
+`\refcode{Interaction Public Data}{+=}\lastnext{InteractionPublicData}`
+`\refvar{Normal3f}{}` `\initvar[Interaction::n]{n}{}`;
+\end{lstlisting}
+
+\subsection{表面交互}\label{sub:表面交互}
+\begin{lstlisting}
+`\initcode{SurfaceInteraction Declarations}{=}`
+class `\initvar{SurfaceInteraction}{}` : public `\refvar{Interaction}{}` {
+public:
+    `\refcode{SurfaceInteraction Public Methods}{}`
+    `\refcode{SurfaceInteraction Public Data}{}`
+};
+\end{lstlisting}
+
+\begin{lstlisting}
+`\initcode{SurfaceInteraction Public Data}{=}\initnext{SurfaceInteractionPublicData}`
+`\refvar{Point2f}{}` `\initvar[SurfaceInteraction::uv]{uv}{}`;
+`\refvar{Vector3f}{}` `\initvar[SurfaceInteraction::dpdu]{dpdu}{}`, `\initvar[SurfaceInteraction::dpdv]{dpdv}{}`;
+`\refvar{Normal3f}{}` `\initvar[SurfaceInteraction::dndu]{dndu}{}`, `\initvar[SurfaceInteraction::dndv]{dndv}{}`;
+const `\refvar{Shape}{}` *`\initvar{shape}{}` = nullptr;
+\end{lstlisting}
+
+\begin{lstlisting}
+`\initcode{SurfaceInteraction Method Definitions}{=}\initnext{SurfaceInteractionMethodDefinitions}`
+`\refvar{SurfaceInteraction}{}`::`\refvar{SurfaceInteraction}{}`(const `\refvar{Point3f}{}` &p,
+    const `\refvar{Vector3f}{}` &pError, const `\refvar{Point2f}{}` &uv, const `\refvar{Vector3f}{}` &wo,
+    const `\refvar{Vector3f}{}` &dpdu, const `\refvar{Vector3f}{}` &dpdv,
+    const `\refvar{Normal3f}{}` &dndu, const `\refvar{Normal3f}{}` &dndv,
+    Float time, const `\refvar{Shape}{}` *shape)
+    : `\refvar{Interaction}{}`(p, `\refvar{Normal3f}{}`(`\refvar{Normalize}{}`(`\refvar{Cross}{}`(dpdu, dpdv))), pError, wo,
+    time, nullptr),
+    `\refvar[SurfaceInteraction::uv]{uv}{}`(uv), `\refvar[SurfaceInteraction::dpdu]{dpdu}{}`(dpdu), `\refvar[SurfaceInteraction::dpdv]{dpdv}{}`(dpdv), `\refvar[SurfaceInteraction::dndu]{dndu}{}`(dndu), `\refvar[SurfaceInteraction::dndv]{dndv}{}`(dndv),
+    `\refvar{shape}{}`(shape) {
+    `\refcode{Initialize shading geometry from true geometry}{}`
+    `\refcode{Adjust normal based on orientation and handedness}{}`
+}
+\end{lstlisting}
+
+\begin{lstlisting}
+`\refcode{SurfaceInteraction Public Data}{+=}\lastnext{SurfaceInteractionPublicData}`
+struct {
+    `\refvar{Normal3f}{}` `\initvar[shading::n]{n}{}`;
+    `\refvar{Vector3f}{}` `\initvar[shading::dpdu]{dpdu}{}`, `\initvar[shading::dpdv]{dpdv}{}`;
+    `\refvar{Normal3f}{}` `\initvar[shading::dndu]{dndu}{}`, `\initvar[shading::dndv]{dndv}{}`;
+} `\initvar{shading}{}`;
+\end{lstlisting}

@@ -1,5 +1,65 @@
 \section{BSDF}\label{sec:BSDF}
 
+\begin{lstlisting}
+`\refcode{BSDF Declarations}{+=}\lastnext{BSDFDeclarations}`
+class `\initvar{BSDF}{}` {
+public:
+    `\refcode{BSDF Public Methods}{}`
+    `\refcode{BSDF Public Data}{}`
+private:
+    `\refcode{BSDF Private Methods}{}`
+    `\refcode{BSDF Private Data}{}`
+};
+\end{lstlisting}
+
+\begin{lstlisting}
+`\initcode{BSDF Public Methods}{=}\initnext{BSDFPublicMethods}`
+`\refvar{BSDF}{}`(const `\refvar{SurfaceInteraction}{}` &si, Float eta = 1)
+: `\refvar{eta}{}`(eta), `\refvar{ns}{}`(si.shading.n), `\refvar{ng}{}`(si.n),
+`\refvar{ss}{}`(`\refvar{Normalize}{}`(si.shading.dpdu)), `\refvar{ts}{}`(`\refvar{Cross}{}`(ns, ss)) { }
+\end{lstlisting}
+
+\begin{lstlisting}
+`\initcode{BSDF Public Data}{=}`
+const Float `\initvar{eta}{}`;
+\end{lstlisting}
+
+\begin{lstlisting}
+`\initcode{BSDF Private Data}{=}\initnext{BSDFPrivateData}`
+const `\refvar{Normal3f}{}` `\initvar{ns}{}`, `\initvar{ng}{}`;
+const `\refvar{Vector3f}{}` `\initvar{ss}{}`, `\initvar{ts}{}`;
+\end{lstlisting}
+
+\begin{lstlisting}
+`\refcode{BSDF Private Data}{+=}\lastnext{BSDFPrivateData}`
+int `\initvar{nBxDFs}{}` = 0;
+static constexpr int `\initvar{MaxBxDFs}{}` = 8;
+`\refvar{BxDF}{}` *`\initvar{bxdfs}{}`[MaxBxDFs];
+\end{lstlisting}
+
+\begin{lstlisting}
+`\refcode{BSDF Public Methods}{+=}\lastnext{BSDFPublicMethods}`
+`\refvar{Vector3f}{}` `\initvar{WorldToLocal}{}`(const `\refvar{Vector3f}{}` &v) const {
+    return `\refvar{Vector3f}{}`(`\refvar{Dot}{}`(v, `\refvar{ss}{}`), `\refvar{Dot}{}`(v, `\refvar{ts}{}`), `\refvar{Dot}{}`(v, `\refvar{ns}{}`));
+}
+\end{lstlisting}
+
+\begin{lstlisting}
+`\initcode{BSDF Method Definitions}{=}\initnext{BSDFMethodDefinitions}`
+`\refvar{Spectrum}{}` `\refvar{BSDF}{}`::`\initvar[BSDF::f]{`\refvar[BxDF::f]{f}{}`}{}`(const `\refvar{Vector3f}{}` &woW, const `\refvar{Vector3f}{}` &wiW,
+`\refvar{BxDFType}{}` flags) const {
+    `\refvar{Vector3f}{}` wi = `\refvar{WorldToLocal}{}`(wiW), wo = `\refvar{WorldToLocal}{}`(woW);
+    bool reflect = `\refvar{Dot}{}`(wiW, `\refvar{ng}{}`) * `\refvar{Dot}{}`(woW, `\refvar{ng}{}`) > 0;
+    `\refvar{Spectrum}{}` f(0.f);
+    for (int i = 0; i < `\refvar{nBxDFs}{}`; ++i)
+        if (`\refvar{bxdfs}{}`[i]->`\refvar{MatchesFlags}{}`(flags) &&
+        ((reflect && (`\refvar{bxdfs}{}`[i]->type & `\refvar[BSDFREFLECTION]{BSDF\_REFLECTION}{}`)) ||
+        (!reflect && (`\refvar{bxdfs}{}`[i]->type & `\refvar[BSDFTRANSMISSION]{BSDF\_TRANSMISSION}{}`))))
+            f += `\refvar{bxdfs}{}`[i]->`\refvar[BxDF::f]{f}{}`(wo, wi);
+    return f;
+}
+\end{lstlisting}
+
 \subsection{BSDF内存管理}\label{sub:BSDF内存管理}
 \begin{lstlisting}
 `\initcode{Memory Declarations}{=}\initnext{MemoryDeclarations}`

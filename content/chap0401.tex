@@ -18,3 +18,21 @@ virtual `\refvar{Bounds3f}{}` `\initvar{WorldBound}{()}` const = 0;
 virtual bool `\initvar{Intersect}{}`(const `\refvar{Ray}{}` &r, `\refvar{SurfaceInteraction}{}` *) const = 0;
 virtual bool `\initvar{IntersectP}{}`(const `\refvar{Ray}{}` &r) const = 0;
 \end{lstlisting}
+
+\begin{lstlisting}
+`\refcode{Primitive Interface}{+=}\lastnext{PrimitiveInterface}`
+virtual const `\refvar{AreaLight}{}` *`\initvar{GetAreaLight}{}`() const = 0;
+\end{lstlisting}
+
+\begin{lstlisting}
+`\refcode{Primitive Interface}{+=}\lastcode{PrimitiveInterface}`
+virtual void `\initvar{ComputeScatteringFunctions}{}`(`\refvar{SurfaceInteraction}{}` *isect,
+    `\refvar{MemoryArena}{}` &arena, `\refvar{TransportMode}{}` mode,
+    bool allowMultipleLobes) const = 0;
+\end{lstlisting}
+
+\begin{lstlisting}
+`\refcode{SurfaceInteraction Public Data}{+=}\lastnext{SurfaceInteractionPublicData}`
+`\refvar{BSDF}{}` *`\initvar{bsdf}{}` = nullptr;
+`\refvar{BSSRDF}{}` *`\initvar{bssrdf}{}` = nullptr;
+\end{lstlisting}

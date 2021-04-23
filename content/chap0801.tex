@@ -1,0 +1,45 @@
+\section{基本接口}\label{sec:基本接口}
+
+\begin{lstlisting}
+`\initcode{BxDF Declarations}{=}\initnext{BxDFDeclarations}`
+class `\initvar{BxDF}{}` {
+public:
+    `\refcode{BxDF Interface}{}`
+    `\refcode{BxDF Public Data}{}`
+};
+\end{lstlisting}
+
+\begin{lstlisting}
+`\initcode{BSDF Declarations}{=}\initnext{BSDFDeclarations}`
+enum `\initvar{BxDFType}{}` {
+    `\initvar[BSDFREFLECTION]{BSDF\_REFLECTION}{}` = 1 << 0,
+    `\initvar[BSDFTRANSMISSION]{BSDF\_TRANSMISSION}{}` = 1 << 1,
+    `\initvar[BSDFDIFFUSE]{BSDF\_DIFFUSE}{}` = 1 << 2,
+    `\initvar[BSDFGLOSSY]{BSDF\_GLOSSY}{}` = 1 << 3,
+    `\initvar[BSDFSPECULAR]{BSDF\_SPECULAR}{}` = 1 << 4,
+    `\initvar[BSDFALL]{BSDF\_ALL}{}` = BSDF_DIFFUSE | BSDF_GLOSSY | BSDF_SPECULAR |
+    BSDF_REFLECTION | BSDF_TRANSMISSION,
+};
+\end{lstlisting}
+
+\begin{lstlisting}
+`\initcode{BxDF Interface}{=}\initnext{BxDFInterface}`
+`\refvar{BxDF}{}`(`\refvar{BxDFType}{}` type) : `\refvar{type}{}`(type) { }
+\end{lstlisting}
+
+\begin{lstlisting}
+`\initcode{BxDF Public Data}{=}`
+const `\refvar{BxDFType}{}` `\initvar{type}{}`;
+\end{lstlisting}
+
+\begin{lstlisting}
+`\refcode{BxDF Interface}{+=}\lastnext{BxDFInterface}`
+bool `\initvar{MatchesFlags}{}`(`\refvar{BxDFType}{}` t) const {
+    return (`\refvar{type}{}` & t) == `\refvar{type}{}`;
+}
+\end{lstlisting}
+
+\begin{lstlisting}
+`\refcode{BxDF Interface}{+=}\lastnext{BxDFInterface}`
+virtual `\refvar{Spectrum}{}` `\initvar[BxDF::f]{f}{}`(const `\refvar{Vector3f}{}` &wo, const `\refvar{Vector3f}{}` &wi) const = 0;
+\end{lstlisting}

@@ -22,7 +22,7 @@ const `\refvar{Medium}{}` *`\initvar{medium}{}`;
 \end{lstlisting}
 相机子类首先要实现的方法是\refvar[GenerateRay]{Camera::GenerateRay}{()}，
 它计算给定样本相应的光线。
-归一化返回光线的方向分量很重要——系统许多其他部分会依赖此行为。
+规范化返回光线的方向分量很重要——系统许多其他部分会依赖此行为。
 \begin{lstlisting}
 `\refcode{Camera Interface}{+=}\lastnext{CameraInterface}`
 virtual Float `\initvar{GenerateRay}{}`(const `\refvar{CameraSample}{}` &sample,

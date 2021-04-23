@@ -1,0 +1,15 @@
+\section{采样反射函数}\label{sec:采样反射函数}
+
+\subsection{采样BSDF}\label{sub:采样BSDF}
+\begin{lstlisting}
+`\refcode{BSDF Method Definitions}{+=}\lastcode{BSDFMethodDefinitions}`
+`\refvar{Spectrum}{}` `\refvar{BSDF}{}`::`\initvar[Samplef]{Sample\_f}{}`(const `\refvar{Vector3f}{}` &woWorld, `\refvar{Vector3f}{}` *wiWorld,
+const `\refvar{Point2f}{}` &u, Float *pdf, `\refvar{BxDFType}{}` type,
+`\refvar{BxDFType}{}` *sampledType) const {
+    `\refcode{Choose which BxDF to sample}{}`
+    `\refcode{Remap BxDF sample u to $[0,1)^2$}{}`
+    `\refcode{Sample chosen BxDF}{}`
+    `\refcode{Compute overall PDF with all matching BxDFs}{}`
+    `\refcode{Compute value of BSDF for sampled direction}{}`
+}
+\end{lstlisting}

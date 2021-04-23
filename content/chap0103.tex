@@ -382,10 +382,10 @@ virtual void `\initvar[Integrator::Render]{Render}{}`(const `\refvar{Scene}{}` &
 
 本章中，我们的重点是\refvar{Integrator}{}的一个子类\refvar{SamplerIntegrator}{}，
 以及实现了\refvar{SamplerIntegrator}{}接口的\refvar{WhittedIntegrator}{}。
-（\refvar{SamplerIntegrator}{}的其他实现
-会在第\refchap{光传输I：表面反射}和\refchap{光传输II：体积渲染}介绍；
+（\refvar{SamplerIntegrator}{}
+的其他实现会在第\refchap{光传输I：表面反射}和\refchap{光传输II：体积渲染}介绍；
 第\refchap{光传输III：双向方法}的积分器直接从\refvar{Integrator}{}继承。）
-\refvar{SamplerIntegrator}{}的名字源自其渲染过程
+\refvar{SamplerIntegrator}{}的名字源自其渲染过程是
 由来自\refvar{Sampler}{}的\keyindex{样本}{sample}{}流驱动的；
 每个这样的样本都标识了图像上的一点，
 让积分器计算到达该点以构成图像的光量。
@@ -424,14 +424,14 @@ std::shared_ptr<const `\refvar{Camera}{}`> `\initvar{camera}{}`;
 \end{lstlisting}
 
 \refvar{SamplerIntegrator}{}构造函数在成员变量中保存了指向这些对象的指针。
-它在被\refvar{pbrtWorldEnd}{()}调用的
+它在\refvar{pbrtWorldEnd}{()}调用的
 方法\refvar{RenderOptions::MakeIntegrator}{()}里创建，
 而\refvar{pbrtWorldEnd}{()}在输入文件解析器
 完成对输入文件的场景描述解析并准备渲染场景时被调用。
 \begin{lstlisting}
 `\initcode{SamplerIntegrator Public Methods}{=}\initnext{SamplerIntegratorPublicMethods}`
 `\refvar{SamplerIntegrator}{}`(std::shared_ptr<const `\refvar{Camera}{}`> `\refvar{camera}{}`,
-        std::shared_ptr<`\refvar{Sampler}{}`> `\refvar{sampler}{}`)
+    std::shared_ptr<`\refvar{Sampler}{}`> `\refvar{sampler}{}`)
     : `\refvar{camera}{}`(`\refvar{camera}{}`), `\refvar{sampler}{}`(`\refvar{sampler}{}`) { }
 \end{lstlisting}
 
@@ -451,7 +451,7 @@ virtual void `\initvar[SamplerIntegrator::Preprocess]{Preprocess}{}`(const `\ref
 调用方法\refvar{Integrator::Render}{()}，
 开始pbrt的第二执行阶段：主渲染循环。
 在\refvar{SamplerIntegrator}{}对该方法的实现中，
-对于图像平面上一系列位置中的每一个，
+对于图像平面上的每一个位置，
 该方法用\refvar{Camera}{}和\refvar{Sampler}{}生成到场景中的光线，
 再用方法{\ttfamily Li()}确定沿该光线到达图像平面的光量。
 该值传入\refvar{Film}{}，记录下光的贡献度。
@@ -577,7 +577,7 @@ arena\sidenote{译者注：arena，竞技场。}内存池总是整体释放，
 它取用的种子也用于伪随机数生成器的一些实现，
 这样每个图块就不会生成一样的伪随机数序列。
 （注意不是所有\refvar{Sampler}{}都使用伪随机数；
-不需要会忽略种子。）
+不需要时会忽略种子。）
 \begin{lstlisting}
 `\initcode{Get sampler instance for tile}{=}`
 int seed = tile.y * nTiles.x + tile.x;
@@ -611,8 +611,8 @@ std::unique_ptr<`\refvar{FilmTile}{}`> `\initvar{filmTile}{}` =
 \end{lstlisting}
 
 现在可以进行渲染了。
-用自动使用由类\refvar{Bounds2}{}提供的迭代器
-的范围{\ttfamily for}循环对图块中所有像素遍历。
+范围{\ttfamily for}循环自动使用
+由类\refvar{Bounds2}{}提供的迭代器遍历图块中所有像素。
 复制的\refvar{Sampler}{}会被通知要开始为当前像素生成样本了，
 样本被依次处理直到\refvar{StartNextSample}{()}返回{\ttfamily false}。
 （如第\refchap{采样与重构}所述，每个像素取多个样本能大幅提高最终图像的质量。）
@@ -631,7 +631,7 @@ for (`\refvar{Point2i}{}` pixel : tileBounds) {
 }
 \end{lstlisting}
 
-结构体\refvar{CameraSample}{}记录了相机应生成光线的相应胶片位置。
+结构体\refvar{CameraSample}{}记录了相机应为之生成光线的相应胶片位置。
 它还存储了时间和透镜位置采样值，
 分别用于渲染移动物体场景和模拟非针孔光圈的相机模型。
 \begin{lstlisting}
@@ -643,7 +643,7 @@ for (`\refvar{Point2i}{}` pixel : tileBounds) {
 给定图像采样位置的光线，\refvar[GenerateRayDifferential]{Camera::GenerateRayDifferential}{()}返回\keyindex{光线差分}{ray differential}{}，
 它合并了\refvar{Camera}{}为那些在$x$和$y$方向都偏离图像平面一像素的样本生成的光线信息。
 光线差分用于第\refchap{纹理}一些纹理函数以获取更好的结果，
-让计算纹理随像素空间变化有多快成为可能，这是纹理反锯齿的关键因素。
+让计算纹理随像素空间变化有多快成为可能，这是纹理抗锯齿的关键因素。
 
 返回光线差分后，方法\refvar{ScaleDifferentials}{()}对其缩放
 以兼顾每个像素取多个样本时胶片平面上样本之间的实际间距。
@@ -660,8 +660,8 @@ for (`\refvar{Point2i}{}` pixel : tileBounds) {
 ray.`\refvar{ScaleDifferentials}{}`(1 / std::sqrt(tileSampler->`\refvar{samplesPerPixel}{}`));
 \end{lstlisting}
 
-注意大写浮点类型\refvar{Float}{}：取决于pbrt的编译选项，
-它是{\ttfamily float}或{\ttfamily double}的别名。
+注意大写浮点类型\refvar{Float}{}：它取决于pbrt的编译选项，
+是{\ttfamily float}或{\ttfamily double}的别名。
 \refsec{主要包含文件}提供了这些设计选项的更多细节。
 
 给定一条光线，下一个任务是确定沿其到达图像平面的辐亮度。
@@ -701,8 +701,8 @@ else if (std::isinf(L.y())) {
     \item {\ttfamily sampler}：通过蒙特卡洛积分求解光传输方程的样本生成器。
     \item {\ttfamily arena}：为积分器高效临时分配内存的\refvar{MemoryArena}{}。
           积分器应假设它用{\ttfamily arena}分配的任何内存都会在方法\refvar{Li}{()}返回后不久就被释放，
-          因此不应使用{\ttfamily arena}分配任何比当前光线所需还驻留更久的内存。
-    \item {\ttfamily depth}：光线从相机出发直到当前调用\refvar{Li}{()}之间反射的次数。
+          因此不应使用{\ttfamily arena}分配任何超出当前光线所需的驻留更久的内存。
+    \item {\ttfamily depth}：光线从相机出发直到当前调用\refvar{Li}{()}之间已反射的次数。
 \end{itemize}
 
 该方法返回的\refvar{Spectrum}{}表示光线起点的入射量：
@@ -712,11 +712,13 @@ virtual `\refvar{Spectrum}{}` `\initvar{Li}{}`(const `\refvar{RayDifferential}{}
     `\refvar{Sampler}{}` &sampler, `\refvar{MemoryArena}{}` &arena, int depth = 0) const = 0;
 \end{lstlisting}
 
-渲染过程中bug的一个常见副作用是计算出不可能的辐亮度。
-例如，除以零得到的辐亮度值等于IEEE浮点无穷或“not a number”值。
-渲染器寻找这种可能情况，以及具有负数贡献的光谱，
-并在遇到这些情况时打印错误信息。
-此处我们不会包含执行这些的
+渲染过程中一个常见bug是计算出不可能的辐亮度。
+例如，除以零得到的辐亮度值等于IEEE浮点无穷
+\sidenote{译者注：可搜索IEEE Standard for Floating-Point Arithmetic或IEEE 754了解详情。}
+或“not a number”值。
+渲染器监控这种和具有负数贡献光谱等可能的情况，
+并在遇到时打印错误信息。
+此处我们不介绍执行这些的
 代码片\refcode{Issue warning if unexpected radiance value is returned}{}\sidenote{译者注：我把它补充上来了。}。
 如果你对其细节感兴趣可以查看\href{https://github.com/mmp/pbrt-v3/tree/master/src/core/integrator.cpp}{\ttfamily core/integrator.cpp}里的实现。
 
@@ -732,7 +734,7 @@ filmTile->`\refvar{AddSample}{}`(cameraSample.`\refvar{pFilm}{}`, L, rayWeight);
 在处理完一个样本后，\refvar{MemoryArena}{}内所有已经分配过的内存都会在调用
 \refvar[Reset]{MemoryArena::Reset}{()}
 时一起释放。（关于如何用\refvar{MemoryArena}{}分配内存
-来表示交点处的BSDF的解释详见\refsub{BSDF内存管理}。）
+来表示交点处BSDF的解释详见\refsub{BSDF内存管理}。）
 \begin{lstlisting}
 `\initcode{Free MemoryArena memory from computing image sample value}{=}`
 arena.`\refvar{Reset}{}`();
@@ -786,7 +788,7 @@ Whitted积分器工作时递归地计算沿反射和折射光线方向的辐亮�
 默认最大递归深度为5。
 没有这项终止准则，递归可能无法停止（例如想象一下镜厅场景）。
 这个成员变量在\refvar{WhittedIntegrator}{}构造函数内
-基于场景描述文件设置的参数来初始化。
+基于场景描述文件设置的参数进行初始化。
 \begin{lstlisting}
 `\initcode{WhittedIntegrator Private Data}{=}`
 const int `\initvar{maxDepth}{}`;
@@ -839,7 +841,7 @@ if (!scene.`\refvar[Scene::Intersect]{Intersect}{}`(ray, &isect)) {
 }
 \end{lstlisting}
 
-否则就找到可行的交点。
+否则就找到了可行的交点。
 积分器必须确定光在交点处如何被形状表面散射，
 确定有多少光照从光源到达该点，
 并用\refeq{1.1}的近似计算有多少光沿视察方向离开表面。
@@ -883,7 +885,7 @@ $\bm n$是交点处的表面法向量，
 然后再初始化该点处BSDF（也可能是BSSRDF）的表示。
 该方法一般需要为构成该表示的对象分配内存；
 因为这些内存只需要对当前光线可用，
-所以为其提供\refvar{MemoryArena}{}供其分配。
+所以为其提供\refvar{MemoryArena}{}完成分配。
 \begin{lstlisting}
 `\initcode{Compute scattering functions for surface interaction}{=}`
 isect.`\refvar[SurfaceInteraction::ComputeScatteringFunctions]{ComputeScatteringFunctions}{}`(ray, arena);
@@ -902,7 +904,7 @@ L += isect.`\refvar[SurfaceInteraction::Le]{Le}{}`(wo);
 对于每个光源，积分器调用方法\refvar[SampleLi]{Light::Sample\_Li}{()}计算
 从该光源落到表面上待着色点的辐亮度。
 该方法也返回从待着色点指向光源的方向向量存于变量{\ttfamily wi}中
-（表示一入射方向${\bm \omega}_\mathrm{i}$）。
+（表示入射方向${\bm \omega}_\mathrm{i}$）。
 \begin{remark}
     当考虑表面位置上的光散射时，pbrt遵循的惯例
     是${\bm \omega}_\mathrm{i}$总表示关心的量（这里是辐亮度）到来的方向，
@@ -915,7 +917,7 @@ L += isect.`\refvar[SurfaceInteraction::Le]{Le}{}`(wo);
 它通过追踪待着色点和光源之间的阴影射线验证路径是畅通的来完成该测试。
 pbrt的代码是按该方式组织的，
 所以它能避免追踪不必要的阴影射线：
-这样它能首先保证如果光没被遮挡
+这样能首先保证如果光没被遮挡
 那落到表面的光\emph{将会}沿方向${\bm \omega}_\mathrm{o}$散射。
 例如，如果表面不是透射的，
 那到达表面背面的光对反射无作用。
@@ -1032,4 +1034,4 @@ else
 方法{\initvar{SpecularTransmit}{()}}本质上和\refvar{SpecularReflect}{()}相同，
 只是如果有的话，比起\refvar{SpecularReflect}{()}使用\refvar[BSDFREFLECTION]{BSDF\_REFLECTION}{}分量，
 它只需要BSDF的\refvar[BSDFTRANSMISSION]{BSDF\_TRANSMISSION}{}光谱分量。
-因此这里我们不在书中包含它的实现了。
+因此这里我们不再赘述它的实现了。

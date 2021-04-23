@@ -8,7 +8,7 @@
 同时，核心的计算能力却提升缓慢；
 因此随着时间推移，
 明显的性能提升只会出现在可以\keyindex{并行}{parallel}{}运行的程序上，
-其许多独立的执行线程同时在多核上进行计算。
+其许多独立的执行\keyindex{线程}{thread}{}同时在多核上进行计算。
 
 编写并行程序比写\keyindex{串行}{serial}{}程序复杂得多。
 当两组程序员认为该独立同时执行的计算意外相互影响时，
@@ -41,3 +41,157 @@
 所花的时间占了看似无妨的5\%，
 则不论并行阶段执行得有多快，
 可能的加速比最多为1/0.05=20倍。
+
+\subsection{数据竞争与协调}
+pbrt中，我们假设运算在提供\keyindex{连续共享内存}{coherent shared memory}{}的处理器上运行。
+连续共享内存的主要含义是
+所有线程都能读写一组公共内存地址，
+一个线程对内存的更改最终能被其他其他线程可见。
+这种属性极大简化了系统的实现，
+因为核之间不需要显式地交换数据。
+（连续共享内存在如今的CPU上一般都是可用的
+且可能在未来CPU上继续使用。
+另一方面，如果在集群的多台计算机上执行计算，
+一般是不提供连续共享内存的。）
+
+尽管连续共享内存摆脱了为独立线程互相显式交换数据的需求，
+它们仍需要\keyindex{协调}{coordinate}{}对共享数据的访问；
+连续共享内存的一大危险是数据\keyindex{竞争}{race}{}。
+如果两个线程互相没有协调就修改同一内存地址，
+则程序几乎一定会计算出错误结果甚至崩溃。
+考虑两个处理器同时运行如下看似无妨代码的例子，
+其中{\ttfamily globalCounter}初始值是2：
+\begin{lstlisting}
+extern int globalCounter;
+if (--globalCounter == 0)
+    printf("done!\n");
+\end{lstlisting}
+
+因为两个线程没有协调它们对{\ttfamily globalCounter}的读写，
+有可能会打印零次、一次甚至两次“done”！
+编译器生成的汇编指令可能与如下步骤对应：
+\begin{lstlisting}
+extern int globalCounter;
+int temp = globalCounter;
+temp = temp - 1;
+globalCounter = temp;
+if (globalCounter == 0)
+    printf("done!\n");
+\end{lstlisting}
+
+现在，考虑两个处理器执行这段代码的不同方式。
+例如，第二个处理器可能比第一个开始得稍稍晚一些，
+但第一个可能执行开始几条指令后就空转\sidenote{译者注：原文go idle。}了几个时钟周期：
+\begin{lstlisting}
+Thread A                          Thread B
+int temp = globalCounter;   
+temp = temp - 1;                  // (idle)
+globalCounter = temp;             
+                                  int temp = globalCounter;
+/* (idle) */                         temp = temp - 1;
+                                  globalCounter = temp;
+if (globalCounter == 0)           if (globalCounter == 0)
+    printf("done!\n");                printf("done!\n");
+\end{lstlisting}
+（从系统中断线程到丢失缓存等,
+许多不可预测的事件会造成
+这类执行泡沫\sidenote{译者注：原文execution bubbles。}。）
+在这个顺序下，两个线程都从{\ttfamily globalCounter}读到零值，
+都执行调用{\ttfamily printf()}。
+此时，错误不是致命的，
+但如果{\ttfamily if}块里换成系统释放资源，
+则会企图释放同一资源两次，
+这很可能引发崩溃。
+现在考虑这种可能的执行顺序：
+\begin{lstlisting}
+Thread A                          Thread B
+int temp = globalCounter;         int temp = globalCounter;
+temp = temp - 1;                  temp = temp - 1;
+globalCounter = temp;             // (idle)
+/* (idle) */                         globalCounter = temp;
+if (globalCounter == 0)           if (globalCounter == 0)
+    printf("done!\n");                printf("done!\n");
+\end{lstlisting}
+
+这种情况下{\ttfamily globalCounter}最终为1，
+两个线程都不执行{\ttfamily if}块。
+这些例子说明了当执行多线程访问共享可改数据时
+它们必须以某种方式\keyindex{同步}{synchronize}{}其访问的原则。
+
+如今有两套主要机制可用于完成这类同步：\keyindex{互斥}{mutual exclusion}{}和\keyindex{原子操作}{atomic operation}{}。
+pbrt中用{\ttfamily std::mutex}对象实现互斥。
+{\ttfamily std::mutex}能用于阻止访问某些资源，
+确保一次只有一个线程可以访问。
+考虑之前计算的如下升级版；
+这里{\ttfamily std::lock\_guard}对象需要获取互斥锁
+并在离开最后大括号作用域时释放它。
+\begin{lstlisting}
+extern int globalCounter;
+extern std::mutex globalCounterMutex;
+{   std::lock_guard<std::mutex> lock(globalCounterMutex);
+    int temp = globalCounter;
+    temp = temp - 1;
+    globalCounter = temp;
+    if (globalCounter == 0)
+        printf("done!\n");
+}
+\end{lstlisting}
+如果两个线程执行这段代码并同时尝试获取互斥锁，
+则互斥锁会只允许其中一个继续执行，
+而让另一个在{\ttfamily std::lock\_guard}的构造函数中暂停。
+只有当第一个线程完成计算
+且它的{\ttfamily std::lock\_guard}离开作用域
+并释放互斥锁，
+第二个线程才能获取到互斥锁并继续计算。
+\begin{lstlisting}
+Thread A                              Thread B
+{ std::lock_guard<std::mutex> lock(   { std::lock_guard<std::mutex> lock(
+    globalCounterMutex);                  globalCounterMutex);
+  int temp = globalCounter;             // (stalled by mutex)
+  // …
+} // (mutex released)
+                                        // (mutex acquired)
+                                        int temp = globalCounter;
+                                        // …
+                                      } // (mutex released)
+\end{lstlisting}
+
+正确互斥后，不论两个线程的执行顺序如何，
+{\ttfamily printf()}都只会执行一次。
+
+原子内存操作（或\keyindex{原子}{atomic}{}）是正确执行这类多线程内存更新的另一选择。
+原子是保证各自内存更新会在单次处理中执行的机器指令。
+（这里的\emph{原子}表示内存更新不可分割的概念。）
+pbrt中原子操作的实现来自于C++11标准库，
+会在附录\refsub{原子操作}讨论。
+使用原子，前面的计算可以写成使用类型{\ttfamily std::atomic<int>}，
+它重载了加、减、增一、减一操作，如下：
+\begin{lstlisting}
+extern std::atomic<int> globalCounter;
+if (--globalCounter == 0)
+    printf("done!\n");
+\end{lstlisting}
+
+{\ttfamily std::atomic}的{\ttfamily -}操作符
+从给定变量{\ttfamily globalCounter}减去1，
+并返回变量的新值。
+使用原子操作保证了如果有两个线程同时尝试更新变量时
+则不仅最终的变量值是正确的而且
+每个线程都会被返回它单独更新后的变量值。
+于是在这个例子中，{\ttfamily globalCounter}最终会如愿变为零值，
+且一个线程保证从原子减法获得返回值1而另一个保证返回的是0。
+
+还有一个选择是\keyindex{事务内存}{transactional memory}{}，
+它在本书编写时才刚在CPU上兴起。
+有了事务内存，一组内存写操作会绑为一个事务；
+当执行事务时，如果没有其他线程访问这些内存地址，
+则所有的写操作都会提交为单个原子操作。
+否则，它会回滚使之不写入内存，因此计算没有影响；
+事务必须稍后再试。
+事务内存利于联系原子的良好细粒度操作和互斥锁的高开销。
+然而因为它还没有广泛运用，pbrt目前不使用事务内存。
+
+附录中\refsec{并行化}有关于并行编程的更多信息、
+性能问题和陷阱的额外细节以及pbrt并行实现所用的各种例程。
+
+\subsection{pbrt中的约定}\label{sub:pbrt中的约定}

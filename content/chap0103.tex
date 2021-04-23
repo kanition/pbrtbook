@@ -972,3 +972,64 @@ for (const auto &light : scene.`\refvar{lights}{}`) {
     \caption{因为是完美镜面反射故反射光线与表面法线的夹角与入射光线相等。}
     \label{fig:1.21}
 \end{figure}
+\begin{lstlisting}
+`\initcode{Trace rays for specular reflection and refraction}{=}`
+L += `\refvar{SpecularReflect}{}`(ray, isect, scene, sampler, arena, depth);
+L += `\refvar{SpecularTransmit}{}`(ray, isect, scene, sampler, arena, depth);
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{SamplerIntegrator Method Definitions}{+=}\lastcode{SamplerIntegratorMethodDefinitions}`
+`\refvar{Spectrum}{}` `\refvar{SamplerIntegrator}{}`::`\initvar{SpecularReflect}{}`(const `\refvar{RayDifferential}{}` &ray,
+const `\refvar{SurfaceInteraction}{}` &isect, const `\refvar{Scene}{}` &scene,
+`\refvar{Sampler}{}` &sampler, `\refvar{MemoryArena}{}` &arena, int depth) const {
+    `\refcode{Compute specular reflection direction wi and BSDF value}{}`
+    `\refcode{Return contribution of specular reflection}{}`
+}
+\end{lstlisting}
+
+方法\refvar{SpecularReflect}{()}和\refvar{SpecularTransmit}{()}中，方法
+\refvar[Samplef]{BSDF::Sample\_f}{()}
+对给定出射方向返回入射光线方向并给出光散射的方式。
+该方法是本书最后几章所述的蒙特卡洛光传输算法的基础之一。
+这里我们只用它寻找关于完美镜面反射或折射的出射方向，
+并用标志指示\refvar[Samplef]{BSDF::Sample\_f}{()}忽略其他类型的反射。
+尽管\refvar[Samplef]{BSDF::Sample\_f}{()}能
+为概率积分算法采样离开表面的随机方向，
+但随机性被约束为和\refvar{BSDF}{}的散射属性一致。
+在完美镜面反射或折射中，只有一个可能的方向，所以根本没有随机性。
+
+在这些函数中调用\refvar{BSDF}{}会用所选方向初始化{\ttfamily wi}
+并返回方向对$({\bm \omega}_\mathrm{o},{\bm \omega}_\mathrm{i})$的BSDF值。
+如果BSDF值非零，则积分器用方法\refvar[Li]{SamplerIntegrator::Li}{()}获取
+沿${\bm \omega}_\mathrm{i}$的入射辐亮度，
+这里是依次解析为方法\refvar{WhittedIntegrator::Li}{()}。
+\begin{lstlisting}
+`\initcode{Compute specular reflection direction wi and BSDF value}{=}`
+`\refvar{Vector3f}{}` wo = isect.`\refvar[Interaction::wo]{wo}{}`, wi;
+Float pdf;
+`\refvar{BxDFType}{}` type = `\refvar{BxDFType}{}`(`\refvar[BSDFREFLECTION]{BSDF\_REFLECTION}{}` | `\refvar[BSDFSPECULAR]{BSDF\_SPECULAR}{}`);
+`\refvar{Spectrum}{}` f = isect.bsdf->`\refvar[Samplef]{Sample\_f}{}`(wo, &wi, sampler.`\refvar{Get2D}{}`(), &pdf, type);
+\end{lstlisting}
+
+为了用光线差分对反射或折射看到的纹理做抗锯齿，
+需要知道反射和透射是如何影响屏幕空间光线的覆盖区的。
+之后的\refsub{镜面反射和透射的光线差分}会定义
+为这些光线计算光线差分的代码片。
+给定完全初始化后的光线差分，递归调用\refvar{Li}{()}得到入射辐亮度，
+并依据\refeq{1.1}用BSDF值和余弦项缩放再除以PDF。
+\begin{lstlisting}
+`\initcode{Return contribution of specular reflection}{=}`
+const `\refvar{Normal3f}{}` &ns = isect.`\refvar{shading}{}`.`\refvar[shading::n]{n}{}`;
+if (pdf > 0 && !f.`\refvar{IsBlack}{}`() && `\refvar{AbsDot}{}`(wi, ns) != 0) {
+    `\refcode{Compute ray differential rd for specular reflection}{}`
+    return f * `\refvar{Li}{}`(rd, scene, sampler, arena, depth + 1) * `\refvar{AbsDot}{}`(wi, ns) /
+        pdf;
+}
+else
+    return `\refvar{Spectrum}{}`(0.f);
+\end{lstlisting}
+
+方法{\initvar{SpecularTransmit}{()}}本质上和\refvar{SpecularReflect}{()}相同，
+只是如果有的话，比起\refvar{SpecularReflect}{()}使用\refvar[BSDFREFLECTION]{BSDF\_REFLECTION}{}分量，
+它只需要BSDF的\refvar[BSDFTRANSMISSION]{BSDF\_TRANSMISSION}{}光谱分量。
+因此这里我们不在书中包含它的实现了。

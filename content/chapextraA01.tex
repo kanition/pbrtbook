@@ -19,3 +19,16 @@ typedef double `\initvar{Float}{}`;
 typedef float Float;
 #endif // PBRT\_FLOAT\_AS\_DOUBLE
 \end{lstlisting}
+
+\subsection{伪随机数}\label{sub:伪随机数}
+{\initvar{RNG}{}}
+\begin{lstlisting}
+`\initcode{RNG Public Methods}{=}\initnext{RNGPublicMethods}`
+`\refvar{RNG}{}`();
+`\refvar{RNG}{}`(uint64_t sequenceIndex) { `\refvar{SetSequence}{}`(sequenceIndex); }
+\end{lstlisting}
+
+\begin{lstlisting}
+`\refcode{RNG Public Methods}{+=}\lastnext{RNGPublicMethods}`
+void `\initvar{SetSequence}{}`(uint64_t sequenceIndex);
+\end{lstlisting}

@@ -45,8 +45,8 @@ pbrt用10个关键抽象基类写成，列于\reftab{1.1}。
     \label{tab:1.1}
 \end{table}
 
-pbrt源码发布于\href{https://pbrt.org/}{\ttfamily pbrt.org}。
-（大量场景示例\footnote{\url{https://pbrt.org/scenes-v3.html}}也可分开下载。）
+pbrt源码发布于\href{https://pbrt.org/}{\ttfamily pbrt.org}
+（大量场景示例\footnote{\url{https://pbrt.org/scenes-v3.html}}也可分开下载）。
 所有的pbrt核心代码均在目录\href{https://github.com/mmp/pbrt-v3/tree/master/src/core}{\ttfamily src/core}内，
 函数\refvar{main}{()}在
 短文件\href{https://github.com/mmp/pbrt-v3/tree/master/src/main/pbrt.cpp}{\ttfamily main/pbrt.cpp}内。
@@ -381,10 +381,10 @@ virtual void `\initvar[Integrator::Render]{Render}{}`(const `\refvar{Scene}{}` &
 \end{lstlisting}
 
 本章中，我们的重点是\refvar{Integrator}{}的一个子类\refvar{SamplerIntegrator}{}，
-以及实现了\refvar{SamplerIntegrator}{}接口的\refvar{WhittedIntegrator}{}。
+以及实现了\refvar{SamplerIntegrator}{}接口的\refvar{WhittedIntegrator}{}
 （\refvar{SamplerIntegrator}{}
 的其他实现会在第\refchap{光传输I：表面反射}和\refchap{光传输II：体积渲染}介绍；
-第\refchap{光传输III：双向方法}的积分器直接从\refvar{Integrator}{}继承。）
+第\refchap{光传输III：双向方法}的积分器直接从\refvar{Integrator}{}继承）。
 \refvar{SamplerIntegrator}{}的名字源自其渲染过程是
 由来自\refvar{Sampler}{}的\keyindex{样本}{sample}{}流驱动的；
 每个这样的样本都标识了图像上的一点，
@@ -575,9 +575,9 @@ arena\sidenote{译者注：arena，竞技场。}内存池总是整体释放，
 因此，\refvar{Sampler}{}提供了方法\refvar{Clone}{()}来
 创建给定\refvar{Sampler}{}的新实例；
 它取用的种子也用于伪随机数生成器的一些实现，
-这样每个图块就不会生成一样的伪随机数序列。
+这样每个图块就不会生成一样的伪随机数序列
 （注意不是所有\refvar{Sampler}{}都使用伪随机数；
-不需要时会忽略种子。）
+不需要时会忽略种子）。
 \begin{lstlisting}
 `\initcode{Get sampler instance for tile}{=}`
 int seed = tile.y * nTiles.x + tile.x;
@@ -614,8 +614,8 @@ std::unique_ptr<`\refvar{FilmTile}{}`> `\initvar{filmTile}{}` =
 范围{\ttfamily for}循环自动使用
 由类\refvar{Bounds2}{}提供的迭代器遍历图块中所有像素。
 复制的\refvar{Sampler}{}会被通知要开始为当前像素生成样本了，
-样本被依次处理直到\refvar{StartNextSample}{()}返回{\ttfamily false}。
-（如第\refchap{采样与重构}所述，每个像素取多个样本能大幅提高最终图像的质量。）
+样本被依次处理直到\refvar{StartNextSample}{()}返回{\ttfamily false}
+（如第\refchap{采样与重构}所述，每个像素取多个样本能大幅提高最终图像的质量）。
 
 \begin{lstlisting}
 `\initcode{Loop over pixels in tile to render them}{=}`
@@ -733,8 +733,8 @@ filmTile->`\refvar{AddSample}{}`(cameraSample.`\refvar{pFilm}{}`, L, rayWeight);
 
 在处理完一个样本后，\refvar{MemoryArena}{}内所有已经分配过的内存都会在调用
 \refvar[Reset]{MemoryArena::Reset}{()}
-时一起释放。（关于如何用\refvar{MemoryArena}{}分配内存
-来表示交点处BSDF的解释详见\refsub{BSDF内存管理}。）
+时一起释放（关于如何用\refvar{MemoryArena}{}分配内存
+来表示交点处BSDF的解释详见\refsub{BSDF内存管理}）。
 \begin{lstlisting}
 `\initcode{Free MemoryArena memory from computing image sample value}{=}`
 arena.`\refvar{Reset}{}`();

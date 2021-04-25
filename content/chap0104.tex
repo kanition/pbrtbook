@@ -195,3 +195,37 @@ if (--globalCounter == 0)
 性能问题和陷阱的额外细节以及pbrt并行实现所用的各种例程。
 
 \subsection{pbrt中的约定}\label{sub:pbrt中的约定}
+pbrt中（大多数光线追踪器也适用）
+渲染时绝大部分数据都是只读的
+（例如场景描述和纹理贴图\sidenote{译者注：原文texture map，也称纹理映射。}）。
+几乎所有场景文件的解析和内存中场景描述的创建都是单个执行线程完成的，
+所以这个执行阶段没有同步问题。
+\begin{remark}
+    两个例外是在图像纹理贴图上做一些图像重采样，
+    以及{\ttfamily BVHAccel}变体的构造，
+    不过它们都是高度局部化的。
+\end{remark}
+渲染时，多线程对所有只读数据的并发访问不会出问题；
+我们只需要关心内存中要修改数据的情况。
+
+向pbrt新增代码时，要注意保证不要在没有适当同步时
+不经意添加了修改共享数据的代码。
+这通常很简单；
+例如，当新增一个\refvar{Shape}{}的实现时，
+\refvar{Shape}{}通常只在其成员变量创建后才执行读取操作。
+然而有时会不经意引入共享数据。
+考虑如下常见于单线程代码的习惯写法：
+\begin{lstlisting}
+static bool firstCall = true;
+if (firstCall) {
+    // additional initialization …
+    firstCall = false;
+}
+\end{lstlisting}
+
+多线程执行这段代码是不安全的，
+因为多线程见到的{\ttfamily firstCall}值
+可能是{\ttfamily true}然后全都执行初始化代码。
+安全的写法需要原子操作或互斥锁
+（这样的习惯用法也可以用函数{\ttfamily std::call\_once()}安全实现）。
+

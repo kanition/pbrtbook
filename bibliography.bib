@@ -113,25 +113,21 @@
   keywords   = {computer animation, visible surface algorithms, computer graphics, shading, raster displays}
 }
 
-@article{10.1145/74334.74361,
-  author     = {Kajiya, J. T. and Kay, T. L.},
-  title      = {Rendering Fur with Three Dimensional Textures},
-  year       = {1989},
-  issue_date = {July 1989},
-  publisher  = {Association for Computing Machinery},
-  address    = {New York, NY, USA},
-  volume     = {23},
-  number     = {3},
-  issn       = {0097-8930},
-  url        = {https://doi.org/10.1145/74334.74361},
-  doi        = {10.1145/74334.74361},
-  abstract   = {We present a method for rendering scenes with fine detail via an object called a texel, a rendering primitive inspired by volume densities mixed with anisotropic lighting models. This technique solves a long outstanding problem in image synthesis: the rendering of furry surfaces.},
-  journal    = {SIGGRAPH Comput. Graph.},
-  month      = jul,
-  pages      = {271–280},
-  numpages   = {10}
+@inproceedings{10.1145/74333.74361,
+  author    = {Kajiya, J. T. and Kay, T. L.},
+  title     = {Rendering Fur with Three Dimensional Textures},
+  year      = {1989},
+  isbn      = {0897913124},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/74333.74361},
+  doi       = {10.1145/74333.74361},
+  abstract  = {We present a method for rendering scenes with fine detail via an object called a texel, a rendering primitive inspired by volume densities mixed with anisotropic lighting models. This technique solves a long outstanding problem in image synthesis: the rendering of furry surfaces.},
+  booktitle = {Proceedings of the 16th Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {271–280},
+  numpages  = {10},
+  series    = {SIGGRAPH '89}
 }
-
 
 @inproceedings{10.1145/74333.74361,
   author    = {Kajiya, J. T. and Kay, T. L.},
@@ -293,4 +289,154 @@
   numpages  = {9},
   keywords  = {Transparency, Depth of field, Gloss, Shadows, Camera, Motion blur, Translucency, Penumbras, Constructive solid geometry, Focus, Ray tracing},
   series    = {SIGGRAPH '84}
+}
+
+@inproceedings{10.1145/15922.15902,
+  author    = {Kajiya, James T.},
+  title     = {The Rendering Equation},
+  year      = {1986},
+  isbn      = {0897911962},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/15922.15902},
+  doi       = {10.1145/15922.15902},
+  abstract  = {We present an integral equation which generalizes a variety of known rendering algorithms. In the course of discussing a monte carlo solution we also present a new form of variance reduction, called Hierarchical sampling and give a number of elaborations shows that it may be an efficient new technique for a wide variety of monte carlo procedures. The resulting rendering algorithm extends the range of optical phenomena which can be effectively simulated.},
+  booktitle = {Proceedings of the 13th Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {143–150},
+  numpages  = {8},
+  series    = {SIGGRAPH '86}
+}
+
+@article{farmer1981comparing,
+  title   = {Comparing the 4341 and M80/42},
+  author  = {Farmer, DF},
+  journal = {Computerworld},
+  volume  = {15},
+  pages   = {9--20},
+  year    = {1981}
+}
+
+@inproceedings{10.1145/800031.808594,
+  author    = {Kajiya, James T. and Von Herzen, Brian P},
+  title     = {Ray Tracing Volume Densities},
+  year      = {1984},
+  isbn      = {0897911385},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/800031.808594},
+  doi       = {10.1145/800031.808594},
+  abstract  = {This paper presents new algorithms to trace objects represented by densities within a volume grid, e.g. clouds, fog, flames, dust, particle systems. We develop the light scattering equations, discuss previous methods of solution, and present a new approximate solution to the full three-dimensional radiative scattering problem suitable for use in computer graphics. Additionally we review dynamical models for clouds used to make an animated movie.},
+  booktitle = {Proceedings of the 11th Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {165–174},
+  numpages  = {10},
+  keywords  = {Light scattering, Stochastic modeling, Clouds, Radiative transport, Particle systems, Simulation of natural phenomena, Computer graphics, Ray tracing, Raster graphics},
+  series    = {SIGGRAPH '84}
+}
+
+@inproceedings{10.1145/97879.97886,
+  author    = {Arvo, James and Kirk, David},
+  title     = {Particle Transport and Image Synthesis},
+  year      = {1990},
+  isbn      = {0897913442},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/97879.97886},
+  doi       = {10.1145/97879.97886},
+  abstract  = {The rendering equation is similar to the linear Boltzmann equation which has been widely studied in physics and nuclear engineering. Consequently, many of the powerful techniques which have been developed in these fields can be applied to problems in image synthesis. In this paper we adapt several statistical techniques commonly used in neutron transport to stochastic ray tracing and, more generally, to Monte Carlo solution of the rendering equation. First, we describe a technique known as Russian roulette which can be used to terminate the recursive tracing of rays without introducing statistical bias. We also examine the practice of creating ray trees in classical ray tracing in the light of a well-known technique in particle transport known as splitting. We show that neither ray trees nor paths as described in [10] constitute an optimal sampling plan in themselves and that a hybrid may be more efficient.},
+  booktitle = {Proceedings of the 17th Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {63–66},
+  numpages  = {4},
+  location  = {Dallas, TX, USA},
+  series    = {SIGGRAPH '90}
+}
+
+@inproceedings{10.1145/122718.122735,
+  author    = {Kirk, David and Arvo, James},
+  title     = {Unbiased Sampling Techniques for Image Synthesis},
+  year      = {1991},
+  isbn      = {0897914368},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/122718.122735},
+  doi       = {10.1145/122718.122735},
+  abstract  = {We examine a class of adaptive sampling techniques employed in image synthesis and show that those commonly used for efficient anti-aliasing are statistically biased. This bias is dependent upon the image function being sampled as well as the strategy for determining the number of samples to use. It is most prominent in areas of high contrast and is attributable to early stages of sampling systematically favoring one extreme or the other. If the expected outcome of the entire adaptive sampling algorithm is considered, we find that the bias of the early decisions is still present in the final estimator. We propose an alternative strategy for performing adaptive sampling that is unbiased but potentially more costly. We conclude that it may not always be practical to mitigate this source of bias, but as a source of error it should be considered when high accuracy and image fidelity are a central concern.},
+  booktitle = {Proceedings of the 18th Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {153–156},
+  numpages  = {4},
+  keywords  = {statistical bias, adaptive sampling, Monte Carlo, antialiasing},
+  series    = {SIGGRAPH '91}
+}
+
+@phdthesis{10.5555/124947,
+  author      = {Shirley, Peter S.},
+  title       = {Physically Based Lighting Calculations for Computer Graphics},
+  year        = {1991},
+  institution = {University of Illinois at Urbana-Champaign},
+  address     = {USA},
+  abstract    = {Realistic image generation is presented in a theoretical formulation that builds from previous work on the rendering equation. Previous and new solution techniques for the global illumination are discussed in the context of this formulation. The physical rules governing reflection are used to make improvements in local reflection models. The conventional local illumination models used in computer graphics are examined and modified to be consistent with these physical rules.Global illumination is treated in terms of evaluation of a Global Radiance Function. Image-based solution methods are phrased as a lazy evaluation of the Global Radiance Function; evaluation takes place for visible points. Zonal solution methods are phrased as table based solutions. A proof is given that, subject to certain constraints, only O(N) rays are required for a zonal solution with N zones. Simulation allows for surfaces which are not zoned to interact with those that are.The ray tracing zonal solution methods used for surfaces are extended to scenes with participating media. The impact of wavelength selection and time dependencies is also discussed.An object oriented implementation is discussed. This implementation separates the local and global illumination modules, so all of the specifics of the local models are hidden from the global energy transport code. This allows new local modules to be added by specifying the black box access routines.},
+  note        = {UMI Order NO. GAX91-24487}
+}
+
+@article{10.1145/226150.226151,
+  author     = {Shirley, Peter and Wang, Changyaw and Zimmerman, Kurt},
+  title      = {Monte Carlo Techniques for Direct Lighting Calculations},
+  year       = {1996},
+  issue_date = {Jan. 1996},
+  publisher  = {Association for Computing Machinery},
+  address    = {New York, NY, USA},
+  volume     = {15},
+  number     = {1},
+  issn       = {0730-0301},
+  url        = {https://doi.org/10.1145/226150.226151},
+  doi        = {10.1145/226150.226151},
+  abstract   = {In a distributed ray tracer, the sampling strategy is the crucial part of the direct lighting calculation. Monte Carlo integration with importance sampling is used to carry out this calculation. Importance sampling involves the design of integrand-specific probability density functions that are used to generate sample points for the numerical quadrature. Probability density functions are presented that aid in the direct lighting calculation from luminaires of various simple shapes. A method for defining a probability density function over a set of luminaires is presented that allows the direct lighting calculation to be carried out with a number of sample points that is independent of the number of luminaires.},
+  journal    = {ACM Trans. Graph.},
+  month      = jan,
+  pages      = {1–36},
+  numpages   = {36},
+  keywords   = {Monte Carlo integration, ray tracing, direct lighting, realistic image synthesis, importance sampling, luminaires}
+}
+
+@book{10.5555/63450,
+  author    = {Hall, Roy},
+  title     = {Illumination and Color in Computer Generated Imagery},
+  year      = {1988},
+  isbn      = {0387967745},
+  publisher = {Springer-Verlag},
+  address   = {Berlin, Heidelberg}
+}
+
+@book{10.5555/527570,
+  author    = {Glassner, Andrew S.},
+  title     = {Principles of Digital Image Synthesis},
+  year      = {1994},
+  isbn      = {1558602763},
+  publisher = {Morgan Kaufmann Publishers Inc.},
+  address   = {San Francisco, CA, USA},
+  abstract  = {From the Publisher:Image synthesis, or rendering, is a field of transformation: it changes geometry and physics into meaningful images. Because the most popular algorithms frequently change, it is increasingly important for researchers and implementors to have a basic understanding of the principles of image synthesis. Focusing on theory, Andrew Glassner provides a comprehensive explanation of the three core fields of study that come together to form digital image synthesis: the human visual system, digital signal processing, and the interaction of matter and light. Assuming no more than a basic background in calculus, Glassner transforms his passion and expertise into a thorough presentation of each of these disciplines, and their elegant orchestration into modern rendering techniques such as radiosity and ray tracing.}
+}
+
+@inproceedings{10.1145/192161.192286,
+  author    = {Ward, Gregory J.},
+  title     = {The RADIANCE Lighting Simulation and Rendering System},
+  year      = {1994},
+  isbn      = {0897916670},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/192161.192286},
+  doi       = {10.1145/192161.192286},
+  abstract  = {This paper describes a physically-based rendering system tailored to the demands of lighting design and architecture. The simulation uses a light-backwards ray-tracing method with extensions to efficiently solve the rendering equation under most conditions. This includes specular, diffuse and directional-diffuse reflection and transmission in any combination to any level in any environment, including complicated, curved geometries. The simulation blends deterministic and stochastic ray-tracing techniques to achieve the best balance between speed and accuracy in its local and global illumination methods. Some of the more interesting techniques are outlined, with references to more detailed descriptions elsewhere. Finally, examples are given of successful applications of this free software by others.},
+  booktitle = {Proceedings of the 21st Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {459–472},
+  numpages  = {14},
+  keywords  = {Monte Carlo, physically-based rendering, lighting simulation, ray-tracing, radiosity},
+  series    = {SIGGRAPH '94}
+}
+
+@phdthesis{slusallek1996vision,
+  title       = {Vision-an Architecture for Physically-based Rendering: Vision-Eine Architektur F{\"u}r Die Physikalisch-basierte Bildsynthese},
+  author      = {Slusallek, Philipp},
+  year        = {1995},
+  month       = {04},
+  institution = {University of Erlangen, Inst. f{\"u}r Math. Maschinen und Datenverarbeitung (Informatik), Computer Graphics Group}
 }

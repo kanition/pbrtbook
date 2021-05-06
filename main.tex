@@ -151,6 +151,7 @@
 \part{回顾与未来}
 \input{content/chap17.tex}
 
+\appendix
 \part{附录}
 \input{content/chapextraA.tex}
 
@@ -363,6 +364,7 @@
 %----------------------------------------------------------------------------------------
 \renewcommand{\bibname}{参考文献}
 \chapter*{参考文献}
+\markboth{\sffamily\normalsize\bfseries 参考文献}{\sffamily\normalsize\bfseries 参考文献}
 \addcontentsline{toc}{chapter}{\textcolor{ocre}{参考文献}} % Add a Bibliography heading to the table of contents
 \printbibliography[heading=bibempty]
 
@@ -381,7 +383,7 @@
 %----------------------------------------------------------------------------------------
 %	INDEX
 %----------------------------------------------------------------------------------------
-\renewcommand{\indexname}{索引}
+\renewcommand{\indexname}{\sffamily\bfseries 索引}
 \cleardoublepage % Make sure the index starts on an odd (right side) page
 \phantomsection
 \setlength{\columnsep}{0.75cm} % Space between the 2 columns of the index

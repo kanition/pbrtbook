@@ -5,15 +5,54 @@ pbrt用三个坐标值$x,y$和$z$表示\keyindex{点}{point}{}、
 \keyindex{向量}{vector}{}和\keyindex{法向量}{normal vector}{vector向量}。
 这些值须在\keyindex{坐标系统}{coordinate system}{}下才有意义，
 即定义了空间的原点并给出三个线性独立的向量定义$x,y$和$z$坐标轴。
-总之，定义了坐标系的原点和三个向量称为\keyindex{坐标系}{frame}{}。
+总之，这样的原点和三个向量称为\keyindex{坐标系}{frame}{}。
 给定3D中的任意一点或方向，其$(x,y,z)$坐标值取决于它和坐标系的关系。
 \reffig{2.1}以2D形式给出例子说明了这点。
-\begin{figure}
-    \input{Pictures/chap02/CoordSysPoint.tex}
-    \caption{2D中，点$\bm p$的坐标$(x,y)$由该点和特定2D坐标系统的关系定义。
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap02/CoordSysPoint.tex}
+    \caption{2D中，点$\bm p$的坐标$(x,y)$由该点与特定2D坐标系统的关系定义。
         这里展示了两个坐标系统；
-        该点关于实线坐标系统的坐标为$(8,8)$但
-        关于虚线坐标系的坐标为$(2,-4)$。
+        该点关于实线坐标系统的坐标为$(8,8)$，但关于虚线坐标系统的坐标为$(2,-4)$。
         两种情况下，2D点$\bm p$都处于空间中的同一绝对位置。}
     \label{fig:2.1}
+\end{figure}
+
+在一般的$n$维情形下，坐标系原点$\bm p_\mathrm{o}$及其
+$n$个线性独立的\keyindex{基向量}{basis vector}{vector向量}定义了一个$n$维\keyindex{仿射空间}{affine space}{}。
+该空间内所有向量$\bm v$都能表示为基向量的线性组合。
+给定向量$\bm v$和基向量$\bm v_i$，存在一组唯一的标量值$s_i$使得
+\begin{align*}
+    \bm v=s_1\bm v_1+\cdots+s_n\bm v_n\, .
+\end{align*}
+标量$s_i$是$\bm v$相对于基$\{\bm v_1,\bm v_2,\ldots \bm v_n\}$的\keyindex{表示}{representation}{}，
+即我们用向量保存的坐标值。
+同样，对于所有点$\bm p$，存在唯一的标量$s_i$使得该点
+可以用原点$\bm p_\mathrm{o}$和基向量表示：
+\begin{align*}
+    \bm p=\bm p_\mathrm{o}+s_1\bm v_1+\cdots+s_n\bm v_n\, .
+\end{align*}
+
+因此，尽管3D中的点和向量都用$x,y$和$z$表示，
+它们却是不同的数学对象，不能随便互换。
+
+以坐标系统形式定义点和向量造成了一个悖论：
+我们需要一个点和一组向量定义坐标系，
+但我们只能在特定坐标系下才能有意义地谈论点和向量。
+因此，在三维中我们需要一个原点为$(0,0,0)$、
+基向量为$(1,0,0)$、$(0,1,0)$以及$(0,0,1)$
+的\keyindex{标准坐标系}{standard frame}{frame坐标系}。
+其他所有坐标系都参照这个规范坐标系统定义，
+该坐标系称为\keyindex{世界空间}{world space}{}。
+
+\subsection{坐标系统惯用手}\label{sub:坐标系统惯用手}
+如\reffig{2.2}所示，三个坐标轴有两种排布方式。
+给定垂直的$x$和$y$坐标轴，$z$轴可以指向两个方向中的一个。
+这两种选择分别称为\keyindex{左手}{left-handed}{}和\keyindex{右手}{right-handed}{}。
+任选一种都行但暗含了整个系统中的一些几何操作要如何实现。
+pbrt使用左手坐标系统。
+\begin{figure}
+    \centering\input{Pictures/chap02/LeftRightHanded.tex}
+    \caption{（左图）在左手坐标系统中，当$x$轴朝右且$y$轴朝上时，$z$轴指入页面。
+        （右图）在右手坐标系统中，$z$轴指出页面。}
+    \label{fig:2.2}
 \end{figure}

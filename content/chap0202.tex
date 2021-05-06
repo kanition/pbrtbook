@@ -1,3 +1,73 @@
 \section{向量}\label{sec:向量}
 
+pbrt提供了2D和3D向量类。
+两者都由基本向量元素参数化，
+因此易于实例化整数和浮点类型的向量。
+
+\begin{lstlisting}
+`\initcode{Vector Declarations}{=}\initnext{VectorDeclarations}`
+template <typename T> class `\initvar{Vector2}{}` {
+public:
+    `\refcode{Vector2 Public Methods}{}`
+    `\refcode{Vector2 Public Data}{}`
+};
+
+`\refcode{Vector Declarations}{+=}\lastnext{VectorDeclarations}`
+template <typename T> class `\initvar{Vector3}{}` {
+public:
+    `\refcode{Vector3 Public Methods}{}`
+    `\refcode{Vector3 Public Data}{}`
+};
+\end{lstlisting}
+
+接下来，我们一般只介绍\refvar{Vector3}{}方法的实现；
+它们都有\refvar{Vector2}{}的相应版本，实现的区别也很简单。
+
+一个向量表示为分量的元组，以所在定义空间$x,y,z$（3D）轴的形式给出其表达。
+一个3D向量$\bm v$的各个分量写作$\bm v_x,\bm v_y$和$\bm v_z$。
+
+\begin{lstlisting}
+`\initcode{Vector2 Public Data}{=}`
+T `\initvar[Vector2::x]{x}{}`, `\initvar[Vector2::y]{y}{}`;
+
+`\initcode{Vector3 Public Data}{=}`
+T `\initvar[Vector3::x]{x}{}`, `\initvar[Vector3::y]{y}{}`, `\initvar[Vector3::z]{z}{}`;
+\end{lstlisting}
+
+另一实现方式是单个模板类再用一个维度整数参数化，
+并以若干{\ttfamily T}值构成的数组表示坐标。
+尽管这种方法能减少代码总量，
+但向量的单个分量不能以{\ttfamily v.x}等形式访问。
+我们认为这种情况下，为了更透明地访问元素，
+向量实现中多一点代码是值得的。
+
+然而，一些例程发现能简单地遍历向量的分量是很有用的；
+向量类也提供了C++操作符以索引分量，
+这样给定向量{\ttfamily v}，有{\ttfamily v[0]==v.x}等。
+\begin{lstlisting}
+`\initcode{Vector3 Public Methods}{=}\initnext{Vector3PublicMethods}`
+T operator[](int i) const { 
+    Assert(i >= 0 && i <= 2);
+    if (i == 0) return x;
+    if (i == 1) return y;
+    return z;
+}
+T &operator[](int i) { 
+    Assert(i >= 0 && i <= 2);
+    if (i == 0) return x;
+    if (i == 1) return y;
+    return z;
+}
+\end{lstlisting}
+
+为了方便起见，{\ttfamily typedef}指定了许多向量常用的类型，
+这样在别处代码中它们会有更简洁的名字。
+\begin{lstlisting}
+`\refcode{Vector Declarations}{+=}\lastcode{VectorDeclarations}`
+typedef `\refvar{Vector2}{}`<`\refvar{Float}{}`> `\initvar{Vector2f}{}`;
+typedef `\refvar{Vector2}{}`<int>   `\initvar{Vector2i}{}`;
+typedef `\refvar{Vector3}{}`<`\refvar{Float}{}`> `\initvar{Vector3f}{}`;
+typedef `\refvar{Vector3}{}`<int>   `\initvar{Vector3i}{}`;
+\end{lstlisting}
+
 \subsection{点积与叉积}\label{sub:点积与叉积}

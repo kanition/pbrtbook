@@ -17,7 +17,7 @@ pbrt用10个关键抽象基类写成，列于\reftab{1.1}。
 再编译和链接到可执行文件，
 并且必须修改附录第\refchap{场景描述接口}中的对象创建例程
 以创建解析场景描述文件所需要的对象。
-\refsec{添加新物体的实现}
+\refsec{添加新对象的实现}
 \sidenote{译者注：原书此处似乎链接错误，已纠正。}
 将讨论这种扩展系统的方法的更多细节。
 
@@ -56,7 +56,7 @@ pbrt源码发布于\href{https://pbrt.org/}{\ttfamily pbrt.org}
 
 本节有许多pbrt扩展版本渲染的图像。
 其中从\reffig{1.11}到\reffig{1.14}
-\sidenote{译者注：原书\reffig{1.14}引用文献似乎遗漏了链接，推测是\citep{10.1145/74334.74361}。}
+\sidenote{译者注：原书\reffig{1.14}引用文献似乎遗漏了链接，推测是\citet{10.1145/74333.74361}。}
 都引人瞩目：
 它们不仅令人过目不忘，而且每张都是渲染课程的学生在
 最后的课程作业中为pbrt扩展新功能渲染得到的有趣图像。
@@ -129,16 +129,16 @@ pbrt通常把绝大部分运行时间都花在这个阶段，
 \begin{figure}[htbp]
     \centering\includegraphics[width=\linewidth]{chap01/furrydog.png}
     \caption{Jared Jacobs和Michael Turitzin为pbrt增加了
-        Kajiya和Kay基于纹素的毛发渲染算法\citep{10.1145/74334.74361}并渲染了该图像，
+        Kajiya和Kay基于纹素的毛发渲染算法\parencite*{10.1145/74333.74361}并渲染了该图像，
         狗毛和粗毛地毯都是用纹素毛发算法渲染的。}
     \label{fig:1.14}
 \end{figure}
 
-\reffig{1.15}和\reffig{1.16}由\emph{LuxRender}渲染，
+\reffig{1.15}和\reffig{1.16}由\emph{LuxCoreRender}渲染，
 它是最初基于本书第一版pbrt源码的GPL许可的基于物理的渲染系统
-（关于\emph{LuxRender}的更多信息详见\url{https://luxcorerender.org}
-\sidenote{译者注：\emph{LuxRender}已更名为\emph{LuxCoreRender}且
-    迁移到了新网址。此处已更正了网址。}）。
+（关于\emph{LuxCoreRender}的更多信息详见\url{https://luxcorerender.org}
+\sidenote{译者注：原文的LuxRender现已更名为LuxCoreRender且
+    迁移到了新网址，此处已更正。}）。
 
 \begin{figure}[htbp]
     \centering\includegraphics[width=\linewidth]{chap01/measure-one180-cut1260.png}

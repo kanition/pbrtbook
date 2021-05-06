@@ -113,25 +113,21 @@
   keywords   = {computer animation, visible surface algorithms, computer graphics, shading, raster displays}
 }
 
-@article{10.1145/74334.74361,
-  author     = {Kajiya, J. T. and Kay, T. L.},
-  title      = {Rendering Fur with Three Dimensional Textures},
-  year       = {1989},
-  issue_date = {July 1989},
-  publisher  = {Association for Computing Machinery},
-  address    = {New York, NY, USA},
-  volume     = {23},
-  number     = {3},
-  issn       = {0097-8930},
-  url        = {https://doi.org/10.1145/74334.74361},
-  doi        = {10.1145/74334.74361},
-  abstract   = {We present a method for rendering scenes with fine detail via an object called a texel, a rendering primitive inspired by volume densities mixed with anisotropic lighting models. This technique solves a long outstanding problem in image synthesis: the rendering of furry surfaces.},
-  journal    = {SIGGRAPH Comput. Graph.},
-  month      = jul,
-  pages      = {271–280},
-  numpages   = {10}
+@inproceedings{10.1145/74333.74361,
+  author    = {Kajiya, J. T. and Kay, T. L.},
+  title     = {Rendering Fur with Three Dimensional Textures},
+  year      = {1989},
+  isbn      = {0897913124},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/74333.74361},
+  doi       = {10.1145/74333.74361},
+  abstract  = {We present a method for rendering scenes with fine detail via an object called a texel, a rendering primitive inspired by volume densities mixed with anisotropic lighting models. This technique solves a long outstanding problem in image synthesis: the rendering of furry surfaces.},
+  booktitle = {Proceedings of the 16th Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {271–280},
+  numpages  = {10},
+  series    = {SIGGRAPH '89}
 }
-
 
 @inproceedings{10.1145/74333.74361,
   author    = {Kajiya, J. T. and Kay, T. L.},
@@ -172,14 +168,6 @@
   numpages  = {18}
 }
 
-@misc{enwiki:1014110231,
-  author       = {{Wikipedia contributors}},
-  title        = {Quaternion --- {Wikipedia}{,} The Free Encyclopedia},
-  year         = {2021},
-  howpublished = {\url{https://en.wikipedia.org/w/index.php?title=Quaternion&oldid=1014110231}},
-  note         = {[Online; accessed 16-April-2021]}
-}
-
 @misc{enwiki:1013104981,
   author       = {{Wikipedia contributors}},
   title        = {Division ring --- {Wikipedia}{,} The Free Encyclopedia},
@@ -187,3 +175,648 @@
   howpublished = {\url{https://en.wikipedia.org/w/index.php?title=Division_ring&oldid=1013104981}},
   note         = {[Online; accessed 16-April-2021]}
 }
+
+# 1.7
+@inproceedings{10.1145/800224.806819,
+  author    = {Cook, Robert L. and Torrance, Kenneth E.},
+  title     = {A Reflectance Model for Computer Graphics},
+  year      = {1981},
+  isbn      = {0897910451},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/800224.806819},
+  doi       = {10.1145/800224.806819},
+  abstract  = {This paper presents a new reflectance model for rendering computer synthesized images. The model accounts for the relative brightness of different materials and light sources in the same scene. It describes the directional distribution of the reflected light and a color shift that occurs as the reflectance changes with incidence angle. The paper presents a method for obtaining the spectral energy distribution of the light reflected from an object made of a specific real material and discusses a procedure for accurately reproducing the color associated with the spectral energy distribution. The model is applied to the simulation of a metal and a plastic.},
+  booktitle = {Proceedings of the 8th Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {307–316},
+  numpages  = {10},
+  keywords  = {Reflectance, Computer graphics, Shading, Image synthesis},
+  location  = {Dallas, Texas, USA},
+  series    = {SIGGRAPH '81}
+}
+
+
+@article{10.1145/357290.357293,
+  author     = {Cook, Robert L. and Torrance, Kenneth E.},
+  title      = {A Reflectance Model for Computer Graphics},
+  year       = {1982},
+  issue_date = {Jan. 1982},
+  publisher  = {Association for Computing Machinery},
+  address    = {New York, NY, USA},
+  volume     = {1},
+  number     = {1},
+  issn       = {0730-0301},
+  url        = {https://doi.org/10.1145/357290.357293},
+  doi        = {10.1145/357290.357293},
+  journal    = {ACM Trans. Graph.},
+  month      = jan,
+  pages      = {7–24},
+  numpages   = {18},
+  keywords   = {image synthesis, reflectance}
+}
+
+@inproceedings{10.1145/800031.808601,
+  author    = {Goral, Cindy M. and Torrance, Kenneth E. and Greenberg, Donald P. and Battaile, Bennett},
+  title     = {Modeling the Interaction of Light between Diffuse Surfaces},
+  year      = {1984},
+  isbn      = {0897911385},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/800031.808601},
+  doi       = {10.1145/800031.808601},
+  abstract  = {A method is described which models the interaction of light between diffusely reflecting surfaces. Current light reflection models used in computer graphics do not account for the object-to-object reflection between diffuse surfaces, and thus incorrectly compute the global illumination effects. The new procedure, based on methods used in thermal engineering, includes the effects of diffuse light sources of finite area, as well as the “color-bleeding” effects which are caused by the diffuse reflections. A simple environment is used to illustrate these simulated effects and is presented with photographs of a physical model. The procedure is applicable to environments composed of ideal diffuse reflectors and can account for direct illumination from a variety of light sources. The resultant surface intensities are independent of observer position, and thus environments can be preprocessed for dynamic sequences.},
+  booktitle = {Proceedings of the 11th Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {213–222},
+  numpages  = {10},
+  keywords  = {Diffuse reflections, Shading, Radiosity, Light reflection models, Form factors},
+  series    = {SIGGRAPH '84}
+}
+
+@inproceedings{10.1145/325334.325171,
+  author    = {Cohen, Michael F. and Greenberg, Donald P.},
+  title     = {The Hemi-Cube: A Radiosity Solution for Complex Environments},
+  year      = {1985},
+  isbn      = {0897911660},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/325334.325171},
+  doi       = {10.1145/325334.325171},
+  abstract  = {This paper presents a comprehensive method to calculate object to object diffuse reflections within complex environments containing hidden surfaces and shadows. In essence, each object in the environment is treated as a secondary light source. The method provides an accurate representation of the "diffuse" and "ambient" terms found in typical image synthesis algorithms. The phenomena of "color bleeding" from one surface to another, shading within shadow envelopes, and penumbras along shadow boundaries are accurately reproduced. Additional advantages result because computations are indepedent of viewer position. This allows the efficient rendering of multiple views of the same scene for dynamic sequences. Light sources can be modulated and object reflectivities can be changed, with minimal extra computation. The procedures extend the radiosity method beyond the bounds previously imposed.},
+  booktitle = {Proceedings of the 12th Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {31–40},
+  numpages  = {10},
+  keywords  = {hidden surface, form-factors, depth buffer, radiosity, diffuse reflections},
+  series    = {SIGGRAPH '85}
+}
+
+@inproceedings{10.1145/325334.325169,
+  author    = {Nishita, Tomoyuki and Nakamae, Eihachiro},
+  title     = {Continuous Tone Representation of Three-Dimensional Objects Taking Account of Shadows and Interreflection},
+  year      = {1985},
+  isbn      = {0897911660},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/325334.325169},
+  doi       = {10.1145/325334.325169},
+  abstract  = {The effect of shadows and interreflection created by room obstructions is an important factor in the continuous tone representation of interiors. For indirect illumination, in most cases a uniform ambient light has been considered, even though the interreflection gives very complex effects with the shaded images.The proposed method for indirect lighting with shadows results in the following advanced points:1) The indirect illuminance caused by the surfaces of objects such as ceilings, floors, walls, desks, bookcases etc. gives added realism to images.2) The proposed method is suitable for every type of light source such as point sources, linear sources, and area sources.},
+  booktitle = {Proceedings of the 12th Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {23–30},
+  numpages  = {8},
+  keywords  = {diffuse reflections, penumbrae, interreflection of light, shading, area light source, shadows},
+  series    = {SIGGRAPH '85}
+}
+
+@inproceedings{10.1145/800031.808590,
+  author    = {Cook, Robert L. and Porter, Thomas and Carpenter, Loren},
+  title     = {Distributed Ray Tracing},
+  year      = {1984},
+  isbn      = {0897911385},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/800031.808590},
+  doi       = {10.1145/800031.808590},
+  abstract  = { Ray tracing is one of the most elegant techniques in computer graphics. Many phenomena that are difficult or impossible with other techniques are simple with ray tracing, including shadows, reflections, and refracted light. Ray directions, however, have been determined precisely, and this has limited the capabilities of ray tracing. By distributing the directions of the rays according to the analytic function they sample, ray tracing can incorporate fuzzy phenomena. This provides correct and easy solutions to some previously unsolved or partially solved problems, including motion blur, depth of field, penumbras, translucency, and fuzzy reflections. Motion blur and depth of field calculations can be integrated with the visible surface calculations, avoiding the problems found in previous methods. },
+  booktitle = {Proceedings of the 11th Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {137–145},
+  numpages  = {9},
+  keywords  = {Transparency, Depth of field, Gloss, Shadows, Camera, Motion blur, Translucency, Penumbras, Constructive solid geometry, Focus, Ray tracing},
+  series    = {SIGGRAPH '84}
+}
+
+@inproceedings{10.1145/15922.15902,
+  author    = {Kajiya, James T.},
+  title     = {The Rendering Equation},
+  year      = {1986},
+  isbn      = {0897911962},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/15922.15902},
+  doi       = {10.1145/15922.15902},
+  abstract  = {We present an integral equation which generalizes a variety of known rendering algorithms. In the course of discussing a monte carlo solution we also present a new form of variance reduction, called Hierarchical sampling and give a number of elaborations shows that it may be an efficient new technique for a wide variety of monte carlo procedures. The resulting rendering algorithm extends the range of optical phenomena which can be effectively simulated.},
+  booktitle = {Proceedings of the 13th Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {143–150},
+  numpages  = {8},
+  series    = {SIGGRAPH '86}
+}
+
+@article{farmer1981comparing,
+  title   = {Comparing the 4341 and M80/42},
+  author  = {Farmer, DF},
+  journal = {Computerworld},
+  volume  = {15},
+  pages   = {9--20},
+  year    = {1981}
+}
+
+@inproceedings{10.1145/800031.808594,
+  author    = {Kajiya, James T. and Von Herzen, Brian P},
+  title     = {Ray Tracing Volume Densities},
+  year      = {1984},
+  isbn      = {0897911385},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/800031.808594},
+  doi       = {10.1145/800031.808594},
+  abstract  = {This paper presents new algorithms to trace objects represented by densities within a volume grid, e.g. clouds, fog, flames, dust, particle systems. We develop the light scattering equations, discuss previous methods of solution, and present a new approximate solution to the full three-dimensional radiative scattering problem suitable for use in computer graphics. Additionally we review dynamical models for clouds used to make an animated movie.},
+  booktitle = {Proceedings of the 11th Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {165–174},
+  numpages  = {10},
+  keywords  = {Light scattering, Stochastic modeling, Clouds, Radiative transport, Particle systems, Simulation of natural phenomena, Computer graphics, Ray tracing, Raster graphics},
+  series    = {SIGGRAPH '84}
+}
+
+@inproceedings{10.1145/97879.97886,
+  author    = {Arvo, James and Kirk, David},
+  title     = {Particle Transport and Image Synthesis},
+  year      = {1990},
+  isbn      = {0897913442},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/97879.97886},
+  doi       = {10.1145/97879.97886},
+  abstract  = {The rendering equation is similar to the linear Boltzmann equation which has been widely studied in physics and nuclear engineering. Consequently, many of the powerful techniques which have been developed in these fields can be applied to problems in image synthesis. In this paper we adapt several statistical techniques commonly used in neutron transport to stochastic ray tracing and, more generally, to Monte Carlo solution of the rendering equation. First, we describe a technique known as Russian roulette which can be used to terminate the recursive tracing of rays without introducing statistical bias. We also examine the practice of creating ray trees in classical ray tracing in the light of a well-known technique in particle transport known as splitting. We show that neither ray trees nor paths as described in [10] constitute an optimal sampling plan in themselves and that a hybrid may be more efficient.},
+  booktitle = {Proceedings of the 17th Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {63–66},
+  numpages  = {4},
+  location  = {Dallas, TX, USA},
+  series    = {SIGGRAPH '90}
+}
+
+@inproceedings{10.1145/122718.122735,
+  author    = {Kirk, David and Arvo, James},
+  title     = {Unbiased Sampling Techniques for Image Synthesis},
+  year      = {1991},
+  isbn      = {0897914368},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/122718.122735},
+  doi       = {10.1145/122718.122735},
+  abstract  = {We examine a class of adaptive sampling techniques employed in image synthesis and show that those commonly used for efficient anti-aliasing are statistically biased. This bias is dependent upon the image function being sampled as well as the strategy for determining the number of samples to use. It is most prominent in areas of high contrast and is attributable to early stages of sampling systematically favoring one extreme or the other. If the expected outcome of the entire adaptive sampling algorithm is considered, we find that the bias of the early decisions is still present in the final estimator. We propose an alternative strategy for performing adaptive sampling that is unbiased but potentially more costly. We conclude that it may not always be practical to mitigate this source of bias, but as a source of error it should be considered when high accuracy and image fidelity are a central concern.},
+  booktitle = {Proceedings of the 18th Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {153–156},
+  numpages  = {4},
+  keywords  = {statistical bias, adaptive sampling, Monte Carlo, antialiasing},
+  series    = {SIGGRAPH '91}
+}
+
+@phdthesis{10.5555/124947,
+  author      = {Shirley, Peter S.},
+  title       = {Physically Based Lighting Calculations for Computer Graphics},
+  year        = {1991},
+  institution = {University of Illinois at Urbana-Champaign},
+  address     = {USA},
+  abstract    = {Realistic image generation is presented in a theoretical formulation that builds from previous work on the rendering equation. Previous and new solution techniques for the global illumination are discussed in the context of this formulation. The physical rules governing reflection are used to make improvements in local reflection models. The conventional local illumination models used in computer graphics are examined and modified to be consistent with these physical rules.Global illumination is treated in terms of evaluation of a Global Radiance Function. Image-based solution methods are phrased as a lazy evaluation of the Global Radiance Function; evaluation takes place for visible points. Zonal solution methods are phrased as table based solutions. A proof is given that, subject to certain constraints, only O(N) rays are required for a zonal solution with N zones. Simulation allows for surfaces which are not zoned to interact with those that are.The ray tracing zonal solution methods used for surfaces are extended to scenes with participating media. The impact of wavelength selection and time dependencies is also discussed.An object oriented implementation is discussed. This implementation separates the local and global illumination modules, so all of the specifics of the local models are hidden from the global energy transport code. This allows new local modules to be added by specifying the black box access routines.},
+  note        = {UMI Order NO. GAX91-24487}
+}
+
+@article{10.1145/226150.226151,
+  author     = {Shirley, Peter and Wang, Changyaw and Zimmerman, Kurt},
+  title      = {Monte Carlo Techniques for Direct Lighting Calculations},
+  year       = {1996},
+  issue_date = {Jan. 1996},
+  publisher  = {Association for Computing Machinery},
+  address    = {New York, NY, USA},
+  volume     = {15},
+  number     = {1},
+  issn       = {0730-0301},
+  url        = {https://doi.org/10.1145/226150.226151},
+  doi        = {10.1145/226150.226151},
+  abstract   = {In a distributed ray tracer, the sampling strategy is the crucial part of the direct lighting calculation. Monte Carlo integration with importance sampling is used to carry out this calculation. Importance sampling involves the design of integrand-specific probability density functions that are used to generate sample points for the numerical quadrature. Probability density functions are presented that aid in the direct lighting calculation from luminaires of various simple shapes. A method for defining a probability density function over a set of luminaires is presented that allows the direct lighting calculation to be carried out with a number of sample points that is independent of the number of luminaires.},
+  journal    = {ACM Trans. Graph.},
+  month      = jan,
+  pages      = {1–36},
+  numpages   = {36},
+  keywords   = {Monte Carlo integration, ray tracing, direct lighting, realistic image synthesis, importance sampling, luminaires}
+}
+
+@book{10.5555/63450,
+  author    = {Hall, Roy},
+  title     = {Illumination and Color in Computer Generated Imagery},
+  year      = {1988},
+  isbn      = {0387967745},
+  publisher = {Springer-Verlag},
+  address   = {Berlin, Heidelberg}
+}
+
+@book{10.5555/527570,
+  author    = {Glassner, Andrew S.},
+  title     = {Principles of Digital Image Synthesis},
+  year      = {1994},
+  isbn      = {1558602763},
+  publisher = {Morgan Kaufmann Publishers Inc.},
+  address   = {San Francisco, CA, USA},
+  abstract  = {From the Publisher:Image synthesis, or rendering, is a field of transformation: it changes geometry and physics into meaningful images. Because the most popular algorithms frequently change, it is increasingly important for researchers and implementors to have a basic understanding of the principles of image synthesis. Focusing on theory, Andrew Glassner provides a comprehensive explanation of the three core fields of study that come together to form digital image synthesis: the human visual system, digital signal processing, and the interaction of matter and light. Assuming no more than a basic background in calculus, Glassner transforms his passion and expertise into a thorough presentation of each of these disciplines, and their elegant orchestration into modern rendering techniques such as radiosity and ray tracing.}
+}
+
+@inproceedings{10.1145/192161.192286,
+  author    = {Ward, Gregory J.},
+  title     = {The RADIANCE Lighting Simulation and Rendering System},
+  year      = {1994},
+  isbn      = {0897916670},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/192161.192286},
+  doi       = {10.1145/192161.192286},
+  abstract  = {This paper describes a physically-based rendering system tailored to the demands of lighting design and architecture. The simulation uses a light-backwards ray-tracing method with extensions to efficiently solve the rendering equation under most conditions. This includes specular, diffuse and directional-diffuse reflection and transmission in any combination to any level in any environment, including complicated, curved geometries. The simulation blends deterministic and stochastic ray-tracing techniques to achieve the best balance between speed and accuracy in its local and global illumination methods. Some of the more interesting techniques are outlined, with references to more detailed descriptions elsewhere. Finally, examples are given of successful applications of this free software by others.},
+  booktitle = {Proceedings of the 21st Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {459–472},
+  numpages  = {14},
+  keywords  = {Monte Carlo, physically-based rendering, lighting simulation, ray-tracing, radiosity},
+  series    = {SIGGRAPH '94}
+}
+
+@phdthesis{slusallek1996vision,
+  title       = {Vision-an Architecture for Physically-based Rendering: Vision-Eine Architektur F{\"u}r Die Physikalisch-basierte Bildsynthese},
+  author      = {Slusallek, Philipp},
+  year        = {1995},
+  month       = {04},
+  institution = {University of Erlangen, Inst. f{\"u}r Math. Maschinen und Datenverarbeitung (Informatik), Computer Graphics Group}
+}
+
+@inproceedings{10.1145/258734.258914,
+  author    = {Greenberg, Donald P. and Torrance, Kenneth E. and Shirley, Peter and Arvo, James and Lafortune, Eric and Ferwerda, James A. and Walter, Bruce and Trumbore, Ben and Pattanaik, Sumanta and Foo, Sing-Choong},
+  title     = {A Framework for Realistic Image Synthesis},
+  year      = {1997},
+  isbn      = {0897918967},
+  publisher = {ACM Press/Addison-Wesley Publishing Co.},
+  address   = {USA},
+  url       = {https://doi.org/10.1145/258734.258914},
+  doi       = {10.1145/258734.258914},
+  booktitle = {Proceedings of the 24th Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {477–494},
+  numpages  = {18},
+  keywords  = {light reflection, perception, realistic image synthesis},
+  series    = {SIGGRAPH '97}
+}
+
+@phdthesis{veach1997robust,
+  title  = {Robust Monte Carlo methods for light transport simulation},
+  author = {Veach, Eric},
+  year   = {1997},
+  month  = {12},
+  school = {Stanford University},
+  url    = {http://graphics.stanford.edu/papers/veach_thesis}
+}
+
+@inproceedings{10.1007/978-3-7091-6242-2_26,
+  author    = {Wald, Ingo and Slusallek, Philipp and Benthin, Carsten},
+  editor    = {Gortler, Steven J. and Myszkowski, Karol},
+  title     = {Interactive Distributed Ray Tracing of Highly Complex Models},
+  booktitle = {Rendering Techniques 2001},
+  year      = {2001},
+  publisher = {Springer Vienna},
+  address   = {Vienna},
+  pages     = {277--288},
+  abstract  = {Many disciplines must handle the creation, visualization, and manipulation of huge and complex 3D environments. Examples include large structural and mechanical engineering projects dealing with entire cars, ships, buildings, and processing plants. The complexity of such models is usually far beyond the interactive rendering capabilities of todays 3D graphics hardware. Previous approaches relied on costly preprocessing for reducing the number of polygons that need to be rendered per frame but suffered from excessive precomputation times --- often several days or even weeks.},
+  isbn      = {978-3-7091-6242-2}
+}
+
+@inproceedings{10.1145/37401.37414,
+  author    = {Cook, Robert L. and Carpenter, Loren and Catmull, Edwin},
+  title     = {The Reyes Image Rendering Architecture},
+  year      = {1987},
+  isbn      = {0897912276},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/37401.37414},
+  doi       = {10.1145/37401.37414},
+  abstract  = {An architecture is presented for fast high-quality rendering of complex images. All objects are reduced to common world-space geometric entities called micropolygons, and all of the shading and visibility calculations operate on these micropolygons. Each type of calculation is performed in a coordinate system that is natural for that type of calculation. Micropolygons are created and textured in the local coordinate sysem of the object, with the result that texture filtering is simplified and improved. Visibility is calculated in screen space using stochastic point sampling with a z buffer. There are no clipping or inverse perspective calculations. Geometric and texture locality are exploited to minimize paging and to support models that contain arbitrarily many primitives.},
+  booktitle = {Proceedings of the 14th Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {95–102},
+  numpages  = {8},
+  series    = {SIGGRAPH '87}
+}
+
+@article{snow2010terminators,
+  title   = {Terminators and Iron Men: Image-based lighting and physical shading at ILM},
+  author  = {Snow, Ben},
+  journal = {part of “Physically Based Shading Models in Film and Game Production,” SIGGRAPH},
+  year    = {2010}
+}
+
+ @online{ohmer1997,
+  title        = {Ray Tracers: Blue Sky Studios},
+  url          = {https://www.awn.com/animationworld/ray-tracers-blue-sky-studios},
+  organization = {Animation World Network},
+  author       = {Ohmer, Susan},
+  date         = {1997-05-01}
+}
+
+@inproceedings{10.1145/2776880.2792699,
+  author    = {Keller, A. and Fascione, L. and Fajardo, M. and Georgiev, I. and Christensen, P. and Hanika, J. and Eisenacher, C. and Nichols, G.},
+  title     = {The Path Tracing Revolution in the Movie Industry},
+  year      = {2015},
+  isbn      = {9781450336345},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/2776880.2792699},
+  doi       = {10.1145/2776880.2792699},
+  abstract  = {As path tracing allows for more realistic and faster lighting, an increasing number of movies are created the physically based way. With examples from recent movies, the architectures and novel workflows of the next generation of production renderers are introduced to a wide audience including technical directors, artists, and researchers.},
+  booktitle = {ACM SIGGRAPH 2015 Courses},
+  articleno = {24},
+  numpages  = {7},
+  location  = {Los Angeles, California},
+  series    = {SIGGRAPH '15}
+}
+
+% 1.8
+@inproceedings{10.1145/1468075.1468082,
+  author    = {Appel, Arthur},
+  title     = {Some Techniques for Shading Machine Renderings of Solids},
+  year      = {1968},
+  isbn      = {9781450378970},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/1468075.1468082},
+  doi       = {10.1145/1468075.1468082},
+  abstract  = {Some applications of computer graphics require a vivid illusion of reality. These include the spatial organization of machine parts, conceptual architectural design, simulation of mechanisms, and industrial design. There has been moderate success in the automatic generation of wire frame, cardboard model, polyhedra, and quadric surface line drawings. The capability of the machine to generate vivid sterographic pictures has been demonstrated. There are, however considerable reasons for developing techniques by which line drawings of solids can be shaded, especially the enhancement of the sense of solidity and depth. Figures 1 and 2 illustrate the value of shading and shadow casting in spatial description. In the line drawing there is no clue as to the relative position of the flat plane and the sheet metal console. When shadows are rendered, it is clear that the plane is below and to the rear of the console, and the hollow nature of the sheet metal assembly is emphasized. Shading can specify the tone or color of a surface and the amount of light falling upon that surface from one or more light sources. Shadows when sharply defined tend to suggest another viewpoint and improves surface definition. When controlled, shading can also emphasize particular parts of the drawing. If techniques for the automatic determination of chiaroscuro with good resolution should prove to be competitive with line drawings, and this is a possibility, machine generated photographs might replace line drawings as the principal mode of graphical communication in engineering and architecture.},
+  booktitle = {Proceedings of the April 30--May 2, 1968, Spring Joint Computer Conference},
+  pages     = {37–45},
+  numpages  = {9},
+  location  = {Atlantic City, New Jersey},
+  series    = {AFIPS '68 (Spring)}
+}
+
+@article{doi:10.1177/003754977101600104,
+  author   = {Robert A. Goldstein and Roger Nagel},
+  title    = {3-D Visual simulation},
+  journal  = {SIMULATION},
+  volume   = {16},
+  number   = {1},
+  pages    = {25-31},
+  year     = {1971},
+  doi      = {10.1177/003754977101600104},
+  url      = {https://doi.org/10.1177/003754977101600104},
+  eprint   = {https://doi.org/10.1177/003754977101600104},
+  abstract = {This paper describes a visual simulation technique by which fully computer-generated perspective views of three-dimensional objects may be produced. The method is based on a relatively simple geometric modeling technique for the mathematical representa tion of the three elements essential to the picture- taking process, namely, a camera, a light source, and the object or objects to be photographed. Once these three basic components have been defined, geometric ray tracing is employed to compute a "picture" of the object as it appears in the simu- Zated camera. In essence, individual light rays are traced from their source to the surface of the object. The reflected component of each ray is computed and traced to its point of intersection with the film plane. Thus, each reflected ray pro vides the intensity at a single point on the pic ture, and, when a sufficient number of points have been computed, the entire area of intensity data may be displayed on a cathode ray tube. Several examples of the pictorial output of this process are shown, and the application to the computer- generated films is discussed. }
+}
+
+@inproceedings{10.1145/800249.807438,
+  author    = {Kay, Douglas Scott and Greenberg, Donald},
+  title     = {Transparency for Computer Synthesized Images},
+  year      = {1979},
+  isbn      = {0897910044},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/800249.807438},
+  doi       = {10.1145/800249.807438},
+  abstract  = {Simple transparency algorithms which assume a linear transparency over an entire surface are the type most often employed to produce computer synthesized images of transparent objects with curved surfaces. Although most of the images created with these algorithms do give the impression of transparency, they usually do not look realistic. One of the most serious problems is that the intensity of the light that is transmitted through the objects is generally not proportional to the amount of material through which it must pass. Another problem is that the image seen behind the objects is not distorted as would naturally occur when the light is refracted as it passes through a material of different density.Use of a non-linear transparency algorithm can provide a great improvement in the realism of an image at a small additional cost. Making the transparency proportional to the normal to the surface causes it to decrease towards the edges of the surface where the path of the light through the object is longer. The exact simulation of refraction, however, requires that each sight ray be individually traced from the observer, through the picture plane and through each transparent object until an opaque surface is intersected. Since the direction of the ray would change as each material of differing optical density was entered, the hidden surface calculations required would be very time consuming. However, if a few assumptions are made about the geometry of each object and about the conditions under which they are viewed, a much simplier algorithm can be used to approximate the refractive effect. This method proceeds in a back to front order, mapping the current background image onto the next surface, until all surfaces have been considered.},
+  booktitle = {Proceedings of the 6th Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {158–164},
+  numpages  = {7},
+  keywords  = {Computer graphics, Refraction, Image synthesis, Shading, Transparency},
+  location  = {Chicago, Illinois, USA},
+  series    = {SIGGRAPH '79}
+}
+
+@inproceedings{10.1145/37401.37411,
+  author    = {Heckbert, Paul S.},
+  title     = {Ray Tracing JELL-OTM Brand Gelatin},
+  year      = {1987},
+  isbn      = {0897912276},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/37401.37411},
+  doi       = {10.1145/37401.37411},
+  abstract  = {Ray tracing has established itself in recent years as the most general image synthesis algorithm. Researchers have investigated ray-surface intersection calculations for a number of surface primitives, including checkerboards, glass balls, green fractal hills, mandrills, abstract blue surfaces, more glass balls, robot arms, pool balls, low-resolution clouds, morphine molecules, aquatic blobby things making strange noises, fantastic cities, and running skeletons. Unfortunately, nobody has ray traced any food. The Dessert Realism Project here at Pixar is addressing this problem. This paper presents new technology for ray tracing Jell-O® brand gelatin. We believe the method may have application to other brands of gelatin and perhaps pudding as well.},
+  booktitle = {Proceedings of the 14th Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {73–74},
+  numpages  = {2},
+  series    = {SIGGRAPH '87}
+}
+
+@article{10.1145/37402.37411,
+  author     = {Heckbert, Paul S.},
+  title      = {Ray Tracing JELL-OTM Brand Gelatin},
+  year       = {1987},
+  issue_date = {July 1987},
+  publisher  = {Association for Computing Machinery},
+  address    = {New York, NY, USA},
+  volume     = {21},
+  number     = {4},
+  issn       = {0097-8930},
+  url        = {https://doi.org/10.1145/37402.37411},
+  doi        = {10.1145/37402.37411},
+  abstract   = {Ray tracing has established itself in recent years as the most general image synthesis algorithm. Researchers have investigated ray-surface intersection calculations for a number of surface primitives, including checkerboards, glass balls, green fractal hills, mandrills, abstract blue surfaces, more glass balls, robot arms, pool balls, low-resolution clouds, morphine molecules, aquatic blobby things making strange noises, fantastic cities, and running skeletons. Unfortunately, nobody has ray traced any food. The Dessert Realism Project here at Pixar is addressing this problem. This paper presents new technology for ray tracing Jell-O® brand gelatin. We believe the method may have application to other brands of gelatin and perhaps pudding as well.},
+  journal    = {SIGGRAPH Comput. Graph.},
+  month      = aug,
+  pages      = {73–74},
+  numpages   = {2}
+}
+
+@book{10.5555/154731,
+  author    = {Cohen, Michael F. and Wallace, John and Hanrahan, Pat},
+  title     = {Radiosity and Realistic Image Synthesis},
+  year      = {1993},
+  isbn      = {0121782700},
+  publisher = {Academic Press Professional, Inc.},
+  address   = {USA}
+}
+
+@book{10.5555/561383,
+  author    = {Sillion, Francois X. and Puech, Claude},
+  title     = {Radiosity and Global Illumination},
+  year      = {1994},
+  isbn      = {1558602771},
+  publisher = {Morgan Kaufmann Publishers Inc.},
+  address   = {San Francisco, CA, USA},
+  abstract  = {From the Publisher:The radiosity method, originally a computation tool for thermal engineers, has evolved in recent years into a powerful and flexible simulation technique for radiant energy transfer. The ability to compute quantitatively accurate simulations of light transfers has opened a vast domain of applications for computer graphics. Thermal radiation studies, lighting design and remote sensing are a few of the fields affected by this exciting technique for producing synthetic images. Here, the authors reformulate some of the most recent and innovative research results into a consistent framework, allowing readers to quickly acquire a comprehensive view of the technique and its derivatives. In addition to reviewing practical issues and offering recommendations, the authors also provide a complete theoretical presentation of the various radiosity algorithms.Special highlights include 93 illustrations and 45 color plates and a practical guide which provides detailed information on various design issues for the development of global illumination software.}
+}
+
+@book{10.5555/200607,
+  author    = {Ashdown, Ian},
+  title     = {Radiosity: A Programmer's Perspective},
+  year      = {1995},
+  isbn      = {0471304883},
+  publisher = {John Wiley \& Sons, Inc.},
+  address   = {USA}
+}
+
+@inproceedings{Kirk88theray,
+  author    = {David Kirk and James Arvo and Apollo Computer},
+  title     = {The Ray Tracing Kernel},
+  booktitle = {In Proceedings of Ausgraph},
+  year      = {1988},
+  pages     = {75--82}
+}
+
+@book{10.5555/94788,
+  editor    = {Glassner, Andrew S.},
+  title     = {An Introduction to Ray Tracing},
+  year      = {1989},
+  isbn      = {0122861604},
+  publisher = {Academic Press Ltd.},
+  address   = {GBR}
+}
+
+@book{10.5555/940410,
+  author    = {Shirley, Peter and Morley, R. Keith},
+  title     = {Realistic Ray Tracing},
+  year      = {2003},
+  isbn      = {1568811985},
+  publisher = {A. K. Peters, Ltd.},
+  address   = {USA},
+  edition   = {2},
+  abstract  = {From the Publisher:Realistic Ray Tracing is an innovative, in-depth look at the theory and techniques of ray tracing, a method of producing photorealistic computer graphics images by applying simple algorithms. This book will guide you through the steps of creating your own powerful ray tracer program, proceeding from simple images through advanced special effects such as soft shadows, glass and metal textures, and motion blur. It concentrates on the nuts and bolts of writing ray tracing programs, with plenty of practical, detail-oriented how-to advice and careful attention to the underlying theory.}
+}
+
+@book{10.5555/1324795,
+  author    = {Suffern, Kevin},
+  title     = {Ray Tracing from the Ground Up},
+  year      = {2007},
+  isbn      = {1568812728},
+  publisher = {A. K. Peters, Ltd.},
+  address   = {USA}
+}
+
+@inproceedings{egtp.19911035,
+  booktitle = {EG 1991-Technical Papers},
+  editor    = {Werner Purgathofer},
+  title     = {{A Testbed for Image Synthesis}},
+  author    = {Trumbore, Ben and Lytle, Wayne and Greenberg, Donald P.},
+  year      = {1991},
+  month     = {09},
+  address   = {North-Holland},
+  publisher = {Eurographics Association},
+  pages     = {467-480},
+  issn      = {1017-4656},
+  doi       = {10.2312/egtp.19911035}
+}
+
+@article{4037684,
+  author  = {Hall, Roy A. and Greenberg, Donald P.},
+  journal = {IEEE Computer Graphics and Applications},
+  title   = {A Testbed for Realistic Image Synthesis},
+  year    = {1983},
+  volume  = {3},
+  number  = {8},
+  pages   = {10-20},
+  doi     = {10.1109/MCG.1983.263292}
+}
+
+@book{10.5555/286090,
+  author    = {Larson, Greg Ward and Shakespeare, Rob},
+  title     = {Rendering with Radiance: The Art and Science of Lighting Visualization},
+  year      = {1998},
+  isbn      = {1558604995},
+  publisher = {Morgan Kaufmann Publishers Inc.},
+  address   = {San Francisco, CA, USA}
+}
+
+@inproceedings{10.1145/325334.325174,
+  author    = {Duff, Tom},
+  title     = {Compositing 3-D Rendered Images},
+  year      = {1985},
+  isbn      = {0897911660},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/325334.325174},
+  doi       = {10.1145/325334.325174},
+  abstract  = {The complexity of anti-aliased 3-D rendering systems can be controlled by using a tool-building approach like that of the UNIX™ text-processing tools. Such an approach requires a simple picture representation amenable to anti-aliasing that all rendering programs can produce, a compositing algorithm for that representation and a command language to piece together scenes. This paper advocates a representation that combines Porter and Duff's compositing algebra with a Z-buffer to provide simple anti-aliased 3-D compositing.},
+  booktitle = {Proceedings of the 12th Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {41–44},
+  numpages  = {4},
+  keywords  = {anti-aliasing, Z-buffer, image synthesis, compositing, 3-D rendering, hidden-surface elimination},
+  series    = {SIGGRAPH '85}
+}
+
+@article{glassner1993spectrum,
+  title   = {Spectrum: An architecture for image synthesis, research, education, and practice},
+  author  = {Glassner, Andrew},
+  editor  = {Strauss, Paul S.},
+  journal = {Developing Large-scale Graphics Software Toolkits,(SIGGRAPH'93 Course Notes 3)},
+  pages   = {1.1–1.44},
+  year    = {1993},
+  month   = {08}
+}
+
+@article{468387,
+  author  = {Slusallek, Philipp and Seidel, Hans-Peter},
+  journal = {IEEE Transactions on Visualization and Computer Graphics},
+  title   = {Vision-an architecture for global illumination calculations},
+  year    = {1995},
+  volume  = {1},
+  number  = {1},
+  pages   = {77-96},
+  doi     = {10.1109/2945.468387}
+}
+
+@inproceedings{10.1007/978-3-7091-7484-5_6,
+  author    = {Slusallek, Philipp and Seidel, Hans-Peter},
+  editor    = {Pueyo, Xavier and Schr{\"o}der, Peter},
+  title     = {Towards an Open Rendering Kernel for Image Synthesis},
+  booktitle = {Rendering Techniques '96},
+  year      = {1996},
+  publisher = {Springer Vienna},
+  address   = {Vienna},
+  pages     = {51--60},
+  abstract  = {In order to use realistic image synthesis successfully in research and development as well as in commercial products, two important prerequisites have to be fulfilled. First of all, good, accurate, robust, and fast algorithms are required. Impressive progress has been made in this respect during the last years, which has also been documented in this workshop. The second step is the creation of a suitable and general software architecture, that offers an environment into which these rendering algorithms can be integrated.},
+  isbn      = {978-3-7091-7484-5}
+}
+
+@book{10.5555/555371,
+  author    = {Apodaca, Anthony A. and Gritz, Larry and Barsky, Brian A.},
+  title     = {Advanced RenderMan: Creating CGI for Motion Picture},
+  year      = {1999},
+  month     = {12},
+  isbn      = {1558606181},
+  publisher = {Morgan Kaufmann Publishers Inc.},
+  address   = {San Francisco, CA, USA},
+  edition   = {1st},
+  abstract  = {From the Publisher: Introduced by Pixar Studios over a decade ago, the RenderMan Interface Specification is the dominant standard for sending data to the leading rendering programs used by 3D artists and animators. But users are hampered by the lack of authoritative, up-to-date information on applying the standard, having long had to rely on the ten-year-old RenderMan Companion and a far-flung collection of course notes and Web sites. Advanced RenderMan: Beyond the Companion is precisely what RenderMan users are dying for. It offers thoroughly updated coverage while moving beyond the original work's scope to provide in-depth information on dozens of advanced topics. Both a reference and a tutorial, this book will be indispensable to graphics programmers, modelers, animators, technical directors, and hobbyists-it is truly the key to their ability to achieve state-of-the-art 3D effects. Key Features: Written by the world's foremost RenderMan experts-key figures at Pixar, the company that developed and first implemented the standard Offers advanced users instruction not available anywhere else while providing a leg up to relative beginners-including tips on avoiding mistakes and an appendix covering key math skills. Filled with technical illustrations and many full-color representations of effects supported by the RenderMan standard Via a companion Web site, provides comprehensive documentation of the standard's semantics and syntax, example source code, shaders and other software, and the full set of SIGGRAPH course notes on RenderMan}
+}
+
+@article{doi:10.1080/10867651.1996.10487462,
+  author    = {Larry Gritz and James K. Hahn},
+  title     = {BMRT: A Global Illumination Implementation of the RenderMan Standard},
+  journal   = {Journal of Graphics Tools},
+  volume    = {1},
+  number    = {3},
+  pages     = {29-47},
+  year      = {1996},
+  publisher = {Taylor & Francis},
+  doi       = {10.1080/10867651.1996.10487462},
+  url       = {https://doi.org/10.1080/10867651.1996.10487462},
+  eprint    = {https://doi.org/10.1080/10867651.1996.10487462}
+}
+
+@inproceedings{732097,
+  author    = {Sung, K. and Craighead, J. and Changyaw Wang and Bakshi, S. and Pearce, A. and Woo, A.},
+  booktitle = {Proceedings Pacific Graphics '98. Sixth Pacific Conference on Computer Graphics and Applications (Cat. No.98EX208)},
+  title     = {Design and implementation of the Maya Renderer},
+  year      = {1998},
+  volume    = {},
+  number    = {},
+  pages     = {150-159},
+  doi       = {10.1109/PCCGA.1998.732097}
+}
+
+@book{10.5555/863712,
+  author    = {Driemeyer, Thomas and Herken, Rolf},
+  title     = {Programming Mental Ray},
+  year      = {2003},
+  isbn      = {3211838511},
+  publisher = {Springer-Verlag},
+  address   = {Berlin, Heidelberg},
+  edition   = {2}
+}
+
+@inproceedings{4061561,
+  author    = {Bigler, James and Stephens, Abe and Parker, Steven G.},
+  booktitle = {2006 IEEE Symposium on Interactive Ray Tracing},
+  title     = {Design for Parallel Interactive Ray Tracing Systems},
+  year      = {2006},
+  volume    = {},
+  number    = {},
+  pages     = {187-196},
+  doi       = {10.1109/RT.2006.280230}
+}
+
+ @misc{acton_2014,
+  title   = {Data-Oriented Design and C++},
+  url     = {https://www.slideshare.net/cellperformance/data-oriented-design-and-c},
+  journal = {SlideShare},
+  author  = {Acton, Mike},
+  year    = {2014},
+  month   = {Sep}
+} 

@@ -3,7 +3,7 @@
     本节内容不是原书内容，而是译者自学补充的，请酌情参考和斧正。
 \end{remark}
 
-本节内容主要依据文献\citep{10.5555/90767.90913,enwiki:1014110231,enwiki:1013104981}整理而成，
+本节内容主要依据文献\citep{10.5555/90767.90913,enwiki:1013104981}整理而成，
 给出四元数相关数学推导，具体介绍
 四元数的定义、性质及其在几何变换中的运用。
 
@@ -183,11 +183,12 @@
                                       & \quad +c_3c_1{\bm u}_2+c_2{\bm u}_1\times{\bm u}_3-c_2{\bm u}_1\cdot{\bm u}_3\nonumber                                                              \\
                                       & \quad +c_1c_2{\bm u}_3+c_3{\bm u}_1\times{\bm u}_2-c_3{\bm u}_1\cdot{\bm u}_2\, .
     \end{align}
-    注意到向量运算有
+    注意到向量运算有\sidenote{它们其实是向量的\protect\keyindex{标量三重积}{scalar triple product}{}的两种等价定义，也称\protect\keyindex{混合积}{mixed product}{}。}
     \begin{align}
         ({\bm u}_1\times{\bm u}_2)\cdot{\bm u}_3\equiv{\bm u}_1\cdot({\bm u}_2\times{\bm u}_3)\, ,
     \end{align}
-    以及
+    以及\sidenote{第一个和第三个等号的变换利用了\protect\keyindex{向量三重积}{vector triple product}{}的定义，
+        也称为\protect\keyindex{三重积展开}{triple product expansion}{}或\protect\keyindex{拉格朗日公式}{Lagrange's formula}{}。}
     \begin{align}
           & ({\bm u}_1\times{\bm u}_2)\times{\bm u}_3-({\bm u}_1\cdot{\bm u}_2){\bm u}_3\nonumber                             \\
         = & ({\bm u}_1\cdot{\bm u}_3){\bm u}_2-({\bm u}_2\cdot{\bm u}_3){\bm u}_1-({\bm u}_1\cdot{\bm u}_2){\bm u}_3\nonumber \\

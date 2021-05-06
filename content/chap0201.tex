@@ -1,1 +1,19 @@
 \section{坐标系统}\label{sec:坐标系统}
+
+按计算机图形学中的经典做法，
+pbrt用三个坐标值$x,y$和$z$表示\keyindex{点}{point}{}、
+\keyindex{向量}{vector}{}和\keyindex{法向量}{normal vector}{vector向量}。
+这些值须在\keyindex{坐标系统}{coordinate system}{}下才有意义，
+即定义了空间的原点并给出三个线性独立的向量定义$x,y$和$z$坐标轴。
+总之，定义了坐标系的原点和三个向量称为\keyindex{坐标系}{frame}{}。
+给定3D中的任意一点或方向，其$(x,y,z)$坐标值取决于它和坐标系的关系。
+\reffig{2.1}以2D形式给出例子说明了这点。
+\begin{figure}
+    \input{Pictures/chap02/CoordSysPoint.tex}
+    \caption{2D中，点$\bm p$的坐标$(x,y)$由该点和特定2D坐标系统的关系定义。
+        这里展示了两个坐标系统；
+        该点关于实线坐标系统的坐标为$(8,8)$但
+        关于虚线坐标系的坐标为$(2,-4)$。
+        两种情况下，2D点$\bm p$都处于空间中的同一绝对位置。}
+    \label{fig:2.1}
+\end{figure}

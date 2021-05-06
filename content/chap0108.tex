@@ -33,7 +33,7 @@ pbrt的设计就基于这些思想。
 光线追踪给出了易懂的介绍并包括了基本光线追踪器的完整源码。
 \citet{10.5555/1324795}的书籍也提供了光线追踪的简要介绍。
 
-康奈尔大学的研究者们多年来已经开发了渲染试验台；
+康奈尔大学的研究者们多年来已开发了渲染试验平台；
 Trumbore、Lytle和Greenberg\parencite*{egtp.19911035}
 \sidenote{译者注：原文所注参考文献似乎有误，无法检索到。
     此处已修正，详见\url{http://www.graphics.cornell.edu/pubs/1991/TLG91b.html}。}
@@ -42,7 +42,7 @@ Hall和Greenberg\parencite*{4037684}描述了它的前身。
 该系统是一组松散耦合的模块和库，每个都设计为处理单一任务
 （光线-物体交点加速、图像存储等）
 并以易于组合适当模块以研究和开发新渲染算法的方式写成。
-该试验台相当成功，为康奈尔众多的渲染研究奠定了基础。
+该试验平台很成功，为康奈尔众多的渲染研究奠定了基础。
 
 \emph{Radiance}是首个广泛应用的从根本上基于物理量的开源渲染器。
 它专为建筑设计中执行精确光照仿真而设计。
@@ -61,3 +61,36 @@ pbrt使用参数/值列表来初始化主要抽象接口的实现的方法与\em
 Slusallek和Seidel(\cite*{468387,10.1007/978-3-7091-7484-5_6}; \citealt{slusallek1996vision})
 描述了\emph{Vision}渲染系统，其也是基于物理的且专门支持许多种光传输算法。
 尤其是它有一个宏伟目标即同时支持蒙特卡洛和基于有限元的光传输算法。
+
+许多论文描述了其他渲染系统的设计和实现，
+包括娱乐和艺术应用的渲染器。
+Cook等\parencite*{10.1145/37401.37414}首次描述的Reyes架构
+构成了皮克斯\emph{RenderMan}渲染器的基础，
+Apodaca、Gritz和Barsky\parencite*{10.5555/555371}\sidenote{译者注：原文所注文献仅为两人于2000年署名发表，笔者检索到为三人于1999年发表，故修正。}
+总结了大量针对原始算法的改进。
+Gritz和Hahn\parencite*{doi:10.1080/10867651.1996.10487462}描述了\emph{BMRT}光线追踪器。
+Sung等\parencite*{732097}描述了Maya建模和动画系统中的渲染器，
+Driemeyer和Herken\parencite*{10.5555/863712}\sidenote{译者注：原文所注文献为2002年发表，笔者仅检索到2003年发表的第2版，故修正。}
+在关于\emph{mental ray}渲染器API的书中描述了一些它的内部结构。
+Bigler等\parencite*{4061561}则描述了高性能的\emph{Manta}交互式光线追踪器的设计。
+
+pbrt源码采用BSD许可\sidenote{译者注：即Berkeley Software Distribution，伯克利软件发行许可。}；
+它允许其他开发者利用pbrt代码作为其工作的基础。
+\emph{LuxCoreRender}可从\url{https://luxcorerender.org}获取，
+是一个用pbrt作为起点构建的基于物理的渲染器；
+它提供大量新增特性并为建模系统提供了丰富的场景导出插件集。
+
+Eric Haines编辑的电子通讯《\emph{Ray Tracing News}》
+\sidenote{译者注：详见\url{http://www.realtimerendering.com/resources/RTNews/html}。}可追溯至1987年且仍偶尔出版。
+它是了解通用光线追踪信息非常好的资源，
+尤其是对交点加速方法、实现问题和平衡技巧等都有有益的讨论。
+最近，许多有经验的光线追踪开发者经常访问论坛\url{https://ompf2.com}。
+
+用于构建pbrt的面向对象方法让系统易于理解
+但不是构建渲染系统的唯一方法。
+一个和面向对象方法相对的重要编程方式是\keyindex{面向数据的设计}{data-oriented design}{}(DoD)，
+它尤其被许多游戏开发者（性能对其至关重要）拥护。
+DoD背后的关键动因是许多传统的面向对象设计的原则与高性能软件系统不兼容，
+因为它们导致了内存中缓存低效的数据布局。
+DoD的支持者主张首先考虑内存中的数据布局以及程序怎样转换这些数据以驱动系统设计。
+例如可参考\citet{acton_2014}在C++大会上的演讲。

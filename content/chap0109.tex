@@ -1,0 +1,13 @@
+\section{习题}\label{sec:习题01}
+
+\begin{enumerate}
+    \item \circleone 理解pbrt的一个好方法是在调试器中跟随单个光线计算辐亮度值的过程。
+          用调试标志构建一版pbrt并启动调试器以{\ttfamily  killeroo-simple}运行pbrt。
+          pbrt场景在{\ttfamily scenes}目录中。在方法\refvar{SamplerIntegrator::Render}{()}
+          中设置断点并追踪怎么生成光线、怎么计算辐亮度值以及怎么添加其作用到图像中的过程。
+          第一次这样做时，你可能想通过在pbrt命令行参数中设定{\ttfamily nthreads}为1来指定只执行单个线程；
+          这样做保证所有计算都在主处理线程中完成，使之更易懂，
+          这取决于你的调试器在运行多线程时单步执行的难易程度。
+          当你之后在本书中更加理解系统的细节后，
+          重复这一过程并更加仔细地追踪系统的特定部分。
+\end{enumerate}

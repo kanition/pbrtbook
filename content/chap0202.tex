@@ -24,7 +24,7 @@ public:
 它们都有\refvar{Vector2}{}的相应版本，实现的区别也很简单。
 
 一个向量表示为分量的元组，以所在定义空间$x,y,z$（3D）轴的形式给出其表达。
-一个3D向量$\bm v$的各个分量写作$\bm v_x,\bm v_y$和$\bm v_z$。
+一个3D向量$\bm v$的各个分量写作$v_x,v_y$和$v_z$。
 
 \begin{lstlisting}
 `\initcode{Vector2 Public Data}{=}`
@@ -158,4 +158,165 @@ operator*(T s, const `\refvar{Vector3}{}`<T> &v) { return v * s; }
 类似地，向量也可以逐分量除以一个标量。
 标量除法的代码和标量乘法相似，
 但一个标量除以向量是没有定义的所以是不允许的。
+
+这些方法的实现中，我们用单次除法计算标量的倒数再执行三次逐分量乘法。
+这是一个避免除法运算的技巧，
+因为在现代CPU上除法比乘法慢得多
+\footnote{一个常见误解认为因为编译器会执行必要分析所以这类优化是不必要的。
+    编译器一般会被限制执行许多这种转换。
+    对于除法，IEEE浮点标准要求对所有\protect{\ttfamily x}都有\protect{\ttfamily x/x=1}，
+    但如果我们计算\protect{\ttfamily 1/x}将其存储到变量中再和\protect{\ttfamily x}相乘，
+    并不能保证结果是1。
+    在这种情况下，我们愿意失去这种保证以换取更高的性能。
+    关于这个问题的更多讨论详见\protect\refsec{控制舍入误差}。}。
+
+我们用宏\refvar{Assert}{()}保证提供的除数不为零；
+这永远不应发生，否则说明系统中有bug。
+\begin{lstlisting}
+`\refcode{Vector3 Public Methods}{+=}\lastnext{Vector3PublicMethods}`
+`\refvar{Vector3}{}`<T> operator/(T f) const {
+    `\refvar{Assert}{}`(f != 0);
+    Float inv = (Float)1 / f;
+    return `\refvar{Vector3}{}`<T>(x * inv, y * inv, z * inv);
+}
+
+`\refvar{Vector3}{}`<T> &operator/=(T f) {
+    `\refvar{Assert}{}`(f != 0);
+    Float inv = (Float)1 / f;
+    x *= inv; y *= inv; z *= inv;
+    return *this;
+}
+\end{lstlisting}
+
+\refvar{Vector3}{}类也提供一元负运算，返回与原始向量指向相反方向的新向量。
+\begin{lstlisting}
+`\refcode{Vector3 Public Methods}{+=}\lastnext{Vector3PublicMethods}`
+`\refvar{Vector3}{}`<T> operator-() const { return `\refvar{Vector3}{}`<T>(-x, -y, -z); }
+\end{lstlisting}
+
+最后，\refvar{Abs}{()}返回各分量取绝对值的向量。
+\begin{lstlisting}
+`\refcode{Geometry Inline Functions}{+=}\lastnext{GeometryInlineFunctions}`
+template <typename T> `\refvar{Vector3}{}`<T> `\initvar{Abs}{}`(const `\refvar{Vector3}{}`<T> &v) {
+    return `\refvar{Vector3}{}`<T>(std::abs(v.x), std::abs(v.y), std::abs(v.z));
+}
+\end{lstlisting}
+
 \subsection{点积与叉积}\label{sub:点积与叉积}
+向量两个很有用的运算是\keyindex{点积}{dot product}{}（也
+称\keyindex{数量积}{scalar product}{}或\keyindex{内积}{inner product}{}）
+与\keyindex{叉积}{cross product}{}。
+对于两个向量$\bm v$和$\bm w$，它们的点积$(\bm v \cdot \bm w)$定义为
+\begin{align*}
+    v_x w_x+ v_y w_y+ v_z w_z\, .
+\end{align*}
+\begin{lstlisting}
+`\refcode{Geometry Inline Functions}{+=}\lastnext{GeometryInlineFunctions}`
+template <typename T> inline T
+`\initvar{Dot}{}`(const `\refvar{Vector3}{}`<T> &v1, const `\refvar{Vector3}{}`<T> &v2) {
+    return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
+}
+\end{lstlisting}
+
+两向量的点积与其夹角有简单关系：
+\begin{align}\label{eq:2.1}
+    (\bm v \cdot \bm w)=\|\bm v\|\|\bm w\|\cos\theta\, ,
+\end{align}
+其中$\theta$是$\bm v$和$\bm w$的夹角，
+$\|\bm v\|$是向量$\bm v$的长度。
+由此可得，
+若$\bm v$和$\bm w$都不是\keyindex{退化}{degenerate}{}的——等于$(0,0,0)$，
+则$(\bm v \cdot \bm w)$等于零当且仅当$\bm v$和$\bm w$垂直。
+称两两垂直的一组向量是\keyindex{正交}{orthogonal}{}的。
+称一组正交的单位向量\sidenote{译者注：长度为$1$的向量称为单位向量。}
+是\keyindex{标准正交}{orthonormal}{}的。
+
+由\refeq{2.1}可以立即得到，如果$\bm v$和$\bm w$是单位向量，
+则它们的点积是其夹角的余弦。
+由于渲染中经常需要计算两向量夹角的余弦，
+所以我们常常利用这个性质。
+一些基本属性可直接从定义推导得到。
+例如，如果$\bm u,\bm v$和$\bm w$是向量且$s$是标量值，则：
+\begin{align*}
+    (\bm u\cdot\bm v)         & =(\bm v\cdot\bm u)\, ,                   \\
+    (s\bm u\cdot\bm v)        & =s(\bm u\cdot\bm v)\, ,                  \\
+    (\bm u\cdot(\bm v+\bm w)) & =(\bm u\cdot\bm v)+(\bm u\cdot\bm w)\, .
+\end{align*}
+
+我们还经常需要计算点积的绝对值。
+函数\refvar{AbsDot}{()}完成这项工作，
+所以不用单独调用{\ttfamily std::abs()}了。
+\begin{lstlisting}
+`\refcode{Geometry Inline Functions}{+=}\lastnext{GeometryInlineFunctions}`
+template <typename T>
+inline T `\initvar{AbsDot}{}`(const `\refvar{Vector3}{}`<T> &v1, const `\refvar{Vector3}{}`<T> &v2) {
+    return std::abs(`\refvar{Dot}{}`(v1, v2));
+}
+\end{lstlisting}
+
+叉积是3D向量另一个很有用的运算。
+给定两个3D向量，叉积$\bm v\times\bm w$是同时垂直于它们的向量。
+给定正交向量$\bm v$和$\bm w$，
+则$\bm v\times\bm w$定义为
+令$(\bm v,\bm w,\bm v\times\bm w)$构成正交坐标系统的向量。
+
+叉积定义为：
+\begin{align*}
+    (\bm v\times\bm w)_x & = v_y w_z- v_z w_y\, , \\
+    (\bm v\times\bm w)_y & = v_z w_x- v_x w_z\, , \\
+    (\bm v\times\bm w)_z & = v_x w_y- v_y w_x\, .
+\end{align*}
+
+记住上式的一个方法是计算矩阵的行列式：
+\begin{align*}
+    \bm v\times\bm w=\left|
+    \begin{array}{ccc}
+        \mathbf{i} & \mathbf{j} & \mathbf{k} \\
+        v_x        & v_y        & v_z        \\
+        w_x        & w_y        & w_z
+    \end{array}\right|\, ,
+\end{align*}
+其中$\mathbf{i},\mathbf{j}$和$\mathbf{k}$分别表示
+轴$(1,0,0)$、$(0,1,0)$和$(0,0,1)$。
+注意该式只是辅助记忆的，并没有严格的数学定义，
+因为该矩阵的元素混有标量和向量。
+
+此处的实现中，函数\refvar{Cross}{()}在减法前将
+向量元素转化为双精度（不论\refvar{Float}{}的类型）。
+这里使用32位浮点数值的额外精度能防止巨量消失
+\sidenote{译者注：原文catastrophic cancellation。}
+造成的误差，即两个值非常接近的浮点数相减造成的误差。
+这不是理论问题：这种改变对于修复以前由此造成的bug是必要的。
+浮点舍入误差的更多信息详见\refsec{控制舍入误差}。
+\begin{lstlisting}
+`\refcode{Geometry Inline Functions}{+=}\lastnext{GeometryInlineFunctions}`
+template <typename T> inline `\refvar{Vector3}{}`<T>
+`\initvar{Cross}{}`(const `\refvar{Vector3}{}`<T> &v1, const `\refvar{Vector3}{}`<T> &v2) {
+    double v1x = v1.x, v1y = v1.y, v1z = v1.z;
+    double v2x = v2.x, v2y = v2.y, v2z = v2.z;
+    return `\refvar{Vector3}{}`<T>((v1y * v2z) - (v1z * v2y),
+                      (v1z * v2x) - (v1x * v2z),
+                      (v1x * v2y) - (v1y * v2x));
+} 
+\end{lstlisting}
+
+由点积的定义可得
+\begin{align}\label{eq:2.2}
+    \|\bm v\times\bm w\|=\|\bm v\|\|\bm w\||\sin\theta|\, ,
+\end{align}
+其中$\theta$是$\bm v$和$\bm w$之间的夹角。
+一个重要推论是，两垂直的单位向量的叉积本身也是单位向量。
+注意如果$\bm v$和$\bm w$平行则叉积结果是退化的。
+
+该定义还给出了计算平行四边形面积的简便方法（\reffig{2.5}）。
+如果平行四边形两邻边由向量$\bm v_1$和$\bm v_2$给定，
+其高为$h$，面积则为$\|\bm v_1\|h$。
+因为$h=\sin\theta\|\bm v_2\|$，
+我们可以用\refeq{2.2}得到面积为$\|\bm v_1\times\bm v_2\|$。
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap02/Parallelogramarea.tex}
+    \caption{由向量$\bm v_1$和$\bm v_2$给定邻边的平行四边形面积等于$\|\bm v_1\|h$。
+    由\protect\refeq{2.2}，$\bm v_1$和$\bm v_2$点积的长度等于
+    两向量长度之积乘以它们夹角的正弦——平行四边形面积。}
+    \label{fig:2.5}
+\end{figure}

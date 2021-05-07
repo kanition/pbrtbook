@@ -47,13 +47,13 @@ T `\initvar[Vector3::x]{x}{}`, `\initvar[Vector3::y]{y}{}`, `\initvar[Vector3::z
 \begin{lstlisting}
 `\initcode{Vector3 Public Methods}{=}\initnext{Vector3PublicMethods}`
 T operator[](int i) const { 
-    Assert(i >= 0 && i <= 2);
+    `\refvar{Assert}{}`(i >= 0 && i <= 2);
     if (i == 0) return x;
     if (i == 1) return y;
     return z;
 }
 T &operator[](int i) { 
-    Assert(i >= 0 && i <= 2);
+    `\refvar{Assert}{}`(i >= 0 && i <= 2);
     if (i == 0) return x;
     if (i == 1) return y;
     return z;

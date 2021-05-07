@@ -1,1 +1,64 @@
 \section{点}\label{sec:点}
+
+点是2D或3D空间中的零维位置。
+pbrt中的类\refvar{Point2}{}和\refvar{Point3}{}以
+明确的方式表示点：使用关于坐标系统的$x,y,z$（3D）坐标。
+尽管向量也使用同样的表示，
+但事实上点表示一个位置而向量表示一个方向，
+由此它们的处理方式有很多重要的差异。
+文中点记为$\bm p$。
+
+本节中，我们这里仍只涵盖类\refvar{Point3}{}中3D点方法的实现。
+\begin{lstlisting}
+`\initcode{Point Declarations}{=}\initnext{PointDeclarations}`
+template <typename T> class `\initvar{Point2}{}` {
+public:
+    `\refcode{Point2 Public Methods}{}`
+    `\refcode{Point2 Public Data}{}`
+};
+\end{lstlisting}
+
+\begin{lstlisting}
+`\refcode{Point Declarations}{+=}\lastnext{PointDeclarations}`
+template <typename T> class `\initvar{Point3}{}` {
+public:
+    `\refcode{Point3 Public Methods}{}`
+    `\refcode{Point3 Public Data}{}`
+};
+\end{lstlisting}
+
+像向量那样，常用点类型有更短的类型名称会很有用。
+\begin{lstlisting}
+`\refcode{Point Declarations}{+=}\lastcode{PointDeclarations}`
+typedef `\refvar{Point2}{}`<`\refvar{Float}{}`> `\initvar{Point2f}{}`;
+typedef `\refvar{Point2}{}`<int>   `\initvar{Point2i}{}`;
+typedef `\refvar{Point3}{}`<`\refvar{Float}{}`> `\initvar{Point3f}{}`;
+typedef `\refvar{Point3}{}`<int>   `\initvar{Point3i}{}`;
+
+`\initcode{Point2 Public Data}{=}`
+T x, y;
+
+`\initcode{Point3 Public Data}{=}`
+T x, y, z;
+\end{lstlisting}
+
+还像向量那样，\refvar{Point3}{}的构造函数接收参数
+设置{\ttfamily x}，{\ttfamily y}和{\ttfamily z}坐标值。
+\begin{lstlisting}
+`\initcode{Point3 Public Methods}{=}\initnext{Point3PublicMethods}`
+`\refvar{Point3}{}`() { x = y = z = 0; }
+`\refvar{Point3}{}`(T x, T y, T z) : x(x), y(y), z(z) {
+    `\refvar{Assert}{}`(!HasNaNs());
+}
+\end{lstlisting}
+
+通过丢弃$z$坐标将\refvar{Point3}{}转换为\refvar{Point2}{}很有用。
+完成这个转换的构造函数有修饰符{\ttfamily explicit}
+所以该转换不会在缺乏显示类型转换时发生，以免意外。
+\begin{lstlisting}
+`\initcode{Point2 Public Methods}{=}`
+explicit `\refvar{Point2}{}`(const `\refvar{Point3}{}`<T> &p) : x(p.x), y(p.y) {
+    `\refvar{Assert}{}`(!HasNaNs());
+}
+\end{lstlisting}
+

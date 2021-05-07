@@ -228,8 +228,7 @@ $\|\bm v\|$是向量$\bm v$的长度。
 若$\bm v$和$\bm w$都不是\keyindex{退化}{degenerate}{}的——等于$(0,0,0)$，
 则$(\bm v \cdot \bm w)$等于零当且仅当$\bm v$和$\bm w$垂直。
 称两两垂直的一组向量是\keyindex{正交}{orthogonal}{}的。
-称一组正交的单位向量\sidenote{译者注：长度为$1$的向量称为单位向量。}
-是\keyindex{标准正交}{orthonormal}{}的。
+称一组正交的单位向量是\keyindex{标准正交}{orthonormal}{}的。
 
 由\refeq{2.1}可以立即得到，如果$\bm v$和$\bm w$是单位向量，
 则它们的点积是其夹角的余弦。
@@ -320,3 +319,25 @@ template <typename T> inline `\refvar{Vector3}{}`<T>
     两向量长度之积乘以它们夹角的正弦——平行四边形面积。}
     \label{fig:2.5}
 \end{figure}
+
+\subsection{规范化}\label{sub:规范化}
+通常有必要对向量\keyindex{规范化}{normalize}{}
+\sidenote{译者注：也称为归一化、标准化。}，
+即计算一个单位长度的新向量指向相同方向。
+规范化的向量常称为\keyindex{单位向量}{unit vector}{vector向量}。
+本书中用记号$\hat{\bm v}$表示向量$\bm v$的规范化版本。
+为了规范化向量，首先要能计算其长度。
+\begin{lstlisting}
+`\refcode{Vector3 Public Methods}{+=}\lastcode{Vector3PublicMethods}`
+Float `\initvar{LengthSquared}{}`() const { return x * x + y * y + z * z; }
+Float `\initvar{Length}{}`() const { return std::sqrt(`\refvar{LengthSquared}{}`()); }
+\end{lstlisting}
+
+\refvar{Normalize}{()}规范化一个向量。
+它用向量的长度$\|\bm v\|$去除每个分量，返回一个新向量；
+它\emph{不会}原位规范化向量：
+\begin{lstlisting}
+`\refcode{Geometry Inline Functions}{+=}\lastnext{GeometryInlineFunctions}`
+template <typename T> inline `\refvar{Vector3}{}`<T>
+`\initvar{Normalize}{}`(const `\refvar{Vector3}{}`<T> &v) { return v / v.`\refvar{Length}{}`(); }
+\end{lstlisting}

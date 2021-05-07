@@ -1,3 +1,422 @@
 \section{向量}\label{sec:向量}
 
+pbrt提供了2D和3D向量类。
+两者都由基本向量元素参数化，
+因此易于实例化整数和浮点类型的向量。
+
+\begin{lstlisting}
+`\initcode{Vector Declarations}{=}\initnext{VectorDeclarations}`
+template <typename T> class `\initvar{Vector2}{}` {
+public:
+    `\refcode{Vector2 Public Methods}{}`
+    `\refcode{Vector2 Public Data}{}`
+};
+
+`\refcode{Vector Declarations}{+=}\lastnext{VectorDeclarations}`
+template <typename T> class `\initvar{Vector3}{}` {
+public:
+    `\refcode{Vector3 Public Methods}{}`
+    `\refcode{Vector3 Public Data}{}`
+};
+\end{lstlisting}
+
+接下来，我们一般只介绍\refvar{Vector3}{}方法的实现；
+它们都有\refvar{Vector2}{}的相应版本，实现的区别也很简单。
+
+一个向量表示为分量的元组，以所在定义空间$x,y,z$（3D）轴的形式给出其表达。
+一个3D向量$\bm v$的各个分量写作$v_x,v_y$和$v_z$。
+
+\begin{lstlisting}
+`\initcode{Vector2 Public Data}{=}`
+T `\initvar[Vector2::x]{x}{}`, `\initvar[Vector2::y]{y}{}`;
+
+`\initcode{Vector3 Public Data}{=}`
+T `\initvar[Vector3::x]{x}{}`, `\initvar[Vector3::y]{y}{}`, `\initvar[Vector3::z]{z}{}`;
+\end{lstlisting}
+
+另一实现方式是单个模板类再用一个维度整数参数化，
+并以若干{\ttfamily T}值构成的数组表示坐标。
+尽管这种方法能减少代码总量，
+但向量的单个分量不能以{\ttfamily v.x}等形式访问。
+我们认为这种情况下，为了更透明地访问元素，
+向量实现中多一点代码是值得的。
+
+然而，一些例程发现能简单地遍历向量的分量是很有用的；
+向量类也提供了C++操作符以索引分量，
+这样给定向量{\ttfamily v}，有{\ttfamily v[0]==v.x}等。
+\begin{lstlisting}
+`\initcode{Vector3 Public Methods}{=}\initnext{Vector3PublicMethods}`
+T operator[](int i) const { 
+    `\refvar{Assert}{}`(i >= 0 && i <= 2);
+    if (i == 0) return x;
+    if (i == 1) return y;
+    return z;
+}
+T &operator[](int i) { 
+    `\refvar{Assert}{}`(i >= 0 && i <= 2);
+    if (i == 0) return x;
+    if (i == 1) return y;
+    return z;
+}
+\end{lstlisting}
+
+为了方便起见，{\ttfamily typedef}指定了许多向量常用的类型，
+这样在别处代码中它们会有更简洁的名字。
+\begin{lstlisting}
+`\refcode{Vector Declarations}{+=}\lastcode{VectorDeclarations}`
+typedef `\refvar{Vector2}{}`<`\refvar{Float}{}`> `\initvar{Vector2f}{}`;
+typedef `\refvar{Vector2}{}`<int>   `\initvar{Vector2i}{}`;
+typedef `\refvar{Vector3}{}`<`\refvar{Float}{}`> `\initvar{Vector3f}{}`;
+typedef `\refvar{Vector3}{}`<int>   `\initvar{Vector3i}{}`;
+\end{lstlisting}
+
+接触过面向对象设计的读者可能质疑我们让向量元素数据可公开访问的决定。
+通常，数据成员只在其类内是可访问的，
+外部代码想要访问或修改类的内容必须通过良好定义的选择器\sidenote{译者注：原文selector。}
+和修改器\sidenote{译者注：原文mutator。}函数API。
+尽管我们通常统一这条设计原则
+（但也有第\refchap{绪论}中“扩展阅读”一节关于面向数据的设计的讨论），
+可是这里它并不合适。
+选择器和修改器函数的目的是隐藏类内实现细节。
+对于向量，隐藏其设计的基本部分没有好处且会增加使用代码的体积。
+
+默认情况下，值$(x,y,z)$设为零，
+但类的用户也可以为每个分类提供值。
+如果用户确实提供了值，
+我们就用宏\refvar{Assert}{()}检查确认其中没有
+“not a number”（NaN）值。
+当以优化模式编译时，该宏从编译代码中消失，
+节约验证这种情况的开销。
+NaN几乎一定表明系统存在bug；
+如果NaN是某些计算生成的，
+我们就要尽快排查以便隔离其来源
+（更多关于NaN值的讨论详见\refsub{浮点算术}）。
+\begin{lstlisting}
+`\refcode{Vector3 Public Methods}{+=}\lastnext{Vector3PublicMethods}`
+`\refvar{Vector3}{}`() { x = y = z = 0; }
+`\refvar{Vector3}{}`(T x, T y, T z)
+    : x(x), y(y), z(z) {
+    `\refvar{Assert}{}`(!`\refvar{HasNaNs}{}`());
+}
+\end{lstlisting}
+
+检查NaN的代码只是为$x,y$和$z$分量中的每一个调用函数{\ttfamily std::isnan()}。
+\begin{lstlisting}
+`\refcode{Vector3 Public Methods}{+=}\lastnext{Vector3PublicMethods}`
+bool `\initvar{HasNaNs}{}`() const {
+    return std::isnan(x) || std::isnan(y) || std::isnan(z);
+}
+\end{lstlisting}
+
+向量的加法和减法逐分量进行。
+向量加减法的一般几何解释如\reffig{2.3}和\reffig{2.4}所示。
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap02/Vectoraddition.tex}
+    \caption{（左图）向量加法：$\bm v+\bm w$。
+        （右图）注意和$\bm v+\bm w$表示由$\bm v$与$\bm w$构成的平行四边形的对角线，
+        表明向量加法满足交换律：$\bm v+\bm w=\bm w+\bm v$。}
+    \label{fig:2.3}
+\end{figure}
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap02/Vectorsubtraction.tex}
+    \caption{（左图）向量减法。
+        （右图）如果我们考虑由两个向量构成的平行四边形，
+        则$\bm w-\bm v$（虚线）与$-\bm v-\bm w$（未画出）表示对角线。}
+    \label{fig:2.4}
+\end{figure}
+
+\begin{lstlisting}
+`\refcode{Vector3 Public Methods}{+=}\lastnext{Vector3PublicMethods}`
+`\refvar{Vector3}{}`<T> operator+(const `\refvar{Vector3}{}`<T> &v) const {
+    return `\refvar{Vector3}{}`(x + v.x, y + v.y, z + v.z);
+}
+`\refvar{Vector3}{}`<T>& operator+=(const `\refvar{Vector3}{}`<T> &v) {
+    x += v.x; y += v.y; z += v.z;
+    return *this;
+}
+\end{lstlisting}
+
+两个向量的减法类似，此处不再说明。
+
+向量可以逐分量与标量相乘，从而改变其长度。
+为了涵盖源码中可能用到的这一运算的所有不同形式
+（即{\ttfamily v*s}、{\ttfamily s*v}以及{\ttfamily v*=s}），需要三个函数：
+\begin{lstlisting}
+`\refcode{Vector3 Public Methods}{+=}\lastnext{Vector3PublicMethods}`
+`\refvar{Vector3}{}`<T> operator*(T s) const { return `\refvar{Vector3}{}`<T>(s*x, s*y, s*z); }
+`\refvar{Vector3}{}`<T> &operator*=(T s) {
+    x *= s; y *= s; z *= s;
+    return *this;
+}
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{Geometry Inline Functions}{=}\initnext{GeometryInlineFunctions}`
+template <typename T> inline `\refvar{Vector3}{}`<T>
+operator*(T s, const `\refvar{Vector3}{}`<T> &v) { return v * s; }
+\end{lstlisting}
+
+类似地，向量也可以逐分量除以一个标量。
+标量除法的代码和标量乘法相似，
+但一个标量除以向量是没有定义的所以是不允许的。
+
+这些方法的实现中，我们用单次除法计算标量的倒数再执行三次逐分量乘法。
+这是一个避免除法运算的技巧，
+因为在现代CPU上除法比乘法慢得多
+\footnote{一个常见误解认为因为编译器会执行必要分析所以这类优化是不必要的。
+    编译器一般会被限制执行许多这种转换。
+    对于除法，IEEE浮点标准要求对所有\protect{\ttfamily x}都有\protect{\ttfamily x/x=1}，
+    但如果我们计算\protect{\ttfamily 1/x}将其存储到变量中再和\protect{\ttfamily x}相乘，
+    并不能保证结果是1。
+    在这种情况下，我们愿意失去这种保证以换取更高的性能。
+    关于这个问题的更多讨论详见\protect\refsec{控制舍入误差}。}。
+
+我们用宏\refvar{Assert}{()}保证提供的除数不为零；
+这永远不应发生，否则说明系统中有bug。
+\begin{lstlisting}
+`\refcode{Vector3 Public Methods}{+=}\lastnext{Vector3PublicMethods}`
+`\refvar{Vector3}{}`<T> operator/(T f) const {
+    `\refvar{Assert}{}`(f != 0);
+    Float inv = (Float)1 / f;
+    return `\refvar{Vector3}{}`<T>(x * inv, y * inv, z * inv);
+}
+
+`\refvar{Vector3}{}`<T> &operator/=(T f) {
+    `\refvar{Assert}{}`(f != 0);
+    Float inv = (Float)1 / f;
+    x *= inv; y *= inv; z *= inv;
+    return *this;
+}
+\end{lstlisting}
+
+\refvar{Vector3}{}类也提供一元负运算，返回与原始向量指向相反方向的新向量。
+\begin{lstlisting}
+`\refcode{Vector3 Public Methods}{+=}\lastnext{Vector3PublicMethods}`
+`\refvar{Vector3}{}`<T> operator-() const { return `\refvar{Vector3}{}`<T>(-x, -y, -z); }
+\end{lstlisting}
+
+最后，\refvar{Abs}{()}返回各分量取绝对值的向量。
+\begin{lstlisting}
+`\refcode{Geometry Inline Functions}{+=}\lastnext{GeometryInlineFunctions}`
+template <typename T> `\refvar{Vector3}{}`<T> `\initvar{Abs}{}`(const `\refvar{Vector3}{}`<T> &v) {
+    return `\refvar{Vector3}{}`<T>(std::abs(v.x), std::abs(v.y), std::abs(v.z));
+}
+\end{lstlisting}
+
 \subsection{点积与叉积}\label{sub:点积与叉积}
+向量两个很有用的运算是\keyindex{点积}{dot product}{}（也
+称\keyindex{数量积}{scalar product}{}或\keyindex{内积}{inner product}{}）
+与\keyindex{叉积}{cross product}{}。
+对于两个向量$\bm v$和$\bm w$，它们的点积$(\bm v \cdot \bm w)$定义为
+\begin{align*}
+    v_x w_x+ v_y w_y+ v_z w_z\, .
+\end{align*}
+\begin{lstlisting}
+`\refcode{Geometry Inline Functions}{+=}\lastnext{GeometryInlineFunctions}`
+template <typename T> inline T
+`\initvar{Dot}{}`(const `\refvar{Vector3}{}`<T> &v1, const `\refvar{Vector3}{}`<T> &v2) {
+    return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
+}
+\end{lstlisting}
+
+两向量的点积与其夹角有简单关系：
+\begin{align}\label{eq:2.1}
+    (\bm v \cdot \bm w)=\|\bm v\|\|\bm w\|\cos\theta\, ,
+\end{align}
+其中$\theta$是$\bm v$和$\bm w$的夹角，
+$\|\bm v\|$是向量$\bm v$的长度。
+由此可得，
+若$\bm v$和$\bm w$都不是\keyindex{退化}{degenerate}{}的——等于$(0,0,0)$，
+则$(\bm v \cdot \bm w)$等于零当且仅当$\bm v$和$\bm w$垂直。
+称两两垂直的一组向量是\keyindex{正交}{orthogonal}{}的。
+称一组正交的单位向量是\keyindex{标准正交}{orthonormal}{}的。
+
+由\refeq{2.1}可以立即得到，如果$\bm v$和$\bm w$是单位向量，
+则它们的点积是其夹角的余弦。
+由于渲染中经常需要计算两向量夹角的余弦，
+所以我们常常利用这个性质。
+一些基本属性可直接从定义推导得到。
+例如，如果$\bm u,\bm v$和$\bm w$是向量且$s$是标量值，则：
+\begin{align*}
+    (\bm u\cdot\bm v)         & =(\bm v\cdot\bm u)\, ,                   \\
+    (s\bm u\cdot\bm v)        & =s(\bm u\cdot\bm v)\, ,                  \\
+    (\bm u\cdot(\bm v+\bm w)) & =(\bm u\cdot\bm v)+(\bm u\cdot\bm w)\, .
+\end{align*}
+
+我们还经常需要计算点积的绝对值。
+函数\refvar{AbsDot}{()}完成这项工作，
+所以不用单独调用{\ttfamily std::abs()}了。
+\begin{lstlisting}
+`\refcode{Geometry Inline Functions}{+=}\lastnext{GeometryInlineFunctions}`
+template <typename T>
+inline T `\initvar{AbsDot}{}`(const `\refvar{Vector3}{}`<T> &v1, const `\refvar{Vector3}{}`<T> &v2) {
+    return std::abs(`\refvar{Dot}{}`(v1, v2));
+}
+\end{lstlisting}
+
+叉积是3D向量另一个很有用的运算。
+给定两个3D向量，叉积$\bm v\times\bm w$是同时垂直于它们的向量。
+给定正交向量$\bm v$和$\bm w$，
+则$\bm v\times\bm w$定义为
+令$(\bm v,\bm w,\bm v\times\bm w)$构成正交坐标系统的向量。
+
+叉积定义为：
+\begin{align*}
+    (\bm v\times\bm w)_x & = v_y w_z- v_z w_y\, , \\
+    (\bm v\times\bm w)_y & = v_z w_x- v_x w_z\, , \\
+    (\bm v\times\bm w)_z & = v_x w_y- v_y w_x\, .
+\end{align*}
+
+记住上式的一个方法是计算矩阵的行列式：
+\begin{align*}
+    \bm v\times\bm w=\left|
+    \begin{array}{ccc}
+        \mathbf{i} & \mathbf{j} & \mathbf{k} \\
+        v_x        & v_y        & v_z        \\
+        w_x        & w_y        & w_z
+    \end{array}\right|\, ,
+\end{align*}
+其中$\mathbf{i},\mathbf{j}$和$\mathbf{k}$分别表示
+轴$(1,0,0)$、$(0,1,0)$和$(0,0,1)$。
+注意该式只是辅助记忆的，并没有严格的数学定义，
+因为该矩阵的元素混有标量和向量。
+
+此处的实现中，函数\refvar{Cross}{()}在减法前将
+向量元素转化为双精度（不论\refvar{Float}{}的类型）。
+这里使用32位浮点数值的额外精度能防止巨量消失
+\sidenote{译者注：原文catastrophic cancellation。}
+造成的误差，即两个值非常接近的浮点数相减造成的误差。
+这不是理论问题：这种改变对于修复以前由此造成的bug是必要的。
+浮点舍入误差的更多信息详见\refsec{控制舍入误差}。
+\begin{lstlisting}
+`\refcode{Geometry Inline Functions}{+=}\lastnext{GeometryInlineFunctions}`
+template <typename T> inline `\refvar{Vector3}{}`<T>
+`\initvar{Cross}{}`(const `\refvar{Vector3}{}`<T> &v1, const `\refvar{Vector3}{}`<T> &v2) {
+    double v1x = v1.x, v1y = v1.y, v1z = v1.z;
+    double v2x = v2.x, v2y = v2.y, v2z = v2.z;
+    return `\refvar{Vector3}{}`<T>((v1y * v2z) - (v1z * v2y),
+                      (v1z * v2x) - (v1x * v2z),
+                      (v1x * v2y) - (v1y * v2x));
+} 
+\end{lstlisting}
+
+由点积的定义可得
+\begin{align}\label{eq:2.2}
+    \|\bm v\times\bm w\|=\|\bm v\|\|\bm w\||\sin\theta|\, ,
+\end{align}
+其中$\theta$是$\bm v$和$\bm w$之间的夹角。
+一个重要推论是，两垂直的单位向量的叉积本身也是单位向量。
+注意如果$\bm v$和$\bm w$平行则叉积结果是退化的。
+
+该定义还给出了计算平行四边形面积的简便方法（\reffig{2.5}）。
+如果平行四边形两邻边由向量$\bm v_1$和$\bm v_2$给定，
+其高为$h$，面积则为$\|\bm v_1\|h$。
+因为$h=\sin\theta\|\bm v_2\|$，
+我们可以用\refeq{2.2}得到面积为$\|\bm v_1\times\bm v_2\|$。
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap02/Parallelogramarea.tex}
+    \caption{由向量$\bm v_1$和$\bm v_2$给定邻边的平行四边形面积等于$\|\bm v_1\|h$。
+        由\protect\refeq{2.2}，$\bm v_1$和$\bm v_2$点积的长度等于
+        两向量长度之积乘以它们夹角的正弦——平行四边形面积。}
+    \label{fig:2.5}
+\end{figure}
+
+\subsection{规范化}\label{sub:规范化}
+通常有必要对向量\keyindex{规范化}{normalize}{}
+\sidenote{译者注：也称为归一化、标准化。}，
+即计算一个单位长度的新向量指向相同方向。
+规范化的向量常称为\keyindex{单位向量}{unit vector}{vector向量}。
+本书中用记号$\hat{\bm v}$表示向量$\bm v$的规范化版本。
+为了规范化向量，首先要能计算其长度。
+\begin{lstlisting}
+`\refcode{Vector3 Public Methods}{+=}\lastcode{Vector3PublicMethods}`
+Float `\initvar{LengthSquared}{}`() const { return x * x + y * y + z * z; }
+Float `\initvar{Length}{}`() const { return std::sqrt(`\refvar{LengthSquared}{}`()); }
+\end{lstlisting}
+
+\refvar{Normalize}{()}规范化一个向量。
+它用向量的长度$\|\bm v\|$去除每个分量，返回一个新向量；
+它\emph{不会}原位规范化向量：
+\begin{lstlisting}
+`\refcode{Geometry Inline Functions}{+=}\lastnext{GeometryInlineFunctions}`
+template <typename T> inline `\refvar{Vector3}{}`<T>
+`\initvar{Normalize}{}`(const `\refvar{Vector3}{}`<T> &v) { return v / v.`\refvar{Length}{}`(); }
+\end{lstlisting}
+
+\subsection{其他操作}\label{sub:其他操作}
+还有一些其他操作在使用向量时很有用。
+方法\refvar{MinComponent}{()}和
+\refvar{MaxComponent}{()}
+分别返回最小和最大的坐标值。
+\begin{lstlisting}
+`\refcode{Geometry Inline Functions}{+=}\lastnext{GeometryInlineFunctions}`
+template <typename T> T
+`\initvar{MinComponent}{}`(const `\refvar{Vector3}{}`<T> &v) {
+    return std::min(v.x, std::min(v.y, v.z));
+}
+template <typename T> T
+`\initvar{MaxComponent}{}`(const `\refvar{Vector3}{}`<T> &v) {
+    return std::max(v.x, std::max(v.y, v.z));
+}
+\end{lstlisting}
+
+相应地，\refvar{MaxDimension}{()}返回最大值分量的索引。
+\begin{lstlisting}
+`\refcode{Geometry Inline Functions}{+=}\lastnext{GeometryInlineFunctions}`
+template <typename T> int
+`\initvar{MaxDimension}{}`(const `\refvar{Vector3}{}`<T> &v) {
+    return (v.x > v.y) ? ((v.x > v.z) ? 0 : 2) : 
+           ((v.y > v.z) ? 1 : 2);
+}
+\end{lstlisting}
+
+还有逐元素的最小和最大操作。
+\begin{lstlisting}
+`\refcode{Geometry Inline Functions}{+=}\lastnext{GeometryInlineFunctions}`
+template <typename T> `\refvar{Vector3}{}`<T>
+`\initvar{Min}{}`(const `\refvar{Vector3}{}`<T> &p1, const `\refvar{Vector3}{}`<T> &p2) {
+    return `\refvar{Vector3}{}`<T>(std::min(p1.x, p2.x), std::min(p1.y, p2.y), 
+                      std::min(p1.z, p2.z));
+}
+template <typename T> `\refvar{Vector3}{}`<T>
+`\initvar{Max}{}`(const `\refvar{Vector3}{}`<T> &p1, const `\refvar{Vector3}{}`<T> &p2) {
+    return `\refvar{Vector3}{}`<T>(std::max(p1.x, p2.x), std::max(p1.y, p2.y), 
+                      std::max(p1.z, p2.z));
+}
+\end{lstlisting}
+
+最后，\refvar{Permute}{()}根据提供的索引值排列坐标值。
+\begin{lstlisting}
+`\refcode{Geometry Inline Functions}{+=}\lastnext{GeometryInlineFunctions}`
+template <typename T> `\refvar{Vector3}{}`<T>
+`\initvar{Permute}{}`(const `\refvar{Vector3}{}`<T> &v, int x, int y, int z) {
+    return `\refvar{Vector3}{}`<T>(v[x], v[y], v[z]);
+}
+\end{lstlisting}
+
+\subsection{来自向量的坐标系统}\label{sub:来自向量的坐标系统}
+我们经常需要在给定单个3D向量时构造一个局部坐标系统。
+因为两个向量的叉积与它们正交，
+所以我们可以运用两次叉积为坐标系统得到三个正交向量。
+注意该技术生成的两个向量在不考虑绕给定向量旋转的情况下是唯一的。
+
+该函数的实现假设传入的向量{\ttfamily v1}已经规范化了。
+它首先通过置零原始向量的一个分量、交换剩下两个分量、再令其中一个取相反数来构造一个垂直向量。
+对两种情况的讨论要澄清的是{\ttfamily v2}将被规范化并且点积$(\bm v_1\cdot\bm v_2)$必定为零。
+给定这两个垂直向量，单次叉积就能得到第三个，根据定义它与前两个垂直。
+\begin{lstlisting}
+`\refcode{Geometry Inline Functions}{+=}\lastnext{GeometryInlineFunctions}`
+template <typename T> inline void
+`\initvar{CoordinateSystem}{}`(const `\refvar{Vector3}{}`<T> &v1, `\refvar{Vector3}{}`<T> *v2, `\refvar{Vector3}{}`<T> *v3) {
+    if (std::abs(v1.x) > std::abs(v1.y))
+        *v2 = `\refvar{Vector3}{}`<T>(-v1.z, 0, v1.x) /
+              std::sqrt(v1.x * v1.x + v1.z * v1.z);
+    else
+        *v2 = `\refvar{Vector3}{}`<T>(0, v1.z, -v1.y) /
+              std::sqrt(v1.y * v1.y + v1.z * v1.z);
+    *v3 = `\refvar{Cross}{}`(v1, *v2);
+}
+\end{lstlisting}
+\begin{remark}
+    译者提示：对于非零向量$\bm v_1=(x,y,z)$，当$\bm v_2$分别取
+    $(-z,0,x)$和$(0,z,-y)$时，计算一下$(\bm v_1\cdot\bm v_2)$，你有什么发现？
+\end{remark}

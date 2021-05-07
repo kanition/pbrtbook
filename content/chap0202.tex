@@ -315,8 +315,8 @@ template <typename T> inline `\refvar{Vector3}{}`<T>
 \begin{figure}[htbp]
     \centering\input{Pictures/chap02/Parallelogramarea.tex}
     \caption{由向量$\bm v_1$和$\bm v_2$给定邻边的平行四边形面积等于$\|\bm v_1\|h$。
-    由\protect\refeq{2.2}，$\bm v_1$和$\bm v_2$点积的长度等于
-    两向量长度之积乘以它们夹角的正弦——平行四边形面积。}
+        由\protect\refeq{2.2}，$\bm v_1$和$\bm v_2$点积的长度等于
+        两向量长度之积乘以它们夹角的正弦——平行四边形面积。}
     \label{fig:2.5}
 \end{figure}
 
@@ -340,4 +340,79 @@ Float `\initvar{Length}{}`() const { return std::sqrt(`\refvar{LengthSquared}{}`
 `\refcode{Geometry Inline Functions}{+=}\lastnext{GeometryInlineFunctions}`
 template <typename T> inline `\refvar{Vector3}{}`<T>
 `\initvar{Normalize}{}`(const `\refvar{Vector3}{}`<T> &v) { return v / v.`\refvar{Length}{}`(); }
+\end{lstlisting}
+
+\subsection{其他操作}\label{sub:其他操作}
+还有一些其他操作在使用向量时很有用。
+方法\refvar{MinComponent}{()}和
+\refvar{MaxComponent}{()}
+分别返回最小和最大的坐标值。
+\begin{lstlisting}
+`\refcode{Geometry Inline Functions}{+=}\lastnext{GeometryInlineFunctions}`
+template <typename T> T
+`\initvar{MinComponent}{}`(const `\refvar{Vector3}{}`<T> &v) {
+    return std::min(v.x, std::min(v.y, v.z));
+}
+template <typename T> T
+`\initvar{MaxComponent}{}`(const `\refvar{Vector3}{}`<T> &v) {
+    return std::max(v.x, std::max(v.y, v.z));
+}
+\end{lstlisting}
+
+相应地，\refvar{MaxDimension}{()}返回最大值分量的索引。
+\begin{lstlisting}
+`\refcode{Geometry Inline Functions}{+=}\lastnext{GeometryInlineFunctions}`
+template <typename T> int
+`\initvar{MaxDimension}{}`(const `\refvar{Vector3}{}`<T> &v) {
+    return (v.x > v.y) ? ((v.x > v.z) ? 0 : 2) : 
+           ((v.y > v.z) ? 1 : 2);
+}
+\end{lstlisting}
+
+还有逐元素的最小和最大操作。
+\begin{lstlisting}
+`\refcode{Geometry Inline Functions}{+=}\lastnext{GeometryInlineFunctions}`
+template <typename T> `\refvar{Vector3}{}`<T>
+`\initvar{Min}{}`(const `\refvar{Vector3}{}`<T> &p1, const `\refvar{Vector3}{}`<T> &p2) {
+    return `\refvar{Vector3}{}`<T>(std::min(p1.x, p2.x), std::min(p1.y, p2.y), 
+                      std::min(p1.z, p2.z));
+}
+template <typename T> `\refvar{Vector3}{}`<T>
+`\initvar{Max}{}`(const `\refvar{Vector3}{}`<T> &p1, const `\refvar{Vector3}{}`<T> &p2) {
+    return `\refvar{Vector3}{}`<T>(std::max(p1.x, p2.x), std::max(p1.y, p2.y), 
+                      std::max(p1.z, p2.z));
+}
+\end{lstlisting}
+
+最后，\refvar{Permute}{()}根据提供的索引值排列坐标值。
+\begin{lstlisting}
+`\refcode{Geometry Inline Functions}{+=}\lastnext{GeometryInlineFunctions}`
+template <typename T> `\refvar{Vector3}{}`<T>
+`\initvar{Permute}{}`(const `\refvar{Vector3}{}`<T> &v, int x, int y, int z) {
+    return `\refvar{Vector3}{}`<T>(v[x], v[y], v[z]);
+}
+\end{lstlisting}
+
+\subsection{来自向量的坐标系统}\label{sub:来自向量的坐标系统}
+我们经常需要在给定单个3D向量时构造一个局部坐标系统。
+因为两个向量的叉积与它们正交，
+所以我们可以运用两次叉积为坐标系统得到三个正交向量。
+注意该技术生成的两个向量在不考虑绕给定向量旋转的情况下是唯一的。
+
+该函数的实现假设传入的向量{\ttfamily v1}已经规范化了。
+它首先通过置零原始向量的一个分量、交换剩下两个分量、再令其中一个取相反数来构造一个垂直向量。
+对两种情况的讨论要澄清的是{\ttfamily v2}将被规范化并且点积$(\bm v_1\cdot\bm v_2)$必须等于零。
+给定这两个垂直向量，单次叉积就能得到第三个，根据定义它与前两个垂直。
+\begin{lstlisting}
+`\refcode{Geometry Inline Functions}{+=}\lastnext{GeometryInlineFunctions}`
+template <typename T> inline void
+`\initvar{CoordinateSystem}{}`(const `\refvar{Vector3}{}`<T> &v1, `\refvar{Vector3}{}`<T> *v2, `\refvar{Vector3}{}`<T> *v3) {
+    if (std::abs(v1.x) > std::abs(v1.y))
+        *v2 = `\refvar{Vector3}{}`<T>(-v1.z, 0, v1.x) /
+              std::sqrt(v1.x * v1.x + v1.z * v1.z);
+    else
+        *v2 = `\refvar{Vector3}{}`<T>(0, v1.z, -v1.y) /
+              std::sqrt(v1.y * v1.y + v1.z * v1.z);
+    *v3 = `\refvar{Cross}{}`(v1, *v2);
+}
 \end{lstlisting}

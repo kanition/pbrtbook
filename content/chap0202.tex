@@ -401,7 +401,7 @@ template <typename T> `\refvar{Vector3}{}`<T>
 
 该函数的实现假设传入的向量{\ttfamily v1}已经规范化了。
 它首先通过置零原始向量的一个分量、交换剩下两个分量、再令其中一个取相反数来构造一个垂直向量。
-对两种情况的讨论要澄清的是{\ttfamily v2}将被规范化并且点积$(\bm v_1\cdot\bm v_2)$必须等于零。
+对两种情况的讨论要澄清的是{\ttfamily v2}将被规范化并且点积$(\bm v_1\cdot\bm v_2)$必定为零。
 给定这两个垂直向量，单次叉积就能得到第三个，根据定义它与前两个垂直。
 \begin{lstlisting}
 `\refcode{Geometry Inline Functions}{+=}\lastnext{GeometryInlineFunctions}`
@@ -416,3 +416,7 @@ template <typename T> inline void
     *v3 = `\refvar{Cross}{}`(v1, *v2);
 }
 \end{lstlisting}
+\begin{remark}
+    译者提示：对于非零向量$\bm v_1=(x,y,z)$，当$\bm v_2$分别取
+    $(-z,0,x)$和$(0,z,-y)$时，计算一下$(\bm v_1\cdot\bm v_2)$，你有什么发现？
+\end{remark}

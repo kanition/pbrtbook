@@ -1,0 +1,18 @@
+\section{控制舍入误差}\label{sec:控制舍入误差}
+
+\begin{remark}
+    本节含有高级内容，第一次阅读时可以跳过。
+\end{remark}
+
+\subsection{浮点算术}\label{sub:浮点算术}
+
+\subsubsection*{实用例程}\label{subsub:实用例程}
+
+\begin{lstlisting}
+`\initcode{Global Inline Functions}{=}\initnext{GlobalInlineFunctions}`
+inline uint32_t `\initvar{FloatToBits}{}`(float f) {
+    uint32_t ui;
+    memcpy(&ui, &f, sizeof(float));
+    return ui;
+}
+\end{lstlisting}

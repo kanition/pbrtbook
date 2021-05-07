@@ -4,3 +4,20 @@
 pbrt提供了四个函数报告异常情况。
 按严重程度升高顺序，它们依次
 为{\initvar{Info}{()}}、{\initvar{Warning}{()}}、{\initvar{Error}{()}}和{\initvar{Severe}{()}}。
+
+\begin{lstlisting}
+`\refcode{Global Include Files}{+=}\lastcode{GlobalIncludeFiles}`
+#include "error.h"
+\end{lstlisting}
+
+\begin{lstlisting}
+`\refcode{Global Inline Functions}{+=}\lastnext{GlobalInlineFunctions}`
+#ifdef NDEBUG
+#define `\initvar{Assert}{}`(expr) ((void)0)
+#else
+#define Assert(expr) \
+    ((expr) ? (void)0 : \
+        `\refvar{Severe}{}`("Assertion \"%s\" failed in %s, line %d", \
+               #expr, __FILE__, __LINE__))
+#endif // NDEBUG
+\end{lstlisting}

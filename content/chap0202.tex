@@ -194,10 +194,10 @@ operator*(T s, const `\refvar{Vector3}{}`<T> &v) { return v * s; }
 `\refvar{Vector3}{}`<T> operator-() const { return `\refvar{Vector3}{}`<T>(-x, -y, -z); }
 \end{lstlisting}
 
-最后，\refvar{Abs}{()}返回各分量取绝对值的向量。
+最后，\refvar[Vector3::Abs]{Abs}{()}返回各分量取绝对值的向量。
 \begin{lstlisting}
 `\refcode{Geometry Inline Functions}{+=}\lastnext{GeometryInlineFunctions}`
-template <typename T> `\refvar{Vector3}{}`<T> `\initvar{Abs}{}`(const `\refvar{Vector3}{}`<T> &v) {
+template <typename T> `\refvar{Vector3}{}`<T> `\initvar[Vector3::Abs]{Abs}{}`(const `\refvar{Vector3}{}`<T> &v) {
     return `\refvar{Vector3}{}`<T>(std::abs(v.x), std::abs(v.y), std::abs(v.z));
 }
 \end{lstlisting}
@@ -373,22 +373,22 @@ template <typename T> int
 \begin{lstlisting}
 `\refcode{Geometry Inline Functions}{+=}\lastnext{GeometryInlineFunctions}`
 template <typename T> `\refvar{Vector3}{}`<T>
-`\initvar{Min}{}`(const `\refvar{Vector3}{}`<T> &p1, const `\refvar{Vector3}{}`<T> &p2) {
+`\initvar[Vector3::Min]{Min}{}`(const `\refvar{Vector3}{}`<T> &p1, const `\refvar{Vector3}{}`<T> &p2) {
     return `\refvar{Vector3}{}`<T>(std::min(p1.x, p2.x), std::min(p1.y, p2.y), 
                       std::min(p1.z, p2.z));
 }
 template <typename T> `\refvar{Vector3}{}`<T>
-`\initvar{Max}{}`(const `\refvar{Vector3}{}`<T> &p1, const `\refvar{Vector3}{}`<T> &p2) {
+`\initvar[Vector3::Max]{Max}{}`(const `\refvar{Vector3}{}`<T> &p1, const `\refvar{Vector3}{}`<T> &p2) {
     return `\refvar{Vector3}{}`<T>(std::max(p1.x, p2.x), std::max(p1.y, p2.y), 
                       std::max(p1.z, p2.z));
 }
 \end{lstlisting}
 
-最后，\refvar{Permute}{()}根据提供的索引值排列坐标值。
+最后，\refvar[Vector3::Permute]{Permute}{()}根据提供的索引值排列坐标值。
 \begin{lstlisting}
 `\refcode{Geometry Inline Functions}{+=}\lastnext{GeometryInlineFunctions}`
 template <typename T> `\refvar{Vector3}{}`<T>
-`\initvar{Permute}{}`(const `\refvar{Vector3}{}`<T> &v, int x, int y, int z) {
+`\initvar[Vector3::Permute]{Permute}{}`(const `\refvar{Vector3}{}`<T> &v, int x, int y, int z) {
     return `\refvar{Vector3}{}`<T>(v[x], v[y], v[z]);
 }
 \end{lstlisting}

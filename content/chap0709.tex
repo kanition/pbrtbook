@@ -113,8 +113,8 @@ void `\initvar{AddSample}{}`(const `\refvar{Point2f}{}` &pFilm, const `\refvar{S
 `\refvar{Point2f}{}` pFilmDiscrete = pFilm - `\refvar{Vector2f}{}`(0.5f, 0.5f);
 `\refvar{Point2i}{}` p0 = (`\refvar{Point2i}{}`)`\refvar{Ceil}{}`(pFilmDiscrete - filterRadius);
 `\refvar{Point2i}{}` p1 = (`\refvar{Point2i}{}`)`\refvar{Floor}{}`(pFilmDiscrete + filterRadius) + `\refvar{Point2i}{}`(1, 1);
-p0 = `\refvar{Max}{}`(p0, pixelBounds.pMin);
-p1 = `\refvar{Min}{}`(p1, pixelBounds.pMax);
+p0 = `\refvar[Point3::Max]{Max}{}`(p0, pixelBounds.pMin);
+p1 = `\refvar[Point3::Min]{Min}{}`(p1, pixelBounds.pMax);
 \end{lstlisting}
 
 \begin{lstlisting}

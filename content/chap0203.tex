@@ -119,11 +119,11 @@ template <typename U> explicit operator `\refvar{Vector3}{}`<U>() const {
 两点间的距离可以由它们相减所得向量的长度算得：
 \begin{lstlisting}
 `\refcode{Geometry Inline Functions}{+=}\lastnext{GeometryInlineFunctions}`
-template <typename T> inline Float
+template <typename T> inline `\refvar{Float}{}`
 `\initvar{Distance}{}`(const `\refvar{Point3}{}`<T> &p1, const `\refvar{Point3}{}`<T> &p2) {
     return (p1 - p2).`\refvar{Length}{}`();
 }
-template <typename T> inline Float
+template <typename T> inline `\refvar{Float}{}`
 `\initvar{DistanceSquared}{}`(const `\refvar{Point3}{}`<T> &p1, const `\refvar{Point3}{}`<T> &p2) {
     return (p1 - p2).`\refvar{LengthSquared}{}`();
 }
@@ -144,7 +144,7 @@ template <typename T> inline Float
 \begin{lstlisting}
 `\refcode{Geometry Inline Functions}{+=}\lastnext{GeometryInlineFunctions}`
 template <typename T> `\refvar{Point3}{}`<T>
-`\initvar{Lerp}{}`(Float t, const `\refvar{Point3}{}`<T> &p0, const `\refvar{Point3}{}`<T> &p1) {
+`\initvar{Lerp}{}`(`\refvar{Float}{}` t, const `\refvar{Point3}{}`<T> &p0, const `\refvar{Point3}{}`<T> &p1) {
     return (1 - t) * p0 + t * p1;
 }
 \end{lstlisting}

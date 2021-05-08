@@ -17,8 +17,8 @@ private:
 \begin{lstlisting}
 `\initcode{Film Method Definitions}{=}\initnext{FilmMethodDefinitions}`
 `\refvar{Film}{}`::`\refvar{Film}{}`(const `\refvar{Point2i}{}` &resolution, const `\refvar{Bounds2f}{}` &cropWindow,
-        std::unique_ptr<`\refvar{Filter}{}`> filt, Float `\refvar{diagonal}{}`,
-        const std::string &`\refvar{filename}{}`, Float `\refvar{scale}{}`)
+        std::unique_ptr<`\refvar{Filter}{}`> filt, `\refvar{Float}{}` `\refvar{diagonal}{}`,
+        const std::string &`\refvar{filename}{}`, `\refvar{Float}{}` `\refvar{scale}{}`)
     : `\refvar{fullResolution}{}`(resolution), `\refvar{diagonal}{}`(`\refvar{diagonal}{}` * .001),
     `\refvar{filter}{}`(std::move(filt)), `\refvar{filename}{}`(`\refvar{filename}{}`), `\refvar{scale}{}`(`\refvar{scale}{}`) {
     `\refcode{Compute film image bounds}{}`
@@ -30,7 +30,7 @@ private:
 \begin{lstlisting}
 `\initcode{Film Public Data}{=}\initnext{FilmPublicData}`
 const `\refvar{Point2i}{}` `\initvar{fullResolution}{}`;
-const Float `\initvar{diagonal}{}`;
+const `\refvar{Float}{}` `\initvar{diagonal}{}`;
 std::unique_ptr<`\refvar{Filter}{}`> `\initvar{filter}{}`;
 const std::string `\initvar{filename}{}`;
 \end{lstlisting}
@@ -38,10 +38,10 @@ const std::string `\initvar{filename}{}`;
 \begin{lstlisting}
 `\initcode{Film Private Data}{=}\initnext{FilmPrivateData}`
 struct `\initvar{Pixel}{}` {
-    Float `\initvar[Pixel:xyz]{xyz}{}`[3] = { 0, 0, 0 };
-    Float `\initvar[Pixel:filterWeightSum]{filterWeightSum}{}` = 0;
+    `\refvar{Float}{}` `\initvar[Pixel:xyz]{xyz}{}`[3] = { 0, 0, 0 };
+    `\refvar{Float}{}` `\initvar[Pixel:filterWeightSum]{filterWeightSum}{}` = 0;
     `\refvar{AtomicFloat}{}` `\initvar[Pixel:splatXYZ]{splatXYZ}{}`[3];
-    Float `\initvar[Pixel:pad]{pad}{}`;
+    `\refvar{Float}{}` `\initvar[Pixel:pad]{pad}{}`;
 };
 std::unique_ptr<`\refvar{Pixel}{}`[]> `\initvar[Pixel::pixels]{pixels}{}`;
 \end{lstlisting}
@@ -82,7 +82,7 @@ private:
 \begin{lstlisting}
 `\initcode{FilmTile Public Methods}{=}\initnext{FilmTilePublicMethods}`
 `\refvar{FilmTile}{}`(const `\refvar{Bounds2i}{}` &pixelBounds, const `\refvar{Vector2f}{}` &filterRadius,
-    const Float *filterTable, int filterTableSize)
+    const `\refvar{Float}{}` *filterTable, int filterTableSize)
     : `\refvar{pixelBounds}{}`(pixelBounds), `\refvar{filterRadius}{}`(filterRadius),
     `\refvar{invFilterRadius}{}`(1 / filterRadius.x, 1 / filterRadius.y),
     `\refvar{filterTable}{}`(filterTable), `\refvar{filterTableSize}{}`(filterTableSize) {
@@ -94,7 +94,7 @@ private:
 `\initcode{FilmTile Private Data}{=}`
 const `\refvar{Bounds2i}{}` `\initvar{pixelBounds}{}`;
 const `\refvar{Vector2f}{}` `\initvar{filterRadius}{}`, `\initvar{invFilterRadius}{}`;
-const Float *`\initvar{filterTable}{}`;
+const `\refvar{Float}{}` *`\initvar{filterTable}{}`;
 const int `\initvar{filterTableSize}{}`;
 std::vector<`\refvar{FilmTilePixel}{}`> `\initvar[FilmTile::pixels]{pixels}{}`;
 \end{lstlisting}
@@ -102,7 +102,7 @@ std::vector<`\refvar{FilmTilePixel}{}`> `\initvar[FilmTile::pixels]{pixels}{}`;
 \begin{lstlisting}
 `\refcode{FilmTile Public Methods}{+=}\lastnext{FilmTilePublicMethods}`
 void `\initvar{AddSample}{}`(const `\refvar{Point2f}{}` &pFilm, const `\refvar{Spectrum}{}` &L,
-    Float sampleWeight = 1.) {
+    `\refvar{Float}{}` sampleWeight = 1.) {
     `\refcode{Compute sample's raster bounds}{}`
     `\refcode{Loop over filter support and add sample to pixel arrays}{}`
 }
@@ -136,13 +136,13 @@ std::mutex `\initvar{mutex}{}`;
 \end{lstlisting}
 \begin{lstlisting}
 `\refcode{Film Private Data}{+=}\lastcode{FilmPrivateData}`
-const Float `\initvar{scale}{}`;
+const `\refvar{Float}{}` `\initvar{scale}{}`;
 \end{lstlisting}
 
 \subsection{图像输出}\label{sub:图像输出}
 \begin{lstlisting}
 `\refcode{Film Method Definitions}{+=}\lastcode{FilmMethodDefinitions}`
-void `\refvar{Film}{}`::`\initvar[Film::WriteImage]{WriteImage}{}`(Float splatScale) {
+void `\refvar{Film}{}`::`\initvar[Film::WriteImage]{WriteImage}{}`(`\refvar{Float}{}` splatScale) {
     `\refcode{Convert image to RGB and compute final pixel values}{}`
     `\refcode{Write RGB image}{}`
 }

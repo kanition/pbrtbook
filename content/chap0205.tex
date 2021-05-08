@@ -20,3 +20,83 @@ public:
     `\refcode{Ray Public Data}{}`
 };
 \end{lstlisting}
+
+因为我们在整个代码中经常引用这些变量，
+所以\refvar{Ray}{}的端点和方向成员简洁地命名为{\ttfamily o}和{\ttfamily d}。
+注意我们为了方便再次令数据可以公开访问。
+\begin{lstlisting}
+`\initcode{Ray Public Data}{=}\initnext{RayPublicData}`
+`\refvar{Point3f}{}` `\initvar[Ray::o]{o}{}`;
+`\refvar{Vector3f}{}` `\initvar[Ray::d]{d}{}`;
+\end{lstlisting}
+
+射线的\keyindex{参数形式}{parametric form}{}将其表达为标量值$t$的函数，
+给出射线通过的点集：
+\begin{align}\label{eq:2.3}
+    \bm r(t)=\bm o+t\bm d,\quad 0\le t<\infty\, .
+\end{align}
+
+\refvar{Ray}{}还有一个成员变量沿其无限端把射线限制为线段。
+该域\refvar{tMax}{}允许我们把射线限制到线段点集$[\bm o,\bm r(t_{\max}))$。
+
+注意到该域声明为{\ttfamily mutable}，
+意味着即使含有它的\refvar{Ray}{}是{\ttfamily const}它也可以改变——
+因此当射线被传入一个接收{\ttfamily const Ray \&}的方法时，
+该方法不允许修改其端点或方向但能修改它的范围。
+这个约定符合系统中射线最常见的用法，
+即作为光线-物体交点测试例程的参数，
+用\refvar{tMax}{}记录最近交点的偏移量。
+\begin{lstlisting}
+`\refcode{Ray Public Data}{+=}\lastnext{RayPublicData}`
+mutable `\refvar{Float}{}` `\initvar{tMax}{}`;
+\end{lstlisting}
+
+每条射线有一个关联的时间值。
+在有动画物体的场景中，
+渲染系统为每条射线构造处于合适时间的场景表示。
+\begin{lstlisting}
+`\refcode{Ray Public Data}{+=}\lastnext{RayPublicData}`
+`\refvar{Float}{}` `\initvar[Ray::time]{time}{}`;
+\end{lstlisting}
+
+最后，每条射线记录包含其端点的介质。
+\refsec{介质}介绍的类\refvar{Medium}{}封装了
+介质（可能在空间上变化）的属性，例如起雾大气、烟，
+或者散射液体如牛奶或洗发液。
+将这些信息与射线关联让系统的其他部分能够
+正确考虑光线从一种介质传播到另一种中的影响。
+\begin{lstlisting}
+`\refcode{Ray Public Data}{+=}\lastcode{RayPublicData}`
+const `\refvar{Medium}{}` *`\initvar[Ray::medium]{medium}{}`;
+\end{lstlisting}
+
+构造\refvar{Ray}{}是很简单的。
+默认构造函数依赖\refvar{Point3f}{}和\refvar{Vector3f}{}的
+构造函数把端点和方向设为$(0,0,0)$。
+也可以提供特定点和方向。
+如果提供了端点和方向，
+则构造函数允许为\refvar{tMax}{}、射线的时间和介质给定一个值。
+\begin{lstlisting}
+`\initcode{Ray Public Methods}{=}\initnext{RayPublicMethods}`
+`\refvar{Ray}{}`() : `\refvar{tMax}{}`(`\refvar{Infinity}{}`), `\refvar[Ray::time]{time}{}`(0.f), `\refvar[Ray::medium]{medium}{}`(nullptr) { }
+`\refvar{Ray}{}`(const `\refvar{Point3f}{}` &o, const `\refvar{Vector3f}{}` &d, `\refvar{Float}{}` tMax = `\refvar{Infinity}{}`,
+    `\refvar{Float}{}` time = 0.f, const `\refvar{Medium}{}` *medium = nullptr)
+    : `\refvar[Ray::o]{o}{}`(o), `\refvar[Ray::d]{d}{}`(d), `\refvar{tMax}{}`(tMax), `\refvar[Ray::time]{time}{}`(time), `\refvar[Ray::medium]{medium}{}`(medium) { }
+\end{lstlisting}
+
+因为沿射线的位置可以视作关于单个参数$t$的函数，
+所以类\refvar{Ray}{}为射线重载了应用运算符函数。
+这样，当我们需要寻找射线上特定位置的点时，
+我们可以这样编写代码：
+
+{\ttfamily\indent\indent\refvar{Ray}{} r(\refvar{Point3f}{}(0, 0, 0), \refvar{Vector3f}{}(1, 2, 3));}
+
+{\ttfamily\indent\indent\refvar{Point3f}{} p = r(1.7);}
+
+\begin{lstlisting}
+`\refcode{Ray Public Methods}{+=}\lastcode{RayPublicMethods}`
+`\refvar{Point3f}{}` operator()(`\refvar{Float}{}` t) const { return `\refvar[Ray::o]{o}{}` + `\refvar[Ray::d]{d}{}` * t; }
+\end{lstlisting}
+
+\subsection{射线差分}\label{sub:射线差分}
+为了用第\refchap{纹理}定义的纹理函数获得更好的抗锯齿效果，

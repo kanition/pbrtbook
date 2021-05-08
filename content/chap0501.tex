@@ -21,7 +21,7 @@ protected:
 
 \begin{lstlisting}
 `\initcode{CoefficientSpectrum Public Methods}{=}\initnext{CoefficientSpectrumPublicMethods}`
-`\refvar{CoefficientSpectrum}{}`(Float v = 0.f) {
+`\refvar{CoefficientSpectrum}{}`(`\refvar{Float}{}` v = 0.f) {
     for (int i = 0; i < `\refvar{nSpectrumSamples}{}`; ++i)
         `\refvar[CoefficientSpectrum::c]{c}{}`[i] = v;
 }
@@ -29,7 +29,7 @@ protected:
 
 \begin{lstlisting}
 `\initcode{CoefficientSpectrum Protected Data}{=}`
-Float `\initvar[CoefficientSpectrum::c]{c}{}`[`\refvar{nSpectrumSamples}{}`];
+`\refvar{Float}{}` `\initvar[CoefficientSpectrum::c]{c}{}`[`\refvar{nSpectrumSamples}{}`];
 \end{lstlisting}
 
 \begin{lstlisting}

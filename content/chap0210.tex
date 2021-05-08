@@ -11,7 +11,7 @@ struct `\initvar{Interaction}{}` {
 \begin{lstlisting}
 `\initcode{Interaction Public Data}{=}\initnext{InteractionPublicData}`
 `\refvar{Point3f}{}` `\initvar[Interaction::p]{p}{}`;
-Float `\initvar[Interaction::time]{time}{}`;
+`\refvar{Float}{}` `\initvar[Interaction::time]{time}{}`;
 \end{lstlisting}
 
 \begin{lstlisting}
@@ -53,7 +53,7 @@ const `\refvar{Shape}{}` *`\initvar{shape}{}` = nullptr;
     const `\refvar{Vector3f}{}` &pError, const `\refvar{Point2f}{}` &uv, const `\refvar{Vector3f}{}` &wo,
     const `\refvar{Vector3f}{}` &dpdu, const `\refvar{Vector3f}{}` &dpdv,
     const `\refvar{Normal3f}{}` &dndu, const `\refvar{Normal3f}{}` &dndv,
-    Float time, const `\refvar{Shape}{}` *shape)
+    `\refvar{Float}{}` time, const `\refvar{Shape}{}` *shape)
     : `\refvar{Interaction}{}`(p, `\refvar{Normal3f}{}`(`\refvar{Normalize}{}`(`\refvar{Cross}{}`(dpdu, dpdv))), pError, wo,
     time, nullptr),
     `\refvar[SurfaceInteraction::uv]{uv}{}`(uv), `\refvar[SurfaceInteraction::dpdu]{dpdu}{}`(dpdu), `\refvar[SurfaceInteraction::dpdv]{dpdv}{}`(dpdv), `\refvar[SurfaceInteraction::dndu]{dndu}{}`(dndu), `\refvar[SurfaceInteraction::dndv]{dndv}{}`(dndv),

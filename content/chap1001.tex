@@ -5,7 +5,7 @@
 \begin{lstlisting}
 `\refcode{SurfaceInteraction Public Data}{+=}\lastcode{SurfaceInteractionPublicData}`
 mutable `\refvar{Vector3f}{}` `\initvar[SurfaceInteraction::dpdx]{dpdx}{}`, `\initvar[SurfaceInteraction::dpdy]{dpdy}{}`;
-mutable Float `\initvar[SurfaceInteraction::dudx]{dudx}{}` = 0, `\initvar[SurfaceInteraction::dvdx]{dvdx}{}` = 0, `\initvar[SurfaceInteraction::dudy]{dudy}{}` = 0, `\initvar[SurfaceInteraction::dvdy]{dvdy}{}` = 0;
+mutable `\refvar{Float}{}` `\initvar[SurfaceInteraction::dudx]{dudx}{}` = 0, `\initvar[SurfaceInteraction::dvdx]{dvdx}{}` = 0, `\initvar[SurfaceInteraction::dudy]{dudy}{}` = 0, `\initvar[SurfaceInteraction::dvdy]{dvdy}{}` = 0;
 \end{lstlisting}
 
 \begin{lstlisting}
@@ -22,4 +22,4 @@ const `\refvar{RayDifferential}{}` &ray) const {
 }
 \end{lstlisting}
 
-\subsection{镜面反射和透射的光线差分}\label{sub:镜面反射和透射的光线差分}
+\subsection{镜面反射和透射的射线差分}\label{sub:镜面反射和透射的射线差分}

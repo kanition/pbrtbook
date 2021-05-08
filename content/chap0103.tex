@@ -640,12 +640,12 @@ for (`\refvar{Point2i}{}` pixel : tileBounds) {
 \end{lstlisting}
 
 \refvar{Camera}{}接口提供了两种方法生成光线：\refvar[GenerateRay]{Camera::GenerateRay}{()}返回
-给定图像采样位置的光线，\refvar[GenerateRayDifferential]{Camera::GenerateRayDifferential}{()}返回\keyindex{光线差分}{ray differential}{}，
+给定图像采样位置的光线，\refvar[GenerateRayDifferential]{Camera::GenerateRayDifferential}{()}返回\keyindex{射线差分}{ray differential}{}，
 它合并了\refvar{Camera}{}为那些在$x$和$y$方向都偏离图像平面一像素的样本生成的光线信息。
-光线差分用于第\refchap{纹理}一些纹理函数以获取更好的结果，
+射线差分用于第\refchap{纹理}一些纹理函数以获取更好的结果，
 让计算纹理随像素空间变化有多快成为可能，这是纹理抗锯齿的关键因素。
 
-返回光线差分后，方法\refvar{ScaleDifferentials}{()}对其缩放
+返回射线差分后，方法\refvar{ScaleDifferentials}{()}对其缩放
 以兼顾每个像素取多个样本时胶片平面上样本之间的实际间距。
 
 相机还返回与光线关联的浮点权重。
@@ -950,7 +950,7 @@ pbrt的代码是按该方式组织的，
 `\initcode{Add contribution of each light source}{=}`
 for (const auto &light : scene.`\refvar{lights}{}`) {
     `\refvar{Vector3f}{}` wi;
-    Float pdf;
+    `\refvar{Float}{}` pdf;
     `\refvar{VisibilityTester}{}` visibility;
     `\refvar{Spectrum}{}` Li = light->`\refvar[SampleLi]{Sample\_Li}{}`(isect, sampler.`\refvar{Get2D}{}`(), &wi,
         &pdf, &visibility);
@@ -1008,16 +1008,16 @@ const `\refvar{SurfaceInteraction}{}` &isect, const `\refvar{Scene}{}` &scene,
 \begin{lstlisting}
 `\initcode{Compute specular reflection direction wi and BSDF value}{=}`
 `\refvar{Vector3f}{}` wo = isect.`\refvar[Interaction::wo]{wo}{}`, wi;
-Float pdf;
+`\refvar{Float}{}` pdf;
 `\refvar{BxDFType}{}` type = `\refvar{BxDFType}{}`(`\refvar[BSDFREFLECTION]{BSDF\_REFLECTION}{}` | `\refvar[BSDFSPECULAR]{BSDF\_SPECULAR}{}`);
 `\refvar{Spectrum}{}` f = isect.bsdf->`\refvar[Samplef]{Sample\_f}{}`(wo, &wi, sampler.`\refvar{Get2D}{}`(), &pdf, type);
 \end{lstlisting}
 
-为了用光线差分对反射或折射看到的纹理做抗锯齿，
+为了用射线差分对反射或折射看到的纹理做抗锯齿，
 需要知道反射和透射是如何影响屏幕空间光线的覆盖区的。
-之后的\refsub{镜面反射和透射的光线差分}会定义
-为这些光线计算光线差分的代码片。
-给定完全初始化后的光线差分，递归调用\refvar{Li}{()}得到入射辐亮度，
+之后的\refsub{镜面反射和透射的射线差分}会定义
+为这些光线计算射线差分的代码片。
+给定完全初始化后的射线差分，递归调用\refvar{Li}{()}得到入射辐亮度，
 并依据\refeq{1.1}用BSDF值和余弦项缩放再除以PDF。
 \begin{lstlisting}
 `\initcode{Return contribution of specular reflection}{=}`

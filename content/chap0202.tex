@@ -176,13 +176,13 @@ operator*(T s, const `\refvar{Vector3}{}`<T> &v) { return v * s; }
 `\refcode{Vector3 Public Methods}{+=}\lastnext{Vector3PublicMethods}`
 `\refvar{Vector3}{}`<T> operator/(T f) const {
     `\refvar{Assert}{}`(f != 0);
-    Float inv = (Float)1 / f;
+    `\refvar{Float}{}` inv = (`\refvar{Float}{}`)1 / f;
     return `\refvar{Vector3}{}`<T>(x * inv, y * inv, z * inv);
 }
 
 `\refvar{Vector3}{}`<T> &operator/=(T f) {
     `\refvar{Assert}{}`(f != 0);
-    Float inv = (Float)1 / f;
+    `\refvar{Float}{}` inv = (`\refvar{Float}{}`)1 / f;
     x *= inv; y *= inv; z *= inv;
     return *this;
 }
@@ -329,8 +329,8 @@ template <typename T> inline `\refvar{Vector3}{}`<T>
 为了规范化向量，首先要能计算其长度。
 \begin{lstlisting}
 `\refcode{Vector3 Public Methods}{+=}\lastcode{Vector3PublicMethods}`
-Float `\initvar{LengthSquared}{}`() const { return x * x + y * y + z * z; }
-Float `\initvar{Length}{}`() const { return std::sqrt(`\refvar{LengthSquared}{}`()); }
+`\refvar{Float}{}` `\initvar{LengthSquared}{}`() const { return x * x + y * y + z * z; }
+`\refvar{Float}{}` `\initvar{Length}{}`() const { return std::sqrt(`\refvar{LengthSquared}{}`()); }
 \end{lstlisting}
 
 \refvar{Normalize}{()}规范化一个向量。

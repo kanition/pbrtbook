@@ -1,0 +1,81 @@
+\section{法线}\label{sec:法线}
+
+\keyindex{曲面法线}{surface normal}{}（或简称\keyindex{法线}{normal}{}）
+是在某一位置垂直于曲面的向量。
+它可定义为与曲面上某点相切的任意两个非平行向量的叉积。
+尽管法线看似和向量相似，但两者有重要区别：
+因为法线是根据其与特定曲面的关系定义的，
+它们在某些情形下和向量截然不同，
+尤其是在进行变换的时候。
+\refsec{施加变换}会讨论这些区别。
+\begin{lstlisting}
+`\initcode{Normal Declarations}{=}\initnext{NormalDeclarations}`
+template <typename T> class `\initvar{Normal3}{}` {
+public:
+    `\refcode{Normal3 Public Methods}{}`
+    `\refcode{Normal3 Public Data}{}`
+};
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{Normal Declarations}{+=}\lastcode{NormalDeclarations}`
+typedef `\refvar{Normal3}{}`<Float> `\initvar{Normal3f}{}`;
+\end{lstlisting}
+其中
+\begin{lstlisting}
+`\initcode{Normal3 Public Data}{=}`
+T `\initvar[Normal3::x]{x}{}`, `\initvar[Normal3::y]{y}{}`, `\initvar[Normal3::z]{z}{}`;
+\end{lstlisting}
+
+\refvar{Normal3}{}和\refvar{Vector3}{}的实现非常相似。
+如同向量那样，法线用{\ttfamily x}、{\ttfamily y}和{\ttfamily z}三个分量表示；
+它们可以相加减计算新的法线；它们也可以被缩放和规范化。
+然而，法线不能与点相加，不能取两法线的叉积。
+要注意不幸的是，从术语层面讲，法线\emph{没有}必要是规范化的。
+
+\refvar{Normal3}{}提供了额外的构造函数来从\refvar{Vector3}{}初始化\refvar{Normal3}{}。
+因为\refvar{Normal3}{}
+和\refvar{Vector3}{}有一些微妙不同，
+我们想保证这种转换不会在我们不希望时发生，
+所以这里再次用到C++的关键字{\ttfamily explicit}。
+\refvar{Vector3}{}也提供了其他转换方式的构造函数。
+因此，给定声明\refvar{Vector3f}{\ v;}和\refvar{Normal3f}{\ n;}，
+则赋值{\ttfamily n = v}是非法的，
+所以需要显式地转换向量，即{\ttfamily n = \refvar{Normal3f}{}(v)}。
+\begin{lstlisting}
+`\initcode{Normal3 Public Methods}{=}`
+explicit `\refvar{Normal3}{}`<T>(const `\refvar{Vector3}{}`<T> &v) : x(v.x), y(v.y), z(v.z) {
+    `\refvar{Assert}{}`(!v.HasNaNs());
+}
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{Geometry Inline Functions}{+=}\lastnext{GeometryInlineFunctions}`
+template <typename T> inline
+`\refvar{Vector3}{}`<T>::`\refvar{Vector3}{}`(const `\refvar{Normal3}{}`<T> &n) : x(n.x), y(n.y), z(n.z) {
+    `\refvar{Assert}{}`(!n.HasNaNs());
+}
+\end{lstlisting}
+
+函数\refvar{Dot}{()}和\refvar{AbsDot}{()}也重载为
+计算法线与向量各种可能的组合的点积。
+这里本文不再介绍这些代码。
+我们也不再介绍\refvar{Normal3}{}其他各种方法的实现，
+因为它们和向量的一样。
+
+一个要实现的新方法源自经常需要翻转曲面法线
+使其和给定向量位于同一半球的事实——
+例如常常需要曲面法线和出射光线位于同一半球。实用函数
+\refvar{Faceforward}{()}封装了这步小型计算。
+（pbrt也为\refvar{Vector3}{}和\refvar{Normal3}{}作为参数的
+其他三种组合提供了该函数的变种。）
+但是在使用其他实例时要谨慎：
+例如当使用接收两个\refvar{Vector3}{}的版本时，
+确保第一个参数是要被返回的那个（可能被翻转了）
+而第二个是被测试的那个。
+弄反这两个参数会给出意外结果。
+\begin{lstlisting}
+`\refcode{Geometry Inline Functions}{+=}\lastnext{GeometryInlineFunctions}`
+template <typename T> inline `\refvar{Normal3}{}`<T>
+`\initvar{Faceforward}{}`(const `\refvar{Normal3}{}`<T> &n, const `\refvar{Vector3}{}`<T> &v) {
+    return (`\refvar{Dot}{}`(n, v) < 0.f) ? -n : n;
+}
+\end{lstlisting}

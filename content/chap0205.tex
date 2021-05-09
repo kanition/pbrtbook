@@ -1,6 +1,6 @@
 \section{射线}\label{sec:射线}
 
-\keyindex{射线}{ray}{}是由\keyindex{端点}{origin}{}和方向指定的半无限直线。
+\keyindex{射线}{ray}{}是由\keyindex{端点}{origin}{}和\keyindex{方向}{direction}{}指定的半无限直线。
 pbrt用\refvar{Point3f}{}作为端点、
 \refvar{Vector3f}{}作为方向表示\refvar{Ray}{}。
 我们只需要端点和方向是浮点的射线，
@@ -100,3 +100,72 @@ const `\refvar{Medium}{}` *`\initvar[Ray::medium]{medium}{}`;
 
 \subsection{射线差分}\label{sub:射线差分}
 为了用第\refchap{纹理}定义的纹理函数获得更好的抗锯齿效果，
+pbrt可以跟踪一些射线的额外信息。
+\refsec{采样与抗锯齿}中，该信息会用于计算
+类\refvar{Texture}{}用来估计一小部分场景在图像平面上投影区域的值。
+由此，\refvar{Texture}{}能计算出在那片区域的纹理均值，得到高质量的最终图像。
+
+\refvar{RayDifferential}{}是\refvar{Ray}{}的子类，
+含有两条辅助射线的额外信息。
+这些额外射线表示由胶卷平面上的主光线
+在$x$和$y$方向偏移一个样本距离后的相机光线。
+通过确定三条射线在待着色物体上的投影区域，
+\refvar{Texture}{}可以为合适的抗锯齿估计出要平均的面积。
+
+因为类\refvar{RayDifferential}{}继承自\refvar{Ray}{}，
+系统的几何接口可以写成接收{\ttfamily const Ray \&}参数，
+这样\refvar{Ray}{}或\refvar{RayDifferential}{}都能传入它们。
+只有需要考虑抗锯齿和纹理的例程才需要\refvar{RayDifferential}{}参数。
+\begin{lstlisting}
+`\refcode{Ray Declarations}{+=}\lastcode{RayDeclarations}`
+class `\initvar{RayDifferential}{}` : public `\refvar{Ray}{}` {
+public:
+    `\refcode{RayDifferential Public Methods}{}`
+    `\refcode{RayDifferential Public Data}{}`
+};
+\end{lstlisting}
+
+\refvar{RayDifferential}{}构造函数照搬\refvar{Ray}{}的构造函数。
+\begin{lstlisting}
+`\initcode{RayDifferential Public Methods}{=}\initnext{RayDifferentialPublicMethods}`
+`\refvar{RayDifferential}{}`() { `\refvar{hasDifferentials}{}` = false; }
+`\refvar{RayDifferential}{}`(const `\refvar{Point3f}{}` &o, const `\refvar{Vector3f}{}` &d,
+        `\refvar{Float}{}` tMax = `\refvar{Infinity}{}`, `\refvar{Float}{}` time = 0.f,
+        const `\refvar{Medium}{}` *medium = nullptr)
+    : `\refvar{Ray}{}`(o, d, tMax, time, medium) {
+    `\refvar{hasDifferentials}{}` = false; 
+}
+\end{lstlisting}
+
+\begin{lstlisting}
+`\initcode{RayDifferential Public Data}{=}`
+bool `\initvar{hasDifferentials}{}`;
+`\refvar{Point3f}{}` `\initvar{rxOrigin}{}`, `\initvar{ryOrigin}{}`;
+`\refvar{Vector3f}{}` `\initvar{rxDirection}{}`, `\initvar{ryDirection}{}`;
+\end{lstlisting}
+
+构造函数还能从\refvar{Ray}{}创建\refvar{RayDifferential}{}。
+它把\refvar{hasDifferentials}{}设为{\ttfamily false}，
+因为如果有相邻射线也还是未知的。
+\begin{lstlisting}
+`\refcode{RayDifferential Public Methods}{+=}\lastnext{RayDifferentialPublicMethods}`
+`\refvar{RayDifferential}{}`(const `\refvar{Ray}{}` &ray) : `\refvar{Ray}{}`(ray) {
+    `\refvar{hasDifferentials}{}` = false; 
+}
+\end{lstlisting}
+
+在相机光线间隔一像素的假设下，pbrt中\refvar{Camera}{}的实现为离开相机的射线计算差分。
+\refvar{SamplerIntegrator}{}之类的积分器可为每个像素生成多条相机光线，
+这时样本间的实际距离会更低。
+第\refchap{绪论}中遇到的代码片\refcode{Generate camera ray for current sample}{}
+调用了如下定义的方法\refvar{ScaleDifferentials}{()}来
+按估计的样本间隔{\ttfamily s}更新差分射线。
+\begin{lstlisting}
+`\refcode{RayDifferential Public Methods}{+=}\lastcode{RayDifferentialPublicMethods}`
+void `\initvar{ScaleDifferentials}{}`(`\refvar{Float}{}` s) {
+    `\refvar{rxOrigin}{}` = `\refvar[Ray::o]{o}{}` + (`\refvar{rxOrigin}{}` - `\refvar[Ray::o]{o}{}`) * s;
+    `\refvar{ryOrigin}{}` = `\refvar[Ray::o]{o}{}` + (`\refvar{ryOrigin}{}` - `\refvar[Ray::o]{o}{}`) * s;
+    `\refvar{rxDirection}{}` = `\refvar[Ray::d]{d}{}` + (`\refvar{rxDirection}{}` - `\refvar[Ray::d]{d}{}`) * s;
+    `\refvar{ryDirection}{}` = `\refvar[Ray::d]{d}{}` + (`\refvar{ryDirection}{}` - `\refvar[Ray::d]{d}{}`) * s;
+}
+\end{lstlisting}

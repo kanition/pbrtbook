@@ -1,0 +1,30 @@
+\section{边界框}\label{sec:边界框}
+
+系统的许多部分都在与坐标轴对齐的空间区域上操作。
+例如，pbrt的多线程是通过把图像划分为可以独立处理的矩形图块实现的，
+\refsec{层次包围盒}中的包围盒层次使用3D框来限定场景中的几何图元。
+模板类\refvar{Bounds2}{}和\refvar{Bounds3}{}用于表示这类区域范围。
+两者都由表示其坐标范围类型的{\ttfamily T}来参数化。
+\begin{lstlisting}
+`\initcode{Bounds Declarations}{=}\initnext{BoundsDeclarations}`
+template <typename T> class `\initvar{Bounds2}{}` {
+public:
+    `\refcode{Bounds2 Public Methods}{}`
+    `\refcode{Bounds2 Public Data}{}`
+};
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{Bounds Declarations}{+=}\lastnext{BoundsDeclarations}`
+template <typename T> class `\initvar{Bounds3}{}` {
+public:
+    `\refcode{Bounds3 Public Methods}{}`
+    `\refcode{Bounds3 Public Data}{}`
+};
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{Bounds Declarations}{+=}\lastcode{BoundsDeclarations}`
+typedef `\refvar{Bounds2}{}`<`\refvar{Float}{}`> `\initvar{Bounds2f}{}`;
+typedef `\refvar{Bounds2}{}`<int>   `\initvar{Bounds2i}{}`;
+typedef `\refvar{Bounds3}{}`<`\refvar{Float}{}`> `\initvar{Bounds3f}{}`;
+typedef `\refvar{Bounds3}{}`<int>   `\initvar{Bounds3i}{}`;
+\end{lstlisting}

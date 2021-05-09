@@ -307,7 +307,7 @@ std::vector<std::shared_ptr<`\refvar{Light}{}`>> `\initvar{lights}{}`;
 `\initcode{Scene Private Data}{=}\initnext{ScenePrivateData}`
 std::shared_ptr<`\refvar{Primitive}{}`> `\initvar{aggregate}{}`;
 \end{lstlisting}
-构造函数把场景几何的边框缓存到成员变量{\ttfamily worldBound}中。
+构造函数把场景几何的边界框缓存到成员变量{\ttfamily worldBound}中。
 \begin{lstlisting}
 `\initcode{Scene Constructor Implementation}{=}\initnext{SceneConstructorImplementation}`
 `\refvar{worldBound}{}` = aggregate->`\refvar{WorldBound}{}`();

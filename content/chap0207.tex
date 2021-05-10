@@ -3,7 +3,7 @@
 通常，\keyindex{变换}{transformation}{}$\bm T$是
 从点到点和从向量到向量的映射：
 \begin{align*}
-    \bm p'=\bm T(\bm p), \quad \bm v'=\bm T(\bm v)\, .
+    \bm p'=\bm T(\bm p), \  \bm v'=\bm T(\bm v)\, .
 \end{align*}
 
 变换$\bm T$可以是任意过程。
@@ -20,3 +20,146 @@
           对于每个$\bm p$，$\bm T$把$\bm p$映射为唯一一个$\bm p'$。
           此外，存在一个逆变换$\bm T^{-1}$将$\bm p'$映射回$\bm p$。
 \end{itemize}
+
+我们经常想取某一坐标系下的点、向量或法线并求它在另一坐标系下的坐标值。
+运用线性代数的基本性质，可以证明一个$4\times4$的矩阵
+能表示点或向量从一个坐标系到另一个坐标系的线性变换。
+此外，这样的$4\times4$矩阵足以表达固定坐标系内点和向量的所有线性变换，
+例如空间中平移或绕一点旋转。
+因此，有两种不同（且不兼容！）的方式解释矩阵：
+\begin{itemize}
+    \item \keyindex{坐标系的变换}{transformation of the frame}{}：给定一点，
+          矩阵可表示如何计算同一坐标系下的\emph{新}点来代表对原始点的变换
+          （例如朝某个方向平移）。
+    \item \keyindex{从一个坐标系到另一个的变换}{transformation from one frame to another}{}：
+          矩阵可依据一点或向量在原坐标系的坐标来表示其在新坐标系的坐标。
+\end{itemize}
+
+pbrt中所用的变换大多数是点从一个坐标系到另一个坐标系的变换。
+
+通常，变换使得在最方便的坐标空间内工作成为可能。
+例如，我们编写定义虚拟相机的例程，
+假设相机位于原点，看向$z$轴，且$y$向上，$x$轴向右。
+这些假设极大简化了相机实现。
+然后，为了把相机置于场景中任意一点并看向任意方向，
+我们只需要构造一个变换把场景坐标系统中的点映射到相机坐标系统中
+（关于pbrt中相机坐标空间的更多信息详见\refsub{相机坐标空间}）。
+
+\subsection{齐次坐标}\label{sub:齐次坐标}
+给定由$(\bm p_\mathrm{o},\bm v_1,\bm v_2,\bm v_3)$定义的坐标系，
+具有相同坐标$(x,y,z)$的点$(p_x,p_y,p_z)$和向量$(v_x,v_y,v_z)$在表示上有歧义。
+利用本章开头介绍的点和向量的表示，
+我们可以把点写作内积$[s_1\ s_2\ s_3\ 1][\bm v_1\ \bm v_2\ \bm v_3\ \bm p_\mathrm{o}]^\mathrm{T}$，
+把向量写作内积$[s'_1\ s'_2\ s'_3\ 0][\bm v_1\ \bm v_2\ \bm v_3\ \bm p_\mathrm{o}]^\mathrm{T}$。
+这样有三个$s_i$以及一个零或一的四维向量称作点或向量的\keyindex{齐次}{homogeneous}{}表示。
+齐次表示的第四个坐标有时称作\keyindex{权重}{weight}{}。
+对于一个点，它的值可以是任意非零标量：
+齐次点$[1,3,-2,1]$和$[-2,-6,4,-2]$描述了同一个笛卡尔点$(1,3,-2)$。
+把齐次点转换为普通点需要用前三个分量除以权重
+\sidenote{译者注：这里调整了原文对各种括号的混用。
+    齐次坐标和矩阵等用方括号，一般坐标等用圆括号。}：
+\begin{align*}
+    [x,y,z,w]\rightarrow\left(\frac{x}{w},\frac{y}{w},\frac{z}{w}\right)\, .
+\end{align*}
+
+我们将利用这些事实来看看变换矩阵为什么可以描述
+如何将一个坐标系下的点和向量映射到另一个坐标系。
+考虑矩阵$\bm M$描述从一个坐标系到另一个坐标系的变换：
+\begin{align*}
+    M=\left[
+        \begin{array}{cccc}
+            m_{0,0} & m_{0,1} & m_{0,2} & m_{0,3} \\
+            m_{1,0} & m_{1,1} & m_{1,2} & m_{1,3} \\
+            m_{2,0} & m_{2,1} & m_{2,2} & m_{2,3} \\
+            m_{3,0} & m_{3,1} & m_{3,2} & m_{3,3}
+        \end{array}
+        \right]\, .
+\end{align*}
+
+（本书中，我们定义矩阵元素时索引从零开始，这样公式和源码更能直接对应。）
+若$\bm M$表示的变换被应用到$x$轴向量$(1,0,0)$上，我们有
+\begin{align*}
+    \bm M\bm x=\bm M[1\ 0\ 0\ 0]^\mathrm{T}=[m_{0,0}\ m_{1,0}\ m_{2,0}\ m_{3,0}]^\mathrm{T}\, .
+\end{align*}
+
+因此，直接阅读矩阵的列就能知道当前坐标系统的基向量和原点是怎样被矩阵变换的：
+\begin{align*}
+    \bm M\bm y & =[m_{0,1}\ m_{1,1}\ m_{2,1}\ m_{3,1}]^\mathrm{T}\, , \\
+    \bm M\bm z & =[m_{0,2}\ m_{1,2}\ m_{2,2}\ m_{3,2}]^\mathrm{T}\, , \\
+    \bm M\bm p & =[m_{0,3}\ m_{1,3}\ m_{2,3}\ m_{3,3}]^\mathrm{T}\, .
+\end{align*}
+
+一般通过表征基是如何变换的，
+我们就能知道该基表示的任意指定点或向量是如何被变换的。
+因为当前坐标系统的点和向量由当前坐标系表示，
+直接对它们施加变换等价于对当前坐标系统的基施加变换并
+用变换后的基求出坐标。
+
+我们并不在代码中显式地使用齐次坐标；
+pbrt中没有类{\ttfamily Homogeneous}。
+然而，下节各种变换例程都隐式地将点、向量和法线转换为齐次形式，
+变换齐次点，再转换回来返回结果。
+这样就在一个地方（即变换的实现）隔离了齐次坐标的细节。
+\begin{lstlisting}
+`\initcode{Transform Declarations}{=}`
+class `\initvar{Transform}{}` {
+public:
+    `\refcode{Transform Public Methods}{}`
+private:
+    `\refcode{Transform Private Data}{}`
+};
+\end{lstlisting}
+
+变换由矩阵\refvar[Transform::m]{m}{}，即一个\refvar{Matrix4x4}{}对象的元素表示。
+底层类\refvar{Matrix4x4}{}定义在\refsub{4x4矩阵}。
+矩阵\refvar[Transform::m]{m}{}按\keyindex{行优先}{row-major}{}形式存储，
+所以元素{\ttfamily m[i][j]}对应$m_{i,j}$，
+其中$i$是行数，$j$是列数。
+为了方便，\refvar{Transform}{}还存储了
+矩阵\refvar[Transform::m]{m}{}的逆
+\refvar{Transform::mInv}{}成员；
+因为pbrt的需要，易获取的逆比按需重复计算更好。
+
+变换的这种表示相对更耗内存：
+假设存储一个\refvar{Float}{}值需要4字节，一个
+\refvar{Transform}{}就需要128字节存储。
+幼稚地使用该方法会造成浪费；
+如果一个场景有几百万个形状但仅有几千个不同的变换，
+就更没理由在内存中冗余地多次保存同一个变换。
+因此pbrt中的\refvar{Shape}{}保存的是\refvar{Transform}{}的指针，
+\refsub{形状}定义的场景指定代码使用\refvar{TransformCache}{}来保证
+所有共享同一变换的形状指向内存中该变换的单一实例。
+
+这个共享变换的决定意味着丧失了灵活性，然而：
+如果\refvar{Transform}{}被场景中的多个物体（以及不希望它改变的对象）共享，
+则\refvar{Transform}{}的元素在创建后不能被修改。
+现实中这点限制不是问题，
+因为场景中的变换通常是在pbrt解析场景描述文件时创建的，
+之后在渲染时不需要改变。
+\begin{lstlisting}
+`\initcode{Transform Private Data}{=}`
+`\refvar{Matrix4x4}{}` `\initvar[Transform::m]{m}{}`, `\initvar[Transform::mInv]{mInv}{}`;
+\end{lstlisting}
+
+\subsection{基本运算}\label{sub:基本运算}
+当创建新的\refvar{Transform}{}时，
+它默认为\keyindex{恒等变换}{identity transformation}{transformation变换}——
+将每个点和向量映射为它自己的变换。
+该变换由\keyindex{单位矩阵}{identity matrix}{}表示：
+\begin{align*}
+    \bm I=\left[
+        \begin{array}{cccc}
+            1 & 0 & 0 & 0 \\
+            0 & 1 & 0 & 0 \\
+            0 & 0 & 1 & 0 \\
+            0 & 0 & 0 & 1
+        \end{array}
+        \right]\, .
+\end{align*}
+
+这里的实现依赖\refvar{Matrix4x4}{}默认构造函数
+把\refvar[Transform::m]{m}{}和\refvar[Transform::mInv]{mInv}{}填充为单位矩阵。
+\begin{lstlisting}
+`\initcode{Transform Public Methods}{=}\initnext{TransformPublicMethods}`
+`\refvar{Transform}{}`() { }
+\end{lstlisting}

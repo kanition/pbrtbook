@@ -136,15 +136,15 @@ template <typename T> inline `\refvar{Float}{}`
 所以这里不再赘述。
 
 值得一提的是，两点间的线性\keyindex{插值}{interpolate}{}很有用。
-\refvar{Lerp}{()}在{\ttfamily t==0}时返回{\ttfamily p0}，
+\refvar[Point3::Lerp]{Lerp}{()}在{\ttfamily t==0}时返回{\ttfamily p0}，
 {\ttfamily t==1}时返回{\ttfamily p1}，
 {\ttfamily t}取其余值时则在两点间插值。
 对于{\ttfamily t<0}或{\ttfamily t>1}，
-\refvar{Lerp}{()}进行\keyindex{外推}{extrapolate}{}。
+\refvar[Point3::Lerp]{Lerp}{()}进行\keyindex{外推}{extrapolate}{}。
 \begin{lstlisting}
 `\refcode{Geometry Inline Functions}{+=}\lastnext{GeometryInlineFunctions}`
 template <typename T> `\refvar{Point3}{}`<T>
-`\initvar{Lerp}{}`(`\refvar{Float}{}` t, const `\refvar{Point3}{}`<T> &p0, const `\refvar{Point3}{}`<T> &p1) {
+`\initvar[Point3::Lerp]{Lerp}{}`(`\refvar{Float}{}` t, const `\refvar{Point3}{}`<T> &p0, const `\refvar{Point3}{}`<T> &p1) {
     return (1 - t) * p0 + t * p1;
 }
 \end{lstlisting}

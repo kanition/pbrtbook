@@ -170,3 +170,123 @@ bool `\initvar{Overlaps}{}`(const `\refvar{Bounds3}{}`<T> &b1, const `\refvar{Bo
     return (x && y && z);
 }
 \end{lstlisting}
+
+三个1D包含测试确认给定点是否在边界框内：
+\begin{lstlisting}
+`\refcode{Geometry Inline Functions}{+=}\lastnext{GeometryInlineFunctions}`
+template <typename T>
+bool `\initvar{Inside}{}`(const `\refvar{Point3}{}`<T> &p, const `\refvar{Bounds3}{}`<T> &b) {
+    return (p.x >= b.pMin.x && p.x <= b.pMax.x &&
+            p.y >= b.pMin.y && p.y <= b.pMax.y &&
+            p.z >= b.pMin.z && p.z <= b.pMax.z);
+}
+\end{lstlisting}
+
+\refvar{Inside}{()}的变体\refvar{InsideExclusive}{()}不认为上界上的点在边界内。
+它对整数型边界最有用。
+\begin{lstlisting}
+`\refcode{Geometry Inline Functions}{+=}\lastnext{GeometryInlineFunctions}`
+template <typename T>
+bool `\initvar{InsideExclusive}{}`(const `\refvar{Point3}{}`<T> &p, const `\refvar{Bounds3}{}`<T> &b) {
+    return (p.x >= b.pMin.x && p.x < b.pMax.x &&
+            p.y >= b.pMin.y && p.y < b.pMax.y &&
+            p.z >= b.pMin.z && p.z < b.pMax.z);
+}
+\end{lstlisting}
+
+函数\refvar{Expand}{()}用常数因子在所有维度上填补边界框。
+\begin{lstlisting}
+`\refcode{Geometry Inline Functions}{+=}\lastnext{GeometryInlineFunctions}`
+template <typename T, typename U> inline `\refvar{Bounds3}{}`<T>
+`\initvar{Expand}{}`(const `\refvar{Bounds3}{}`<T> &b, U delta) {
+    return `\refvar{Bounds3}{}`<T>(b.pMin - `\refvar{Vector3}{}`<T>(delta, delta, delta),
+                      b.pMax + `\refvar{Vector3}{}`<T>(delta, delta, delta));
+}
+\end{lstlisting}
+
+\refvar{Diagonal}{()}返回沿框的对角线从最小点指向最大点的向量。
+\begin{lstlisting}
+`\refcode{Bounds3 Public Methods}{+=}\lastnext{Bounds3PublicMethods}`
+`\refvar{Vector3}{}`<T> `\initvar{Diagonal}{}`() const { return `\refvar{pMax}{}` - `\refvar{pMin}{}`; }
+\end{lstlisting}
+
+计算框的六个面表面积以及内含体积的方法也很常用。
+\begin{lstlisting}
+`\refcode{Bounds3 Public Methods}{+=}\lastnext{Bounds3PublicMethods}`
+T `\initvar{SurfaceArea}{}`() const {
+    `\refvar{Vector3}{}`<T> d = `\refvar{Diagonal}{}`();
+    return 2 * (d.x * d.y + d.x * d.z + d.y * d.z);
+}
+\end{lstlisting}
+
+\begin{lstlisting}
+`\refcode{Bounds3 Public Methods}{+=}\lastnext{Bounds3PublicMethods}`
+T `\initvar{Volume}{}`() const {
+    `\refvar{Vector3}{}`<T> d = `\refvar{Diagonal}{}`();
+    return d.x * d.y * d.z;
+}
+\end{lstlisting}
+
+方法\refvar[MaximumExtent]{Bounds3::MaximumExtent}{()}返回
+三轴中最长者的索引。
+例如在构建一些光线-交点加速结构需要决定要细分哪个轴时这很有用。
+\begin{lstlisting}
+`\refcode{Bounds3 Public Methods}{+=}\lastnext{Bounds3PublicMethods}`
+int `\initvar{MaximumExtent}{}`() const {
+    `\refvar{Vector3}{}`<T> d = `\refvar{Diagonal}{}`();
+    if (d.x > d.y && d.x > d.z)
+        return 0;
+    else if (d.y > d.z)
+        return 1;
+    else
+        return 2;
+}
+\end{lstlisting}
+
+方法\refvar[Bounds3::Lerp]{Lerp}{()}用每个维度的给定量在框的两个顶点之间线性插值。
+\begin{lstlisting}
+`\refcode{Bounds3 Public Methods}{+=}\lastnext{Bounds3PublicMethods}`
+`\refvar{Point3}{}`<T> `\initvar[Bounds3::Lerp]{Lerp}{}`(const `\refvar{Point3}{}` &t) const {
+    return `\refvar{Point3}{}`<T>(::`\refvar{Lerp}{}`(t.x, pMin.x, pMax.x),
+                     ::`\refvar{Lerp}{}`(t.y, pMin.y, pMax.y),
+                     ::`\refvar{Lerp}{}`(t.z, pMin.z, pMax.z));
+}
+\end{lstlisting}
+
+\refvar{Offset}{()}返回一点相对于框顶点的连续位置，
+最小顶点处的偏移量为$(0,0,0)$，最大顶点处的偏移量为$(1,1,1)$，以此类推。
+\begin{lstlisting}
+`\refcode{Bounds3 Public Methods}{+=}\lastnext{Bounds3PublicMethods}`
+`\refvar{Vector3}{}`<T> `\initvar{Offset}{}`(const `\refvar{Point3}{}`<T> &p) const {
+    `\refvar{Vector3}{}`<T> o = p - pMin;
+    if (pMax.x > pMin.x) o.x /= pMax.x - pMin.x;
+    if (pMax.y > pMin.y) o.y /= pMax.y - pMin.y;
+    if (pMax.z > pMin.z) o.z /= pMax.z - pMin.z;
+    return o;
+}
+\end{lstlisting}
+
+\refvar{Bounds3}{}也提供方法返回包围边界框的球体的球心和半径。
+尽管它也很有用，但一般这样给出的范围会比直接包围\refvar{Bounds3}{}所含内容的球体松弛得多。
+\begin{lstlisting}
+`\refcode{Bounds3 Public Methods}{+=}\lastcode{Bounds3PublicMethods}`
+void `\initvar{BoundingSphere}{}`(`\refvar{Point3}{}`<T> *center, `\refvar{Float}{}` *radius) const {
+    *center = (`\refvar{pMin}{}` + `\refvar{pMax}{}`) / 2;
+    *radius = `\refvar{Inside}{}`(*center, *this) ? `\refvar{Distance}{}`(*center, `\refvar{pMax}{}`) : 0;
+}
+\end{lstlisting}
+
+最后，对于整数框，有一个迭代器类\sidenote{译者注：详见类{\ttfamily Bounds2iIterator}。}
+满足C++前向迭代器\sidenote{译者注：原文forward iterator，是一种C++迭代器。}
+（即它只能增长）的要求。
+其细节比较乏味无趣，所以本书不介绍它的代码。
+有了它的定义就可以用范围{\ttfamily for}循环编写代码
+遍历边界框内的整数坐标了：
+
+{\ttfamily\indent \refvar{Bounds2i}{} b = ...;}\newline
+{\ttfamily\indent for (\refvar{Point2i}{} p : b) \{}\newline
+{\ttfamily\indent \qquad//  …}\newline
+{\ttfamily\indent \}}
+
+这样实现后，每个维度的迭代会增长到最大范围但不取等于最大值的点
+\sidenote{译者注：类似于左闭右开区间。}。

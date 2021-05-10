@@ -337,8 +337,8 @@ for (const auto &light : `\refvar{lights}{}`)
 结构体\refvar{SurfaceInteraction}{}将在\refsec{图元接口与几何图元}定义。
 \begin{lstlisting}
 `\initcode{Scene Method Definitions}{=}\initnext{SceneMethodDefinitions}`
-bool `\refvar{Scene}{}`::`\refvar[Intersect]{\initvar[Scene::Intersect]{Intersect}{}}{}`(const `\refvar{Ray}{}` &ray, `\refvar{SurfaceInteraction}{}` *isect) const {
-    return `\refvar{aggregate}{}`->`\refvar{Intersect}{}`(ray, isect);
+bool `\refvar{Scene}{}`::`\refvar[Primitive::Intersect]{\initvar[Scene::Intersect]{Intersect}{}}{}`(const `\refvar{Ray}{}` &ray, `\refvar{SurfaceInteraction}{}` *isect) const {
+    return `\refvar{aggregate}{}`->`\refvar[Primitive::Intersect]{Intersect}{}`(ray, isect);
 }
 \end{lstlisting}
 一个紧密相关的方法是\refvar{Scene::IntersectP}{()}，

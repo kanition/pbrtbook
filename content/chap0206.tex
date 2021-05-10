@@ -1,0 +1,292 @@
+\section{边界框}\label{sec:边界框}
+
+系统的许多部分都在与坐标轴对齐的空间区域上操作。
+例如，pbrt的多线程是通过把图像划分为可以独立处理的矩形图块实现的，
+\refsec{层次包围盒}中的包围盒层次使用3D框来限定场景中的几何图元。
+模板类\refvar{Bounds2}{}和\refvar{Bounds3}{}用于表示这类区域范围。
+两者都由表示其坐标范围类型的{\ttfamily T}来参数化。
+\begin{lstlisting}
+`\initcode{Bounds Declarations}{=}\initnext{BoundsDeclarations}`
+template <typename T> class `\initvar{Bounds2}{}` {
+public:
+    `\refcode{Bounds2 Public Methods}{}`
+    `\refcode{Bounds2 Public Data}{}`
+};
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{Bounds Declarations}{+=}\lastnext{BoundsDeclarations}`
+template <typename T> class `\initvar{Bounds3}{}` {
+public:
+    `\refcode{Bounds3 Public Methods}{}`
+    `\refcode{Bounds3 Public Data}{}`
+};
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{Bounds Declarations}{+=}\lastcode{BoundsDeclarations}`
+typedef `\refvar{Bounds2}{}`<`\refvar{Float}{}`> `\initvar{Bounds2f}{}`;
+typedef `\refvar{Bounds2}{}`<int>   `\initvar{Bounds2i}{}`;
+typedef `\refvar{Bounds3}{}`<`\refvar{Float}{}`> `\initvar{Bounds3f}{}`;
+typedef `\refvar{Bounds3}{}`<int>   `\initvar{Bounds3i}{}`;
+\end{lstlisting}
+
+这类\keyindex{边界框}{bounding box}{}有若干种可能的表示；
+pbrt使用\keyindex{轴对齐的边界框}{axis-aligned bounding box}{bounding box边界框}(AABB)，
+框边相互垂直且与坐标系统的轴对齐。
+另一种可能的选择是\keyindex{定向边界框}{oriented bounding box}{bounding box边界框}(OBB)，
+不同侧的框边依然互相垂直但不一定对齐坐标系统。
+3D的AABB可以用其一个顶点和三个长度表示，
+每一个表示沿$x,y$和$z$坐标轴张开的距离。
+也可以用框的两个对角顶点描述它。
+我们为pbrt的类\refvar{Bounds2}{}和\refvar{Bounds3}{}选择了两点表示法；
+它们存储了具有最小坐标值和最大坐标值的两个顶点的位置。
+边界框的2D图示及其表示如\reffig{2.8}所示。
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap02/AABB.tex}
+    \caption{轴对齐的边界框。
+        类\protect\refvar{Bounds2}{}和\protect\refvar{Bounds3}{}只
+        存储该框坐标最小和最大的点；框的其他顶点隐含在该表示中。}
+    \label{fig:2.8}
+\end{figure}
+
+默认构造函数通过把范围设置为不可用的配置来创建一个空框，
+违反了{\ttfamily pMin.x <= pMax.x}的性质（其他维度也这样）。
+通过初始化具有最大和最小表示数字的两个顶点，
+任何涉及空框的操作（例如\refvar[Union1]{Union}{()}）都会产生正确结果。
+\begin{lstlisting}
+`\initcode{Bounds3 Public Methods}{=}\initnext{Bounds3PublicMethods}`
+`\refvar{Bounds3}{}`() {
+    T minNum = std::numeric_limits<T>::lowest();
+    T maxNum = std::numeric_limits<T>::max();
+    `\refvar{pMin}{}` = `\refvar{Point3}{}`<T>(maxNum, maxNum, maxNum);
+    `\refvar{pMax}{}` = `\refvar{Point3}{}`<T>(minNum, minNum, minNum);
+}
+\end{lstlisting}
+
+\begin{lstlisting}
+`\initcode{Bounds3 Public Data}{=}`
+`\refvar{Point3}{}`<T> `\initvar{pMin}{}`, `\initvar{pMax}{}`;
+\end{lstlisting}
+
+初始化\refvar{Bounds3}{}来包围单个点也很有用：
+\begin{lstlisting}
+`\refcode{Bounds3 Public Methods}{+=}\lastnext{Bounds3PublicMethods}`
+`\refvar{Bounds3}{}`(const `\refvar{Point3}{}`<T> &p) : `\refvar{pMin}{}`(p), `\refvar{pMax}{}`(p) { }
+\end{lstlisting}
+
+如果调用者传入两个顶点（{\ttfamily p1}和{\ttfamily p2}）来定义框，
+构造函数需要寻找它们逐元素最小和最大值，
+因为所选{\ttfamily p1}和{\ttfamily p2}不需要满足{\ttfamily p1.x <= p2.x}等。
+\begin{lstlisting}
+`\refcode{Bounds3 Public Methods}{+=}\lastnext{Bounds3PublicMethods}`
+`\refvar{Bounds3}{}`(const `\refvar{Point3}{}`<T> &p1, const `\refvar{Point3}{}`<T> &p2)
+    : `\refvar{pMin}{}`(std::min(p1.x, p2.x), std::min(p1.y, p2.y),
+           std::min(p1.z, p2.z)),
+      `\refvar{pMax}{}`(std::max(p1.x, p2.x), std::max(p1.y, p2.y),
+           std::max(p1.z, p2.z)) {
+}
+\end{lstlisting}
+
+有时，在框的两个顶点之间使用数组索引来进行选择也很有用。
+这些方法的实现基于{\ttfamily i}的值在\refvar{pMin}{}和\refvar{pMax}{}之间做选择。
+\begin{lstlisting}
+`\refcode{Bounds3 Public Methods}{+=}\lastnext{Bounds3PublicMethods}`
+const `\refvar{Point3}{}`<T> &operator[](int i) const;
+`\refvar{Point3}{}`<T> &operator[](int i);
+\end{lstlisting}
+
+方法\refvar{Corner}{()}返回边界框8个顶点之一的坐标。
+\begin{lstlisting}
+`\refcode{Bounds3 Public Methods}{+=}\lastnext{Bounds3PublicMethods}`
+`\refvar{Point3}{}`<T> `\initvar{Corner}{}`(int corner) const {
+    return `\refvar{Point3}{}`<T>((*this)[(corner & 1)].x,
+                     (*this)[(corner & 2) ? 1 : 0].y,
+                     (*this)[(corner & 4) ? 1 : 0].z);
+}
+\end{lstlisting}
+
+给定一个边界框和一点，函数\refvar[Union1]{Union}{()}返回包含该点和原始框的新边界框。
+\begin{lstlisting}
+`\refcode{Geometry Inline Functions}{+=}\lastnext{GeometryInlineFunctions}`
+template <typename T> `\refvar{Bounds3}{}` <T>
+`\initvar[Union1]{Union}{}`(const `\refvar{Bounds3}{}`<T> &b, const `\refvar{Point3}{}`<T> &p) {
+    return `\refvar{Bounds3}{}`<T>(`\refvar{Point3}{}`<T>(std::min(b.pMin.x, p.x),
+                                std::min(b.pMin.y, p.y),
+                                std::min(b.pMin.z, p.z)),
+                      `\refvar{Point3}{}`<T>(std::max(b.pMax.x, p.x),
+                                std::max(b.pMax.y, p.y),
+                                std::max(b.pMax.z, p.z)));
+}
+\end{lstlisting}
+
+同样也可以构造一个新框包围另两个边界框所围的空间。
+该函数的定义与上述接收\refvar{Point3}{}的方法\refvar[Union1]{Union}{()}类似；
+不同点是{\ttfamily std::min()}和{\ttfamily std::max()}测试
+分别用的是第二个框的\refvar{pMin}{}和\refvar{pMax}{}。
+\begin{lstlisting}
+`\refcode{Geometry Inline Functions}{+=}\lastnext{GeometryInlineFunctions}`
+template <typename T> `\refvar{Bounds3}{}`<T>
+`\initvar[Union2]{Union}{}`(const `\refvar{Bounds3}{}`<T> &b1, const `\refvar{Bounds3}{}`<T> &b2) {
+    return `\refvar{Bounds3}{}`<T>(`\refvar{Point3}{}`<T>(std::min(b1.pMin.x, b2.pMin.x),
+                                std::min(b1.pMin.y, b2.pMin.y),
+                                std::min(b1.pMin.z, b2.pMin.z)),
+                      `\refvar{Point3}{}`<T>(std::max(b1.pMax.x, b2.pMax.x),
+                                std::max(b1.pMax.y, b2.pMax.y),
+                                std::max(b1.pMax.z, b2.pMax.z)));
+}
+\end{lstlisting}
+
+两个边界框的交集可以通过计算它们最小坐标的最大值和最大坐标的最小值得到（见\reffig{2.9}）。
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap02/Bboxoverlap.tex}
+    \caption{两个边界框的交集。给定两个边界框，
+        用空心圆表示\protect\refvar{pMin}{}和\protect\refvar{pMax}{}，
+        它们相交区域（涂色区域）边界框的最小点（左下角实心圆）的坐标由
+        两个边界框每个维度最小点坐标的最大值给定。
+        同样，其最大点（右上角实心圆）由框的最大坐标的最小值给定。}
+    \label{fig:2.9}
+\end{figure}
+
+\begin{lstlisting}
+`\refcode{Geometry Inline Functions}{+=}\lastnext{GeometryInlineFunctions}`
+template <typename T> `\refvar{Bounds3}{}`<T>
+`\initvar[Bounds3::Intersect]{Intersect}{}`(const `\refvar{Bounds3}{}`<T> &b1, const `\refvar{Bounds3}{}`<T> &b2) {
+    return `\refvar{Bounds3}{}`<T>(`\refvar{Point3}{}`<T>(std::max(b1.pMin.x, b2.pMin.x),
+                                std::max(b1.pMin.y, b2.pMin.y),
+                                std::max(b1.pMin.z, b2.pMin.z)),
+                      `\refvar{Point3}{}`<T>(std::min(b1.pMax.x, b2.pMax.x),
+                                std::min(b1.pMax.y, b2.pMax.y),
+                                std::min(b1.pMax.z, b2.pMax.z)));
+}
+\end{lstlisting}
+
+我们可以通过检查两个边界框在$x,y$和$z$上的范围是否全都重合来判断它们是否重合：
+\begin{lstlisting}
+`\refcode{Geometry Inline Functions}{+=}\lastnext{GeometryInlineFunctions}`
+template <typename T>
+bool `\initvar{Overlaps}{}`(const `\refvar{Bounds3}{}`<T> &b1, const `\refvar{Bounds3}{}`<T> &b2) {
+    bool x = (b1.pMax.x >= b2.pMin.x) && (b1.pMin.x <= b2.pMax.x);
+    bool y = (b1.pMax.y >= b2.pMin.y) && (b1.pMin.y <= b2.pMax.y);
+    bool z = (b1.pMax.z >= b2.pMin.z) && (b1.pMin.z <= b2.pMax.z);
+    return (x && y && z);
+}
+\end{lstlisting}
+
+三个1D包含测试确认给定点是否在边界框内：
+\begin{lstlisting}
+`\refcode{Geometry Inline Functions}{+=}\lastnext{GeometryInlineFunctions}`
+template <typename T>
+bool `\initvar{Inside}{}`(const `\refvar{Point3}{}`<T> &p, const `\refvar{Bounds3}{}`<T> &b) {
+    return (p.x >= b.pMin.x && p.x <= b.pMax.x &&
+            p.y >= b.pMin.y && p.y <= b.pMax.y &&
+            p.z >= b.pMin.z && p.z <= b.pMax.z);
+}
+\end{lstlisting}
+
+\refvar{Inside}{()}的变体\refvar{InsideExclusive}{()}不认为上界上的点在边界内。
+它对整数型边界最有用。
+\begin{lstlisting}
+`\refcode{Geometry Inline Functions}{+=}\lastnext{GeometryInlineFunctions}`
+template <typename T>
+bool `\initvar{InsideExclusive}{}`(const `\refvar{Point3}{}`<T> &p, const `\refvar{Bounds3}{}`<T> &b) {
+    return (p.x >= b.pMin.x && p.x < b.pMax.x &&
+            p.y >= b.pMin.y && p.y < b.pMax.y &&
+            p.z >= b.pMin.z && p.z < b.pMax.z);
+}
+\end{lstlisting}
+
+函数\refvar{Expand}{()}用常数因子在所有维度上填补边界框。
+\begin{lstlisting}
+`\refcode{Geometry Inline Functions}{+=}\lastnext{GeometryInlineFunctions}`
+template <typename T, typename U> inline `\refvar{Bounds3}{}`<T>
+`\initvar{Expand}{}`(const `\refvar{Bounds3}{}`<T> &b, U delta) {
+    return `\refvar{Bounds3}{}`<T>(b.pMin - `\refvar{Vector3}{}`<T>(delta, delta, delta),
+                      b.pMax + `\refvar{Vector3}{}`<T>(delta, delta, delta));
+}
+\end{lstlisting}
+
+\refvar{Diagonal}{()}返回沿框的对角线从最小点指向最大点的向量。
+\begin{lstlisting}
+`\refcode{Bounds3 Public Methods}{+=}\lastnext{Bounds3PublicMethods}`
+`\refvar{Vector3}{}`<T> `\initvar{Diagonal}{}`() const { return `\refvar{pMax}{}` - `\refvar{pMin}{}`; }
+\end{lstlisting}
+
+计算框的六个面表面积以及内含体积的方法也很常用。
+\begin{lstlisting}
+`\refcode{Bounds3 Public Methods}{+=}\lastnext{Bounds3PublicMethods}`
+T `\initvar{SurfaceArea}{}`() const {
+    `\refvar{Vector3}{}`<T> d = `\refvar{Diagonal}{}`();
+    return 2 * (d.x * d.y + d.x * d.z + d.y * d.z);
+}
+\end{lstlisting}
+
+\begin{lstlisting}
+`\refcode{Bounds3 Public Methods}{+=}\lastnext{Bounds3PublicMethods}`
+T `\initvar{Volume}{}`() const {
+    `\refvar{Vector3}{}`<T> d = `\refvar{Diagonal}{}`();
+    return d.x * d.y * d.z;
+}
+\end{lstlisting}
+
+方法\refvar[MaximumExtent]{Bounds3::MaximumExtent}{()}返回
+三轴中最长者的索引。
+例如在构建一些光线-交点加速结构需要决定要细分哪个轴时这很有用。
+\begin{lstlisting}
+`\refcode{Bounds3 Public Methods}{+=}\lastnext{Bounds3PublicMethods}`
+int `\initvar{MaximumExtent}{}`() const {
+    `\refvar{Vector3}{}`<T> d = `\refvar{Diagonal}{}`();
+    if (d.x > d.y && d.x > d.z)
+        return 0;
+    else if (d.y > d.z)
+        return 1;
+    else
+        return 2;
+}
+\end{lstlisting}
+
+方法\refvar[Bounds3::Lerp]{Lerp}{()}用每个维度的给定量在框的两个顶点之间线性插值。
+\begin{lstlisting}
+`\refcode{Bounds3 Public Methods}{+=}\lastnext{Bounds3PublicMethods}`
+`\refvar{Point3}{}`<T> `\initvar[Bounds3::Lerp]{Lerp}{}`(const `\refvar{Point3}{}` &t) const {
+    return `\refvar{Point3}{}`<T>(::`\refvar{Lerp}{}`(t.x, pMin.x, pMax.x),
+                     ::`\refvar{Lerp}{}`(t.y, pMin.y, pMax.y),
+                     ::`\refvar{Lerp}{}`(t.z, pMin.z, pMax.z));
+}
+\end{lstlisting}
+
+\refvar{Offset}{()}返回一点相对于框顶点的连续位置，
+最小顶点处的偏移量为$(0,0,0)$，最大顶点处的偏移量为$(1,1,1)$，以此类推。
+\begin{lstlisting}
+`\refcode{Bounds3 Public Methods}{+=}\lastnext{Bounds3PublicMethods}`
+`\refvar{Vector3}{}`<T> `\initvar{Offset}{}`(const `\refvar{Point3}{}`<T> &p) const {
+    `\refvar{Vector3}{}`<T> o = p - pMin;
+    if (pMax.x > pMin.x) o.x /= pMax.x - pMin.x;
+    if (pMax.y > pMin.y) o.y /= pMax.y - pMin.y;
+    if (pMax.z > pMin.z) o.z /= pMax.z - pMin.z;
+    return o;
+}
+\end{lstlisting}
+
+\refvar{Bounds3}{}也提供方法返回包围边界框的球体的球心和半径。
+尽管它也很有用，但一般这样给出的范围会比直接包围\refvar{Bounds3}{}所含内容的球体松弛得多。
+\begin{lstlisting}
+`\refcode{Bounds3 Public Methods}{+=}\lastcode{Bounds3PublicMethods}`
+void `\initvar{BoundingSphere}{}`(`\refvar{Point3}{}`<T> *center, `\refvar{Float}{}` *radius) const {
+    *center = (`\refvar{pMin}{}` + `\refvar{pMax}{}`) / 2;
+    *radius = `\refvar{Inside}{}`(*center, *this) ? `\refvar{Distance}{}`(*center, `\refvar{pMax}{}`) : 0;
+}
+\end{lstlisting}
+
+最后，对于整数框，有一个迭代器类\sidenote{译者注：详见类{\ttfamily Bounds2iIterator}。}
+满足C++前向迭代器\sidenote{译者注：原文forward iterator，是一种C++迭代器。}
+（即它只能增长）的要求。
+其细节比较乏味无趣，所以本书不介绍它的代码。
+有了它的定义就可以用范围{\ttfamily for}循环编写代码
+遍历边界框内的整数坐标了：
+
+{\ttfamily\indent \refvar{Bounds2i}{} b = ...;}\newline
+{\ttfamily\indent for (\refvar{Point2i}{} p : b) \{}\newline
+{\ttfamily\indent \qquad//  …}\newline
+{\ttfamily\indent \}}
+
+这样实现后，每个维度的迭代会增长到最大范围但不取等于最大值的点
+\sidenote{译者注：类似于左闭右开区间。}。

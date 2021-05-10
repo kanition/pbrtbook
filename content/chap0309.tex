@@ -5,6 +5,11 @@
 \end{remark}
 
 \subsection{浮点算术}\label{sub:浮点算术}
+\begin{lstlisting}
+`\initcode{Global Constants}{=}\initnext{GlobalConstants}`
+static constexpr `\refvar{Float}{}` `\initvar{MaxFloat}{}` = std::numeric_limits<`\refvar{Float}{}`>::max();
+static constexpr `\refvar{Float}{}` `\initvar{Infinity}{}` = std::numeric_limits<`\refvar{Float}{}`>::infinity();
+\end{lstlisting}
 
 \subsubsection*{实用例程}\label{subsub:实用例程}
 

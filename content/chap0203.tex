@@ -1,6 +1,6 @@
 \section{点}\label{sec:点}
 
-点是2D或3D空间中的零维位置。
+\keyindex{点}{point}{}是2D或3D空间中的零维位置。
 pbrt中的类\refvar{Point2}{}和\refvar{Point3}{}以
 明确的方式表示点：使用关于坐标系统的$x,y,z$（3D）坐标。
 尽管向量也使用同样的表示，
@@ -54,7 +54,7 @@ T x, y, z;
 
 通过丢弃$z$坐标将\refvar{Point3}{}转换为\refvar{Point2}{}很有用。
 完成这个转换的构造函数有修饰符{\ttfamily explicit}
-所以该转换不会在缺乏显示类型转换时发生，以免意外。
+所以该转换不会在缺乏显式类型转换时发生，以免意外。
 \begin{lstlisting}
 `\initcode{Point2 Public Methods}{=}`
 explicit `\refvar{Point2}{}`(const `\refvar{Point3}{}`<T> &p) : x(p.x), y(p.y) {
@@ -62,3 +62,129 @@ explicit `\refvar{Point2}{}`(const `\refvar{Point3}{}`<T> &p) : x(p.x), y(p.y) {
 }
 \end{lstlisting}
 
+将一种元素类型的点（例如\refvar{Point3f}{}）转换为另一种点（例如\refvar{Point3i}{}）
+和将点转换为不同元素类型的向量都很有用。
+下列构造函数和转换操作提供了这些转换形式。
+它们也都要求有显式类型转换，使得在使用它们时源码更加清楚。
+\begin{lstlisting}
+`\refcode{Point3 Public Methods}{+=}\lastnext{Point3PublicMethods}`
+template <typename U> explicit `\refvar{Point3}{}`(const `\refvar{Point3}{}`<U> &p)
+    : x((T)p.x), y((T)p.y), z((T)p.z) { 
+        `\refvar{Assert}{}`(!HasNaNs());
+}
+template <typename U> explicit operator `\refvar{Vector3}{}`<U>() const {
+    return `\refvar{Vector3}{}`<U>(x, y, z);
+}
+\end{lstlisting}
+
+某些\refvar{Point3}{}方法返回或接收\refvar{Vector3}{}。
+例如，可以把向量加到点上，使之朝给定方向偏移得到一个新点。
+\begin{lstlisting}
+`\refcode{Point3 Public Methods}{+=}\lastnext{Point3PublicMethods}`
+`\refvar{Point3}{}`<T> operator+(const `\refvar{Vector3}{}`<T> &v) const {
+    return `\refvar{Point3}{}`<T>(x + v.x, y + v.y, z + v.z);
+}
+`\refvar{Point3}{}`<T> &operator+=(const `\refvar{Vector3}{}`<T> &v) {
+    x += v.x; y += v.y; z += v.z;
+    return *this;
+}
+\end{lstlisting}
+
+或者，从一个点减去另一个点，得到两者间的向量，如\reffig{2.6}所示。
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap02/Vecfrompoints.tex}
+    \caption{求两点间的向量。向量$\bm v=\bm p'-\bm p$由点$\bm p'$和$\bm p$的逐元素减法得到。}
+    \label{fig:2.6}
+\end{figure}
+
+\begin{lstlisting}
+`\refcode{Point3 Public Methods}{+=}\lastnext{Point3PublicMethods}`
+`\refvar{Vector3}{}`<T> operator-(const `\refvar{Point3}{}`<T> &p) const {
+    return `\refvar{Vector3}{}`<T>(x - p.x, y - p.y, z - p.z);
+}
+\end{lstlisting}
+
+从一个点减去向量得到另一个点。
+\begin{lstlisting}
+`\refcode{Point3 Public Methods}{+=}\lastcode{Point3PublicMethods}`
+`\refvar{Point3}{}`<T> operator-(const `\refvar{Vector3}{}`<T> &v) const {
+    return `\refvar{Point3}{}`<T>(x - v.x, y - v.y, z - v.z);
+}
+`\refvar{Point3}{}`<T> &operator-=(const `\refvar{Vector3}{}`<T> &v) {
+    x -= v.x; y -= v.y; z -= v.z;
+    return *this;
+}
+\end{lstlisting}
+
+两点间的距离可以由它们相减所得向量的长度算得：
+\begin{lstlisting}
+`\refcode{Geometry Inline Functions}{+=}\lastnext{GeometryInlineFunctions}`
+template <typename T> inline `\refvar{Float}{}`
+`\initvar{Distance}{}`(const `\refvar{Point3}{}`<T> &p1, const `\refvar{Point3}{}`<T> &p2) {
+    return (p1 - p2).`\refvar{Length}{}`();
+}
+template <typename T> inline `\refvar{Float}{}`
+`\initvar{DistanceSquared}{}`(const `\refvar{Point3}{}`<T> &p1, const `\refvar{Point3}{}`<T> &p2) {
+    return (p1 - p2).`\refvar{LengthSquared}{}`();
+}
+\end{lstlisting}
+
+尽管通常用标量对点赋权或把两点相加没有数学意义，
+但为了能计算点的加权和，点类仍允许这类操作，
+只要所用权重和为一就有数学意义。
+数乘代码以及与点求和的代码和向量的相应代码一样，
+所以这里不再赘述。
+
+值得一提的是，两点间的线性\keyindex{插值}{interpolate}{}很有用。
+\refvar[Point3::Lerp]{Lerp}{()}在{\ttfamily t==0}时返回{\ttfamily p0}，
+{\ttfamily t==1}时返回{\ttfamily p1}，
+{\ttfamily t}取其余值时则在两点间插值。
+对于{\ttfamily t<0}或{\ttfamily t>1}，
+\refvar[Point3::Lerp]{Lerp}{()}进行\keyindex{外推}{extrapolate}{}。
+\begin{lstlisting}
+`\refcode{Geometry Inline Functions}{+=}\lastnext{GeometryInlineFunctions}`
+template <typename T> `\refvar{Point3}{}`<T>
+`\initvar[Point3::Lerp]{Lerp}{}`(`\refvar{Float}{}` t, const `\refvar{Point3}{}`<T> &p0, const `\refvar{Point3}{}`<T> &p1) {
+    return (1 - t) * p0 + t * p1;
+}
+\end{lstlisting}
+
+函数\refvar[Point3::Min]{Min}{()}和\refvar[Point3::Max]{Max}{()}返回
+给定两点逐元素取最小和最大值后表示的点。
+\begin{lstlisting}
+`\refcode{Geometry Inline Functions}{+=}\lastnext{GeometryInlineFunctions}`
+template <typename T> `\refvar{Point3}{}`<T>
+`\initvar[Point3::Min]{Min}{}`(const `\refvar{Point3}{}`<T> &p1, const `\refvar{Point3}{}`<T> &p2) {
+    return `\refvar{Point3}{}`<T>(std::min(p1.x, p2.x), std::min(p1.y, p2.y), 
+                     std::min(p1.z, p2.z));
+}
+template <typename T> `\refvar{Point3}{}`<T>
+`\initvar[Point3::Max]{Max}{}`(const `\refvar{Point3}{}`<T> &p1, const `\refvar{Point3}{}`<T> &p2) {
+    return `\refvar{Point3}{}`<T>(std::max(p1.x, p2.x), std::max(p1.y, p2.y), 
+                     std::max(p1.z, p2.z));
+}
+\end{lstlisting}
+
+\refvar{Floor}{()}、\refvar{Ceil}{()}和\refvar[Point3::Abs]{Abs}{()}对
+给定点逐元素应用相应操作。
+\begin{lstlisting}
+`\refcode{Geometry Inline Functions}{+=}\lastnext{GeometryInlineFunctions}`
+template <typename T> `\refvar{Point3}{}`<T> `\initvar{Floor}{}`(const `\refvar{Point3}{}`<T> &p) {
+    return `\refvar{Point3}{}`<T>(std::floor(p.x), std::floor(p.y), std::floor(p.z));
+}
+template <typename T> `\refvar{Point3}{}`<T> `\initvar{Ceil}{}`(const `\refvar{Point3}{}`<T> &p) {
+    return `\refvar{Point3}{}`<T>(std::ceil(p.x), std::ceil(p.y), std::ceil(p.z));
+}
+template <typename T> `\refvar{Point3}{}`<T> `\initvar[Point3::Abs]{Abs}{}`(const `\refvar{Point3}{}`<T> &p) {
+    return `\refvar{Point3}{}`<T>(std::abs(p.x), std::abs(p.y), std::abs(p.z));
+}
+\end{lstlisting}
+
+最后，\refvar[Point3::Permute]{Permute}{()}根据提供的顺序对坐标值排序。
+\begin{lstlisting}
+`\refcode{Geometry Inline Functions}{+=}\lastnext{GeometryInlineFunctions}`
+template <typename T> `\refvar{Point3}{}`<T>
+`\initvar[Point3::Permute]{Permute}{}`(const `\refvar{Point3}{}`<T> &p, int x, int y, int z) {
+    return `\refvar{Point3}{}`<T>(p[x], p[y], p[z]);
+}
+\end{lstlisting}

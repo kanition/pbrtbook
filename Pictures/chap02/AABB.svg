@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="Layer_1"
+   data-name="Layer 1"
+   viewBox="0 0 664.88 292.75"
+   version="1.1"
+   sodipodi:docname="AABB.svg"
+   inkscape:version="1.0.1 (3bc2e813f5, 2020-09-07)">
+  <metadata
+     id="metadata1068">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     id="namedview1066"
+     showgrid="false"
+     inkscape:zoom="1.6544339"
+     inkscape:cx="332.44"
+     inkscape:cy="146.375"
+     inkscape:window-x="1912"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="Layer_1" />
+  <defs
+     id="defs993">
+    <rect
+       x="510.14429"
+       y="44.728291"
+       width="174.68211"
+       height="32.639564"
+       id="rect1633" />
+    <style
+       id="style991">.cls-1{fill:none;stroke:#000;stroke-miterlimit:10;}</style>
+    <rect
+       x="510.14429"
+       y="44.728291"
+       width="174.68211"
+       height="32.639565"
+       id="rect1633-7" />
+    <rect
+       x="510.14429"
+       y="44.728291"
+       width="174.68211"
+       height="32.639565"
+       id="rect1646" />
+  </defs>
+  <title
+     id="title995">AABB</title>
+  <rect
+     class="cls-1"
+     x="166.29"
+     y="91.5"
+     width="189.45"
+     height="189.45"
+     id="rect997" />
+  <rect
+     class="cls-1"
+     x="308.99"
+     y="11.58"
+     width="189.45"
+     height="189.45"
+     id="rect999" />
+  <path
+     class="cls-1"
+     d="M166.29,91.5c-.24,0,142.7-79.92,142.7-79.92"
+     id="path1001" />
+  <line
+     class="cls-1"
+     x1="355.73"
+     y1="91.5"
+     x2="498.44"
+     y2="11.58"
+     id="line1003" />
+  <line
+     class="cls-1"
+     x1="355.73"
+     y1="280.95"
+     x2="498.44"
+     y2="201.03"
+     id="line1005" />
+  <line
+     class="cls-1"
+     x1="166.29"
+     y1="280.95"
+     x2="308.99"
+     y2="201.03"
+     id="line1007" />
+  <circle
+     cx="498.67"
+     cy="12.75"
+     r="6.22"
+     id="circle1009" />
+  <circle
+     cx="166.18"
+     cy="281.03"
+     r="6.22"
+     id="circle1011" />
+  <text
+     xml:space="preserve"
+     id="text1631"
+     style="font-size:18.6667px;line-height:1.25;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;shape-inside:url(#rect1633);"
+     transform="translate(0,-41.101673)"><tspan
+       x="510.14453"
+       y="61.758712"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18.6667px;font-family:sans-serif;-inkscape-font-specification:sans-serif">Bounds3::pMax</tspan></tspan></text>
+  <text
+     xml:space="preserve"
+     id="text1631-3"
+     style="font-size:18.6667px;line-height:1.25;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;shape-inside:url(#rect1633-7);"
+     transform="translate(-499.93503,219.68226)"><tspan
+       x="510.14453"
+       y="61.758712"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18.6667px;font-family:sans-serif;-inkscape-font-specification:sans-serif">Bounds3::pMin</tspan></tspan></text>
+</svg>

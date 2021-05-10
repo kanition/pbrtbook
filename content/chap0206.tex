@@ -28,3 +28,41 @@ typedef `\refvar{Bounds2}{}`<int>   `\initvar{Bounds2i}{}`;
 typedef `\refvar{Bounds3}{}`<`\refvar{Float}{}`> `\initvar{Bounds3f}{}`;
 typedef `\refvar{Bounds3}{}`<int>   `\initvar{Bounds3i}{}`;
 \end{lstlisting}
+
+这类\keyindex{边界框}{bounding box}{}有若干种可能的表示；
+pbrt使用\keyindex{轴对齐的边界框}{axis-aligned bounding box}{bounding box边界框}(AABB)，
+框边相互垂直且与坐标系统的轴对齐。
+另一种可能的选择是\keyindex{定向边界框}{oriented bounding box}{bounding box边界框}(OBB)，
+不同侧的框边依然互相垂直但不一定对齐坐标系统。
+3D的AABB可以用其一个顶点和三个长度表示，
+每一个表示沿$x,y$和$z$坐标轴张开的距离。
+也可以用框的两个对角顶点描述它。
+我们为pbrt的类\refvar{Bounds2}{}和\refvar{Bounds3}{}选择了两点表示法；
+它们存储了具有最小坐标值和最大坐标值的两个顶点的位置。
+边界框的2D图示及其表示如\reffig{2.8}所示。
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap02/AABB.tex}
+    \caption{轴对齐的边界框。
+        类\protect\refvar{Bounds2}{}和\protect\refvar{Bounds3}{}只
+        存储该框坐标最小和最大的点；框的其他角点隐含在该表示中。}
+    \label{fig:2.8}
+\end{figure}
+
+默认构造函数通过把范围设置为不可用的配置来创建一个空框，
+违反了{\ttfamily pMin.x <= pMax.x}的性质（其他维度也这样）。
+通过初始化具有最大和最小表示数字的两个角点，
+任何涉及空框的操作（例如\refvar{Union}{()}）都会产生正确结果。
+\begin{lstlisting}
+`\initcode{Bounds3 Public Methods}{=}\initnext{Bounds3PublicMethods}`
+`\refvar{Bounds3}{}`() {
+    T minNum = std::numeric_limits<T>::lowest();
+    T maxNum = std::numeric_limits<T>::max();
+    `\refvar{pMin}{}` = `\refvar{Point3}{}`<T>(maxNum, maxNum, maxNum);
+    `\refvar{pMax}{}` = `\refvar{Point3}{}`<T>(minNum, minNum, minNum);
+}
+\end{lstlisting}
+
+\begin{lstlisting}
+`\initcode{Bounds3 Public Data}{=}`
+`\refvar{Point3}{}`<T> `\initvar{pMin}{}`, `\initvar{pMax}{}`;
+\end{lstlisting}

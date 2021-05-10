@@ -1,1 +1,22 @@
 \section{变换}\label{sec:变换}
+
+通常，\keyindex{变换}{transformation}{}$\bm T$是
+从点到点和从向量到向量的映射：
+\begin{align*}
+    \bm p'=\bm T(\bm p), \quad \bm v'=\bm T(\bm v)\, .
+\end{align*}
+
+变换$\bm T$可以是任意过程。
+然而，本章我们考虑所有可能变换的一个子集。
+特别地，它们是：
+\begin{itemize}
+    \item \keyindex{线性的}{linear}{}：对于任意线性变换$\bm T$和
+          标量$s$，都有$\bm T(s\bm v)=s\bm T(\bm v)$以及
+          $\bm T(\bm v_1+\bm v_2)=\bm T(\bm v_1)+\bm T(\bm v_2)$。
+          这两点性质可极大简化关于变换的推导。
+    \item \keyindex{连续的}{continuous}{}：简单说，
+          $\bm T$把$\bm p$和$\bm v$的邻域映射为$\bm p'$和$\bm v'$的邻域。
+    \item \keyindex{一对一}{one-to-one}{}且\keyindex{可逆}{invertible}{}：
+          对于每个$\bm p$，$\bm T$把$\bm p$映射为唯一一个$\bm p'$。
+          此外，存在一个逆变换$\bm T^{-1}$将$\bm p'$映射回$\bm p$。
+\end{itemize}

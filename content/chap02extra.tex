@@ -408,4 +408,21 @@
     \begin{align}
         \bm q=\cos\frac{\theta}{2}+\bm n\sin\frac{\theta}{2}\, .
     \end{align}
+
+    对应的$3\times3$旋转矩阵$\bm R_{\bm n}(\theta)$为\sidenote{你可以动手验算一下。}
+    \begin{align}
+        \bm R_{\bm n}(\theta)=\bm I\cos\theta+(1-\cos\theta)\bm n\bm n^\mathrm{T}+\bm A_{\bm n}\sin\theta\, .
+    \end{align}
+    其中$\bm I$为单位矩阵，$\bm A_{\bm n}$为
+    \begin{align}
+        \bm A_{\bm n}=\left[
+            \begin{array}{ccc}
+                0    & -n_z & n_y  \\
+                n_z  & 0    & -n_x \\
+                -n_y & n_x  & 0
+            \end{array}
+            \right]\, .
+    \end{align}
+
+    对应的$4\times4$旋转矩阵只需在$\bm R_{\bm n}(\theta)$右边和底部添加全零列（行）即可。
 \end{proposition}

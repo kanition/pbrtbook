@@ -406,3 +406,49 @@ bool `\initvar{HasScale}{}`() const {
         $y$和$z$轴映射为虚线给出的向量；$y$和$z$坐标相应变化。}
     \label{fig:2.11}
 \end{figure}
+
+容易看出矩阵不改变$x$轴：
+\begin{align*}
+    \bm R_x(\theta)[1\ 0\ 0\ 0]^\mathrm{T}=[1\ 0\ 0\ 0]^\mathrm{T}\, .
+\end{align*}
+它把$y$轴$(0,1,0)$映射为$(0,\cos\theta,\sin\theta)$，
+把$z$轴映射为$(0,-\sin\theta,\cos\theta)$
+\sidenote{译者注：这句话指的是旧坐标轴在新坐标系下的取值。}。
+$y$和$z$轴仍在同一平面内，与$x$轴垂直，但旋转了给定角度。
+空间中任意点也同样因该变换而绕$x$轴旋转并留在和之前同样的$yz$平面内。
+
+函数\refvar{RotateX}{()}的实现很简单。
+\begin{lstlisting}
+`\refcode{Transform Method Definitions}{+=}\lastnext{TransformMethodDefinitions}`
+`\refvar{Transform}{}` `\initvar{RotateX}{}`(`\refvar{Float}{}` theta) {
+    `\refvar{Float}{}` sinTheta = std::sin(Radians(theta));
+    `\refvar{Float}{}` cosTheta = std::cos(Radians(theta));
+    `\refvar{Matrix4x4}{}` m(1,        0,         0, 0, 
+                0, cosTheta, -sinTheta, 0,
+                0, sinTheta,  cosTheta, 0,
+                0,        0,         0, 1);
+    return `\refvar{Transform}{}`(m, `\refvar[Matrix4x4::Transpose]{Transpose}{}`(m));
+}
+\end{lstlisting}
+
+同样，绕$y$和$z$轴顺时针旋转，我们有
+\begin{align*}
+    \bm R_y(\theta)=\left[
+        \begin{array}{cccc}
+            \cos\theta  & 0 & \sin\theta & 0 \\
+            0           & 1 & 0          & 0 \\
+            -\sin\theta & 0 & \cos\theta & 0 \\
+            0           & 0 & 0          & 1
+        \end{array}
+        \right], \quad
+    \bm R_z(\theta)=\left[
+        \begin{array}{cccc}
+            \cos\theta & -\sin\theta & 0 & 0 \\
+            \sin\theta & \cos\theta  & 0 & 0 \\
+            0          & 0           & 1 & 0 \\
+            0          & 0           & 0 & 1
+        \end{array}
+        \right]\, .
+\end{align*}
+
+\refvar{RotateY}{()}和\refvar{RotateZ}{()}的实现直接遵循上式此处不再介绍。

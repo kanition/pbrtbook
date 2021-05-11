@@ -311,3 +311,69 @@ $\bm T(\Delta x,\Delta y, \Delta z)$。
 \end{lstlisting}
 
 \subsection{缩放}\label{sub:缩放}
+另一个基本变换是\keyindex{缩放变换}{scale transformation}{transformation变换}，$\bm S(s_x,s_y,s_z)$。
+它对点和向量起作用并用缩放因子乘以其$x,y$和$z$分量：$\bm S(2,2,1)(x,y,z)=(2x,2y,z)$。
+它有如下基本性质：
+\begin{align*}
+    \bm S(1,1,1)                         & =\bm I\, ,                                                 \\
+    \bm S(x_1,y_1,z_1)\bm S(x_2,y_2,z_2) & =\bm S(x_1x_2,y_1y_2,z_1z_2)\, ,                           \\
+    \bm S^{-1}(x,y,z)                    & =\bm S\left(\frac{1}{x},\frac{1}{y},\frac{1}{z}\right)\, .
+\end{align*}
+
+我们可以区分\keyindex{均匀缩放}{uniform scaling}{}，
+即全部三个缩放因子有相同值，
+以及\keyindex{非均匀缩放}{nonuniform scaling}{}，
+即它们有不同的值。
+一般的缩放矩阵为
+\begin{align*}
+    \bm S(x,y,z)=\left[
+        \begin{array}{cccc}
+            x & 0 & 0 & 0 \\
+            0 & y & 0 & 0 \\
+            0 & 0 & z & 0 \\
+            0 & 0 & 0 & 1
+        \end{array}
+        \right]\, .
+\end{align*}
+
+\begin{lstlisting}
+`\refcode{Transform Method Definitions}{+=}\lastnext{TransformMethodDefinitions}`
+`\refvar{Transform}{}` `\initvar{Scale}{}`(`\refvar{Float}{}` x, `\refvar{Float}{}` y, `\refvar{Float}{}` z) {
+    `\refvar{Matrix4x4}{}` m(x, 0, 0, 0,
+                0, y, 0, 0,
+                0, 0, z, 0,
+                0, 0, 0, 1);
+    `\refvar{Matrix4x4}{}` minv(1/x,   0,   0, 0,
+                   0,   1/y,   0, 0,
+                   0,     0, 1/z, 0,
+                   0,     0,   0, 1);
+    return `\refvar{Transform}{}`(m, minv);
+}
+\end{lstlisting}
+
+能够测试变换是否有缩放项是很有用的；
+一个简单的方式是对三个坐标轴做该变换并看
+它们的长度是否明显不等于一。
+\begin{lstlisting}
+`\refcode{Transform Public Methods}{+=}\lastnext{TransformPublicMethods}`
+bool `\initvar{HasScale}{}`() const {
+    `\refvar{Float}{}` la2 = (*this)(`\refvar{Vector3f}{}`(1, 0, 0)).`\refvar{LengthSquared}{}`();
+    `\refvar{Float}{}` lb2 = (*this)(`\refvar{Vector3f}{}`(0, 1, 0)).`\refvar{LengthSquared}{}`();
+    `\refvar{Float}{}` lc2 = (*this)(`\refvar{Vector3f}{}`(0, 0, 1)).`\refvar{LengthSquared}{}`();
+#define NOT_ONE(x) ((x) < .999f || (x) > 1.001f)
+    return (NOT_ONE(la2) || NOT_ONE(lb2) || NOT_ONE(lc2));
+#undef NOT_ONE
+}
+\end{lstlisting}
+
+\subsection{x,y和z轴旋转}\label{sub:x,y和z轴旋转}
+另一个有用的变换类型是\keyindex{旋转变换}{rotation transformation}{transformation变换}，$\bm R$。
+通常，我们可以定义从原点到任意方向的任意轴再绕轴旋转给定角度。
+这类最常见的是绕$x,y$和$z$坐标轴旋转。
+我们把这类旋转写作$\bm R_x(\theta)$、$\bm R_y(\theta)$等。
+绕任意轴旋转记作$\bm R_{(x,y,z)}(\theta)$。
+
+旋转也有一些基本性质：
+\begin{align*}
+    \bm R_a(0)=\bm I\, , \\
+\end{align*}

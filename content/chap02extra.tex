@@ -187,7 +187,7 @@
     \begin{align}
         ({\bm u}_1\times{\bm u}_2)\cdot{\bm u}_3\equiv{\bm u}_1\cdot({\bm u}_2\times{\bm u}_3)\, ,
     \end{align}
-    以及\sidenote{第一个和第三个等号的变换利用了\protect\keyindex{向量三重积}{vector triple product}{}的定义，
+    以及\sidenote{第一个和第三个等号的变换利用了\protect\keyindex{向量三重积}{vector triple product}{}的性质，
         也称为\protect\keyindex{三重积展开}{triple product expansion}{}或\protect\keyindex{拉格朗日公式}{Lagrange's formula}{}。}
     \begin{align}
           & ({\bm u}_1\times{\bm u}_2)\times{\bm u}_3-({\bm u}_1\cdot{\bm u}_2){\bm u}_3\nonumber                             \\
@@ -342,3 +342,70 @@
         \|{\bm q}\|=1 \Rightarrow {\bm q}^{-1}=\bar{\bm q}\, .
     \end{align}
 \end{corollary}
+
+\subsection{四元数与旋转变换}\label{sub:四元数与旋转变换}
+如\reffig{2.ex1}所示，点$P$绕单位向量$\bm n$给定的轴顺时针旋转角度$\theta$得到点$P'$。
+我们现在说明该一般旋转变换和四元数运算的关系。
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap02/QuaternionAndRotaion.tex}
+    \caption{旋转的几何表达。}
+    \label{fig:2.ex1}
+\end{figure}
+
+作点$P$在$\bm n$所在直线（过点$O$）上的投影$H$，即$PH\perp OH$。
+点$P$绕$\bm n$顺时针旋转角度$\theta$得到点$P'$，即$\angle PHP'=\theta$且$HP'\perp OH$。
+最后，作点$P$绕$\bm n$顺时针旋转角度$\displaystyle\frac{\pi}{2}$得到的点$V$，即$HV\perp HP$且$HV\perp OH$。
+记向量
+\begin{align}
+    \bm h=\overrightarrow{OH},\quad
+    \bm p=\overrightarrow{OP},\quad
+    \bm p'=\overrightarrow{OP'},\quad
+    \bm u=\overrightarrow{HP},\quad
+    \bm u'=\overrightarrow{HP'},\quad
+    \bm v=\overrightarrow{HV}\, .
+\end{align}
+注意到$\bm n$是单位向量，根据上述几何关系，易得
+\begin{align}
+    \bm h  & =(\bm n\cdot\bm p)\bm n\, ,          \\
+    \bm u  & =\bm p-\bm h\, ,                     \\
+    \bm v  & =\bm n\times\bm u\, ,                \\
+    \bm u' & =\bm u\cos\theta+\bm v\sin\theta\, , \\
+    \bm p' & =\bm h+\bm u'\, .
+\end{align}
+将这些式子从前往后依次代入可得\sidenote{注意这是普通的向量运算。}
+\begin{align}
+    \bm p' & =(\bm n\cdot\bm p)\bm n+(\bm p-(\bm n\cdot\bm p)\bm n)\cos\theta+\bm n\times(\bm p-(\bm n\cdot\bm p)\bm n)\sin\theta\nonumber \\
+           & =\bm p\cos\theta+(1-\cos\theta)(\bm n\cdot\bm p)\bm n+\bm n\times\bm p\sin\theta\, .
+\end{align}
+另一方面，我们构造三个四元数$\bm a,\bm a'$和$\bm q$：
+\begin{align}
+    \bm a  & =\bm p\, ,                                                  \\
+    \bm a' & =\bm p'\, ,                                                 \\
+    \bm q  & =c+\bm s=\cos\frac{\theta}{2}+\bm n\sin\frac{\theta}{2}\, .
+\end{align}
+其中$\displaystyle c=\cos\frac{\theta}{2}$，$\displaystyle \bm s=\bm n\sin\frac{\theta}{2}$。于是有\sidenote{注意这是四元数运算。}
+\begin{align}
+    \bm q\bm a\bar{\bm q} & =(c+\bm s)\bm p(c-\bm s)\nonumber                                                                                                                                                                \\
+                          & =(-\bm s\cdot\bm p+(c\bm p+\bm s\times\bm p))(c-\bm s)\nonumber                                                                                                                                  \\
+                          & =(-c\bm s\cdot\bm p+(c\bm p+\bm s\times\bm p)\cdot\bm s)+((\bm s\cdot\bm p)\bm s+c(c\bm p+\bm s\times\bm p)-(c\bm p+\bm s\times\bm p)\times\bm s)\nonumber                                       \\
+                          & =(\bm s\cdot\bm p)\bm s+c(c\bm p+\bm s\times\bm p)-(c\bm p+\bm s\times\bm p)\times\bm s\nonumber                                                                                                 \\
+                          & =(\bm s\cdot\bm p)\bm s+c^2\bm p+c\bm s\times\bm p-c\bm p\times\bm s-\bm s\times\bm p\times\bm s\nonumber                                                                                        \\
+                          & =(\bm s\cdot\bm p)\bm s+c^2\bm p+2c\bm s\times\bm p-((\bm s\cdot\bm s)\bm p-(\bm p\cdot\bm s)\bm s)\nonumber                                                                                     \\
+                          & =(c^2-\bm s\cdot\bm s)\bm p+2(\bm s\cdot\bm p)\bm s+2c\bm s\times\bm p\nonumber                                                                                                                  \\
+                          & =\left(\cos^2\frac{\theta}{2}-\bm n\cdot\bm n\sin^2\frac{\theta}{2}\right)\bm p+2(\bm n\cdot\bm p)\bm n\sin^2\frac{\theta}{2}+2\bm n\times\bm p\cos\frac{\theta}{2}\sin\frac{\theta}{2}\nonumber \\
+                          & =\bm p\cos\theta+(1-\cos\theta)(\bm n\cdot\bm p)\bm n+\bm n\times\bm p\sin\theta\nonumber                                                                                                        \\
+                          & =\bm a'\, .
+\end{align}
+其中前三个等号运用了四元数乘法计算规则，
+第四个等号算得实部为零，
+第六个等号再次运用了向量三重积的性质，
+第九个等号运用了三角函数倍角公式。
+
+上式给出了旋转变换与四元数的关系是：
+\begin{proposition}
+    向量$\bm v$绕任意单位向量$\bm n$顺时针旋转角度$\theta$得到新向量$\bm v'$，
+    则$\bm v'$是四元数积$\bm q\bm v\bar{\bm q}$的虚部，其中
+    \begin{align}
+        \bm q=\cos\frac{\theta}{2}+\bm n\sin\frac{\theta}{2}\, .
+    \end{align}
+\end{proposition}

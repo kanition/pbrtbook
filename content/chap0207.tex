@@ -375,5 +375,34 @@ bool `\initvar{HasScale}{}`() const {
 
 旋转也有一些基本性质：
 \begin{align*}
-    \bm R_a(0)=\bm I\, , \\
+    \bm R_a(0)                         & =\bm I\, ,                                       \\
+    \bm R_a(\theta_1)\bm R_a(\theta_2) & =\bm R_a(\theta_1+\theta_2)\, ,                  \\
+    \bm R_a(\theta_1)\bm R_a(\theta_2) & =\bm R_a(\theta_2)\bm R_a(\theta_1)\, ,          \\
+    \bm R_a^{-1}(\theta)               & =\bm R_a(-\theta)=\bm R_a^\mathrm{T}(\theta)\, .
 \end{align*}
+其中$\bm R^\mathrm{T}$是矩阵$\bm R$的转置。
+最后一条性质，即$\bm R$的逆等于它的转置，
+是源自$\bm R$是\keyindex{正交矩阵}{orthogonal matrix}{}的事实；
+它的前三列（或行）都是规范化的且相互正交。
+幸运的是，转置比计算矩阵完整的逆要简单得多。
+
+对于左手坐标系统，绕$x$轴顺时针旋转的矩阵为：
+\begin{align*}
+    \bm R_x(\theta)=\left[
+        \begin{array}{cccc}
+            1 & 0          & 0           & 0 \\
+            0 & \cos\theta & -\sin\theta & 0 \\
+            0 & \sin\theta & \cos\theta  & 0 \\
+            0 & 0          & 0           & 1
+        \end{array}
+        \right]\, .
+\end{align*}
+
+\reffig{2.11}给出了该矩阵是怎样工作的图示
+\sidenote{译者注：图中$x$轴指向纸面里。}。
+\begin{figure}[htbp]
+    \centering\includegraphics[scale=0.75]{chap02/Rotatexaxis.eps}
+    \caption{绕$x$轴顺时针旋转角度$\theta$不改变$x$坐标。
+        $y$和$z$轴映射为虚线给出的向量；$y$和$z$坐标相应变化。}
+    \label{fig:2.11}
+\end{figure}

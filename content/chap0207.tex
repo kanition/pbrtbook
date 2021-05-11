@@ -163,3 +163,151 @@ private:
 `\initcode{Transform Public Methods}{=}\initnext{TransformPublicMethods}`
 `\refvar{Transform}{}`() { }
 \end{lstlisting}
+
+\refvar{Transform}{}也可以从给定矩阵创建。
+这时，给定矩阵必须是显式可逆的。
+\begin{lstlisting}
+`\refcode{Transform Public Methods}{+=}\lastnext{TransformPublicMethods}`
+`\refvar{Transform}{}`(const `\refvar{Float}{}` mat[4][4]) {
+    `\refvar[Transform::m]{m}{}` = `\refvar{Matrix4x4}{}`(mat[0][0], mat[0][1], mat[0][2], mat[0][3],
+                  mat[1][0], mat[1][1], mat[1][2], mat[1][3],
+                  mat[2][0], mat[2][1], mat[2][2], mat[2][3],
+                  mat[3][0], mat[3][1], mat[3][2], mat[3][3]);
+    `\refvar[Transform::mInv]{mInv}{}` = `\refvar[Matrix4x4::Inverse]{Inverse}{}`(`\refvar[Transform::m]{m}{}`);
+}
+\end{lstlisting}
+
+\begin{lstlisting}
+`\refcode{Transform Public Methods}{+=}\lastnext{TransformPublicMethods}`
+`\refvar{Transform}{}`(const `\refvar{Matrix4x4}{}` &m) : `\refvar[Transform::m]{m}{}`(m), `\refvar[Transform::mInv]{mInv}{}`(`\refvar[Matrix4x4::Inverse]{Inverse}{}`(m)) { }
+\end{lstlisting}
+
+最常用的构造函数取变换矩阵的引用以及显式提供的逆。
+在构造函数中计算逆是一种很好的方法，
+因为许多几何变换有很简单的逆，
+我们可以避免由于计算一般$4\times4$矩阵的逆
+而造成的开销和潜在的数值精度损失。
+\begin{lstlisting}
+`\refcode{Transform Public Methods}{+=}\lastnext{TransformPublicMethods}`
+`\refvar{Transform}{}`(const `\refvar{Matrix4x4}{}` &m, const `\refvar{Matrix4x4}{}` &mInv) 
+   : `\refvar[Transform::m]{m}{}`(m), `\refvar[Transform::mInv]{mInv}{}`(mInv) {
+}
+\end{lstlisting}
+
+\refvar{Transform}{}表示\refvar{Transform}{}的逆只需
+通过交换\refvar[Transform::mInv]{mInv}{}和\refvar[Transform::m]{m}{}并返回。
+\begin{lstlisting}
+`\refcode{Transform Public Methods}{+=}\lastnext{TransformPublicMethods}`
+friend `\refvar{Transform}{}` `\initvar[Transform::Inverse]{Inverse}{}`(const `\refvar{Transform}{}` &t) {
+    return `\refvar{Transform}{}`(t.`\refvar[Transform::mInv]{mInv}{}`, t.`\refvar[Transform::m]{m}{}`);
+}
+\end{lstlisting}
+
+转置变换中的两个矩阵以计算新变换也很有用。
+\begin{lstlisting}
+`\refcode{Transform Public Methods}{+=}\lastnext{TransformPublicMethods}`
+friend `\refvar{Transform}{}` `\initvar[Transform::Transpose]{Transpose}{}`(const `\refvar{Transform}{}` &t) {
+    return `\refvar{Transform}{}`(`\refvar[Matrix4x4::Transpose]{Transpose}{}`(t.`\refvar[Transform::m]{m}{}`), `\refvar[Matrix4x4::Transpose]{Transpose}{}`(t.`\refvar[Transform::mInv]{mInv}{}`));
+}
+\end{lstlisting}
+
+我们提供了\refvar{Transform}{}相等（和不相等）测试方法；
+它们的实现很简单就不介绍了\sidenote{译者注：即逐元素比较。}。
+\refvar{Transform}{}也提供了方法{\ttfamily IsIdentity()}检查变换是否是恒等的。
+
+\subsection{平移}\label{sub:平移}
+最简单的变换之一就是\keyindex{平移变换}{translation transformation}{transformation变换}，
+$\bm T(\Delta x,\Delta y, \Delta z)$。
+当施加到一点$\bm p$上时，它将$\bm p$的坐标平移$\Delta x,\Delta y$和$\Delta z$，
+如\reffig{2.10}所示。例如，
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap02/Pointtranslation2d.tex}
+    \caption{2D中的平移。分别将偏移量$\Delta x$和$\Delta y$添加到点的坐标改变其在空间中的位置。}
+    \label{fig:2.10}
+\end{figure}
+
+平移有一些简单的性质：
+\begin{align*}
+    \bm T(0,0,0)                         & =\bm I\, ,                                \\
+    \bm T(x_1,y_1,z_1)\bm T(x_2,y_2,z_2) & =\bm T(x_1+x_2,y_1+y_2,z_1+z_2)\, ,       \\
+    \bm T(x_1,y_1,z_1)\bm T(x_2,y_2,z_2) & =\bm T(x_2,y_2,z_2)\bm T(x_1,y_1,z_1)\, , \\
+    \bm T^{-1}(x,y,z)                    & =\bm T(-x,-y,-z)\, .
+\end{align*}
+
+平移只影响点，不改变向量。平移变换的矩阵形式是
+\begin{align*}
+    \bm T(\Delta x,\Delta y, \Delta z)=\left[
+        \begin{array}{cccc}
+            1 & 0 & 0 & \Delta x \\
+            0 & 1 & 0 & \Delta y \\
+            0 & 0 & 1 & \Delta z \\
+            0 & 0 & 0 & 1
+        \end{array}
+        \right]\, .
+\end{align*}
+
+当考虑对一点的平移矩阵操作时，我们看看齐次坐标的值。
+考虑$\bm T(\Delta x,\Delta y, \Delta z)$的矩阵与
+齐次坐标为$[x\ y\ z\ 1]^\mathrm{T}$的点$\bm p$的乘积：
+\begin{align*}
+    \left[
+        \begin{array}{cccc}
+            1 & 0 & 0 & \Delta x \\
+            0 & 1 & 0 & \Delta y \\
+            0 & 0 & 1 & \Delta z \\
+            0 & 0 & 0 & 1
+        \end{array}
+        \right]\left[
+        \begin{array}{c}
+            x \\y\\z\\1
+        \end{array}
+        \right]=\left[
+        \begin{array}{c}
+            x+\Delta x \\y+\Delta y\\z+\Delta z\\1
+        \end{array}
+        \right]\, .
+\end{align*}
+
+不出所料，我们计算得到了一个坐标值偏移了$(\Delta x,\Delta y, \Delta z)$的新点。
+然而，如果我们将$\bm T$施加到向量$\bm v$，则有
+\begin{align*}
+    \left[
+        \begin{array}{cccc}
+            1 & 0 & 0 & \Delta x \\
+            0 & 1 & 0 & \Delta y \\
+            0 & 0 & 1 & \Delta z \\
+            0 & 0 & 0 & 1
+        \end{array}
+        \right]\left[
+        \begin{array}{c}
+            x \\y\\z\\0
+        \end{array}
+        \right]=\left[
+        \begin{array}{c}
+            x \\y\\z\\0
+        \end{array}
+        \right]\, .
+\end{align*}
+
+结果为同一向量$\bm v$是有意义的，因为向量表示方向所以平移不改变它们。
+
+我们将定义创建新\refvar{Transform}{}矩阵来表示给定平移的例程——
+它是平移矩阵等式的简单运用。
+该例程完全初始化返回的\refvar{Transform}{}，
+还初始化表示该平移的逆的矩阵。
+\begin{lstlisting}
+`\initcode{Transform Method Definitions}{=}\initnext{TransformMethodDefinitions}`
+`\refvar{Transform}{}` `\initvar{Translate}{}`(const `\refvar{Vector3f}{}` &delta) {
+    `\refvar{Matrix4x4}{}` m(1, 0, 0, delta.x,
+                0, 1, 0, delta.y,
+                0, 0, 1, delta.z, 
+                0, 0, 0,       1);
+    `\refvar{Matrix4x4}{}` minv(1, 0, 0, -delta.x,
+                   0, 1, 0, -delta.y,
+                   0, 0, 1, -delta.z, 
+                   0, 0, 0,        1);
+    return `\refvar{Transform}{}`(m, minv);
+}
+\end{lstlisting}
+
+\subsection{缩放}\label{sub:缩放}

@@ -421,8 +421,8 @@ $y$和$z$轴仍在同一平面内，与$x$轴垂直，但旋转了给定角度�
 \begin{lstlisting}
 `\refcode{Transform Method Definitions}{+=}\lastnext{TransformMethodDefinitions}`
 `\refvar{Transform}{}` `\initvar{RotateX}{}`(`\refvar{Float}{}` theta) {
-    `\refvar{Float}{}` sinTheta = std::sin(Radians(theta));
-    `\refvar{Float}{}` cosTheta = std::cos(Radians(theta));
+    `\refvar{Float}{}` sinTheta = std::sin(`\refvar{Radians}{}`(theta));
+    `\refvar{Float}{}` cosTheta = std::cos(`\refvar{Radians}{}`(theta));
     `\refvar{Matrix4x4}{}` m(1,        0,         0, 0, 
                 0, cosTheta, -sinTheta, 0,
                 0, sinTheta,  cosTheta, 0,
@@ -457,7 +457,87 @@ $y$和$z$轴仍在同一平面内，与$x$轴垂直，但旋转了给定角度�
 我们也提供了例程计算表示绕任意轴旋转的变换。
 该通用矩阵的推导基于计算把给定轴映射为固定轴（例如$z$轴）的旋转，
 执行旋转，再把固定轴旋转回原始轴。
-更简洁的推导可以用向量代数构造。
+更简洁的推导可以用向量代数构造
+\sidenote{译者注：尽管下文的内容的图示和推导没太大问题，
+    但想必读者第一次阅读时都会怀疑图中的标注和推导无法对应，
+    以至于难以理解其含义。
+    译者重新整理了这部分内容，详见\protect\refsub{四元数与旋转变换}。}。
 
 考虑规范化的方向向量$\bm a$给出旋转轴，旋转角度为$\theta$，
 被旋转向量为$\bm v$（\reffig{2.12}）。
+\begin{figure}[htbp]
+    \centering\includegraphics[scale=0.75]{chap02/Rotatearbitraryaxis.eps}
+    \caption{向量$\bm v$可通过在垂直于任意轴$\bm a$且过$\bm v$末端的平面内
+        建立坐标系统$(\bm p,\bm v_1,\bm v_2)$
+        并绕$\bm p$旋转向量$\bm v_1$和$\bm v_2$来做到绕该轴旋转。
+        将该旋转变换施加到坐标系统的轴$(1,0,0)$、$(0,1,0)$
+        和$(0,0,1)$即给出该旋转的一般旋转矩阵。}
+    \label{fig:2.12}
+\end{figure}
+
+首先，我们可以计算沿$\bm a$轴的向量$\bm v_\mathrm{c}$，
+它在过$\bm v$的末端且平行于$\bm a$的平面内。
+设$\bm v$和$\bm a$构成夹角$\alpha$，我们有
+\begin{align*}
+    \bm v_\mathrm{c}=\bm a\|\bm v\|\cos\alpha=\bm a(\bm v\cdot\bm a)\, .
+\end{align*}
+
+现在我们在该平面内计算一对基向量$\bm v_1$和$\bm v_2$。平凡地，其中一个是
+\begin{align*}
+    \bm v_1=\bm v-\bm v_\mathrm{c}\, ,
+\end{align*}
+且另一个可由叉积算得
+\begin{align*}
+    \bm v_2=(\bm v_1\times\bm a)\, .
+\end{align*}
+
+因为$\bm a$是规范化的，所以$\bm v_1$和$\bm v_2$长度相同，
+都等于连接$\bm v$和$\bm v_\mathrm{c}$的向量的长度。
+为了计算在旋转平面内绕$\bm v_\mathrm{c}$旋转角度$\theta$的变换，
+之前的旋转公式已经给出
+\begin{align*}
+    \bm v'=\bm v_\mathrm{c}+\bm v_1\cos\theta+\bm v_2\sin\theta\, .
+\end{align*}
+
+为了将其转化为旋转矩阵，我们把该公式施加到
+基向量$(1,0,0)$、$(0,1,0)$和$(0,0,1)$来得到矩阵各列的值。
+以上所有结果封装在下列函数中。
+如同其他旋转矩阵那样，其逆等于转置。
+\begin{lstlisting}
+`\refcode{Transform Method Definitions}{+=}\lastnext{TransformMethodDefinitions}`
+`\refvar{Transform}{}` `\initvar{Rotate}{}`(`\refvar{Float}{}` theta, const `\refvar{Vector3f}{}` &axis) {
+    `\refvar{Vector3f}{}` a = `\refvar{Normalize}{}`(axis);
+    `\refvar{Float}{}` sinTheta = std::sin(`\refvar{Radians}{}`(theta));
+    `\refvar{Float}{}` cosTheta = std::cos(`\refvar{Radians}{}`(theta));
+    `\refvar{Matrix4x4}{}` m;
+    `\refcode{Compute rotation of first basis vector}{}`
+    `\refcode{Compute rotations of second and third basis vectors}{}`
+    return `\refvar{Transform}{}`(m, `\refvar[Matrix4x4::Transpose]{Transpose}{}`(m));
+}
+\end{lstlisting}
+
+\begin{lstlisting}
+`\initcode{Compute rotation of first basis vector}{=}`
+m.m[0][0] = a.x * a.x + (1 - a.x * a.x) * cosTheta;
+m.m[0][1] = a.x * a.y * (1 - cosTheta) - a.z * sinTheta;
+m.m[0][2] = a.x * a.z * (1 - cosTheta) + a.y * sinTheta;
+m.m[0][3] = 0;
+\end{lstlisting}
+
+\begin{lstlisting}
+`\initcode{Compute rotations of second and third basis vectors}{=}`
+m.m[1][0] = a.x * a.y * (1 - cosTheta) + a.z * sinTheta;
+m.m[1][1] = a.y * a.y + (1 - a.y * a.y) * cosTheta;
+m.m[1][2] = a.y * a.z * (1 - cosTheta) - a.x * sinTheta;
+m.m[1][3] = 0;
+
+m.m[2][0] = a.x * a.z * (1 - cosTheta) - a.y * sinTheta;
+m.m[2][1] = a.y * a.z * (1 - cosTheta) + a.x * sinTheta;
+m.m[2][2] = a.z * a.z + (1 - a.z * a.z) * cosTheta;
+m.m[2][3] = 0;
+\end{lstlisting}
+
+另外两个基向量的代码类似，此处不再介绍
+\sidenote{译者注：笔者补充回来了。}。
+
+\subsection{注视变换}\label{sub:注视变换}

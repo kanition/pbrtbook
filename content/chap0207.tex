@@ -541,3 +541,66 @@ m.m[2][3] = 0;
 \sidenote{译者注：笔者补充回来了。}。
 
 \subsection{注视变换}\label{sub:注视变换}
+\keyindex{注视变换}{look-at transformation}{transformation变换}对于
+在场景中放置相机尤为有用。
+调用者指定要求的相机位置、相机要注视的点以及
+让沿这两个参数确定的观察方向的相机定向的“向上”向量。
+所有这些值都用世界空间坐标给定。
+然后注视的构建给出相机空间与世界空间之间的变换（\reffig{2.13}）。
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap02/Viewingtransform.tex}
+    \caption{给定相机位置、相机注视的位置以及一个“向上”方向，
+        注视变换描述了来自左手观察坐标系统的变换，相机处于原点看向$+z$轴且$+y$轴向上。}
+    \label{fig:2.13}
+\end{figure}
+
+为了求得注视变换矩阵的元素，
+我们利用之前本节描述的原理：
+变换矩阵的列给出了该变换作用于坐标系统基的结果。
+\begin{lstlisting}
+`\refcode{Transform Method Definitions}{+=}\lastnext{TransformMethodDefinitions}`
+`\refvar{Transform}{}` `\initvar{LookAt}{}`(const `\refvar{Point3f}{}` &pos, const `\refvar{Point3f}{}` &look,
+        const `\refvar{Vector3f}{}` &up) {
+    `\refvar{Matrix4x4}{}` cameraToWorld;
+    `\refcode{Initialize fourth column of viewing matrix}{}`
+    `\refcode{Initialize first three columns of viewing matrix}{}`
+    return `\refvar{Transform}{}`(`\refvar[Matrix4x4::Inverse]{Inverse}{}`(cameraToWorld), cameraToWorld);
+}
+\end{lstlisting}
+
+最简单的是第四列，给出了相机空间原点$[0\ 0\ 0\ 1]^\mathrm{T}$映射到世界空间中的点。
+显然它是用户提供的相机位置。
+\begin{lstlisting}
+`\initcode{Initialize fourth column of viewing matrix}{=}`
+cameraToWorld.m[0][3] = pos.x;
+cameraToWorld.m[1][3] = pos.y;
+cameraToWorld.m[2][3] = pos.z;
+cameraToWorld.m[3][3] = 1;
+\end{lstlisting}
+
+其他三列也不复杂。
+首先\refvar{LookAt}{()}计算从相机位置到注视点的规范化方向向量；
+这给出了$z$轴应该映射到的向量坐标，即矩阵第三列
+（在左手坐标系统中，沿$+z$轴的观察方向定义相机空间）。
+第一列给出相机空间中$+x$轴映射到世界空间的方向，
+它通过取用户提供的“向上”向量与刚刚计算的观察方向向量的叉积求得。
+最后，“向上”向量通过重新计算观察方向向量与变换的$x$轴向量的叉积求得，
+这样保证了$y$和$x$轴是垂直的，并且我们获得了一个正交观察坐标系统。
+\begin{lstlisting}
+`\initcode{Initialize first three columns of viewing matrix}{=}`
+`\refvar{Vector3f}{}` dir = `\refvar{Normalize}{}`(look - pos);
+`\refvar{Vector3f}{}` right = `\refvar{Normalize}{}`(`\refvar{Cross}{}`(`\refvar{Normalize}{}`(up), dir));
+`\refvar{Vector3f}{}` newUp = `\refvar{Cross}{}`(dir, right);
+cameraToWorld.m[0][0] = right.x;
+cameraToWorld.m[1][0] = right.y;
+cameraToWorld.m[2][0] = right.z;
+cameraToWorld.m[3][0] = 0.;
+cameraToWorld.m[0][1] = newUp.x;
+cameraToWorld.m[1][1] = newUp.y;
+cameraToWorld.m[2][1] = newUp.z;
+cameraToWorld.m[3][1] = 0.;
+cameraToWorld.m[0][2] = dir.x;
+cameraToWorld.m[1][2] = dir.y;
+cameraToWorld.m[2][2] = dir.z;
+cameraToWorld.m[3][2] = 0.;
+\end{lstlisting}

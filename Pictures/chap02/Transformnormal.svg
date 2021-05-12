@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="Layer_1"
+   data-name="Layer 1"
+   viewBox="0 0 343.25 118.64"
+   version="1.1"
+   sodipodi:docname="Transformnormal.svg"
+   inkscape:version="1.0.1 (3bc2e813f5, 2020-09-07)">
+  <metadata
+     id="metadata1083">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     id="namedview1081"
+     showgrid="false"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:snap-bbox="true"
+     inkscape:snap-object-midpoints="true"
+     inkscape:snap-bbox-midpoints="true"
+     inkscape:snap-bbox-edge-midpoints="true"
+     inkscape:bbox-nodes="true"
+     inkscape:bbox-paths="true"
+     inkscape:zoom="0.97233621"
+     inkscape:cx="264.56062"
+     inkscape:cy="541.78381"
+     inkscape:window-x="1912"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="Layer_1"
+     inkscape:document-rotation="0">
+    <sodipodi:guide
+       position="123.26457,7.3746391"
+       orientation="0,-1"
+       id="guide1136" />
+  </sodipodi:namedview>
+  <defs
+     id="defs1026">
+    <rect
+       x="44.360699"
+       y="103.26589"
+       width="35.634004"
+       height="15.271716"
+       id="rect1087" />
+    <style
+       id="style1024">.cls-1{fill:none;stroke:#000;stroke-miterlimit:10;}.cls-2{fill:#a6a6a6;}.cls-3{fill:#666;}</style>
+    <rect
+       x="44.360699"
+       y="103.26589"
+       width="35.634003"
+       height="15.271716"
+       id="rect1087-4" />
+    <rect
+       x="44.360699"
+       y="103.26589"
+       width="35.634003"
+       height="15.271716"
+       id="rect1100" />
+    <rect
+       x="44.360699"
+       y="103.26589"
+       width="35.634003"
+       height="15.271716"
+       id="rect1087-6" />
+    <rect
+       x="44.360699"
+       y="103.26589"
+       width="35.634003"
+       height="15.271716"
+       id="rect1100-6" />
+  </defs>
+  <title
+     id="title1028">Transform normal</title>
+  <circle
+     class="cls-1"
+     cx="59.02"
+     cy="57.15"
+     r="40.51"
+     id="circle1030" />
+  <line
+     class="cls-1"
+     x1="5.81"
+     y1="5.65"
+     x2="29.45"
+     y2="28.66"
+     id="line1032" />
+  <polygon
+     points="5.49 13.02 6.27 6.11 13.16 5.13 0 0 5.49 13.02"
+     id="polygon1034" />
+  <polygon
+     class="cls-2"
+     points="5.21 11.07 0.94 0.92 5.82 5.67 5.21 11.07"
+     id="polygon1036" />
+  <polygon
+     class="cls-3"
+     points="11.21 4.91 0.94 0.92 5.82 5.67 11.21 4.91"
+     id="polygon1038" />
+  <ellipse
+     class="cls-1"
+     cx="183.52"
+     cy="53.39"
+     rx="40.51"
+     ry="22.21"
+     id="ellipse1046" />
+  <line
+     class="cls-1"
+     x1="131.64"
+     y1="25.88"
+     x2="153.94"
+     y2="37.77"
+     id="line1048" />
+  <polygon
+     points="133.39 33.04 132.22 26.18 138.57 23.33 124.49 22.06 133.39 33.04"
+     id="polygon1050" />
+  <polygon
+     class="cls-2"
+     points="132.58 31.25 125.65 22.68 131.66 25.88 132.58 31.25"
+     id="polygon1052" />
+  <polygon
+     class="cls-3"
+     points="136.62 23.66 125.65 22.68 131.66 25.88 136.62 23.66"
+     id="polygon1054" />
+  <line
+     class="cls-1"
+     x1="259.11"
+     y1="22.85"
+     x2="272.68"
+     y2="44.18"
+     id="line1062" />
+  <polygon
+     points="257.1 29.95 259.46 23.4 266.39 24.04 254.76 16.02 257.1 29.95"
+     id="polygon1064" />
+  <polygon
+     class="cls-2"
+     points="257.28 27.99 255.46 17.12 259.12 22.87 257.28 27.99"
+     id="polygon1066" />
+  <polygon
+     class="cls-3"
+     points="264.53 23.37 255.46 17.12 259.12 22.87 264.53 23.37"
+     id="polygon1068" />
+  <polyline
+     class="cls-1"
+     points="276.76 42.02 274.33 38.1 270.56 40.28"
+     id="polyline1070" />
+  <ellipse
+     class="cls-1"
+     cx="302.24"
+     cy="59.44"
+     rx="40.51"
+     ry="22.21"
+     id="ellipse1072" />
+  <text
+     xml:space="preserve"
+     id="text1085"
+     style="font-size:13.3333px;line-height:1.25;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;shape-inside:url(#rect1087);"
+     x="20.556589"
+     y="0"
+     transform="matrix(1.5,0,0,1.5,-36.025851,-58.350302)"><tspan
+       x="54.778665"
+       y="115.10054"><tspan
+         style="text-align:center;text-anchor:middle">(a)</tspan></tspan></text>
+  <text
+     xml:space="preserve"
+     id="text1085-2"
+     style="font-size:13.3333px;line-height:1.25;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;shape-inside:url(#rect1087-4);"
+     x="20.556589"
+     y="0"
+     transform="matrix(1.5,0,0,1.5,93.412634,-58.350302)"><tspan
+       x="54.404317"
+       y="115.10054"><tspan
+         style="text-align:center;text-anchor:middle">(b)</tspan></tspan></text>
+  <text
+     xml:space="preserve"
+     id="text1085-4"
+     style="font-size:13.3333px;line-height:1.25;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;shape-inside:url(#rect1087-6);"
+     x="20.556589"
+     y="0"
+     transform="matrix(1.5,0,0,1.5,210.53343,-58.350302)"><tspan
+       x="54.778665"
+       y="115.10054"><tspan
+         style="text-align:center;text-anchor:middle">(c)</tspan></tspan></text>
+</svg>

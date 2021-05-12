@@ -1,1 +1,92 @@
 \section{施加变换}\label{sec:施加变换}
+
+我们现在可以定义执行合适的矩阵乘法来变换点和向量的例程了。
+我们将重载函数应用运算符来描述这些变换；
+这使得我们可以像这样编写代码：
+{\ttfamily\indent \refvar{Point3f}{} p = ...;\\}
+{\ttfamily\indent \refvar{Transform}{} T = ...;\\}
+{\ttfamily\indent \refvar{Point3f}{} pNew = T(p);}
+
+\subsection{点}\label{sub:点}
+点的变换例程接收一点$(x,y,z)$并隐式地将其表示为齐次坐标向量$[x\ y\ z\ 1]^\mathrm{T}$。
+然后它通过将该向量与变换矩阵相乘来变换该点。
+最后，它除以$w$来转换回非齐次点的表示。
+为了效率，当$w=1$时该方法跳过除以齐次权重$w$，
+这对pbrt中用到的大多数变换都很常见——
+只有第\refchap{相机模型}定义的投影变换才需要该除法。
+\begin{lstlisting}
+`\initcode{Transform Inline Functions}{=}\initnext{TransformInlineFunctions}`
+template <typename T> inline `\refvar{Point3}{}`<T>
+`\refvar{Transform}{}`::operator()(const `\refvar{Point3}{}`<T> &p) const {
+    T x = p.x, y = p.y, z = p.z;
+    T xp = m.m[0][0]*x + m.m[0][1]*y + m.m[0][2]*z + m.m[0][3];
+    T yp = m.m[1][0]*x + m.m[1][1]*y + m.m[1][2]*z + m.m[1][3];
+    T zp = m.m[2][0]*x + m.m[2][1]*y + m.m[2][2]*z + m.m[2][3];
+    T wp = m.m[3][0]*x + m.m[3][1]*y + m.m[3][2]*z + m.m[3][3];
+    if (wp == 1) return `\refvar{Point3}{}`<T>(xp, yp, zp);
+    else         return `\refvar{Point3}{}`<T>(xp, yp, zp) / wp;
+}
+\end{lstlisting}
+
+\subsection{向量}\label{sub:向量}
+向量的变换可用相同方式计算。
+然而，因为隐含了齐次坐标$w$为零，所以简化了矩阵和列向量的乘法。
+\begin{lstlisting}
+`\refcode{Transform Inline Functions}{+=}\lastnext{TransformInlineFunctions}`
+template <typename T> inline `\refvar{Vector3}{}`<T>
+`\refvar{Transform}{}`::operator()(const `\refvar{Vector3}{}`<T> &v) const {
+    T x = v.x, y = v.y, z = v.z;
+    return `\refvar{Vector3}{}`<T>(m.m[0][0]*x + m.m[0][1]*y + m.m[0][2]*z,
+                      m.m[1][0]*x + m.m[1][1]*y + m.m[1][2]*z,
+                      m.m[2][0]*x + m.m[2][1]*y + m.m[2][2]*z);
+}
+\end{lstlisting}
+
+\subsection{法线}\label{sub:法线}
+法线和向量的变换方式并不一样，如\reffig{2.14}所示。
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap02/Transformnormal.tex}
+    \caption{变换曲面法线。(a)原始圆，箭头表示一点的法线。
+        (b)当圆在$y$方向高度缩减一半时，
+        简单地把法线当做方向并用相同方式缩放所给出的法线不再和曲面垂直。
+        (c)正确变换的法线。}
+    \label{fig:2.14}
+\end{figure}
+
+尽管切向量变换的方式很简单，但法线却需要特殊处理。
+因为构造的法向量$\bm v$和曲面上任意切向量$\bm t$是垂直的，
+我们知道
+\begin{align*}
+    \bm n\cdot\bm t=\bm n^\mathrm{T}\bm t=0\, .
+\end{align*}
+
+当我们用某矩阵$\bm M$对曲面上的点做变换时，
+被变换点处的新切向量$\bm t'$为$\bm M\bm t$。
+对于某个$4\times4$矩阵$\bm S$，变换后的法线$\bm n'$应该等于$\bm S\bm n$。
+为了满足正交要求，我们必须有
+\begin{align*}
+    0 & =(\bm n')^\mathrm{T}\bm t'                      \\
+      & =(\bm S\bm n)^\mathrm{T}\bm M\bm t              \\
+      & =\bm n^\mathrm{T}\bm S^\mathrm{T}\bm M\bm t\, .
+\end{align*}
+
+如果$\bm S^\mathrm{T}\bm M=\bm I$则该条件成立。
+因此$\bm S^\mathrm{T}=\bm M^{-1}$，所以$\bm S=(\bm M^{-1})^\mathrm{T}$，
+并且我们看到法线必须被变换矩阵的逆转置变换。
+这个细节是为什么\refvar{Transform}{}要保留其逆的主要原因之一。
+
+注意该方法在变换法线时不显式计算逆的转置。
+它只是按不同顺序索引逆矩阵（和变换\refvar{Vector3f}{}的代码比较）。
+\begin{lstlisting}
+`\refcode{Transform Inline Functions}{+=}\lastnext{TransformInlineFunctions}`
+template <typename T> inline `\refvar{Normal3}{}`<T>
+`\refvar{Transform}{}`::operator()(const `\refvar{Normal3}{}`<T> &n) const {
+    T x = n.x, y = n.y, z = n.z;
+    return `\refvar{Normal3}{}`<T>(mInv.m[0][0]*x + mInv.m[1][0]*y + mInv.m[2][0]*z,
+                      mInv.m[0][1]*x + mInv.m[1][1]*y + mInv.m[2][1]*z,
+                      mInv.m[0][2]*x + mInv.m[1][2]*y + mInv.m[2][2]*z);
+}
+\end{lstlisting}
+
+\subsection{射线}\label{sub:射线}
+变换射线在概念上很简单：

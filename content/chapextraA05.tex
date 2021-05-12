@@ -7,3 +7,66 @@ inline `\refvar{Float}{}` `\initvar{Lerp}{}`(`\refvar{Float}{}` t, `\refvar{Floa
     return (1 - t) * v1 + t * v2;
 }
 \end{lstlisting}
+
+\subsection{2$\times$2线性系统}\label{sub:2x2线性系统}
+\begin{lstlisting}
+`\initcode{Matrix4x4 Method Definitions}{=}\initnext{Matrix4x4MethodDefinitions}`
+bool `\initvar{SolveLinearSystem2x2}{}`(const `\refvar{Float}{}` A[2][2],
+        const `\refvar{Float}{}` B[2], `\refvar{Float}{}` *x0, `\refvar{Float}{}` *x1) {
+    `\refvar{Float}{}` det = A[0][0] * A[1][1] - A[0][1] * A[1][0];
+    if (std::abs(det) < 1e-10f)
+        return false;
+    *x0 = (A[1][1] * B[0] - A[0][1] * B[1]) / det;
+    *x1 = (A[0][0] * B[1] - A[1][0] * B[0]) / det;
+    if (std::isnan(*x0) || std::isnan(*x1))
+        return false;
+    return true;
+}
+\end{lstlisting}
+
+\subsection{4$\times$4矩阵}\label{sub:4x4矩阵}
+\begin{lstlisting}
+`\initcode{Matrix4x4 Declarations}{=}`
+struct `\initvar{Matrix4x4}{}` {
+    `\refcode{Matrix4x4 Public Methods}{}`
+    `\refvar{Float}{}` `\initvar[Matrix4x4::m]{m}{}`[4][4];
+};
+\end{lstlisting}
+
+\begin{lstlisting}
+`\initcode{Matrix4x4 Public Methods}{=}\initnext{Matrix4x4PublicMethods}`
+`\refvar{Matrix4x4}{}`(`\refvar{Float}{}` mat[4][4]);
+`\refvar{Matrix4x4}{}`(`\refvar{Float}{}` t00, `\refvar{Float}{}` t01, `\refvar{Float}{}` t02, `\refvar{Float}{}` t03,
+          `\refvar{Float}{}` t10, `\refvar{Float}{}` t11, `\refvar{Float}{}` t12, `\refvar{Float}{}` t13,
+          `\refvar{Float}{}` t20, `\refvar{Float}{}` t21, `\refvar{Float}{}` t22, `\refvar{Float}{}` t23,
+          `\refvar{Float}{}` t30, `\refvar{Float}{}` t31, `\refvar{Float}{}` t32, `\refvar{Float}{}` t33);
+\end{lstlisting}
+
+\begin{lstlisting}
+`\refcode{Matrix4x4 Method Definitions}{+=}\lastcode{Matrix4x4MethodDefinitions}`
+`\refvar{Matrix4x4}{}` `\initvar[Matrix4x4::Transpose]{Transpose}{}`(const `\refvar{Matrix4x4}{}` &m) {
+   return `\refvar{Matrix4x4}{}`(m.`\refvar[Matrix4x4::m]{m}{}`[0][0], m.`\refvar[Matrix4x4::m]{m}{}`[1][0], m.`\refvar[Matrix4x4::m]{m}{}`[2][0], m.`\refvar[Matrix4x4::m]{m}{}`[3][0],
+                    m.`\refvar[Matrix4x4::m]{m}{}`[0][1], m.`\refvar[Matrix4x4::m]{m}{}`[1][1], m.`\refvar[Matrix4x4::m]{m}{}`[2][1], m.`\refvar[Matrix4x4::m]{m}{}`[3][1],
+                    m.`\refvar[Matrix4x4::m]{m}{}`[0][2], m.`\refvar[Matrix4x4::m]{m}{}`[1][2], m.`\refvar[Matrix4x4::m]{m}{}`[2][2], m.`\refvar[Matrix4x4::m]{m}{}`[3][2],
+                    m.`\refvar[Matrix4x4::m]{m}{}`[0][3], m.`\refvar[Matrix4x4::m]{m}{}`[1][3], m.`\refvar[Matrix4x4::m]{m}{}`[2][3], m.`\refvar[Matrix4x4::m]{m}{}`[3][3]);
+}
+\end{lstlisting}
+
+\begin{lstlisting}
+`\refcode{Matrix4x4 Public Methods}{+=}\lastnext{Matrix4x4PublicMethods}`
+static `\refvar{Matrix4x4}{}` `\initvar[Matrix4x4::Mul]{Mul}{}`(const `\refvar{Matrix4x4}{}` &m1, const `\refvar{Matrix4x4}{}` &m2) {
+    `\refvar{Matrix4x4}{}` r;
+    for (int i = 0; i < 4; ++i)
+        for (int j = 0; j < 4; ++j)
+            r.`\refvar[Matrix4x4::m]{m}{}`[i][j] = m1.`\refvar[Matrix4x4::m]{m}{}`[i][0] * m2.`\refvar[Matrix4x4::m]{m}{}`[0][j] + 
+                        m1.`\refvar[Matrix4x4::m]{m}{}`[i][1] * m2.`\refvar[Matrix4x4::m]{m}{}`[1][j] + 
+                        m1.`\refvar[Matrix4x4::m]{m}{}`[i][2] * m2.`\refvar[Matrix4x4::m]{m}{}`[2][j] + 
+                        m1.`\refvar[Matrix4x4::m]{m}{}`[i][3] * m2.`\refvar[Matrix4x4::m]{m}{}`[3][j];
+    return r;
+}
+\end{lstlisting}
+
+\begin{lstlisting}
+`\refcode{Matrix4x4 Public Methods}{+=}\lastcode{Matrix4x4PublicMethods}`
+friend `\refvar{Matrix4x4}{}` `\initvar[Matrix4x4::Inverse]{Inverse}{}`(const `\refvar{Matrix4x4}{}` &);
+\end{lstlisting}

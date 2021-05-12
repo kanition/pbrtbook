@@ -1,1 +1,606 @@
 \section{变换}\label{sec:变换}
+
+通常，\keyindex{变换}{transformation}{}$\bm T$是
+从点到点和从向量到向量的映射：
+\begin{align*}
+    \bm p'=\bm T(\bm p), \  \bm v'=\bm T(\bm v)\, .
+\end{align*}
+
+变换$\bm T$可以是任意过程。
+然而，本章我们考虑所有可能变换的一个子集。
+特别地，它们是：
+\begin{itemize}
+    \item \keyindex{线性的}{linear}{}：对于任意线性变换$\bm T$和
+          标量$s$，都有$\bm T(s\bm v)=s\bm T(\bm v)$以及
+          $\bm T(\bm v_1+\bm v_2)=\bm T(\bm v_1)+\bm T(\bm v_2)$。
+          这两点性质可极大简化关于变换的推导。
+    \item \keyindex{连续的}{continuous}{}：简单说，
+          $\bm T$把$\bm p$和$\bm v$的邻域映射为$\bm p'$和$\bm v'$的邻域。
+    \item \keyindex{一对一}{one-to-one}{}且\keyindex{可逆}{invertible}{}：
+          对于每个$\bm p$，$\bm T$把$\bm p$映射为唯一一个$\bm p'$。
+          此外，存在一个逆变换$\bm T^{-1}$将$\bm p'$映射回$\bm p$。
+\end{itemize}
+
+我们经常想取某一坐标系下的点、向量或法线并求它在另一坐标系下的坐标值。
+运用线性代数的基本性质，可以证明一个$4\times4$的矩阵
+能表示点或向量从一个坐标系到另一个坐标系的线性变换。
+此外，这样的$4\times4$矩阵足以表达固定坐标系内点和向量的所有线性变换，
+例如空间中平移或绕一点旋转。
+因此，有两种不同（且不兼容！）的方式解释矩阵：
+\begin{itemize}
+    \item \keyindex{坐标系的变换}{transformation of the frame}{}：给定一点，
+          矩阵可表示如何计算同一坐标系下的\emph{新}点来代表对原始点的变换
+          （例如朝某个方向平移）。
+    \item \keyindex{从一个坐标系到另一个的变换}{transformation from one frame to another}{}：
+          矩阵可依据一点或向量在原坐标系的坐标来表示其在新坐标系的坐标。
+\end{itemize}
+
+pbrt中所用的变换大多数是点从一个坐标系到另一个坐标系的变换。
+
+通常，变换使得在最方便的坐标空间内工作成为可能。
+例如，我们编写定义虚拟相机的例程，
+假设相机位于原点，看向$z$轴，且$y$向上，$x$轴向右。
+这些假设极大简化了相机实现。
+然后，为了把相机置于场景中任意一点并看向任意方向，
+我们只需要构造一个变换把场景坐标系统中的点映射到相机坐标系统中
+（关于pbrt中相机坐标空间的更多信息详见\refsub{相机坐标空间}）。
+
+\subsection{齐次坐标}\label{sub:齐次坐标}
+给定由$(\bm p_\mathrm{o},\bm v_1,\bm v_2,\bm v_3)$定义的坐标系，
+具有相同坐标$(x,y,z)$的点$(p_x,p_y,p_z)$和向量$(v_x,v_y,v_z)$在表示上有歧义。
+利用本章开头介绍的点和向量的表示，
+我们可以把点写作内积$[s_1\ s_2\ s_3\ 1][\bm v_1\ \bm v_2\ \bm v_3\ \bm p_\mathrm{o}]^\mathrm{T}$，
+把向量写作内积$[s'_1\ s'_2\ s'_3\ 0][\bm v_1\ \bm v_2\ \bm v_3\ \bm p_\mathrm{o}]^\mathrm{T}$。
+这样有三个$s_i$以及一个零或一的四维向量称作点或向量的\keyindex{齐次}{homogeneous}{}表示。
+齐次表示的第四个坐标有时称作\keyindex{权重}{weight}{}。
+对于一个点，它的值可以是任意非零标量：
+齐次点$[1,3,-2,1]$和$[-2,-6,4,-2]$描述了同一个笛卡尔点$(1,3,-2)$。
+把齐次点转换为普通点需要用前三个分量除以权重
+\sidenote{译者注：这里调整了原文对各种括号的混用。
+    齐次坐标和矩阵等用方括号，一般坐标等用圆括号。}：
+\begin{align*}
+    [x,y,z,w]\rightarrow\left(\frac{x}{w},\frac{y}{w},\frac{z}{w}\right)\, .
+\end{align*}
+
+我们将利用这些事实来看看变换矩阵为什么可以描述
+如何将一个坐标系下的点和向量映射到另一个坐标系。
+考虑矩阵$\bm M$描述从一个坐标系到另一个坐标系的变换：
+\begin{align*}
+    M=\left[
+        \begin{array}{cccc}
+            m_{0,0} & m_{0,1} & m_{0,2} & m_{0,3} \\
+            m_{1,0} & m_{1,1} & m_{1,2} & m_{1,3} \\
+            m_{2,0} & m_{2,1} & m_{2,2} & m_{2,3} \\
+            m_{3,0} & m_{3,1} & m_{3,2} & m_{3,3}
+        \end{array}
+        \right]\, .
+\end{align*}
+
+（本书中，我们定义矩阵元素时索引从零开始，这样公式和源码更能直接对应。）
+若$\bm M$表示的变换被应用到$x$轴向量$(1,0,0)$上，我们有
+\begin{align*}
+    \bm M\bm x=\bm M[1\ 0\ 0\ 0]^\mathrm{T}=[m_{0,0}\ m_{1,0}\ m_{2,0}\ m_{3,0}]^\mathrm{T}\, .
+\end{align*}
+
+因此，直接阅读矩阵的列就能知道当前坐标系统的基向量和原点是怎样被矩阵变换的：
+\begin{align*}
+    \bm M\bm y & =[m_{0,1}\ m_{1,1}\ m_{2,1}\ m_{3,1}]^\mathrm{T}\, , \\
+    \bm M\bm z & =[m_{0,2}\ m_{1,2}\ m_{2,2}\ m_{3,2}]^\mathrm{T}\, , \\
+    \bm M\bm p & =[m_{0,3}\ m_{1,3}\ m_{2,3}\ m_{3,3}]^\mathrm{T}\, .
+\end{align*}
+
+一般通过表征基是如何变换的，
+我们就能知道该基表示的任意指定点或向量是如何被变换的。
+因为当前坐标系统的点和向量由当前坐标系表示，
+直接对它们施加变换等价于对当前坐标系统的基施加变换并
+用变换后的基求出坐标。
+
+我们并不在代码中显式地使用齐次坐标；
+pbrt中没有类{\ttfamily Homogeneous}。
+然而，下节各种变换例程都隐式地将点、向量和法线转换为齐次形式，
+变换齐次点，再转换回来返回结果。
+这样就在一个地方（即变换的实现）隔离了齐次坐标的细节。
+\begin{lstlisting}
+`\initcode{Transform Declarations}{=}`
+class `\initvar{Transform}{}` {
+public:
+    `\refcode{Transform Public Methods}{}`
+private:
+    `\refcode{Transform Private Data}{}`
+};
+\end{lstlisting}
+
+变换由矩阵\refvar[Transform::m]{m}{}，即一个\refvar{Matrix4x4}{}对象的元素表示。
+底层类\refvar{Matrix4x4}{}定义在\refsub{4x4矩阵}。
+矩阵\refvar[Transform::m]{m}{}按\keyindex{行优先}{row-major}{}形式存储，
+所以元素{\ttfamily m[i][j]}对应$m_{i,j}$，
+其中$i$是行数，$j$是列数。
+为了方便，\refvar{Transform}{}还存储了
+矩阵\refvar[Transform::m]{m}{}的逆
+\refvar{Transform::mInv}{}成员；
+因为pbrt的需要，易获取的逆比按需重复计算更好。
+
+变换的这种表示相对更耗内存：
+假设存储一个\refvar{Float}{}值需要4字节，一个
+\refvar{Transform}{}就需要128字节存储。
+幼稚地使用该方法会造成浪费；
+如果一个场景有几百万个形状但仅有几千个不同的变换，
+就更没理由在内存中冗余地多次保存同一个变换。
+因此pbrt中的\refvar{Shape}{}保存的是\refvar{Transform}{}的指针，
+\refsub{形状}定义的场景指定代码使用\refvar{TransformCache}{}来保证
+所有共享同一变换的形状指向内存中该变换的单一实例。
+
+这个共享变换的决定意味着丧失了灵活性，然而：
+如果\refvar{Transform}{}被场景中的多个物体（以及不希望它改变的对象）共享，
+则\refvar{Transform}{}的元素在创建后不能被修改。
+现实中这点限制不是问题，
+因为场景中的变换通常是在pbrt解析场景描述文件时创建的，
+之后在渲染时不需要改变。
+\begin{lstlisting}
+`\initcode{Transform Private Data}{=}`
+`\refvar{Matrix4x4}{}` `\initvar[Transform::m]{m}{}`, `\initvar[Transform::mInv]{mInv}{}`;
+\end{lstlisting}
+
+\subsection{基本运算}\label{sub:基本运算}
+当创建新的\refvar{Transform}{}时，
+它默认为\keyindex{恒等变换}{identity transformation}{transformation变换}——
+将每个点和向量映射为它自己的变换。
+该变换由\keyindex{单位矩阵}{identity matrix}{}表示：
+\begin{align*}
+    \bm I=\left[
+        \begin{array}{cccc}
+            1 & 0 & 0 & 0 \\
+            0 & 1 & 0 & 0 \\
+            0 & 0 & 1 & 0 \\
+            0 & 0 & 0 & 1
+        \end{array}
+        \right]\, .
+\end{align*}
+
+这里的实现依赖\refvar{Matrix4x4}{}默认构造函数
+把\refvar[Transform::m]{m}{}和\refvar[Transform::mInv]{mInv}{}填充为单位矩阵。
+\begin{lstlisting}
+`\initcode{Transform Public Methods}{=}\initnext{TransformPublicMethods}`
+`\refvar{Transform}{}`() { }
+\end{lstlisting}
+
+\refvar{Transform}{}也可以从给定矩阵创建。
+这时，给定矩阵必须是显式可逆的。
+\begin{lstlisting}
+`\refcode{Transform Public Methods}{+=}\lastnext{TransformPublicMethods}`
+`\refvar{Transform}{}`(const `\refvar{Float}{}` mat[4][4]) {
+    `\refvar[Transform::m]{m}{}` = `\refvar{Matrix4x4}{}`(mat[0][0], mat[0][1], mat[0][2], mat[0][3],
+                  mat[1][0], mat[1][1], mat[1][2], mat[1][3],
+                  mat[2][0], mat[2][1], mat[2][2], mat[2][3],
+                  mat[3][0], mat[3][1], mat[3][2], mat[3][3]);
+    `\refvar[Transform::mInv]{mInv}{}` = `\refvar[Matrix4x4::Inverse]{Inverse}{}`(`\refvar[Transform::m]{m}{}`);
+}
+\end{lstlisting}
+
+\begin{lstlisting}
+`\refcode{Transform Public Methods}{+=}\lastnext{TransformPublicMethods}`
+`\refvar{Transform}{}`(const `\refvar{Matrix4x4}{}` &m) : `\refvar[Transform::m]{m}{}`(m), `\refvar[Transform::mInv]{mInv}{}`(`\refvar[Matrix4x4::Inverse]{Inverse}{}`(m)) { }
+\end{lstlisting}
+
+最常用的构造函数取变换矩阵的引用以及显式提供的逆。
+在构造函数中计算逆是一种很好的方法，
+因为许多几何变换有很简单的逆，
+我们可以避免由于计算一般$4\times4$矩阵的逆
+而造成的开销和潜在的数值精度损失。
+\begin{lstlisting}
+`\refcode{Transform Public Methods}{+=}\lastnext{TransformPublicMethods}`
+`\refvar{Transform}{}`(const `\refvar{Matrix4x4}{}` &m, const `\refvar{Matrix4x4}{}` &mInv) 
+   : `\refvar[Transform::m]{m}{}`(m), `\refvar[Transform::mInv]{mInv}{}`(mInv) {
+}
+\end{lstlisting}
+
+\refvar{Transform}{}表示\refvar{Transform}{}的逆只需
+通过交换\refvar[Transform::mInv]{mInv}{}和\refvar[Transform::m]{m}{}并返回。
+\begin{lstlisting}
+`\refcode{Transform Public Methods}{+=}\lastnext{TransformPublicMethods}`
+friend `\refvar{Transform}{}` `\initvar[Transform::Inverse]{Inverse}{}`(const `\refvar{Transform}{}` &t) {
+    return `\refvar{Transform}{}`(t.`\refvar[Transform::mInv]{mInv}{}`, t.`\refvar[Transform::m]{m}{}`);
+}
+\end{lstlisting}
+
+转置变换中的两个矩阵以计算新变换也很有用。
+\begin{lstlisting}
+`\refcode{Transform Public Methods}{+=}\lastnext{TransformPublicMethods}`
+friend `\refvar{Transform}{}` `\initvar[Transform::Transpose]{Transpose}{}`(const `\refvar{Transform}{}` &t) {
+    return `\refvar{Transform}{}`(`\refvar[Matrix4x4::Transpose]{Transpose}{}`(t.`\refvar[Transform::m]{m}{}`), `\refvar[Matrix4x4::Transpose]{Transpose}{}`(t.`\refvar[Transform::mInv]{mInv}{}`));
+}
+\end{lstlisting}
+
+我们提供了\refvar{Transform}{}相等（和不相等）测试方法；
+它们的实现很简单就不介绍了\sidenote{译者注：即逐元素比较。}。
+\refvar{Transform}{}也提供了方法{\ttfamily IsIdentity()}检查变换是否是恒等的。
+
+\subsection{平移}\label{sub:平移}
+最简单的变换之一就是\keyindex{平移变换}{translation transformation}{transformation变换}，
+$\bm T(\Delta x,\Delta y, \Delta z)$。
+当施加到一点$\bm p$上时，它将$\bm p$的坐标平移$\Delta x,\Delta y$和$\Delta z$，
+如\reffig{2.10}所示。例如，
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap02/Pointtranslation2d.tex}
+    \caption{2D中的平移。分别将偏移量$\Delta x$和$\Delta y$添加到点的坐标改变其在空间中的位置。}
+    \label{fig:2.10}
+\end{figure}
+
+平移有一些简单的性质：
+\begin{align*}
+    \bm T(0,0,0)                         & =\bm I\, ,                                \\
+    \bm T(x_1,y_1,z_1)\bm T(x_2,y_2,z_2) & =\bm T(x_1+x_2,y_1+y_2,z_1+z_2)\, ,       \\
+    \bm T(x_1,y_1,z_1)\bm T(x_2,y_2,z_2) & =\bm T(x_2,y_2,z_2)\bm T(x_1,y_1,z_1)\, , \\
+    \bm T^{-1}(x,y,z)                    & =\bm T(-x,-y,-z)\, .
+\end{align*}
+
+平移只影响点，不改变向量。平移变换的矩阵形式是
+\begin{align*}
+    \bm T(\Delta x,\Delta y, \Delta z)=\left[
+        \begin{array}{cccc}
+            1 & 0 & 0 & \Delta x \\
+            0 & 1 & 0 & \Delta y \\
+            0 & 0 & 1 & \Delta z \\
+            0 & 0 & 0 & 1
+        \end{array}
+        \right]\, .
+\end{align*}
+
+当考虑对一点的平移矩阵操作时，我们看看齐次坐标的值。
+考虑$\bm T(\Delta x,\Delta y, \Delta z)$的矩阵与
+齐次坐标为$[x\ y\ z\ 1]^\mathrm{T}$的点$\bm p$的乘积：
+\begin{align*}
+    \left[
+        \begin{array}{cccc}
+            1 & 0 & 0 & \Delta x \\
+            0 & 1 & 0 & \Delta y \\
+            0 & 0 & 1 & \Delta z \\
+            0 & 0 & 0 & 1
+        \end{array}
+        \right]\left[
+        \begin{array}{c}
+            x \\y\\z\\1
+        \end{array}
+        \right]=\left[
+        \begin{array}{c}
+            x+\Delta x \\y+\Delta y\\z+\Delta z\\1
+        \end{array}
+        \right]\, .
+\end{align*}
+
+不出所料，我们计算得到了一个坐标值偏移了$(\Delta x,\Delta y, \Delta z)$的新点。
+然而，如果我们将$\bm T$施加到向量$\bm v$，则有
+\begin{align*}
+    \left[
+        \begin{array}{cccc}
+            1 & 0 & 0 & \Delta x \\
+            0 & 1 & 0 & \Delta y \\
+            0 & 0 & 1 & \Delta z \\
+            0 & 0 & 0 & 1
+        \end{array}
+        \right]\left[
+        \begin{array}{c}
+            x \\y\\z\\0
+        \end{array}
+        \right]=\left[
+        \begin{array}{c}
+            x \\y\\z\\0
+        \end{array}
+        \right]\, .
+\end{align*}
+
+结果为同一向量$\bm v$是有意义的，因为向量表示方向所以平移不改变它们。
+
+我们将定义创建新\refvar{Transform}{}矩阵来表示给定平移的例程——
+它是平移矩阵等式的简单运用。
+该例程完全初始化返回的\refvar{Transform}{}，
+还初始化表示该平移的逆的矩阵。
+\begin{lstlisting}
+`\initcode{Transform Method Definitions}{=}\initnext{TransformMethodDefinitions}`
+`\refvar{Transform}{}` `\initvar{Translate}{}`(const `\refvar{Vector3f}{}` &delta) {
+    `\refvar{Matrix4x4}{}` m(1, 0, 0, delta.x,
+                0, 1, 0, delta.y,
+                0, 0, 1, delta.z, 
+                0, 0, 0,       1);
+    `\refvar{Matrix4x4}{}` minv(1, 0, 0, -delta.x,
+                   0, 1, 0, -delta.y,
+                   0, 0, 1, -delta.z, 
+                   0, 0, 0,        1);
+    return `\refvar{Transform}{}`(m, minv);
+}
+\end{lstlisting}
+
+\subsection{缩放}\label{sub:缩放}
+另一个基本变换是\keyindex{缩放变换}{scale transformation}{transformation变换}，$\bm S(s_x,s_y,s_z)$。
+它对点和向量起作用并用缩放因子乘以其$x,y$和$z$分量：$\bm S(2,2,1)(x,y,z)=(2x,2y,z)$。
+它有如下基本性质：
+\begin{align*}
+    \bm S(1,1,1)                         & =\bm I\, ,                                                 \\
+    \bm S(x_1,y_1,z_1)\bm S(x_2,y_2,z_2) & =\bm S(x_1x_2,y_1y_2,z_1z_2)\, ,                           \\
+    \bm S^{-1}(x,y,z)                    & =\bm S\left(\frac{1}{x},\frac{1}{y},\frac{1}{z}\right)\, .
+\end{align*}
+
+我们可以区分\keyindex{均匀缩放}{uniform scaling}{}，
+即全部三个缩放因子有相同值，
+以及\keyindex{非均匀缩放}{nonuniform scaling}{}，
+即它们有不同的值。
+一般的缩放矩阵为
+\begin{align*}
+    \bm S(x,y,z)=\left[
+        \begin{array}{cccc}
+            x & 0 & 0 & 0 \\
+            0 & y & 0 & 0 \\
+            0 & 0 & z & 0 \\
+            0 & 0 & 0 & 1
+        \end{array}
+        \right]\, .
+\end{align*}
+
+\begin{lstlisting}
+`\refcode{Transform Method Definitions}{+=}\lastnext{TransformMethodDefinitions}`
+`\refvar{Transform}{}` `\initvar{Scale}{}`(`\refvar{Float}{}` x, `\refvar{Float}{}` y, `\refvar{Float}{}` z) {
+    `\refvar{Matrix4x4}{}` m(x, 0, 0, 0,
+                0, y, 0, 0,
+                0, 0, z, 0,
+                0, 0, 0, 1);
+    `\refvar{Matrix4x4}{}` minv(1/x,   0,   0, 0,
+                   0,   1/y,   0, 0,
+                   0,     0, 1/z, 0,
+                   0,     0,   0, 1);
+    return `\refvar{Transform}{}`(m, minv);
+}
+\end{lstlisting}
+
+能够测试变换是否有缩放项是很有用的；
+一个简单的方式是对三个坐标轴做该变换并看
+它们的长度是否明显不等于一。
+\begin{lstlisting}
+`\refcode{Transform Public Methods}{+=}\lastnext{TransformPublicMethods}`
+bool `\initvar{HasScale}{}`() const {
+    `\refvar{Float}{}` la2 = (*this)(`\refvar{Vector3f}{}`(1, 0, 0)).`\refvar{LengthSquared}{}`();
+    `\refvar{Float}{}` lb2 = (*this)(`\refvar{Vector3f}{}`(0, 1, 0)).`\refvar{LengthSquared}{}`();
+    `\refvar{Float}{}` lc2 = (*this)(`\refvar{Vector3f}{}`(0, 0, 1)).`\refvar{LengthSquared}{}`();
+#define NOT_ONE(x) ((x) < .999f || (x) > 1.001f)
+    return (NOT_ONE(la2) || NOT_ONE(lb2) || NOT_ONE(lc2));
+#undef NOT_ONE
+}
+\end{lstlisting}
+
+\subsection{x,y和z轴旋转}\label{sub:x,y和z轴旋转}
+另一个有用的变换类型是\keyindex{旋转变换}{rotation transformation}{transformation变换}，$\bm R$。
+通常，我们可以定义从原点到任意方向的任意轴再绕轴旋转给定角度。
+这类最常见的是绕$x,y$和$z$坐标轴旋转。
+我们把这类旋转写作$\bm R_x(\theta)$、$\bm R_y(\theta)$等。
+绕任意轴旋转记作$\bm R_{(x,y,z)}(\theta)$。
+
+旋转也有一些基本性质：
+\begin{align*}
+    \bm R_a(0)                         & =\bm I\, ,                                       \\
+    \bm R_a(\theta_1)\bm R_a(\theta_2) & =\bm R_a(\theta_1+\theta_2)\, ,                  \\
+    \bm R_a(\theta_1)\bm R_a(\theta_2) & =\bm R_a(\theta_2)\bm R_a(\theta_1)\, ,          \\
+    \bm R_a^{-1}(\theta)               & =\bm R_a(-\theta)=\bm R_a^\mathrm{T}(\theta)\, .
+\end{align*}
+其中$\bm R^\mathrm{T}$是矩阵$\bm R$的转置。
+最后一条性质，即$\bm R$的逆等于它的转置，
+是源自$\bm R$是\keyindex{正交矩阵}{orthogonal matrix}{}的事实；
+它的前三列（或行）都是规范化的且相互正交。
+幸运的是，转置比计算矩阵完整的逆要简单得多。
+
+对于左手坐标系统，绕$x$轴顺时针旋转的矩阵为：
+\begin{align*}
+    \bm R_x(\theta)=\left[
+        \begin{array}{cccc}
+            1 & 0          & 0           & 0 \\
+            0 & \cos\theta & -\sin\theta & 0 \\
+            0 & \sin\theta & \cos\theta  & 0 \\
+            0 & 0          & 0           & 1
+        \end{array}
+        \right]\, .
+\end{align*}
+
+\reffig{2.11}给出了该矩阵是怎样工作的图示
+\sidenote{译者注：图中$x$轴指向纸面里。}。
+\begin{figure}[htbp]
+    \centering\includegraphics[scale=0.75]{chap02/Rotatexaxis.eps}
+    \caption{绕$x$轴顺时针旋转角度$\theta$不改变$x$坐标。
+        $y$和$z$轴映射为虚线给出的向量；$y$和$z$坐标相应变化。}
+    \label{fig:2.11}
+\end{figure}
+
+容易看出矩阵不改变$x$轴：
+\begin{align*}
+    \bm R_x(\theta)[1\ 0\ 0\ 0]^\mathrm{T}=[1\ 0\ 0\ 0]^\mathrm{T}\, .
+\end{align*}
+它把$y$轴$(0,1,0)$映射为$(0,\cos\theta,\sin\theta)$，
+把$z$轴映射为$(0,-\sin\theta,\cos\theta)$
+\sidenote{译者注：这句话指的是旧坐标轴在新坐标系下的取值。}。
+$y$和$z$轴仍在同一平面内，与$x$轴垂直，但旋转了给定角度。
+空间中任意点也同样因该变换而绕$x$轴旋转并留在和之前同样的$yz$平面内。
+
+函数\refvar{RotateX}{()}的实现很简单。
+\begin{lstlisting}
+`\refcode{Transform Method Definitions}{+=}\lastnext{TransformMethodDefinitions}`
+`\refvar{Transform}{}` `\initvar{RotateX}{}`(`\refvar{Float}{}` theta) {
+    `\refvar{Float}{}` sinTheta = std::sin(`\refvar{Radians}{}`(theta));
+    `\refvar{Float}{}` cosTheta = std::cos(`\refvar{Radians}{}`(theta));
+    `\refvar{Matrix4x4}{}` m(1,        0,         0, 0, 
+                0, cosTheta, -sinTheta, 0,
+                0, sinTheta,  cosTheta, 0,
+                0,        0,         0, 1);
+    return `\refvar{Transform}{}`(m, `\refvar[Matrix4x4::Transpose]{Transpose}{}`(m));
+}
+\end{lstlisting}
+
+同样，绕$y$和$z$轴顺时针旋转，我们有
+\begin{align*}
+    \bm R_y(\theta)=\left[
+        \begin{array}{cccc}
+            \cos\theta  & 0 & \sin\theta & 0 \\
+            0           & 1 & 0          & 0 \\
+            -\sin\theta & 0 & \cos\theta & 0 \\
+            0           & 0 & 0          & 1
+        \end{array}
+        \right], \quad
+    \bm R_z(\theta)=\left[
+        \begin{array}{cccc}
+            \cos\theta & -\sin\theta & 0 & 0 \\
+            \sin\theta & \cos\theta  & 0 & 0 \\
+            0          & 0           & 1 & 0 \\
+            0          & 0           & 0 & 1
+        \end{array}
+        \right]\, .
+\end{align*}
+
+{\ttfamily RotateY()}和{\ttfamily RotateZ()}的实现直接遵循上式此处不再介绍。
+
+\subsection{绕任意轴旋转}\label{sub:绕任意轴旋转}
+我们也提供了例程计算表示绕任意轴旋转的变换。
+该通用矩阵的推导基于计算把给定轴映射为固定轴（例如$z$轴）的旋转，
+执行旋转，再把固定轴旋转回原始轴。
+更简洁的推导可以用向量代数构造
+\sidenote{译者注：尽管下文的内容的图示和推导没太大问题，
+    但想必读者第一次阅读时都会怀疑图中的标注和推导无法对应，
+    以至于难以理解其含义。
+    译者重新整理了这部分内容，详见\protect\refsub{四元数与旋转变换}。}。
+
+考虑规范化的方向向量$\bm a$给出旋转轴，旋转角度为$\theta$，
+被旋转向量为$\bm v$（\reffig{2.12}）。
+\begin{figure}[htbp]
+    \centering\includegraphics[scale=0.75]{chap02/Rotatearbitraryaxis.eps}
+    \caption{向量$\bm v$可通过在垂直于任意轴$\bm a$且过$\bm v$末端的平面内
+        建立坐标系统$(\bm p,\bm v_1,\bm v_2)$
+        并绕$\bm p$旋转向量$\bm v_1$和$\bm v_2$来做到绕该轴旋转。
+        将该旋转变换施加到坐标系统的轴$(1,0,0)$、$(0,1,0)$
+        和$(0,0,1)$即给出该旋转的一般旋转矩阵。}
+    \label{fig:2.12}
+\end{figure}
+
+首先，我们可以计算沿$\bm a$轴的向量$\bm v_\mathrm{c}$，
+它在过$\bm v$的末端且平行于$\bm a$的平面内。
+设$\bm v$和$\bm a$构成夹角$\alpha$，我们有
+\begin{align*}
+    \bm v_\mathrm{c}=\bm a\|\bm v\|\cos\alpha=\bm a(\bm v\cdot\bm a)\, .
+\end{align*}
+
+现在我们在该平面内计算一对基向量$\bm v_1$和$\bm v_2$。平凡地，其中一个是
+\begin{align*}
+    \bm v_1=\bm v-\bm v_\mathrm{c}\, ,
+\end{align*}
+且另一个可由叉积算得
+\begin{align*}
+    \bm v_2=(\bm v_1\times\bm a)\, .
+\end{align*}
+
+因为$\bm a$是规范化的，所以$\bm v_1$和$\bm v_2$长度相同，
+都等于连接$\bm v$和$\bm v_\mathrm{c}$的向量的长度。
+为了计算在旋转平面内绕$\bm v_\mathrm{c}$旋转角度$\theta$的变换，
+之前的旋转公式已经给出
+\begin{align*}
+    \bm v'=\bm v_\mathrm{c}+\bm v_1\cos\theta+\bm v_2\sin\theta\, .
+\end{align*}
+
+为了将其转化为旋转矩阵，我们把该公式施加到
+基向量$(1,0,0)$、$(0,1,0)$和$(0,0,1)$来得到矩阵各列的值。
+以上所有结果封装在下列函数中。
+如同其他旋转矩阵那样，其逆等于转置。
+\begin{lstlisting}
+`\refcode{Transform Method Definitions}{+=}\lastnext{TransformMethodDefinitions}`
+`\refvar{Transform}{}` `\initvar{Rotate}{}`(`\refvar{Float}{}` theta, const `\refvar{Vector3f}{}` &axis) {
+    `\refvar{Vector3f}{}` a = `\refvar{Normalize}{}`(axis);
+    `\refvar{Float}{}` sinTheta = std::sin(`\refvar{Radians}{}`(theta));
+    `\refvar{Float}{}` cosTheta = std::cos(`\refvar{Radians}{}`(theta));
+    `\refvar{Matrix4x4}{}` m;
+    `\refcode{Compute rotation of first basis vector}{}`
+    `\refcode{Compute rotations of second and third basis vectors}{}`
+    return `\refvar{Transform}{}`(m, `\refvar[Matrix4x4::Transpose]{Transpose}{}`(m));
+}
+\end{lstlisting}
+
+\begin{lstlisting}
+`\initcode{Compute rotation of first basis vector}{=}`
+m.m[0][0] = a.x * a.x + (1 - a.x * a.x) * cosTheta;
+m.m[0][1] = a.x * a.y * (1 - cosTheta) - a.z * sinTheta;
+m.m[0][2] = a.x * a.z * (1 - cosTheta) + a.y * sinTheta;
+m.m[0][3] = 0;
+\end{lstlisting}
+
+\begin{lstlisting}
+`\initcode{Compute rotations of second and third basis vectors}{=}`
+m.m[1][0] = a.x * a.y * (1 - cosTheta) + a.z * sinTheta;
+m.m[1][1] = a.y * a.y + (1 - a.y * a.y) * cosTheta;
+m.m[1][2] = a.y * a.z * (1 - cosTheta) - a.x * sinTheta;
+m.m[1][3] = 0;
+
+m.m[2][0] = a.x * a.z * (1 - cosTheta) - a.y * sinTheta;
+m.m[2][1] = a.y * a.z * (1 - cosTheta) + a.x * sinTheta;
+m.m[2][2] = a.z * a.z + (1 - a.z * a.z) * cosTheta;
+m.m[2][3] = 0;
+\end{lstlisting}
+
+另外两个基向量的代码类似，此处不再介绍
+\sidenote{译者注：笔者补充回来了。}。
+
+\subsection{注视变换}\label{sub:注视变换}
+\keyindex{注视变换}{look-at transformation}{transformation变换}对于
+在场景中放置相机尤为有用。
+调用者指定要求的相机位置、相机要注视的点以及
+让沿这两个参数确定的观察方向的相机定向的“向上”向量。
+所有这些值都用世界空间坐标给定。
+然后注视的构建给出相机空间与世界空间之间的变换（\reffig{2.13}）。
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap02/Viewingtransform.tex}
+    \caption{给定相机位置、相机注视的位置以及一个“向上”方向，
+        注视变换描述了来自左手观察坐标系统的变换，相机处于原点看向$+z$轴且$+y$轴向上。}
+    \label{fig:2.13}
+\end{figure}
+
+为了求得注视变换矩阵的元素，
+我们利用之前本节描述的原理：
+变换矩阵的列给出了该变换作用于坐标系统基的结果。
+\begin{lstlisting}
+`\refcode{Transform Method Definitions}{+=}\lastnext{TransformMethodDefinitions}`
+`\refvar{Transform}{}` `\initvar{LookAt}{}`(const `\refvar{Point3f}{}` &pos, const `\refvar{Point3f}{}` &look,
+        const `\refvar{Vector3f}{}` &up) {
+    `\refvar{Matrix4x4}{}` cameraToWorld;
+    `\refcode{Initialize fourth column of viewing matrix}{}`
+    `\refcode{Initialize first three columns of viewing matrix}{}`
+    return `\refvar{Transform}{}`(`\refvar[Matrix4x4::Inverse]{Inverse}{}`(cameraToWorld), cameraToWorld);
+}
+\end{lstlisting}
+
+最简单的是第四列，给出了相机空间原点$[0\ 0\ 0\ 1]^\mathrm{T}$映射到世界空间中的点。
+显然它是用户提供的相机位置。
+\begin{lstlisting}
+`\initcode{Initialize fourth column of viewing matrix}{=}`
+cameraToWorld.m[0][3] = pos.x;
+cameraToWorld.m[1][3] = pos.y;
+cameraToWorld.m[2][3] = pos.z;
+cameraToWorld.m[3][3] = 1;
+\end{lstlisting}
+
+其他三列也不复杂。
+首先\refvar{LookAt}{()}计算从相机位置到注视点的规范化方向向量；
+这给出了$z$轴应该映射到的向量坐标，即矩阵第三列
+（在左手坐标系统中，沿$+z$轴的观察方向定义相机空间）。
+第一列给出相机空间中$+x$轴映射到世界空间的方向，
+它通过取用户提供的“向上”向量与刚刚计算的观察方向向量的叉积求得。
+最后，“向上”向量通过重新计算观察方向向量与变换的$x$轴向量的叉积求得，
+这样保证了$y$和$x$轴是垂直的，并且我们获得了一个正交观察坐标系统。
+\begin{lstlisting}
+`\initcode{Initialize first three columns of viewing matrix}{=}`
+`\refvar{Vector3f}{}` dir = `\refvar{Normalize}{}`(look - pos);
+`\refvar{Vector3f}{}` right = `\refvar{Normalize}{}`(`\refvar{Cross}{}`(`\refvar{Normalize}{}`(up), dir));
+`\refvar{Vector3f}{}` newUp = `\refvar{Cross}{}`(dir, right);
+cameraToWorld.m[0][0] = right.x;
+cameraToWorld.m[1][0] = right.y;
+cameraToWorld.m[2][0] = right.z;
+cameraToWorld.m[3][0] = 0.;
+cameraToWorld.m[0][1] = newUp.x;
+cameraToWorld.m[1][1] = newUp.y;
+cameraToWorld.m[2][1] = newUp.z;
+cameraToWorld.m[3][1] = 0.;
+cameraToWorld.m[0][2] = dir.x;
+cameraToWorld.m[1][2] = dir.y;
+cameraToWorld.m[2][2] = dir.z;
+cameraToWorld.m[3][2] = 0.;
+\end{lstlisting}

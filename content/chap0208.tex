@@ -1,1 +1,185 @@
 \section{施加变换}\label{sec:施加变换}
+
+我们现在可以定义执行合适的矩阵乘法来变换点和向量的例程了。
+我们将重载函数应用运算符来描述这些变换；
+这使得我们可以像这样编写代码：
+{\ttfamily\indent \refvar{Point3f}{} p = ...;\\}
+{\ttfamily\indent \refvar{Transform}{} T = ...;\\}
+{\ttfamily\indent \refvar{Point3f}{} pNew = T(p);}
+
+\subsection{点}\label{sub:点}
+点的变换例程接收一点$(x,y,z)$并隐式地将其表示为齐次坐标向量$[x\ y\ z\ 1]^\mathrm{T}$。
+然后它通过将该向量与变换矩阵相乘来变换该点。
+最后，它除以$w$来转换回非齐次点的表示。
+为了效率，当$w=1$时该方法跳过除以齐次权重$w$，
+这对pbrt中用到的大多数变换都很常见——
+只有第\refchap{相机模型}定义的投影变换才需要该除法。
+\begin{lstlisting}
+`\initcode{Transform Inline Functions}{=}\initnext{TransformInlineFunctions}`
+template <typename T> inline `\refvar{Point3}{}`<T>
+`\refvar{Transform}{}`::operator()(const `\refvar{Point3}{}`<T> &p) const {
+    T x = p.x, y = p.y, z = p.z;
+    T xp = m.m[0][0]*x + m.m[0][1]*y + m.m[0][2]*z + m.m[0][3];
+    T yp = m.m[1][0]*x + m.m[1][1]*y + m.m[1][2]*z + m.m[1][3];
+    T zp = m.m[2][0]*x + m.m[2][1]*y + m.m[2][2]*z + m.m[2][3];
+    T wp = m.m[3][0]*x + m.m[3][1]*y + m.m[3][2]*z + m.m[3][3];
+    if (wp == 1) return `\refvar{Point3}{}`<T>(xp, yp, zp);
+    else         return `\refvar{Point3}{}`<T>(xp, yp, zp) / wp;
+}
+\end{lstlisting}
+
+\subsection{向量}\label{sub:向量}
+向量的变换可用相同方式计算。
+然而，因为隐含了齐次坐标$w$为零，所以简化了矩阵和列向量的乘法。
+\begin{lstlisting}
+`\refcode{Transform Inline Functions}{+=}\lastnext{TransformInlineFunctions}`
+template <typename T> inline `\refvar{Vector3}{}`<T>
+`\refvar{Transform}{}`::operator()(const `\refvar{Vector3}{}`<T> &v) const {
+    T x = v.x, y = v.y, z = v.z;
+    return `\refvar{Vector3}{}`<T>(m.m[0][0]*x + m.m[0][1]*y + m.m[0][2]*z,
+                      m.m[1][0]*x + m.m[1][1]*y + m.m[1][2]*z,
+                      m.m[2][0]*x + m.m[2][1]*y + m.m[2][2]*z);
+}
+\end{lstlisting}
+
+\subsection{法线}\label{sub:法线}
+法线和向量的变换方式并不一样，如\reffig{2.14}所示。
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap02/Transformnormal.tex}
+    \caption{变换曲面法线。(a)原始圆，箭头表示一点的法线。
+        (b)当圆在$y$方向高度缩减一半时，
+        简单地把法线当做方向并用相同方式缩放所给出的法线不再和曲面垂直。
+        (c)正确变换的法线。}
+    \label{fig:2.14}
+\end{figure}
+
+尽管切向量变换的方式很简单，但法线却需要特殊处理。
+因为构造的法向量$\bm v$和曲面上任意切向量$\bm t$是垂直的，
+我们知道
+\begin{align*}
+    \bm n\cdot\bm t=\bm n^\mathrm{T}\bm t=0\, .
+\end{align*}
+
+当我们用某矩阵$\bm M$对曲面上的点做变换时，
+被变换点处的新切向量$\bm t'$为$\bm M\bm t$。
+对于某个$4\times4$矩阵$\bm S$，变换后的法线$\bm n'$应该等于$\bm S\bm n$。
+为了满足正交要求，我们必须有
+\begin{align*}
+    0 & =(\bm n')^\mathrm{T}\bm t'                      \\
+      & =(\bm S\bm n)^\mathrm{T}\bm M\bm t              \\
+      & =\bm n^\mathrm{T}\bm S^\mathrm{T}\bm M\bm t\, .
+\end{align*}
+
+如果$\bm S^\mathrm{T}\bm M=\bm I$则该条件成立。
+因此$\bm S^\mathrm{T}=\bm M^{-1}$，所以$\bm S=(\bm M^{-1})^\mathrm{T}$，
+并且我们看到法线必须被变换矩阵的逆转置变换。
+这个细节是为什么\refvar{Transform}{}要保留其逆的主要原因之一。
+
+注意该方法在变换法线时不显式计算逆的转置。
+它只是按不同顺序索引逆矩阵（和变换\refvar{Vector3f}{}的代码比较）。
+\begin{lstlisting}
+`\refcode{Transform Inline Functions}{+=}\lastnext{TransformInlineFunctions}`
+template <typename T> inline `\refvar{Normal3}{}`<T>
+`\refvar{Transform}{}`::operator()(const `\refvar{Normal3}{}`<T> &n) const {
+    T x = n.x, y = n.y, z = n.z;
+    return `\refvar{Normal3}{}`<T>(mInv.m[0][0]*x + mInv.m[1][0]*y + mInv.m[2][0]*z,
+                      mInv.m[0][1]*x + mInv.m[1][1]*y + mInv.m[2][1]*z,
+                      mInv.m[0][2]*x + mInv.m[1][2]*y + mInv.m[2][2]*z);
+}
+\end{lstlisting}
+
+\subsection{射线}\label{sub:射线}
+变换射线在概念上很简单：变换构成的端点和方向并复制其他数据成员即可
+（pbrt也为变换\refvar{RayDifferential}{}提供了同样的方法）。
+
+pbrt中用于控制浮点舍入误差的方法引入了一些微妙之处，
+需要对变换后的射线端点作小的调整。
+代码片\refcode{Offset ray origin to edge of error bounds}{}负责这些细节；
+它定义于\refsub{边界交点误差}，并讨论了舍入误差和pbrt的处理机制。
+\begin{lstlisting}
+`\refcode{Transform Inline Functions}{+=}\lastnext{TransformInlineFunctions}`
+inline `\refvar{Ray}{}` `\refvar{Transform}{}`::operator()(const `\refvar{Ray}{}` &r) const { 
+    `\refvar{Vector3f}{}` oError;
+    `\refvar{Point3f}{}` o = (*this)(r.o, &oError);
+    `\refvar{Vector3f}{}` d = (*this)(r.d);
+    `\refcode{Offset ray origin to edge of error bounds and compute tMax}{}`
+    return `\refvar{Ray}{}`(o, d, tMax, r.time, r.medium);
+}
+\end{lstlisting}
+
+\subsection{边界框}\label{sub:边界框}
+变换轴对齐边界框最简单的方式是变换其全部八个顶点
+再计算包围这些点的新边界框。
+下面是该方法的实现；
+本章的一道习题是实现更高效完成这项计算的技术。
+\begin{lstlisting}
+`\refcode{Transform Method Definitions}{+=}\lastnext{TransformMethodDefinitions}`
+`\refvar{Bounds3f}{}` `\refvar{Transform}{}`::operator()(const `\refvar{Bounds3f}{}` &b) const {
+    const `\refvar{Transform}{}` &M = *this;
+    `\refvar{Bounds3f}{}` ret(M(`\refvar{Point3f}{}`(b.pMin.x, b.pMin.y, b.pMin.z)));    
+    ret = `\refvar[Union1]{Union}{}`(ret, M(`\refvar{Point3f}{}`(b.pMax.x, b.pMin.y, b.pMin.z)));
+    ret = `\refvar[Union1]{Union}{}`(ret, M(`\refvar{Point3f}{}`(b.pMin.x, b.pMax.y, b.pMin.z)));
+    ret = `\refvar[Union1]{Union}{}`(ret, M(`\refvar{Point3f}{}`(b.pMin.x, b.pMin.y, b.pMax.z)));
+    ret = `\refvar[Union1]{Union}{}`(ret, M(`\refvar{Point3f}{}`(b.pMin.x, b.pMax.y, b.pMax.z)));
+    ret = `\refvar[Union1]{Union}{}`(ret, M(`\refvar{Point3f}{}`(b.pMax.x, b.pMax.y, b.pMin.z)));
+    ret = `\refvar[Union1]{Union}{}`(ret, M(`\refvar{Point3f}{}`(b.pMax.x, b.pMin.y, b.pMax.z)));
+    ret = `\refvar[Union1]{Union}{}`(ret, M(`\refvar{Point3f}{}`(b.pMax.x, b.pMax.y, b.pMax.z)));
+    return ret;
+}
+\end{lstlisting}
+
+\subsection{变换的合成}\label{sub:变换的合成}
+定义了怎样构建矩阵表示单个类型的变换后，
+我们现在可以考虑一系列单个变换得到的聚合变换。
+最终，我们将看到用矩阵表示变换的真正价值。
+
+考虑一系列变换$\bm A$、$\bm B$和$\bm C$。
+我们想计算新的变换$\bm T$使得应用$\bm T$的结果
+和逆序应用每个$\bm A$、$\bm B$和$\bm C$的结果相同；
+即$\bm A(\bm B(\bm C(\bm p)))=\bm T(\bm p)$。
+这样的变换$\bm T$可以通过将变换$\bm A$、$\bm B$和$\bm C$的矩阵一起相乘算得。
+pbrt中我们可以写作：
+
+{\ttfamily\indent \refvar{Transform}{} T = A * B * C;}
+
+然后我们可以像平常一样将{\ttfamily T}施加到\refvar{Point3f}{}上，
+{\ttfamily\refvar{Point3f}{} pp = T(p)}，
+而不是依次施加每个变换：{\ttfamily\refvar{Point3f}{} pp = A(B(C(p)))}。
+
+我们使用C++的{\ttfamily *}运算符计算由一个变换右乘另一个变换{\ttfamily t2}得到的新变换。
+在矩阵乘法中，结果矩阵的第$(i,j)$个元素是第一个矩阵的第$i$行与
+第二个矩阵的第$j$列的内积。
+
+结果变换的逆等于{\ttfamily t2.mInv * mInv}的积。
+这是矩阵恒等式的结果：
+\begin{align*}
+    (\bm A\bm B)^{-1}=\bm B^{-1}\bm A^{-1}\, .
+\end{align*}
+
+\begin{lstlisting}
+`\refcode{Transform Method Definitions}{+=}\lastnext{TransformMethodDefinitions}`
+`\refvar{Transform}{}` `\refvar{Transform}{}`::operator*(const `\refvar{Transform}{}` &t2) const {
+    return `\refvar{Transform}{}`(`\refvar{Matrix4x4}{}`::`\refvar[Matrix4x4::Mul]{Mul}{}`(`\refvar[Transform::m]{m}{}`, t2.`\refvar[Transform::m]{m}{}`),
+                     `\refvar{Matrix4x4}{}`::`\refvar[Matrix4x4::Mul]{Mul}{}`(t2.`\refvar[Transform::mInv]{mInv}{}`, `\refvar[Transform::mInv]{mInv}{}`));
+}
+\end{lstlisting}
+
+\subsection{变换与坐标系统惯用手}\label{sub:变换与坐标系统惯用手}
+特定类型的变换将左手坐标系统变为右手，反之亦然。
+一些例程需要知道源坐标系统的惯用手是否和目标不同。
+特别地，如果惯用手改变了，
+那么想保证曲面法线总是指向表面“外侧”的例程
+可能需要在变换后翻转法线的方向。
+
+幸运的是，很容易判断变换是否改变了惯用手：
+它只会在变换的左上角$3\times3$子阵的行列式为负时发生。
+\begin{lstlisting}
+`\refcode{Transform Method Definitions}{+=}\lastnext{TransformMethodDefinitions}`
+bool `\refvar{Transform}{}`::`\initvar{SwapsHandedness}{}`() const {
+    `\refvar{Float}{}` det = 
+        m.m[0][0] * (m.m[1][1] * m.m[2][2] - m.m[1][2] * m.m[2][1]) -
+        m.m[0][1] * (m.m[1][0] * m.m[2][2] - m.m[1][2] * m.m[2][0]) +
+        m.m[0][2] * (m.m[1][0] * m.m[2][1] - m.m[1][1] * m.m[2][0]);
+    return det < 0;
+}
+\end{lstlisting}

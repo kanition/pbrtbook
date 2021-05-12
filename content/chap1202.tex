@@ -21,10 +21,10 @@ protected:
     `\refcode{Warn if light has transformation with non-uniform scale}{}`
 }
 \end{lstlisting}
-其中从
+其中
 \begin{lstlisting}
 `\initcode{Warn if light has transformation with non-uniform scale}{=}`
-if (WorldToLight.HasScale())
+if (WorldToLight.`\refvar{HasScale}{}`())
     Warning("Scaling detected in world to light transformation!\n"
         "The system has numerous assumptions, implicit and explicit,\n"
         "that this transform will have no scale factors in it.\n"

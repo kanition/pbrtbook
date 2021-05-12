@@ -53,6 +53,20 @@ struct `\initvar{Matrix4x4}{}` {
 \end{lstlisting}
 
 \begin{lstlisting}
+`\refcode{Matrix4x4 Public Methods}{+=}\lastnext{Matrix4x4PublicMethods}`
+static `\refvar{Matrix4x4}{}` `\initvar[Matrix4x4::Mul]{Mul}{}`(const `\refvar{Matrix4x4}{}` &m1, const `\refvar{Matrix4x4}{}` &m2) {
+    `\refvar{Matrix4x4}{}` r;
+    for (int i = 0; i < 4; ++i)
+        for (int j = 0; j < 4; ++j)
+            r.`\refvar[Matrix4x4::m]{m}{}`[i][j] = m1.`\refvar[Matrix4x4::m]{m}{}`[i][0] * m2.`\refvar[Matrix4x4::m]{m}{}`[0][j] + 
+                        m1.`\refvar[Matrix4x4::m]{m}{}`[i][1] * m2.`\refvar[Matrix4x4::m]{m}{}`[1][j] + 
+                        m1.`\refvar[Matrix4x4::m]{m}{}`[i][2] * m2.`\refvar[Matrix4x4::m]{m}{}`[2][j] + 
+                        m1.`\refvar[Matrix4x4::m]{m}{}`[i][3] * m2.`\refvar[Matrix4x4::m]{m}{}`[3][j];
+    return r;
+}
+\end{lstlisting}
+
+\begin{lstlisting}
 `\refcode{Matrix4x4 Public Methods}{+=}\lastcode{Matrix4x4PublicMethods}`
 friend `\refvar{Matrix4x4}{}` `\initvar[Matrix4x4::Inverse]{Inverse}{}`(const `\refvar{Matrix4x4}{}` &);
 \end{lstlisting}

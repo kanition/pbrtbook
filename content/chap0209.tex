@@ -66,3 +66,55 @@ pbrt中使用的变换插值方法是基于\keyindex{矩阵分解}{matrix decomp
     \bm M=\bm S\bm R\bm T\, ,
 \end{align*}
 其中这些分量每一个都是独立插值，然后合成的插值矩阵由三个插值矩阵一起相乘得到。
+
+平移和缩放的插值可以由矩阵分量的线性插值轻松准确完成；
+旋转插值则更困难。
+在描述pbrt中的矩阵分解实现之前，我们首先介绍\keyindex{四元数}{quaternion}{}，
+它对旋转的优雅表示将给出高效的插值方法。
+
+\subsection{四元数}\label{sub:四元数}
+四元数\sidenote{译者注：本节内容对四元数的介绍比较精简，不加证明地给出相关性质。
+    如果你关心这些性质背后的原因是什么，可以阅读译者自行整理编写的\refsec{译者补充：四元数}。}
+作为复数的推广，最初由William Rowan Hamilton爵士于1843年发明。
+就像复数可以定义为实部和虚部之和$x+y\mathbf{i}$，其中$\mathbf{i}^2=-1$那样，
+他确定也能推广到四维，得到了四元数。
+
+四元数是一个四元组，
+\begin{align}\label{eq:2.4}
+    \bm q=(x,y,z,w)=w+x\mathbf{i}+y\mathbf{j}+z\mathbf{k}\, ,
+\end{align}
+其中$\mathbf{i}, \mathbf{j}, \mathbf{k}$定义
+\footnote{Hamilton发现分量之间的这种关系非常有趣，
+    以至于当他想到这个时立即用刀子把公式刻在了他正经过的桥上。}
+为$\mathbf{i}^2=\mathbf{j}^2=\mathbf{k}^2=\mathbf{i}\mathbf{j}\mathbf{k}=-1$。
+分量间的另一重要关系是$\mathbf{i}\mathbf{j}=\mathbf{k}$且
+$\mathbf{j}\mathbf{i}=-\mathbf{k}$。
+这说明四元数乘法一般是不可交换的。
+
+四元数可以表示为四元组$\bm q=(q_x,q_y,q_z,q_w)$或$(\bm q_{xyz},q_w)$，
+其中$\bm q_{xyz}$是虚部三维向量，$q_w$是实部。
+本节中我们会穿插使用这两种表示。
+
+两个任意四元数的乘积表达式可以通过展开它们定义的实部和虚部得到：
+\begin{align*}
+    \bm q\bm q'=(q_w+q_x\mathbf{i}+q_y\mathbf{j}+q_z\mathbf{k})(q'_w+q'_x\mathbf{i}+q'_y\mathbf{j}+q'_z\mathbf{k})\, .
+\end{align*}
+
+整理各项并利用像上面列出的分量间恒等式（例如$\mathbf{i}^2=-1$），
+结果可用向量叉积和点积简洁地表示为
+\begin{align}
+    (\bm q\bm q')_{xyz} & =\bm q_{xyz}\times\bm q'_{xyz}+q_w\bm q'_{xyz}+q'_w\bm q_{xyz}\nonumber\, , \\
+    (\bm q\bm q')_w     & =q_wq'_w-(\bm q_{xyz}\cdot\bm q'_{xyz})\, .
+\end{align}
+
+单位四元数（分量满足$x^2+y^2+z^2+w^2=1$的四元数）和
+$\mathbb{R}^3$空间中的旋转之间有一很有用的关系：具体来说，
+绕着可以映射为单位四元数$(\hat{\bm v}\sin\theta,\cos\theta)$的
+单位轴$\hat{\bm v}$旋转角度$2\theta$时，
+下列四元数乘积等效于将旋转施加到点$\bm p$后表达为齐次坐标形式：
+\begin{align*}
+    \bm p'=\bm q\bm p\bm q^{-1}\, .
+\end{align*}
+
+并且，若干旋转四元数的积得到的另一个四元数等价于依次施加旋转。
+

@@ -11,30 +11,30 @@
 \begin{definition}
     \keyindex{四元数}{quaternion}{}记作
     \begin{align}
-        {\bm q}=c+x\mathbf{i}+y\mathbf{j}+z\mathbf{k}\, ,
+        {\bm q}=w+x\mathbf{i}+y\mathbf{j}+z\mathbf{k}\, ,
     \end{align}
-    其中$c, x, y, z$是实数，
+    其中$w, x, y, z$是实数，
     $\mathbf{i}, \mathbf{j}, \mathbf{k}$是\keyindex{基四元数}{basic quaternion}{quaternion四元数}，
     也称\keyindex{基元}{basis element}{quaternion四元数}。
 
     基四元数可视为分别指向三个空间轴向的单位向量。
-    此时${\bm q}$可以看作由一个标量和一个向量构成：
-    其中$c$称为\keyindex{实部}{real part}{}或\keyindex{标量部}{scalar part}{quaternion四元数}，
+    此时${\bm q}$可视作由一个标量和一个向量构成：
+    其中$w$称为\keyindex{实部}{real part}{}或\keyindex{标量部}{scalar part}{quaternion四元数}，
     $x\mathbf{i}+y\mathbf{j}+z\mathbf{k}$称为\keyindex{虚部}{imaginary part}{quaternion四元数}、\keyindex{纯部}{pure part}{quaternion四元数}或\keyindex{向量部}{vector part}{quaternion四元数}。
 \end{definition}
 \begin{definition}
-    当$c=0$且$xyz\neq 0$时，${\bm q}$称为\keyindex{向量四元数}{vector quaternion}{quaternion四元数}。
+    当$w=0$且$xyz\neq 0$时，${\bm q}$称为\keyindex{向量四元数}{vector quaternion}{quaternion四元数}。
 \end{definition}
 \begin{definition}
     当$x=y=z=0$时，${\bm q}$称为\keyindex{标量四元数}{scalar quaternion}{quaternion四元数}。
-    其中，当$c=x=y=z=0$时，${\bm q}$称为\keyindex{零四元数}{zero quaternion}{quaternion四元数}，记作$0$。
+    其中，当$w=x=y=z=0$时，${\bm q}$称为\keyindex{零四元数}{zero quaternion}{quaternion四元数}，记作$0$。
 \end{definition}
 \begin{notation}
     在实际书写时，我们做如下约定：
     \begin{itemize}
-        \item $c, x, y, z$之一等于$0$时，略写相应项；
+        \item $w, x, y, z$之一等于$0$时，略写相应项；
         \item $x, y, z$之一等于$1$时，相应项简写为$\mathbf{i, j}$或$\mathbf{k}$；
-        \item 也可写作${\bm q}=c+{\bm u}$，其中$c$为标量，${\bm u}=x\mathbf{i}+y\mathbf{j}+z\mathbf{k}$为向量；
+        \item 也可写作${\bm q}=w+{\bm u}$，其中$w$为标量，${\bm u}=x\mathbf{i}+y\mathbf{j}+z\mathbf{k}$为向量；
         \item 所有四元数构成的集合记作$\mathbb{H}$。
     \end{itemize}
 \end{notation}
@@ -48,15 +48,15 @@
 \subsection{四元数的运算}\label{sub:四元数的运算}
 分别记四元数为
 \begin{align}
-    {\bm q}   & =c+{\bm u}=c+x\mathbf{i}+y\mathbf{j}+z\mathbf{k}\, ,             \\
-    {\bm q}_n & =c_n+{\bm u}_n=c_n+x_n\mathbf{i}+y_n\mathbf{j}+z_n\mathbf{k}\, ,
+    {\bm q}   & =w+{\bm u}=w+x\mathbf{i}+y\mathbf{j}+z\mathbf{k}\, ,             \\
+    {\bm q}_n & =w_n+{\bm u}_n=w_n+x_n\mathbf{i}+y_n\mathbf{j}+z_n\mathbf{k}\, ,
 \end{align}
-其中$c, x, y, z, c_n, x_n, y_n, z_n\in\mathbb{R}$，${\bm u}, {\bm u}_n\in\mathbb{R}^3$，$n$为下标。
+其中$w, x, y, z, w_n, x_n, y_n, z_n\in\mathbb{R}$，${\bm u}, {\bm u}_n\in\mathbb{R}^3$，$n$为下标。
 \begin{definition}
     四元数\keyindex{加法}{addition}{}为
     \begin{align}
-        {\bm q}_1+{\bm q}_2 & =(c_1+c_2)+({\bm u}_1+{\bm u}_2)\nonumber                                  \\
-                            & =(c_1+c_2)+(x_1+x_2)\mathbf{i}+(y_1+y_2)\mathbf{j}+(z_1+z_2)\mathbf{k}\, .
+        {\bm q}_1+{\bm q}_2 & =(w_1+w_2)+({\bm u}_1+{\bm u}_2)\nonumber                                  \\
+                            & =(w_1+w_2)+(x_1+x_2)\mathbf{i}+(y_1+y_2)\mathbf{j}+(z_1+z_2)\mathbf{k}\, .
     \end{align}
 \end{definition}
 \begin{proposition}
@@ -65,7 +65,7 @@
 \begin{proposition}
     四元数加法的\keyindex{逆元}{inverse element}{}是
     \begin{align}
-        -{\bm q}=-c-x\mathbf{i}-y\mathbf{j}-z\mathbf{k}\, .
+        -{\bm q}=-w-x\mathbf{i}-y\mathbf{j}-z\mathbf{k}\, .
     \end{align}
 \end{proposition}
 \begin{proposition}
@@ -91,8 +91,8 @@
 \begin{definition}
     四元数${\bm q}$与实数$\lambda$的\keyindex{数乘}{scalar multiplication}{}为
     \begin{align}
-        \lambda{\bm q}={\bm q}\lambda & =\lambda c+\lambda {\bm u}\nonumber                                              \\
-                                      & =\lambda c+(\lambda x)\mathbf{i}+(\lambda y)\mathbf{j}+(\lambda z)\mathbf{k}\, .
+        \lambda{\bm q}={\bm q}\lambda & =\lambda w+\lambda {\bm u}\nonumber                                              \\
+                                      & =\lambda w+(\lambda x)\mathbf{i}+(\lambda y)\mathbf{j}+(\lambda z)\mathbf{k}\, .
     \end{align}
 \end{definition}
 \begin{proposition}
@@ -114,25 +114,25 @@
 \begin{definition}
     四元数\keyindex{乘法}{multiplication}{}为
     \begin{align}
-        {\bm q}_1{\bm q}_2 & =(c_1+{\bm u}_1)(c_2+{\bm u}_2)\nonumber                                                                      \\
-                           & =(c_1+x_1\mathbf{i}+y_1\mathbf{j}+z_1\mathbf{k})(c_2+x_2\mathbf{i}+y_2\mathbf{j}+z_2\mathbf{k})\nonumber      \\
-                           & =\quad c_1c_2+c_1x_2\mathbf{i}+c_1y_2\mathbf{j}+c_1z_2\mathbf{k}\nonumber                                     \\
-                           & \quad +x_1c_2\mathbf{i}+x_1x_2\mathbf{i}^2+x_1y_2\mathbf{i}\mathbf{j}+x_1z_2\mathbf{i}\mathbf{k}\nonumber     \\
-                           & \quad +y_1c_2\mathbf{j}+y_1x_2\mathbf{j}\mathbf{i}+y_1y_2\mathbf{j}^2+y_1z_2\mathbf{j}\mathbf{k}\nonumber     \\
-                           & \quad +z_1c_2\mathbf{k}+z_1x_2\mathbf{k}\mathbf{i}+z_1y_2\mathbf{k}\mathbf{j}+z_1z_2\mathbf{k}^2\nonumber     \\
-                           & =\quad c_1c_2-(x_1x_2+y_1y_2+z_1z_2)\nonumber                                                                 \\
-                           & \quad +c_1(x_2\mathbf{i}+y_2\mathbf{j}+z_2\mathbf{k})+c_2(x_1\mathbf{i}+y_1\mathbf{j}+z_1\mathbf{k})\nonumber \\
+        {\bm q}_1{\bm q}_2 & =(w_1+{\bm u}_1)(w_2+{\bm u}_2)\nonumber                                                                      \\
+                           & =(w_1+x_1\mathbf{i}+y_1\mathbf{j}+z_1\mathbf{k})(w_2+x_2\mathbf{i}+y_2\mathbf{j}+z_2\mathbf{k})\nonumber      \\
+                           & =\quad w_1w_2+w_1x_2\mathbf{i}+w_1y_2\mathbf{j}+w_1z_2\mathbf{k}\nonumber                                     \\
+                           & \quad +x_1w_2\mathbf{i}+x_1x_2\mathbf{i}^2+x_1y_2\mathbf{i}\mathbf{j}+x_1z_2\mathbf{i}\mathbf{k}\nonumber     \\
+                           & \quad +y_1w_2\mathbf{j}+y_1x_2\mathbf{j}\mathbf{i}+y_1y_2\mathbf{j}^2+y_1z_2\mathbf{j}\mathbf{k}\nonumber     \\
+                           & \quad +z_1w_2\mathbf{k}+z_1x_2\mathbf{k}\mathbf{i}+z_1y_2\mathbf{k}\mathbf{j}+z_1z_2\mathbf{k}^2\nonumber     \\
+                           & =\quad w_1w_2-(x_1x_2+y_1y_2+z_1z_2)\nonumber                                                                 \\
+                           & \quad +w_1(x_2\mathbf{i}+y_2\mathbf{j}+z_2\mathbf{k})+w_2(x_1\mathbf{i}+y_1\mathbf{j}+z_1\mathbf{k})\nonumber \\
                            & \quad +(y_1z_2-y_2z_1)\mathbf{i}+(z_1x_2-z_2x_1)\mathbf{j}+(x_1y_2-x_2y_1)\mathbf{k}\nonumber                 \\
-                           & =(c_1c_2-{\bm u}_1\cdot{\bm u}_2)+(c_1{\bm u}_2+c_2{\bm u}_1+{\bm u}_1\times{\bm u}_2)\, ,
+                           & =(w_1w_2-{\bm u}_1\cdot{\bm u}_2)+(w_1{\bm u}_2+w_2{\bm u}_1+{\bm u}_1\times{\bm u}_2)\, ,
     \end{align}
     也称为\keyindex{哈密顿积}{Hamilton product}{}。
 \end{definition}
 \begin{proposition}
     四元数乘法的单位元是$1$。
 \end{proposition}
-\begin{proposition}
+\begin{corollary}
     四元数的乘法不满足交换律。
-\end{proposition}
+\end{corollary}
 \begin{example}
     取
     \begin{align}
@@ -155,33 +155,33 @@
 \begin{prove}
     根据定义有
     \begin{align}
-        ({\bm q}_1{\bm q}_2){\bm q}_3 & =((c_1+{\bm u}_1)(c_2+{\bm u}_2))(c_3+{\bm u}_3)\nonumber                                                                                           \\
-                                      & =((c_1c_2-{\bm u}_1\cdot{\bm u}_2)+(c_1{\bm u}_2+c_2{\bm u}_1+{\bm u}_1\times{\bm u}_2))(c_3+{\bm u}_3)\nonumber                                    \\
-                                      & =\quad ((c_1c_2-{\bm u}_1\cdot{\bm u}_2)c_3-(c_1{\bm u}_2+c_2{\bm u}_1+{\bm u}_1\times{\bm u}_2)\cdot{\bm u}_3)\nonumber                            \\
-                                      & \quad +((c_1c_2-{\bm u}_1\cdot{\bm u}_2){\bm u}_3+c_3(c_1{\bm u}_2+c_2{\bm u}_1+{\bm u}_1\times{\bm u}_2)\nonumber                                  \\
-                                      & \quad +(c_1{\bm u}_2+c_2{\bm u}_1+{\bm u}_1\times{\bm u}_2)\times{\bm u}_3)\nonumber                                                                \\
-                                      & =\quad c_1c_2c_3-c_3{\bm u}_1\cdot{\bm u}_2-c_1{\bm u}_2\cdot{\bm u}_3-c_2{\bm u}_1\cdot{\bm u}_3-({\bm u}_1\times{\bm u}_2)\cdot{\bm u}_3\nonumber \\
-                                      & \quad +c_1c_2{\bm u}_3-({\bm u}_1\cdot{\bm u}_2){\bm u}_3+c_3c_1{\bm u}_2+c_2c_3{\bm u}_1+c_3{\bm u}_1\times{\bm u}_2\nonumber                      \\
-                                      & \quad +c_1{\bm u}_2\times{\bm u}_3+c_2{\bm u}_1\times{\bm u}_3+({\bm u}_1\times{\bm u}_2)\times{\bm u}_3\nonumber                                   \\
-                                      & =\quad  c_1c_2c_3-({\bm u}_1\times{\bm u}_2)\cdot{\bm u}_3+({\bm u}_1\times{\bm u}_2)\times{\bm u}_3-({\bm u}_1\cdot{\bm u}_2){\bm u}_3\nonumber    \\
-                                      & \quad +c_2c_3{\bm u}_1+c_1{\bm u}_2\times{\bm u}_3-c_1{\bm u}_2\cdot{\bm u}_3\nonumber                                                              \\
-                                      & \quad +c_3c_1{\bm u}_2+c_2{\bm u}_1\times{\bm u}_3-c_2{\bm u}_1\cdot{\bm u}_3\nonumber                                                              \\
-                                      & \quad +c_1c_2{\bm u}_3+c_3{\bm u}_1\times{\bm u}_2-c_3{\bm u}_1\cdot{\bm u}_2\, .
+        ({\bm q}_1{\bm q}_2){\bm q}_3 & =((w_1+{\bm u}_1)(w_2+{\bm u}_2))(w_3+{\bm u}_3)\nonumber                                                                                           \\
+                                      & =((w_1w_2-{\bm u}_1\cdot{\bm u}_2)+(w_1{\bm u}_2+w_2{\bm u}_1+{\bm u}_1\times{\bm u}_2))(w_3+{\bm u}_3)\nonumber                                    \\
+                                      & =\quad ((w_1w_2-{\bm u}_1\cdot{\bm u}_2)w_3-(w_1{\bm u}_2+w_2{\bm u}_1+{\bm u}_1\times{\bm u}_2)\cdot{\bm u}_3)\nonumber                            \\
+                                      & \quad +((w_1w_2-{\bm u}_1\cdot{\bm u}_2){\bm u}_3+w_3(w_1{\bm u}_2+w_2{\bm u}_1+{\bm u}_1\times{\bm u}_2)\nonumber                                  \\
+                                      & \quad +(w_1{\bm u}_2+w_2{\bm u}_1+{\bm u}_1\times{\bm u}_2)\times{\bm u}_3)\nonumber                                                                \\
+                                      & =\quad w_1w_2w_3-w_3{\bm u}_1\cdot{\bm u}_2-w_1{\bm u}_2\cdot{\bm u}_3-w_2{\bm u}_1\cdot{\bm u}_3-({\bm u}_1\times{\bm u}_2)\cdot{\bm u}_3\nonumber \\
+                                      & \quad +w_1w_2{\bm u}_3-({\bm u}_1\cdot{\bm u}_2){\bm u}_3+w_3w_1{\bm u}_2+w_2w_3{\bm u}_1+w_3{\bm u}_1\times{\bm u}_2\nonumber                      \\
+                                      & \quad +w_1{\bm u}_2\times{\bm u}_3+w_2{\bm u}_1\times{\bm u}_3+({\bm u}_1\times{\bm u}_2)\times{\bm u}_3\nonumber                                   \\
+                                      & =\quad  w_1w_2w_3-({\bm u}_1\times{\bm u}_2)\cdot{\bm u}_3+({\bm u}_1\times{\bm u}_2)\times{\bm u}_3-({\bm u}_1\cdot{\bm u}_2){\bm u}_3\nonumber    \\
+                                      & \quad +w_2w_3{\bm u}_1+w_1{\bm u}_2\times{\bm u}_3-w_1{\bm u}_2\cdot{\bm u}_3\nonumber                                                              \\
+                                      & \quad +w_3w_1{\bm u}_2+w_2{\bm u}_1\times{\bm u}_3-w_2{\bm u}_1\cdot{\bm u}_3\nonumber                                                              \\
+                                      & \quad +w_1w_2{\bm u}_3+w_3{\bm u}_1\times{\bm u}_2-w_3{\bm u}_1\cdot{\bm u}_2\, .
     \end{align}
     同理有
     \begin{align}
-        {\bm q}_1({\bm q}_2{\bm q}_3) & =(c_1+{\bm u}_1)((c_2+{\bm u}_2)(c_3+{\bm u}_3))\nonumber                                                                                           \\
-                                      & =(c_1+{\bm u}_1)((c_2c_3-{\bm u}_2\cdot{\bm u}_3)+(c_2{\bm u}_3+c_3{\bm u}_2+{\bm u}_2\times{\bm u}_3))\nonumber                                    \\
-                                      & =\quad(c_1(c_2c_3-{\bm u}_2\cdot{\bm u}_3)-{\bm u}_1\cdot(c_2{\bm u}_3+c_3{\bm u}_2+{\bm u}_2\times{\bm u}_3))\nonumber                             \\
-                                      & \quad +(c_1(c_2{\bm u}_3+c_3{\bm u}_2+{\bm u}_2\times{\bm u}_3)+(c_2c_3-{\bm u}_2\cdot{\bm u}_3){\bm u}_1\nonumber                                  \\
-                                      & \quad +{\bm u}_1\times(c_2{\bm u}_3+c_3{\bm u}_2+{\bm u}_2\times{\bm u}_3))\nonumber                                                                \\
-                                      & =\quad c_1c_2c_3-c_1{\bm u}_2\cdot{\bm u}_3-c_2{\bm u}_1\cdot{\bm u}_3-c_3{\bm u}_1\cdot{\bm u}_2-{\bm u}_1\cdot({\bm u}_2\times{\bm u}_3)\nonumber \\
-                                      & \quad +c_1c_2{\bm u}_3+c_1c_3{\bm u}_2+c_1{\bm u}_2\times{\bm u}_3+c_2c_3{\bm u}_1-({\bm u}_2\cdot{\bm u}_3){\bm u}_1\nonumber                      \\
-                                      & \quad +c_2{\bm u}_1\times{\bm u}_3+c_3{\bm u}_1\times{\bm u}_2+{\bm u}_1\times({\bm u}_2\times{\bm u}_3)\nonumber                                   \\
-                                      & =\quad c_1c_2c_3-{\bm u}_1\cdot({\bm u}_2\times{\bm u}_3)+{\bm u}_1\times({\bm u}_2\times{\bm u}_3)-({\bm u}_2\cdot{\bm u}_3){\bm u}_1\nonumber     \\
-                                      & \quad +c_2c_3{\bm u}_1+c_1{\bm u}_2\times{\bm u}_3-c_1{\bm u}_2\cdot{\bm u}_3\nonumber                                                              \\
-                                      & \quad +c_3c_1{\bm u}_2+c_2{\bm u}_1\times{\bm u}_3-c_2{\bm u}_1\cdot{\bm u}_3\nonumber                                                              \\
-                                      & \quad +c_1c_2{\bm u}_3+c_3{\bm u}_1\times{\bm u}_2-c_3{\bm u}_1\cdot{\bm u}_2\, .
+        {\bm q}_1({\bm q}_2{\bm q}_3) & =(w_1+{\bm u}_1)((w_2+{\bm u}_2)(w_3+{\bm u}_3))\nonumber                                                                                           \\
+                                      & =(w_1+{\bm u}_1)((w_2w_3-{\bm u}_2\cdot{\bm u}_3)+(w_2{\bm u}_3+w_3{\bm u}_2+{\bm u}_2\times{\bm u}_3))\nonumber                                    \\
+                                      & =\quad(w_1(w_2w_3-{\bm u}_2\cdot{\bm u}_3)-{\bm u}_1\cdot(w_2{\bm u}_3+w_3{\bm u}_2+{\bm u}_2\times{\bm u}_3))\nonumber                             \\
+                                      & \quad +(w_1(w_2{\bm u}_3+w_3{\bm u}_2+{\bm u}_2\times{\bm u}_3)+(w_2w_3-{\bm u}_2\cdot{\bm u}_3){\bm u}_1\nonumber                                  \\
+                                      & \quad +{\bm u}_1\times(w_2{\bm u}_3+w_3{\bm u}_2+{\bm u}_2\times{\bm u}_3))\nonumber                                                                \\
+                                      & =\quad w_1w_2w_3-w_1{\bm u}_2\cdot{\bm u}_3-w_2{\bm u}_1\cdot{\bm u}_3-w_3{\bm u}_1\cdot{\bm u}_2-{\bm u}_1\cdot({\bm u}_2\times{\bm u}_3)\nonumber \\
+                                      & \quad +w_1w_2{\bm u}_3+w_1w_3{\bm u}_2+w_1{\bm u}_2\times{\bm u}_3+w_2w_3{\bm u}_1-({\bm u}_2\cdot{\bm u}_3){\bm u}_1\nonumber                      \\
+                                      & \quad +w_2{\bm u}_1\times{\bm u}_3+w_3{\bm u}_1\times{\bm u}_2+{\bm u}_1\times({\bm u}_2\times{\bm u}_3)\nonumber                                   \\
+                                      & =\quad w_1w_2w_3-{\bm u}_1\cdot({\bm u}_2\times{\bm u}_3)+{\bm u}_1\times({\bm u}_2\times{\bm u}_3)-({\bm u}_2\cdot{\bm u}_3){\bm u}_1\nonumber     \\
+                                      & \quad +w_2w_3{\bm u}_1+w_1{\bm u}_2\times{\bm u}_3-w_1{\bm u}_2\cdot{\bm u}_3\nonumber                                                              \\
+                                      & \quad +w_3w_1{\bm u}_2+w_2{\bm u}_1\times{\bm u}_3-w_2{\bm u}_1\cdot{\bm u}_3\nonumber                                                              \\
+                                      & \quad +w_1w_2{\bm u}_3+w_3{\bm u}_1\times{\bm u}_2-w_3{\bm u}_1\cdot{\bm u}_2\, .
     \end{align}
     注意到向量运算有\sidenote{它们其实是向量的\protect\keyindex{标量三重积}{scalar triple product}{}的两种等价定义，也称\protect\keyindex{混合积}{mixed product}{}。}
     \begin{align}
@@ -209,26 +209,26 @@
 \begin{prove}
     根据定义有
     \begin{align}
-        {\bm q}_1({\bm q}_2+{\bm q}_3) & =(c_1+{\bm u}_1)((c_2+{\bm u}_2)+(c_3+{\bm u}_3))\nonumber                                            \\
-                                       & =(c_1+{\bm u}_1)((c_2+c_3)+({\bm u}_2+{\bm u}_3))\nonumber                                            \\
-                                       & =\quad (c_1(c_2+c_3)-{\bm u}_1\cdot({\bm u}_2+{\bm u}_3))\nonumber                                    \\
-                                       & \quad +(c_1({\bm u}_2+{\bm u}_3)+(c_2+c_3){\bm u}_1+{\bm u}_1\times({\bm u}_2+{\bm u}_3))\nonumber    \\
-                                       & =\quad (c_1c_2-{\bm u}_1\cdot{\bm u}_2)+(c_1{\bm u}_2+c_2{\bm u}_1+{\bm u}_1\times{\bm u}_2)\nonumber \\
-                                       & \quad +(c_1c_3-{\bm u}_1\cdot{\bm u}_3)+(c_1{\bm u}_3+c_3{\bm u}_1{\bm u}_1\times{\bm u}_3)\nonumber  \\
+        {\bm q}_1({\bm q}_2+{\bm q}_3) & =(w_1+{\bm u}_1)((w_2+{\bm u}_2)+(w_3+{\bm u}_3))\nonumber                                            \\
+                                       & =(w_1+{\bm u}_1)((w_2+w_3)+({\bm u}_2+{\bm u}_3))\nonumber                                            \\
+                                       & =\quad (w_1(w_2+w_3)-{\bm u}_1\cdot({\bm u}_2+{\bm u}_3))\nonumber                                    \\
+                                       & \quad +(w_1({\bm u}_2+{\bm u}_3)+(w_2+w_3){\bm u}_1+{\bm u}_1\times({\bm u}_2+{\bm u}_3))\nonumber    \\
+                                       & =\quad (w_1w_2-{\bm u}_1\cdot{\bm u}_2)+(w_1{\bm u}_2+w_2{\bm u}_1+{\bm u}_1\times{\bm u}_2)\nonumber \\
+                                       & \quad +(w_1w_3-{\bm u}_1\cdot{\bm u}_3)+(w_1{\bm u}_3+w_3{\bm u}_1{\bm u}_1\times{\bm u}_3)\nonumber  \\
                                        & ={\bm q}_1{\bm q}_2+{\bm q}_1{\bm q}_3\, .
     \end{align}
     \begin{align}
-        ({\bm q}_1+{\bm q}_2){\bm q}_3 & =((c_1+{\bm u}_1)+(c_2+{\bm u}_2))(c_3+{\bm u}_3)\nonumber                                            \\
-                                       & =((c_1+c_2)+({\bm u}_1+{\bm u}_2))(c_3+{\bm u}_3)\nonumber                                            \\
-                                       & =\quad ((c_1+c_2)c_3-({\bm u}_1+{\bm u}_2)\cdot{\bm u}_3)\nonumber                                    \\
-                                       & \quad +((c_1+c_2){\bm u}_3+c_3({\bm u}_1+{\bm u}_2)+({\bm u}_1+{\bm u}_2)\times{\bm u}_3)\nonumber    \\
-                                       & =\quad (c_1c_3-{\bm u}_1\cdot{\bm u}_3)+(c_1{\bm u}_3+c_3{\bm u}_1+{\bm u}_1\times{\bm u}_3)\nonumber \\
-                                       & \quad +(c_2c_3-{\bm u}_2\cdot{\bm u}_3)+(c_2{\bm u}_3+c_3{\bm u}_2+{\bm u}_2\times{\bm u}_3)\nonumber \\
+        ({\bm q}_1+{\bm q}_2){\bm q}_3 & =((w_1+{\bm u}_1)+(w_2+{\bm u}_2))(w_3+{\bm u}_3)\nonumber                                            \\
+                                       & =((w_1+w_2)+({\bm u}_1+{\bm u}_2))(w_3+{\bm u}_3)\nonumber                                            \\
+                                       & =\quad ((w_1+w_2)w_3-({\bm u}_1+{\bm u}_2)\cdot{\bm u}_3)\nonumber                                    \\
+                                       & \quad +((w_1+w_2){\bm u}_3+w_3({\bm u}_1+{\bm u}_2)+({\bm u}_1+{\bm u}_2)\times{\bm u}_3)\nonumber    \\
+                                       & =\quad (w_1w_3-{\bm u}_1\cdot{\bm u}_3)+(w_1{\bm u}_3+w_3{\bm u}_1+{\bm u}_1\times{\bm u}_3)\nonumber \\
+                                       & \quad +(w_2w_3-{\bm u}_2\cdot{\bm u}_3)+(w_2{\bm u}_3+w_3{\bm u}_2+{\bm u}_2\times{\bm u}_3)\nonumber \\
                                        & ={\bm q}_1{\bm q}_3+{\bm q}_2{\bm q}_3\, .
     \end{align}
 \end{prove}
 \begin{definition}
-    称四元数${\bm q}=c+{\bm u}$与$\bar{\bm q}=c-{\bm u}$互为\keyindex{共轭}{conjugate}{}。
+    称四元数${\bm q}=w+{\bm u}$与$\bar{\bm q}=w-{\bm u}$互为\keyindex{共轭}{conjugate}{}。
 \end{definition}
 \begin{proposition}
     四元数积的共轭等于逆序共轭的积，即
@@ -239,16 +239,16 @@
 \begin{prove}
     根据定义有
     \begin{align}
-        \overline{{\bm q}_1{\bm q}_2} & =(c_1c_2-{\bm u}_1\cdot{\bm u}_2)-(c_1{\bm u}_2+c_2{\bm u}_1+{\bm u}_1\times{\bm u}_2)\nonumber                   \\
-                                      & =(c_2c_1-(-{\bm u}_2)\cdot(-{\bm u}_1))+(c_2(-{\bm u}_1)+c_1(-{\bm u}_2)+(-{\bm u}_2)\times(-{\bm u}_1))\nonumber \\
-                                      & =(c_2-{\bm u}_2)(c_1-{\bm u}_1)\nonumber                                                                          \\
+        \overline{{\bm q}_1{\bm q}_2} & =(w_1w_2-{\bm u}_1\cdot{\bm u}_2)-(w_1{\bm u}_2+w_2{\bm u}_1+{\bm u}_1\times{\bm u}_2)\nonumber                   \\
+                                      & =(w_2w_1-(-{\bm u}_2)\cdot(-{\bm u}_1))+(w_2(-{\bm u}_1)+w_1(-{\bm u}_2)+(-{\bm u}_2)\times(-{\bm u}_1))\nonumber \\
+                                      & =(w_2-{\bm u}_2)(w_1-{\bm u}_1)\nonumber                                                                          \\
                                       & =\bar{\bm q}_2\bar{\bm q}_1\, .
     \end{align}
 \end{prove}
 \begin{definition}
     四元数的\keyindex{模}{magnitude}{}为
     \begin{align}
-        \|{\bm q}\|=\sqrt{{\bm q}\bar{\bm q}}=\sqrt{\bar{\bm q}{\bm q}}=\sqrt{c^2+x^2+y^2+z^2}\, .
+        \|{\bm q}\|=\sqrt{{\bm q}\bar{\bm q}}=\sqrt{\bar{\bm q}{\bm q}}=\sqrt{w^2+x^2+y^2+z^2}\, .
     \end{align}
 \end{definition}
 \begin{definition}
@@ -258,7 +258,7 @@
     称$、\displaystyle\frac{1}{\|{\bm q}\|}{\bm q}$为非零四元数${\bm q}$的\keyindex{规范化四元数}{versor}{quaternion四元数}。
 \end{definition}
 \begin{proposition}
-    当向量四元数${\bm q}$是单位四元数即$c=0$且$x^2+y^2+z^2=1$时，有
+    当向量四元数${\bm q}$是单位四元数即$w=0$且$x^2+y^2+z^2=1$时，有
     \begin{align}
         {\bm q}^2={\bm q}{\bm q}=-1\, .
     \end{align}
@@ -266,7 +266,7 @@
 \begin{prove}
     依据哈密顿积定义有
     \begin{align}
-        {\bm q}^2={\bm q}{\bm q} & =(c^2-{\bm u}\cdot{\bm u})+(2c{\bm u}+{\bm u}\times{\bm u})\nonumber \\
+        {\bm q}^2={\bm q}{\bm q} & =(w^2-{\bm u}\cdot{\bm u})+(2c{\bm u}+{\bm u}\times{\bm u})\nonumber \\
                                  & =-{\bm u}\cdot{\bm u}\nonumber                                       \\
                                  & =-(x^2+y^2+z^2)\nonumber                                             \\
                                  & =-1\, .
@@ -293,15 +293,15 @@
 \begin{prove}
     根据定义可得
     \begin{align}
-        \|{\bm q}_1{\bm q}_2\|^2 = & \|(c_1c_2-x_1x_2-y_1y_2-z_1z_2)\nonumber                    \\
-                                   & +(c_1x_2+c_2x_1+y_1z_2-y_2z_1)\mathbf{i}\nonumber           \\
-                                   & +(c_1y_2+c_2y_1+z_1x_2-z_2x_1)\mathbf{j}\nonumber           \\
-                                   & +(c_1z_2+c_2z_1+x_1y_2-x_2y_1)\mathbf{k}\|^2\nonumber       \\
-        =                          & (c_1c_2-x_1x_2-y_1y_2-z_1z_2)^2\nonumber                    \\
-                                   & +(c_1x_2+c_2x_1+y_1z_2-y_2z_1)^2\nonumber                   \\
-                                   & +(c_1y_2+c_2y_1+z_1x_2-z_2x_1)^2\nonumber                   \\
-                                   & +(c_1z_2+c_2z_1+x_1y_2-x_2y_1)^2\nonumber                   \\
-        =                          & (c_1^2+x_1^2+y_1^2+z_1^2)(c_2^2+x_2^2+y_2^2+z_2^2)\nonumber \\
+        \|{\bm q}_1{\bm q}_2\|^2 = & \|(w_1w_2-x_1x_2-y_1y_2-z_1z_2)\nonumber                    \\
+                                   & +(w_1x_2+w_2x_1+y_1z_2-y_2z_1)\mathbf{i}\nonumber           \\
+                                   & +(w_1y_2+w_2y_1+z_1x_2-z_2x_1)\mathbf{j}\nonumber           \\
+                                   & +(w_1z_2+w_2z_1+x_1y_2-x_2y_1)\mathbf{k}\|^2\nonumber       \\
+        =                          & (w_1w_2-x_1x_2-y_1y_2-z_1z_2)^2\nonumber                    \\
+                                   & +(w_1x_2+w_2x_1+y_1z_2-y_2z_1)^2\nonumber                   \\
+                                   & +(w_1y_2+w_2y_1+z_1x_2-z_2x_1)^2\nonumber                   \\
+                                   & +(w_1z_2+w_2z_1+x_1y_2-x_2y_1)^2\nonumber                   \\
+        =                          & (w_1^2+x_1^2+y_1^2+z_1^2)(w_2^2+x_2^2+y_2^2+z_2^2)\nonumber \\
         =                          & \|{\bm q}_1\|^2\|{\bm q}_2\|^2\, ,
     \end{align}
     所以$\|{\bm q}_1{\bm q}_2\|=\|{\bm q}_1\|\|{\bm q}_2\|$。
@@ -316,9 +316,9 @@
 \begin{prove}
     根据定义有
     \begin{align}
-        {\bm q}\bar{\bm q} & =(c+{\bm u})(c-{\bm u})\nonumber                                                      \\
-                           & =(c^2-{\bm u}\cdot(-{\bm u}))+(c(-{\bm u})+c{\bm u}+{\bm u}\times(-{\bm u}))\nonumber \\
-                           & =c^2+{\bm u}\cdot{\bm u}\nonumber                                                     \\
+        {\bm q}\bar{\bm q} & =(w+{\bm u})(w-{\bm u})\nonumber                                                      \\
+                           & =(w^2-{\bm u}\cdot(-{\bm u}))+(w(-{\bm u})+w{\bm u}+{\bm u}\times(-{\bm u}))\nonumber \\
+                           & =w^2+{\bm u}\cdot{\bm u}\nonumber                                                     \\
                            & =\|{\bm q}\|^2\, .
     \end{align}
     同理有$\bar{\bm q}{\bm q}=\|{\bm q}\|^2$。
@@ -377,15 +377,14 @@
     \bm p' & =(\bm n\cdot\bm p)\bm n+(\bm p-(\bm n\cdot\bm p)\bm n)\cos\theta+\bm n\times(\bm p-(\bm n\cdot\bm p)\bm n)\sin\theta\nonumber \\
            & =\bm p\cos\theta+(1-\cos\theta)(\bm n\cdot\bm p)\bm n+\bm n\times\bm p\sin\theta\, .
 \end{align}
-另一方面，我们构造三个四元数$\bm a,\bm a'$和$\bm q$：
+另一方面，我们构造四元数$\bm q$：
 \begin{align}
-    \bm a  & =\bm p\, ,                                                  \\
-    \bm a' & =\bm p'\, ,                                                 \\
-    \bm q  & =c+\bm s=\cos\frac{\theta}{2}+\bm n\sin\frac{\theta}{2}\, .
+    \bm q=c+\bm s=\cos\frac{\theta}{2}+\bm n\sin\frac{\theta}{2}\, .
 \end{align}
-其中$\displaystyle c=\cos\frac{\theta}{2}$，$\displaystyle \bm s=\bm n\sin\frac{\theta}{2}$。于是有\sidenote{注意这是四元数运算。}
+其中$\displaystyle c=\cos\frac{\theta}{2}$，$\displaystyle \bm s=\bm n\sin\frac{\theta}{2}$。
+于是有四元数积
 \begin{align}
-    \bm q\bm a\bar{\bm q} & =(c+\bm s)\bm p(c-\bm s)\nonumber                                                                                                                                                                \\
+    \bm q\bm p\bar{\bm q} & =(c+\bm s)\bm p(c-\bm s)\nonumber                                                                                                                                                                \\
                           & =(-\bm s\cdot\bm p+(c\bm p+\bm s\times\bm p))(c-\bm s)\nonumber                                                                                                                                  \\
                           & =(-c\bm s\cdot\bm p+(c\bm p+\bm s\times\bm p)\cdot\bm s)+((\bm s\cdot\bm p)\bm s+c(c\bm p+\bm s\times\bm p)-(c\bm p+\bm s\times\bm p)\times\bm s)\nonumber                                       \\
                           & =(\bm s\cdot\bm p)\bm s+c(c\bm p+\bm s\times\bm p)-(c\bm p+\bm s\times\bm p)\times\bm s\nonumber                                                                                                 \\
@@ -394,17 +393,26 @@
                           & =(c^2-\bm s\cdot\bm s)\bm p+2(\bm s\cdot\bm p)\bm s+2c\bm s\times\bm p\nonumber                                                                                                                  \\
                           & =\left(\cos^2\frac{\theta}{2}-\bm n\cdot\bm n\sin^2\frac{\theta}{2}\right)\bm p+2(\bm n\cdot\bm p)\bm n\sin^2\frac{\theta}{2}+2\bm n\times\bm p\cos\frac{\theta}{2}\sin\frac{\theta}{2}\nonumber \\
                           & =\bm p\cos\theta+(1-\cos\theta)(\bm n\cdot\bm p)\bm n+\bm n\times\bm p\sin\theta\nonumber                                                                                                        \\
-                          & =\bm a'\, .
+                          & =\bm p'\, .
 \end{align}
 其中前三个等号运用了四元数乘法计算规则，
 第四个等号算得实部为零，
 第六个等号再次运用了向量三重积的性质，
 第九个等号运用了三角函数倍角公式。
 
+更一般地，对任意实数$w$有
+\begin{align}
+    \bm q(w+\bm p)\bar{\bm q} & =w\bm q\bar{\bm q}+\bm q\bm p\bar{\bm q}\nonumber \\
+                              & =w\|\bm q\|^2+\bm q\bm p\bar{\bm q}\nonumber      \\
+                              & =w+\bm q\bm p\bar{\bm q}\nonumber                 \\
+                              & =w+\bm p'\, .
+\end{align}
+其中第一个等号运用了四元数乘法分配律。
+
 上式给出了旋转变换与四元数的关系是：
 \begin{proposition}
-    向量$\bm v$绕任意单位向量$\bm n$顺时针旋转角度$\theta$得到新向量$\bm v'$，
-    则$\bm v'$是四元数积$\bm q\bm v\bar{\bm q}$的虚部，其中
+    任意点或向量$\bm p$绕任意单位向量$\bm n$顺时针旋转角度$\theta$得到新点或新向量$\bm p'$，
+    则$\bm p'$的齐次坐标恰是四元数积$\bm q\bm p\bar{\bm q}$，其中
     \begin{align}
         \bm q=\cos\frac{\theta}{2}+\bm n\sin\frac{\theta}{2}\, .
     \end{align}
@@ -413,7 +421,7 @@
     \begin{align}
         \bm R_{\bm n}(\theta)=\bm I\cos\theta+(1-\cos\theta)\bm n\bm n^\mathrm{T}+\bm A_{\bm n}\sin\theta\, .
     \end{align}
-    其中$\bm I$为单位矩阵，$\bm A_{\bm n}$为
+    其中$\bm I$为单位矩阵，$\bm A_{\bm n}$为叉积的等效矩阵
     \begin{align}
         \bm A_{\bm n}=\left[
             \begin{array}{ccc}

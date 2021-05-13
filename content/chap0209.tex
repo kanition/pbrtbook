@@ -102,7 +102,7 @@ $\mathbf{j}\mathbf{i}=-\mathbf{k}$。
 
 整理各项并利用像上面列出的分量间恒等式（例如$\mathbf{i}^2=-1$），
 结果可用向量叉积和点积简洁地表示为
-\begin{align}
+\begin{align}\label{eq:2.5}
     (\bm q\bm q')_{xyz} & =\bm q_{xyz}\times\bm q'_{xyz}+q_w\bm q'_{xyz}+q'_w\bm q_{xyz}\nonumber\, , \\
     (\bm q\bm q')_w     & =q_wq'_w-(\bm q_{xyz}\cdot\bm q'_{xyz})\, .
 \end{align}
@@ -118,3 +118,77 @@ $\mathbb{R}^3$空间中的旋转之间有一很有用的关系：具体来说，
 
 并且，若干旋转四元数的积得到的另一个四元数等价于依次施加旋转。
 
+pbrt中文件\href{https://github.com/mmp/pbrt-v3/tree/master/src/core/quaternion.h}{{\ttfamily core/quaternion.h}}
+和\href{https://github.com/mmp/pbrt-v3/tree/master/src/core/quaternion.cpp}{{\ttfamily core/quaternion.cpp}}
+中有类\refvar{Quaternion}{}
+的实现。默认构造函数初始化一个单位四元数。
+\begin{lstlisting}
+`\initcode{Quaternion Public Methods}{=}\initnext{QuaternionPublicMethods}`
+`\initvar{Quaternion}{}`() : `\refvar[Quaternion::v]{v}{}`(0, 0, 0), `\refvar[Quaternion::w]{w}{}`(1) { }
+\end{lstlisting}
+
+我们用\refvar{Vector3f}{}表示四元数的$xyz$分量；
+这样可以在下面一些方法的实现中利用\refvar{Vector3f}{}的各种方法。
+\begin{lstlisting}
+`\initcode{Quaternion Public Data}{=}`
+`\refvar{Vector3f}{}` `\initvar[Quaternion::v]{v}{}`;
+`\refvar{Float}{}` `\initvar[Quaternion::w]{w}{}`;
+\end{lstlisting}
+
+四元数的加减法逐元素执行。这直接由\refeq{2.4}推导而来。例如
+\begin{align*}
+    \bm q+\bm q' & =(w+x\mathbf{i}+y\mathbf{j}+z\mathbf{k})(w'+x'\mathbf{i}+y'\mathbf{j}+z'\mathbf{k})\nonumber \\
+                 & =(w+w')+(x+x')\mathbf{i}+(y+y')\mathbf{j}+(z+z')\mathbf{k}\, .
+\end{align*}
+
+其他算术方法（减法、乘法以及除以标量）也有类似定义和实现，此处不再赘述。
+\begin{lstlisting}
+`\refcode{Quaternion Public Methods}{+=}\lastnext{QuaternionPublicMethods}`
+`\refvar{Quaternion}{}` &operator+=(const `\refvar{Quaternion}{}` &q) {
+    `\refvar[Quaternion::v]{v}{}` += q.`\refvar[Quaternion::v]{v}{}`;
+    `\refvar[Quaternion::w]{w}{}` += q.`\refvar[Quaternion::w]{w}{}`;
+    return *this;
+}
+\end{lstlisting}
+
+两个四元数的内积由方法\refvar[Quaternion::Dot]{Dot}{()}实现，
+并且四元数可以被它的长度规范化。
+\begin{lstlisting}
+`\initcode{Quaternion Inline Functions}{=}\initnext{QuaternionInlineFunctions}`
+inline `\refvar{Float}{}` `\initvar[Quaternion::Dot]{Dot}{}`(const `\refvar{Quaternion}{}` &q1, const `\refvar{Quaternion}{}` &q2) {
+    return `\refvar{Dot}{}`(q1.`\refvar[Quaternion::v]{v}{}`, q2.`\refvar[Quaternion::v]{v}{}`) + q1.`\refvar[Quaternion::w]{w}{}` * q2.`\refvar[Quaternion::w]{w}{}`;
+}
+\end{lstlisting}
+
+\begin{lstlisting}
+`\refcode{Quaternion Inline Functions}{+=}\lastcode{QuaternionInlineFunctions}`
+inline `\refvar{Quaternion}{}` `\initvar[Quaternion::Normalize]{Normalize}{}`(const `\refvar{Quaternion}{}` &q) {
+    return q / std::sqrt(`\refvar[Quaternion::Dot]{Dot}{}`(q, q));
+}
+\end{lstlisting}
+
+能够计算和四元数表示同一旋转的变换矩阵非常有用。特别地，在类
+\refvar{AnimatedTransform}{}中用四元数对旋转插值后，
+我们需要将插值后的旋转转换回变换矩阵来计算最后合成的插值矩阵。
+
+为了推导四元数的旋转矩阵，回忆一下四元数对点的变换由$\bm q\bm p\bm q^{-1}$给出。
+我们想要矩阵$\bm M$执行相同的变换，即$\bm p'=\bm M\bm p$。
+如果我们用\refeq{2.5}展开四元数乘法$\bm q\bm p\bm q^{-1}$、
+用四元数基本恒等式化简、合并项并把结果表示为矩阵，
+我们可以得到如下$3\times3$矩阵表示同一变换：
+\begin{align}\label{eq:2.6}
+    \bm M=\left[
+        \begin{array}{ccc}
+            1-2(q_y^2+q_z^2) & 2(q_xq_y+q_zq_w) & 2(q_xq_z-q_yq_w) \\
+            2(q_xq_y-q_zq_w) & 1-2(q_x^2+q_z^2) & 2(q_yq_z+q_xq_w) \\
+            2(q_xq_z+q_yq_w) & 2(q_yq_z-q_xq_w) & 1-2(q_x^2+q_y^2)
+        \end{array}
+        \right]\, .
+\end{align}
+
+该计算由方法\refvar[ToTransform]{Quaternion::ToTransform}{()}实现。
+我们此处不介绍它的实现，因为它就是\refeq{2.6}的直接实现。
+\begin{lstlisting}
+`\refcode{Quaternion Public Methods}{+=}\lastnext{QuaternionPublicMethods}`
+`\refvar{Transform}{}` `\initvar{ToTransform}{}`() const;
+\end{lstlisting}

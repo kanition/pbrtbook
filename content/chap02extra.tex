@@ -365,34 +365,36 @@
     \bm v=\overrightarrow{HV}\, .
 \end{align}
 注意到$\bm n$是单位向量，根据上述几何关系，易得
+\sidenote{注意$\bm v$的表达式与惯用手有关，
+    此处为了与原书统一，使用的是左手坐标系统。}
 \begin{align}
     \bm h  & =(\bm n\cdot\bm p)\bm n\, ,          \\
     \bm u  & =\bm p-\bm h\, ,                     \\
-    \bm v  & =\bm n\times\bm u\, ,                \\
+    \bm v  & =\bm u\times\bm n\, ,                \\
     \bm u' & =\bm u\cos\theta+\bm v\sin\theta\, , \\
     \bm p' & =\bm h+\bm u'\, .
 \end{align}
 将这些式子从前往后依次代入可得\sidenote{注意这是普通的向量运算。}
 \begin{align}
-    \bm p' & =(\bm n\cdot\bm p)\bm n+(\bm p-(\bm n\cdot\bm p)\bm n)\cos\theta+\bm n\times(\bm p-(\bm n\cdot\bm p)\bm n)\sin\theta\nonumber \\
-           & =\bm p\cos\theta+(1-\cos\theta)(\bm n\cdot\bm p)\bm n+\bm n\times\bm p\sin\theta\, .
+    \bm p' & =(\bm n\cdot\bm p)\bm n+(\bm p-(\bm n\cdot\bm p)\bm n)\cos\theta+(\bm p-(\bm n\cdot\bm p)\bm n)\times\bm n\sin\theta\nonumber \\
+           & =\bm p\cos\theta+(1-\cos\theta)(\bm n\cdot\bm p)\bm n+\bm p\times\bm n\sin\theta\, .
 \end{align}
 另一方面，我们构造四元数$\bm q$：
 \begin{align}
-    \bm q=c+\bm s=\cos\frac{\theta}{2}+\bm n\sin\frac{\theta}{2}\, .
+    \bm q=c+\bm s=\cos\frac{\theta}{2}+\bm n\sin\frac{\theta}{2}\, ,
 \end{align}
 其中$\displaystyle c=\cos\frac{\theta}{2}$，$\displaystyle \bm s=\bm n\sin\frac{\theta}{2}$。
 于是有四元数积
 \begin{align}
-    \bm q\bm p\bar{\bm q} & =(c+\bm s)\bm p(c-\bm s)\nonumber                                                                                                                                                                \\
-                          & =(-\bm s\cdot\bm p+(c\bm p+\bm s\times\bm p))(c-\bm s)\nonumber                                                                                                                                  \\
-                          & =(-c\bm s\cdot\bm p+(c\bm p+\bm s\times\bm p)\cdot\bm s)+((\bm s\cdot\bm p)\bm s+c(c\bm p+\bm s\times\bm p)-(c\bm p+\bm s\times\bm p)\times\bm s)\nonumber                                       \\
-                          & =(\bm s\cdot\bm p)\bm s+c(c\bm p+\bm s\times\bm p)-(c\bm p+\bm s\times\bm p)\times\bm s\nonumber                                                                                                 \\
-                          & =(\bm s\cdot\bm p)\bm s+c^2\bm p+c\bm s\times\bm p-c\bm p\times\bm s-\bm s\times\bm p\times\bm s\nonumber                                                                                        \\
-                          & =(\bm s\cdot\bm p)\bm s+c^2\bm p+2c\bm s\times\bm p-((\bm s\cdot\bm s)\bm p-(\bm p\cdot\bm s)\bm s)\nonumber                                                                                     \\
-                          & =(c^2-\bm s\cdot\bm s)\bm p+2(\bm s\cdot\bm p)\bm s+2c\bm s\times\bm p\nonumber                                                                                                                  \\
-                          & =\left(\cos^2\frac{\theta}{2}-\bm n\cdot\bm n\sin^2\frac{\theta}{2}\right)\bm p+2(\bm n\cdot\bm p)\bm n\sin^2\frac{\theta}{2}+2\bm n\times\bm p\cos\frac{\theta}{2}\sin\frac{\theta}{2}\nonumber \\
-                          & =\bm p\cos\theta+(1-\cos\theta)(\bm n\cdot\bm p)\bm n+\bm n\times\bm p\sin\theta\nonumber                                                                                                        \\
+    \bar{\bm q}\bm p\bm q & =(c-\bm s)\bm p(c+\bm s)\nonumber                                                                                                                                                                \\
+                          & =(\bm s\cdot\bm p+(c\bm p-\bm s\times\bm p))(c+\bm s)\nonumber                                                                                                                                   \\
+                          & =(c\bm s\cdot\bm p-(c\bm p-\bm s\times\bm p)\cdot\bm s)+((\bm s\cdot\bm p)\bm s+c(c\bm p-\bm s\times\bm p)+(c\bm p-\bm s\times\bm p)\times\bm s)\nonumber                                        \\
+                          & =(\bm s\cdot\bm p)\bm s+c(c\bm p-\bm s\times\bm p)+(c\bm p-\bm s\times\bm p)\times\bm s\nonumber                                                                                                 \\
+                          & =(\bm s\cdot\bm p)\bm s+c^2\bm p-c\bm s\times\bm p+c\bm p\times\bm s-\bm s\times\bm p\times\bm s\nonumber                                                                                        \\
+                          & =(\bm s\cdot\bm p)\bm s+c^2\bm p+2c\bm p\times\bm s-((\bm s\cdot\bm s)\bm p-(\bm p\cdot\bm s)\bm s)\nonumber                                                                                     \\
+                          & =(c^2-\bm s\cdot\bm s)\bm p+2(\bm s\cdot\bm p)\bm s+2c\bm p\times\bm s\nonumber                                                                                                                  \\
+                          & =\left(\cos^2\frac{\theta}{2}-\bm n\cdot\bm n\sin^2\frac{\theta}{2}\right)\bm p+2(\bm n\cdot\bm p)\bm n\sin^2\frac{\theta}{2}+2\bm p\times\bm n\cos\frac{\theta}{2}\sin\frac{\theta}{2}\nonumber \\
+                          & =\bm p\cos\theta+(1-\cos\theta)(\bm n\cdot\bm p)\bm n+\bm p\times\bm n\sin\theta\nonumber                                                                                                        \\
                           & =\bm p'\, .
 \end{align}
 其中前三个等号运用了四元数乘法计算规则，
@@ -402,22 +404,36 @@
 
 更一般地，对任意实数$w$有
 \begin{align}
-    \bm q(w+\bm p)\bar{\bm q} & =w\bm q\bar{\bm q}+\bm q\bm p\bar{\bm q}\nonumber \\
-                              & =w\|\bm q\|^2+\bm q\bm p\bar{\bm q}\nonumber      \\
-                              & =w+\bm q\bm p\bar{\bm q}\nonumber                 \\
+    \bar{\bm q}(w+\bm p)\bm q & =w\bar{\bm q}\bm q+\bar{\bm q}\bm p\bm q\nonumber \\
+                              & =w\|\bm q\|^2+\bar{\bm q}\bm p\bm q\nonumber      \\
+                              & =w+\bar{\bm q}\bm p\bm q\nonumber                 \\
                               & =w+\bm p'\, .
 \end{align}
 其中第一个等号运用了四元数乘法分配律。
 
 上式给出了旋转变换与四元数的关系是：
-\begin{proposition}
+\begin{theorem}
     任意点或向量$\bm p$绕任意单位向量$\bm n$顺时针旋转角度$\theta$得到新点或新向量$\bm p'$，
-    则$\bm p'$的齐次坐标恰是四元数积$\bm q\bm p\bar{\bm q}$，其中
+    则$\bm p'$的（左手）齐次坐标恰是四元数积$\bar{\bm q}\bm p\bm q$，其中
     \begin{align}
         \bm q=\cos\frac{\theta}{2}+\bm n\sin\frac{\theta}{2}\, .
     \end{align}
+\end{theorem}
 
-    对应的$3\times3$旋转矩阵$\bm R_{\bm n}(\theta)$为\sidenote{你可以动手验算一下。}
+\begin{corollary}
+    绕单位向量$\bm n$顺时针旋转角度$\theta$与绕$-\bm n$逆时针旋转$\theta$等价。
+\end{corollary}
+
+\begin{prove}
+    利用四元数积易证：
+    \begin{align}
+          & (\cos(-\frac{\theta}{2})-(-\bm n)\sin(-\frac{\theta}{2}))\bm p(\cos(-\frac{\theta}{2})+(-\bm n)\sin(-\frac{\theta}{2}))\nonumber \\
+        = & (\cos\frac{\theta}{2}-\bm n\sin\frac{\theta}{2})\bm p(\cos\frac{\theta}{2}+\bm n\sin\frac{\theta}{2})\, .
+    \end{align}
+\end{prove}
+
+\begin{theorem}
+    绕单位向量$\bm n$顺时针旋转角度$\theta$的$3\times3$旋转矩阵$\bm R_{\bm n}(\theta)$为
     \begin{align}
         \bm R_{\bm n}(\theta)=\bm I\cos\theta+(1-\cos\theta)\bm n\bm n^\mathrm{T}+\bm A_{\bm n}\sin\theta\, .
     \end{align}
@@ -425,12 +441,81 @@
     \begin{align}
         \bm A_{\bm n}=\left[
             \begin{array}{ccc}
-                0    & -n_z & n_y  \\
-                n_z  & 0    & -n_x \\
-                -n_y & n_x  & 0
+                0    & n_z  & -n_y \\
+                -n_z & 0    & n_x  \\
+                n_y  & -n_x & 0
             \end{array}
             \right]\, .
     \end{align}
-
     对应的$4\times4$旋转矩阵只需在$\bm R_{\bm n}(\theta)$右边和底部添加全零列（行）即可。
-\end{proposition}
+\end{theorem}
+
+\begin{corollary}
+    $3\times3$旋转矩阵$\bm R_{\bm n}(\theta)$的分量表达式为
+    \begin{align}
+        \bm R_{\bm n}(\theta)=\left[\begin{array}{ccc}
+                1-2(y^2+z^2) & 2(xy+zw)     & 2(xz-yw)     \\
+                2(xy-zw)     & 1-2(x^2+z^2) & 2(yz+xw)     \\
+                2(xz+yw)     & 2(yz-xw)     & 1-2(x^2+y^2)
+            \end{array}\right]\, .
+    \end{align}
+    其中$\displaystyle w+x\mathbf{i}+y\mathbf{j}+z\mathbf{k}=\cos\frac{\theta}{2}+\bm n\sin\frac{\theta}{2}$，
+    $\bm n$为单位向量。
+\end{corollary}
+
+\begin{remark}
+    以上都是在左手坐标系统下的结论，右手坐标系统下则会有所不同。试着推导一下吧！
+\end{remark}
+
+\begin{prove}
+    考虑$\theta\in[0,\pi]$的情况\sidenote{为什么只需要考虑这个角度区间？超过这个区间又该如何处理？}，
+    此时有$\displaystyle\frac{\theta}{2}\in[0,\frac{\pi}{2}]$。因为
+    \begin{align}
+        w+x\mathbf{i}+y\mathbf{j}+z\mathbf{k}=\cos\frac{\theta}{2}+\bm n\sin\frac{\theta}{2}\, ,
+    \end{align}
+    所以
+    \begin{align}
+        \cos\frac{\theta}{2}=w,\qquad\sin\frac{\theta}{2}=\sqrt{1-w^2}\, .
+    \end{align}
+    于是
+    \begin{align}
+        \cos\theta & =2\cos^2\frac{\theta}{2}-1=2w^2-1\, ,                         \\
+        \sin\theta & =2\sin\frac{\theta}{2}\cos\frac{\theta}{2}=2w\sqrt{1-w^2}\, .
+    \end{align}
+    并且
+    \begin{align}
+        n_x         & =\frac{x}{\sin\frac{\theta}{2}}=\frac{x}{\sqrt{1-w^2}}\, ,          \\
+        n_y         & =\frac{y}{\sin\frac{\theta}{2}}=\frac{y}{\sqrt{1-w^2}}\, ,          \\
+        n_z         & =\frac{z}{\sin\frac{\theta}{2}}=\frac{z}{\sqrt{1-w^2}}\, ,          \\
+        x^2+y^2+z^2 & =\sin^2\frac{\theta}{2}\|\bm n\|^2=\sin^2\frac{\theta}{2}=1-w^2\, .
+    \end{align}
+
+    将上面的式子代入旋转矩阵表达式得
+    \begin{align}
+        \bm R_{\bm n}(\theta) & =\bm I\cos\theta+(1-\cos\theta)\bm n\bm n^\mathrm{T}+\bm A_{\bm n}\sin\theta\nonumber                                         \\
+                              & =(2w^2-1)\bm I+2(1-w^2)\bm n\bm n^\mathrm{T}+2w\sqrt{1-w^2}\bm A_{\bm n}\nonumber                                             \\
+                              & =(2w^2-1)\bm I+2(1-w^2)\left[\begin{array}{ccc}
+                n_x^2  & n_xn_y & n_xn_z \\
+                n_xn_y & n_y^2  & n_yn_z \\
+                n_xn_z & n_yn_z & n_z^2
+            \end{array}\right]+2w\sqrt{1-w^2}\left[\begin{array}{ccc}
+                0    & n_z  & -n_y \\
+                -n_z & 0    & n_x  \\
+                n_y  & -n_x & 0
+            \end{array}\right]\nonumber \\
+                              & =(1-2x^2-2y^2-2z^2)\bm I+2\left[\begin{array}{ccc}
+                x^2 & xy  & xz  \\
+                xy  & y^2 & yz  \\
+                xz  & yz  & z^2
+            \end{array}\right]+2w\left[\begin{array}{ccc}
+                0  & z  & -y \\
+                -z & 0  & x  \\
+                y  & -x & 0
+            \end{array}\right]\nonumber          \\
+                              & =\left[\begin{array}{ccc}
+                1-2(y^2+z^2) & 2(xy+zw)     & 2(xz-yw)     \\
+                2(xy-zw)     & 1-2(x^2+z^2) & 2(yz+xw)     \\
+                2(xz+yw)     & 2(yz-xw)     & 1-2(x^2+y^2)
+            \end{array}\right]\, .
+    \end{align}
+\end{prove}

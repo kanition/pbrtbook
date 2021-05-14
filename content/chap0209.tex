@@ -192,3 +192,32 @@ inline `\refvar{Quaternion}{}` `\initvar[Quaternion::Normalize]{Normalize}{}`(co
 `\refcode{Quaternion Public Methods}{+=}\lastnext{QuaternionPublicMethods}`
 `\refvar{Transform}{}` `\initvar{ToTransform}{}`() const;
 \end{lstlisting}
+
+注意我们可以利用一个单位四元数
+$\displaystyle(\bm q_{xyz}\sin\frac{\theta}{2},\cos\frac{\theta}{2})$表示
+绕单位轴$\hat{\bm q}_{xyz}$旋转角度$\theta$的事实计算旋转矩阵。
+首先我们计算出旋转角度为$\theta=2\arccos q_w$，
+然后利用之前定义的函数\refvar{Rotate}{()}，
+传入轴$\hat{\bm q}_{xyz}$和旋转角度$\theta$。
+然而，这个替代方法会很低效，因为需要多次调用三角函数，
+但是这里实现的方法只用了浮点加法、减法和乘法。
+
+从旋转矩阵创建四元数也很有用。
+为此，\refvar{Quaternion}{}提供了接收\refvar{Transform}{}
+的构造函数。合适的四元数可以通过利用\refeq{2.6}中旋转矩阵元素与四元数分量之间的关系算得。
+例如，如果我们从矩阵本身中减去它的转置，则结果矩阵的$(0,1)$分量为$-4q_wq_z$。
+因此，给定已知值的特定旋转矩阵实例，
+可以利用矩阵值与四元数分量之间大量这样的关系生成一系列可以求解四元数分量的方程。
+
+本文中我们不介绍推导细节或实际实现
+\sidenote{译者注：笔者将其补充到了\refsec{译者补充：四元数}。}；
+关于怎样推导这项技术的更多信息，
+包括处理数值稳定性，详见\citet{SHOEMAKE1991351}。
+
+\begin{lstlisting}
+`\refcode{Quaternion Public Methods}{+=}\lastcode{QuaternionPublicMethods}`
+`\refvar{Quaternion}{}`(const `\refvar{Transform}{}` &t);
+\end{lstlisting}
+
+\subsection{四元数插值}\label{sub:四元数插值}
+我们最后要定义的函数

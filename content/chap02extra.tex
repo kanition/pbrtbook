@@ -437,17 +437,17 @@
     \begin{align}
         \bm R_{\bm n}(\theta)=\bm I\cos\theta+(1-\cos\theta)\bm n\bm n^\mathrm{T}+\bm A_{\bm n}\sin\theta\, .
     \end{align}
-    其中$\bm I$为单位矩阵，$\bm A_{\bm n}$为叉积的等效矩阵
+    其中$\bm I$为3阶单位矩阵，$\bm A_{\bm n}$为叉积的等效矩阵
     \begin{align}
         \bm A_{\bm n}=\left[
             \begin{array}{ccc}
-                0    & n_z  & -n_y \\
-                -n_z & 0    & n_x  \\
-                n_y  & -n_x & 0
+                     & n_z  & -n_y \\
+                -n_z &      & n_x  \\
+                n_y  & -n_x &
             \end{array}
             \right]\, .
     \end{align}
-    对应的$4\times4$旋转矩阵只需在$\bm R_{\bm n}(\theta)$右边和底部添加全零列（行）即可。
+    相应$4\times4$旋转矩阵只需将4阶单位矩阵左上角$3\times3$子阵替换为$\bm R_{\bm n}(\theta)$。
 \end{theorem}
 
 \begin{corollary}
@@ -468,7 +468,7 @@
 \end{remark}
 
 \begin{prove}
-    考虑$\theta\in[0,\pi]$的情况\sidenote{为什么只需要考虑这个角度区间？超过这个区间又该如何处理？}，
+    考虑$\theta\in[0,\pi]$的情况\sidenote{思考一下：为什么只需要考虑这个角度区间？超过这个区间又该如何处理？}，
     此时有$\displaystyle\frac{\theta}{2}\in[0,\frac{\pi}{2}]$。因为
     \begin{align}
         w+x\mathbf{i}+y\mathbf{j}+z\mathbf{k}=\cos\frac{\theta}{2}+\bm n\sin\frac{\theta}{2}\, ,
@@ -499,18 +499,18 @@
                 n_xn_y & n_y^2  & n_yn_z \\
                 n_xn_z & n_yn_z & n_z^2
             \end{array}\right]+2w\sqrt{1-w^2}\left[\begin{array}{ccc}
-                0    & n_z  & -n_y \\
-                -n_z & 0    & n_x  \\
-                n_y  & -n_x & 0
+                     & n_z  & -n_y \\
+                -n_z &      & n_x  \\
+                n_y  & -n_x &
             \end{array}\right]\nonumber \\
                               & =(1-2x^2-2y^2-2z^2)\bm I+2\left[\begin{array}{ccc}
                 x^2 & xy  & xz  \\
                 xy  & y^2 & yz  \\
                 xz  & yz  & z^2
             \end{array}\right]+2w\left[\begin{array}{ccc}
-                0  & z  & -y \\
-                -z & 0  & x  \\
-                y  & -x & 0
+                   & z  & -y \\
+                -z &    & x  \\
+                y  & -x &
             \end{array}\right]\nonumber          \\
                               & =\left[\begin{array}{ccc}
                 1-2(y^2+z^2) & 2(xy+zw)     & 2(xz-yw)     \\
@@ -519,3 +519,119 @@
             \end{array}\right]\, .
     \end{align}
 \end{prove}
+
+\subsubsection{由旋转矩阵求解四元数}
+已知$3\times3$旋转矩阵为$\bm R$，根据上文定理，
+其对应的单位四元数$\bm q=w+x\mathbf{i}+y\mathbf{j}+z\mathbf{k}$满足
+\begin{align}
+    \bm R=\left[\begin{array}{ccc}
+            r_{00} & r_{01} & r_{02} \\
+            r_{10} & r_{11} & r_{12} \\
+            r_{20} & r_{21} & r_{22}
+        \end{array}\right]
+    =\left[\begin{array}{ccc}
+            1-2(y^2+z^2) & 2(xy+zw)     & 2(xz-yw)     \\
+            2(xy-zw)     & 1-2(x^2+z^2) & 2(yz+xw)     \\
+            2(xz+yw)     & 2(yz-xw)     & 1-2(x^2+y^2)
+        \end{array}\right]\, .
+\end{align}
+注意到
+\begin{align}\label{eq:02ex.1}
+    \bm R-\bm R^\mathrm{T}=4\left[\begin{array}{ccc}
+                & zw  & -yw \\
+            -zw &     & xw  \\
+            yw  & -xw &
+        \end{array}\right],\quad
+    \bm R+\bm R^\mathrm{T}=4\left[\begin{array}{ccc}
+            \displaystyle\frac{r_{00}}{2} & xy                            & xz                            \\
+            xy                            & \displaystyle\frac{r_{11}}{2} & yz                            \\
+            xz                            & yz                            & \displaystyle\frac{r_{22}}{2}
+        \end{array}\right]\, .
+\end{align}
+观察上式可以发现，若已知$w$则可以利用$\bm R-\bm R^\mathrm{T}$快速求得$x,y,z$；
+若已知$x,y,z$中任意一项，也可利用$\bm R+\bm R^\mathrm{T}$快速求得其他项，并求出$w$。
+因此我们首先利用$\bm R$主对角线上的元素有
+\begin{align}
+    \bm B[x^2\ y^2\ z^2\ w^2]^\mathrm{T}=\bm C[r_{00}\ r_{11}\ r_{22}\ 1]^\mathrm{T}\, ,
+\end{align}
+其中
+\begin{align}
+    \bm B=\left[\begin{array}{rrrr}
+               & -2 & -2 &   \\
+            -2 &    & -2 &   \\
+            -2 & -2 &    &   \\
+            1  & 1  & 1  & 1
+        \end{array}\right],\
+    \bm C=\left[\begin{array}{rrrr}
+            1 &   &   & -1 \\
+              & 1 &   & -1 \\
+              &   & 1 & -1 \\
+              &   &   & 1
+        \end{array}\right]\, .
+\end{align}
+这个方程组不难解得
+\begin{align}\label{eq:02ex.2}
+    \left[\begin{array}{c}
+            x^2 \\y^2\\z^2\\w^2
+        \end{array}\right]=\bm B^{-1}\bm C\left[\begin{array}{c}
+            r_{00} \\r_{11}\\r_{22}\\1
+        \end{array}\right]=\frac{1}{4}\left[\begin{array}{rrrr}
+            1  & -1 & -1 & 1 \\
+            -1 & 1  & -1 & 1 \\
+            -1 & -1 & 1  & 1 \\
+            1  & 1  & 1  & 1
+        \end{array}\right]\left[\begin{array}{c}
+            r_{00} \\r_{11}\\r_{22}\\1
+        \end{array}\right]\, .
+\end{align}
+虽然我们可以从$x^2,y^2,z^2,w^2$中任解一项并开方，
+然后利用上文的$\bm R-\bm R^\mathrm{T}$或$\bm R+\bm R^\mathrm{T}$求解出其他项
+\sidenote{思考一下：为什么不直接全部开方求解？开方后取正负会有影响吗？}，
+但是考虑到开方运算一般比除法的开销大，我们希望最高效地利用这次开方运算——
+选最大的一项开方，使下一步的除数远离零以保持足够的数值精度。
+为此我们需要用简单的方式判断哪一项最大。
+设$a=w^2-x^2-y^2-z^2$，于是有
+\begin{align}
+    [x^2\ y^2\ z^2\ a]^\mathrm{T}=\bm D[x^2\ y^2\ z^2\ w^2]^\mathrm{T}\, ,
+\end{align}
+其中
+\begin{align}
+    \bm D=\left[\begin{array}{rrrr}
+            1  &    &    &   \\
+               & 1  &    &   \\
+               &    & 1  &   \\
+            -1 & -1 & -1 & 1
+        \end{array}\right]\, .
+\end{align}
+于是联立可解得
+\begin{align}
+    \left[\begin{array}{c}
+            r_{00} \\r_{11}\\r_{22}\\1
+        \end{array}\right]=\bm C^{-1}\bm B\bm D^{-1}\left[\begin{array}{c}
+            x^2 \\ y^2\\ z^2\\ a
+        \end{array}\right]=\left[\begin{array}{cccc}
+            2 &   &   & 1 \\
+              & 2 &   & 1 \\
+              &   & 2 & 1 \\
+            2 & 2 & 2 & 1
+        \end{array}\right]\left[\begin{array}{c}
+            x^2 \\ y^2\\ z^2\\ a
+        \end{array}\right]\, .
+\end{align}
+整理可得
+\begin{align}
+    r_{00}             & =2x^2+a\, , \\
+    r_{11}             & =2y^2+a\, , \\
+    r_{22}             & =2z^2+a\, , \\
+    \mathrm{tr}(\bm R) & =2w^2+a\, .
+\end{align}
+这说明$x^2,y^2,z^2,w^2$和$r_{00},r_{11},r_{22},\mathrm{tr}(\bm R)$的大小关系一致。
+
+综上所述，由旋转矩阵$\bm R$求解单位四元数$\bm q=w+x\mathbf{i}+y\mathbf{j}+z\mathbf{k}$的方式是：
+\begin{enumerate}
+    \item 比较$r_{00},r_{11},r_{22},\mathrm{tr}(\bm R)$的大小关系，
+          对应于$x^2,y^2,z^2,w^2$的大小关系；
+    \item 取最大的那项，按\refeq{02ex.2}对应行计算该项并开方；
+    \item 计算$\bm R-\bm R^\mathrm{T}$或$\bm R+\bm R^\mathrm{T}$，
+          分别用所得矩阵的元素（\refeq{02ex.1}）除以上一步的已知项和系数4得到剩余未知项。
+\end{enumerate}

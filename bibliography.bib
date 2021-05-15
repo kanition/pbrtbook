@@ -837,3 +837,29 @@
   abstract  = {Publisher Summary
 This chapter describes the quaternions and 4 × 4 matrices. Quaternions are steadily replacing Euler angles as the internal representation of orientations. They mesh remarkably well with 4 × 4 homogeneous matrices. Matrix multiplication can be used quite nicely for quaternion multiplication, because quaternions are, in fact, four-component homogeneous coordinates for orientations, and because they multiply linearly. A quaternion q as a 4-vector, written as (xq, yq, zq, wq), or as just (x, y, z, w) is described. Some systems do not implement matrix manipulations carefully, and will misbehave if the bottom right entry of the matrix is not 1. Even when normalization is desired, it is not necessary to compute a square root and only addition, subtraction, multiplication, and division are used. It is found that only the last row and column of the two matrices differ, and then only by transposition or sign change.}
 }
+
+@inproceedings{10.1145/325334.325242,
+  author    = {Shoemake, Ken},
+  title     = {Animating Rotation with Quaternion Curves},
+  year      = {1985},
+  isbn      = {0897911660},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/325334.325242},
+  doi       = {10.1145/325334.325242},
+  abstract  = {Solid bodies roll and tumble through space. In computer animation, so do cameras. The rotations of these objects are best described using a four coordinate system, quaternions, as is shown in this paper. Of all quaternions, those on the unit sphere are most suitable for animation, but the question of how to construct curves on spheres has not been much explored. This paper gives one answer by presenting a new kind of spline curve, created on a sphere, suitable for smoothly in-betweening (i.e. interpolating) sequences of arbitrary rotations. Both theory and experiment show that the motion generated is smooth and natural, without quirks found in earlier methods.},
+  booktitle = {Proceedings of the 12th Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {245–254},
+  numpages  = {10},
+  keywords  = {spherical geometry, B\'{e}zier curve, in-betweening, spline, rotation, B-spline, interpolation, animation, quaternion, approximation},
+  series    = {SIGGRAPH '85}
+}
+
+@misc{Blow_2004,
+  title   = {Understanding Slerp, Then Not Using It},
+  url     = {http://number-none.com/product/Understanding%20Slerp,%20Then%20Not%20Using%20It/},
+  journal = {Happycake Development Notes},
+  author  = {Blow, Jonathan},
+  year    = {2004},
+  month   = {Feb}
+}

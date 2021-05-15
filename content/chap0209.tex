@@ -210,7 +210,7 @@ $\displaystyle(\bm q_{xyz}\sin\frac{\theta}{2},\cos\frac{\theta}{2})$表示
 可以利用矩阵值与四元数分量之间大量这样的关系生成一系列可以求解四元数分量的方程。
 
 本文中我们不介绍推导细节或实际实现
-\sidenote{译者注：笔者将其补充到了\refsec{译者补充：四元数}。}；
+\sidenote{译者注：笔者将其补充到了\refsub{四元数与旋转变换}。}；
 关于怎样推导这项技术的更多信息，
 包括处理数值稳定性，详见\citet{SHOEMAKE1991351}。
 
@@ -220,4 +220,103 @@ $\displaystyle(\bm q_{xyz}\sin\frac{\theta}{2},\cos\frac{\theta}{2})$表示
 \end{lstlisting}
 
 \subsection{四元数插值}\label{sub:四元数插值}
-我们最后要定义的函数
+我们最后要定义的函数\refvar{Slerp}{()}，
+在两个四元数之间进行\keyindex{球面线性插值}{spherical linear interpolation}{interpolation插值}(slerp)。
+球面线性插值可在球体表面大圆的弧线上做匀速率运动，
+因此对于旋转插值有两个期望的性质：
+\begin{itemize}
+    \item 旋转插值路径使得\keyindex{扭矩最小化}{torque minimization}{}：
+          两个旋转之间所得路径是旋转空间中所能得到的最短路径。
+    \item 插值有\keyindex{恒定角速度}{constant angular velocity}{}：
+          动画参数{\ttfamily t}的变化量和所得旋转的变化量的关系在插值过程中是恒定的
+          （换句话说，在插值范围内，插值速度是恒定的）。
+\end{itemize}
+
+参考本章末“扩展阅读”一节更彻底地讨论好的旋转插值该有什么性质。
+
+如下的四元数球面线性插值最初由\citet{10.1145/325334.325242}提出，
+给定两个四元数$\bm q_1$和$\bm q_2$和参数值$t\in[0,1]$以在两者之间插值
+\sidenote{译者注：利用三角形的正弦定理可以推导出该公式。}：
+\begin{align*}
+    \mathrm{slerp}(\bm q_1,\bm q_2,t)=\frac{\bm q_1\sin((1-t)\theta)+\bm q_2\sin(t\theta)}{\sin\theta}\, .
+\end{align*}
+
+\citet{Blow_2004}提出了一种直观的方式理解\refvar{Slerp}{()}。
+下文中，给定要在其间插值的四元数$\bm q_1$和$\bm q_2$，两者角度记为$\theta$。
+然后，给定参数值$t\in[0,1]$，我们想要找到中间的四元数$\bm q'$使得
+它沿从$\bm q_1$到$\bm q_2$的路径与$\bm q_1$的角度为$\theta'=\theta t$。
+
+\begin{figure}[htbp]
+    \centering\includegraphics[scale=0.6]{chap02/Quaternionrotation.eps}
+    \caption{为了理解四元数球面线性插值，考虑2D下的两个单位圆上的向量$\bm v_0$和$\bm v_1$，
+        两者夹角$\theta$。我们想要计算两者间角度为$\theta'$的插值向量。
+        为此，我们可以寻找正交于$\bm v_0$的向量$\bm v_{\perp}$，
+        再应用三角恒等式$\bm v'=\bm v_0\cos\theta'+\bm v_{\perp}\sin\theta'$。}
+    \label{fig:2.17}
+\end{figure}
+
+一个计算$\bm q'$的简单方法是先在四元数空间中计算一个正交坐标系统，
+一个轴为$\bm q_1$，另一个是与$\bm q_1$正交的四元数，
+这样两轴就构成张开$\bm q_1$和$\bm q_2$的基。
+
+有了这个坐标系统，我们就能计算关于$\bm q_1$的旋转
+（见\reffig{2.17}展示的2D设置下的概念）。
+正交向量$\bm q_{\perp}$可以通过将$\bm q_2$投影到$\bm q_1$并
+从$\bm q_2$减去该正交投影得到；
+剩余部分保证与$\bm q_1$正交：
+\begin{align}\label{eq:2.7}
+    \bm q_{\perp}=\bm q_2-(\bm q_1\cdot\bm q_2)\bm q_1\, .
+\end{align}
+给定坐标系统和规范化的$\bm q_{\perp}$，沿动画路径的四元数为
+\begin{align}\label{eq:2.8}
+    \bm q'=\bm q_1\cos(\theta t)+\hat{\bm q}_{\perp}\sin(\theta t)\, .
+\end{align}
+
+函数\refvar{Slerp}{()}的实现检查看两个四元数是否几乎平行，
+是的话它就按顺序对四元数分量用普通的线性插值以避免数值不稳定。
+否则，它就用\refeq{2.7}计算正交四元数{\ttfamily qperp}，
+然后按\refeq{2.8}计算插值的四元数。
+\begin{lstlisting}
+`\initcode{Quaternion Method Definitions}{=}`
+`\refvar{Quaternion}{}` `\initvar{Slerp}{}`( `\refvar{Float}{}` t, const `\refvar{Quaternion}{}` &q1,
+                 const `\refvar{Quaternion}{}` &q2) {
+     `\refvar{Float}{}` cosTheta = `\refvar[Quaternion::Dot]{Dot}{}`(q1, q2);
+    if (cosTheta > .9995f)
+        return `\refvar[Quaternion::Normalize]{Normalize}{}`((1 - t) * q1 + t * q2);
+    else {
+        `\refvar{Float}{}` theta = std::acos(`\refvar{Clamp}{}`(cosTheta, -1, 1));
+        `\refvar{Float}{}` thetap = theta * t;
+        `\refvar{Quaternion}{}` qperp = `\refvar[Quaternion::Normalize]{Normalize}{}`(q2 - q1 * cosTheta);
+        return q1 * std::cos(thetap) + qperp * std::sin(thetap);
+    }
+}
+\end{lstlisting}
+
+\subsection{动画变换实现}\label{sub:动画变换实现}
+给定
+
+\begin{lstlisting}
+`\initcode{AnimatedTransform Method Definitions}{=}\initnext{AnimatedTransformMethodDefinitions}`
+`\initvar{AnimatedTransform}{}`::`\refvar{AnimatedTransform}{}`(const `\refvar{Transform}{}` *startTransform,
+        `\refvar{Float}{}` startTime, const `\refvar{Transform}{}` *endTransform, `\refvar{Float}{}` endTime)
+    : `\refvar{startTransform}{}`(startTransform), `\refvar{endTransform}{}`(endTransform),
+      `\refvar{startTime}{}`(startTime), `\refvar{endTime}{}`(endTime),
+      `\refvar{actuallyAnimated}{}`(*startTransform != *endTransform) {
+    `\refvar{Decompose}{}`(startTransform->m, &`\refvar[AnimatedTransform::T]{T}{}`[0], &`\refvar[AnimatedTransform::R]{R}{}`[0], &`\refvar[AnimatedTransform::S]{S}{}`[0]);
+    `\refvar{Decompose}{}`(endTransform->m, &`\refvar[AnimatedTransform::T]{T}{}`[1], &`\refvar[AnimatedTransform::R]{R}{}`[1], &`\refvar[AnimatedTransform::S]{S}{}`[1]);
+    `\refcode{Flip R[1] if needed to select shortest path}{}`
+    `\refvar{hasRotation}{}` = `\refvar[Quaternion::Dot]{Dot}{}`(`\refvar[AnimatedTransform::R]{R}{}`[0], `\refvar[AnimatedTransform::R]{R}{}`[1]) < 0.9995f;
+    `\refcode{Compute terms of motion derivative function}{}`
+}
+\end{lstlisting}
+
+\begin{lstlisting}
+`\initcode{AnimatedTransform Private Data}{=}\initnext{AnimatedTransformPrivateData}`
+const `\refvar{Transform}{}` *`\initvar{startTransform}{}`, *`\initvar{endTransform}{}`;
+const `\refvar{Float}{}` `\initvar{startTime}{}`, `\initvar{endTime}{}`;
+const bool `\initvar{actuallyAnimated}{}`;
+`\refvar{Vector3f}{}` `\initvar[AnimatedTransform::T]{T}{}`[2];
+`\refvar{Quaternion}{}` `\initvar[AnimatedTransform::R]{R}{}`[2];
+`\refvar{Matrix4x4}{}` `\initvar[AnimatedTransform::S]{S}{}`[2];
+bool `\initvar{hasRotation}{}`;
+\end{lstlisting}

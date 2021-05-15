@@ -20,6 +20,18 @@ typedef float Float;
 #endif // PBRT\_FLOAT\_AS\_DOUBLE
 \end{lstlisting}
 
+\subsection{实用函数}\label{sub:实用函数}
+\subsubsection*{钳位}
+\begin{lstlisting}
+`\refcode{Global Inline Functions}{+=}\lastnext{GlobalInlineFunctions}`
+template <typename T, typename U, typename V>
+inline T `\initvar{Clamp}{}`(T val, U low, V high) {
+    if (val < low) return low;
+    else if (val > high) return high;
+    else return val;
+}
+\end{lstlisting}
+
 \subsection{伪随机数}\label{sub:伪随机数}
 {\initvar{RNG}{}}
 \begin{lstlisting}

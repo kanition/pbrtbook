@@ -548,8 +548,8 @@
             xz                            & yz                            & \displaystyle\frac{r_{22}}{2}
         \end{array}\right]\, .
 \end{align}
-观察上式可以发现，若已知$w$则可以利用$\bm R-\bm R^\mathrm{T}$快速求得$x,y,z$；
-若已知$x,y,z$中任意一项，也可利用$\bm R+\bm R^\mathrm{T}$快速求得其他项，并求出$w$。
+观察上式可以发现，若已知$x,y,z,w$中任意一项，则可以利用$\bm R-\bm R^\mathrm{T}$
+或$\bm R+\bm R^\mathrm{T}$快速求得其他项。
 因此我们首先利用$\bm R$主对角线上的元素有
 \begin{align}
     \bm B[x^2\ y^2\ z^2\ w^2]^\mathrm{T}=\bm C[r_{00}\ r_{11}\ r_{22}\ 1]^\mathrm{T}\, ,
@@ -585,10 +585,10 @@
         \end{array}\right]\, .
 \end{align}
 虽然我们可以从$x^2,y^2,z^2,w^2$中任解一项并开方，
-然后利用上文的$\bm R-\bm R^\mathrm{T}$或$\bm R+\bm R^\mathrm{T}$求解出其他项
-\sidenote{思考一下：为什么不直接全部开方求解？开方后取正负会有影响吗？}，
+然后利用上文的$\bm R-\bm R^\mathrm{T}$或$\bm R+\bm R^\mathrm{T}$求解出其他项，
 但是考虑到开方运算一般比除法的开销大，我们希望最高效地利用这次开方运算——
-选最大的一项开方，使下一步的除数远离零以保持足够的数值精度。
+选最大的一项开方\sidenote{思考一下：开方后取正负会有影响吗？不直接全部开方求解的原因除了开销大外还有别的吗？}，
+使下一步的除数远离零以保持足够的数值精度。
 为此我们需要用简单的方式判断哪一项最大。
 设$a=w^2-x^2-y^2-z^2$，于是有
 \begin{align}
@@ -633,5 +633,5 @@
           对应于$x^2,y^2,z^2,w^2$的大小关系；
     \item 取最大的那项，按\refeq{02ex.2}对应行计算该项并开方；
     \item 计算$\bm R-\bm R^\mathrm{T}$或$\bm R+\bm R^\mathrm{T}$，
-          分别用所得矩阵的元素（\refeq{02ex.1}）除以上一步的已知项和系数4得到剩余未知项。
+          分别用所得矩阵的元素（\refeq{02ex.1}）除以上一步的已知项并乘以系数$\displaystyle\frac{1}{4}$得到剩余未知项。
 \end{enumerate}

@@ -293,7 +293,13 @@ $\displaystyle(\bm q_{xyz}\sin\frac{\theta}{2},\cos\frac{\theta}{2})$表示
 \end{lstlisting}
 
 \subsection{动画变换实现}\label{sub:动画变换实现}
-给定
+有了四元数基础知识，我们现在就能实现类\refvar{AnimatedTransform}{}了，
+它在pbrt中实现关键帧变换的插值。
+其构造函数接收两个变换以及关联的时间值。
+
+正如之前提到的，\refvar{AnimatedTransform}{}将
+给定的合成变换矩阵分解为缩放、旋转和平移分量。
+分解由方法\refvar[Decompose]{AnimatedTransform::Decompose}{()}执行。
 
 \begin{lstlisting}
 `\initcode{AnimatedTransform Method Definitions}{=}\initnext{AnimatedTransformMethodDefinitions}`
@@ -320,3 +326,205 @@ const bool `\initvar{actuallyAnimated}{}`;
 `\refvar{Matrix4x4}{}` `\initvar[AnimatedTransform::S]{S}{}`[2];
 bool `\initvar{hasRotation}{}`;
 \end{lstlisting}
+
+给定一变换的合成矩阵，关于合成它的任何单个变换的信息已经损失了。
+例如，给定一先平移在缩放的矩阵乘积，
+一个等价矩阵也可以是先缩放再平移（但量不同）。
+因此，我们需要为分解选择一个标准变换序列。
+此处根据我们的需要，具体选哪个并不重要
+（例如在动画系统中这会更重要因为它要分解合成矩阵使其可编辑改变独立分量）。
+
+我们这里只处理\keyindex{仿射变换}{affine transformation}{transformation变换}，
+渲染系统中的动画相机和几何图元都需要它；
+透视变换一般与这样的物体动画无关。
+
+我们将使用下列变换分解：
+\begin{align}\label{eq:2.9}
+    \bm M=\bm T\bm R\bm S\, ,
+\end{align}
+其中$\bm M$是给定变换，$\bm T$是平移，$\bm R$是旋转，$\bm S$是缩放。
+$\bm S$实际上是一种表示在\emph{某些}坐标系统下的通用缩放
+（Shoemake和Duff称之为拉伸\sidenote{译者注：原文stretch。}），
+而不一定在是当前坐标系下。
+不论哪种情况，它都仍然可以按分量正确地线性插值。
+给定\refvar{Matrix4x4}{}，方法\refvar{Decompose}{()}计算其分解。
+\begin{lstlisting}
+`\refcode{AnimatedTransform Method Definitions}{+=}\lastnext{AnimatedTransformMethodDefinitions}`
+void `\refvar{AnimatedTransform}{}`::`\initvar{Decompose}{}`(const `\refvar{Matrix4x4}{}` &m, `\refvar{Vector3f}{}` *T,
+        `\refvar{Quaternion}{}` *Rquat, `\refvar{Matrix4x4}{}` *S) {
+    `\refcode{Extract translation T from transformation matrix}{}`
+    `\refcode{Compute new transformation matrix M without translation}{}`
+    `\refcode{Extract rotation R from transformation matrix}{}`
+    `\refcode{Compute scale S using rotation and original matrix}{}`
+}
+\end{lstlisting}
+
+提取平移$\bm T$很简单；
+可直接从变换矩阵适当的$1\times4$元素中找到它。
+\begin{lstlisting}
+`\initcode{Extract translation T from transformation matrix}{=}`
+T->x = m.`\refvar[Matrix4x4::m]{m}{}`[0][3];
+T->y = m.`\refvar[Matrix4x4::m]{m}{}`[1][3];
+T->z = m.`\refvar[Matrix4x4::m]{m}{}`[2][3];
+\end{lstlisting}
+
+既然我们假设是仿射变换（没有透视分量），
+我们可以去掉平移，剩下上面表示缩放和旋转的$3\times3$矩阵。
+该矩阵被复制到新矩阵{\ttfamily M}中做进一步处理。
+\begin{lstlisting}
+`\initcode{Compute new transformation matrix M without translation}{=}`
+`\refvar{Matrix4x4}{}` M = m;
+for (int i = 0; i < 3; ++i)
+    M.`\refvar[Matrix4x4::m]{m}{}`[i][3] = M.`\refvar[Matrix4x4::m]{m}{}`[3][i] = 0.f;
+M.`\refvar[Matrix4x4::m]{m}{}`[3][3] = 1.f;
+\end{lstlisting}
+
+接着我们想提取纯旋转分量$\bm R$。
+我们使用称为\keyindex{极分解}{polar decomposition}{}的技术来完成它。
+可以证明矩阵$\bm M$极分解为旋转$\bm R$和缩放$\bm S$可以通过
+依次平均$\bm M$和它的逆转置算得
+\begin{align}\label{eq:2.10}
+    \bm M_{i+1}=\frac{1}{2}(\bm M_i+(\bm M_i^\mathrm{T})^{-1})\, ,
+\end{align}
+直到收敛于点$\bm M_i=\bm R$。
+（容易看到如果$\bm M$是纯旋转，则平均它及其逆转置会保持不变，
+因为它的逆等于转置。“扩展阅读”一节有更多讨论
+为什么该序列收敛于原始变换旋转分量的参考文献。）
+Shoemake和Duff\parencite*{10.5555/155294.155324}证明
+结果矩阵是最接近$\bm M$的正交矩阵——我们期望的性质。
+
+为了计算该序列，我们迭代应用\refeq{2.10}直到相邻两项之间的差很小或
+执行了固定数目的循环。
+实际上，该序列一般收敛得很快。
+\begin{lstlisting}
+`\initcode{Extract rotation R from transformation matrix}{=}`
+`\refvar{Float}{}` norm;
+int count = 0;
+`\refvar{Matrix4x4}{}` R = M;
+do {
+    `\refcode{Compute next matrix Rnext in series}{}`
+    `\refcode{Compute norm of difference between R and Rnext}{}`
+    R = Rnext;
+} while (++count < 100 && norm > .0001);
+*Rquat = `\refvar{Quaternion}{}`(R);
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{Compute next matrix Rnext in series}{=}`
+`\refvar{Matrix4x4}{}` Rnext;
+`\refvar{Matrix4x4}{}` Rit = `\refvar[Matrix4x4::Inverse]{Inverse}{}`(`\refvar[Matrix4x4::Transpose]{Transpose}{}`(R));
+for (int i = 0; i < 4; ++i)
+    for (int j = 0; j < 4; ++j)
+        Rnext.`\refvar[Matrix4x4::m]{m}{}`[i][j] = 0.5f * (R.`\refvar[Matrix4x4::m]{m}{}`[i][j] + Rit.`\refvar[Matrix4x4::m]{m}{}`[i][j]);
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{Compute norm of difference between R and Rnext}{=}`
+norm = 0;
+for (int i = 0; i < 3; ++i) {
+    `\refvar{Float}{}` n = std::abs(R.`\refvar[Matrix4x4::m]{m}{}`[i][0] - Rnext.`\refvar[Matrix4x4::m]{m}{}`[i][0]) + 
+              std::abs(R.`\refvar[Matrix4x4::m]{m}{}`[i][1] - Rnext.`\refvar[Matrix4x4::m]{m}{}`[i][1]) + 
+              std::abs(R.`\refvar[Matrix4x4::m]{m}{}`[i][2] - Rnext.`\refvar[Matrix4x4::m]{m}{}`[i][2]);
+    norm = std::max(norm, n);
+}
+\end{lstlisting}
+
+一旦我们从$\bm M$提取了旋转，剩下的全部就是缩放了。
+我们想寻找满足$\bm M=\bm R\bm S$的矩阵$\bm S$。
+现在我们知道了$\bm R$和$\bm M$，只需解得$\bm S=\bm R^{-1}\bm M$。
+\begin{lstlisting}
+`\initcode{Compute scale S using rotation and original matrix}{=}`
+*S = `\refvar{Matrix4x4::Mul}{}`(`\refvar[Matrix4x4::Inverse]{Inverse}{}`(R), M);
+\end{lstlisting}
+
+对于每个旋转矩阵，有两个单位四元数与其矩阵对应且只相差一个符号。
+如果我们提取到的两个旋转的点积是负数，则两者之间的slerp不会
+在相应的两个旋转之间走最短路径。
+令其中一个取负（这里即任意选择第二个）可以改为取到最短路径。
+\begin{lstlisting}
+`\initcode{Flip R[1] if needed to select shortest path}{=}`
+if (`\refvar{Dot}{}`(`\refvar[AnimatedTransform::R]{R}{}`[0], `\refvar[AnimatedTransform::R]{R}{}`[1]) < 0)
+    `\refvar[AnimatedTransform::R]{R}{}`[1] = -`\refvar[AnimatedTransform::R]{R}{}`[1];
+\end{lstlisting}
+
+方法\refvar{Interpolate}{()}计算给定时刻的插值变换矩阵。
+通过插值之前提取的平移、旋转和缩放再相乘得到
+表示三种变换综合效应的合成矩阵。
+\begin{lstlisting}
+`\refcode{AnimatedTransform Method Definitions}{+=}\lastnext{AnimatedTransformMethodDefinitions}`
+void `\refvar{AnimatedTransform}{}`::`\initvar{Interpolate}{}`(`\refvar{Float}{}` time, `\refvar{Transform}{}` *t) const {
+    `\refcode{Handle boundary conditions for matrix interpolation}{}`
+    `\refvar{Float}{}` dt = (time - `\refvar{startTime}{}`) / (`\refvar{endTime}{}` - `\refvar{startTime}{}`);
+    `\refcode{Interpolate translation at dt}{}`
+    `\refcode{Interpolate rotation at dt}{}`
+    `\refcode{Interpolate scale at dt}{}`
+    `\refcode{Compute interpolated matrix as product of interpolated components}{}`
+}
+\end{lstlisting}
+
+如果给定时间值超出存于\refvar{AnimatedTransform}{}的两个变换的时间范围，
+则视情况返回开始或结束时刻的变换。
+\refvar{AnimatedTransform}{}构造函数也检查两个\refvar{Transform}{}是否相同；
+如果是，则没有必要插值。
+pbrt中所有支持动画的类都永远为其变换保存了\refvar{AnimatedTransform}{}，
+而不是视情况保存\refvar{Transform}{}或
+\refvar{AnimatedTransform}{}。
+尽管确实值得检查这种情况而不必要在两个相等的变换之间插值，
+但这简化了它们的实现。
+\begin{lstlisting}
+`\initcode{Handle boundary conditions for matrix interpolation}{=}`
+if (!`\refvar{actuallyAnimated}{}` || time <= `\refvar{startTime}{}`) { 
+    *t = *`\refvar{startTransform}{}`;
+    return; 
+}
+if (time >= `\refvar{endTime}{}`) { 
+    *t = *`\refvar{endTransform}{}`;
+    return; 
+}
+\end{lstlisting}
+
+变量{\ttfamily dt}保存了从\refvar{startTime}{}到\refvar{endTime}{}范围的偏移量；
+在\refvar{startTime}{}处取零，\refvar{endTime}{}处取一。
+给定{\ttfamily dt}，平移的插值很简单。
+\begin{lstlisting}
+`\initcode{Interpolate translation at dt}{=}`
+`\refvar{Vector3f}{}` trans = (1 - dt) * `\refvar[AnimatedTransform::T]{T}{}`[0] + dt * `\refvar[AnimatedTransform::T]{T}{}`[1];
+\end{lstlisting}
+
+开始和结束之间的旋转插值用\refvar{Slerp}{()}例程（\refsub{四元数插值}）。
+\begin{lstlisting}
+`\initcode{Interpolate rotation at dt}{=}`
+`\refvar{Quaternion}{}` rotate = `\refvar{Slerp}{}`(dt, `\refvar[AnimatedTransform::R]{R}{}`[0], `\refvar[AnimatedTransform::R]{R}{}`[1]);
+\end{lstlisting}
+
+最后，缩放插值矩阵通过对开始和结束缩放矩阵的独立分量插值算得。
+因为\refvar{Matrix4x4}{}构造函数把矩阵设置为单位矩阵，
+我们不需要初始化{\ttfamily scale}的其他任何元素。
+\begin{lstlisting}
+`\initcode{Interpolate scale at dt}{=}`
+`\refvar{Matrix4x4}{}` scale;
+for (int i = 0; i < 3; ++i)
+    for (int j = 0; j < 3; ++j)
+        scale.m[i][j] = `\refvar{Lerp}{}`(dt, `\refvar[AnimatedTransform::S]{S}{}`[0].m[i][j], `\refvar[AnimatedTransform::S]{S}{}`[1].m[i][j]);
+\end{lstlisting}
+
+有了三个插值部分，它们三个变换矩阵的积就给出了最后的结果。
+\begin{lstlisting}
+`\initcode{Compute interpolated matrix as product of interpolated components}{=}`
+*t = `\refvar{Translate}{}`(trans) * rotate.`\refvar{ToTransform}{}`() * `\refvar{Transform}{}`(scale);
+\end{lstlisting}
+
+\refvar{AnimatedTransform}{}也使用\refvar{Point3f}{}和
+\refvar{Vector3f}{}的时间以及\refvar{Ray}{}的
+\refvar{Ray::time}{}
+来提供大量直接应用插值变换的方法。
+当实际上没有动画时，这些方法比调用\refvar[Interpolate]{AnimatedTransform::Interpolate}{()}再
+使用返回的矩阵更高效，因为那种情况下不需要复制变换矩阵。
+\begin{lstlisting}
+`\initcode{AnimatedTransform Public Methods}{=}`
+`\refvar{Ray}{}` operator()(const `\refvar{Ray}{}` &r) const;
+`\refvar{RayDifferential}{}` operator()(const `\refvar{RayDifferential}{}` &r) const;
+`\refvar{Point3f}{}` operator()(`\refvar{Float}{}` time, const `\refvar{Point3f}{}` &p) const;
+`\refvar{Vector3f}{}` operator()(`\refvar{Float}{}` time, const `\refvar{Vector3f}{}` &v) const;
+\end{lstlisting}
+
+\subsection{定界移动边界框}\label{sub:定界移动边界框}
+给定经过动画变换的\refvar{Bounds3f}{}，

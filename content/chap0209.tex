@@ -391,7 +391,8 @@ M.`\refvar[Matrix4x4::m]{m}{}`[3][3] = 1.f;
 因为它的逆等于转置。“扩展阅读”一节有更多讨论
 为什么该序列收敛于原始变换旋转分量的参考文献。）
 Shoemake和Duff\parencite*{10.5555/155294.155324}证明
-结果矩阵是最接近$\bm M$的正交矩阵——我们期望的性质。
+结果矩阵是最接近$\bm M$的正交矩阵——我们期望的性质
+\sidenote{译者注：笔者将这部分内容整理为补充的\refsec{译者补充：分解旋转矩阵}。}。
 
 为了计算该序列，我们迭代应用\refeq{2.10}直到相邻两项之间的差很小或
 执行了固定数目的循环。
@@ -512,9 +513,8 @@ for (int i = 0; i < 3; ++i)
 *t = `\refvar{Translate}{}`(trans) * rotate.`\refvar{ToTransform}{}`() * `\refvar{Transform}{}`(scale);
 \end{lstlisting}
 
-\refvar{AnimatedTransform}{}也使用\refvar{Point3f}{}和
-\refvar{Vector3f}{}的时间以及\refvar{Ray}{}的
-\refvar{Ray::time}{}
+\refvar{AnimatedTransform}{}也用\refvar{Point3f}{}和
+\refvar{Vector3f}{}的时间以及\refvar{Ray}{}的\refvar{Ray::time}{}
 来提供大量直接应用插值变换的方法。
 当实际上没有动画时，这些方法比调用\refvar[Interpolate]{AnimatedTransform::Interpolate}{()}再
 使用返回的矩阵更高效，因为那种情况下不需要复制变换矩阵。
@@ -528,4 +528,94 @@ for (int i = 0; i < 3; ++i)
 
 \subsection{定界移动边界框}\label{sub:定界移动边界框}
 给定经过动画变换的\refvar{Bounds3f}{}，
-计算边界框
+计算包围了整个动画时段里全部运动的边界框是很有用的。
+例如，如果我们可以定界动画几何图元的运动，
+我们就能在按光线时间插值图元边界以检查交点并承担开销之前，
+用光线与该边界的相交性来确定光线是否可能与物体相交。
+方法\refvar[MotionBounds]{AnimatedTransform::MotionBounds}{()}
+执行该运算，接收一个边界框并返回整个\refvar{AnimatedTransform}{}时间段内其运动的边界框。
+
+有两种简单情况：第一，如果关键帧矩阵相等，
+则我们可以任意地只施加开始的变换来计算完整边框。
+第二，如果变换只包括缩放和/或平移，
+则包围了边界框在开始和结束时刻变换位置的边界框将包围所有运动。
+为了理解为什么会这样，将变换的点$\bm p$考虑为时间的函数；
+我们将其记为两个矩阵、一个点和时间的函数$a(\bm M_0,\bm M_1,\bm p,t)$。
+
+因为这种情况下分解的旋转分量是恒等变换，所以我们将矩阵分解为：
+\begin{align*}
+    a(\bm M_0,\bm M_1,\bm p,t)=\bm T(t)\bm S(t)\bm p\, ,
+\end{align*}
+其中平移和缩放都写作时间的函数。
+为了简便，假设$\bm S(t)$是常规缩放，
+我们可以求得$a(\bm M_0,\bm M_1,\bm p,t)$的分量表达式。
+例如，对于$x$分量有
+\begin{align*}
+    a(\bm M_0,\bm M_1,\bm p,t)_x & =((1-t)s_{0,0}+ts'_{0,0})p_x+(1-t)d_{0,3}+td'_{0,3}                \\
+                                 & =(s_{0,0}+d_{0,3})+(-s_{0,0}p_x+s'_{0,0}p_x-d_{0,3}+d'_{0,3})t\, ,
+\end{align*}
+其中$s_{0,0}$是缩放矩阵$\bm M_0$的相应元素，同样$s'_{0,0}$是缩放矩阵$\bm M_1$的元素，
+平移矩阵的元素类似地表示为$d$（这里我们用$d$表示“delta”，因为$t$已经用来表示时间了）。
+作为$t$的线性函数，该函数的极值在开始和结束时刻取得。
+对于一般缩放下的其他坐标和情况也有类似结论。
+\begin{lstlisting}
+`\refcode{AnimatedTransform Method Definitions}{+=}\lastnext{AnimatedTransformMethodDefinitions}`
+`\refvar{Bounds3f}{}` `\refvar{AnimatedTransform}{}`::`\initvar{MotionBounds}{}`(const `\refvar{Bounds3f}{}` &b) const {
+    if (!`\refvar{actuallyAnimated}{}`)
+        return (*`\refvar{startTransform}{}`)(b);
+    if (`\refvar{hasRotation}{}` == false)
+        return `\refvar[Union2]{Union}{}`((*`\refvar{startTransform}{}`)(b), (*`\refvar{endTransform}{}`)(b));
+    `\refcode{Return motion bounds accounting for animated rotation}{}`
+}
+\end{lstlisting}
+
+对于有动画旋转的一般情况，运动函数可能在时间段中间有极值。
+我们不知道寻找这些点的简单方法。
+许多渲染器通过在时间段内采样大量时间点、
+在每一点计算插值变换、再取所有相应变换后的边界框的并集来解决该问题。
+这里我们开发了一种更理性的方法使得我们可以稳定地计算这些运动的边界。
+
+我们使用稍微简单的保守边界，即需要分别计算边界框八个顶点的运动
+并寻找它们边界的并集。
+\begin{lstlisting}
+`\initcode{Return motion bounds accounting for animated rotation}{=}`
+`\refvar{Bounds3f}{}` bounds;
+for (int corner = 0; corner < 8; ++corner)
+    bounds = `\refvar[Union1]{Union}{}`(bounds, `\refvar{BoundPointMotion}{}`(b.`\refvar{Corner}{}`(corner)));
+return bounds;
+\end{lstlisting}
+
+对于每个边界框顶点$\bm p$，我们需要寻找$a$在整个动画时间段上的极值。
+回想微积分中闭区间上连续函数的极值要么在边界点要么在一阶导数为零的点。
+因此，总边界由运动开始和结束时的位置以及任何极值位置的并集给出。
+
+对于某点所关注的运动路径，\reffig{2.18}展示了运动函数的一个坐标及其导数的图示。
+注意函数在整个时间段上的最大值在导数为零的点取得。
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.5]{chap02/point-motion.eps}
+    \includegraphics[scale=0.5]{chap02/point-motion-deriv.eps}
+    \caption{(a)点$\bm p$的$x$坐标的运动是时间的函数，由两个关键帧矩阵决定。
+        (b)运动函数的导数，\refeq{2.12}。注意给定时间范围内运动函数的极值对应导数的零点。}
+    \label{fig:2.18}
+\end{figure}
+
+为了定界单点的运动，我们用下面无旋转情况的方法开始推导，
+将\refeq{2.9}的三个分量$\bm T,\bm R$和$\bm S$展开为时间的函数并
+求它们的积。我们得到：
+\begin{align}\label{eq:2.11}
+    a(\bm M_0,\bm M_1,\bm p,t)=\bm T(t)\bm R(t)\bm S(t)\bm p\, .
+\end{align}
+
+导数$\displaystyle\frac{\partial}{\partial t}a(\bm M_0,\bm M_1,\bm p,t)$也相当复杂——
+它的完整代数运算非常壮观，
+对于给定的一对分解的矩阵、点和时间，需要两千多次运算才能求值。
+然而，对于特定的变换矩阵和特定点，$a$可以大大简化；
+我们把专门关于$t$的函数表示为$a_{\bm M,\bm p}(t)$。
+对每个坐标求它的导数大约要十次浮点运算、一次正弦和一次余弦：
+\begin{align}\label{eq:2.12}
+    \frac{\mathrm{d}a_{\bm M,\bm p}(t)}{\mathrm{d}t}=\bm c_1+(\bm c_2+\bm c_3t)\cos(2\theta t)+(\bm c_4+\bm c_5t)\sin(2\theta t)\, ,
+\end{align}
+
+其中$\theta$是两个四元数点积的反余弦，
+五个系数$\bm c_i$是依赖于两个矩阵和位置$\bm p$的三维向量。

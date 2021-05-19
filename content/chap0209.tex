@@ -312,7 +312,7 @@ $\displaystyle(\bm q_{xyz}\sin\frac{\theta}{2},\cos\frac{\theta}{2})$表示
     `\refvar{Decompose}{}`(endTransform->m, &`\refvar[AnimatedTransform::T]{T}{}`[1], &`\refvar[AnimatedTransform::R]{R}{}`[1], &`\refvar[AnimatedTransform::S]{S}{}`[1]);
     `\refcode{Flip R[1] if needed to select shortest path}{}`
     `\refvar{hasRotation}{}` = `\refvar[Quaternion::Dot]{Dot}{}`(`\refvar[AnimatedTransform::R]{R}{}`[0], `\refvar[AnimatedTransform::R]{R}{}`[1]) < 0.9995f;
-    `\refcode{Compute terms of motion derivative function}{}`
+    `\initcode{Compute terms of motion derivative function}{}`
 }
 \end{lstlisting}
 
@@ -606,16 +606,126 @@ return bounds;
 \begin{align}\label{eq:2.11}
     a(\bm M_0,\bm M_1,\bm p,t)=\bm T(t)\bm R(t)\bm S(t)\bm p\, .
 \end{align}
+结果展开会非常复杂，绝大多数是slerp和四元数转换为矩阵的结果造成的；
+需要计算机代数系统才能处理该函数。
 
 导数$\displaystyle\frac{\partial}{\partial t}a(\bm M_0,\bm M_1,\bm p,t)$也相当复杂——
 它的完整代数运算非常壮观，
 对于给定的一对分解的矩阵、点和时间，需要两千多次运算才能求值。
 然而，对于特定的变换矩阵和特定点，$a$可以大大简化；
 我们把专门关于$t$的函数表示为$a_{\bm M,\bm p}(t)$。
-对每个坐标求它的导数大约要十次浮点运算、一次正弦和一次余弦：
+对每个坐标\sidenote{译者注：$b_i$表示不含$t$的系数。
+缩放变换后每维坐标为$b_1t+b_2$；
+旋转相应的四元数各分量为$b_3\sin(\theta t)+b_4\cos(\theta t)$，
+而$\bm R(t)$元素只含其二次项
+$b_5\sin^2(\theta t)+b_6\cos^2(\theta t)+b_7\sin(\theta t)\cos(\theta t)$，即
+$b_8+b_9\sin(2\theta t)+b_{10}\cos(2\theta t)$，故坐标旋转为
+$(b_8+b_9\sin(2\theta t)+b_{10}\cos(2\theta t))(b_1t+b_2)$；$\bm T(t)$再加上$t$的一次式得
+$(b_8+b_9\sin(2\theta t)+b_{10}\cos(2\theta t))(b_1t+b_2)+b_{11}t+b_{12}$。
+对$t$求导即形如\refeq{2.12}。}
+求导数大约要十次浮点运算、一次正弦和一次余弦：
 \begin{align}\label{eq:2.12}
     \frac{\mathrm{d}a_{\bm M,\bm p}(t)}{\mathrm{d}t}=\bm c_1+(\bm c_2+\bm c_3t)\cos(2\theta t)+(\bm c_4+\bm c_5t)\sin(2\theta t)\, ,
 \end{align}
 
 其中$\theta$是两个四元数点积的反余弦，
-五个系数$\bm c_i$是依赖于两个矩阵和位置$\bm p$的三维向量。
+五个系数$\bm c_i$是依赖于两个矩阵和位置$\bm p$的三维向量
+\sidenote{译者注：本应是四维的齐次表达式，
+    但因为平移、旋转和缩放均不改变第四维权重，
+    对时间的导数恒为零，所以省略为三维向量。}。
+该特殊化解决得不错，因为我们需要在许多时间点上对给定点计算该函数值。
+
+我们现在有两项任务：第一，给定一对关键帧矩阵和一点$\bm p$，
+我们首先需要能够高效计算出系数$\bm c_i$的值。
+然后，有了由$\bm p$和$\bm c_i$定义的相对简单的函数，
+我们需要求得\refeq{2.12}的零点，即可能代表运动极值出现的时间。
+
+对于第一项任务，假设对于每一对关键帧矩阵都计算多点运动的边界框（即此处的情况），
+我们先把对系数的贡献分为依赖于关键帧矩阵和依赖于点$\bm p$的部分
+\sidenote{译者注：这句不确定翻译正确。}。
+幸运的是结果很简单——向量$\bm c_i$是点的$x,y$和$z$分量的线性函数
+\sidenote{译者注：为了前后文一致该式改成了向量形式（粗体），
+    原文为标量形式，但本质含义一致。}。
+\begin{align*}
+    \bm c_i(\bm p)=\bm k_{i,c}+\bm k_{i,x}p_x+\bm k_{i,y}p_y+\bm k_{i,z}p_z\, .
+\end{align*}
+
+因此，给定系数$\bm k_i$和我们想定界其运动的特定点$\bm p$，
+我们可以高效计算\refeq{2.12}中导函数的系数$\bm c_i$。
+结构体\refvar{DerivativeTerm}{}封装了这些系数和计算。
+\begin{lstlisting}
+`\refcode{AnimatedTransform Private Data}{+=}\lastnext{AnimatedTransformPrivateData}`
+struct `\initvar{DerivativeTerm}{}` {
+    `\refvar{DerivativeTerm}{}`(`\refvar{Float}{}` c, `\refvar{Float}{}` x, `\refvar{Float}{}` y, `\refvar{Float}{}` z)
+        : `\refvar[DerivativeTerm::kc]{kc}{}`(c), `\refvar[DerivativeTerm::kx]{kx}{}`(x), `\refvar[DerivativeTerm::ky]{ky}{}`(y), `\refvar[DerivativeTerm::kz]{kz}{}`(z) { }
+    `\refvar{Float}{}` `\initvar[DerivativeTerm::kc]{kc}{}`, `\initvar[DerivativeTerm::kx]{kx}{}`, `\initvar[DerivativeTerm::ky]{ky}{}`, `\initvar[DerivativeTerm::kz]{kz}{}`;
+    `\refvar{Float}{}` `\initvar[DerivativeTerm::Eval]{Eval}{}`(const `\refvar{Point3f}{}` &p) const {
+        return `\refvar[DerivativeTerm::kc]{kc}{}` + `\refvar[DerivativeTerm::kx]{kx}{}` * p.x + `\refvar[DerivativeTerm::ky]{ky}{}` * p.y + `\refvar[DerivativeTerm::kz]{kz}{}` * p.z;
+    }
+  };
+\end{lstlisting}
+
+属性{\ttfamily c1}-{\ttfamily c5}保存了与\refeq{2.12}对应五项的导数信息。
+三个数组元素对应空间的三个维度。
+\begin{lstlisting}
+`\refcode{AnimatedTransform Private Data}{+=}\lastcode{AnimatedTransformPrivateData}`
+`\refvar{DerivativeTerm}{}` `\initvar[DerivativeTerm::c1]{c1}{}`[3], `\initvar[DerivativeTerm::c2]{c2}{}`[3], `\initvar[DerivativeTerm::c3]{c3}{}`[3], `\initvar[DerivativeTerm::c4]{c4}{}`[3], `\initvar[DerivativeTerm::c5]{c5}{}`[3];
+\end{lstlisting}
+
+这里没有介绍\refvar{AnimatedTransform}{}构造函数中的
+代码片\refcode{Compute terms of motion derivative function}{}，
+它通过自动生成的代码初始化这些项。
+因为它需要几千次浮点运算，
+一次性完成该工作并分摊到多个边界框顶点上比较有帮助。
+如果我们假设规范化时间范围是$[0,1]$则系数$\bm k_i$更加容易计算；
+之后，我们将运动函数零点的$t$值重新映射到实际快门时间范围。
+
+\refvar{BoundPointMotion}{()}用基于关键帧矩阵的系数$\bm k_i$算{\ttfamily p}运动的稳定边界。
+\begin{lstlisting}
+`\refcode{AnimatedTransform Method Definitions}{+=}\lastcode{AnimatedTransformMethodDefinitions}`
+`\refvar{Bounds3f}{}` `\refvar{AnimatedTransform}{}`::`\initvar{BoundPointMotion}{}`(const `\refvar{Point3f}{}` &p) const {
+    `\refvar{Bounds3f}{}` bounds((*`\refvar{startTransform}{}`)(p), (*`\refvar{endTransform}{}`)(p));
+    `\refvar{Float}{}` cosTheta = `\refvar{Dot}{}`(`\refvar[AnimatedTransform::R]{R}{}`[0], `\refvar[AnimatedTransform::R]{R}{}`[1]);
+    `\refvar{Float}{}` theta = std::acos(`\refvar{Clamp}{}`(cosTheta, -1, 1));
+    for (int c = 0; c < 3; ++c) {
+        `\refcode{Find any motion derivative zeros for the component c}{}`
+        `\refcode{Expand bounding box for any motion derivative zeros found}{}`
+    }
+    return bounds;
+}
+\end{lstlisting}
+
+稍后介绍的函数\refvar{IntervalFindZeros}{()}数值地寻找\refeq{2.12}的零点，最多可能有四个。
+\begin{lstlisting}
+`\initcode{Find any motion derivative zeros for the component c}{=}`
+`\refvar{Float}{}` zeros[4];
+int nZeros = 0;
+`\refvar{IntervalFindZeros}{}`(`\refvar[DerivativeTerm::c1]{c1}{}`[c].`\refvar[DerivativeTerm::Eval]{Eval}{}`(p), `\refvar[DerivativeTerm::c2]{c2}{}`[c].`\refvar[DerivativeTerm::Eval]{Eval}{}`(p), `\refvar[DerivativeTerm::c3]{c3}{}`[c].`\refvar[DerivativeTerm::Eval]{Eval}{}`(p),
+                  `\refvar[DerivativeTerm::c4]{c4}{}`[c].`\refvar[DerivativeTerm::Eval]{Eval}{}`(p), `\refvar[DerivativeTerm::c5]{c5}{}`[c].`\refvar[DerivativeTerm::Eval]{Eval}{}`(p), theta,
+                  `\refvar{Interval}{}`(0., 1.), zeros, &nZeros);
+\end{lstlisting}
+
+零点在$t\in[0,1]$内寻找，所以我们需要
+在调用方法于相应时间对点做变换之前在时间范围内插值。
+还要注意极值只在$x,y$和$z$中的一个维度内，
+所以只需要在那个维度内更新边界。
+为了方便，这里我们只使用函数\refvar[Union1]{Union}{()}，
+即便有两个维度是可以忽略的，它也考虑了所有维度。
+\begin{lstlisting}
+`\initcode{Expand bounding box for any motion derivative zeros found}{=}`
+for (int i = 0; i < nZeros; ++i) {
+    `\refvar{Point3f}{}` pz = (*this)(`\refvar{Lerp}{}`(zeros[i], `\refvar{startTime}{}`, `\refvar{endTime}{}`), p);
+    bounds = `\refvar[Union1]{Union}{}`(bounds, pz);
+}
+\end{lstlisting}
+
+寻找\refeq{2.12}运动导函数的零点不能用代数方法解决；
+数值方法是必要的。幸运的是，该函数性质不错——
+它非常光滑且零点的数量有限
+（回想\reffig{2.18}是一个非常复杂的代表）。
+
+尽管我们可以用二分搜索或牛顿法，
+但当函数只是短暂穿过轴时，我们有丢失零点的风险。
+因此，我们使用\keyindex{区间运算}{interval arithmetic}{}，
+它是一种运算的推广，即了解函数在一定范围值上的特性，
+这让稳定寻找函数零点成为可能。

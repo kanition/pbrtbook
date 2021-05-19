@@ -729,3 +729,166 @@ for (int i = 0; i < nZeros; ++i) {
 因此，我们使用\keyindex{区间运算}{interval arithmetic}{}，
 它是一种运算的推广，即了解函数在一定范围值上的特性，
 这让稳定寻找函数零点成为可能。
+
+例如，为了理解区间运算的基本思想，考虑函数$f(x)=2x$。
+如果有一区间值$[a,b]\in\mathbb{R}$，
+则我们可以看到在该区间上，$f$的范围是区间$[2a,2b]$。
+换句话说$f([a,b])\subset[2a,2b]$。
+
+更一般地，所有基本算术运算都有\keyindex{区间推广}{interval extension}{}即
+描述它们怎样运算区间。例如，
+给定两个区间$[a,b]$和$[c,d]$，
+\begin{align*}
+    [a,b]+[c,d]\subset [a+c,b+d]\, .
+\end{align*}
+换句话说，如果我们把一个在范围$[a,b]$内和另一个在$[c,d]$内的两个值相加，
+则结果一定在范围$[a+c,b+d]$内。
+
+区间运算有一重要性质即它得到的区间是保守的。
+特别地，如果$f([a,b])\subset[c,d]$且$c>0$，
+则我们确信$[a,b]$内没有值能让$f$为负。
+下文中，我们会说明怎样在区间上计算\refeq{2.12}{}并
+利用算得区间的保守边界高效找到有零交叉的小区间，
+小区间内可以使用常规的求根方法。
+
+首先我们定义类\refvar{Interval}{}表示实数区间。
+\begin{lstlisting}
+`\initcode{Interval Definitions}{=}\initnext{IntervalDefinitions}`
+class `\initvar{Interval}{}` {
+public:
+    `\refcode{Interval Public Methods}{}`
+    `\refvar{Float}{}` `\initvar[Interval::low]{low}{}`, `\initvar[Interval::high]{high}{}`;
+};
+\end{lstlisting}
+
+区间可以用单个值初始化，表示实数轴上的单个点，
+也可用两个值指定非零宽度的区间。
+\begin{lstlisting}
+`\initcode{Interval Public Methods}{=}\initnext{IntervalPublicMethods}`
+`\refvar{Interval}{}`(`\refvar{Float}{}` v) : `\refvar[Interval::low]{low}{}`(v), `\refvar[Interval::high]{high}{}`(v) { }
+`\refvar{Interval}{}`(`\refvar{Float}{}` v0, `\refvar{Float}{}` v1)
+    : `\refvar[Interval::low]{low}{}`(std::min(v0, v1)), `\refvar[Interval::high]{high}{}`(std::max(v0, v1)) { }
+\end{lstlisting}
+
+该类还提供了基本算术运算符的重载。
+注意对于减法是从第一个区间的下界减去第二个区间的上界
+\footnote{已经阅读\protect\refsec{控制舍入误差}或者熟悉浮点舍入误差的读者
+    可能注意到我们对稳定性的要求有瑕疵：当计算区间边界之一的浮点值时，
+    结果会舍入到最接近的浮点值，它可能比完全精确的结果更大或更小。
+    为了完全稳定，浮点数的舍入模式应该设置为对范围的下界向下舍去且
+    对上界向上进位。在现代CPU上改变舍入模式的开销一般非常大，
+    并且对于该应用来说这是个很小的问题；因此我们的实现没有改变舍入模式。}。
+\begin{lstlisting}
+`\refcode{Interval Public Methods}{+=}\lastnext{IntervalPublicMethods}`
+`\refvar{Interval}{}` operator+(const `\refvar{Interval}{}` &i) const {
+    return `\refvar{Interval}{}`(`\refvar[Interval::low]{low}{}` + i.`\refvar[Interval::low]{low}{}`, `\refvar[Interval::high]{high}{}` + i.`\refvar[Interval::high]{high}{}`);
+}
+`\refvar{Interval}{}` operator-(const `\refvar{Interval}{}` &i) const {
+    return `\refvar{Interval}{}`(`\refvar[Interval::low]{low}{}` - i.`\refvar[Interval::high]{high}{}`, `\refvar[Interval::high]{high}{}` - i.`\refvar[Interval::low]{low}{}`);
+}
+\end{lstlisting}
+
+对于乘法，每个区间的哪一边决定结果区间的最小或最大值取决于相应值的符号。
+将不同的可能相乘并取全局最小和最大值比解决用哪一个相乘更容易。
+\begin{lstlisting}
+`\refcode{Interval Public Methods}{+=}\lastnext{IntervalPublicMethods}`
+`\refvar{Interval}{}` operator*(const `\refvar{Interval}{}` &i) const {
+    return `\refvar{Interval}{}`(std::min(std::min(`\refvar[Interval::low]{low}{}` * i.`\refvar[Interval::low]{low}{}`,  `\refvar[Interval::high]{high}{}` * i.`\refvar[Interval::low]{low}{}`),
+                             std::min(`\refvar[Interval::low]{low}{}` * i.`\refvar[Interval::high]{high}{}`, `\refvar[Interval::high]{high}{}` * i.`\refvar[Interval::high]{high}{}`)),
+                    std::max(std::max(`\refvar[Interval::low]{low}{}` * i.`\refvar[Interval::low]{low}{}`,  `\refvar[Interval::high]{high}{}` * i.`\refvar[Interval::low]{low}{}`),
+                             std::max(`\refvar[Interval::low]{low}{}` * i.`\refvar[Interval::high]{high}{}`, `\refvar[Interval::high]{high}{}` * i.`\refvar[Interval::high]{high}{}`)));
+}
+\end{lstlisting}
+
+我们也为\refvar{Interval}{}实现了函数\refvar{Sin}{()}和\refvar{Cos}{()}。
+该实现假设给定的区间在$[0,2\pi]$内，即我们使用这些函数针对的情况。
+这里我们只介绍\refvar{Sin}{()}的实现；\refvar{Cos}{()}在基本结构上非常类似。
+\begin{lstlisting}
+`\refcode{Interval Definitions}{+=}\lastnext{IntervalDefinitions}`
+inline `\refvar{Interval}{}` `\initvar{Sin}{}`(const `\refvar{Interval}{}` &i) {
+    `\refvar{Float}{}` sinLow = std::sin(i.`\refvar[Interval::low]{low}{}`), sinHigh = std::sin(i.`\refvar[Interval::high]{high}{}`);
+    if (sinLow > sinHigh)
+        std::swap(sinLow, sinHigh);
+    if (i.`\refvar[Interval::low]{low}{}` < `\refvar{Pi}{}` / 2 && i.`\refvar[Interval::high]{high}{}` > `\refvar{Pi}{}` / 2)
+        sinHigh = 1.;
+    if (i.`\refvar[Interval::low]{low}{}` < (3.f / 2.f) * `\refvar{Pi}{}` && i.`\refvar[Interval::high]{high}{}` > (3.f / 2.f) * `\refvar{Pi}{}`)
+        sinLow = -1.;
+    return `\refvar{Interval}{}`(sinLow, sinHigh);
+}
+\end{lstlisting}
+
+有了区间机制后，我们现在可以实现函数\refvar{IntervalFindZeros}{()}了，
+它在给定区间{\ttfamily tInterval}上寻找\refeq{2.12}任何零交叉处的$t$值。
+\begin{lstlisting}
+`\refcode{Interval Definitions}{+=}\lastcode{IntervalDefinitions}`
+void `\initvar{IntervalFindZeros}{}`(`\refvar{Float}{}` c1, `\refvar{Float}{}` c2, `\refvar{Float}{}` c3, `\refvar{Float}{}` c4,
+        `\refvar{Float}{}` c5, `\refvar{Float}{}` theta, `\refvar{Interval}{}` tInterval, `\refvar{Float}{}` *zeros,
+        int *zeroCount, int depth = 8) {
+    `\refcode{Evaluate motion derivative in interval form, return if no zeros}{}`
+    if (depth > 0) {
+        `\refcode{Split tInterval and check both resulting intervals}{}`
+    } else {
+        `\refcode{Use Newton's method to refine zero}{}`
+    }
+}
+\end{lstlisting}
+
+该函数从在{\ttfamily tInterval}上计算区间范围开始。
+如果范围没有覆盖到零，则函数在{\ttfamily tInterval}上没有零点，可以返回。
+\begin{lstlisting}
+`\initcode{Evaluate motion derivative in interval form, return if no zeros}{}`
+`\refvar{Interval}{}` range = `\refvar{Interval}{}`(c1) +
+    (`\refvar{Interval}{}`(c2) + `\refvar{Interval}{}`(c3) * tInterval) *
+        Cos(`\refvar{Interval}{}`(2 * theta) * tInterval) +
+    (`\refvar{Interval}{}`(c4) + `\refvar{Interval}{}`(c5) * tInterval) *
+        Sin(`\refvar{Interval}{}`(2 * theta) * tInterval);
+if (range.`\refvar[Interval::low]{low}{}` > 0. || range.`\refvar[Interval::high]{high}{}` < 0. || range.`\refvar[Interval::low]{low}{}` == range.`\refvar[Interval::high]{high}{}`)
+    return;
+\end{lstlisting}
+
+如果区间{\ttfamily range}覆盖到零，则在区间{\ttfamily tInterval}内可能一个或多个零点，
+但实际上也可能没有，因为区间边界是保守的而不是尽量紧致。
+函数把{\ttfamily tInterval}分为两部分并递归地检查两个子区间。
+减小区间域的大小\sidenote{译者注：指自变量范围。}一般会减小区间范围程度\sidenote{译者注：指因变量范围。}，
+这可能允许我们确定新区间有一个或两个都不存在零点。
+\begin{lstlisting}
+`\initcode{Split tInterval and check both resulting intervals}{=}`
+`\refvar{Float}{}` mid = (tInterval.`\refvar[Interval::low]{low}{}` + tInterval.`\refvar[Interval::high]{high}{}`) * 0.5f;
+`\refvar{IntervalFindZeros}{}`(c1, c2, c3, c4, c5, theta,
+    `\refvar{Interval}{}`(tInterval.`\refvar[Interval::low]{low}{}`, mid), zeros, zeroCount, depth - 1);
+`\refvar{IntervalFindZeros}{}`(c1, c2, c3, c4, c5, theta,
+    `\refvar{Interval}{}`(mid, tInterval.`\refvar[Interval::high]{high}{}`), zeros, zeroCount, depth - 1);
+\end{lstlisting}
+
+一旦我们把区间缩窄到运动导函数的区间值覆盖到零，
+实现就切换到牛顿法的一些迭代从区间中点开始求取零点。
+牛顿法需要函数导数；因为我们要求运动导函数的零点，
+所以需要\refeq{2.11}的二阶导数：
+\begin{align*}
+    \frac{\mathrm{d}^2a_{\bm M,\bm p}(t)_x}{\mathrm{d}t^2}=(c_{3,x}+2\theta(c_{4,x}+c_{5,x}t))\cos(2\theta t)+(c_{5,x}-2\theta(c_{2,x}+c_{3,x}))\sin(2\theta t)\, .
+\end{align*}
+
+\begin{lstlisting}
+`\initcode{Use Newton's method to refine zero}{=}`
+`\refvar{Float}{}` tNewton = (tInterval.`\refvar[Interval::low]{low}{}` + tInterval.`\refvar[Interval::high]{high}{}`) * 0.5f;
+for (int i = 0; i < 4; ++i) {
+    `\refvar{Float}{}` fNewton = c1 +
+        (c2 + c3 * tNewton) * std::cos(2.f * theta * tNewton) +
+        (c4 + c5 * tNewton) * std::sin(2.f * theta * tNewton);
+    `\refvar{Float}{}` fPrimeNewton =
+        (c3 + 2 * (c4 + c5 * tNewton) * theta) *
+            std::cos(2.f * tNewton * theta) +
+        (c5 - 2 * (c2 + c3 * tNewton) * theta) *
+            std::sin(2.f * tNewton * theta);
+    if (fNewton == 0 || fPrimeNewton == 0)
+        break;
+    tNewton = tNewton - fNewton / fPrimeNewton;
+}
+zeros[*zeroCount] = tNewton;
+(*zeroCount)++;
+\end{lstlisting}
+
+注意当使用牛顿法时如果函数在{\ttfamily tInterval}内有多个零点，
+则我们这里只会找出其中一个。
+然而，因为该点处的区间非常小，这类错误的影响也很小。
+无论如何，我们在实际中还没有发现这个问题造成过麻烦。

@@ -830,13 +830,13 @@ const int `\initvar{maxDepth}{}`;
 如果没有找到交点，那可能因为光源没有关联几何而就沿光线携带辐射。
 这类光源的一个例子是\refvar{InfiniteAreaLight}{}，
 它能表示来自天空的光照。
-方法\refvar[Le]{Light::Le}{()}允许这样的光源返回其沿给定光线的辐亮度。
+方法\refvar{Light::Le}{()}允许这样的光源返回其沿给定光线的辐亮度。
 \begin{lstlisting}
 `\initcode{Find closest ray intersection or return background radiance}{=}`
 `\refvar{SurfaceInteraction}{}` isect;
 if (!scene.`\refvar[Scene::Intersect]{Intersect}{}`(ray, &isect)) {
     for (const auto &light : scene.`\refvar{lights}{}`)
-        L += light->`\refvar{Le}{}`(ray);
+        L += light->`\refvar[Light::Le]{Le}{}`(ray);
     return L;
 }
 \end{lstlisting}

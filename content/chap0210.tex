@@ -85,6 +85,11 @@ bool `\initvar{IsSurfaceInteraction}{}`() const {
 \end{lstlisting}
 
 \subsection{表面交互}\label{sub:表面交互}
+\refvar{SurfaceInteraction}{}表示曲面上特定点
+（通常是光线与曲面相交求得的位置）的几何。
+有了这个抽象后处理曲面上点的大部分系统就不用考虑点所在几何形状的特定类型；
+抽象\refvar{SurfaceInteraction}{}提供了关于曲面点的充足信息
+以允许一般化实现pbrt剩余部分的着色和几何操作。
 \begin{lstlisting}
 `\initcode{SurfaceInteraction Declarations}{=}`
 class `\initvar{SurfaceInteraction}{}` : public `\refvar{Interaction}{}` {
@@ -93,7 +98,30 @@ public:
     `\refcode{SurfaceInteraction Public Data}{}`
 };
 \end{lstlisting}
+\begin{lstlisting}
+`\initcode{SurfaceInteraction Public Methods}{=}`
+`\refvar{SurfaceInteraction}{}`() { }
+`\refvar{SurfaceInteraction}{}`(const `\refvar{Point3f}{}` &p, const `\refvar{Vector3f}{}` &pError,const `\refvar{Point2f}{}` &uv,
+    const `\refvar{Vector3f}{}` &wo, const `\refvar{Vector3f}{}` &dpdu, const `\refvar{Vector3f}{}` &dpdv,
+    const `\refvar{Normal3f}{}` &dndu, const `\refvar{Normal3f}{}` &dndv,
+    `\refvar{Float}{}` time, const `\refvar{Shape}{}` *sh);
+void `\initvar{SetShadingGeometry}{}`(const `\refvar{Vector3f}{}` &dpdu, const `\refvar{Vector3f}{}` &dpdv,
+     const `\refvar{Normal3f}{}` &dndu, const `\refvar{Normal3f}{}` &dndv, bool orientationIsAuthoritative);
+void `\initvar{ComputeScatteringFunctions}{}`(const `\refvar{RayDifferential}{}` &ray,
+    `\refvar{MemoryArena}{}` &arena, bool allowMultipleLobes = false,
+    `\refvar{TransportMode}{}` mode = `\refvar{TransportMode}{}`::`\refvar{Radiance}{}`);
+void `\initvar{ComputeDifferentials}{}`(const `\refvar{RayDifferential}{}` &r) const;
+`\refvar{Spectrum}{}` `\initvar[SurfaceInteraction::Le]{Le}{}`(const `\refvar{Vector3f}{}` &w) const;
+\end{lstlisting}
 
+除了来自基类\refvar{Interaction}{}的点\refvar[Interaction::p]{p}{}和
+曲面法线\refvar[Interaction::n]{n}{}，
+\refvar{SurfaceInteraction}{}还存储了来自曲面参数化的坐标$(u,v)$以及
+该点的参数化偏导数$\displaystyle\frac{\partial \bm p}{\partial u}$
+和$\displaystyle\frac{\partial \bm p}{\partial v}$。
+这些值的描述见\reffig{2.19}。
+保有指向该点所在\refvar{Shape}{}（下章将介绍类\refvar{Shape}{}）的指针
+以及曲面法线的偏导数也很有用。
 \begin{lstlisting}
 `\initcode{SurfaceInteraction Public Data}{=}\initnext{SurfaceInteractionPublicData}`
 `\refvar{Point2f}{}` `\initvar[SurfaceInteraction::uv]{uv}{}`;
@@ -102,6 +130,27 @@ public:
 const `\refvar{Shape}{}` *`\initvar{shape}{}` = nullptr;
 \end{lstlisting}
 
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap02/Localdifferentialgeometry.tex}
+    \caption{点$\bm p$附近的局部微分几何。曲面的参数化偏导数$\displaystyle\frac{\partial \bm p}{\partial u}$
+        和$\displaystyle\frac{\partial \bm p}{\partial v}$位于切平面内但不必正交。
+        曲面法线$\bm n$由$\displaystyle\frac{\partial \bm p}{\partial u}$
+        和$\displaystyle\frac{\partial \bm p}{\partial v}$的叉积给出。
+        向量$\displaystyle\frac{\partial \bm n}{\partial u}$和
+        $\displaystyle\frac{\partial \bm n}{\partial v}$（此处没有画出）
+        记录当我们沿曲面移动$u$和$v$时曲面法线的微分变化。}
+    \label{fig:2.19}
+\end{figure}
+
+该表示隐式地假设了形状有参数化描述——
+对于一定范围的$(u,v)$值，曲面上的点由某函数$f$给出即$\bm p=f(u,v)$。
+尽管这并不适用于所有形状，
+但pbrt支持的所有形状至少都有一个局部参数化描述，
+所以既然这在别处（例如第\refchap{纹理}的纹理抗锯齿）很有帮助，
+我们就继续使用参数化表示。
+
+\refvar{SurfaceInteraction}{}的构造函数接收所有设置这些值的参数。
+它计算偏导数的叉积作为法线。
 \begin{lstlisting}
 `\initcode{SurfaceInteraction Method Definitions}{=}\initnext{SurfaceInteractionMethodDefinitions}`
 `\refvar{SurfaceInteraction}{}`::`\refvar{SurfaceInteraction}{}`(const `\refvar{Point3f}{}` &p,

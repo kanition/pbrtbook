@@ -95,7 +95,7 @@ template <typename T> inline `\refvar{Normal3}{}`<T>
 pbrt中用于控制浮点舍入误差的方法引入了一些微妙之处，
 需要对变换后的射线端点作小的调整。
 代码片\refcode{Offset ray origin to edge of error bounds}{}负责这些细节；
-它定义于\refsub{边界交点误差}，并讨论了舍入误差和pbrt的处理机制。
+它定义于\refsub{定界交点误差}，并讨论了舍入误差和pbrt的处理机制。
 \begin{lstlisting}
 `\refcode{Transform Inline Functions}{+=}\lastnext{TransformInlineFunctions}`
 inline `\refvar{Ray}{}` `\refvar{Transform}{}`::operator()(const `\refvar{Ray}{}` &r) const { 

@@ -3,6 +3,16 @@
 本章最后的抽象\refvar{SurfaceInteraction}{}，表示在2D曲面上一点的局部信息。
 例如，第\refchap{形状}的光线-形状交点例程在\refvar{SurfaceInteraction}{}里
 返回在交点处关于局部微分几何的信息。
+之后，第\refchap{纹理}的纹理代码计算\refvar{SurfaceInteraction}{}表示的曲面上给定点的材料属性。
+紧密相关的类\refvar{MediumInteraction}{}用于表示在烟或云等介质中发生光散射的点；
+在介绍了额外的预备知识后，它将在\refsec{介质}中定义。
+这些类的实现在文件\href{https://github.com/mmp/pbrt-v3/tree/master/src/core/interaction.h}{\ttfamily core/interaction.h}和
+\href{https://github.com/mmp/pbrt-v3/tree/master/src/core/interaction.cpp}{\ttfamily core/interaction.cpp}中。
+
+\refvar{SurfaceInteraction}{}和\refvar{MediumInteraction}{}都继承自
+一般类\refvar{Interaction}{}，它提供了一些常见的成员变量和方法。
+系统的一些部分（特别是光源实现）对\refvar{Interaction}{}进行操作，
+而曲面和介质相互作用的区别对其并不重要。
 
 \begin{lstlisting}
 `\initcode{Interaction Declarations}{=}\initnext{InteractionDeclarations}`
@@ -12,25 +22,66 @@ struct `\initvar{Interaction}{}` {
 };
 \end{lstlisting}
 
+有许多\refvar{Interaction}{}构造函数可用；
+根据要构造的交互作用类型以及哪种类型的信息相关，接收相应参数集。
+以下是其中最一般的一个。
+\begin{lstlisting}
+`\initcode{Interaction Public Methods}{=}\initnext{InteractionPublicMethods}`
+`\refvar{Interaction}{}`(const `\refvar{Point3f}{}` &p, const `\refvar{Normal3f}{}` &n, const `\refvar{Vector3f}{}` &pError,
+        const `\refvar{Vector3f}{}` &wo, `\refvar{Float}{}` time,
+        const `\refvar{MediumInterface}{}` &mediumInterface)
+    : `\refvar[Interaction::p]{p}{}`(p), `\refvar[Interaction::time]{time}{}`(time), `\refvar{pError}{}`(pError), `\refvar[Interaction::wo]{wo}{}`(wo), `\refvar[Interaction::n]{n}{}`(n),
+      `\refvar{mediumInterface}{}`(mediumInterface) { }
+\end{lstlisting}
+
+所有交互作用必须有关联的点$\bm p$和时间。
 \begin{lstlisting}
 `\initcode{Interaction Public Data}{=}\initnext{InteractionPublicData}`
 `\refvar{Point3f}{}` `\initvar[Interaction::p]{p}{}`;
 `\refvar{Float}{}` `\initvar[Interaction::time]{time}{}`;
 \end{lstlisting}
 
+对于由光线相交计算的点$\bm p$处的交互作用，
+\refvar[Interaction::p]{p}{}值中通常会出现浮点误差。
+\refvar{pError}{}给出了该误差的保守边界；
+对于介质中的点它取$(0,0,0)$。
+关于pbrt控制舍入误差的方法见\refsec{控制舍入误差}{}，
+关于怎样为不同形状计算该边界见\refsub{定界交点误差}。
 \begin{lstlisting}
 `\refcode{Interaction Public Data}{+=}\lastnext{InteractionPublicData}`
 `\refvar{Vector3f}{}` `\initvar{pError}{}`;
 \end{lstlisting}
 
+对于沿光线（要么来自光线-形状交点要么来自在介质中传播的光线）的交互作用，
+负的光线方向保存于\refvar[Interaction::wo]{wo}{}，
+对应于$\bm \omega_{\mathrm{o}}$，
+即我们计算一点光量时用来表示出射方向的记号。
+对于没有用到出射方向记号的其他类型的交互作用点
+（例如形状曲面上由随机采样点求得的），
+\refvar[Interaction::wo]{wo}{}的值为$(0,0,0)$。
 \begin{lstlisting}
 `\refcode{Interaction Public Data}{+=}\lastnext{InteractionPublicData}`
 `\refvar{Vector3f}{}` `\initvar[Interaction::wo]{wo}{}`;
 \end{lstlisting}
 
+对于曲面上的交互作用，\refvar[Interaction::n]{n}{}保存了该点处的曲面法线。
 \begin{lstlisting}
 `\refcode{Interaction Public Data}{+=}\lastnext{InteractionPublicData}`
 `\refvar{Normal3f}{}` `\initvar[Interaction::n]{n}{}`;
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{Interaction Public Methods}{+=}\lastnext{InteractionPublicMethods}`
+bool `\initvar{IsSurfaceInteraction}{}`() const {
+    return `\refvar[Interaction::n]{n}{}` != `\refvar{Normal3f}{}`();
+}
+\end{lstlisting}
+
+交互作用也需要记录这些点处的散射介质（如果有的话）；
+这由\refsub{介质交互}定义的类
+\refvar{MediumInterface}{}的实例负责处理。
+\begin{lstlisting}
+`\refcode{Interaction Public Data}{+=}\lastcode{InteractionPublicData}`
+`\refvar{MediumInterface}{}` `\initvar{mediumInterface}{}`;
 \end{lstlisting}
 
 \subsection{表面交互}\label{sub:表面交互}

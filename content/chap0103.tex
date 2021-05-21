@@ -51,7 +51,8 @@ pbrt源码发布于\href{https://pbrt.org/}{\ttfamily pbrt.org}
 函数\refvar{main}{()}在
 短文件\href{https://github.com/mmp/pbrt-v3/tree/master/src/main/pbrt.cpp}{\ttfamily main/pbrt.cpp}内。
 抽象基类实例的各种实现在分开的目录下：
-\href{https://github.com/mmp/pbrt-v3/tree/master/src/shapes}{\ttfamily src/shapes}有基类\refvar{Shape}{}的实现，
+\href{https://github.com/mmp/pbrt-v3/tree/master/src/shapes}{\ttfamily src/shapes}
+有基类\refvar{Shape}{}的实现，
 \href{https://github.com/mmp/pbrt-v3/tree/master/src/materials}{\ttfamily src/materials}有基类\refvar{Material}{}的实现，以此类推。
 
 本节有许多pbrt扩展版本渲染的图像。
@@ -194,7 +195,6 @@ int `\initvar{main}{}`(int argc, char *argv[]) {
     return 0;
 }
 \end{lstlisting}
-其中
 \begin{lstlisting}
 `\initcode{Process command-line arguments}{=}`
 for (int i = 1; i < argc; ++i) {
@@ -673,7 +673,6 @@ if (rayWeight > 0)
     L = `\refvar{Li}{}`(ray, scene, *tileSampler, arena);
 `\refcode{Issue warning if unexpected radiance value is returned}{}`
 \end{lstlisting}
-其中
 \begin{lstlisting}
 `\initcode{Issue warning if unexpected radiance value is returned}{=}`
 if (L.HasNaNs()) {
@@ -827,7 +826,7 @@ const int `\initvar{maxDepth}{}`;
 对于找到交点的光线，它用交点的几何信息
 初始化提供的\refvar{SurfaceInteraction}{}。
 
-如果没有找到交点，那可能因为光源没有关联几何而就沿光线携带辐射。
+如果没有找到交点，那可能因为光源没有关联几何体而就沿光线携带辐射。
 这类光源的一个例子是\refvar{InfiniteAreaLight}{}，
 它能表示来自天空的光照。
 方法\refvar{Light::Le}{()}允许这样的光源返回其沿给定光线的辐亮度。
@@ -904,12 +903,11 @@ L += isect.`\refvar[SurfaceInteraction::Le]{Le}{}`(wo);
 对于每个光源，积分器调用方法\refvar[SampleLi]{Light::Sample\_Li}{()}计算
 从该光源落到表面上待着色点的辐亮度。
 该方法也返回从待着色点指向光源的方向向量存于变量{\ttfamily wi}中
-（表示入射方向${\bm \omega}_\mathrm{i}$）。
-\begin{remark}
-    当考虑表面位置上的光散射时，pbrt遵循的惯例
+（表示入射方向${\bm \omega}_\mathrm{i}$）
+\footnote{当考虑表面位置上的光散射时，pbrt遵循的惯例
     是${\bm \omega}_\mathrm{i}$总表示关心的量（这里是辐亮度）到来的方向，
-    而不是\refvar{Integrator}{}接近表面的方向。
-\end{remark}
+    而不是\refvar{Integrator}{}接近表面的方向。}。
+
 
 该方法返回的光谱不考虑其他一些形状可能挡住来自光源的光照阻止其到达待着色点的可能性。
 代替的是，它返回一个\refvar{VisibilityTester}{}对象

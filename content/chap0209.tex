@@ -45,7 +45,7 @@ pbrt为场景中的相机和几何图元支持关键帧矩阵动画。
 
 \reffig{2.16}展示了在该帧过程中旋转90度的球体；
 直接对矩阵元素插值给出的结果不如本节实现的方法准确。
-\begin{figure}[htbp]
+\begin{figure}[htb]
     \raggedright
     \subfloat[静止球体。]{\label{fig:2.16.1}\includegraphics[width=0.5\linewidth]{chap02/sphere-still.png}}%
     \subfloat[旋转，正确插值。]{\label{fig:2.16.2}\includegraphics[width=0.5\linewidth]{chap02/sphere-rot-good.png}}\\%
@@ -59,13 +59,13 @@ pbrt为场景中的相机和几何图元支持关键帧矩阵动画。
     \end{minipage}
 \end{figure}
 
-pbrt中使用的变换插值方法是基于\keyindex{矩阵分解}{matrix decomposition}{}——
+pbrt用的变换插值方法基于\keyindex{矩阵分解}{matrix decomposition}{}——
 给定任意变换矩阵$\bm M$，我们将其分解为
 缩放（$\bm S$）、旋转（$\bm R$）和平移（$\bm T$）变换的级联，
 \begin{align*}
     \bm M=\bm S\bm R\bm T\, ,
 \end{align*}
-其中这些分量每一个都是独立插值，然后合成的插值矩阵由三个插值矩阵一起相乘得到。
+其中这些分量每个都是独立插值，然后三个插值矩阵相乘得到合成插值矩阵。
 
 平移和缩放的插值可以由矩阵分量的线性插值轻松准确完成；
 旋转插值则更困难。
@@ -528,12 +528,12 @@ for (int i = 0; i < 3; ++i)
 
 \subsection{定界移动边界框}\label{sub:定界移动边界框}
 给定经过动画变换的\refvar{Bounds3f}{}，
-计算包围了整个动画时段里全部运动的边界框是很有用的。
-例如，如果我们可以定界动画几何图元的运动，
+计算包围了动画时段里全部运动的边界框很有用。
+例如，如果我们能定界动画几何图元的运动，
 我们就能在按光线时间插值图元边界以检查交点并承担开销之前，
-用光线与该边界的相交性来确定光线是否可能与物体相交。
+用光线与该边界的相交性来确定光线是否会与物体相交。
 方法\refvar[MotionBounds]{AnimatedTransform::MotionBounds}{()}
-执行该运算，接收一个边界框并返回整个\refvar{AnimatedTransform}{}时间段内其运动的边界框。
+执行该运算，接收边界框并返回\refvar{AnimatedTransform}{}时间段内其运动的边界框。
 
 有两种简单情况：第一，如果关键帧矩阵相等，
 则我们可以任意地只施加开始的变换来计算完整边框。
@@ -789,7 +789,7 @@ public:
 \end{lstlisting}
 
 对于乘法，每个区间的哪一边决定结果区间的最小或最大值取决于相应值的符号。
-将不同的可能相乘并取全局最小和最大值比解决用哪一个相乘更容易。
+将不同可能相乘并取全局最小和最大值比解决用哪一个相乘更容易。
 \begin{lstlisting}
 `\refcode{Interval Public Methods}{+=}\lastnext{IntervalPublicMethods}`
 `\refvar{Interval}{}` operator*(const `\refvar{Interval}{}` &i) const {
@@ -862,7 +862,7 @@ if (range.`\refvar[Interval::low]{low}{}` > 0. || range.`\refvar[Interval::high]
 
 一旦我们把区间缩窄到运动导函数的区间值覆盖到零，
 实现就切换到牛顿法的一些迭代从区间中点开始求取零点。
-牛顿法需要函数导数；因为我们要求运动导函数的零点，
+牛顿法\sidenote{译者注：指牛顿迭代法。}需要函数导数；因为我们要求运动导函数的零点，
 所以需要\refeq{2.11}的二阶导数：
 \begin{align*}
     \frac{\mathrm{d}^2a_{\bm M,\bm p}(t)_x}{\mathrm{d}t^2}=(c_{3,x}+2\theta(c_{4,x}+c_{5,x}t))\cos(2\theta t)+(c_{5,x}-2\theta(c_{2,x}+c_{3,x}))\sin(2\theta t)\, .

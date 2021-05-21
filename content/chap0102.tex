@@ -66,7 +66,7 @@
 当针孔未被遮挡时，光射进针孔落到固定在盒子另一端的相纸上。
 虽然它很简单，但这种相机至今仍在使用，常用于艺术目的。
 要在胶片上获得足够的光以形成图像需要非常长的曝光时间。
-\begin{figure}
+\begin{figure}[htbp]
       \centering\input{Pictures/chap01/PinholeCamera.tex}
       \caption{针孔相机}\label{fig:1.1}
 \end{figure}
@@ -86,7 +86,7 @@
 但对于仿真目的而言它是个方便的抽象。
 当胶片（或成像）平面在针孔前时，
 针孔也常常改称作\keyindex{眼睛}{eye}{}。
-\begin{figure}
+\begin{figure}[htbp]
       \centering\input{Pictures/chap01/Filminfront.tex}
       \caption{当仿真针孔相机时，胶片放在针孔前的平面，针孔改称为\emph{眼睛}。}\label{fig:1.2}
 \end{figure}
@@ -169,22 +169,19 @@
 快速剔除无关几何体的能力意味着光线追踪常能以$O(I\log{N})$的时间运行，
 其中$I$是图像像素数目，
 $N$是场景中物体的数量
-（然而构建加速结构本身至少需要$O(N)$时间）。
-\begin{remark}
-      虽然光线追踪的对数复杂度是
+\footnote{虽然光线追踪的对数复杂度是
       常被认为是其主要优点，但该复杂度只在平均意义下是典型正确的。
       在计算几何文献中发表的许多光线追踪算法都保证有对数运行时间，
       但它们只在特定种类场景下才能工作，并且预处理开销和存储要求很高。
-      Szirmay-Kalos和Márton提供了相关参考文献\citep{10.1007/BF02684409}
-      {\itshape （译者注：原文缺失该引文标注，本人推测为该文）}。
+      Szirmay-Kalos和Márton提供了相关参考文献\protect\citep{10.1007/BF02684409}。
       但好在表现真实环境的场景通常不会遇到这种最坏的情形。
       实践中本书介绍的射线相交算法是次线性的，
       但在去掉大量预处理和存储开销时
-      总是有可能构造出使光线追踪以$O(IN)$时间运行的最坏情形。
-\end{remark}
+      总是有可能构造出使光线追踪以$O(IN)$时间运行的最坏情形。}
+（然而构建加速结构本身至少需要$O(N)$时间）。
 
 pbrt为各种形状实现的几何接口将在第\refchap{形状}介绍，
-加速接口和实现在第\refchap{图元和交点加速}说明。
+加速接口和实现在第\refchap{图元和交点加速}。
 
 \subsection{光分布}\label{sub:光分布}
 
@@ -212,7 +209,7 @@ $\varPhi$并向所有方向均匀辐射光
 这意味着围绕光源的单位球面在单位面积上的功率
 为$\displaystyle\frac{\varPhi}{4\mathrm{\pi}}$
 （这些度量将在\refsec{辐射学}解释和形式化）。
-\begin{figure}
+\begin{figure}[htbp]
       \centering\input{Pictures/chap01/Basicreflectionsetting.tex}
       \caption{确定由点光源到达一点的单位面积功率的几何结构。
             该点到光源的距离记作$r$。}\label{fig:1.3}
@@ -222,7 +219,7 @@ $\varPhi$并向所有方向均匀辐射光
 很明显大球上一点的单位面积功率必然比小球低，
 因为相同的总功率分布在了更大的面积上。
 特别地，到达半径为$r$的球面上一点的单位面积功率正比于$\displaystyle\frac{1}{r^2}$。
-\begin{figure}
+\begin{figure}[htbp]
       \centering\input{Pictures/chap01/Lightspheresequalpower.tex}
       \caption{因为点光源向所有方向均匀辐射光，
             所以以光源为球心的任意球面所积累的总功率相同。}
@@ -251,7 +248,7 @@ $\mathrm{d}E$为
 上节所述的光分布忽略了一个重要部分：\keyindex{阴影}{shadow}{}。
 对于着色点，只有当该点到光源位置的路径畅通时，
 该光源才会照亮该点（\reffig{1.5}）。
-\begin{figure}
+\begin{figure}[htbp]
       \centering\input{Pictures/chap01/Twolightsoneblocker.tex}
       \caption{只有在视点处能无障碍地看到光源时，
             该光源才能对其表面积累能量。
@@ -269,15 +266,12 @@ $\mathrm{d}E$为
 就应考虑该光源的作用。
 
 \subsection{表面散射}\label{sub:表面散射}
-我们可以计算两种对着色点至关重要的信息了：位置和入射光。
+我们现在能计算两种对着色点至关重要的信息了：位置和入射光
+\footnote{已熟悉渲染的读者可能会反对本节只考虑直接照明的讨论。但请放心，pbrt支持全局照明。}。
 现在需要确定入射光是如何在表面上\keyindex{散射}{scattered}{}的。
-特别地，我们关注沿着原来追踪寻找交点的射线散射回来的光的能量大小，
-因为这条光线会通向相机（\reffig{1.6}）。
-\begin{remark}
-      已经熟悉渲染的读者可能会反对本节只考虑直接照明的讨论。
-      但请放心，pbrt支持全局照明。
-\end{remark}
-\begin{figure}
+特别地，我们关注沿着原来追踪寻找交点的射线散射回的光的能量大小，
+因为该光线会通向相机（\reffig{1.6}）。
+\begin{figure}[htbp]
       \centering\input{Pictures/chap01/Surfacescatteringgeometry.tex}
       \caption{表面散射的几何结构。
             入射光沿${\bm \omega}_\mathrm{i}$方向与表面交于点$\bm p$并沿方向${\bm \omega}_\mathrm{o}$散射回相机。
@@ -384,7 +378,7 @@ Whitted的方法可以扩展到实现镜面和玻璃外的更多效果。
 来自相机的射线是该树的根。
 树中每条光线有关联的\keyindex{权重}{weight}{}；
 这允许我们对不反射100\%入射光的光滑表面建模。
-\begin{figure}
+\begin{figure}[htbp]
       \centering\input{Pictures/chap01/RayTree.tex}
       \caption{递归光线追踪与一整棵关于图像每处位置光线的树关联。}\label{fig:1.8}
 \end{figure}

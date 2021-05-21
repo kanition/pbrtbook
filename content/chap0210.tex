@@ -1,8 +1,8 @@
 \section{交互作用}\label{sec:交互作用}
 
-本章最后的抽象\refvar{SurfaceInteraction}{}，表示在2D曲面上一点的局部信息。
+本章最后的抽象\refvar{SurfaceInteraction}{}，表示在2D曲面上某点的局部信息。
 例如，第\refchap{形状}的光线-形状交点例程在\refvar{SurfaceInteraction}{}里
-返回在交点处关于局部微分几何的信息。
+返回在交点处的局部微分几何相关信息。
 之后，第\refchap{纹理}的纹理代码计算\refvar{SurfaceInteraction}{}表示的曲面上给定点的材料属性。
 紧密相关的类\refvar{MediumInteraction}{}用于表示在烟或云等介质中发生光散射的点；
 在介绍了额外的预备知识后，它将在\refsec{介质}中定义。
@@ -86,8 +86,8 @@ bool `\initvar{IsSurfaceInteraction}{}`() const {
 
 \subsection{表面交互}\label{sub:表面交互}
 \refvar{SurfaceInteraction}{}表示曲面上特定点
-（通常是光线与曲面相交求得的位置）的几何。
-有了这个抽象后处理曲面上点的大部分系统就不用考虑点所在几何形状的特定类型；
+（通常是光线与曲面相交求得的位置）的几何信息。
+有了这个抽象后处理曲面上点的大部分系统就不用考虑该点所在几何形状的特定类型；
 抽象\refvar{SurfaceInteraction}{}提供了关于曲面点的充足信息
 以允许一般化实现pbrt剩余部分的着色和几何操作。
 \begin{lstlisting}
@@ -132,7 +132,7 @@ const `\refvar{Shape}{}` *`\initvar{shape}{}` = nullptr;
 
 \begin{figure}[htbp]
     \centering\input{Pictures/chap02/Localdifferentialgeometry.tex}
-    \caption{点$\bm p$附近的局部微分几何。曲面的参数化偏导数$\displaystyle\frac{\partial \bm p}{\partial u}$
+    \caption{点$\bm p$附近的局部微分结构。曲面的参数化偏导数$\displaystyle\frac{\partial \bm p}{\partial u}$
         和$\displaystyle\frac{\partial \bm p}{\partial v}$位于切平面内但不必正交。
         曲面法线$\bm n$由$\displaystyle\frac{\partial \bm p}{\partial u}$
         和$\displaystyle\frac{\partial \bm p}{\partial v}$的叉积给出。
@@ -167,6 +167,9 @@ const `\refvar{Shape}{}` *`\initvar{shape}{}` = nullptr;
 }
 \end{lstlisting}
 
+\refvar{SurfaceInteraction}{}存储了曲面法线以及各种偏导数的第二个实例
+来表示这些量因为凹凸贴图或用三角形为每个顶点插值法线而可能生成的扰动值。
+系统一些部分使用该着色几何体\sidenote{译者注：原文shading geometry。}，而其他的则需要处理原始量。
 \begin{lstlisting}
 `\refcode{SurfaceInteraction Public Data}{+=}\lastnext{SurfaceInteractionPublicData}`
 struct {
@@ -175,3 +178,21 @@ struct {
     `\refvar{Normal3f}{}` `\initvar[shading::dndu]{dndu}{}`, `\initvar[shading::dndv]{dndv}{}`;
 } `\initvar{shading}{}`;
 \end{lstlisting}
+
+着色几何值在构造函数中初始化以匹配原始曲面几何体。
+如果存在着色几何体，则通常直到\refvar{SurfaceInteraction}{}
+构造函数运行一段时间后才计算它。
+稍后定义的方法\refvar{SetShadingGeometry}{()}
+将更新着色几何体。
+\begin{lstlisting}
+`\initcode{Initialize shading geometry from true geometry}{=}`
+`\refvar{shading}{}`.`\refvar[shading::n]{n}{}` = n;
+`\refvar{shading}{}`.`\refvar[shading::dpdu]{dpdu}{}` = dpdu;
+`\refvar{shading}{}`.`\refvar[shading::dpdv]{dpdv}{}` = dpdv;
+`\refvar{shading}{}`.`\refvar[shading::dndu]{dndu}{}` = dndu;
+`\refvar{shading}{}`.`\refvar[shading::dndv]{dndv}{}` = dndv;
+\end{lstlisting}
+
+曲面法线对pbrt有特殊意义，
+它假设，对于闭合形状，法线指向形状外部。
+对于用作面光源的几何体，光只从法线指向的那一侧曲面发出。

@@ -105,7 +105,7 @@ public:
     const `\refvar{Vector3f}{}` &wo, const `\refvar{Vector3f}{}` &dpdu, const `\refvar{Vector3f}{}` &dpdv,
     const `\refvar{Normal3f}{}` &dndu, const `\refvar{Normal3f}{}` &dndv,
     `\refvar{Float}{}` time, const `\refvar{Shape}{}` *sh);
-void `\initvar{SetShadingGeometry}{}`(const `\refvar{Vector3f}{}` &dpdu, const `\refvar{Vector3f}{}` &dpdv,
+void `\refvar{SetShadingGeometry}{}`(const `\refvar{Vector3f}{}` &dpdu, const `\refvar{Vector3f}{}` &dpdv,
      const `\refvar{Normal3f}{}` &dndu, const `\refvar{Normal3f}{}` &dndv, bool orientationIsAuthoritative);
 void `\initvar{ComputeScatteringFunctions}{}`(const `\refvar{RayDifferential}{}` &ray,
     `\refvar{MemoryArena}{}` &arena, bool allowMultipleLobes = false,
@@ -194,5 +194,120 @@ struct {
 \end{lstlisting}
 
 曲面法线对pbrt有特殊意义，
-它假设，对于闭合形状，法线指向形状外部。
-对于用作面光源的几何体，光只从法线指向的那一侧曲面发出。
+它假设对于闭合形状，法线指向形状外部。
+对于用作面光源的几何体，光只从法线指向的那一侧曲面发出；另一侧是黑的。
+因为法线有这样的特殊意义，pbrt为用户提供了机制翻转法线的朝向，使其指向相反方向。
+pbrt输入文件中的\refvar{reverseOrientation}{}指令将法线翻转为相反的非默认方向。
+因此，有必要检查所给的\refvar{Shape}{}是否设置了相应标识，
+如果有则在此切换法线方向。
+
+然而，还有一个因素影响法线朝向并且也必须考虑。
+如果\refvar{Shape}{}的变换矩阵把物体坐标系统的惯用手
+从pbrt默认的左手坐标系统变为右手，则我们也需要切换法线的朝向。
+为了理解为什么会这样，考虑一个缩放矩阵$\bm S(1,1,-1)$。
+我们自然能意料到该缩放会改变法线的方向，当然我们也可以
+通过$\displaystyle\bm n=\frac{\partial\bm p}{\partial u}\times\frac{\partial\bm p}{\partial v}$计算法线
+\sidenote{译者注：为了帮助读者理解该式，笔者加上了括号以澄清运算顺序。}，
+\begin{align*}
+    \left(\bm S(1,1,-1)\frac{\partial\bm p}{\partial u}\right)\times\left(\bm S(1,1,-1)\frac{\partial\bm p}{\partial v}\right) & =\bm S(-1,-1,1)\left(\frac{\partial\bm p}{\partial u}\times\frac{\partial\bm p}{\partial v}\right) \\
+                                                                                                                               & =\bm S(-1,-1,1)\bm n                                                                               \\
+                                                                                                                               & \neq \bm S(1,1,-1)\bm n\, .
+\end{align*}
+因此，如果变换切换了坐标系统的惯用手，则它也需要翻转法线的方向，
+因为用叉积计算法线方向不会考虑该翻转。
+
+如果满足了两个条件中的一个而不是两个，则要交换法线方向；
+如果都满足，它们的作用会抵消。异或运算测试该条件。
+\begin{lstlisting}
+`\initcode{Adjust normal based on orientation and handedness}{=}`
+if (`\refvar{shape}{}` && (`\refvar{shape}{}`->`\refvar{reverseOrientation}{}` ^
+              `\refvar{shape}{}`->`\refvar{transformSwapsHandedness}{}`)) {
+    `\refvar[Interaction::n]{n}{}` *= -1;
+    `\refvar{shading}{}`.`\refvar[shading::n]{n}{}` *= -1;
+}
+\end{lstlisting}
+
+计算一个着色坐标系时，\refvar{SurfaceInteraction}{}通过
+\refvar{SetShadingGeometry}{()}
+方法得到更新。
+\begin{lstlisting}
+`\refcode{SurfaceInteraction Method Definitions}{+=}\lastnext{SurfaceInteractionMethodDefinitions}`
+void `\refvar{SurfaceInteraction}{}`::`\initvar{SetShadingGeometry}{}`(const `\refvar{Vector3f}{}` &dpdus,
+        const `\refvar{Vector3f}{}` &dpdvs, const `\refvar{Normal3f}{}` &dndus,
+        const `\refvar{Normal3f}{}` &dndvs, bool orientationIsAuthoritative) {
+    `\refcode{Compute shading.n for SurfaceInteraction}{}`
+    `\refcode{Initialize shading partial derivative values}{}`
+}
+\end{lstlisting}
+
+在像之前那样执行同样的叉积（可能翻转了法线朝向）计算初始着色法线后，
+如果需要的话实现就翻转着色法线或真正的几何法线，
+使得两法线位于同一半球。
+因为着色法线通常表示几何法线相对小的扰动，它们两个应该总是位于同一半球。
+根据上下文，要么是几何法线要么是着色法线可能更权威地指向正确的曲面“外侧”，
+所以调用者在需要时传入一个布尔值决定要翻转哪一个。
+\begin{lstlisting}
+`\initcode{Compute shading.n for SurfaceInteraction}{=}`
+`\refvar{shading}{}`.`\refvar[shading::n]{n}{}` = `\refvar{Normalize}{}`((`\refvar{Normal3f}{}`)`\refvar{Cross}{}`(dpdus, dpdvs));
+if (`\refvar{shape}{}` && (`\refvar{shape}{}`->`\refvar{reverseOrientation}{}` ^
+              `\refvar{shape}{}`->`\refvar{transformSwapsHandedness}{}`))
+    `\refvar{shading}{}`.`\refvar[shading::n]{n}{}` = -`\refvar{shading}{}`.`\refvar[shading::n]{n}{}`;
+if (orientationIsAuthoritative)
+    `\refvar[Interaction::n]{n}{}` = `\refvar{Faceforward}{}`(`\refvar[Interaction::n]{n}{}`, `\refvar{shading}{}`.`\refvar[shading::n]{n}{}`);
+else
+    `\refvar{shading}{}`.`\refvar[shading::n]{n}{}` = `\refvar{Faceforward}{}`(`\refvar{shading}{}`.`\refvar[shading::n]{n}{}`, `\refvar[Interaction::n]{n}{}`);
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{Initialize shading partial derivative values}{=}`
+`\refvar{shading}{}`.`\refvar[shading::dpdu]{dpdu}{}` = dpdus;
+`\refvar{shading}{}`.`\refvar[shading::dpdv]{dpdv}{}` = dpdvs;
+`\refvar{shading}{}`.`\refvar[shading::dndu]{dndu}{}` = dndus;
+`\refvar{shading}{}`.`\refvar[shading::dndv]{dndv}{}` = dndvs;
+\end{lstlisting}
+
+我们将向\refvar{Transform}{}添加一个方法以变换\refvar{SurfaceInteraction}{}。
+多数成员按需要要么直接变换要么复制，
+但有了pbrt在计算交点时用来定界浮点误差的方法，
+对成员变量\refvar[Interaction::p]{p}{}和\refvar{pError}{}的变换需要足够细心。
+负责它的代码片\refcode{Transform p and pError in SurfaceInteraction}{}
+定义于讨论浮点舍入误差的\refsec{控制舍入误差}。
+\begin{lstlisting}
+`\refcode{Transform Method Definitions}{+=}\lastnext{TransformMethodDefinitions}`
+`\refvar{SurfaceInteraction}{}`
+`\refvar{Transform}{}`::operator()(const `\refvar{SurfaceInteraction}{}` &si) const {
+    `\refvar{SurfaceInteraction}{}` ret;
+    `\refcode{Transform p and pError in SurfaceInteraction}{}`
+    `\refcode{Transform remaining members of SurfaceInteraction}{}`
+    return ret; 
+}
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{Transform remaining members of SurfaceInteraction}{=}`
+const `\refvar{Transform}{}` &t = *this;
+ret.n = `\refvar{Normalize}{}`(t(si.n));
+ret.wo = t(si.wo);
+ret.time = si.time;
+ret.mediumInterface = si.mediumInterface;
+ret.uv = si.uv;
+ret.shape = si.shape;
+ret.dpdu = t(si.dpdu);
+ret.dpdv = t(si.dpdv);
+ret.dndu = t(si.dndu);
+ret.dndv = t(si.dndv);
+ret.shading.n = `\refvar{Normalize}{}`(t(si.shading.n));
+ret.shading.dpdu = t(si.shading.dpdu);
+ret.shading.dpdv = t(si.shading.dpdv);
+ret.shading.dndu = t(si.shading.dndu);
+ret.shading.dndv = t(si.shading.dndv);
+ret.dudx = si.dudx;
+ret.dvdx = si.dvdx;
+ret.dudy = si.dudy;
+ret.dvdy = si.dvdy;
+ret.dpdx = t(si.dpdx);
+ret.dpdy = t(si.dpdy);
+ret.bsdf = si.bsdf;
+ret.bssrdf = si.bssrdf;
+ret.primitive = si.primitive;
+//    ret.n = Faceforward(ret.n, ret.shading.n);
+ret.shading.n = `\refvar{Faceforward}{}`(ret.shading.n, ret.n);
+\end{lstlisting}

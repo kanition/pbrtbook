@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="Layer_1"
+   data-name="Layer 1"
+   viewBox="0 0 513.22902 178.1806"
+   version="1.1"
+   sodipodi:docname="Boundingchoices.svg"
+   width="513.229"
+   height="178.1806"
+   inkscape:version="1.0.1 (3bc2e813f5, 2020-09-07)">
+  <metadata
+     id="metadata193">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>Bounding choices</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     id="namedview191"
+     showgrid="false"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:snap-bbox="true"
+     inkscape:bbox-paths="false"
+     inkscape:bbox-nodes="true"
+     inkscape:snap-bbox-edge-midpoints="true"
+     inkscape:snap-bbox-midpoints="true"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:zoom="2.0308194"
+     inkscape:cx="243.44627"
+     inkscape:cy="140.70516"
+     inkscape:window-x="1912"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="Layer_1">
+    <sodipodi:guide
+       position="155.10981,9.7734319"
+       orientation="0,-1"
+       id="guide201" />
+  </sodipodi:namedview>
+  <defs
+     id="defs12">
+    <rect
+       x="172.7012"
+       y="24.373154"
+       width="152.50632"
+       height="71.030334"
+       id="rect197" />
+    <style
+       id="style10">.cls-1,.cls-2{fill:none;stroke:#000;stroke-miterlimit:10;}.cls-2{stroke-dasharray:4;}</style>
+    <rect
+       x="172.7012"
+       y="24.373154"
+       width="152.50632"
+       height="71.030334"
+       id="rect197-4" />
+    <rect
+       x="172.7012"
+       y="24.373154"
+       width="152.50632"
+       height="71.030334"
+       id="rect197-4-2" />
+  </defs>
+  <title
+     id="title14">Bounding choices</title>
+  <path
+     class="cls-1"
+     d="m 101.72,120.77224 23.22,-20.3 c 0,0 -2.07,-3.42 -4.49,-1.61 -2.42,1.81 -10.24,15.41 -16.39,14 -6.15,-1.41 -26.49,-21.48 -26.06,-25.56 0.43,-4.08 3.14,-10.14 7.25,-15 4.11,-4.86 6.14,-10.55 3.75,-19.59 -2.39,-9.04 -16.43,-38.56 -16.43,-38.56 l -35.26,30.85"
+     id="path16" />
+  <path
+     class="cls-1"
+     d="m 103.75,119.00224 -23.22,20.29 c 0,0 -3.11,-2.51 -1,-4.66 2.11,-2.15 16.65,-8.09 16.08,-14.37 -0.57,-6.28 -17.76,-29.12 -21.86,-29.26 -4.1,-0.14 -10.47,1.79 -15.75,5.21 -5.28,3.42 -11.32,4.66 -20,1.13 -8.68,-3.53 -36,-21.48 -36,-21.48 l 35.24,-30.86"
+     id="path18" />
+  <rect
+     class="cls-2"
+     x="0.5"
+     y="12.262239"
+     width="125.89"
+     height="129.37"
+     id="rect20" />
+  <path
+     class="cls-1"
+     d="m 290.53,119.61224 23.08,-20.45 c 0,0 -2.09,-3.41 -4.5,-1.58 -2.41,1.83 -10.11,15.48 -16.3,14.12 -6.19,-1.36 -26.62,-21.32 -26.21,-25.4 0.41,-4.08 3.08,-10.16 7.15,-15 4.07,-4.84 6.06,-10.63 3.66,-19.65 -2.4,-9.02 -16.72,-38.46 -16.72,-38.46 l -35.06,31.04"
+     id="path68" />
+  <path
+     class="cls-1"
+     d="m 292.54,117.83224 -23.08,20.44 c 0,0 -3.14,-2.49 -1,-4.66 2.14,-2.17 16.59,-8.19 16,-14.47 -0.59,-6.28 -18,-29 -22.05,-29.09 -4.05,-0.09 -10.45,1.83 -15.76,5.28 -5.31,3.45 -11.29,4.74 -19.94,1.26 -8.65,-3.48 -36.21,-21.25 -36.21,-21.25 l 35.06,-31.05"
+     id="path70" />
+  <rect
+     class="cls-2"
+     x="90.723328"
+     y="180.86665"
+     width="97.599998"
+     height="103.4"
+     transform="rotate(-41.51)"
+     id="rect72" />
+  <line
+     class="cls-2"
+     x1="426.82001"
+     y1="18.092239"
+     x2="426.82001"
+     y2="153.18224"
+     id="line128" />
+  <line
+     class="cls-2"
+     x1="488.64999"
+     y1="19.43224"
+     x2="488.64999"
+     y2="154.52225"
+     id="line130" />
+  <ellipse
+     class="cls-1"
+     cx="457.82999"
+     cy="85.352242"
+     rx="29.889999"
+     ry="54.040001"
+     id="ellipse176" />
+  <line
+     class="cls-2"
+     x1="406.09"
+     y1="31.322239"
+     x2="509.57001"
+     y2="31.322239"
+     id="line178" />
+  <line
+     class="cls-2"
+     x1="406.09"
+     y1="139.39224"
+     x2="509.57001"
+     y2="139.39224"
+     id="line180" />
+  <line
+     class="cls-2"
+     x1="460.85999"
+     y1="0.83223969"
+     x2="405.54999"
+     y2="102.88224"
+     id="line182" />
+  <line
+     class="cls-2"
+     x1="449.64999"
+     y1="0.27223971"
+     x2="512.84998"
+     y2="97.63224"
+     id="line184" />
+  <line
+     class="cls-2"
+     x1="397.22"
+     y1="70.692245"
+     x2="458.73001"
+     y2="155.19225"
+     id="line186" />
+  <line
+     class="cls-2"
+     x1="511.95001"
+     y1="73.502243"
+     x2="455.70001"
+     y2="161.59224"
+     id="line188" />
+  <text
+     xml:space="preserve"
+     id="text195"
+     style="font-size:13.3333px;line-height:1.25;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;shape-inside:url(#rect197);"
+     x="39.759014"
+     y="0"
+     transform="translate(-185.42316,137.44918)"><tspan
+       x="200.9541"
+       y="38.567364"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16px;font-family:sans-serif;-inkscape-font-specification:sans-serif;text-align:center;text-anchor:middle">轴对齐边界框</tspan></tspan></text>
+  <text
+     xml:space="preserve"
+     id="text195-6"
+     style="font-size:13.3333px;line-height:1.25;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;shape-inside:url(#rect197-4);"
+     x="39.759014"
+     y="0"
+     transform="translate(9.9119035,137.44918)"><tspan
+       x="192.9541"
+       y="38.567364"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16px;font-family:sans-serif;-inkscape-font-specification:sans-serif;text-align:center;text-anchor:middle">非轴对齐边界框</tspan></tspan></text>
+  <text
+     xml:space="preserve"
+     id="text195-6-9"
+     style="font-size:13.3333px;line-height:1.25;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;shape-inside:url(#rect197-4-2);"
+     x="39.759014"
+     y="0"
+     transform="translate(208.87589,137.44918)"><tspan
+       x="208.9541"
+       y="38.567364"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16px;font-family:sans-serif;-inkscape-font-specification:sans-serif;text-align:center;text-anchor:middle">任意边界块</tspan></tspan></text>
+</svg>

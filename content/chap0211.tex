@@ -1,4 +1,4 @@
-\section{扩展阅读}\label{sec:扩展阅读2}
+\section{扩展阅读}\label{sec:扩展阅读02}
 \citeauthor{10.1007/978-3-642-61542-9_19}、\citeauthor{10.1145/282957.282969}
 以及他们的合作者主张优雅的“无坐标”方法来为图形学描述向量几何，
 不再强调位置和方向恰好由关于特定坐标系统的坐标$(x,y,z)$表示的事实，
@@ -29,3 +29,25 @@ Rogers和Adams\parencite*{10.5555/63448}的
 也可详见Akenine-Möller等的书《\citetitle{10.5555/2829183}》\parencite*{10.5555/2829183}了解
 基于图形学对线性代数的详实介绍。
 
+在\citet{inproceedings}和\citet{TURKOWSKI1990539}的论文发表后，
+图形学学界首次广泛理解了怎样变换法线向量的细节。
+
+\citet{10.1145/325334.325242}将四元数引入图形学并展示了它们在动画旋转中的用处。
+Shoemake和Duff\parencite*{10.5555/155294.155324}描述了为动画变换使用矩阵极分解；
+\citet{doi:10.1137/0907079}通过将矩阵与其逆转置相加开发了
+从旋转和缩放合成矩阵中成功提取旋转的算法。
+《\emph{\citefield{SHOEMAKE1994207}{booktitle}}》中
+\citeauthor{SHOEMAKE1994207}的章节\parencite*{SHOEMAKE1991351,SHOEMAKE1994207,10.5555/180895.180914}
+分别给出更多关于从矩阵到四元数转换和矩阵极分解实现的推导细节。
+
+我们在本章阐述中遵循\citet{Blow_2004}的球面线性插值推导。
+Bloom等\parencite*{Bloom2003ErrorsAO}讨论了在计算机图形学中
+动画旋转插值需要的性质以及哪些方法提供哪些性质。
+\refvar{Slerp}{()}函数基于多项式逼近三角函数的更高效实现
+见Eberly\parencite*{doi:10.1080/2151237X.2011.610255}。
+更多旋转插值的精巧方法见Ramamoorthi和Barr\parencite*{10.1145/258734.258870}
+与Buss和Fillmore\parencite*{10.1145/502122.502124}。
+Akenine-Möller和Hughes\parencite*{doi:10.1080/10867651.1999.10487509}阐述了
+高效计算矩阵来旋转向量的技术。
+
+区间运算是渲染中常用的工具；\citet{moore1966interval}的书中有写得很好的介绍。

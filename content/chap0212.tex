@@ -17,4 +17,22 @@
           对于适用于你的优化的场景，你观察到了多大的性能变化？
 \end{enumerate}
 
-\subsection*{第2题解答}
+\noindent{\bfseries 第1题解答}\sidenote{译者注：这是笔者根据原文所给参考文献摘录的。}
+\begin{algorithm}[htb]
+    \SetAlgoNoLine
+    \caption{Transform\_Interval\_Box($\bm M,\bm T,\bm A,\bm B$)}
+    \KwIn{$3\times3$变换矩阵$\bm M$，平移变换$\bm T$，边界框$\bm A$}
+    \KwOut{边界框$\bm B$}
+    \For{$i=1\cdots3$}{
+    \tcp{从$T_i$处的退化区间开始考虑平移}
+    $B_i^{\min}\leftarrow T_i$\;
+    $B_i^{\max}\leftarrow T_i$\;
+    \tcp{通过计算最小和最大元素与$\bm M$第$i$行的积来求得极值}
+    \For{$j=1\cdots3$}{
+    $a\leftarrow M_{i,j}*A_j^{\min}$\;
+    $b\leftarrow M_{i,j}*A_j^{\max}$\;
+    $B_i^{\min}\leftarrow B_i^{\min}+\min(a,b)$\;
+    $B_i^{\max}\leftarrow B_i^{\max}+\max(a,b)$\;
+    }
+    }
+\end{algorithm}

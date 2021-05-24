@@ -1,5 +1,257 @@
 \section{译者补充：牛顿迭代法}\label{sec:译者补充：牛顿迭代法}
 \begin{remark}
-    本节内容不是原书内容，而是译者自学补充的，请酌情参考和斧正。
+    本节内容不是原书内容，而是译者参照教材补充的，请酌情参考和斧正。
 \end{remark}
 
+科学计算中常常需要求解非线性方程
+\begin{align}\label{eq:02ex0301}
+    f(x)=0\, .
+\end{align}
+即求函数的零点。因为没有通用解法，所以常用数值求解算法。
+其基本思想是从给定的若干个近似初始值出发，
+按某种规律产生收敛的迭代数列$\{x_k\}_{k=0}^{\infty}$，
+使其逼近\refeq{02ex0301}的某个解。
+
+\subsection{基本定义与定理}\label{sub:基本定义与定理02}
+\begin{definition}
+    设非线性方程$f(x)=0$中$f(x)$是连续函数，
+    如果有
+    \begin{align}\label{eq:02ex0302}
+        f(x^*)=0\, ,
+    \end{align}
+    则称$x^*$为该方程的\keyindex{根}{root}{}，
+    或称为函数$f(x)$的\keyindex{零点}{zero}{}；
+    如果有
+    \begin{align}\label{eq:02ex0303}
+        f(x)=(x-x^*)^mg(x)\, ,
+    \end{align}
+    其中$g(x)$在$x^*$邻域内连续，$g(x^*)\neq0$，且$m$为正整数，
+    则称$x^*$为该方程的$m$\keyindex{重根}{multiple root}{root根}。
+    当$m=1$时，称$x^*$为该方程的\keyindex{单根}{simple root}{root根}。
+\end{definition}
+
+\begin{example}
+    方程$f(x)=(x-4)(x+2)^3=0$中，$4$是单根，$-2$是3重根。
+\end{example}
+
+本节将使用如下重要定理：
+\begin{theorem}[\protect\keyindex{介值定理}{intermediate value theorem}{}]
+    若实值函数$f$在闭区间$[a,b]$上连续，则对于介于$f(a)$和$f(b)$之间的任意数$u$，即
+    \begin{align}\label{eq:02ex0304}
+        \min\{f(a),f(b)\}<u<\max\{f(a),f(b)\}\, ,
+    \end{align}
+    则必存在$\xi\in(a,b)$使得$f(\xi)=u$。
+\end{theorem}
+\begin{corollary}
+    若实值函数$f$在闭区间$[a,b]$上连续，且$f(a)f(b)<0$，则必存在$\xi\in(a,b)$使得$f(\xi)=0$。
+\end{corollary}
+\begin{theorem}[\protect\keyindex{拉格朗日中值定理}{Lagrange's mean value theorem}{}]
+    若实值函数$f$在闭区间$[a,b]$上连续，在开区间$(a,b)$上可导，其中$a<b$，
+    则存在$\xi\in(a,b)$使得
+    \begin{align}\label{eq:02ex0305}
+        f'(\xi)=\frac{f(b)-f(a)}{b-a}\, .
+    \end{align}
+\end{theorem}
+
+\subsection{简单迭代法}\label{sub:简单迭代法}
+\begin{definition}
+    在有根区间$[a,b]$上，将方程$f(x)=0$等价变形为
+    \begin{align}\label{eq:02ex0306}
+        x=\varphi(x)\, .
+    \end{align}
+    在$[a,b]$上选取$x_0$作为初始近似值，使用如下迭代公式
+    \begin{align}\label{eq:02ex0307}
+        x_{k+1}=\varphi(x_k),\quad k=0,1,\cdots\, ,
+    \end{align}
+    构造序列$\{x_k\}_{k=0}^\infty$。
+    若有$\displaystyle\lim\limits_{k\rightarrow\infty}{x_k}=x^*$，
+    且函数$\varphi(x)$在$x^*$邻域内连续，则对上式取极限有$x^*=\varphi(x^*)$。
+    因此$x^*$是\refeq{02ex0306}的根，也即$f(x)=0$的根。
+    称$\varphi(x)$为\keyindex{迭代函数}{iterative function}{}，
+    所得序列$\{x_k\}_{k=0}^\infty$为\keyindex{迭代序列}{iterative sequence}{}，
+    这种求方程根近似值的方法称为简单迭代法，简称\keyindex{迭代法}{iterative method}{}。
+\end{definition}
+
+\begin{theorem}[全局收敛性定理]
+    若函数$\varphi(x)$在区间$[a,b]$上具有一阶连续导数$\varphi'(x)$，且满足条件：
+    \begin{enumerate}
+        \item 对任意$x\in[a,b]$，有$\varphi(x)\in[a,b]$；
+        \item 存在常数$L\in(0,1)$，使得对任意$x\in[a,b]$有$|\varphi'(x)|\le L$成立。
+    \end{enumerate}
+    则
+    \begin{enumerate}
+        \item 方程$x=\varphi(x)$在区间$[a,b]$上有唯一实根$x^*$；
+        \item 对于任意$x_0\in[a,b]$，迭代公\refeq{02ex0307}收敛，且\begin{align}\label{eq:02ex0308}
+                  \lim\limits_{k\rightarrow\infty}{x_k}=x^*\, ;
+              \end{align}
+        \item 迭代公\refeq{02ex0307}的后验和先验误差估计式分别为
+              \begin{align}
+                  |x_k-x^*| & \le\frac{L}{1-L}|x_k-x_{k-1}|\, , \label{eq:02ex0309} \\
+                  |x_k-x^*| & \le\frac{L^k}{1-L}|x_1-x_0|\, ;\label{eq:02ex0310}
+              \end{align}
+        \item 存在极限\begin{align}\label{eq:02ex0311}
+                  \lim\limits_{k\rightarrow\infty}{\frac{x_{k+1}-x^*}{x_k-x^*}}=\varphi'(x^*)\, .
+              \end{align}
+    \end{enumerate}
+\end{theorem}
+\begin{prove}
+    (1) 构造函数$g(x)=x-\varphi(x)$，则由条件1有
+    \begin{align}\label{eq:02ex0312}
+        g(a) & =a-\varphi(a)\le0\, , \\
+        g(b) & =b-\varphi(b)\ge0\, .
+    \end{align}
+    因此$g(x)$在$[a,b]$上至少存在一个零点。
+    又因为当$x\in[a,b]$时，由条件2有
+    \begin{align}\label{eq:02ex0313}
+        g'(x)=1-\varphi'(x)\ge1-L>0\, ,
+    \end{align}
+    所以$g(x)$在$[a,b]$上是严格单调增函数，存在唯一零点，
+    即$x=\varphi(x)$在区间$[a,b]$上有唯一实根，记为$x^*$。
+
+    (2) 由$x_0\in[a,b]$及条件1知$x_k\in[a,b]$，$k=1,2,\cdots$。
+    考虑到$x_{k+1}=\varphi(x_k)$以及$x^*=\varphi(x^*)$，
+    两者作差并利用拉格朗日中值定理得
+    \begin{align}\label{eq:02ex0314}
+        x_{k+1}-x^*=\varphi(x_k)-\varphi(x^*)=\varphi'(\xi_k)(x_k-x^*),\quad k=0,1,\cdots\, ,
+    \end{align}
+    其中$\xi_k$介于$x_k$与$x^*$之间。所以由条件2得
+    \begin{align}\label{eq:02ex0314.5}
+        |x_{k+1}-x^*|\le L|x_k-x^*|,\quad k=0,1,\cdots\, .
+    \end{align}
+    反复递推得
+    \begin{align}\label{eq:02ex0315}
+        0\le|x_{k+1}-x^*| & \le L|x_k-x^*|\nonumber                     \\
+                          & \le L^2|x_{k-1}-x^*|\nonumber               \\
+                          & \le\cdots\nonumber                          \\
+                          & \le L^{k+1}|x_0-x^*|,\quad k=0,1,\cdots\, .
+    \end{align}
+    因为$L\in(0,1)$，所以对上式取极限易得$\displaystyle\lim\limits_{k\rightarrow\infty}{|x_{k+1}-x^*|}=0$，
+    即$\displaystyle\lim\limits_{k\rightarrow\infty}{x_k}=x^*$。
+
+    (3) 由\refeq{02ex0314.5}得
+    \begin{align}\label{eq:02ex0316}
+        |x_k-x^*| & =|x_k-x_{k+1}+x_{k+1}-x^*|\nonumber                \\
+                  & \le|x_k-x_{k+1}|+|x_{k+1}-x^*|\nonumber            \\
+                  & \le|x_{k+1}-x_k|+L|x_k-x^*|,\quad k=0,1,\cdots\, ,
+    \end{align}
+    从而
+    \begin{align}\label{eq:02ex0317}
+        |x_k-x^*|\le\frac{1}{1-L}|x_{k+1}-x_k|\, .
+    \end{align}
+    又因为根据拉格朗日中值定理有
+    \begin{align}\label{eq:02ex0318}
+        |x_{k+1}-x_k| & =|\varphi(x_k)-\varphi(x_{k-1})|\nonumber \\
+                      & =|\varphi'(\eta_k)(x_k-x_{k-1})|\nonumber \\
+                      & \le L|x_k-x_{k-1}|,\quad k=1,2,\cdots\, ,
+    \end{align}
+    其中$\eta_k$介于$x_k$与$x_{k-1}$之间。反复递推得
+    \begin{align}\label{eq:02ex0319}
+        |x_k-x_{k-1}|\le L |x_{k-1}-x_{k-2}|\le\cdots\le L^{k-1}|x_1-x_0|,\quad k=1,2,\cdots\, .
+    \end{align}
+    联合\refeq{02ex0317}、\refeq{02ex0318}和\refeq{02ex0319}得误差估计
+    \begin{align}\label{eq:02ex0320}
+        |x_k-x^*|\le\frac{L}{1-L}|x_k-x_{k-1}|\le\frac{L^k}{1-L}|x_1-x_0|,\quad k=1,2,\cdots\, .
+    \end{align}
+
+    (4) 由\refeq{02ex0314}得
+    \begin{align}\label{eq:02ex0321}
+        \frac{x_{k+1}-x^*}{x_k-x^*}=\varphi'(\xi_k),\quad k=0,1,\cdots\, .
+    \end{align}
+    注意$\xi_k$介于$x_k$与$x^*$之间，故$\displaystyle\lim\limits_{k\rightarrow\infty}{\xi_k}=x^*$。
+    由$\varphi'(x)$的连续性，上式取极限得
+    \begin{align}\label{eq:02ex0322}
+        \lim\limits_{k\rightarrow\infty}{\frac{x_{k+1}-x^*}{x_k-x^*}}=\varphi'(x^*)\, .
+    \end{align}
+\end{prove}
+
+\begin{theorem}[局部收敛性定理]
+    若对于方程$x=\varphi(x)$的根$x^*$，存在闭邻域$U(x^*,\delta)=[x^*-\delta,x^*+\delta]$，$(\delta>0)$
+    和常数$L\in(0,1)$，使得$\varphi'(x)$连续且$|\varphi'(x)|\le L$，
+    则对任意$x_0\in U(x^*,\delta)$，迭代$x_{k+1}=\varphi(x_k)$收敛。
+\end{theorem}
+\begin{prove}
+    由所给条件，对任意$x\in U(x^*,\delta)$，有
+    \begin{align}\label{eq:02ex0323}
+        |\varphi(x)-x^*|=|\varphi(x)-\varphi(x^*)|=|\varphi'(\eta)(x-x^*)|\le L\delta<\delta\, ,
+    \end{align}
+    其中$\eta$介于$x$与$x^*$之间。于是$\varphi(x)\in U(x^*,\delta)$。
+    根据全局收敛性定理，迭代$x_{k+1}=\varphi(x_k)$对任意$x_0\in U(x^*,\delta)$收敛。
+\end{prove}
+
+接下来引入收敛阶的概念刻画迭代法收敛速度。
+\begin{definition}
+    设迭代序列$\{x_k\}_{k=0}^\infty$收敛到根$x^*$，记$e_k=x_k-x^*$。
+    若存在常数$c>0$和实数$p\ge1$使得
+    \begin{align}\label{eq:02ex0324}
+        \lim\limits_{k\rightarrow\infty}{\frac{|e_{k+1}|}{|e_k|^p}}=c\, ,
+    \end{align}
+    则称序列$\{x_k\}_{k=0}^\infty$是\keyindex{$p$阶收敛}{converge with order $p$}{}的，
+    $p$为\keyindex{收敛阶}{order of convergence}{}，
+    $c$为\keyindex{渐进误差常数}{asymptotic error constant}{}，简称渐进常数，
+    也称为\keyindex{收敛速率}{rate of convergence}{}。
+    当$p=1$且$0<c<1$时，称$\{x_k\}_{k=0}^\infty$是\keyindex{线性收敛}{linear convergence}{}的；
+    当$p>1$时，称为\keyindex{超线性收敛}{superlinear convergence}{}。
+    显然$p$越大，$c$越小，收敛越快。
+\end{definition}
+
+\subsection{牛顿迭代法}\label{sub:牛顿迭代法}
+\begin{theorem}[\keyindex{泰勒中值定理}{Taylor's mean value theorem}{}]
+    若函数$f(x)$在含$x_0$的开区间$(a,b)$上有直到$(n+1)$阶导数，则对任意$x\in(a,b)$有
+    \begin{align}\label{eq:02ex0325.1}
+        f(x)=f(x_0)+f'(x_0)(x-x_0)+\frac{f''(x_0)}{2!}(x-x_0)^2+\cdots+\frac{f^{(n)}(x_0)}{n!}(x-x_0)^n+R_n(x)\, ,
+    \end{align}
+    其中
+    \begin{align}\label{eq:02ex0325.2}
+        R_n(x)=\frac{f^{(n+1)}(\xi)}{(n+1)!}(x-x_0)^{n+1}\, .
+    \end{align}
+    这里$\xi$介于$x$和$x_0$之间。
+    $R_n(x)$称为\refeq{02ex0325.1}的\keyindex{拉格朗日型余项}{Lagrange form of the remainder}{}。
+    \refeq{02ex0325.1}称为$f(x)$按$(x-x_0)$的幂展开的
+    带有拉格朗日型余项的$n$阶\keyindex{泰勒公式}{Taylor's formula}{}。
+\end{theorem}
+
+求解非线性方程$f(x)=0$时，将简单迭代法中的迭代函数取为
+\begin{align}\label{eq:02ex0325}
+    \varphi(x)=x-\frac{f(x)}{f'(x)}\, ,
+\end{align}
+便得到牛顿迭代法，简称\keyindex{牛顿法}{Newton's method}{}。
+
+\begin{theorem}
+    对于方程$f(x)=0$的单根$x^*$，其二阶导数$f''(x)$在$x^*$邻域上连续且$f'(x)\neq0$，
+    则存在$\delta>0$，使得对任意$x_0\in U(x^*,\delta)=[x^*-\delta,x^*+\delta]$，
+    牛顿法产生的迭代序列$\{x_k\}_{k=0}^\infty$至少二阶收敛。
+\end{theorem}
+\begin{prove}
+    牛顿法中，迭代函数导数为
+    \begin{align}\label{eq:02ex0326}
+        \varphi'(x)=\frac{f(x)f''(x)}{(f'(x))^2}\, .
+    \end{align}
+    显然$\varphi'(x)$在$x^*$邻域上连续。又因为代入$f(x^*)=0$得$\varphi'(x^*)=0$，
+    所以$\varphi'(x)$必在$x^*$的某个闭邻域$U(x^*,\delta)$上有
+    \begin{align}\label{eq:02ex0327}
+        |\varphi'(x)|\le L<1\, .
+    \end{align}
+    根据局部收敛性定理，牛顿法产生的迭代序列$\{x_k\}_{k=0}^\infty$在该邻域上收敛。
+
+    将$f(x^*)$在$x_k$处作一阶泰勒展开有
+    \begin{align}\label{eq:02ex0328}
+        f(x^*)=f(x_k)+f'(x_k)(x^*-x_k)+\frac{1}{2}f''(\xi_k)(x^*-x_k)^2=0\, ,
+    \end{align}
+    其中$\xi_k$介于$x^*$和$x_k$之间。又由牛顿迭代公式得
+    \begin{align}\label{eq:02ex0329}
+        x_{k+1}=x_k-\frac{f(x_k)}{f'(x_k)}\, ,
+    \end{align}
+    整理得
+    \begin{align}\label{eq:02ex0330}
+        f(x_k)+f'(x_k)(x_{k+1}-x_k)=0\, .
+    \end{align}
+    将\refeq{02ex0328}和\refeq{02ex0330}相减得
+    \begin{align}\label{eq:02ex0331}
+        x^*-x_{k+1}=\frac{f''(\xi_k)}{2f'(x_k)}(x^*-x_k)^2\, ,
+    \end{align}
+    因此
+    \begin{align}\label{eq:02ex0332}
+        \lim\limits_{k\rightarrow\infty}{\left|\frac{x^*-x_{k+1}}{(x^*-x_k)^2}\right|}=\lim\limits_{k\rightarrow\infty}{\left|\frac{f''(\xi_k)}{2f'(x_k)}\right|}=\left|\frac{f''(x^*)}{2f'(x^*)}\right|\neq0\, ,
+    \end{align}
+    即牛顿法至少具有二阶收敛速度。
+\end{prove}

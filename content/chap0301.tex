@@ -109,13 +109,13 @@ pbrt提供该方法的默认实现将物体空间边界变换到世界空间。
 我们就有了光线位于框内的参数范围。
 \reffig{3.2}{}说明了该过程，
 \reffig{3.3}展示了光线与厚板相交的基本几何结构。
-\begin{figure}[htbp]
+\begin{figure}[htb]
     \centering\input{Pictures/chap03/RayAABBintersect.tex}
     \caption{光线与轴对齐边界框相交。我们依次计算与每个厚板的交点，逐渐缩窄参数区间。
         这里的2D形式中，沿光线与$x$和$y$相交范围（蓝色线段）给出了框中光线的范围。}
     \label{fig:3.2}
 \end{figure}
-\begin{figure}[htbp]
+\begin{figure}[htb]
     \centering\input{Pictures/chap03/Rayslabintersect.tex}
     \caption{光线与轴对齐厚板相交。这里展示的两平面由关于常数$c$的$x=c$描述。
         每个平面的法线为$(1,0,0)$。除非光线平行于平面，否则它会在
@@ -123,4 +123,143 @@ pbrt提供该方法的默认实现将物体空间边界变换到世界空间。
     \label{fig:3.3}
 \end{figure}
 
+如果方法\refvar{Bounds3::IntersectP}{()}返回{\ttfamily true}，
+相交的参数范围在可选参数{\ttfamily hitt0}和{\ttfamily hitt1}内返回。
+光线超出范围{\ttfamily (0, \refvar[tMax]{Ray::tMax})}的相交部分被忽略。
+如果射线端点在框内，{\ttfamily hitt0}返回$0$。
+\begin{lstlisting}
+`\refcode{Geometry Inline Functions}{+=}\lastnext{GeometryInlineFunctions}`
+template <typename T>
+inline bool `\refvar{Bounds3}{}`<T>::`\initvar[Bounds3::IntersectP]{IntersectP}{}`(const `\refvar{Ray}{}` &ray, `\refvar{Float}{}` *hitt0,
+        `\refvar{Float}{}` *hitt1) const {
+    `\refvar{Float}{}` t0 = 0, t1 = ray.`\refvar{tMax}{}`;
+    for (int i = 0; i < 3; ++i) {
+        `\refcode{Update interval for ith bounding box slab}{}`
+    }
+    if (hitt0) *hitt0 = t0;
+    if (hitt1) *hitt1 = t1;
+    return true;
+}
+\end{lstlisting}
+
+对于每对平面，该例程需要两处光线-平面相交。
+例如，两个垂直于$x$轴的平面描述的厚板可以由
+通过点$(x_0,0,0)$和$(x_1,0,0)$的平面描述，每个的法线都是$(1,0,0)$。
+考虑平面相交的第一个$t$值即$t_0$。
+端点为$\bm o$方向为$\bm d$的射线与平面$ax+by+cz+d=0$相交处的参数$t$值
+可通过将射线方程代入平面方程求得：
+\begin{align*}
+    0 & =a(o_x+td_x)+b(o_y+td_y)+c(o_z+td_z)+d      \\
+      & =(a,b,c)\cdot\bm o+t(a,b,c)\cdot\bm d+d\, .
+\end{align*}
+解得$t$为
+\begin{align*}
+    t=\frac{-d-(a,b,c)\cdot\bm o}{(a,b,c)\cdot\bm d}\, .
+\end{align*}
+
+因为平面法线的$y$和$z$分量是零，所以$b$和$c$是零，$a$是1。
+平面的系数$d$是$-x_0$。我们可以用这些信息和点积的定义大大简化计算：
+\begin{align*}
+    t_0=\frac{x_0-o_x}{d_x}\, .
+\end{align*}
+
+计算厚板相交处$t$值的代码从计算光线方向相应分量的倒数开始，
+这样它可以乘以该因子而不是执行多次除法。
+注意尽管它除以该分量，但却不需要检查除数非零。
+如果是零，则{\ttfamily invRayDir}会有无限值$-\infty$或$\infty$，
+且算法剩余部分仍能正确工作
+\footnote{这里假设所用架构支持现代系统通用的IEEE浮点算术。
+IEEE浮点算术相关属性是对于所有{\ttfamily v>0}，{\ttfamily v/0=}$\infty$，
+对所有{\ttfamily w<0}，{\ttfamily w/0=-}$\infty$，
+其中$\infty$是特殊值即任意正数乘以$\infty$为$\infty$，
+任意负数乘以$\infty$为$-\infty$。
+关于浮点算术的更多信息见\protect\refsub{浮点算术}。}。
+\begin{lstlisting}
+`\initcode{Update interval for ith bounding box slab}{=}`
+`\refvar{Float}{}` invRayDir = 1 / ray.`\refvar[Ray::d]{d}{}`[i];
+`\refvar{Float}{}` tNear = (`\refvar{pMin}{}`[i] - ray.`\refvar[Ray::o]{o}{}`[i]) * invRayDir;
+`\refvar{Float}{}` tFar  = (`\refvar{pMax}{}`[i] - ray.`\refvar[Ray::o]{o}{}`[i]) * invRayDir;
+`\refcode{Update parametric interval from slab intersection t values}{}`
+\end{lstlisting}
+
+两个距离被记下来，这样{\ttfamily tNear}存有最近的相交处而{\ttfamily tFar}的最远。
+这给出了参数范围$[${\ttfamily tNear,tFar}$]$，
+用于计算和当前范围$[${\ttfamily t0,t1}$]$的交集以计算新范围。
+如果新范围为空（即{\ttfamily t0>t1}），则代码会立即返回错误。
+
+这里还有另一个浮点相关的细节：当射线端点在边界框厚板平面上
+且射线在厚板平面内时，{\ttfamily tNear}或{\ttfamily tFar}可能会
+由$\frac{0}{0}$的表达式算出，得到IEEE浮点“not a number”(NaN)值。
+像无限值那样，NaN有明确指定的含义：例如任何含有NaN的逻辑比较结果都是假。
+因此应细心编写更新{\ttfamily t0}和{\ttfamily t1}值的代码，
+这样如果{\ttfamily tNear}或{\ttfamily tFar}是NaN，则
+{\ttfamily t0}或{\ttfamily t1}不会取NaN值而总是保持不变。
+\begin{lstlisting}
+`\initcode{Update parametric interval from slab intersection t values}{=}`
+if (tNear > tFar) std::swap(tNear, tFar);
+`\refcode{Update tFar to ensure robust ray–bounds intersection}{}`
+t0 = tNear > t0 ? tNear : t0;
+t1 = tFar  < t1 ? tFar  : t1;
+if (t0 > t1) return false;
+\end{lstlisting}
+
+\refvar{Bounds3}{}也提供了特殊化的方法\refvar[Bounds3::IntersectP2]{IntersectP}{()}，
+它接收射线方向的倒数作为额外参数，
+这样每次调用\refvar[Bounds3::IntersectP2]{IntersectP}{()}就不用计算三个倒数了。
+
+这个版本还接收表示每个方向分量是否为负的预计算值，
+使得可以去掉原始例程中对算出的{\ttfamily tNear}和{\ttfamily tFar}值的比较
+而是直接分别计算近和远的值。
+因为原始代码中将这些值从低到高排序的比较取决于算出的值，
+它们对于执行的处理器会很低效，
+因为在比较之前必须完成计算它们的值。
+
+如果射线段全在边界框内则该例程返回{\ttfamily true}，
+即使相交处不在射线的范围$(0,${\ttfamily tMax}$)$内也是这样。
+\begin{lstlisting}
+`\refcode{Geometry Inline Functions}{+=}\lastnext{GeometryInlineFunctions}`
+template <typename T>
+inline bool `\refvar{Bounds3}{}`<T>::`\initvar[Bounds3::IntersectP2]{IntersectP}{}`(const `\refvar{Ray}{}` &ray, const `\refvar{Vector3f}{}` &invDir,
+        const int dirIsNeg[3]) const {
+    const `\refvar{Bounds3f}{}` &bounds = *this;
+    `\refcode{Check for ray intersection against x and y slabs}{}`
+    `\refcode{Check for ray intersection against z slab}{}`
+    return (tMin < ray.`\refvar{tMax}{}`) && (tMax > 0);
+}
+\end{lstlisting}
+
 如果
+\begin{lstlisting}
+`\initcode{Check for ray intersection against x and y slabs}{=}`
+`\refvar{Float}{}` tMin =  (bounds[  dirIsNeg[0]].x - ray.o.x) * invDir.x;
+`\refvar{Float}{}` tMax =  (bounds[1-dirIsNeg[0]].x - ray.o.x) * invDir.x;
+`\refvar{Float}{}` tyMin = (bounds[  dirIsNeg[1]].y - ray.o.y) * invDir.y;
+`\refvar{Float}{}` tyMax = (bounds[1-dirIsNeg[1]].y - ray.o.y) * invDir.y;
+`\refcode{Update tMax and tyMax to ensure robust bounds intersection}{}`
+if (tMin > tyMax || tyMin > tMax) 
+    return false;
+if (tyMin > tMin) tMin = tyMin; 
+if (tyMax < tMax) tMax = tyMax;
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{Update tMax and tyMax to ensure robust bounds intersection}{=}`
+tMax *= 1 + 2 * `\refvar{gamma}{}`(3);
+tyMax *= 1 + 2 * `\refvar{gamma}{}`(3);
+\end{lstlisting}
+
+\begin{lstlisting}
+`\initcode{Check for ray intersection against z slab}{=}`
+`\refvar{Float}{}` tzMin = (bounds[  dirIsNeg[2]].z - ray.o.z) * invDir.z;
+`\refvar{Float}{}` tzMax = (bounds[1-dirIsNeg[2]].z - ray.o.z) * invDir.z;
+`\refcode{Update tzMax to ensure robust bounds intersection}{}`
+if (tMin > tzMax || tzMin > tMax)
+    return false;
+if (tzMin > tMin)
+    tMin = tzMin;
+if (tzMax < tMax)
+    tMax = tzMax;
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{Update tzMax to ensure robust bounds intersection}{=}`
+tzMax *= 1 + 2 * `\refvar{gamma}{}`(3);
+\end{lstlisting}

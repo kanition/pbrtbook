@@ -22,4 +22,19 @@ inline uint32_t `\initvar{FloatToBits}{}`(float f) {
 }
 \end{lstlisting}
 
+\subsubsection*{算术运算}\label{subsub:算术运算}
+\begin{lstlisting}
+`\refcode{Global Constants}{+=}\lastnext{GlobalConstants}`
+static constexpr `\refvar{Float}{}` `\initvar{MachineEpsilon}{}` =
+       std::numeric_limits<`\refvar{Float}{}`>::epsilon() * 0.5;
+\end{lstlisting}
+
+\subsubsection*{误差传播}\label{subsub:误差传播}
+\begin{lstlisting}
+`\refcode{Global Inline Functions}{+=}\lastnext{GlobalInlineFunctions}`
+inline constexpr `\refvar{Float}{}` `\initvar{gamma}{}`(int n) {
+    return (n * `\refvar{MachineEpsilon}{}`) / (1 - n * `\refvar{MachineEpsilon}{}`);
+}
+\end{lstlisting}
+
 \subsection{定界交点误差}\label{sub:定界交点误差}

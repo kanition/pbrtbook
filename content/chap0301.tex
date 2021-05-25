@@ -15,9 +15,82 @@ public:
 };
 \end{lstlisting}
 
+所有形状都定义在物体的坐标空间中；
+例如，所有球体都定义在球心位于原点的坐标系统中。
+为了在场景别处放置球体，必须提供描述从物体空间到世界空间映射的变换。
+类\refvar{Shape}{}保存了该变换及其逆。
+
+\refvar{Shape}{}也接收一个布尔参数\refvar{reverseOrientation}{}来
+表示其曲面法线方向是否与默认的相反。
+该能力很有用，因为曲面法线的朝向用于决定形状哪一面是“外面”。
+例如，发光形状只在曲面法线所在那侧是发光的。
+该参数值通过pbrt输入文件中的{\ttfamily ReverseOrientation}语句控制。
+
+\refvar{Shape}{}还保存了调用\refvar[SwapsHandedness]{Transform::SwapsHandedness}{()}
+来进行物体到世界变换的返回值。
+每次找到光线交点就调用的\refvar{SurfaceInteraction}{}构造函数需要该值，
+所以\refvar{Shape}{}构造函数一次性计算并保存它。
+\begin{lstlisting}
+`\initcode{Shape Method Definitions}{=}\initnext{ShapeMethodDefinitions}`
+`\refvar{Shape}{}`::`\refvar{Shape}{}`(const `\refvar{Transform}{}` *ObjectToWorld,
+        const `\refvar{Transform}{}` *WorldToObject, bool reverseOrientation)
+    : `\refvar{ObjectToWorld}{}`(ObjectToWorld), `\refvar{WorldToObject}{}`(WorldToObject),
+      `\refvar{reverseOrientation}{}`(reverseOrientation),
+      `\refvar{transformSwapsHandedness}{}`(ObjectToWorld->`\refvar{SwapsHandedness}{}`()) {
+}
+\end{lstlisting}
+
+一个重要细节是形状保存了指向其变换的指针而不是直接保存\refvar{Transform}{}
+对象。回想\refsec{变换}\refvar{Transform}{}对象由总共32个浮点数表示，需要128字节内存；
+因为场景中许多形状经常被施加同样的变换，
+pbrt维持了一个\refvar{Transform}{}池使它们可以复用，
+并把指向共享\refvar{Transform}{}的指针传给形状。
+这样，\refvar{Shape}{}析构函数不会删除其\refvar{Transform}{}指针，
+而是让\refvar{Transform}{}控制代码来管理那些内存。
 \begin{lstlisting}
 `\initcode{Shape Public Data}{=}`
 const `\refvar{Transform}{}` *`\initvar{ObjectToWorld}{}`, *`\initvar{WorldToObject}{}`;
 const bool `\initvar{reverseOrientation}{}`;
 const bool `\initvar{transformSwapsHandedness}{}`;
 \end{lstlisting}
+
+\subsection{边界}\label{sub:边界}
+pbrt要渲染的场景中经常包含处理计算量极大的物体。
+对于许多操作，有一个3D\keyindex{包围盒}{bounding volume}{}来封住物体常常很有用。
+例如，如果一条光线没有穿过某个包围盒，对于该光线pbrt可以避免处理里面所有物体。
+
+轴对齐边界框是方便的包围盒，因为它们只需要六个浮点值保存且适合很多形状。
+而且测试光线与轴对齐边界框的交点的成本极低。
+因此每个\refvar{Shape}{}实现必须能
+用\refvar{Bounds3f}{}表示的轴对齐边界框包围自己。
+有两种不同的包围方法。
+第一个是\refvar{ObjectBound}{()}，返回在形状的物体空间里的边界框。
+\begin{lstlisting}
+`\initcode{Shape Interface}{=}\initnext{ShapeInterface}`
+virtual `\refvar{Bounds3f}{}` `\initvar{ObjectBound}{}`() const = 0;
+\end{lstlisting}
+
+第二个方法是\refvar[Shape::WorldBound]{WorldBound}{()}，返回世界空间的边界框。
+pbrt提供该方法的默认实现将物体空间边界变换到世界空间。
+然而可以轻松计算更紧致的世界空间边界的形状应该重载该方法。
+这种形状的一个例子是三角形（\reffig{3.1}）。
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap03/Objworldbounds.tex}
+    \caption{(a)三角形的世界空间边界框通过将其物体空间边界框
+        变换到世界空间再寻找包围结果边界框的边界框算得；可能得到肥大的边界框。
+        (b)然而，如果三角形的顶点首先从物体空间变换到世界空间再包围，边界框可能合适得多。}
+    \label{fig:3.1}
+\end{figure}
+
+\begin{lstlisting}
+`\refcode{Shape Method Definitions}{+=}\lastnext{ShapeMethodDefinitions}`
+`\refvar{Bounds3f}{}` `\refvar{Shape}{}`::`\initvar[Shape::WorldBound]{WorldBound}{}`() const {
+    return (*`\refvar{ObjectToWorld}{}`)(`\refvar{ObjectBound}{}`());
+}
+\end{lstlisting}
+
+\subsection{光线-边界交点}\label{sub:光线-边界交点}
+有了使用\refvar{Bounds3f}{}实例包围形状后，我们将添加一个\refvar{Bounds3}{}方法，即
+\refvar{Bounds3::IntersectP}{()}，以检查光线-框交点，
+并且如果有的话还返回交点的两个参数$t$值。
+

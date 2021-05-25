@@ -310,16 +310,16 @@ std::shared_ptr<`\refvar{Primitive}{}`> `\initvar{aggregate}{}`;
 构造函数把场景几何的边界框缓存到成员变量{\ttfamily worldBound}中。
 \begin{lstlisting}
 `\initcode{Scene Constructor Implementation}{=}\initnext{SceneConstructorImplementation}`
-`\refvar{worldBound}{}` = aggregate->`\refvar{WorldBound}{}`();
+`\refvar{worldBound}{}` = aggregate->`\refvar[Primitive::WorldBound]{WorldBound}{}`();
 \end{lstlisting}
 \begin{lstlisting}
 `\refcode{Scene Private Data}{+=}\lastcode{ScenePrivateData}`
 `\refvar{Bounds3f}{}` `\initvar{worldBound}{}`;
 \end{lstlisting}
-可通过方法{\ttfamily WorldBound()}获取该边界。
+可通过方法\refvar[Scene::WorldBound]{WorldBound}{()}获取该边界。
 \begin{lstlisting}
 `\refcode{Scene Public Methods}{+=}\lastcode{ScenePublicMethods}`
-const `\refvar{Bounds3f}{}` &WorldBound() const { return `\refvar{worldBound}{}`; }
+const `\refvar{Bounds3f}{}` &`\initvar[Scene::WorldBound]{WorldBound}{}`() const { return `\refvar{worldBound}{}`; }
 \end{lstlisting}
 
 一些光源实现发现在定义场景后开始渲染前做一些额外的初始化很有用。
@@ -348,8 +348,8 @@ bool `\refvar{Scene}{}`::`\refvar[Primitive::Intersect]{\initvar[Scene::Intersec
 这个例程用于阴影射线。
 \begin{lstlisting}
 `\refcode{Scene Method Definitions}{+=}\lastnext{SceneMethodDefinitions}`
-bool `\refvar{Scene}{}`::`\refvar[IntersectP]{\initvar[Scene::IntersectP]{IntersectP}{}}{}`(const `\refvar{Ray}{}` &ray) const {
-    return `\refvar{aggregate}{}`->`\refvar{IntersectP}{}`(ray);
+bool `\refvar{Scene}{}`::`\refvar[Primitive::IntersectP]{\initvar[Scene::IntersectP]{IntersectP}{}}{}`(const `\refvar{Ray}{}` &ray) const {
+    return `\refvar{aggregate}{}`->`\refvar[Primitive::IntersectP]{IntersectP}{}`(ray);
 }
 \end{lstlisting}
 

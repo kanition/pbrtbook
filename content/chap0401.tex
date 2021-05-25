@@ -10,13 +10,13 @@ public:
 
 \begin{lstlisting}
 `\initcode{Primitive Interface}{=}\initnext{PrimitiveInterface}`
-virtual `\refvar{Bounds3f}{}` `\initvar{WorldBound}{()}` const = 0;
+virtual `\refvar{Bounds3f}{}` `\initvar[Primitive::WorldBound]{WorldBound}{()}` const = 0;
 \end{lstlisting}
 
 \begin{lstlisting}
 `\refcode{Primitive Interface}{+=}\lastnext{PrimitiveInterface}`
 virtual bool `\initvar[Primitive::Intersect]{Intersect}{}`(const `\refvar{Ray}{}` &r, `\refvar{SurfaceInteraction}{}` *) const = 0;
-virtual bool `\initvar{IntersectP}{}`(const `\refvar{Ray}{}` &r) const = 0;
+virtual bool `\initvar[Primitive::IntersectP]{IntersectP}{}`(const `\refvar{Ray}{}` &r) const = 0;
 \end{lstlisting}
 
 \begin{lstlisting}

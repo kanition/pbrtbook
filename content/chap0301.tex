@@ -90,7 +90,37 @@ pbrt提供该方法的默认实现将物体空间边界变换到世界空间。
 \end{lstlisting}
 
 \subsection{光线-边界交点}\label{sub:光线-边界交点}
-有了使用\refvar{Bounds3f}{}实例包围形状后，我们将添加一个\refvar{Bounds3}{}方法，即
+有了\refvar{Bounds3f}{}实例包围形状的用法后，我们将添加一个\refvar{Bounds3}{}方法，即
 \refvar{Bounds3::IntersectP}{()}，以检查光线-框交点，
 并且如果有的话还返回交点的两个参数$t$值。
 
+认识边界框的一种方式是将其看作三块厚板\sidenote{译者注：原文slab。}的交集，
+每一块是两平行平面之间的空间区域。
+为了求光线与框的相交性，我们让光线依次与框的三块厚板相交。
+因为厚板与三个坐标轴对齐，在光线-厚板相交中可以应用大量优化。
+
+基本的光线-边界框交点算法算法工作如下：
+我们从一个参数化区间开始，它沿我们想要求交点的光线覆盖了位置$t$的范围；
+该范围通常是$(0,+\infty)$。
+然后我们先后计算光线与每个厚板相交的两个参数化$t$位置。
+我们计算每个厚板相交区间与当前相交区间的交集，
+如果我们发现结果区间退化则返回失败。
+如果检查完全部三个厚板后区间是非退化的，
+我们就有了光线位于框内的参数范围。
+\reffig{3.2}{}说明了该过程，
+\reffig{3.3}展示了光线与厚板相交的基本几何结构。
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap03/RayAABBintersect.tex}
+    \caption{光线与轴对齐边界框相交。我们依次计算与每个厚板的交点，逐渐缩窄参数区间。
+        这里的2D形式中，沿光线与$x$和$y$相交范围（蓝色线段）给出了框中光线的范围。}
+    \label{fig:3.2}
+\end{figure}
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap03/Rayslabintersect.tex}
+    \caption{光线与轴对齐厚板相交。这里展示的两平面由关于常数$c$的$x=c$描述。
+        每个平面的法线为$(1,0,0)$。除非光线平行于平面，否则它会在
+        参数位置$t_{\mathrm{near}}$和$t_{\mathrm{far}}$处与厚板相交两次。}
+    \label{fig:3.3}
+\end{figure}
+
+如果

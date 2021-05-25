@@ -1,15 +1,15 @@
 \section{pbrt：系统概述}\label{sec:pbrt：系统概述}
 
-pbrt是使用标准的\keyindex{面向对象}{object-oriented}{}技术构建的：
-重要实体都定义了抽象\keyindex{基类}{base class}{class类}（例如
+pbrt是用标准的\keyindex{面向对象}{object-oriented}{}技术构建的：
+重要实体都定义了抽象\keyindex{基类}{base class}{class类}（如
 抽象基类\refvar{Shape}{}定义了所有几何形状必须实现的接口，
 光源的抽象基类\refvar{Light}{}也有相似设计）。
-系统大部分都纯粹是由这些抽象基类提供的接口来实现的；
-例如检查光源与着色点之间遮挡物体的代码
+系统大部分都纯粹是由这些抽象基类提供的接口实现的；
+如检查光源与着色点之间遮挡物体的代码
 调用\refvar{Shape}{}的相交方法
 而不用考虑场景中出现的特定类型的形状。
-这种方式使得扩展系统变得很容易，
-新增一种形状只需要实现一个完成\refvar{Shape}{}接口的类并链接到系统。
+该方式让扩展系统变得很容易，
+新增一种形状只需实现一个完成\refvar{Shape}{}接口的类并链接到系统。
 
 pbrt用10个关键抽象基类写成，列于\reftab{1.1}。
 向系统添加这些类的新实现很简单；
@@ -21,8 +21,7 @@ pbrt用10个关键抽象基类写成，列于\reftab{1.1}。
 \sidenote{译者注：原书此处似乎链接错误，已纠正。}
 将讨论这种扩展系统的方法的更多细节。
 
-
-\begin{table}[h]
+\begin{table}[htbp]
     \centering
     \begin{tabular}{l l l}
         \toprule
@@ -302,7 +301,7 @@ std::vector<std::shared_ptr<`\refvar{Light}{}`>> `\initvar{lights}{}`;
 因为它实现了\refvar{Primitive}{}接口，
 所以从单个图元到系统其余部分似乎没什么区别。
 聚合体的实现用加速的数据结构存储了所有场景图元，
-减少对远离给定光线的图元做不必要的光线交点测试量。
+减少对远离给定光线的图元做不必要的光线相交测试量。
 \begin{lstlisting}
 `\initcode{Scene Private Data}{=}\initnext{ScenePrivateData}`
 std::shared_ptr<`\refvar{Primitive}{}`> `\initvar{aggregate}{}`;
@@ -330,7 +329,7 @@ for (const auto &light : `\refvar{lights}{}`)
     light->`\refvar{Preprocess}{}`(*this);
 \end{lstlisting}
 
-\refvar{Scene}{}类提供两个与光线-图元交点相关的方法。
+\refvar{Scene}{}类提供两个与光线-图元相交相关的方法。
 它的\refvar[Scene::Intersect]{Intersect}{()}方法跟随给定光线到场景中并
 返回表示光线是否与某一图元相交的布尔值。
 如果是，它便把沿光线最近交点的信息填入提供的结构体\refvar{SurfaceInteraction}{}。
@@ -342,8 +341,8 @@ bool `\refvar{Scene}{}`::`\refvar[Primitive::Intersect]{\initvar[Scene::Intersec
 }
 \end{lstlisting}
 一个紧密相关的方法是\refvar{Scene::IntersectP}{()}，
-它沿光线检查交点的存在性但不返回任何关于这些交点的信息。
-因为这个例程不需要搜索最近的交点或计算任何关于交点的额外信息，
+它沿光线检查相交的存在性但不返回任何关于这些相交处的信息。
+因为这个例程不需要搜索最近的相交处或计算任何关于相交的额外信息，
 所以它一般比\refvar{Scene::Intersect}{()}更高效。
 这个例程用于阴影射线。
 \begin{lstlisting}
@@ -803,7 +802,7 @@ const int `\initvar{maxDepth}{}`;
         \protect\refvar{SamplerIntegrator}{}中的主渲染循环
         计算一条相机光线并将其传给方法\protect\refvar{Li}{()}，
         返回沿该光线到达光线起点的辐亮度。
-        找到最近交点后，它计算交点处的材料属性，以BSDF的形式表示它们。
+        找到最近相交处后，它计算交点处的材料属性，以BSDF的形式表示它们。
         然后再用场景中的灯光来确定照明。
         同样，它们给出了计算交点处沿光线反射回去的辐亮度所需的信息。}
     \label{fig:1.19}
@@ -820,13 +819,13 @@ const int `\initvar{maxDepth}{}`;
 }
 \end{lstlisting}
 
-第一步是找到光线与场景中形状的首个交点。
-方法\refvar{Scene::Intersect}{()}取一条光线并
-返回表示它是否和形状相交的布尔值。
-对于找到交点的光线，它用交点的几何信息
+第一步是找到光线与场景中形状的首个相交处。方法
+\refvar{Scene::Intersect}{()}
+取一条光线并返回表示它是否和形状相交的布尔值。
+对于找到相交处的光线，它用相交处的几何信息
 初始化提供的\refvar{SurfaceInteraction}{}。
 
-如果没有找到交点，那可能因为光源没有关联几何体而就沿光线携带辐射。
+如果没有找到相交，那可能因为光源没有关联几何体而就沿光线携带辐射。
 这类光源的一个例子是\refvar{InfiniteAreaLight}{}，
 它能表示来自天空的光照。
 方法\refvar{Light::Le}{()}允许这样的光源返回其沿给定光线的辐亮度。
@@ -840,7 +839,7 @@ if (!scene.`\refvar[Scene::Intersect]{Intersect}{}`(ray, &isect)) {
 }
 \end{lstlisting}
 
-否则就找到了可行的交点。
+否则就找到了可行的相交处。
 积分器必须确定光在交点处如何被形状表面散射，
 确定有多少光照从光源到达该点，
 并用\refeq{1.1}的近似计算有多少光沿视察方向离开表面。
@@ -878,7 +877,7 @@ $\bm n$是交点处的表面法向量，
 `\refvar{Vector3f}{}` wo = isect.`\refvar[Interaction::wo]{wo}{}`;
 \end{lstlisting}
 
-如果找到交点，就需要确定表面材质如何散射光照。
+如果找到相交处，就需要确定表面材质如何散射光照。
 负责这项任务的是方法\refvar[SurfaceInteraction::ComputeScatteringFunctions]{ComputeScatteringFunctions}{()}，
 它求取纹理函数来确定表面属性
 然后再初始化该点处BSDF（也可能是BSSRDF）的表示。

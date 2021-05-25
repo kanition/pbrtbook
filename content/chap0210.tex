@@ -1,7 +1,7 @@
 \section{交互作用}\label{sec:交互作用}
 
 本章最后的抽象\refvar{SurfaceInteraction}{}，表示在2D曲面上某点的局部信息。
-例如，第\refchap{形状}的光线-形状交点例程在\refvar{SurfaceInteraction}{}里
+例如，第\refchap{形状}的光线-形状相交例程在\refvar{SurfaceInteraction}{}里
 返回在交点处的局部微分几何相关信息。
 之后，第\refchap{纹理}的纹理代码计算\refvar{SurfaceInteraction}{}表示的曲面上给定点的材料属性。
 紧密相关的类\refvar{MediumInteraction}{}用于表示在烟或云等介质中发生光散射的点；
@@ -52,7 +52,7 @@ struct `\initvar{Interaction}{}` {
 `\refvar{Vector3f}{}` `\initvar{pError}{}`;
 \end{lstlisting}
 
-对于沿光线（要么来自光线-形状交点要么来自在介质中传播的光线）的交互作用，
+对于沿光线（要么来自光线-形状相交要么来自在介质中传播的光线）的交互作用，
 负的光线方向保存于\refvar[Interaction::wo]{wo}{}，
 对应于$\bm \omega_{\mathrm{o}}$，
 即我们计算一点光量时用来表示出射方向的记号。

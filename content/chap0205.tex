@@ -44,8 +44,8 @@ public:
 因此当射线被传入一个接收{\ttfamily const Ray \&}的方法时，
 该方法不允许修改其端点或方向但能修改它的范围。
 这个约定符合系统中射线最常见的用法，
-即作为光线-物体交点测试例程的参数，
-用\refvar{tMax}{}记录最近交点的偏移量。
+即作为光线-物体相交测试例程的参数，
+用\refvar{tMax}{}记录最近相交处的偏移量。
 \begin{lstlisting}
 `\refcode{Ray Public Data}{+=}\lastnext{RayPublicData}`
 mutable `\refvar{Float}{}` `\initvar{tMax}{}`;

@@ -28,7 +28,7 @@ public:
 
 \refvar{Shape}{}还保存了调用\refvar[SwapsHandedness]{Transform::SwapsHandedness}{()}
 来进行物体到世界变换的返回值。
-每次找到光线交点就调用的\refvar{SurfaceInteraction}{}构造函数需要该值，
+每次找到光线相交处就调用的\refvar{SurfaceInteraction}{}构造函数需要该值，
 所以\refvar{Shape}{}构造函数一次性计算并保存它。
 \begin{lstlisting}
 `\initcode{Shape Method Definitions}{=}\initnext{ShapeMethodDefinitions}`
@@ -60,7 +60,7 @@ pbrt要渲染的场景中经常包含处理计算量极大的物体。
 例如，如果一条光线没有穿过某个包围盒，对于该光线pbrt可以避免处理里面所有物体。
 
 轴对齐边界框是方便的包围盒，因为它们只需要六个浮点值保存且适合很多形状。
-而且测试光线与轴对齐边界框的交点的成本极低。
+而且测试光线与轴对齐边界框相交性的成本极低。
 因此每个\refvar{Shape}{}实现必须能
 用\refvar{Bounds3f}{}表示的轴对齐边界框包围自己。
 有两种不同的包围方法。
@@ -89,18 +89,18 @@ pbrt提供该方法的默认实现将物体空间边界变换到世界空间。
 }
 \end{lstlisting}
 
-\subsection{光线-边界交点}\label{sub:光线-边界交点}
+\subsection{光线-边界相交}\label{sub:光线-边界相交}
 有了\refvar{Bounds3f}{}实例包围形状的用法后，我们将添加一个\refvar{Bounds3}{}方法，即
-\refvar{Bounds3::IntersectP}{()}，以检查光线-框交点，
-并且如果有的话还返回交点的两个参数$t$值。
+\refvar{Bounds3::IntersectP}{()}，以检查光线-框相交性，
+并且如果有的话还返回相交处的两个参数$t$值。
 
 认识边界框的一种方式是将其看作三块厚板\sidenote{译者注：原文slab。}的交集，
 每一块是两平行平面之间的空间区域。
 为了求光线与框的相交性，我们让光线依次与框的三块厚板相交。
 因为厚板与三个坐标轴对齐，在光线-厚板相交中可以应用大量优化。
 
-基本的光线-边界框交点算法算法工作如下：
-我们从一个参数化区间开始，它沿我们想要求交点的光线覆盖了位置$t$的范围；
+基本的光线-边界框相交算法算法工作如下：
+我们从一个参数化区间开始，它沿我们想要求交的光线覆盖了位置$t$的范围；
 该范围通常是$(0,+\infty)$。
 然后我们先后计算光线与每个厚板相交的两个参数化$t$位置。
 我们计算每个厚板相交区间与当前相交区间的交集，

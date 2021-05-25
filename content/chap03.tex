@@ -10,11 +10,11 @@
 
 pbrt将图元的细节隐藏在两层抽象后。
 类\refvar{Shape}{}提供对图元原始几何属性的访问，
-例如其表面面积和边界框，并且提供光线交点例程。
+例如其表面面积和边界框，并且提供光线相交例程。
 类\refvar{Primitive}{}封装了关于图元的额外非几何信息，例如其材质属性。
 然后渲染器剩余部分只处理\refvar{Primitive}{}抽象接口。
 本章将关注只与几何相关的类\refvar{Shape}{}；
-\refvar{Primitive}{}接口是第\refchap{图元和交点加速}的关键内容。
+\refvar{Primitive}{}接口是第\refchap{图元和相交加速}的关键内容。
 
 \input{content/chap0301.tex}
 

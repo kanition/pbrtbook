@@ -1,5 +1,22 @@
+\chapterimage{Pictures/chap03/killeroo-control-684x1368.png}
 \chapter{形状}\label{chap:形状}
+
+本章中，我们将阐述pbrt对例如球体和三角形等几何图元的抽象。
+光线追踪器中对几何形状的仔细抽象是干净系统设计的关键部分，
+而且形状是面向对象方法的理想选择。
+所有几何图元都实现一个公共接口，
+渲染器剩余部分可以使用该接口而无需底层形状的任何细节。
+这样能分离pbrt的几何与着色系统。
+
+pbrt将图元的细节隐藏在两层抽象后。
+类\refvar{Shape}{}提供对图元原始几何属性的访问，
+例如其表面面积和边界框，并且提供光线交点例程。
+类\refvar{Primitive}{}封装了关于图元的额外非几何信息，例如其材质属性。
+然后渲染器剩余部分只处理\refvar{Primitive}{}抽象接口。
+本章将关注只与几何相关的类\refvar{Shape}{}；
+\refvar{Primitive}{}接口是第\refchap{图元和交点加速}的关键内容。
 
 \input{content/chap0301.tex}
 
+{\noindent\hfil$=========$\hfil{\color{red}{施工分割线}}\hfil$=========$\
 \input{content/chap0309.tex}

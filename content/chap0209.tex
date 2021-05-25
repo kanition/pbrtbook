@@ -862,7 +862,7 @@ if (range.`\refvar[Interval::low]{low}{}` > 0. || range.`\refvar[Interval::high]
 
 一旦我们把区间缩窄到运动导函数的区间值覆盖到零，
 实现就切换到牛顿法的一些迭代从区间中点开始求取零点。
-牛顿法\sidenote{译者注：指牛顿迭代法。}需要函数导数；因为我们要求运动导函数的零点，
+牛顿法\sidenote{译者注：详见笔者在\refsec{译者补充：牛顿迭代法}补充的牛顿迭代法相关内容。}需要函数导数；因为我们要求运动导函数的零点，
 所以需要\refeq{2.11}的二阶导数：
 \begin{align*}
     \frac{\mathrm{d}^2a_{\bm M,\bm p}(t)_x}{\mathrm{d}t^2}=(c_{3,x}+2\theta(c_{4,x}+c_{5,x}t))\cos(2\theta t)+(c_{5,x}-2\theta(c_{2,x}+c_{3,x}))\sin(2\theta t)\, .
@@ -888,7 +888,8 @@ zeros[*zeroCount] = tNewton;
 (*zeroCount)++;
 \end{lstlisting}
 
-注意当使用牛顿法时如果函数在{\ttfamily tInterval}内有多个零点，
-则我们这里只会找出其中一个。
+注意使用牛顿法时如果函数在{\ttfamily tInterval}内有多个零点，
+则我们这里只会找出其中一个
+\sidenote{译者注：牛顿法有相应的收敛条件，详见\refsec{译者补充：牛顿迭代法}。}。
 然而，因为该点处的区间非常小，这类错误的影响也很小。
 无论如何，我们在实际中还没有发现这个问题造成过麻烦。

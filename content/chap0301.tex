@@ -1,5 +1,11 @@
 \section{基本形状接口}\label{sec:基本形状接口}
 
+\refvar{Shape}{}的接口定义于
+源文件\href{https://github.com/mmp/pbrt-v3/tree/master/src/core/shape.h}{\ttfamily core/shape.h}中，
+\href{https://github.com/mmp/pbrt-v3/tree/master/src/core/shape.cpp}{\ttfamily core/shape.cpp}中
+可以找到\refvar{Shape}{}公共方法的定义。
+基类\refvar{Shape}{}定义了通用形状接口。
+它也暴露了一些对所有\refvar{Shape}{}实现有用的公有数据成员。
 \begin{lstlisting}
 `\initcode{Shape Declarations}{=}`
 class `\initvar{Shape}{}` {

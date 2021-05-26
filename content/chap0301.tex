@@ -125,7 +125,7 @@ pbrt提供该方法的默认实现将物体空间边界变换到世界空间。
 
 如果方法\refvar{Bounds3::IntersectP}{()}返回{\ttfamily true}，
 相交的参数范围在可选参数{\ttfamily hitt0}和{\ttfamily hitt1}内返回。
-光线超出范围{\ttfamily (0, \refvar[tMax]{Ray::tMax})}的相交部分被忽略。
+光线超出范围{\ttfamily (0, \refvar[tMax]{Ray::tMax}{})}的相交部分被忽略。
 如果射线端点在框内，{\ttfamily hitt0}返回$0$。
 \begin{lstlisting}
 `\refcode{Geometry Inline Functions}{+=}\lastnext{GeometryInlineFunctions}`
@@ -228,7 +228,9 @@ inline bool `\refvar{Bounds3}{}`<T>::`\initvar[Bounds3::IntersectP2]{IntersectP}
 }
 \end{lstlisting}
 
-如果
+如果射线方向向量为负\sidenote{译者注：指分量为负。}，
+则用厚板和较大的两个边界值计算“近”参数化的相交处，较小的计算“远”相交处。
+该实现可用该观察直接在每个方向计算近和远参数值。
 \begin{lstlisting}
 `\initcode{Check for ray intersection against x and y slabs}{=}`
 `\refvar{Float}{}` tMin =  (bounds[  dirIsNeg[0]].x - ray.o.x) * invDir.x;
@@ -247,6 +249,8 @@ tMax *= 1 + 2 * `\refvar{gamma}{}`(3);
 tyMax *= 1 + 2 * `\refvar{gamma}{}`(3);
 \end{lstlisting}
 
+代码片\refcode{Check for ray intersection against z slab}{}类似，这里就不介绍了
+\sidenote{译者注：笔者还是补充上来了。}。
 \begin{lstlisting}
 `\initcode{Check for ray intersection against z slab}{=}`
 `\refvar{Float}{}` tzMin = (bounds[  dirIsNeg[2]].z - ray.o.z) * invDir.z;
@@ -263,3 +267,71 @@ if (tzMax < tMax)
 `\initcode{Update tzMax to ensure robust bounds intersection}{=}`
 tzMax *= 1 + 2 * `\refvar{gamma}{}`(3);
 \end{lstlisting}
+
+相交测试是遍历\refsec{层次包围盒}介绍的加速结构\refvar{BVHAccel}{}的核心。
+因为遍历BVH树时要执行如此多的光线-边界框相交测试，
+我们发现比起没有接收预计算方向导数和符号的\refvar{Bounds3::IntersectP}{()}，
+该优化方法在整个渲染时间中提供了大约15\%的性能提升。
+
+\subsection{相交测试}\label{sub:相交测试}
+\refvar{Shape}{}实现必须提供一个（也可能两个）
+方法的实现以测试光线与其形状的相交性。
+第一个是\refvar{Shape::Intersect}{()}，
+如果有的话就返回关于单个光线-形状相交处的几何信息，
+它在沿光线的参数范围{\ttfamily (0, \refvar{tMax}{})}内对应于首次相交。
+\begin{lstlisting}
+`\refcode{Shape Interface}{+=}\lastnext{ShapeInterface}`
+virtual bool `\initvar[Shape::Intersect]{Intersect}{}`(const `\refvar{Ray}{}` &ray, `\refvar{Float}{}` *tHit,
+    `\refvar{SurfaceInteraction}{}` *isect, bool testAlphaTexture = true) const = 0;
+\end{lstlisting}
+
+在阅读（和编写）相交例程时要记住一些重点：
+\begin{itemize}
+    \item \refvar{Ray}{}结构含有成员\refvar[tMax]{Ray::tMax}{}定义光线终点。
+          相交例程必须忽略发生在该点后的任何相交。
+    \item 如果找到相交处，其沿光线的参数距离应该存于{\ttfamily tHit}指针
+          传入相交例程。如果沿光线有多次相交，则应报告最近的那个。
+    \item 关于相交处的信息存于结构\refvar{SurfaceInteraction}{}，
+          它完全刻画了曲面的局部几何属性。该类在整个pbrt中大量使用，
+          它用于将光线追踪器的几何部分与着色和照明部分干净地隔离开。
+          类\refvar{SurfaceInteraction}{}已在\refsec{交互作用}定义
+          \footnote{几乎所有光线追踪器都使用这个通用习惯来返回
+              关于与形状相交的几何信息。作为一种优化，许多光线追踪器在找到相交处时
+              都只部分初始化相交处信息，并只存储够用的信息，如果确实需要剩余值则稍后再计算。
+              在稍后会找到与另一个形状更近的相交处的情况下该方法节省了工作。
+              按我们的经验，计算所有信息的额外工作并不多，而对于有着复杂场景数据管理算法
+              （例如当占用太多内存时从主内存剔除几何体并写入磁盘）的渲染器而言，
+              延迟的方法可能会失败，因为形状不再在内存中了。}。
+    \item 传入相交例程的光线在世界空间中，所以如果相交测试需要，
+          形状应负责将它们变换到物体空间。返回的相交信息应在世界空间中。
+\end{itemize}
+
+一些形状实现支持用纹理切掉它们的一些表面；
+参数{\ttfamily testAlphaTexture}表示这些形状是否应该为当前的相交测试执行此操作。
+第二个相交测试方法\refvar{Shape::IntersectP}{()}，
+是一个决定相交是否发生的断言函数，不返回关于相交的任何信息。
+类\refvar{Shape}{}提供了方法\refvar[Shape::IntersectP]{IntersectP}{()}的
+一个默认实现，即调用方法\refvar{Shape::Intersect}{()}并
+只是忽略算得的关于交点的额外信息。
+因为这非常浪费，pbrt中几乎所有形状实现都
+为\refvar[Shape::IntersectP]{IntersectP}{()}提供了
+一个更高效的实现，即确定是否存在相交而不计算其所有细节。
+\begin{lstlisting}
+`\refcode{Shape Interface}{+=}\lastnext{ShapeInterface}`
+virtual bool `\initvar[Shape::IntersectP]{IntersectP}{}`(const `\refvar{Ray}{}` &ray,
+        bool testAlphaTexture = true) const {
+    `\refvar{Float}{}` tHit = ray.`\refvar{tMax}{}`;
+    `\refvar{SurfaceInteraction}{}` isect;
+    return `\refvar[Shape::Intersect]{Intersect}{}`(ray, &tHit, &isect, testAlphaTexture);
+}
+\end{lstlisting}
+
+\subsection{表面积}\label{sub:表面积}
+为了合理地将\refvar{Shape}{}用作面光源，需要能够计算物体空间中形状的表面积。
+\begin{lstlisting}
+`\refcode{Shape Interface}{+=}\lastnext{ShapeInterface}`
+virtual `\refvar{Float}{}` `\initvar[Shape::Area]{Area}{}`() const = 0;
+\end{lstlisting}
+
+\subsection{面性}\label{sub:面性}
+许多渲染系统，

@@ -65,3 +65,47 @@ private:
     `\refcode{Sphere Private Data}{}`
 };
 \end{lstlisting}
+
+为了在场景中别处放置球体，用户在输入文件里指定球体时必须施加合适的变换。
+它同时接收物体到世界和世界到物体的变换作为参数给构造函数，
+并将它们传给父类\refvar{Shape}{}的构造函数。
+
+球的半径可以是任意正值，且球的范围可用两种方式截断。
+第一，设置最小和最大$z$值；球体分别位于这些平面之下和之上的部分会被切除。
+第二，在球面坐标中考虑球的参数化，可设置最大的$\varphi$值。
+球体的$\varphi$值扫过从$0$到给定$\varphi_{\max}$的范围，
+这样超出$\varphi_{\max}$的$\varphi$值对应的球体部分也被移除。
+\begin{lstlisting}
+`\initcode{Sphere Public Methods}{=}`
+`\refvar{Sphere}{}`(const `\refvar{Transform}{}` *ObjectToWorld, const `\refvar{Transform}{}` *WorldToObject,
+       bool reverseOrientation, `\refvar{Float}{}` radius, `\refvar{Float}{}` zMin, `\refvar{Float}{}` zMax,
+       `\refvar{Float}{}` phiMax)
+    : `\refvar{Shape}{}`(ObjectToWorld, WorldToObject, reverseOrientation),
+      `\refvar[Sphere::radius]{radius}{}`(radius), `\refvar[Sphere::zMin]{zMin}{}`(`\refvar{Clamp}{}`(std::min(zMin, zMax), -radius, radius)),
+      `\refvar[Sphere::zMax]{zMax}{}`(`\refvar{Clamp}{}`(std::max(zMin, zMax), -radius, radius)),
+      `\refvar[Sphere::thetaMin]{thetaMin}{}`(std::acos(`\refvar{Clamp}{}`(zMin / radius, -1, 1))),
+      `\refvar[Sphere::thetaMax]{thetaMax}{}`(std::acos(`\refvar{Clamp}{}`(zMax / radius, -1, 1))),
+      `\refvar[Sphere::phiMax]{phiMax}{}`(`\refvar{Radians}{}`(`\refvar{Clamp}{}`(phiMax, 0, 360))) { }
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{Sphere Private Data}{=}`
+const `\refvar{Float}{}` `\initvar[Sphere::radius]{radius}{}`;
+const `\refvar{Float}{}` `\initvar[Sphere::zMin]{zMin}{}`, `\initvar[Sphere::zMax]{zMax}{}`;
+const `\refvar{Float}{}` `\initvar[Sphere::thetaMin]{thetaMin}{}`, `\initvar[Sphere::thetaMax]{thetaMax}{}`, `\initvar[Sphere::phiMax]{phiMax}{}`;
+\end{lstlisting}
+
+\subsection{边界}\label{sub:边界2}
+计算球体的物体空间边界框很简单。
+当要渲染的部分少于整个球体时，这里的实现使用用户提供的$z_{\min}$和$z_{\max}$值来缩紧边界。
+然而，当$\varphi_{\max}$少于$\displaystyle\frac{3\pi}{2}$时它并不做额外工作计算更紧的边界框。
+该改进留作习题。
+\begin{lstlisting}
+`\initcode{Sphere Method Definitions}{=}\initnext{SphereMethodDefinitions}`
+`\refvar{Bounds3f}{}` `\refvar{Sphere}{}`::`\initvar[Sphere::ObjectBound]{ObjectBound}{}`() const {
+    return `\refvar{Bounds3f}{}`(`\refvar{Point3f}{}`(-`\refvar[Sphere::radius]{radius}{}`, -`\refvar[Sphere::radius]{radius}{}`, `\refvar[Sphere::zMin]{zMin}{}`),
+                    `\refvar{Point3f}{}`( `\refvar[Sphere::radius]{radius}{}`,  `\refvar[Sphere::radius]{radius}{}`, `\refvar[Sphere::zMax]{zMax}{}`));
+}
+\end{lstlisting}
+
+\subsection{相交测试}\label{sub:相交测试2}
+推导光线-球体相交测试的任务被球体中心位于原点的事实简化了。

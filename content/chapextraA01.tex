@@ -43,6 +43,18 @@ static const `\refvar{Float}{}` `\initvar{PiOver2}{}` = 1.57079632679489661923;
 static const `\refvar{Float}{}` `\initvar{PiOver4}{}` = 0.78539816339744830961;
 static const `\refvar{Float}{}` `\initvar{Sqrt2}{}`   = 1.41421356237309504880;
 \end{lstlisting}
+
+\subsubsection*{角的度量之间的转化}
+\begin{lstlisting}
+`\refcode{Global Inline Functions}{+=}\lastnext{GlobalInlineFunctions}`
+inline `\refvar{Float}{}` `\initvar{Radians}{}`(`\refvar{Float}{}` deg) { 
+    return (`\refvar{Pi}{}` / 180) * deg; 
+}
+inline `\refvar{Float}{}` `\initvar{Degrees}{}`(`\refvar{Float}{}` rad) { 
+    return (180 / `\refvar{Pi}{}`) * rad; 
+}
+\end{lstlisting}
+
 \subsection{伪随机数}\label{sub:伪随机数}
 {\initvar{RNG}{}}
 \begin{lstlisting}

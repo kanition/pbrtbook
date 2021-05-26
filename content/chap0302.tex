@@ -108,4 +108,208 @@ const `\refvar{Float}{}` `\initvar[Sphere::thetaMin]{thetaMin}{}`, `\initvar[Sph
 \end{lstlisting}
 
 \subsection{相交测试}\label{sub:相交测试2}
-推导光线-球体相交测试的任务被球体中心位于原点的事实简化了。
+推导光线-球体相交测试的任务被球心位于原点的事实简化了。
+然而如果球已被变换到世界空间的另一位置，
+则光线与球相交前需要用世界到物体的变换来变到物体空间。
+有了物体空间的光线，就能在物体空间执行相交计算了
+\footnote{这是计算机图形学的经典主题。
+    通过把问题转换为特定受限的情况，就可能更简单高效地做相交测试：
+    即因为球总是在$(0,0,0)$，方程的许多项就消掉了。
+    这不会失去一般性，因为对于其他位置的球体，适当平移光线即可。}。
+
+下列代码片展示了整个相交方法：
+\begin{lstlisting}
+`\refcode{Sphere Method Definitions}{+=}\lastnext{SphereMethodDefinitions}`
+bool `\refvar{Sphere}{}`::`\initvar[Sphere::Intersect]{Intersect}{}`(const `\refvar{Ray}{}` &r, `\refvar{Float}{}` *tHit,
+        `\refvar{SurfaceInteraction}{}` *isect, bool testAlphaTexture) const {
+    `\refvar{Float}{}` phi;
+    `\refvar{Point3f}{}` pHit;
+    `\refcode{Transform Ray to object space}{}`
+    `\refcode{Compute quadratic sphere coefficients}{}`
+    `\refcode{Solve quadratic equation for t values}{}`
+    `\refcode{Compute sphere hit position and $\varphi$}{}`
+    `\refcode{Test sphere intersection against clipping parameters}{}`
+    `\refcode{Find parametric representation of sphere hit}{}`
+    `\refcode{Compute error bounds for sphere intersection}{}`
+    `\refcode{Initialize SurfaceInteraction from parametric information}{}`
+    `\refcode{Update tHit for quadric intersection}{}`
+    return true;
+}
+\end{lstlisting}
+
+首先，所给世界空间光线被变换到球的物体空间。
+相交测试的剩余部分将在那个坐标系统内进行。
+{\ttfamily oErr}和{\ttfamily dErr}变量分别定界
+在变换射线端点和方向时因为施加变换而引入的浮点舍入误差
+（更多关于浮点算术和其对于准确光线相交计算实现的更多信息见\refsec{控制舍入误差}）。
+\begin{lstlisting}
+`\initcode{Transform Ray to object space}{=}`
+`\refvar{Vector3f}{}` oErr, dErr;
+`\refvar{Ray}{}` ray = (*`\refvar{WorldToObject}{}`)(r, &oErr, &dErr);
+\end{lstlisting}
+
+如果球心在原点，半径为$r$，则其隐式表示是
+\begin{align*}
+    x^2+y^2+z^2-r^2=0\, .
+\end{align*}
+
+通过将\refeq{2.3}中射线的参数表示代入隐式球方程，我们有
+\begin{align*}
+    (o_x+td_x)^2+(o_y+td_y)^2+(o_z+td_z)^2=r^2\, .
+\end{align*}
+
+注意该方程除了$t$的所有元素都是已知量。
+使方程成立的$t$值给出了光线上使隐式球方程成立的参数化位置，
+即沿光线与球相交的点。
+我们可以展开该方程并整理系数得到$t$的一般二次方程，
+\begin{align*}
+    at^2+bt+c=0\, ,
+\end{align*}
+其中\footnote{一些光线追踪器要求规范化射线方向向量，即$a=1$。
+    然而如果调用者忘记规范化射线方向则会导致微妙错误。
+    当然，该错误可以通过在射线构造函数内规范化方向来避免，
+    但这在提供的方向\emph{已经}规范化时会浪费精力。
+    为了避免这无用的复杂性，pbrt没有在相交例程中坚持向量规范化。
+    这特别有用，因为它减少了将射线变换到物体空间所需的计算量，即不需要规范化。}
+\begin{align*}
+    a & =d_x^2+d_y^2+d_z^2\, ,       \\
+    b & =2(d_xo_x+d_yo_y+d_zo_z)\, , \\
+    c & =o_x^2+o_y^2+o_z^2-r^2\, .
+\end{align*}
+
+该结果可以直接翻译为源码片。注意在该代码中，
+类\refvar{EFloat}{}的而不是\refvar{Float}{}
+的实例用于表示浮点值。\refvar{EFloat}{}跟踪累积的浮点舍入误差；
+\refsec{控制舍入误差}将讨论它的使用。
+至于现在，阅读时可以认为它和\refvar{Float}{}等价。
+\begin{lstlisting}
+`\initcode{Compute quadratic sphere coefficients}{=}`
+`\refcode{Initialize EFloat ray coordinate values}{}`
+`\refvar{EFloat}{}` a = dx * dx + dy * dy + dz * dz;
+`\refvar{EFloat}{}` b = 2 * (dx * ox + dy * oy + dz * oz);
+`\refvar{EFloat}{}` c = ox * ox + oy * oy + oz * oz - `\refvar{EFloat}{}`(`\refvar[Sphere::radius]{radius}{}`) * `\refvar{EFloat}{}`(`\refvar[Sphere::radius]{radius}{}`);
+\end{lstlisting}
+
+相交测试用的射线端点和方向值由将射线变换到物体空间的浮点误差界初始化。
+\begin{lstlisting}
+`\initcode{Initialize EFloat ray coordinate values}{=}`
+`\refvar{EFloat}{}` ox(ray.o.x, oErr.x), oy(ray.o.y, oErr.y), oz(ray.o.z, oErr.z);
+`\refvar{EFloat}{}` dx(ray.d.x, dErr.x), dy(ray.d.y, dErr.y), dz(ray.d.z, dErr.z);
+\end{lstlisting}
+
+二次方程有两个可能的解，给出光线交于球体的零、一或两个非虚数$t$值。
+\begin{lstlisting}
+`\initcode{Solve quadratic equation for t values}{=}`
+`\refvar{EFloat}{}` t0, t1;
+if (!`\refvar{Quadratic}{}`(a, b, c, &t0, &t1))
+    return false;
+`\refcode{Check quadric shape t0 and t1 for nearest intersection}{}`
+\end{lstlisting}
+
+实用函数\refvar{Quadratic}{}求解二次方程，
+如果没有实数解就返回{\ttfamily false}，
+如果有则返回{\ttfamily true}并适当设置{\ttfamily t0}和{\ttfamily t1}。
+稍后将在\refsub{求解二次方程}\sidenote{译者注：原文此处似乎链接章节错误，已修正。}定义它，
+我们会讨论怎样用浮点算术稳定地实现它。
+
+算得的参数化距离{\ttfamily t0}和{\ttfamily t1}跟踪了
+原始射线参数的误差和\refvar{Quadratic}{}内累积的误差造成的不确定性；
+不确定性区间范围的下界和上界可以使用方法\refvar[LowerBound]{EFloat::LowerBound}{()}和
+\refvar[UpperBound]{EFloat::UpperBound}{()}获取。
+
+代码片\refcode{Check quadric shape t0 and t1 for nearest intersection}{}取
+两个相交值并确定如果有的话哪一个是最近的有效相交处。
+对于有效的相交处，其值必须大于零且小于{\ttfamily ray.\refvar{tMax}{}}。
+下列代码使用类\refvar{EFloat}{}提供的误差区间并只接受
+明确在范围$(0,$\refvar{tMax}{}$)$内的相交处。
+
+因为$t_0$保证小于或等于$t_1$（且$0$小于\refvar{tMax}{}），
+则如果$t_0$大于\refvar{tMax}{}或$t_1$小于$0$，
+那么两个相交处都一定超出了考虑范围。
+否则，$t_0$是暂时的命中$t$值。
+但它可能小于$0$，这时我们忽略它并尝试$t_1$。
+如果也超出范围，我们就没有有效相交处。
+如果有一个相交处，则初始化{\ttfamily tShapeHit}来保存该相交处的参数$t$值。
+\begin{lstlisting}
+`\initcode{Check quadric shape t0 and t1 for nearest intersection}{=}`
+if (t0.`\refvar{UpperBound}{}`() > ray.`\refvar{tMax}{}` || t1.`\refvar{LowerBound}{}`() <= 0)
+    return false;
+`\refvar{EFloat}{}` tShapeHit = t0;
+if (tShapeHit.`\refvar{LowerBound}{}`() <= 0) {
+    tShapeHit = t1;
+    if (tShapeHit.`\refvar{UpperBound}{}`() > ray.`\refvar{tMax}{}`)
+        return false;
+}
+\end{lstlisting}
+有了射线与完整球体相交的参数距离，
+就能按沿射线的偏移量计算交点{\ttfamily pHit}。
+
+接下来需要处理带有截断$z$或$\varphi$范围的部分球体——
+必须忽略与截去区域的相交。
+实现从计算命中点的$\varphi$值开始。使用球的参数化表示，
+\begin{align*}
+    \frac{y}{x}=\frac{r\sin\theta\sin\varphi}{r\sin\theta\cos\varphi}=\tan\varphi\, ,
+\end{align*}
+所以$\displaystyle\varphi=\arctan\frac{y}{x}$。
+为了符合球的原始定义，需要将标准库函数{\ttfamily std::atan()}的
+结果重新映射为$0$到$2\pi$的值。
+\begin{lstlisting}
+`\initcode{Compute sphere hit position and $\varphi$}{=}`
+pHit = ray((`\refvar{Float}{}`)tShapeHit);
+`\refcode{Refine sphere intersection point}{}`
+if (pHit.x == 0 && pHit.y == 0) pHit.x = 1e-5f * `\refvar[Sphere::radius]{radius}{}`;
+phi = std::atan2(pHit.y, pHit.x);
+if (phi < 0) phi += 2 * `\refvar{Pi}{}`;
+\end{lstlisting}
+
+由于浮点精度限制，算得的该交点{\ttfamily pHit}可能位于实际球体表面的一侧；
+定义于\refsub{定界交点误差}的
+代码片\refcode{Refine sphere intersection point}{}会提升该值精度。
+
+现在可以针对$z$和$\varphi$指定的最小值和最大值测试命中点了。
+一个细节是如果$z$范围包括了整个球体则跳过$z$测试非常重要；
+算得的值{\ttfamily pHit.z}可能因为浮点舍入超出$z$范围一点点，
+所以我们应该只在用户希望球体是部分不完整时才执行该测试。
+如果$t_0$相交处实际无效，例程就再次尝试$t_1$。
+\begin{lstlisting}
+`\initcode{Test sphere intersection against clipping parameters}{=}`
+if ((`\refvar[Sphere::zMin]{zMin}{}` > -`\refvar[Sphere::radius]{radius}{}` && pHit.z < `\refvar[Sphere::zMin]{zMin}{}`) ||
+    (`\refvar[Sphere::zMax]{zMax}{}` <  `\refvar[Sphere::radius]{radius}{}` && pHit.z > `\refvar[Sphere::zMax]{zMax}{}`) || phi > `\refvar[Sphere::phiMax]{phiMax}{}`) {
+    if (tShapeHit == t1) return false;
+    if (t1.`\refvar{UpperBound}{}`() > ray.`\refvar{tMax}{}`) return false;
+    tShapeHit = t1;
+    `\refcode{Compute sphere hit position and $\varphi$}{}`
+    if ((`\refvar[Sphere::zMin]{zMin}{}` > -`\refvar[Sphere::radius]{radius}{}` && pHit.z < `\refvar[Sphere::zMin]{zMin}{}`) ||
+        (`\refvar[Sphere::zMax]{zMax}{}` <  `\refvar[Sphere::radius]{radius}{}` && pHit.z > `\refvar[Sphere::zMax]{zMax}{}`) || phi > `\refvar[Sphere::phiMax]{phiMax}{}`)
+        return false;
+}
+\end{lstlisting}
+
+在例程中的此处，光线一定命中了球体。
+接下来方法分别通过缩放之前计算的$\varphi$值来为命中点计算在0到1之间的$u$值，
+并基于所给球体的$\theta$值范围通过为命中点计算0到1的$\theta$值来计算$v$值
+\sidenote{译者注：这句话太绕了，我投降，请大佬赐教怎么翻译。
+    看不懂没关系，去翻翻前面$u,v$与$\varphi,\theta$的关系你就懂了。}。
+然后它再求位置的参数化偏导数$\displaystyle\frac{\partial \bm p}{\partial u}$和
+$\displaystyle\frac{\partial \bm p}{\partial v}$以及
+曲面法线的$\displaystyle\frac{\partial \bm n}{\partial u}$和
+$\displaystyle\frac{\partial \bm n}{\partial v}$。
+\begin{lstlisting}
+`\initcode{Find parametric representation of sphere hit}{=}`
+`\refvar{Float}{}` u = phi / `\refvar[Sphere::phiMax]{phiMax}{}`;
+`\refvar{Float}{}` theta = std::acos(`\refvar{Clamp}{}`(pHit.z / `\refvar[Sphere::radius]{radius}{}`, -1, 1));
+`\refvar{Float}{}` v = (theta - `\refvar[Sphere::thetaMin]{thetaMin}{}`) / (`\refvar[Sphere::thetaMax]{thetaMax}{}` - `\refvar[Sphere::thetaMin]{thetaMin}{}`);
+`\refcode{Compute sphere $\partial$p/$\partial$u and $\partial$p/$\partial$v}{}`
+`\refcode{Compute sphere $\partial$n/$\partial$u and $\partial$n/$\partial$v}{}`
+\end{lstlisting}
+
+计算球上一点的偏导数是个代数小习题。
+这里我们将展示怎样计算$\displaystyle\frac{\partial \bm p}{\partial u}$的$x$分量，
+$\displaystyle\frac{\partial p_x}{\partial u}$；
+其他分量解法相同。使用球的参数化定义，我们有
+\begin{align*}
+    x                               & =r\sin\theta\cos\varphi\, ,                          \\
+    \frac{\partial p_x}{\partial u} & =\frac{\partial}{\partial u}(r\sin\theta\cos\varphi) \\
+                                    & =r\sin\theta\frac{\partial}{\partial u}(\cos\varphi) \\
+                                    & =r\sin\theta(-\varphi_{\max}\sin\varphi)\, .
+\end{align*}

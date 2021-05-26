@@ -7,6 +7,14 @@ inline `\refvar{Float}{}` `\initvar{Lerp}{}`(`\refvar{Float}{}` t, `\refvar{Floa
     return (1 - t) * v1 + t * v2;
 }
 \end{lstlisting}
+\subsection{求解二次方程}\label{sub:求解二次方程}
+\begin{lstlisting}
+`\refcode{Global Inline Functions}{+=}\lastnext{GlobalInlineFunctions}`
+inline bool `\initvar{Quadratic}{}`(`\refvar{Float}{}` a, `\refvar{Float}{}` b, `\refvar{Float}{}` c, `\refvar{Float}{}` *t0, `\refvar{Float}{}` *t1) {
+    `\refcode{Find quadratic discriminant}{}`
+    `\refcode{Compute quadratic t values}{}`
+}
+\end{lstlisting}
 
 \subsection{2$\times$2线性系统}\label{sub:2x2线性系统}
 \begin{lstlisting}

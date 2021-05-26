@@ -37,4 +37,32 @@ inline constexpr `\refvar{Float}{}` `\initvar{gamma}{}`(int n) {
 }
 \end{lstlisting}
 
+\subsubsection*{运行误差分析}\label{subsub:运行误差分析}
+\begin{lstlisting}
+`\initcode{EFloat Public Methods}{=}\initnext{EFloatPublicMethods}`
+`\initvar{EFloat}{}`() { }
+`\refvar{EFloat}{}`(float v, float err = 0.f) : `\refvar[EFloat::v]{v}{}`(v), `\refvar[EFloat::err]{err}{}`(err) {
+    `\refcode{Store high-precision reference value in EFloat}{}`
+}
+\end{lstlisting}
+
+\begin{lstlisting}
+`\initcode{EFloat Private Data}{=}\initnext{EFloatPrivateData}`
+float `\initvar[EFloat::v]{v}{}`;
+float `\initvar[EFloat::err]{err}{}`;
+\end{lstlisting}
+
+\begin{lstlisting}
+`\refcode{EFloat Private Data}{+=}\lastcode{EFloatPrivateData}`
+#ifndef NDEBUG
+long double `\initvar[EFloat::ld]{ld}{}`;
+#endif // NDEBUG
+\end{lstlisting}
+
+\begin{lstlisting}
+`\refcode{EFloat Public Methods}{+=}\lastnext{EFloatPublicMethods}`
+float `\initvar{UpperBound}{}`() const { return `\refvar{NextFloatUp}{}`(`\refvar[EFloat::v]{v}{}` + `\refvar[EFloat::err]{err}{}`); }
+float `\initvar{LowerBound}{}`() const { return `\refvar{NextFloatDown}{}`(`\refvar[EFloat::v]{v}{}` - `\refvar[EFloat::err]{err}{}`); }
+\end{lstlisting}
+
 \subsection{定界交点误差}\label{sub:定界交点误差}

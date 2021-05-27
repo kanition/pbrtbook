@@ -101,7 +101,7 @@ const `\refvar{Float}{}` `\initvar[Sphere::thetaMin]{thetaMin}{}`, `\initvar[Sph
 该改进留作习题。
 \begin{lstlisting}
 `\initcode{Sphere Method Definitions}{=}\initnext{SphereMethodDefinitions}`
-`\refvar{Bounds3f}{}` `\refvar{Sphere}{}`::`\initvar[Sphere::ObjectBound]{ObjectBound}{}`() const {
+`\refvar{Bounds3f}{}` `\refvar{Sphere}{}`::`\initvar[Sphere::ObjectBound]{\refvar{ObjectBound}{}}{}`() const {
     return `\refvar{Bounds3f}{}`(`\refvar{Point3f}{}`(-`\refvar[Sphere::radius]{radius}{}`, -`\refvar[Sphere::radius]{radius}{}`, `\refvar[Sphere::zMin]{zMin}{}`),
                     `\refvar{Point3f}{}`( `\refvar[Sphere::radius]{radius}{}`,  `\refvar[Sphere::radius]{radius}{}`, `\refvar[Sphere::zMax]{zMax}{}`));
 }
@@ -120,7 +120,7 @@ const `\refvar{Float}{}` `\initvar[Sphere::thetaMin]{thetaMin}{}`, `\initvar[Sph
 下列代码片展示了整个相交方法：
 \begin{lstlisting}
 `\refcode{Sphere Method Definitions}{+=}\lastnext{SphereMethodDefinitions}`
-bool `\refvar{Sphere}{}`::`\initvar[Sphere::Intersect]{Intersect}{}`(const `\refvar{Ray}{}` &r, `\refvar{Float}{}` *tHit,
+bool `\refvar{Sphere}{}`::`\initvar[Sphere::Intersect]{\refvar[Shape::Intersect]{Intersect}{}}{}`(const `\refvar{Ray}{}` &r, `\refvar{Float}{}` *tHit,
         `\refvar{SurfaceInteraction}{}` *isect, bool testAlphaTexture) const {
     `\refvar{Float}{}` phi;
     `\refvar{Point3f}{}` pHit;
@@ -306,10 +306,202 @@ $\displaystyle\frac{\partial \bm n}{\partial v}$。
 计算球上一点的偏导数是个代数小习题。
 这里我们将展示怎样计算$\displaystyle\frac{\partial \bm p}{\partial u}$的$x$分量，
 $\displaystyle\frac{\partial p_x}{\partial u}$；
-其他分量解法相同。使用球的参数化定义，我们有
+其他分量解法相同。使用球的参数化定义，我们有\sidenote{译者注：这里$p_x$与$x$含义相同，以此类推。}
 \begin{align*}
     x                               & =r\sin\theta\cos\varphi\, ,                          \\
     \frac{\partial p_x}{\partial u} & =\frac{\partial}{\partial u}(r\sin\theta\cos\varphi) \\
-                                    & =r\sin\theta\frac{\partial}{\partial u}(\cos\varphi) \\
-                                    & =r\sin\theta(-\varphi_{\max}\sin\varphi)\, .
+                                    & =r\sin\theta\frac{\partial\cos\varphi}{\partial u}   \\
+                                    & =-r\varphi_{\max}\sin\theta\sin\varphi\, .
 \end{align*}
+
+基于球$y$坐标的参数化定义进行代换，可以简化为
+\begin{align*}
+    \frac{\partial p_x}{\partial u}=-\varphi_{\max}y\, .
+\end{align*}
+同样
+\begin{align*}
+    \frac{\partial p_y}{\partial u}=\varphi_{\max}x\, ,
+\end{align*}
+以及
+\begin{align*}
+    \frac{\partial p_z}{\partial u}=0\, .
+\end{align*}
+
+同样过程求得$\displaystyle\frac{\partial \bm p}{\partial v}$，完整结果为
+\begin{align*}
+    \frac{\partial \bm p}{\partial u} & =(-\varphi_{\max}y,\varphi_{\max}x,0)\, ,                                  \\
+    \frac{\partial \bm p}{\partial v} & =(\theta_{\max}-\theta_{\min})(z\cos\varphi,z\sin\varphi,-r\sin\theta)\, .
+\end{align*}
+\begin{lstlisting}
+`\initcode{Compute sphere $\partial$p/$\partial$u and $\partial$p/$\partial$v}{=}`
+`\refvar{Float}{}` zRadius = std::sqrt(pHit.x * pHit.x + pHit.y * pHit.y);
+`\refvar{Float}{}` invZRadius = 1 / zRadius;
+`\refvar{Float}{}` cosPhi = pHit.x * invZRadius;
+`\refvar{Float}{}` sinPhi = pHit.y * invZRadius;
+`\refvar{Vector3f}{}` dpdu(-`\refvar[Sphere::phiMax]{phiMax}{}` * pHit.y, `\refvar[Sphere::phiMax]{phiMax}{}` * pHit.x, 0);
+`\refvar{Vector3f}{}` dpdv = (`\refvar[Sphere::thetaMax]{thetaMax}{}` - `\refvar[Sphere::thetaMin]{thetaMin}{}`) *
+    `\refvar{Vector3f}{}`(pHit.z * cosPhi, pHit.z * sinPhi,
+             -`\refvar[Sphere::radius]{radius}{}` * std::sin(theta));
+\end{lstlisting}
+
+\subsection{法向量的偏导数}\label{sub:法向量的偏导数}
+\begin{remark}
+    本节含有高级内容，第一次阅读时可以跳过。
+\end{remark}
+
+当我们沿表面在$u$和$v$方向移动时，确定法线是怎样变化的也很有用。
+例如，第\refchap{纹理}的抗锯齿技术就依赖于该信息来消除物体曲面上反射可见的纹理锯齿。
+法线的微分变化量$\displaystyle\frac{\partial \bm n}{\partial u}$和
+$\displaystyle\frac{\partial \bm n}{\partial v}$由微分几何学
+的\keyindex{Weingarten方程}{Weingarten equations}{}给出
+\sidenote{译者注：得名于德国数学家Julius Weingarten。
+    相关简要推导详见译者整理补充的\refsec{Weingarten方程}。
+    注意该公式其实隐含了对$\bm n$的规范化要求。
+    下面所提的第一基本形式、第二基本形式也是微分几何学中的概念。}：
+\begin{align*}
+    \frac{\partial \bm n}{\partial u} & =\frac{fF-eG}{EG-F^2}\frac{\partial \bm p}{\partial u}+\frac{eF-fE}{EG-F^2}\frac{\partial \bm p}{\partial v}\, , \\
+    \frac{\partial \bm n}{\partial v} & =\frac{gF-fG}{EG-F^2}\frac{\partial \bm p}{\partial u}+\frac{fF-gE}{EG-F^2}\frac{\partial \bm p}{\partial v}\, ,
+\end{align*}
+其中$E,F$和$G$是\keyindex{第一基本形式}{the first fundamental form}{}的系数，即
+\begin{align*}
+    E & =\left|\frac{\partial \bm p}{\partial u}\right|^2\, ,                                     \\
+    F & =\left(\frac{\partial \bm p}{\partial u}\cdot\frac{\partial \bm p}{\partial v}\right)\, , \\
+    G & =\left|\frac{\partial \bm p}{\partial v}\right|^2\, .
+\end{align*}
+
+它们可以利用之前算得的$\displaystyle\frac{\partial \bm p}{\partial u}$和$\displaystyle\frac{\partial \bm p}{\partial v}$轻松算出。
+$e,f$和$g$是\keyindex{第二基本形式}{the second fundamental form}{}的系数，
+\begin{align*}
+    e & =\left(\bm n\cdot\frac{\partial^2\bm p}{\partial u^2}\right)\, ,         \\
+    f & =\left(\bm n\cdot\frac{\partial^2\bm p}{\partial u\partial v}\right)\, , \\
+    g & =\left(\bm n\cdot\frac{\partial^2\bm p}{\partial v^2}\right)\, .
+\end{align*}
+
+两个基本形式刻画了曲面的基本度量属性，包括距离、角度和\keyindex{曲率}{curvature}{}的概念；
+细节详见微分几何教材例如\citet{gray2017modern}
+\sidenote{译者注：此处引用文献改为了新版。}。
+为了求$e,f$和$g$，需要计算二阶偏导数$\displaystyle\frac{\partial^2\bm p}{\partial u^2}$等。
+
+对于球体，可以算得二阶导数为：
+\begin{align*}
+    \frac{\partial^2\bm p}{\partial u^2}         & =-\varphi_{\max}^2(x,y,0)\, ,                                                 \\
+    \frac{\partial^2\bm p}{\partial u\partial v} & =(\theta_{\max}-\theta_{\min})z\varphi_{\max}(-\sin\varphi,\cos\varphi,0)\, , \\
+    \frac{\partial^2\bm p}{\partial v^2}         & =-(\theta_{\max}-\theta_{\min})^2(x,y,z)\, .
+\end{align*}
+\begin{lstlisting}
+`\initcode{Compute sphere $\partial$n/$\partial$u and $\partial$n/$\partial$v}{=}`
+`\refvar{Vector3f}{}` d2Pduu = -`\refvar[Sphere::phiMax]{phiMax}{}` * `\refvar[Sphere::phiMax]{phiMax}{}` * `\refvar{Vector3f}{}`(pHit.x, pHit.y, 0);
+`\refvar{Vector3f}{}` d2Pduv = (`\refvar[Sphere::thetaMax]{thetaMax}{}` - `\refvar[Sphere::thetaMin]{thetaMin}{}`) * pHit.z * `\refvar[Sphere::phiMax]{phiMax}{}` *
+                  `\refvar{Vector3f}{}`(-sinPhi, cosPhi, 0.);
+`\refvar{Vector3f}{}` d2Pdvv = -(`\refvar[Sphere::thetaMax]{thetaMax}{}` - `\refvar[Sphere::thetaMin]{thetaMin}{}`) * (`\refvar[Sphere::thetaMax]{thetaMax}{}` - `\refvar[Sphere::thetaMin]{thetaMin}{}`) *
+                  `\refvar{Vector3f}{}`(pHit.x, pHit.y, pHit.z);
+`\refcode{Compute coefficients for fundamental forms}{}`
+`\refcode{Compute $\partial$n/$\partial$u and $\partial$n/$\partial$v from fundamental form coefficients}{}`
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{Compute coefficients for fundamental forms}{=}`
+`\refvar{Float}{}` E = `\refvar{Dot}{}`(dpdu, dpdu);
+`\refvar{Float}{}` F = `\refvar{Dot}{}`(dpdu, dpdv);
+`\refvar{Float}{}` G = `\refvar{Dot}{}`(dpdv, dpdv);
+`\refvar{Vector3f}{}` N = `\refvar{Normalize}{}`(`\refvar{Cross}{}`(dpdu, dpdv));
+`\refvar{Float}{}` e = `\refvar{Dot}{}`(N, d2Pduu);
+`\refvar{Float}{}` f = `\refvar{Dot}{}`(N, d2Pduv);
+`\refvar{Float}{}` g = `\refvar{Dot}{}`(N, d2Pdvv);
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{Compute $\partial$n/$\partial$u and $\partial$n/$\partial$v from fundamental form coefficients}{=}`
+`\refvar{Float}{}` invEGF2 = 1 / (E * G - F * F);
+`\refvar{Normal3f}{}` dndu = `\refvar{Normal3f}{}`((f * F - e * G) * invEGF2 * dpdu + 
+                         (e * F - f * E) * invEGF2 * dpdv);
+`\refvar{Normal3f}{}` dndv = `\refvar{Normal3f}{}`((g * F - f * G) * invEGF2 * dpdu + 
+                         (f * F - g * E) * invEGF2 * dpdv);
+\end{lstlisting}
+
+\subsection{SurfaceInteraction 初始化}
+计算了曲面参数化和所有相关偏导数后，
+可以用该相交处的几何信息初始化结构\refvar{SurfaceInteraction}{}了。
+传给\refvar{SurfaceInteraction}{}构造函数的\refvar{pError}{}值
+定界了算得的点{\ttfamily pHit}中的舍入误差。
+它在稍后于\refsub{定界交点误差}定义的代码片\refcode{Compute error bounds for sphere intersection}{}中初始化。
+\begin{lstlisting}
+`\initcode{Initialize SurfaceInteraction from parametric information}{=}`
+*isect = (*`\refvar{ObjectToWorld}{}`)(
+    `\refvar{SurfaceInteraction}{}`(pHit, `\refvar{pError}{}`, `\refvar{Point2f}{}`(u, v), -ray.`\refvar[Ray::d]{d}{}`, dpdu, dpdv,
+                       dndu, dndv, ray.`\refvar[Ray::time]{time}{}`, this));
+\end{lstlisting}
+
+因为有相交处，已存于{\ttfamily tShapeHit}的光线上的命中参数距离将更新
+方法\refvar[Shape::Intersect]{Intersect}{}的参数{\ttfamily tHit}。
+如果可能的命中点比已有的相交处更远，则更新{\ttfamily *tHit}能让后续相交测试提前终止。
+\begin{lstlisting}
+`\initcode{Update tHit for quadric intersection}{=}`
+*tHit = (`\refvar{Float}{}`)tShapeHit;
+\end{lstlisting}
+
+这里自然会问道：“世界到物体变换对于返回正确的参数距离有何影响呢？”
+确实，相交方法已经为物体空间射线求得到相交处的参数距离，
+它可能已被平移、旋转、缩放，甚至是从世界空间变换来的。
+然而，可以证明在物体空间内到相交处的参数距离正好等于
+把射线留在世界空间内并在那里求相交后得到的距离，
+因此，{\ttfamily *tHit}可以直接设置。
+注意如果物体空间射线的方向在变换后被规范化，那就不是这种情况了，
+会需要一个与未规范化射线的长度相关的校正因子。
+这是变换后不规范化物体空间射线方向向量的另一个动机。
+
+\refvar{Sphere::IntersectP}{()}例程几乎和\refvar{Sphere::Intersect}{()}一样，
+但它不初始化结构\refvar{SurfaceInteraction}{}。
+因为方法\refvar[Shape::Intersect]{Intersect}{}和\refvar[Shape::IntersectP]{IntersectP}{()}总是如此接近，
+接下来我们不再为剩余形状展示\refvar[Shape::IntersectP]{IntersectP}{()}。
+\begin{lstlisting}
+`\refcode{Sphere Method Definitions}{+=}\lastnext{SphereMethodDefinitions}`
+bool `\refvar{Sphere}{}`::`\initvar[Sphere::IntersectP]{\refvar[Shape::IntersectP]{IntersectP}{}}{}`(const `\refvar{Ray}{}` &r, bool testAlphaTexture) const {
+    `\refvar{Float}{}` phi;
+    `\refvar{Point3f}{}` pHit;
+    `\refcode{Transform Ray to object space}{}`
+    `\refcode{Compute quadratic sphere coefficients}{}`
+    `\refcode{Solve quadratic equation for t values}{}`
+    `\refcode{Compute sphere hit position and $\varphi$}{}`
+    `\refcode{Test sphere intersection against clipping parameters}{}`
+    return true;
+}
+\end{lstlisting}
+
+\subsection{表面积}\label{sub:表面积2}
+为了计算二次曲面的表面积，我们使用\keyindex{积分学}{integral calculus}{}的标准公式。
+如果定义于$x=a$到$x=b$的\keyindex{曲线}{curve}{}$y=f(x)$绕$x$轴旋转，
+则所得扫掠曲面的表面积为
+\begin{align*}
+    2\pi\int_a^b{f(x)\sqrt{1+(f'(x))^2}\mathrm{d}x}\, ,
+\end{align*}
+其中$f'(x)$表示导数$\displaystyle\frac{\mathrm{d}f}{\mathrm{d}x}$。
+因为我们大多数的旋转表面都只是绕轴部分扫掠的，所以我们替代使用公式
+\begin{align*}
+    \varphi_{\max}\int_a^b{f(x)\sqrt{1+(f'(x))^2}\mathrm{d}x}\, .
+\end{align*}
+
+球面是\keyindex{圆弧}{circular arc}{}旋转的曲面。
+沿球体$z$轴定义轮廓曲线的函数是
+\begin{align*}
+    f(z)=\sqrt{r^2-z^2}\, ,
+\end{align*}
+并且其导数为
+\begin{align*}
+    f'(z)=-\frac{z}{\sqrt{r^2-z^2}}\, .
+\end{align*}
+
+回想球体在$z_{\min}$和$z_{\max}$处被裁剪。因此表面积为
+\begin{align*}
+    A & =\varphi_{\max}\int_{z_{\min}}^{z_{\max}}{\sqrt{r^2-z^2}\sqrt{1+\frac{z^2}{r^2-z^2}}\mathrm{d}z} \\
+      & =\varphi_{\max}\int_{z_{\min}}^{z_{\max}}{\sqrt{r^2-z^2+z^2}\mathrm{d}z}                         \\
+      & =\varphi_{\max}\int_{z_{\min}}^{z_{\max}}{r\mathrm{d}z}                                          \\
+      & =\varphi_{\max}r(z_{\max}-z_{\min})\, .
+\end{align*}
+
+对于完整球体$\varphi_{\max}=2\pi$，$z_{\min}=-r$且$z_{\max}=r$，
+所以我们有标准公式$A=4\pi r^2$，确认该公式有意义。
+\begin{lstlisting}
+`\refcode{Sphere Method Definitions}{+=}\lastnext{SphereMethodDefinitions}`
+`\refvar{Float}{}` `\refvar{Sphere}{}`::`\initvar[Sphere::Area]{\refvar[Shape::Area]{Area}{}}{}`() const {
+    return `\refvar[Sphere::phiMax]{phiMax}{}` * `\refvar[Sphere::radius]{radius}{}` * (`\refvar[Sphere::zMax]{zMax}{}` - `\refvar[Sphere::zMin]{zMin}{}`);
+}
+\end{lstlisting}

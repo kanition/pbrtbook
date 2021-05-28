@@ -1,1 +1,329 @@
-\section{Weingarten方程}\label{sec:Weingarten方程}
+\section{微分几何基础}\label{sec:微分几何基础}
+\begin{remark}
+    本节内容不是原书内容，而是译者参照教材补充的，请酌情参考和斧正。
+\end{remark}
+
+\subsection{曲线的概念}\label{sub:曲线的概念}
+\begin{definition}
+    给出两个集合$E$和$E'$，如果集合$E$中的每一个点（或称元素）$x$，
+    有$E'$中的点$x'$和它对应，
+    则我们说给定了$E$到$E'$的一个\keyindex{映射}{mapping}{}$f$。
+    $x'$称为点$x$的\keyindex{像}{image}{}，
+    $x$称为$x'$的\keyindex{原像}{preimage}{}。
+\end{definition}
+\begin{definition}
+    对于任取集合$E$中的点$x_1$和$x_2$，如果$x_1\neq x_2$时有$f(x_1)\neq f(x_2)$，
+    则称映射$f$是\keyindex{一一的}{one-to-one}{}（或称\keyindex{单的}{injective}{}）。
+\end{definition}
+\begin{definition}
+    在欧氏空间中给出两个集合$E,E'$，
+    对于$E$中任一个点$x_0$和任一个数$\varepsilon>0$，
+    存在数$\delta>0$，使得对于$E$中与$x_0$的距离小于$\delta$的任意一点$x$来说，
+    点$f(x)$与$f(x_0)$间的距离小于$\varepsilon$，
+    则称映射$f$为\keyindex{连续}{continuous}{}的。
+\end{definition}
+\begin{definition}
+    如果$f(E)=E'$，就说$f$是从$E$到$E'$的\keyindex{在上映射}{onto mapping}{mapping映射}
+    （或称\keyindex{满映射}{surjective mapping}{mapping映射}）。
+\end{definition}
+\begin{definition}
+    如果一个开的直线段到三维欧氏空间内建立的对应$f$是一一的、双方连续的在上映射
+    （这种映射称为\keyindex{拓扑映射}{topological mapping}{mapping映射}或\keyindex{同胚}{homeomorphism}{}），
+    则我们把三维欧氏空间中的映射的像称为\keyindex{简单曲线段}{%simple curve segment
+    }{curve曲线}。
+\end{definition}
+
+我们以后所讨论的曲线都是简单曲线段，不另做声明。
+
+我们可以确立曲线的方程。在直线段上引入坐标$t(a<t<b)$，
+在空间中引入笛卡尔直角坐标$(x,y,z)$，
+则上述映射的解析表达式是
+\begin{align}\label{eq:03ex01.1}
+    \left\{\begin{array}{c}
+        x=f(t), \\
+        y=g(t), \\
+        z=h(t),
+    \end{array}
+    \right.\quad a<t<b\, .
+\end{align}
+习惯上常把\refeq{03ex01.1}中的函数关系符号$f,g,h$分别
+写作$x,y,z$，于是\refeq{03ex01.1}可写为
+\begin{align}\label{eq:03ex01.2}
+    \left\{\begin{array}{c}
+        x=x(t), \\
+        y=y(t), \\
+        z=z(t),
+    \end{array}
+    \right.\quad a<t<b\, .
+\end{align}
+\refeq{03ex01.2}称为曲线的\keyindex{参数表示}{parametric representation}{}或\keyindex{参数方程}{parametric equation}{}，
+$t$称为曲线的\keyindex{参数}{parameter}{}。
+
+由于向量函数$\bm r(t)$可表示为$\bm r(t)=x(t)\mathbf{i}+y(t)\mathbf{j}+z(t)\mathbf{k}$，
+因而曲线的参数方程\refeq{03ex01.2}也可以写成向量函数的形式：
+\begin{align}\label{eq:03ex01.3}
+    \bm r=\bm r(t),\quad a<t<b\, .
+\end{align}
+即在空间中给定一点$O$，以该点作为始点放上对于$t$的所有值的向量$\bm r(t)$。
+于是对于$t$的每个值，我们得到确定的向量$\overrightarrow{OM}=\bm r(t)$，
+它的始点是点$O$，而终点$M$则与$t$值有关，当$t$在$(a,b)$内变化时，
+点$M$在空间中画出一条轨迹，这就是由参数$t$所给定的曲线。
+点$M$的向量表达式称为曲线的\keyindex{向量参数表示}{}{parametric representation参数表示}。
+
+\begin{definition}
+    如果曲线的参数表示式中的函数
+    是\keyindex{$k$阶连续可微}{$k$-times continuously differentiable}{}的函数，
+    则把该曲线称为\keyindex{$C^k$类曲线}{%$C^k$-curve
+    }{curve曲线}。
+    当$k=1$时，也就是$C^1$类曲线
+    又称为\keyindex{光滑曲线}{smooth curve}{curve曲线}。
+\end{definition}
+
+\begin{definition}
+    给出$C^1$类的曲线$\bm r=\bm r(t)$，假设对于该曲线上一点($t=t_0$)有
+    \begin{align}\label{eq:03ex01.4}
+        \bm r'(t_0)\neq \bm 0\, ,
+    \end{align}
+    则这一点称为曲线的\keyindex{正常点}{%regular point
+    }{point点}。
+    注意\refeq{03ex01.4}表示$x'(t_0),y'(t_0),z'(t_0)$中至少有一个不等于零。
+\end{definition}
+
+以后我们只考虑曲线的正常点。实际上$\bm r'(t_0)=\bm 0$是很特殊的。
+如果在一段曲线上$\bm r'(t_0)\equiv\bm 0$，则$\bm r(t)$变成常向量，
+这时这段曲线缩成一点，所以一段曲线上$\bm r'(t_0)=\bm 0$的点一般是孤立点。
+\begin{definition}
+    曲线上所有点都是正常点时，称该曲线为\keyindex{正则曲线}{%regular curve
+    }{curve曲线}。
+\end{definition}
+
+\begin{definition}
+    给出曲线上一点$P$，点$Q$是曲线上$P$的邻近一点，
+    使点$Q$沿曲线趋近于点$P$，若\keyindex{割线}{secant line}{}$PQ$趋近于一定位置，
+    则把$PQ$的这个极限位置称为曲线在$P$点的\keyindex{切线}{tangent line}{}，
+    而定点$P$称为\keyindex{切点}{tangent point}{}。
+\end{definition}
+
+\begin{definition}
+    设曲线参数方程是$\bm r=\bm r(t)$，点$P$对应参数$t_0$，
+    若$\bm r(t)$在$t_0$处可微，则
+    \begin{align}\label{eq:03ex01.5}
+        \bm r'(t_0)=\lim\limits_{\Delta t\rightarrow0}{\frac{\bm r(t_0+\Delta t)-\bm r(t_0)}{\Delta t}}
+    \end{align}
+    称为曲线在点$P$的\keyindex{切向量}{tangent vector}{vector向量}。
+\end{definition}
+
+由于我们已经规定只研究曲线的正常点，所以曲线上一点的切向量是存在的，
+它就是切线上的一个非零向量，其正向和曲线参数$t$的增量方向一致。
+
+\begin{corollary}
+    曲线在参数$t_0$处的切线方程是
+    \begin{align}\label{eq:03ex01.6}
+        \frac{X-x(t_0)}{x'(t_0)}=\frac{Y-y(t_0)}{y'(t_0)}=\frac{Z-z(t_0)}{z'(t_0)}\, .
+    \end{align}
+\end{corollary}
+
+\begin{definition}
+    经过切点而垂直于切线的平面称为
+    曲线的\keyindex{法平面}{normal plane}{}或\keyindex{法面}{}{normal plane法平面}。
+\end{definition}
+
+\begin{corollary}
+    曲线在参数$t_0$处的法面方程是
+    \begin{align}\label{eq:03ex01.7}
+        x'(t_0)(X-x(t_0))+y'(t_0)(Y-y(t_0))+z'(t_0)(Z-z(t_0))=0\, .
+    \end{align}
+\end{corollary}
+
+\begin{corollary}
+    曲线$\bm r=\bm r(t)$中从$\bm r(a)$到$\bm r(t)$的弧长是
+    \begin{align}\label{eq:03ex01.8}
+        \sigma(t)=\int_a^t{|\bm r'(t)|\mathrm{d}t},\quad t>a\, .
+    \end{align}
+\end{corollary}
+
+\subsection{曲面的概念}\label{sub:曲面的概念}
+\begin{definition}
+    平面上不自交的简单\keyindex{闭曲线}{closed curve}{curve曲线}称为\keyindex{若尔当曲线}{Jordan curve}{curve曲线}。
+    它将平面分为两个都以该曲线为边界的部分，其中一个是有限的，另一个是无限的；
+    有限的区域称为\keyindex{初等区域}{}{}，即若尔当曲线的内部。
+\end{definition}
+\begin{example}
+    正方形或矩形内部，圆或椭圆内部都是初等区域。
+\end{example}
+
+\begin{definition}
+    如果平面上初等区域到三维欧氏空间内建立的映射是一一的、双方连续的在上映射，
+    则把三维欧氏空间中的像称为\keyindex{简单曲面}{%simple surface
+    }{surface曲面}。
+\end{definition}
+\begin{example}
+    矩形纸片（初等区域）卷成的带有裂缝的圆柱面是简单曲面。
+\end{example}
+
+我们假定以后所讨论的曲面都是简单曲面，不另作说明。
+
+给出平面上一初等区域$G$，$G$中的点的笛卡尔坐标是$(u,v)$，
+$G$经过上述映射$f$后的像是曲面$S$。
+对于空间的笛卡尔坐标系来说，$S$上的点的坐标是$(x,y,z)$，
+则可以写出$f$的解析表达式：
+\begin{align}\label{eq:03ex01.9}
+    \begin{array}{l}
+        x=f_1(u,v)\, , \\
+        y=f_2(u,v)\, , \\
+        z=f_3(u,v)\, ,
+    \end{array}\quad (u,v)\in G\, .
+\end{align}
+称\refeq{03ex01.9}为曲面$S$的\keyindex{参数表示}{parametric representation}{}或\keyindex{参数方程}{parametric equation}{}，
+$u$和$v$称为曲面的\keyindex{参数}{parameter}{}或\keyindex{曲纹坐标}{%curvilinear coordinate
+}{}。
+
+习惯上常把\refeq{03ex01.9}中的函数关系符号$f_1,f_2$和$f_3$分别写成$x,y$和$z$，即
+\begin{align}\label{eq:03ex01.10}
+    \begin{array}{l}
+        x=x(u,v)\, , \\
+        y=y(u,v)\, , \\
+        z=z(u,v)\, ,
+    \end{array}\quad (u,v)\in G\, .
+\end{align}
+有时也将其简写称向量函数的形式：
+\begin{align}\label{eq:03ex01.11}
+    \bm r=\bm r(u,v),\quad (u,v)\in G\, .
+\end{align}
+
+\begin{definition}
+    初等区域$G$所在平面上的坐标直线$v=$常数或$u=$常数
+    在曲面上的像称为曲面的\keyindex{坐标曲线}{coordinate curve}{}。
+    使$v$等于常数$v_0$而$u$变动时的曲线$\bm r=\bm r(u,v_0)$叫$u$-曲线；
+    使$u$等于常数$u_0$而$v$变动时的曲线$\bm r=\bm r(u_0,v)$叫$v$-曲线。
+    这两族坐标曲线在曲面上构成的坐标网称为曲面上的\keyindex{曲纹坐标网}{}{}。
+\end{definition}
+
+\begin{definition}
+    若曲面方程中的函数有直到$k$阶的连续\keyindex{偏微商}{partial derivative}{}，
+    则该曲面称为\keyindex{$k$阶正则曲面}{}{surface曲面}或\keyindex{$C^k$类曲面}{}{surface曲面}。
+    特别地，$C^1$类曲面又称为\keyindex{光滑曲面}{}{surface曲面}。
+\end{definition}
+
+以后我们假定所讨论的曲面都是光滑的。
+
+\begin{definition}
+    在曲面$\bm r=\bm r(u,v)$上$(u_0,v_0)$点处两条坐标曲线的切向量分别为
+    \begin{align}\label{eq:03ex01.12}
+        \bm r_u(u_0,v_0) & =\frac{\partial \bm r}{\partial u}(u_0,v_0)\, , \\
+        \bm r_v(u_0,v_0) & =\frac{\partial \bm r}{\partial v}(u_0,v_0)\, .
+    \end{align}
+    若它们不平行，即$\bm r_u\times\bm r_v$在$(u_0,v_0)$点不等于$\bm 0$，
+    则称该点为曲面的\keyindex{正常点}{}{point点}。
+\end{definition}
+
+以后我们只讨论曲面的正常点。
+
+若曲面上点的曲纹坐标由下列方程确定：
+\begin{align}\label{eq:03ex01.13}
+    u & =u(t)\, , \\
+    v & =v(t)\, ,
+\end{align}
+其中$t$是自变量，代入曲面的参数方程可得
+该点的\keyindex{向径}{radius vector}{vector向量}为
+\begin{align}\label{eq:03ex01.14}
+    \bm r=\bm r\left(u(t),v(t)\right)=\bm r(t)\, .
+\end{align}
+当$t$在某区间上变动时，
+关于$t$的函数$\bm r$相应的终点在曲面上确定了某一曲线，
+该曲线在曲面上$(u_0,v_0)$点处的切方向称为
+曲面在该点的\keyindex{切方向}{tangent direction}{direction方向}或\keyindex{方向}{direction}{}。
+它平行于
+\begin{align}\label{eq:03ex01.15}
+    \bm r'(t)=\bm r_u\frac{\mathrm{d}u}{\mathrm{d}t}+\bm r_v\frac{\mathrm{d}v}{\mathrm{d}t}\, ,
+\end{align}
+其中$\bm r_u$和$\bm r_v$分别是在该点的两条坐标曲线的切向量。
+$\bm r'(t),\bm r_u$和$\bm r_v$共面。
+\begin{definition}
+    曲面上正常点处的所有切方向都在
+    过该点的坐标曲线的切向量$\bm r_u$和$\bm r_v$所决定的平面上，
+    该平面称为曲面在这一点的\keyindex{切平面}{tangent plane}{}。
+\end{definition}
+\begin{corollary}
+    曲面$\bm r=\bm r(u,v)$在点$P_0(u_0,v_0)$处的切平面方程为
+    \begin{align}\label{eq:03ex01.16}
+        \left|
+        \begin{array}{ccc}
+            X-x(u_0,v_0) & Y-y(u_0,v_0) & Z-z(u_0,v_0) \\
+            x_u(u_0,v_0) & y_u(u_0,v_0) & z_u(u_0,v_0) \\
+            x_v(u_0,v_0) & y_v(u_0,v_0) & z_v(u_0,v_0)
+        \end{array}\right|=0\, .
+    \end{align}
+\end{corollary}
+
+\begin{definition}
+    曲线在正常点处垂直于切平面的方向称为曲面的\keyindex{法方向}{normal direction}{direction方向}。
+    过该点平行于法方向的直线称为曲面在该点的\keyindex{法线}{normal}{}。
+\end{definition}
+\begin{corollary}
+    曲面$\bm r=\bm r(u,v)$的法向量为$\displaystyle\bm N=\bm r_u\times\bm r_v$，
+    单位法向量为$\displaystyle\frac{\bm r_u\times\bm r_v}{|\bm r_u\times\bm r_v|}$。
+\end{corollary}
+\begin{corollary}
+    曲面$\bm r=\bm r(u,v)$在点$P_0(u_0,v_0)$处的法线方程为
+    \begin{align}\label{eq:03ex01.17}
+        \frac{X-x(u_0,v_0)}{\left|
+            \begin{array}{cc}
+                y_u(u_0,v_0) & z_u(u_0,v_0) \\
+                y_v(u_0,v_0) & z_v(u_0,v_0)
+            \end{array}
+            \right|}=\frac{Y-y(u_0,v_0)}{\left|
+            \begin{array}{cc}
+                z_u(u_0,v_0) & x_u(u_0,v_0) \\
+                z_v(u_0,v_0) & x_v(u_0,v_0)
+            \end{array}
+            \right|}=\frac{Z-z(u_0,v_0)}{\left|
+            \begin{array}{cc}
+                x_u(u_0,v_0) & y_u(u_0,v_0) \\
+                x_v(u_0,v_0) & y_v(u_0,v_0)
+            \end{array}
+            \right|}\, .
+    \end{align}
+\end{corollary}
+
+曲面$S$为$\bm r=\bm r(u,v)$，其上的曲线$C$对应为$u=u(t),v=v(t)$，
+若以$s$表示曲面上曲线的弧长，则有
+\begin{align}\label{eq:03ex01.18}
+    \mathrm{d}s^2=\mathrm{d}\bm r^2=(\bm r_u\mathrm{d}u+\bm r_v\mathrm{d}v)^2=\bm r_u^2\mathrm{d}u^2+2\bm r_u\bm r_v\mathrm{d}u\mathrm{d}v+\bm r_v^2\mathrm{d}v^2\, .
+\end{align}
+令
+\begin{align}\label{eq:03ex01.19}
+    E=\bm r_u\cdot\bm r_u,\quad F=\bm r_u\cdot\bm r_v,\quad G=\bm r_v\cdot\bm r_v\, ,
+\end{align}
+则有
+\begin{align}\label{eq:03ex01.20}
+    \mathrm{d}s^2=E\mathrm{d}u^2+2F\mathrm{d}u\mathrm{d}v+G\mathrm{d}v^2\, .
+\end{align}
+该二次形式决定曲面上曲线的弧长。
+设曲线$C$上两点$A(t_0),B(t_1)$，则弧长为
+\begin{align}\label{eq:03ex01.21}
+    s=\int_{t_0}^{t_1}{\frac{\mathrm{d}s}{\mathrm{d}t}\mathrm{d}t}=\int_{t_0}^{t_1}
+    {\sqrt{E\left(\frac{\mathrm{d}u}{\mathrm{d}t}\right)^2+
+        2F\frac{\mathrm{d}u}{\mathrm{d}t}\frac{\mathrm{d}v}{\mathrm{d}t}+
+        G\left(\frac{\mathrm{d}v}{\mathrm{d}t}\right)^2}
+    \mathrm{d}t},\quad t_0<t_1\, .
+\end{align}
+
+\begin{definition}
+    称$I$为曲面$S$的\keyindex{第一基本形式}{the first fundamental form}{}：
+    \begin{align}\label{eq:03ex01.22}
+        I=E\mathrm{d}u^2+2F\mathrm{d}u\mathrm{d}v+G\mathrm{d}v^2\, .
+    \end{align}
+    其中系数
+    \begin{align}\label{eq:03ex01.23}
+        E=\bm r_u\cdot\bm r_u,\quad F=\bm r_u\cdot\bm r_v,\quad G=\bm r_v\cdot\bm r_v
+    \end{align}
+    称为曲面$S$的\keyindex{第一类基本量}{coefficient of the first fundamental form}{}。
+\end{definition}
+
+\begin{corollary}
+    曲面的第一基本形式是正定的，即
+    \begin{align}\label{eq:03ex01.24}
+        E>0,\quad G>0,\quad EG-F^2>0\, .
+    \end{align}
+\end{corollary}

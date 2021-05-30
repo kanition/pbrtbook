@@ -136,9 +136,9 @@ $t$称为曲线的\keyindex{参数}{parameter}{}。
 \end{corollary}
 
 \begin{corollary}
-    曲线$\bm r=\bm r(t)$中从$\bm r(a)$到$\bm r(t)$的弧长是
+    曲线$\bm r=\bm r(t)$中从$\bm r(a)$到$\bm r(t)$的有向弧长是
     \begin{align}\label{eq:03ex01.8}
-        \sigma(t)=\int_a^t{|\bm r'(t)|\mathrm{d}t},\quad t>a\, .
+        \sigma(t)=\int_a^t{|\bm r'(t)|\mathrm{d}t}\, .
     \end{align}
 \end{corollary}
 
@@ -163,8 +163,8 @@ $t$称为曲线的\keyindex{参数}{parameter}{}。
 
 我们假定以后所讨论的曲面都是简单曲面，不另作说明。
 
-给出平面上一初等区域$G$，$G$中的点的笛卡尔坐标是$(u,v)$，
-$G$经过上述映射$f$后的像是曲面$S$。
+给出平面上一初等区域$\mathscr{D}$，$\mathscr{D}$中的点的笛卡尔坐标是$(u,v)$，
+$\mathscr{D}$经过上述映射$f$后的像是曲面$S$。
 对于空间的笛卡尔坐标系来说，$S$上的点的坐标是$(x,y,z)$，
 则可以写出$f$的解析表达式：
 \begin{align}\label{eq:03ex01.9}
@@ -172,7 +172,7 @@ $G$经过上述映射$f$后的像是曲面$S$。
         x=f_1(u,v)\, , \\
         y=f_2(u,v)\, , \\
         z=f_3(u,v)\, ,
-    \end{array}\quad (u,v)\in G\, .
+    \end{array}\quad (u,v)\in \mathscr{D}\, .
 \end{align}
 称\refeq{03ex01.9}为曲面$S$的\keyindex{参数表示}{parametric representation}{}或\keyindex{参数方程}{parametric equation}{}，
 $u$和$v$称为曲面的\keyindex{参数}{parameter}{}或\keyindex{曲纹坐标}{%curvilinear coordinate
@@ -184,15 +184,15 @@ $u$和$v$称为曲面的\keyindex{参数}{parameter}{}或\keyindex{曲纹坐标}
         x=x(u,v)\, , \\
         y=y(u,v)\, , \\
         z=z(u,v)\, ,
-    \end{array}\quad (u,v)\in G\, .
+    \end{array}\quad (u,v)\in \mathscr{D}\, .
 \end{align}
 有时也将其简写称向量函数的形式：
 \begin{align}\label{eq:03ex01.11}
-    \bm r=\bm r(u,v),\quad (u,v)\in G\, .
+    \bm r=\bm r(u,v),\quad (u,v)\in \mathscr{D}\, .
 \end{align}
 
 \begin{definition}
-    初等区域$G$所在平面上的坐标直线$v=$常数或$u=$常数
+    初等区域$\mathscr{D}$所在平面上的坐标直线$v=$常数或$u=$常数
     在曲面上的像称为曲面的\keyindex{坐标曲线}{coordinate curve}{}。
     使$v$等于常数$v_0$而$u$变动时的曲线$\bm r=\bm r(u,v_0)$叫$u$-曲线；
     使$u$等于常数$u_0$而$v$变动时的曲线$\bm r=\bm r(u_0,v)$叫$v$-曲线。
@@ -262,7 +262,7 @@ $\bm r'(t),\bm r_u$和$\bm r_v$共面。
 \end{definition}
 \begin{corollary}
     曲面$\bm r=\bm r(u,v)$的法向量为$\displaystyle\bm N=\bm r_u\times\bm r_v$，
-    单位法向量为$\displaystyle\frac{\bm r_u\times\bm r_v}{|\bm r_u\times\bm r_v|}$。
+    单位法向量$\bm n=\displaystyle\frac{\bm r_u\times\bm r_v}{|\bm r_u\times\bm r_v|}$。
 \end{corollary}
 \begin{corollary}
     曲面$\bm r=\bm r(u,v)$在点$P_0(u_0,v_0)$处的法线方程为
@@ -286,44 +286,156 @@ $\bm r'(t),\bm r_u$和$\bm r_v$共面。
     \end{align}
 \end{corollary}
 
-曲面$S$为$\bm r=\bm r(u,v)$，其上的曲线$C$对应为$u=u(t),v=v(t)$，
-若以$s$表示曲面上曲线的弧长，则有
-\begin{align}\label{eq:03ex01.18}
-    \mathrm{d}s^2=\mathrm{d}\bm r^2=(\bm r_u\mathrm{d}u+\bm r_v\mathrm{d}v)^2=\bm r_u^2\mathrm{d}u^2+2\bm r_u\bm r_v\mathrm{d}u\mathrm{d}v+\bm r_v^2\mathrm{d}v^2\, .
-\end{align}
-令
-\begin{align}\label{eq:03ex01.19}
-    E=\bm r_u\cdot\bm r_u,\quad F=\bm r_u\cdot\bm r_v,\quad G=\bm r_v\cdot\bm r_v\, ,
-\end{align}
-则有
-\begin{align}\label{eq:03ex01.20}
-    \mathrm{d}s^2=E\mathrm{d}u^2+2F\mathrm{d}u\mathrm{d}v+G\mathrm{d}v^2\, .
-\end{align}
-该二次形式决定曲面上曲线的弧长。
-设曲线$C$上两点$A(t_0),B(t_1)$，则弧长为
-\begin{align}\label{eq:03ex01.21}
-    s=\int_{t_0}^{t_1}{\frac{\mathrm{d}s}{\mathrm{d}t}\mathrm{d}t}=\int_{t_0}^{t_1}
-    {\sqrt{E\left(\frac{\mathrm{d}u}{\mathrm{d}t}\right)^2+
-        2F\frac{\mathrm{d}u}{\mathrm{d}t}\frac{\mathrm{d}v}{\mathrm{d}t}+
-        G\left(\frac{\mathrm{d}v}{\mathrm{d}t}\right)^2}
-    \mathrm{d}t},\quad t_0<t_1\, .
-\end{align}
-
 \begin{definition}
-    称$I$为曲面$S$的\keyindex{第一基本形式}{the first fundamental form}{}：
-    \begin{align}\label{eq:03ex01.22}
-        I=E\mathrm{d}u^2+2F\mathrm{d}u\mathrm{d}v+G\mathrm{d}v^2\, .
+    曲面$\bm r=\bm r(u,v)$的\keyindex{第一基本形式}{the first fundamental form}{}：
+    \begin{align}\label{eq:03ex01.18}
+        \uppercase\expandafter{\romannumeral1}=\mathrm{d}\bm r^2=E\mathrm{d}u^2+2F\mathrm{d}u\mathrm{d}v+G\mathrm{d}v^2\, .
     \end{align}
     其中系数
-    \begin{align}\label{eq:03ex01.23}
+    \begin{align}\label{eq:03ex01.19}
         E=\bm r_u\cdot\bm r_u,\quad F=\bm r_u\cdot\bm r_v,\quad G=\bm r_v\cdot\bm r_v
     \end{align}
-    称为曲面$S$的\keyindex{第一类基本量}{coefficient of the first fundamental form}{}。
+    称为曲面的\keyindex{第一类基本量}{the first fundamental form coefficient}{}。
 \end{definition}
 
 \begin{corollary}
     曲面的第一基本形式是正定的，即
-    \begin{align}\label{eq:03ex01.24}
+    \begin{align}\label{eq:03ex01.20}
         E>0,\quad G>0,\quad EG-F^2>0\, .
     \end{align}
 \end{corollary}
+
+\begin{corollary}
+    曲面的第一基本形式决定曲面上曲线的弧长。
+    设曲面上某曲线$C$为$u=u(t),v=v(t)$，
+    则其上两点$A(t_0),B(t_1)$沿$C$的有向弧长为
+    \begin{align}\label{eq:03ex01.21}
+        s=\int_{t_0}^{t_1}{\frac{\mathrm{d}s}{\mathrm{d}t}\mathrm{d}t}=\int_{t_0}^{t_1}
+        {\sqrt{E\left(\frac{\mathrm{d}u}{\mathrm{d}t}\right)^2+
+            2F\frac{\mathrm{d}u}{\mathrm{d}t}\frac{\mathrm{d}v}{\mathrm{d}t}+
+            G\left(\frac{\mathrm{d}v}{\mathrm{d}t}\right)^2}
+        \mathrm{d}t}\, .
+    \end{align}
+\end{corollary}
+
+\begin{corollary}
+    曲面的第一基本形式决定曲面的面积。
+    曲面$\bm r=\bm r(u,v)$上的曲面域$D$对应的$(u,v)$平面区域为$\mathscr{D}$，
+    则$D$是面积为
+    \begin{align}\label{eq:03ex01.22}
+        \sigma=\iint\limits_{\mathscr{D}}{|\bm r_u\times\bm r_v|\mathrm{d}u\mathrm{d}v}=\iint\limits_{\mathscr{D}}{\sqrt{EG-F^2}\mathrm{d}u\mathrm{d}v}\, .
+    \end{align}
+\end{corollary}
+
+\begin{definition}
+    $C^2$类曲面$\bm r=\bm r(u,v)$中$\bm r(u,v)$有连续的二阶导函数$\bm r_{uu},\bm r_{uv},\bm r_{vv}$，
+    单位法向量为$\bm n$，则该曲面的\keyindex{第二基本形式}{the second fundamental form}{}为
+    \begin{align}\label{eq:03ex01.23}
+        \uppercase\expandafter{\romannumeral2}=\bm n\cdot\mathrm{d}^2\bm r=-\mathrm{d}\bm n\cdot\mathrm{d}\bm r=L\mathrm{d}u^2+2M\mathrm{d}u\mathrm{d}v+N\mathrm{d}v^2\, ,
+    \end{align}
+    其中系数
+    \begin{align}\label{eq:03ex01.24}
+        L & =\bm r_{uu}\cdot\bm n=-\bm r_u\cdot\bm n_u,                      \\
+        M & =\bm r_{uv}\cdot\bm n=-\bm r_u\cdot\bm n_v=-\bm r_v\cdot\bm n_u, \\
+        N & =\bm r_{vv}\cdot\bm n=-\bm r_v\cdot\bm n_v\,
+    \end{align}
+    称为曲面的\keyindex{第二类基本量}{the second fundamental form coefficient}{}。
+\end{definition}
+
+曲面的第二基本形式近似等于曲面与切平面的有向距离的两倍，刻画了曲面在空间中的弯曲性。
+当曲面在给定点向$\bm n$的正侧弯曲时为正，反之为负。
+
+\subsection{曲面的基本方程}\label{sub:曲面的基本方程}
+\begin{notation}
+    为了让式子更简洁规律，本小节采用新的符号来表示之前的量：
+    \begin{align*}%\label{eq:03ex01.25}
+        \bm u^1    & =\bm u,      & \bm u^2    & =v,          & \bm r_1    & =\bm r_u,    & \bm r_2         & =\bm r_v,                                                                                       \\
+        \bm r_{11} & =\bm r_{uu}, & \bm r_{22} & =\bm r_{vv}, & \bm r_{12} & =\bm r_{uv}, & \bm r_{21}      & =\bm r_{vu},                                                                                    \\
+        g_{11}     & =E,          & g_{22}     & =G,          & g_{12}     & =g_{21}=F,   & g               & =EG-F^2=\left|\begin{array}{cc}g_{11}&g_{12}\\ g_{21}&g_{22}\end{array}\right|,                                                \\
+        L_{11}     & =L,          & L_{22}     & =N,          & L_{12}     & =L_{21}=M,   & \sum\limits_{i} & =\sum\limits_{i=1}^{2},\quad \sum\limits_{i,j}=\sum\limits_{i=1}^{2}{\sum\limits_{j=1}^{2}}\, .
+    \end{align*}
+\end{notation}
+
+对于一个$C^3$类曲面$S$即$\bm r=\bm r(u^1,u^2)$（这里$u^2$中2是上标，不是平方），它确定了向量
+\begin{align}\label{eq:03ex01.26}
+    \bm r_1=\frac{\partial \bm r}{\partial u^1}, \quad \bm r_2=\frac{\partial \bm r}{\partial u^2}, \quad \bm n=\frac{\bm r_1\times\bm r_2}{\sqrt{g}}\, .
+\end{align}
+对这三个向量再求导，并且命
+\begin{align}\label{eq:03ex01.27}
+    \left\{\begin{array}{l}
+        \displaystyle\bm r_{ij}=\lambda_{ij}\bm n+\sum\limits_{k}{\varGamma_{ij}^k\bm r_k}, \\
+        \displaystyle\bm n_i=\sum\limits_{j}{\mu_i^j\bm r_j},
+    \end{array}\right.\quad i,j=1,2\, .
+\end{align}
+其中$\varGamma_{ij}^k,\lambda_{ij},\mu_i^j$为待定系数，$i,j,k=1,2$为上下标。
+
+注意到$\bm r_k\cdot\bm n=0$且$\bm r_{ij}\cdot\bm n=L_{ij}$，
+于是\refeq{03ex01.27}第一式两边点乘$\bm n$得
+\begin{align}\label{eq:03ex01.28}
+    \lambda_{ij}=\bm r_{ij}\cdot\bm n=L_{ij}\, .
+\end{align}
+注意到$g_{ij}=\bm r_i\cdot\bm r_j$，对它们求导得
+\begin{align}\label{eq:03ex01.29}
+    \frac{\partial g_{ij}}{\partial u^l}=\bm r_{il}\cdot\bm r_{j}+\bm r_{i}\cdot\bm r_{jl}\, .
+\end{align}
+由于$\bm r_{ij}=\bm r_{ji}$且$g_{ij}=g_{ji}$，所以有
+\begin{align}\label{eq:03ex01.30}
+    \frac{1}{2}\left(\frac{\partial g_{il}}{\partial u^j}+\frac{\partial g_{jl}}{\partial u^i}-\frac{\partial g_{ij}}{\partial u^l}\right)=\bm r_{ij}\cdot\bm r_l=\sum\limits_{k}{\varGamma_{ij}^k g_{kl}}, \quad i,j,l=1,2\, .
+\end{align}
+记$[g_{ij}]_{2\times2}$的逆矩阵为$[g^{ij}]_{2\times2}$，即
+\begin{align}\label{eq:03ex01.31}
+    \sum\limits_{k}{g^{ik}g_{kj}}=\left\{\begin{array}{ll}
+        1, & \text{if}\quad i=j,     \\
+        0, & \text{if}\quad i\neq j,
+    \end{array}\right.\quad i,j=2\, .
+\end{align}
+于是从\refeq{03ex01.30}可解得系数$\varGamma_{ij}^k$为
+\begin{align}\label{eq:03ex01.32}
+    \varGamma_{ij}^k=\frac{1}{2}\sum\limits_{l}{g^{lk}\left(\frac{\partial g_{il}}{\partial u^j}+\frac{\partial g_{jl}}{\partial u^i}-\frac{\partial g_{ij}}{\partial u^l}\right)},\quad i,j,k=1,2\, .
+\end{align}
+对于\refeq{03ex01.27}第二式，两边点乘$\bm r_k$得
+\begin{align}\label{eq:03ex01.33}
+    \bm n_i\cdot\bm r_k=-\bm r_{ik}\cdot\bm n=-L_{ik}=\sum\limits_{j}{\mu_i^j g_{jk}}, \quad i,k=1,2\, .
+\end{align}
+因此
+\begin{align}\label{eq:03ex01.34}
+    \mu_i^j=-\sum\limits_{k}{L_{ik}g^{kj}},\quad i,j=1,2\, .
+\end{align}
+于是我们得到$\bm r_1,\bm r_2$和$\bm n$的导向量为
+\begin{theorem}
+    \begin{align}\label{eq:03ex01.35}
+        \left\{\begin{array}{l}
+            \displaystyle\bm r_{ij}=L_{ij}\bm n+\sum\limits_{k}{\varGamma_{ij}^k\bm r_k}, \\
+            \displaystyle\bm n_i=-\sum\limits_{j,k}{L_{ik}g^{kj}\bm r_j},
+        \end{array}\right.\quad i,j=1,2\, ,
+    \end{align}
+    上式称为\keyindex{曲面的基本方程}{}{}，
+    其中第一式称为\keyindex{高斯方程}{Gauss equation}{}，
+    第二式子称为\keyindex{Weingarten方程}{Weingarten equation}{}，
+    系数
+    \begin{align}\label{eq:03ex01.36}
+        \varGamma_{ij}^k=\frac{1}{2}\sum\limits_{l}{g^{lk}\left(\frac{\partial g_{il}}{\partial u^j}+\frac{\partial g_{jl}}{\partial u^i}-\frac{\partial g_{ij}}{\partial u^l}\right)},\quad i,j,k=1,2
+    \end{align}
+    称为\keyindex{第二类Christoffel符号}{Christoffel symbol of the second kind}{}。
+\end{theorem}
+\begin{notation}
+    将曲面的基本方程中的系数用旧记号表示得
+    \begin{align*}
+        E_u              & =\frac{\partial E}{\partial u},      &
+        E_v              & =\frac{\partial E}{\partial v},        \\
+        F_u              & =\frac{\partial F}{\partial u},      &
+        F_v              & =\frac{\partial F}{\partial v},        \\
+        G_u              & =\frac{\partial G}{\partial u},      &
+        G_v              & =\frac{\partial G}{\partial v},        \\
+        \varGamma_{11}^1 & =\frac{GE_u-F(2F_u-E_v)}{2(EG-F^2)}, &
+        \varGamma_{11}^2 & =\frac{E(2F_u-E_v)-FE_u}{2(EG-F^2)},   \\
+        \varGamma_{12}^1 & =\frac{GE_v-FG_u}{2(EG-F^2)},        &
+        \varGamma_{12}^2 & =\frac{EG_u-FE_v}{2(EG-F^2)},          \\
+        \varGamma_{22}^1 & =\frac{G(2F_v-G_u)-FG_v}{2(EG-F^2)}, &
+        \varGamma_{22}^2 & =\frac{EG_v-F(2F_v-G_u)}{2(EG-F^2)},   \\
+        \mu_1^1          & =\frac{-LG+MF}{EG-F^2},              &
+        \mu_1^2          & =\frac{LF-ME}{EG-F^2},                 \\
+        \mu_2^1          & =\frac{NF-MG}{EG-F^2},               &
+        \mu_2^2          & =\frac{-NE+MF}{EG-F^2}\, .
+    \end{align*}
+\end{notation}

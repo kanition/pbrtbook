@@ -85,3 +85,99 @@ const `\refvar{Float}{}` `\initvar[Cylinder::radius]{radius}{}`, `\initvar[Cylin
 `\refvar{EFloat}{}` b = 2 * (dx * ox + dy * oy);
 `\refvar{EFloat}{}` c = ox * ox + oy * oy - `\refvar{EFloat}{}`(`\refvar[Cylinder::radius]{radius}{}`) * `\refvar{EFloat}{}`(`\refvar[Cylinder::radius]{radius}{}`);
 \end{lstlisting}
+
+所有二次曲面形状求解二次方程的过程都一样，
+所以下面会复用来自\refvar{Sphere}{}
+相交方法的一些代码片。
+\begin{lstlisting}
+`\refcode{Cylinder Method Definitions}{+=}\lastnext{CylinderMethodDefinitions}`
+bool `\refvar{Cylinder}{}`::`\initvar[Cylinder::Intersect]{\refvar[Shape::Intersect]{Intersect}{}}{}`(const `\refvar{Ray}{}` &r, `\refvar{EFloat}{}` *tHit,
+        `\refvar{SurfaceInteraction}{}` *isect, bool testAlphaTexture) const {
+    `\refvar{Float}{}` phi;
+    `\refvar{Point3f}{}` pHit;
+    `\refcode{Transform Ray to object space}{}`
+    `\refcode{Compute quadratic cylinder coefficients}{}`
+    `\refcode{Solve quadratic equation for t values}{}`
+    `\refcode{Compute cylinder hit point and $\varphi$}{}`
+    `\refcode{Test cylinder intersection against clipping parameters}{}`
+    `\refcode{Find parametric representation of cylinder hit}{}`
+    `\refcode{Compute error bounds for cylinder intersection}{}`
+    `\refcode{Initialize SurfaceInteraction from parametric information}{}`
+    `\refcode{Update tHit for quadric intersection}{}`
+    return true;
+}
+\end{lstlisting}
+
+像球体那样，这里的实现改进了计算的交点
+以降低在计算射线方程中累积舍入误差的影响；见\refsub{定界交点误差}。
+于是我们由圆柱体的参数化描述从$x$和$y$反解出$\varphi$；
+最后所得结果与球体相同。
+\begin{lstlisting}
+`\initcode{Compute cylinder hit point and $\varphi$}{=}`
+pHit = ray((`\refvar{Float}{}`)tShapeHit);
+`\refcode{Refine cylinder intersection point}{}`
+phi = std::atan2(pHit.y, pHit.x);
+if (phi < 0) phi += 2 * `\refvar{Pi}{}`;
+\end{lstlisting}
+
+相交方法下一部分保证命中点在指定$z$范围内且能接受角度$\varphi$。
+否则它就拒绝该命中点，并在之前还没尝试的前提下检查$t_1$——这和
+\refvar{Sphere::Intersect}{()}
+中的条件逻辑很像。
+\begin{lstlisting}
+`\initcode{Test cylinder intersection against clipping parameters}{=}`
+if (pHit.z < `\refvar[Cylinder::zMin]{zMin}{}` || pHit.z > `\refvar[Cylinder::zMax]{zMax}{}` || phi > `\refvar[Cylinder::phiMax]{phiMax}{}`) {
+    if (tShapeHit == t1) return false;
+    tShapeHit = t1;
+    if (t1.`\refvar{UpperBound}{}`() > ray.`\refvar{tMax}{}`) return false;
+    `\refcode{Compute cylinder hit point and $\varphi$}{}`
+    if (pHit.z < `\refvar[Cylinder::zMin]{zMin}{}` || pHit.z > `\refvar[Cylinder::zMax]{zMax}{}` || phi > `\refvar[Cylinder::phiMax]{phiMax}{}`)
+        return false;
+}
+\end{lstlisting}
+
+再次将$\varphi$缩放到0到1计算$u$值。
+直接反解圆柱体参数方程的$z$值求得$v$参数坐标。
+\begin{lstlisting}
+`\initcode{Find parametric representation of cylinder hit}{=}`
+`\refvar{Float}{}` u = phi / `\refvar[Cylinder::phiMax]{phiMax}{}`;
+`\refvar{Float}{}` v = (pHit.z - `\refvar[Cylinder::zMin]{zMin}{}`) / (`\refvar[Cylinder::zMax]{zMax}{}` - `\refvar[Cylinder::zMin]{zMin}{}`);
+`\refcode{Compute cylinder $\partial$p/$\partial$u and $\partial$p/$\partial$v}{}`
+`\refcode{Compute cylinder $\partial$n/$\partial$u and $\partial$n/$\partial$v}{}`
+\end{lstlisting}
+
+圆柱体的偏导数很容易推导：
+\begin{align*}
+    \frac{\partial\bm p}{\partial u} & =(-\varphi_{\max}y,\varphi_{\max}x,0)\, , \\
+    \frac{\partial\bm p}{\partial v} & =(0,0,z_{\max}-z_{\min})\, .
+\end{align*}
+\begin{lstlisting}
+`\initcode{Compute cylinder $\partial$p/$\partial$u and $\partial$p/$\partial$v}{=}`
+`\refvar{Vector3f}{}` dpdu(-`\refvar[Cylinder::phiMax]{phiMax}{}` * pHit.y, `\refvar[Cylinder::phiMax]{phiMax}{}` * pHit.x, 0);
+`\refvar{Vector3f}{}` dpdv(0, 0, `\refvar[Cylinder::zMax]{zMax}{}` - `\refvar[Cylinder::zMin]{zMin}{}`);
+\end{lstlisting}
+
+我们又用Weingarten方程计算圆柱法线的参数化偏导数。
+相关偏导数为：
+\begin{align*}
+    \frac{\partial^2\bm p}{\partial u^2}         & =-\varphi_{\max}^2(x,y,0)\, , \\
+    \frac{\partial^2\bm p}{\partial u\partial v} & =(0,0,0)\, ,                  \\
+    \frac{\partial^2\bm p}{\partial v^2}         & =(0,0,0)\, .
+\end{align*}
+\begin{lstlisting}
+`\initcode{Compute cylinder $\partial$n/$\partial$u and $\partial$n/$\partial$v}{=}`
+`\refvar{Vector3f}{}` d2Pduu = -`\refvar[Cylinder::phiMax]{phiMax}{}` * `\refvar[Cylinder::phiMax]{phiMax}{}` * `\refvar{Vector3f}{}`(pHit.x, pHit.y, 0);
+`\refvar{Vector3f}{}` d2Pduv(0, 0, 0), d2Pdvv(0, 0, 0);
+`\refcode{Compute coefficients for fundamental forms}{}`
+`\refcode{Compute $\partial$n/$\partial$u and $\partial$n/$\partial$v from fundamental form coefficients}{}`
+\end{lstlisting}
+
+\subsection{表面积}\label{sub:表面积3}
+圆柱体就是卷起来的矩形。如果你展开矩形，
+其高是$z_{\max}-z_{\min}$，宽是$r\varphi_{\max}$：
+\begin{lstlisting}
+`\refcode{Cylinder Method Definitions}{+=}\lastnext{CylinderMethodDefinitions}`
+`\refvar{Float}{}` `\refvar{Cylinder}{}`::`\initvar[Cylinder::Area]{\refvar[Shape::Area]{Area}{}}{}`() const {
+    return (`\refvar[Cylinder::zMax]{zMax}{}` - `\refvar[Cylinder::zMin]{zMin}{}`) * `\refvar[Cylinder::radius]{radius}{}` * `\refvar[Cylinder::phiMax]{phiMax}{}`;
+}
+\end{lstlisting}

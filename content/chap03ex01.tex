@@ -124,8 +124,8 @@ $t$称为曲线的\keyindex{参数}{parameter}{}。
 \end{corollary}
 
 \begin{definition}
-    经过切点而垂直于切线的平面称为
-    曲线的\keyindex{法平面}{normal plane}{}或\keyindex{法面}{}{normal plane法平面}。
+    过切点垂直于切线的平面称为
+    曲线的\keyindex{法平面}{normal plane}{}。
 \end{definition}
 
 \begin{corollary}
@@ -146,7 +146,7 @@ $t$称为曲线的\keyindex{参数}{parameter}{}。
 \begin{definition}
     平面上不自交的简单\keyindex{闭曲线}{closed curve}{curve曲线}称为\keyindex{若尔当曲线}{Jordan curve}{curve曲线}。
     它将平面分为两个都以该曲线为边界的部分，其中一个是有限的，另一个是无限的；
-    有限的区域称为\keyindex{初等区域}{}{}，即若尔当曲线的内部。
+    有限的区域称为\keyindex{初等区域}{}{curve曲线}，即若尔当曲线的内部。
 \end{definition}
 \begin{example}
     正方形或矩形内部，圆或椭圆内部都是初等区域。
@@ -176,7 +176,7 @@ $\mathscr{D}$经过上述映射$f$后的像是曲面$S$。
 \end{align}
 称\refeq{03ex01.9}为曲面$S$的\keyindex{参数表示}{parametric representation}{}或\keyindex{参数方程}{parametric equation}{}，
 $u$和$v$称为曲面的\keyindex{参数}{parameter}{}或\keyindex{曲纹坐标}{%curvilinear coordinate
-}{}。
+}{coordinate坐标}。
 
 习惯上常把\refeq{03ex01.9}中的函数关系符号$f_1,f_2$和$f_3$分别写成$x,y$和$z$，即
 \begin{align}\label{eq:03ex01.10}
@@ -196,7 +196,7 @@ $u$和$v$称为曲面的\keyindex{参数}{parameter}{}或\keyindex{曲纹坐标}
     在曲面上的像称为曲面的\keyindex{坐标曲线}{coordinate curve}{}。
     使$v$等于常数$v_0$而$u$变动时的曲线$\bm r=\bm r(u,v_0)$叫$u$-曲线；
     使$u$等于常数$u_0$而$v$变动时的曲线$\bm r=\bm r(u_0,v)$叫$v$-曲线。
-    这两族坐标曲线在曲面上构成的坐标网称为曲面上的\keyindex{曲纹坐标网}{}{}。
+    这两族坐标曲线在曲面上构成的坐标网称为曲面上的\keyindex{曲纹坐标网}{}{coordinate坐标}。
 \end{definition}
 
 \begin{definition}
@@ -287,7 +287,7 @@ $\bm r'(t),\bm r_u$和$\bm r_v$共面。
 \end{corollary}
 
 \begin{definition}
-    曲面$\bm r=\bm r(u,v)$的\keyindex{第一基本形式}{the first fundamental form}{}：
+    曲面$\bm r=\bm r(u,v)$的\keyindex{第一基本形式}{the first fundamental form}{}为
     \begin{align}\label{eq:03ex01.18}
         \uppercase\expandafter{\romannumeral1}=\mathrm{d}\bm r^2=E\mathrm{d}u^2+2F\mathrm{d}u\mathrm{d}v+G\mathrm{d}v^2\, .
     \end{align}
@@ -401,17 +401,18 @@ $\bm r'(t),\bm r_u$和$\bm r_v$共面。
 \begin{align}\label{eq:03ex01.34}
     \mu_i^j=-\sum\limits_{k}{L_{ik}g^{kj}},\quad i,j=1,2\, .
 \end{align}
-于是我们得到$\bm r_1,\bm r_2$和$\bm n$的导向量为
+于是我们得到了$\bm r_1,\bm r_2$和$\bm n$的导向量。
 \begin{theorem}
+    $C^3$类曲面$S$有
     \begin{align}\label{eq:03ex01.35}
         \left\{\begin{array}{l}
             \displaystyle\bm r_{ij}=L_{ij}\bm n+\sum\limits_{k}{\varGamma_{ij}^k\bm r_k}, \\
             \displaystyle\bm n_i=-\sum\limits_{j,k}{L_{ik}g^{kj}\bm r_j},
         \end{array}\right.\quad i,j=1,2\, ,
     \end{align}
-    上式称为\keyindex{曲面的基本方程}{}{}，
+    上式称为\keyindex{曲面的基本方程}{}{surface曲面}，
     其中第一式称为\keyindex{高斯方程}{Gauss equation}{}，
-    第二式子称为\keyindex{Weingarten方程}{Weingarten equation}{}，
+    第二式称为\keyindex{Weingarten方程}{Weingarten equation}{}，
     系数
     \begin{align}\label{eq:03ex01.36}
         \varGamma_{ij}^k=\frac{1}{2}\sum\limits_{l}{g^{lk}\left(\frac{\partial g_{il}}{\partial u^j}+\frac{\partial g_{jl}}{\partial u^i}-\frac{\partial g_{ij}}{\partial u^l}\right)},\quad i,j,k=1,2
@@ -419,23 +420,27 @@ $\bm r'(t),\bm r_u$和$\bm r_v$共面。
     称为\keyindex{第二类Christoffel符号}{Christoffel symbol of the second kind}{}。
 \end{theorem}
 \begin{notation}
-    将曲面的基本方程中的系数用旧记号表示得
+    将曲面基本方程中的新记号用旧记号表示：
     \begin{align*}
-        E_u              & =\frac{\partial E}{\partial u},      &
-        E_v              & =\frac{\partial E}{\partial v},        \\
-        F_u              & =\frac{\partial F}{\partial u},      &
-        F_v              & =\frac{\partial F}{\partial v},        \\
-        G_u              & =\frac{\partial G}{\partial u},      &
-        G_v              & =\frac{\partial G}{\partial v},        \\
-        \varGamma_{11}^1 & =\frac{GE_u-F(2F_u-E_v)}{2(EG-F^2)}, &
-        \varGamma_{11}^2 & =\frac{E(2F_u-E_v)-FE_u}{2(EG-F^2)},   \\
-        \varGamma_{12}^1 & =\frac{GE_v-FG_u}{2(EG-F^2)},        &
-        \varGamma_{12}^2 & =\frac{EG_u-FE_v}{2(EG-F^2)},          \\
-        \varGamma_{22}^1 & =\frac{G(2F_v-G_u)-FG_v}{2(EG-F^2)}, &
-        \varGamma_{22}^2 & =\frac{EG_v-F(2F_v-G_u)}{2(EG-F^2)},   \\
-        \mu_1^1          & =\frac{-LG+MF}{EG-F^2},              &
-        \mu_1^2          & =\frac{LF-ME}{EG-F^2},                 \\
-        \mu_2^1          & =\frac{NF-MG}{EG-F^2},               &
-        \mu_2^2          & =\frac{-NE+MF}{EG-F^2}\, .
+        g^{11}                               & =\frac{G}{EG-F^2},                                                       &
+        g^{22}                               & =\frac{E}{EG-F^2},                                                         \\
+        g^{12}                               & =\frac{-F}{EG-F^2},                                                      &
+        g^{21}                               & =\frac{-F}{EG-F^2},                                                        \\
+        \frac{\partial g_{11}}{\partial u^1} & =\frac{\partial E}{\partial u}=E_u,                                      &
+        \frac{\partial g_{11}}{\partial u^2} & =\frac{\partial E}{\partial v}=E_v,                                        \\
+        \frac{\partial g_{22}}{\partial u^1} & =\frac{\partial G}{\partial u}=G_u,                                      &
+        \frac{\partial g_{22}}{\partial u^2} & =\frac{\partial G}{\partial v}=G_v,                                        \\
+        \frac{\partial g_{12}}{\partial u^1} & =\frac{\partial g_{21}}{\partial u^1}=\frac{\partial F}{\partial u}=F_u, &
+        \frac{\partial g_{12}}{\partial u^2} & =\frac{\partial g_{21}}{\partial u^2}=\frac{\partial F}{\partial v}=F_v,   \\
+        \varGamma_{11}^1                     & =\frac{GE_u-F(2F_u-E_v)}{2(EG-F^2)},                                     &
+        \varGamma_{11}^2                     & =\frac{E(2F_u-E_v)-FE_u}{2(EG-F^2)},                                       \\
+        \varGamma_{12}^1                     & =\frac{GE_v-FG_u}{2(EG-F^2)},                                            &
+        \varGamma_{12}^2                     & =\frac{EG_u-FE_v}{2(EG-F^2)},                                              \\
+        \varGamma_{22}^1                     & =\frac{G(2F_v-G_u)-FG_v}{2(EG-F^2)},                                     &
+        \varGamma_{22}^2                     & =\frac{EG_v-F(2F_v-G_u)}{2(EG-F^2)},                                       \\
+        \mu_1^1                              & =\frac{-LG+MF}{EG-F^2},                                                  &
+        \mu_1^2                              & =\frac{LF-ME}{EG-F^2},                                                     \\
+        \mu_2^1                              & =\frac{NF-MG}{EG-F^2},                                                   &
+        \mu_2^2                              & =\frac{-NE+MF}{EG-F^2}\, .
     \end{align*}
 \end{notation}

@@ -1,3 +1,87 @@
 \section{圆柱体}\label{sec:圆柱体}
 
-另一个有用的二次曲面是keyindex{圆柱体}{cylinder}{}。
+另一个有用的二次曲面是\keyindex{圆柱体}{cylinder}{}；
+pbrt提供以$z$轴为中心的圆柱体\refvar{Shape}{}。
+实现在文件\href{https://github.com/mmp/pbrt-v3/tree/master/src/shapes/cylinder.h}{\ttfamily shapes/cylinder.h}和
+\href{https://github.com/mmp/pbrt-v3/tree/master/src/shapes/cylinder.cpp}{\ttfamily shapes/cylinder.cpp}内。
+用户为圆柱体提供最小和最大$z$值，以及半径和最大扫掠值$\varphi$（\reffig{3.6}）。
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap03/Cylindersetting.tex}
+    \caption{圆柱体形状基本设置。它半径为$r$并沿$z$轴覆盖一定范围。
+        通过指定最大值$\varphi$可扫掠出部分圆柱体。}
+    \label{fig:3.6}
+\end{figure}
+\begin{lstlisting}
+`\initcode{Cylinder Declarations}{=}`
+class `\initvar{Cylinder}{}` : public `\refvar{Shape}{}` {
+public:
+    `\refcode{Cylinder Public Methods}{}`
+protected:
+    `\refcode{Cylinder Private Data}{}`
+};
+\end{lstlisting}
+
+参数形式下，圆柱体由下列方程描述：
+\begin{align*}
+    \varphi & =u\varphi_{\max}\, ,               \\
+    x       & =r\cos\varphi\, ,                  \\
+    y       & =r\sin\varphi\, ,                  \\
+    z       & =z_{\min}+v(z_{\max}-z_{\min})\, .
+\end{align*}
+
+\reffig{3.7}展示了两个圆柱体的渲染图像。像球体图像那样，
+左边圆柱体是完整圆柱体，右边是部分圆柱体，因为它的$\varphi_{\max}$值小于$2\pi$。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=\linewidth]{chap03/twocylinders.png}
+    \caption{两个圆柱体。左边是完整圆柱体，右边是部分圆柱体。}
+    \label{fig:3.7}
+\end{figure}
+
+\begin{lstlisting}
+`\initcode{Cylinder Public Methods}{=}`
+`\refvar{Cylinder}{}`(const `\refvar{Transform}{}` *ObjectToWorld, const `\refvar{Transform}{}` *WorldToObject,
+         bool reverseOrientation, `\refvar{Float}{}` radius, `\refvar{Float}{}` zMin, `\refvar{Float}{}` zMax,
+         `\refvar{Float}{}` phiMax)
+    : `\refvar{Shape}{}`(ObjectToWorld, WorldToObject, reverseOrientation),
+      `\refvar[Cylinder::radius]{radius}{}`(radius), `\refvar[Cylinder::zMin]{zMin}{}`(std::min(zMin, zMax)),
+      `\refvar[Cylinder::zMax]{zMax}{}`(std::max(zMin, zMax)),
+      `\refvar[Cylinder::phiMax]{phiMax}{}`(`\refvar{Radians}{}`(`\refvar{Clamp}{}`(phiMax, 0, 360))) { }
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{Cylinder Private Data}{=}`
+const `\refvar{Float}{}` `\initvar[Cylinder::radius]{radius}{}`, `\initvar[Cylinder::zMin]{zMin}{}`, `\initvar[Cylinder::zMax]{zMax}{}`, `\initvar[Cylinder::phiMax]{phiMax}{}`;
+\end{lstlisting}
+
+\subsection{边界}\label{sub:边界3}
+像球那样，圆柱体边界方法用$z$的范围计算保守边界框但不考虑最大的$\varphi$。
+\begin{lstlisting}
+`\initcode{Cylinder Method Definitions}{=}\initnext{CylinderMethodDefinitions}`
+`\refvar{Bounds3f}{}` `\refvar{Cylinder}{}`::`\initvar[Cylinder::ObjectBound]{\refvar{ObjectBound}{}}{}`() const {
+    return `\refvar{Bounds3f}{}`(`\refvar{Point3f}{}`(-`\refvar[Cylinder::radius]{radius}{}`, -`\refvar[Cylinder::radius]{radius}{}`, `\refvar[Cylinder::zMin]{zMin}{}`),
+                    `\refvar{Point3f}{}`( `\refvar[Cylinder::radius]{radius}{}`,  `\refvar[Cylinder::radius]{radius}{}`, `\refvar[Cylinder::zMax]{zMax}{}`));
+}
+\end{lstlisting}
+
+\subsection{相交测试}\label{sub:相交测试3}
+光线-圆柱体相交公式可以通过把射线方程代入圆柱体的隐式方程得到，和球体的情况一样。
+以$z$轴为中心$r$为半径的无限长圆柱体的隐式方程为
+\begin{align*}
+    x^2+y^2-r^2=0\, .
+\end{align*}
+代入射线方程\refeq{2.3}，我们有
+\begin{align*}
+    (o_x+td_x)^2+(o_y+td_y)^2=r^2\, .
+\end{align*}
+我们将其展开并求二次式方程$at^2+bt+c=0$的系数得
+\begin{align*}
+    a & =d_x^2+d_y^2\, ,      \\
+    b & =2(d_xo_x+d_yo_y)\, , \\
+    c & =o_x^2+o_y^2-r^2\, .
+\end{align*}
+\begin{lstlisting}
+`\initcode{Compute quadratic cylinder coefficients}{=}`
+`\refcode{Initialize EFloat ray coordinate values}{}`
+`\refvar{EFloat}{}` a = dx * dx + dy * dy;
+`\refvar{EFloat}{}` b = 2 * (dx * ox + dy * oy);
+`\refvar{EFloat}{}` c = ox * ox + oy * oy - `\refvar{EFloat}{}`(`\refvar[Cylinder::radius]{radius}{}`) * `\refvar{EFloat}{}`(`\refvar[Cylinder::radius]{radius}{}`);
+\end{lstlisting}

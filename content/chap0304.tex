@@ -51,3 +51,121 @@ private:
 `\initcode{Disk Private Data}{=}`
 const `\refvar{Float}{}` `\initvar[Disk::height]{height}{}`, `\initvar[Disk::radius]{radius}{}`, `\initvar[Disk::innerRadius]{innerRadius}{}`, `\initvar[Disk::phiMax]{phiMax}{}`;
 \end{lstlisting}
+
+\subsection{边界}\label{sub:边界4}
+边界方法非常简单；
+它计算的边界框的中心沿$z$轴高度为$h$，
+$x$和$y$方向边长都为\refvar[Disk::radius]{radius}{}。
+\begin{lstlisting}
+`\initcode{Disk Method Definitions}{=}\initnext{DiskMethodDefinitions}`
+`\refvar{Bounds3f}{}` `\refvar{Disk}{}`::`\initvar[Disk::ObjectBound]{\refvar{ObjectBound}{}}{}`() const {
+    return `\refvar{Bounds3f}{}`(`\refvar{Point3f}{}`(-`\refvar[Disk::radius]{radius}{}`, -`\refvar[Disk::radius]{radius}{}`, `\refvar[Disk::height]{height}{}`),
+                    `\refvar{Point3f}{}`( `\refvar[Disk::radius]{radius}{}`,  `\refvar[Disk::radius]{radius}{}`, `\refvar[Disk::height]{height}{}`));
+}
+\end{lstlisting}
+
+\subsection{相交测试}\label{sub:相交测试4}
+射线与圆盘相交也很简单。射线与圆盘所在平面$z=h$相交，再检查交点是否在圆盘内。
+\begin{lstlisting}
+`\refcode{Disk Method Definitions}{+=}\lastnext{DiskMethodDefinitions}`
+bool `\refvar{Disk}{}`::`\initvar[Disk::Intersect]{\refvar[Shape::Intersect]{Intersect}{}}{}`(const `\refvar{Ray}{}` &r, `\refvar{Float}{}` *tHit,
+        `\refvar{SurfaceInteraction}{}` *isect, bool testAlphaTexture) const {
+    `\refcode{Transform Ray to object space}{}`
+    `\refcode{Compute plane intersection for disk}{}`
+    `\refcode{See if hit point is inside disk radii and $\varphi$max}{}`
+    `\refcode{Find parametric representation of disk hit}{}`
+    `\refcode{Refine disk intersection point}{}`
+    `\refcode{Compute error bounds for disk intersection}{}`
+    `\refcode{Initialize SurfaceInteraction from parametric information}{}`
+    `\refcode{Update tHit for quadric intersection}{}`
+    return true;
+}
+\end{lstlisting}
+
+第一步是计算射线与圆盘所在平面相交处的参数$t$值。
+我们想求得射线位置$z$分量等于圆盘高度时的$t$。因此
+\begin{align*}
+    h=o_z+td_z\, ,
+\end{align*}
+即
+\begin{align*}
+    t=\frac{h-o_z}{d_z}\, .
+\end{align*}
+
+相交方法算出$t$值并检查它是否在合法值范围{\ttfamily (0, \refvar{tMax}{})}内。
+如果不在，例程就返回{\ttfamily false}。
+\begin{lstlisting}
+`\initcode{Compute plane intersection for disk}{=}`
+`\refcode{Reject disk intersections for rays parallel to the disk's plane}{}`
+`\refvar{Float}{}` tShapeHit = (`\refvar[Disk::height]{height}{}` - ray.o.z) / ray.d.z;
+if (tShapeHit <= 0 || tShapeHit >= ray.`\refvar{tMax}{}`)
+    return false;
+\end{lstlisting}
+
+如果射线平行于圆盘平面（即它的$z$分量为0），则报告不相交。
+射线平行于圆盘平面且在该平面内的情况有些模棱两可，
+但把和圆盘边缘相交定义为“不相交”是最合理的。
+必须明确处理该情况以避免下列代码生成NaN浮点值。
+\begin{lstlisting}
+`\initcode{Reject disk intersections for rays parallel to the disk's plane}{=}`
+if (ray.d.z == 0)
+    return false;
+\end{lstlisting}
+
+现在相交方法可以计算射线与平面相交的点{\ttfamily pHit}了。
+知道平面相交处后，如果从命中点到圆盘中心的距离
+大于\refvar{Disk::radius}{}或小于\refvar{Disk::innerRadius}{}
+则返回{\ttfamily false}。
+该过程可以利用中心点{\ttfamily (0,0,\refvar[Disk::height]{height}{})}的$x$和$y$坐标是零，
+{\ttfamily pHit}的$z$分量等于\refvar[Disk::height]{height}{}的事实，
+通过实际计算到中心的平方距离来优化。
+\begin{lstlisting}
+`\initcode{See if hit point is inside disk radii and $\varphi$max}{=}`
+`\refvar{Point3f}{}` pHit = ray(tShapeHit);
+`\refvar{Float}{}` dist2 = pHit.x * pHit.x + pHit.y * pHit.y;
+if (dist2 > `\refvar[Disk::radius]{radius}{}` * `\refvar[Disk::radius]{radius}{}` || dist2 < `\refvar[Disk::innerRadius]{innerRadius}{}` * `\refvar[Disk::innerRadius]{innerRadius}{}`)
+    return false;
+`\refcode{Test disk $\varphi$ value against $\varphi$max}{}`
+\end{lstlisting}
+
+如果距离检查通过，则最终测试保证命中点的$\varphi$值
+在零到调用者指定的$\varphi_{\max}$之间。
+反解圆盘参数化得到和其他二次曲面一样的$\varphi$表达式。
+\begin{lstlisting}
+`\initcode{Test disk $\varphi$ value against $\varphi$max}{=}`
+`\refvar{Float}{}` phi = std::atan2(pHit.y, pHit.x);
+if (phi < 0) phi += 2 * `\refvar{Pi}{}`;
+if (phi > `\refvar[Disk::phiMax]{phiMax}{}`)
+    return false;
+\end{lstlisting}
+
+如果我们走到这一步，则与圆盘存在相交。
+参数{\ttfamily u}被缩放来反映$\varphi_{\max}$指定的部分圆盘，
+{\ttfamily v}通过反解参数方程算得。
+命中点的偏导数方程推导过程和之前二次曲面用的一样。
+因为圆盘的法线在任何地方都一样，
+偏导数$\displaystyle\frac{\partial\bm n}{\partial u}$和$\displaystyle\frac{\partial\bm n}{\partial v}$都是平凡的$(0,0,0)$。
+\begin{lstlisting}
+`\initcode{Find parametric representation of disk hit}{=}`
+`\refvar{Float}{}` u = phi / `\refvar[Disk::phiMax]{phiMax}{}`;
+`\refvar{Float}{}` rHit = std::sqrt(dist2);
+`\refvar{Float}{}` oneMinusV = ((rHit - `\refvar[Disk::innerRadius]{innerRadius}{}`) /
+                   (`\refvar[Disk::radius]{radius}{}` - `\refvar[Disk::innerRadius]{innerRadius}{}`));
+`\refvar{Float}{}` v = 1 - oneMinusV;
+`\refvar{Vector3f}{}` dpdu(-`\refvar[Disk::phiMax]{phiMax}{}` * pHit.y, `\refvar[Disk::phiMax]{phiMax}{}` * pHit.x, 0);
+`\refvar{Vector3f}{}` dpdv = `\refvar{Vector3f}{}`(pHit.x, pHit.y, 0.) * (`\refvar[Disk::innerRadius]{innerRadius}{}` - `\refvar[Disk::radius]{radius}{}`) /
+                rHit;
+`\refvar{Normal3f}{}` dndu(0, 0, 0), dndv(0, 0, 0);
+\end{lstlisting}
+
+\subsection{表面积}\label{sub:表面积4}
+圆盘有计算简单的表面积，因为它们只是圆环的一部分：
+\begin{align*}
+    A=\frac{\varphi_{\max}}{2}(r^2-r_{\mathrm{i}}^2)\, .
+\end{align*}
+\begin{lstlisting}
+`\refcode{Disk Method Definitions}{+=}\lastnext{DiskMethodDefinitions}`
+`\refvar{Float}{}` `\refvar{Disk}{}`::`\initvar[Disk::Area]{\refvar[Shape::Area]{Area}{}}{}`() const { 
+    return `\refvar[Disk::phiMax]{phiMax}{}` * 0.5 * (`\refvar[Disk::radius]{radius}{}` * `\refvar[Disk::radius]{radius}{}` - `\refvar[Disk::innerRadius]{innerRadius}{}` * `\refvar[Disk::innerRadius]{innerRadius}{}`);
+}
+\end{lstlisting}

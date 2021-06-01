@@ -233,4 +233,200 @@ const `\refvar{Point3f}{}` &p2 = `\refvar{mesh}{}`->`\refvar[TriangleMesh::p]{p}
 \end{lstlisting}
 
 \subsection{三角形相交}\label{sub:三角形相交}
-三角形状方法的\refvar[Triangle::Intersect]{Intersect}{()}结构
+三角形状方法\refvar[Triangle::Intersect]{Intersect}{()}的结构
+遵循之前的相交测试方法：应用几何测试以确定是否相交，
+如果有，则计算更多关于相交的信息，并在给定的
+\refvar{SurfaceInteraction}{}中返回。
+\begin{lstlisting}
+`\refcode{Triangle Method Definitions}{+=}\lastnext{TriangleMethodDefinitions}`
+bool `\initvar{Triangle::Intersect}{}`(const `\refvar{Ray}{}` &ray, `\refvar{Float}{}` *tHit,
+        `\refvar{SurfaceInteraction}{}` *isect, bool testAlphaTexture) const {
+    `\refcode{Get triangle vertices in p0, p1, and p2}{}`
+    `\refcode{Perform ray–triangle intersection test}{}`
+    `\refcode{Compute triangle partial derivatives}{}`
+    `\refcode{Compute error bounds for triangle intersection}{}`
+    `\refcode{Interpolate (u,v) parametric coordinates and hit point}{}`
+    `\refcode{Test intersection against alpha texture, if present}{}`
+    `\refcode{Fill in SurfaceInteraction from triangle hit}{}`
+    *tHit = t;
+    return true;
+}
+\end{lstlisting}
+
+pbrt的光线-三角形相交测试基于首先计算仿射变换
+使得射线在变换后的坐标系统里端点被变换为$(0,0,0)$且其方向沿$+z$轴。
+在执行相机测试之前三角形顶点也变换到该坐标系统。
+下面我们将看到应用该坐标系统变换会简化相交测试逻辑，
+例如任何交点的$x$和$y$坐标必须为零。
+之后在\refsub{稳定的三角形相交}，我们会看到该变换让
+拥有\keyindex{水密的}{watertight}{}光线-三角形相交算法成为可能，
+这样刚好命中三角形边缘的棘手光线等的相交就永远不会被错误地报告为未命中了。
+\begin{lstlisting}
+`\initcode{Perform ray–triangle intersection test}{=}`
+`\refcode{Transform triangle vertices to ray coordinate space}{}`
+`\refcode{Compute edge function coefficients e0, e1, and e2}{}`
+`\refcode{Fall back to double-precision test at triangle edges}{}`
+`\refcode{Perform triangle edge and determinant tests}{}`
+`\refcode{Compute scaled hit distance to triangle and test against ray t range}{}`
+`\refcode{Compute barycentric coordinates and t value for triangle intersection}{}`
+`\refcode{Ensure that computed triangle t is conservatively greater than zero}{}`
+\end{lstlisting}
+
+计算从世界空间到光线-三角形相交坐标空间的变换有三步：
+平移$\bm T$、坐标\keyindex{置换}{permutation}{}$\bm P$和\keyindex{错切}{shear}{}$\bm S$。
+下列实现没有为它们每个都计算显式的变换矩阵
+再计算合成变换矩阵$\bm M=\bm S\bm P\bm T$来把顶点变换到坐标空间，
+而是直接施加每步的变换，这最终是更高效的方法。
+\begin{lstlisting}
+`\initcode{Transform triangle vertices to ray coordinate space}{=}`
+`\refcode{Translate vertices based on ray origin}{}`
+`\refcode{Permute components of triangle vertices and ray direction}{}`
+`\refcode{Apply shear transformation to translated vertex positions}{}`
+\end{lstlisting}
+
+将射线端点放置在坐标系统的原点的平移是：
+\begin{align*}
+    \bm T=\left[\begin{array}{cccc}
+            1 & 0 & 0 & -o_x \\
+            0 & 1 & 0 & -o_y \\
+            0 & 0 & 1 & -o_z \\
+            0 & 0 & 0 & 1
+        \end{array}\right]\, .
+\end{align*}
+该变换不需要显式施加到射线端点，但我们会将其施加于三角形三个顶点。
+\begin{lstlisting}
+`\initcode{Translate vertices based on ray origin}{=}`
+`\refvar{Point3f}{}` p0t = p0 - `\refvar{Vector3f}{}`(ray.o);
+`\refvar{Point3f}{}` p1t = p1 - `\refvar{Vector3f}{}`(ray.o);
+`\refvar{Point3f}{}` p2t = p2 - `\refvar{Vector3f}{}`(ray.o);
+\end{lstlisting}
+
+接下来，置换空间三个维度使得$z$维的射线方向绝对值最大。
+$x$和$y$维任意分配给另外两维。
+例如，这步保证如果原始射线的$z$方向为零，
+则非零幅度的维度映射到$+z$。
+
+例如，如果光线方向在$x$有最大幅值，则置换为：
+\begin{align*}
+    \bm P=\left[\begin{array}{cccc}
+            0 & 1 & 0 & 0 \\
+            0 & 0 & 1 & 0 \\
+            1 & 0 & 0 & 0 \\
+            0 & 0 & 0 & 1
+        \end{array}\right]\, .
+\end{align*}
+
+像之前那样，直接置换射线方向维度和平移后的三角形顶点最简单。
+\begin{lstlisting}
+`\initcode{Permute components of triangle vertices and ray direction}{=}`
+int kz = `\refvar{MaxDimension}{}`(`\refvar[Vector3::Abs]{Abs}{}`(ray.d));
+int kx = kz + 1; if (kx == 3) kx = 0;
+int ky = kx + 1; if (ky == 3) ky = 0;
+`\refvar{Vector3f}{}` d = `\refvar[Vector3::Permute]{Permute}{}`(ray.d, kx, ky, kz);
+p0t = `\refvar[Point3::Permute]{Permute}{}`(p0t, kx, ky, kz);
+p1t = `\refvar[Point3::Permute]{Permute}{}`(p1t, kx, ky, kz);
+p2t = `\refvar[Point3::Permute]{Permute}{}`(p2t, kx, ky, kz);
+\end{lstlisting}
+
+最后，错切变换将射线方向与$+z$轴对齐：
+\begin{align*}
+    \bm S=\left[\begin{array}{rrrr}
+            1 & 0 & \displaystyle-\frac{d_x}{d_z} & 0 \\
+            0 & 1 & \displaystyle-\frac{d_y}{d_z} & 0 \\
+            0 & 0 & \displaystyle\frac{1}{d_z}    & 0 \\
+            0 & 0 & 0                             & 1
+        \end{array}\right]\, .
+\end{align*}
+为了理解该变换如何工作，可考虑它对射线方向向量$[d_x\ d_y\ d_z\ 0]^{\mathrm{T}}$的操作。
+
+现在，只有$x$和$y$维被错切；我们可以等到只有当光线确实与三角形相交时再错切$z$维。
+\begin{lstlisting}
+`\initcode{Apply shear transformation to translated vertex positions}{=}`
+`\refvar{Float}{}` Sx = -d.x / d.z;
+`\refvar{Float}{}` Sy = -d.y / d.z;
+`\refvar{Float}{}` Sz = 1.f / d.z;
+p0t.x += Sx * p0t.z;
+p0t.y += Sy * p0t.z;
+p1t.x += Sx * p1t.z;
+p1t.y += Sy * p1t.z;
+p2t.x += Sx * p2t.z;
+p2t.y += Sy * p2t.z;
+\end{lstlisting}
+
+注意坐标置换和错切系数的计算只取决于给定的光线；
+它们和三角形无关。在高性能光线追踪器里，
+我们可能想一次性计算这些值并保存在类\refvar{Ray}{}里，
+而不是为与光线相交的每个三角形重新计算它们。
+
+三角形顶点变换到该坐标系统后，我们现在的任务是求从原点出发
+并沿$+z$的光线是否与变换后的三角形相交。
+因为构造坐标系统的方式，该问题等价于2D问题即
+确定$x,y$坐标$(0,0)$是否在三角形的$xy$投影内（\reffig{3.12}）。
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap03/Triisectcoordinatesystem.tex}
+    \caption{在光线-三角形相交坐标系统中，从原点出发的光线沿$+z$轴射出。
+        可通过只考虑光线和三角形顶点的$xy$投影执行相交测试，
+        转而简化为确定2D点$(0,0)$是否在三角形内。}
+    \label{fig:3.12}
+\end{figure}
+
+为了理解相交算法如何工作，首先回想\reffig{2.5}中两个向量
+叉积的长度给出了它们定义的平行四边形面积。
+在2D中，向量为$\bm a$和$\bm b$，则面积为
+\begin{align*}
+    a_xb_y-b_xa_y\, .
+\end{align*}
+该面积的一半是它们定义的三角形面积。因此我们看到在2D中，
+顶点为$\bm p_0,\bm p_1$和$\bm p_2$的三角形面积为
+\begin{align*}
+    \frac{1}{2}((p_{1x}-p_{0x})(p_{2y}-p_{0y})-(p_{2x}-p_{0x})(p_{1y}-p_{0y}))\, .
+\end{align*}
+\reffig{3.13}以几何方式将其可视化。
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap03/Triarea.tex}
+    \caption{两边由向量$\bm v_1$和$\bm v_2$给定的三角形的面积
+        是这里展示的平行四边形面积的一半。
+        平行四边形面积由$\bm v_1$和$\bm v_2$的叉积长度给出。}
+    \label{fig:3.13}
+\end{figure}
+
+我们将用三角形面积的该表达式定义有符号的\keyindex{边函数}{edge function}{}：
+给定两个三角形顶点$\bm p_0$和$\bm p_1$，
+则我们可以定义定向边函数$e$，它给出由$\bm p_0$和$\bm p_1$以及
+给定的第三点$\bm p$指定的三角形面积的两倍（见\reffig{3.14}）：
+\begin{align}\label{eq:3.1}
+    e(\bm p)=(p_{1x}-p_{0x})(p_y-p_{0y})-(p_x-p_{0x})(p_{1y}-p_{0y})\, .
+\end{align}
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap03/Triedgefunction.tex}
+    \caption{边函数$e(\bm p)$用相对于两点$\bm p_0$和$\bm p_1$间的有向直线表征点。
+        对于该直线左边的点$\bm p$边函数值为正，直线上的点为零，直线右边的点为负。
+        光线-三角形相交算法使用的边函数是三点构造的三角形有符号面积的两倍。}
+    \label{fig:3.14}
+\end{figure}
+
+对于直线左边的点边函数为正值，右边的点为负值。
+因此若某点的边函数值对三角形三条边有相同符号，
+它一定在三条边的同侧并因此必在三角形内。
+
+得益于坐标系统变换，我们要测试的点$\bm p$是$(0,0)$。
+这简化了边函数表达式。例如，对于从$\bm p_1$到$\bm p_2$的边$e_0$，我们有：
+\begin{align}
+    e_0(\bm p) & =
+\end{align}
+
+\begin{lstlisting}
+`\initcode{Fall back to double-precision test at triangle edges}{=}`
+if (sizeof(`\refvar{Float}{}`) == sizeof(float) &&
+(e0 == 0.0f || e1 == 0.0f || e2 == 0.0f)) {
+    double p2txp1ty = (double)p2t.x * (double)p1t.y;
+    double p2typ1tx = (double)p2t.y * (double)p1t.x;
+    e0 = (float)(p2typ1tx - p2txp1ty);
+    double p0txp2ty = (double)p0t.x * (double)p2t.y;
+    double p0typ2tx = (double)p0t.y * (double)p2t.x;
+    e1 = (float)(p0typ2tx - p0txp2ty);
+    double p1txp0ty = (double)p1t.x * (double)p0t.y;
+    double p1typ0tx = (double)p1t.y * (double)p0t.x;
+    e2 = (float)(p1typ0tx - p1txp0ty);
+}
+\end{lstlisting}

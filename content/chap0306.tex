@@ -536,6 +536,7 @@ $\displaystyle\frac{\partial \bm p}{\partial v}$。
 为计算$\displaystyle\frac{\partial \bm p}{\partial u}$和
 $\displaystyle\frac{\partial \bm p}{\partial v}$的表达式，
 我们从作差$\bm p_0-\bm p_2$和$\bm p_1-\bm p_2$开始，得到矩阵方程
+\sidenote{译者注：这里的点坐标按行向量处理。}
 \begin{align*}
     \left[\begin{array}{cc}
             u_0-u_2 & v_0-v_2 \\
@@ -693,3 +694,72 @@ else if (`\refvar{reverseOrientation}{}` ^ `\refvar{transformSwapsHandedness}{}`
 \subsection{着色几何}\label{sub:着色几何}
 有了\refvar{Triangle}{}，用户可以提供网格顶点处的法向量和切向量，
 它们用来插值求取三角形面上的点的法线和切线。
+用插值法线的着色几何体可以让原本小面的三角网格显得比它们的几何形状更平滑。
+如果提供了着色法线或着色切线，
+就用它们初始化\refvar{SurfaceInteraction}{}里的着色几何体。
+\begin{lstlisting}
+`\initcode{Initialize Triangle shading geometry}{=}`
+`\refcode{Compute shading normal ns for triangle}{}`
+`\refcode{Compute shading tangent ss for triangle}{}`
+`\refcode{Compute shading bitangent ts for triangle and adjust ss}{}`
+`\refcode{Compute $\partial$n/$\partial$u and $\partial$n/$\partial$v for triangle shading geometry}{}`
+isect->`\refvar{SetShadingGeometry}{}`(ss, ts, dndu, dndv, true);
+\end{lstlisting}
+
+给定交点的重心坐标，如果有的话，通过在合适的顶点法线间插值计算着色法线很简单。
+\begin{lstlisting}
+`\initcode{Compute shading normal ns for triangle}{=}`
+`\refvar{Normal3f}{}` ns;
+if (`\refvar{mesh}{}`->`\refvar[TriangleMesh::n]{n}{}`) ns = `\refvar{Normalize}{}`(b0 * `\refvar{mesh}{}`->`\refvar[TriangleMesh::n]{n}{}`[`\refvar[Triangle::v]{v}{}`[0]] +
+                            b1 * `\refvar{mesh}{}`->`\refvar[TriangleMesh::n]{n}{}`[`\refvar[Triangle::v]{v}{}`[1]] + 
+                            b2 * `\refvar{mesh}{}`->`\refvar[TriangleMesh::n]{n}{}`[`\refvar[Triangle::v]{v}{}`[2]]);
+else
+    ns = isect->`\refvar[Interaction::n]{n}{}`;
+\end{lstlisting}
+
+着色切线计算相同。
+\begin{lstlisting}
+`\initcode{Compute shading tangent ss for triangle}{=}`
+`\refvar{Vector3f}{}` ss;
+if (`\refvar{mesh}{}`->`\refvar[TriangleMesh::s]{s}{}`) ss = `\refvar{Normalize}{}`(b0 * `\refvar{mesh}{}`->`\refvar[TriangleMesh::s]{s}{}`[`\refvar[Triangle::v]{v}{}`[0]] +
+                            b1 * `\refvar{mesh}{}`->`\refvar[TriangleMesh::s]{s}{}`[`\refvar[Triangle::v]{v}{}`[1]] + 
+                            b2 * `\refvar{mesh}{}`->`\refvar[TriangleMesh::s]{s}{}`[`\refvar[Triangle::v]{v}{}`[2]]);
+else
+    ss = `\refvar{Normalize}{}`(isect->`\refvar[SurfaceInteraction::dpdu]{dpdu}{}`);
+\end{lstlisting}
+
+用{\ttfamily ns}和{\ttfamily ss}的叉积求\keyindex{双切向量}{bitangent vector}{}{\ttfamily ts}，
+即得到一个正交于它俩的向量。
+接下来，{\ttfamily ss}被{\ttfamily ts}和{\ttfamily ns}的叉积覆写；
+这保证{\ttfamily ss}和{\ttfamily ts}的叉积是{\ttfamily ns}。
+因此，如果提供了每个顶点的$\bm n$和$\bm s$值
+且插值的$\bm n$和$\bm s$值并不完全正交，
+则$\bm n$会被保留而$\bm s$被修改使得坐标系统是正交的。
+\begin{lstlisting}
+`\initcode{Compute shading bitangent ts for triangle and adjust ss}{=}`
+`\refvar{Vector3f}{}` ts = `\refvar{Cross}{}`(ns, ss);
+if (ts.`\refvar{LengthSquared}{}`() > 0.f) {
+    ts = `\refvar{Normalize}{}`(ts);
+    ss = `\refvar{Cross}{}`(ts, ns);
+}
+else
+    `\refvar{CoordinateSystem}{}`((`\refvar{Vector3f}{}`)ns, &ss, &ts);
+\end{lstlisting}
+
+计算着色法线偏导数$\displaystyle\frac{\partial\bm n}{\partial u}$
+和$\displaystyle\frac{\partial\bm n}{\partial v}$的代码
+几乎和计算偏导数$\displaystyle\frac{\partial\bm p}{\partial u}$
+和$\displaystyle\frac{\partial\bm p}{\partial v}$的代码一样，
+因此这里略去。
+
+\subsection{表面积}\label{sub:表面积6}
+利用平行四边形面积等于它沿两边的两个向量的叉积长度的事实，
+方法\refvar[Triangle::Area]{Area}{()}计算三角形面积为
+其边向量构成的平行四边形面积的一半（\reffig{3.13}）。
+\begin{lstlisting}
+`\refcode{Triangle Method Definitions}{+=}\lastnext{TriangleMethodDefinitions}`
+`\refvar{Float}{}` `\refvar{Triangle}{}`::`\initvar[Triangle::Area]{\refvar[Shape::Area]{Area}{}}{}`() const {
+    `\refcode{Get triangle vertices in p0, p1, and p2}{}`
+    return 0.5 * `\refvar{Cross}{}`(p1 - p0, p2 - p0).`\refvar{Length}{}`();
+}
+\end{lstlisting}

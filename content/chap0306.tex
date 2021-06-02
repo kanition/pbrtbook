@@ -411,10 +411,26 @@ p2t.y += Sy * p2t.z;
 
 得益于坐标系统变换，我们要测试的点$\bm p$是$(0,0)$。
 这简化了边函数表达式。例如，对于从$\bm p_1$到$\bm p_2$的边$e_0$，我们有：
-\begin{align}
-    e_0(\bm p) & =
+\begin{align}\label{eq:3.2}
+    e_0(\bm p) & =(p_{2x}-p_{1x})(p_y-p_{1y})-(p_x-p_{1x})(p_{2y}-p_{1y})\nonumber \\
+               & =(p_{2x}-p_{1x})(-p_{1y})-(-p_{1x})(p_{2y}-p_{1y})\nonumber       \\
+               & =p_{1x}p_{2y}-p_{2x}p_{1y}\, .
 \end{align}
 
+下面，我们将使用以边函数$e_i$对应
+从顶点$\bm p_{(i+1)\mod{3}}$到$\bm p_{(i+2)\mod{3}}$的有向边的索引方案。
+\begin{lstlisting}
+`\initcode{Compute edge function coefficients e0, e1, and e2}{=}`
+`\refvar{Float}{}` e0 = p1t.x * p2t.y - p1t.y * p2t.x;
+`\refvar{Float}{}` e1 = p2t.x * p0t.y - p2t.y * p0t.x;
+`\refvar{Float}{}` e2 = p0t.x * p1t.y - p0t.y * p1t.x;
+\end{lstlisting}
+
+在任一边函数值恰好为零的罕见情况下，
+不可能确定光线是否命中了三角形，则用双精度浮点算术重新计算边方程。
+（\refsub{稳定的三角形相交}更详细地讨论了对这步的需求。）
+实现该计算的代码片\refcode{Fall back to double-precision test at triangle edges}{}只是
+用{\ttfamily double}再次实现\refcode{Compute edge function coefficients e0, e1, and e2}{}。
 \begin{lstlisting}
 `\initcode{Fall back to double-precision test at triangle edges}{=}`
 if (sizeof(`\refvar{Float}{}`) == sizeof(float) &&
@@ -430,3 +446,250 @@ if (sizeof(`\refvar{Float}{}`) == sizeof(float) &&
     e2 = (float)(p1typ0tx - p1txp0ty);
 }
 \end{lstlisting}
+
+给定三个边函数的值，我们有前两次机会确定没有相交。
+首先，如果边函数的符号不同，则点$(0,0)$不在三条边的同侧，因此在三角形外。
+然后，如果三个边函数值的和为零，则光线接近三角形的边缘
+\sidenote{译者注：提示：因为此时三个边函数同号，如果和接近零，
+    则它们必然分别也接近零。}，
+我们报告没有相交（对于闭合三角网格，光线则是命中相邻三角形）。
+\begin{lstlisting}
+`\initcode{Perform triangle edge and determinant tests}{=}`
+if ((e0 < 0 || e1 < 0 || e2 < 0) && (e0 > 0 || e1 > 0 || e2 > 0))
+    return false;
+`\refvar{Float}{}` det = e0 + e1 + e2;
+if (det == 0)
+    return false;
+\end{lstlisting}
+
+因为光线从原点出发，有单位长度，且沿$+z$轴，交点的$z$坐标值等于相交处的参数$t$值。
+为了计算该$z$值，我们先要继续对三角形顶点的$z$坐标施加错切变换。
+有了这些值后，三角形中交点的\keyindex{重心坐标}{barycentric coordinate}{coordinate坐标}可
+用于在三角形间对其插值。它们由每个边函数值除以边函数值之和得到
+\sidenote{译者注：提示：$b_i$其实表示了原点接近$\bm p_i$的程度。}：
+\begin{align*}
+    b_i=\frac{e_i}{e_0+e_1+e_2}\, .
+\end{align*}
+因此$b_i$和为一。
+
+插值的$z$值为
+\begin{align*}
+    z=b_0z_0+b_1z_1+b_2z_2\, ,
+\end{align*}
+其中$z_i$是光线-三角形相交坐标系统中三个顶点的坐标。
+
+为了节约计算$b_i$的浮点除法开销避免最后的$t$值超出有效$t$值范围，
+这里的实现先用$e_i$插值$z_i$来计算$t$
+（换句话说，还没执行除以$d=e_0+e_1+e_2$）。
+若$d$的符号和插值的$t$的符号不同，
+则最后的$t$值一定为负，因此不是有效相交。
+
+同样，检查$t<t_{\max}$可用两种方式等价执行：
+\begin{align*}
+    \sum\limits_i{e_iz_i} & <t_{\max}(e_0+e_1+e_2)\quad\text{如果}e_0+e_1+e_2>0\, , \\
+    \sum\limits_i{e_iz_i} & >t_{\max}(e_0+e_1+e_2)\quad\text{其他}\, .
+\end{align*}
+\begin{lstlisting}
+`\initcode{Compute scaled hit distance to triangle and test against ray t range}{=}`
+p0t.z *= Sz;
+p1t.z *= Sz;
+p2t.z *= Sz;
+`\refvar{Float}{}` tScaled = e0 * p0t.z + e1 * p1t.z + e2 * p2t.z;
+if (det < 0 && (tScaled >= 0 || tScaled < ray.tMax * det))
+    return false;
+else if (det > 0 && (tScaled <= 0 || tScaled > ray.tMax * det))
+    return false;
+\end{lstlisting}
+
+我们现在知道有一处有效相交并继续花费浮点除法开销为相交处
+计算实际的重心坐标以及实际的$t$值。
+\begin{lstlisting}
+`\initcode{Compute barycentric coordinates and t value for triangle intersection}{=}`
+`\refvar{Float}{}` invDet = 1 / det;
+`\refvar{Float}{}` b0 = e0 * invDet;
+`\refvar{Float}{}` b1 = e1 * invDet;
+`\refvar{Float}{}` b2 = e2 * invDet;
+`\refvar{Float}{}` t = tScaled * invDet;
+\end{lstlisting}
+
+为了在三角网格上生成一致的切向量，如果提供了的话，
+有必要用参数值$(u,v)$计算三角形顶点处的偏导数
+$\displaystyle\frac{\partial \bm p}{\partial u}$和
+$\displaystyle\frac{\partial \bm p}{\partial v}$。
+尽管三角形上所有点的偏导数都一样，这里的实现
+还是每次找到相交处就重算它们。
+尽管这导致多余的计算，但对于大型三角网格节约的存储是显著的。
+
+三角形可以描述为点集
+\begin{align*}
+    \bm p_{\mathrm{o}}+u\frac{\partial \bm p}{\partial u}+v\frac{\partial \bm p}{\partial v}\, ,
+\end{align*}
+对于某点$\bm p_{\mathrm{o}}$，$u$和$v$在三角形参数坐标范围内变动。
+我们还知道三个顶点位置$\bm p_i, i=0,1,2$，
+以及每个顶点的纹理坐标$(u_i,v_i)$。
+由此推出$\bm p$的偏导数一定满足
+\begin{align*}
+    \bm p_i=\bm p_{\mathrm{o}}+u_i\frac{\partial \bm p}{\partial u}+v_i\frac{\partial \bm p}{\partial v}\, .
+\end{align*}
+换句话说，从2D$(u,v)$空间到三角形上的点有唯一的仿射映射
+（即使三角形是在3D空间指定的，该映射也存在，因为三角形是平面的）。
+为计算$\displaystyle\frac{\partial \bm p}{\partial u}$和
+$\displaystyle\frac{\partial \bm p}{\partial v}$的表达式，
+我们从作差$\bm p_0-\bm p_2$和$\bm p_1-\bm p_2$开始，得到矩阵方程
+\begin{align*}
+    \left[\begin{array}{cc}
+            u_0-u_2 & v_0-v_2 \\
+            u_1-u_2 & v_1-v_2
+        \end{array}\right]\left[\begin{array}{c}
+            \displaystyle\frac{\partial \bm p}{\partial u} \\
+            \displaystyle\frac{\partial \bm p}{\partial v}
+        \end{array}\right]=\left[\begin{array}{c}
+            \bm p_0-\bm p_2 \\
+            \bm p_1-\bm p_2
+        \end{array}\right]\, .
+\end{align*}
+因此
+\begin{align*}
+    \left[\begin{array}{c}
+            \displaystyle\frac{\partial \bm p}{\partial u} \\
+            \displaystyle\frac{\partial \bm p}{\partial v}
+        \end{array}\right]=\left[\begin{array}{cc}
+            u_0-u_2 & v_0-v_2 \\
+            u_1-u_2 & v_1-v_2
+        \end{array}\right]^{-1}\left[\begin{array}{c}
+            \bm p_0-\bm p_2 \\
+            \bm p_1-\bm p_2
+        \end{array}\right]\, .
+\end{align*}
+$2\times2$矩阵求逆很简单。$(u,v)$作差矩阵的逆为
+\begin{align*}
+    \frac{1}{(u_0-u_2)(v_1-v_2)-(v_0-v_2)(u_1-u_2)}\left[\begin{array}{cc}
+            v_1-v_2    & -(v_0-v_2) \\
+            -(u_1-u_2) & u_0-u_2
+        \end{array}\right]\, .
+\end{align*}
+\begin{lstlisting}
+`\initcode{Compute triangle partial derivatives}{=}`
+`\refvar{Vector3f}{}` dpdu, dpdv;
+`\refvar{Point2f}{}` uv[3];
+`\refvar{GetUVs}{}`(uv);
+`\refcode{Compute deltas for triangle partial derivatives}{}`
+`\refvar{Float}{}` determinant = duv02[0] * duv12[1] - duv02[1] * duv12[0];
+if (determinant == 0) {
+    `\refcode{Handle zero determinant for triangle partial derivative matrix}{}`
+} else {
+    `\refvar{Float}{}` invdet = 1 / determinant;
+    dpdu = ( duv12[1] * dp02 - duv02[1] * dp12) * invdet;
+    dpdv = (-duv12[0] * dp02 + duv02[0] * dp12) * invdet;
+}
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{Compute deltas for triangle partial derivatives}{=}`
+`\refvar{Vector2f}{}` duv02 = uv[0] - uv[2], duv12 = uv[1] - uv[2];
+`\refvar{Vector3f}{}` dp02 = p0 - p2, dp12 = p1 - p2;
+\end{lstlisting}
+
+最后，有必要处理矩阵是奇异的而不能求逆的情况。
+注意这只在用户提供的每个顶点参数化值是退化的时候发生。
+这种情况下，\refvar{Triangle}{}只选择
+关于三角形曲面法线的任一坐标系统，确保它是正交的
+\begin{lstlisting}
+`\initcode{Handle zero determinant for triangle partial derivative matrix}{=}`
+`\refvar{CoordinateSystem}{}`(`\refvar{Normalize}{}`(`\refvar{Cross}{}`(p2 - p0, p1 - p0)), &dpdu, &dpdv);
+\end{lstlisting}
+
+为了计算交点和命中点的$(u,v)$参数坐标，
+将重心插值公式用于顶点位置和顶点的$(u,v)$坐标。
+我们将在\refsub{定界交点误差}看到，
+比起用{\ttfamily t}代入参数射线方程，
+它会给出交点更加精确的结果。
+\begin{lstlisting}
+`\initcode{Interpolate (u,v) parametric coordinates and hit point}{=}`
+`\refvar{Point3f}{}` pHit = b0 * p0 + b1 * p1 + b2 * p2;
+`\refvar{Point2f}{}` uvHit = b0 * uv[0] + b1 * uv[1] + b2 * uv[2];
+\end{lstlisting}
+
+实用例程\refvar{GetUVs}{()}返回三角形三个顶点的$(u,v)$坐标，
+如果有的话就从
+\refvar{Triangle}{}取，
+否则如果网格没有指定显式$(u,v)$坐标就返回默认值。
+\begin{lstlisting}
+`\initcode{Triangle Private Methods}{=}`
+void `\initvar{GetUVs}{}`(`\refvar{Point2f}{}` uv[3]) const {
+    if (`\refvar{mesh}{}`->`\refvar[TriangleMesh::uv]{uv}{}`) {
+        uv[0] = `\refvar{mesh}{}`->`\refvar[TriangleMesh::uv]{uv}{}`[`\refvar[Triangle::v]{v}{}`[0]];
+        uv[1] = `\refvar{mesh}{}`->`\refvar[TriangleMesh::uv]{uv}{}`[`\refvar[Triangle::v]{v}{}`[1]];
+        uv[2] = `\refvar{mesh}{}`->`\refvar[TriangleMesh::uv]{uv}{}`[`\refvar[Triangle::v]{v}{}`[2]];
+    } else {
+        uv[0] = `\refvar{Point2f}{}`(0, 0);
+        uv[1] = `\refvar{Point2f}{}`(1, 0);
+        uv[2] = `\refvar{Point2f}{}`(1, 1);
+    }
+}
+\end{lstlisting}
+
+在报告成功相交前，如果形状被赋值了$\alpha$掩模纹理，则用它测试交点。
+该纹理可看作在三角形曲面上的1D函数，
+在任何取值为零的点处都忽略相交，
+高效地将三角形上的点当做不存在。
+（第\refchap{纹理}更详细地定义了纹理接口和实现。）
+$\alpha$掩模对于表示像叶子那样的物体很有用：
+一片叶子可以建模为单个三角形，
+$\alpha$掩模“裁去”边缘使之保留叶子形状。
+该功能对其他形状没多大用，所以pbrt只为三角形支持。
+\begin{lstlisting}
+`\initcode{Test intersection against alpha texture, if present}{=}`
+if (testAlphaTexture && `\refvar{mesh}{}`->`\refvar{alphaMask}{}`) {
+    `\refvar{SurfaceInteraction}{}` isectLocal(pHit, `\refvar{Vector3f}{}`(0,0,0), uvHit,
+        `\refvar{Vector3f}{}`(0,0,0), dpdu, dpdv, `\refvar{Normal3f}{}`(0,0,0), `\refvar{Normal3f}{}`(0,0,0),
+        ray.`\refvar[Ray::time]{time}{}`, this);
+    if (`\refvar{mesh}{}`->`\refvar{alphaMask}{}`->`\refvar{Evaluate}{}`(isectLocal) == 0)
+        return false;
+}
+\end{lstlisting}
+现在我们一定有有效相交，可以更新传入相交例程的指针所指的值了。
+不像其他形状的实现，这里初始化结构\refvar{SurfaceInteraction}{}的
+代码不需要将偏导数变换到世界空间，
+因为三角形的顶点已经变换到世界空间了。
+像圆盘那样，三角形法线的偏导数也都是$(0,0,0)$，因为它是平的。
+\begin{lstlisting}
+`\initcode{Fill in SurfaceInteraction from triangle hit}{}`
+*isect = `\refvar{SurfaceInteraction}{}`(pHit, pError, uvHit, -ray.`\refvar[Ray::d]{d}{}`, dpdu, dpdv,
+    `\refvar{Normal3f}{}`(0, 0, 0), `\refvar{Normal3f}{}`(0, 0, 0), ray.`\refvar[Ray::time]{time}{}`, this);
+`\refcode{Override surface normal in isect for triangle}{}`
+if (`\refvar{mesh}{}`->`\refvar[TriangleMesh::n]{n}{}` || `\refvar{mesh}{}`->`\refvar[TriangleMesh::s]{s}{}`) {
+    `\refcode{Initialize Triangle shading geometry}{}`
+}
+`\refcode{Ensure correct orientation of the geometric normal}{}`
+\end{lstlisting}
+
+\refvar{SurfaceInteraction}{}构造函数初始化几何法线{\ttfamily n}为
+{\ttfamily dpdu}和{\ttfamily dpdv}的规范化叉积。
+这对大多数形状都适用，但在三角网格的情况下
+使用不依赖于底层纹理坐标的初始化更好：
+遇到不良参数化即没有保全朝向的网格是很常见的，
+这时几何法线可能有错误方向。
+
+因此我们用边向量{\ttfamily dp02}和{\ttfamily dp12}的
+规范化叉积初始化几何法线，它得到相同的法线要取决于由三角形顶点确切顺序
+（也即三角形的\keyindex{缠绕顺序}{winding order}{}）决定的可能的符号差。
+3D建模包通常尽力确保网格中的三角形有一致的缠绕顺序，这让本方法更稳定。
+\begin{lstlisting}
+`\initcode{Override surface normal in isect for triangle}{=}`
+isect->`\refvar[Interaction::n]{n}{}` = isect->`\refvar{shading}{}`.`\refvar[shading::n]{n}{}` = `\refvar{Normal3f}{}`(`\refvar{Normalize}{}`(`\refvar{Cross}{}`(dp02, dp12)));
+\end{lstlisting}
+
+当插值的法线可用时，我们将它们考虑为朝向信息最权威的来源。
+这种情况下，如果{\ttfamily isect->\refvar[Interaction::n]{n}{}}和
+插值的法线夹角大于90度，我们就翻转它的朝向。
+\begin{lstlisting}
+`\initcode{Ensure correct orientation of the geometric normal}{=}`
+if (`\refvar{mesh}{}`->`\refvar[TriangleMesh::n]{n}{}`)
+    isect->`\refvar[Interaction::n]{n}{}` = `\refvar{Faceforward}{}`(isect->`\refvar[Interaction::n]{n}{}`, isect->`\refvar{shading}{}`.`\refvar[shading::n]{n}{}`);
+else if (`\refvar{reverseOrientation}{}` ^ `\refvar{transformSwapsHandedness}{}`)
+    isect->`\refvar[Interaction::n]{n}{}` = isect->`\refvar{shading}{}`.`\refvar[shading::n]{n}{}` = -isect->`\refvar[Interaction::n]{n}{}`;  
+\end{lstlisting}
+
+\subsection{着色几何}\label{sub:着色几何}
+有了\refvar{Triangle}{}，用户可以提供网格顶点处的法向量和切向量，
+它们用来插值求取三角形面上的点的法线和切线。

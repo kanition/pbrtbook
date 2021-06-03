@@ -10,7 +10,7 @@
 分解出旋转矩阵，可以利用序列$\displaystyle\{\bm M_i\}_{i=0}^{\infty}$：
 \begin{align}
     \bm M_0     & =\bm M\, ,                                                         \\
-    \bm M_{i+1} & =\frac{1}{2}(\bm M_i+\bm M_i^{-\mathrm{T}}),\quad i=0,1,\cdots\, ,
+    \bm M_{i+1} & =\frac{1}{2}(\bm M_i+\bm M_i^{-\mathrm{T}}),\quad i=0,1,\ldots\, ,
 \end{align}
 此时$\displaystyle \lim\limits_{i \to \infty}{\bm M_i}$必存在
 且在Frobenius范数\sidenote{矩阵所有元素的平方和。}度量下最接近$\bm M$，可作为$\bm R$或$-\bm R$，
@@ -23,8 +23,8 @@
     \begin{align}
         \bm A=\bm P\bm \varSigma\bm Q^{-1}\, ,
     \end{align}
-    其中$\bm \varSigma=\mathrm{diag}(\sigma_1,\sigma_2,\cdots,\sigma_n)$，
-    $\sigma_k>0$，$k=1,2,\cdots,n$。
+    其中$\bm \varSigma=\mathrm{diag}(\sigma_1,\sigma_2,\ldots,\sigma_n)$，
+    $\sigma_k>0$，$k=1,2,\ldots,n$。
 \end{theorem}
 
 我们从两方面证明这个算法：
@@ -47,11 +47,11 @@
     构造序列$\displaystyle\{\bm M_i\}_{i=0}^{\infty}$：
     \begin{align}
         \bm M_0     & =\bm M\, ,                                                           \\
-        \bm M_{i+1} & =\frac{1}{2}(\bm M_i+\bm M_i^{-\mathrm{T}}),\quad i=0,1,2,\cdots\, .
+        \bm M_{i+1} & =\frac{1}{2}(\bm M_i+\bm M_i^{-\mathrm{T}}),\quad i=0,1,2,\ldots\, .
     \end{align}
     再构造另一个序列$\displaystyle\{\bm D_i\}_{i=0}^{\infty}$：
     \begin{align}
-        \bm D_i=\bm P^{-1}\bm M_i\bm Q,\quad i=0,1,2,\cdots\, .
+        \bm D_i=\bm P^{-1}\bm M_i\bm Q,\quad i=0,1,2,\ldots\, .
     \end{align}
     取$i=0$可得
     \begin{align}
@@ -64,7 +64,7 @@
         \bm D_{i+1}=\frac{1}{2}(\bm D_i+\bm D_i^{-\mathrm{T}})\, .
     \end{align}
     可以看出如果$\bm D_i$是主对角线为正数的对角矩阵，则$\bm D_{i+1}$也是。
-    由归纳法，对于$i=0,1,2,\cdots$，$\bm D_i$均是这样的矩阵，记为
+    由归纳法，对于$i=0,1,2,\ldots$，$\bm D_i$均是这样的矩阵，记为
     \begin{align}
         \bm D_i=\mathrm{diag}\left(d_k^{(i)}\right)\in\mathbb{R}^{3\times 3}, \quad d_k^{(i)}>0, \quad k=1,2,3\, .
     \end{align}
@@ -72,14 +72,14 @@
     因此可以独立考虑$\bm D_i$主对角线上的各个分量，即
     \begin{align}
         d_k^{(0)}   & =\sigma_k>0,\qquad k=1,2,3\, ,                                                                     \\
-        d_k^{(i+1)} & = \frac{1}{2}\left(d_k^{(i)}+\frac{1}{d_k^{(i)}}\right),\quad i=0,1,2,\cdots\label{eq:02ex.03}\, .
+        d_k^{(i+1)} & = \frac{1}{2}\left(d_k^{(i)}+\frac{1}{d_k^{(i)}}\right),\quad i=0,1,2,\ldots\label{eq:02ex.03}\, .
     \end{align}
 
     显然，由基本不等式有
     \begin{align}
-        d_k^{(i+1)}\ge\sqrt{d_k^{(i)}\cdot\frac{1}{d_k^{(i)}}}=1,\quad i=0,1,2,\cdots\, .
+        d_k^{(i+1)}\ge\sqrt{d_k^{(i)}\cdot\frac{1}{d_k^{(i)}}}=1,\quad i=0,1,2,\ldots\, .
     \end{align}
-    并且对于$i=1,2,\cdots$有
+    并且对于$i=1,2,\ldots$有
     \begin{align}
         d_k^{(i)}-d_k^{(i+1)}=\frac{1}{2}\left(d_k^{(i)}-\frac{1}{d_k^{(i)}}\right)\ge0\, .
     \end{align}

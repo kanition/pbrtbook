@@ -6,3 +6,64 @@
 虽然三角形可用于表示细小形状来建模细微几何体如头发、皮毛或草地，
 但为了更高效地渲染这类物体，拥有专门的\refvar{Shape}{}的值得的，
 因为经常出现它们的许多实例。
+本节介绍的\refvar{Curve}{}形状即表示
+用\keyindex{三次贝塞尔样条}{cubic Bézier spline}{spline样条}建模的细小几何体，
+它由四个控制点$\bm p_0,\bm p_1,\bm p_2$和$\bm p_3$定义。
+贝塞尔样条穿过第一个和最后一个控制点；
+中间点由多项式给出（见\reffig{3.15}）
+\begin{align}\label{eq:3.3}
+    \bm p(u)=(1-u)^3\bm p_0+3(1-u)^2u\bm p_1+3(1-u)u^2\bm p_2+u^3\bm p_3\, .
+\end{align}
+给定在其他三次基中指定的曲线，例如\keyindex{Hermite样条}{Hermite spline}{spline样条}
+\sidenote{译者注：三次Hermite样条
+    形如$\bm p(u)=(2u^3-3u^2+1)\bm p_0+(u^3-2u^2+t)\bm m_0+(-2u^3+3u^2)\bm p_1+(u^3-u^2)\bm m_1$，
+    其中$\bm p_i$是起点和终点，$\bm m_i$是起点和终点处的切向量，$u\in[0,1]$。}，
+很容易将其转化为贝塞尔基，所以这里的实现将这一负担留给用户。
+如果经常用的话，可以很容易添加该功能。
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap03/bezier-and-cps.tex}
+    \caption{三次贝塞尔曲线由四个控制点$\bm p_i$定义。
+        \protect\refeq{3.3}定义的曲线$\bm p(u)$分别在$u=0$和$u=1$处穿过第一个和最后一个控制点。}
+    \label{fig:3.15}
+\end{figure}
+
+\refvar{Curve}{}形状由具有宽度的1D贝塞尔曲线定义，
+其宽度是从起点宽度到终点宽度沿其范围线性插值的。
+即它们定义了一个平坦的2D曲面（\reffig{3.16}）
+\footnote{注意术语的滥用：尽管曲线是1D数学概念，但\protect\refvar{Curve}{}形状表示2D曲面。
+    下文中我们所称的曲线通常指\protect\refvar{Shape}{}。
+    当区别不够明确时我们用“贝塞尔曲线”来区分1D概念。}。
+直接用光线与该表示相交而不用细分\sidenote{译者注：原文tessellating。}它是可能的，
+从而能够高效渲染平滑曲线而不使用过多内存。
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap03/bezier-and-offsets.tex}
+    \caption{\protect\refvar{Curve}{}形状的基本几何。
+        1D贝塞尔曲线在沿它的每一点上都朝两边垂直于曲线的方向偏移指定宽度的一半。
+        得到的区域表示该曲线的曲面。}
+    \label{fig:3.16}
+\end{figure}
+
+\reffig{3.17}展示了用上百万\refvar{Curve}{}建模皮毛的小兔子模型。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=\linewidth]{chap03/furrybunny.png}
+    \caption{毛茸茸的小兔子。上百万\refvar{Curve}{}形状用于建模皮毛的小兔子模型。
+        这里我们使用了不真实的长曲线来更好展示\refvar{Curve}{}的能力。}
+    \label{fig:3.17}
+\end{figure}
+\begin{lstlisting}
+`\initcode{CurveDeclarations}{=}`
+class `\initvar{Curve}{}` : public `\refvar{Shape}{}` {
+public:
+    `\refcode{Curve Public Methods}{}`
+private:
+    `\refcode{Curve Private Methods}{}`
+    `\refcode{Curve Private Data}{}`
+};
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{Curve Private Methods}{=}`
+bool `\refvar{recursiveIntersect}{}`(const `\refvar{Ray}{}` &r, `\refvar{Float}{}` *tHit,
+    `\refvar{SurfaceInteraction}{}` *isect, const `\refvar{Point3f}{}` cp[4],
+    const `\refvar{Transform}{}` &rayToObject, `\refvar{Float}{}` u0, `\refvar{Float}{}` u1, int depth) const;
+
+\end{lstlisting}

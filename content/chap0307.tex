@@ -67,3 +67,25 @@ bool `\refvar{recursiveIntersect}{}`(const `\refvar{Ray}{}` &r, `\refvar{Float}{
     const `\refvar{Transform}{}` &rayToObject, `\refvar{Float}{}` u0, `\refvar{Float}{}` u1, int depth) const;
 
 \end{lstlisting}
+
+如\reffig{3.18}所示，\refvar{Curve}{}形状可以表示三种曲线。
+\begin{itemize}
+    \item \keyindex{平坦面}{flat}{}：这种表示的曲线总是朝向与之相交的光线；
+          它们在建模细微扫掠圆柱形状如头发或皮毛时很有用。
+    \item {\sffamily 圆柱}：对于在屏幕上张开几像素的曲线（如不远处看到的意大利面），
+          \refvar{Curve}{}形状可以计算着色法线使得曲线看起来实际是圆柱体。
+    \item \keyindex{丝带}{ribbon}{}：这个变体对于建模实际没有
+          圆柱\keyindex{横截面}{cross section}{}的形状（例如一片草）很有用。
+\end{itemize}
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.6\linewidth]{chap03/threecurves.png}
+    \caption{\protect\refvar{Curve}{}形状可以表示的三种曲线。
+        左边是平坦曲线，总是朝向垂直于光线接近它的方向。
+        中间的变体可以设置着色法线使得曲线看起来是圆柱体。
+        右边是丝带，在起点和终点有固定朝向；中间的朝向在它们之间平滑插值。}
+    \label{fig:3.18}
+\end{figure}
+
+枚举\refvar{CurveType}{}记录了给定的\refvar{Curve}{}实例模型是它们中的哪一个。
+
+平坦和圆柱曲线变体旨在用于方便地近似变形的圆柱体。

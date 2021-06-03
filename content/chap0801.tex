@@ -24,18 +24,18 @@ enum `\initvar{BxDFType}{}` {
 
 \begin{lstlisting}
 `\initcode{BxDF Interface}{=}\initnext{BxDFInterface}`
-`\refvar{BxDF}{}`(`\refvar{BxDFType}{}` type) : `\refvar{type}{}`(type) { }
+`\refvar{BxDF}{}`(`\refvar{BxDFType}{}` type) : `\refvar[BxDF::type]{type}{}`(type) { }
 \end{lstlisting}
 
 \begin{lstlisting}
 `\initcode{BxDF Public Data}{=}`
-const `\refvar{BxDFType}{}` `\initvar{type}{}`;
+const `\refvar{BxDFType}{}` `\initvar[BxDF::type]{type}{}`;
 \end{lstlisting}
 
 \begin{lstlisting}
 `\refcode{BxDF Interface}{+=}\lastnext{BxDFInterface}`
 bool `\initvar{MatchesFlags}{}`(`\refvar{BxDFType}{}` t) const {
-    return (`\refvar{type}{}` & t) == `\refvar{type}{}`;
+    return (`\refvar[BxDF::type]{type}{}` & t) == `\refvar[BxDF::type]{type}{}`;
 }
 \end{lstlisting}
 

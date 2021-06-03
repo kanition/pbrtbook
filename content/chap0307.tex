@@ -78,7 +78,7 @@ bool `\refvar{recursiveIntersect}{}`(const `\refvar{Ray}{}` &r, `\refvar{Float}{
           圆柱\keyindex{横截面}{cross section}{}的形状（例如一片草）很有用。
 \end{itemize}
 \begin{figure}[htbp]
-    \centering\includegraphics[width=0.6\linewidth]{chap03/threecurves.png}
+    \centering\includegraphics[width=0.5\linewidth]{chap03/threecurves.png}
     \caption{\protect\refvar{Curve}{}形状可以表示的三种曲线。
         左边是平坦曲线，总是朝向垂直于光线接近它的方向。
         中间的变体可以设置着色法线使得曲线看起来是圆柱体。
@@ -89,3 +89,143 @@ bool `\refvar{recursiveIntersect}{}`(const `\refvar{Ray}{}` &r, `\refvar{Float}{
 枚举\refvar{CurveType}{}记录了给定的\refvar{Curve}{}实例模型是它们中的哪一个。
 
 平坦和圆柱曲线变体旨在用于方便地近似变形的圆柱体。
+要注意的是针对它们求得的相交并不对应物理可实现的3D形状，
+在拿真正的圆柱体场景作参考时这可能导致微小的矛盾。
+\begin{lstlisting}
+`\initcode{CurveType Declarations}{=}`
+enum class `\initvar{CurveType}{}` { `\initvar{Flat}{}`, `\initvar{Cylinder}{}`, `\initvar{Ribbon}{}` };
+\end{lstlisting}
+
+给定在pbrt场景描述文件中指定的曲线，
+值得将其分为若干段，每段包含曲线的一部分参数$u$范围。
+（这样做的一个原因是轴对齐边界框不能紧致地包围起伏的曲线，
+但把贝塞尔样条分开会使其不那么弯——
+多项式样条的\keyindex{变差缩减性}{variation diminishing property}{}。）
+因此，\refvar{Curve}{}构造函数同时
+接收$u$值的参数范围$[u_{\min},u_{\max}]$以及
+指向结构体\refvar{CurveCommon}{}的指针，
+它存储了控制点和各曲线段共享的关于曲线的其他信息。
+这样，单个曲线段所占内存被最小化，
+使得在内存中保留许多曲线更容易。
+\begin{lstlisting}
+`\initcode{Curve Public Methods}{=}`
+`\refvar{Curve}{}`(const `\refvar{Transform}{}` *ObjectToWorld, const `\refvar{Transform}{}` *WorldToObject,
+      bool reverseOrientation, const std::shared_ptr<`\refvar{CurveCommon}{}`> &common,
+      `\refvar{Float}{}` uMin, `\refvar{Float}{}` uMax)
+    : `\refvar{Shape}{}`(ObjectToWorld, WorldToObject, reverseOrientation),
+      `\refvar{common}{}`(common), `\refvar{uMin}{}`(uMin), `\refvar{uMax}{}`(uMax) { }
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{Curve Private Data}{=}`
+const std::shared_ptr<`\refvar{CurveCommon}{}`> `\initvar{common}{}`;
+const `\refvar{Float}{}` `\initvar{uMin}{}`, `\initvar{uMax}{}`; 
+\end{lstlisting}
+
+\refvar{CurveCommon}{}构造函数大多数只初始化成员变量
+和传入的控制点值、曲线宽度等。
+提供给它的控制点应该在曲线的物体空间内。
+
+对于\refvar{Ribbon}{}曲线，\refvar{CurveCommon}{}存储了
+曲面法线以在每个终点处让曲线定向。
+构造函数预计算两个法向量的夹角并求该角正弦的倒数；
+这些值会在沿曲线范围计算任意点处的朝向时很有用。
+\begin{lstlisting}
+`\initcode{Curve Method Definitions}{=}\initnext{CurveMethodDefinitions}`
+`\refvar{CurveCommon}{}`::`\refvar{CurveCommon}{}`(const `\refvar{Point3f}{}` c[4], `\refvar{Float}{}` width0, `\refvar{Float}{}` width1,
+        `\refvar{CurveType}{}` type, const `\refvar{Normal3f}{}` *norm)
+    : `\refvar[CurveCommon::type]{type}{}`(type), `\refvar{cpObj}{}`{c[0], c[1], c[2], c[3]},
+      `\refvar[CurveCommon::width]{width}{}`{width0, width1} {
+    if (norm) {
+        `\refvar[CurveCommon::n]{n}{}`[0] = `\refvar{Normalize}{}`(norm[0]);
+        `\refvar[CurveCommon::n]{n}{}`[1] = `\refvar{Normalize}{}`(norm[1]);
+        `\refvar{normalAngle}{}` = std::acos(`\refvar{Clamp}{}`(`\refvar{Dot}{}`(`\refvar[CurveCommon::n]{n}{}`[0], `\refvar[CurveCommon::n]{n}{}`[1]), 0, 1));
+        `\refvar{invSinNormalAngle}{}` = 1 / std::sin(`\refvar{normalAngle}{}`);
+    }
+}
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{CurveCommon Declarations}{=}`
+struct `\initvar{CurveCommon}{}` {
+    const `\refvar{CurveType}{}` `\initvar[CurveCommon::type]{type}{}`;
+    const `\refvar{Point3f}{}` `\initvar{cpObj}{}`[4];
+    const `\refvar{Float}{}` `\initvar[CurveCommon::width]{width}{}`[2];
+    `\refvar{Normal3f}{}` `\initvar[CurveCommon::n]{n}{}`[2];
+    `\refvar{Float}{}` `\initvar{normalAngle}{}`, `\initvar{invSinNormalAngle}{}`;
+};
+\end{lstlisting}
+
+\refvar{Curve}{}的边界框可通过利用\keyindex{凸包性质}{convex hull property}{convex hull凸包}计算，
+这是贝塞尔曲线的性质，即它们一定位于其控制点的\keyindex{凸包}{convex hull}{}内
+\sidenote{译者注：在实数向量空间中，对于给定集合$X$，
+所有包含$X$的凸集的交集$S$称为$X$的凸包，
+它可以用$X$内所有点$(x_1,\ldots,x_n)$的线性组合来构造，
+即$\displaystyle S=\{\sum\limits_{j=1}^n{t_jx_j}|x_j\in X,\sum\limits_{j=1}^n{t_j}=1,t_j\in[0,1]\}$。}。
+因此，控制点的边界框给出了底层曲线的保守边界。
+方法\refvar[Curve::ObjectBound]{ObjectBound}{()}首先
+计算1D贝塞尔段的控制点边界框来沿曲线的中心包围样条。
+然后这些边界在曲线参数范围内被展开所取最大宽度的一半，
+得到\refvar{Curve}{}表示的\refvar{Shape}{}的3D边界。
+\begin{lstlisting}
+`\refcode{Curve Method Definitions}{+=}\lastnext{CurveMethodDefinitions}`
+`\refvar{Bounds3f}{}` `\initvar{Curve::ObjectBound}{}`() const {
+    `\refcode{Compute object-space control points for curve segment, cpObj}{}`
+    `\refvar{Bounds3f}{}` b = `\refvar[Union2]{Union}{}`(`\refvar{Bounds3f}{}`(cpObj[0], cpObj[1]),
+                       `\refvar{Bounds3f}{}`(cpObj[2], cpObj[3]));
+    `\refvar{Float}{}` width[2] = { `\refvar{Lerp}{}`(`\refvar{uMin}{}`, `\refvar{common}{}`->`\refvar[CurveCommon::width]{width}{}`[0], `\refvar{common}{}`->`\refvar[CurveCommon::width]{width}{}`[1]),
+                       `\refvar{Lerp}{}`(`\refvar{uMax}{}`, `\refvar{common}{}`->`\refvar[CurveCommon::width]{width}{}`[0], `\refvar{common}{}`->`\refvar[CurveCommon::width]{width}{}`[1]) };
+    return `\refvar{Expand}{}`(b, std::max(width[0], width[1]) * 0.5f);
+}
+\end{lstlisting}
+
+类\refvar{CurveCommon}{}存储了整条曲线的控制点，
+但\refvar{Curve}{}实例通常需要对应其$u$范围的
+表示贝塞尔曲线的四个控制点。
+这些控制点用称为\keyindex{开花}{blossoming}{}的技术计算。
+三次贝塞尔样条的花簇\sidenote{译者注：原文blossom。}$\bm p(u_0,u_1,u_2)$由三个阶段的线性插值定义，
+从原始控制点开始：
+\begin{align}\label{eq:3.4}
+    \bm a_i & =(1-u_0)\bm p_i+u_0\bm p_{i+1},\quad i\in[0,1,2]\nonumber\, , \\
+    \bm b_j & =(1-u_1)\bm a_j+u_1\bm a_{j+1},\quad j\in[0,1]\nonumber\, ,   \\
+    \bm c   & =(1-u_2)\bm b_0+u_2\bm b_1\, .
+\end{align}
+
+花簇$\bm p(u,u,u)$给出了在位置$u$处的曲线值
+（要自己验证的话，用$u_i=u$展开\refeq{3.4}，化简，并和\refeq{3.3}比较）。
+
+\refvar{BlossomBezier}{()}实现了该计算。
+\begin{lstlisting}
+`\initcode{Curve Utility Functions}{=}\initnext{CurveUtilityFunctions}`
+static `\refvar{Point3f}{}` `\initvar{BlossomBezier}{}`(const `\refvar{Point3f}{}` p[4], `\refvar{Float}{}` u0, `\refvar{Float}{}` u1,
+        `\refvar{Float}{}` u2) {
+    `\refvar{Point3f}{}` a[3] = { `\refvar{Lerp}{}`(u0, p[0], p[1]),
+                     `\refvar{Lerp}{}`(u0, p[1], p[2]),
+                     `\refvar{Lerp}{}`(u0, p[2], p[3]) };
+    `\refvar{Point3f}{}` b[2] = { `\refvar{Lerp}{}`(u1, a[0], a[1]), `\refvar{Lerp}{}`(u1, a[1], a[2]) };
+    return `\refvar{Lerp}{}`(u2, b[0], b[1]);
+}
+\end{lstlisting}
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap03/blossom-pts.tex}
+    \caption{为一段贝塞尔曲线开花寻找控制点。
+        \protect\refeq{3.5}中的四个花簇给出了从$u_{\min}$到$u_{\max}$的曲线控制点。
+        开花提供了优雅方法计算表示整条曲线子集的曲线的贝塞尔控制点。}
+    \label{fig:3.19}
+\end{figure}
+
+范围从$u_{\min}$到$u_{\max}$的曲线段的四个控制点由花簇给出（\reffig{3.19}）：
+\begin{align}\label{eq:3.5}
+    \bm p_0 & =\bm p(u_{\min},u_{\min},u_{\min})\nonumber\, , \\
+    \bm p_1 & =\bm p(u_{\min},u_{\min},u_{\max})\nonumber\, , \\
+    \bm p_2 & =\bm p(u_{\min},u_{\max},u_{\max})\nonumber\, , \\
+    \bm p_3 & =\bm p(u_{\max},u_{\max},u_{\max})\, .
+\end{align}
+
+有了该机制，计算\refvar{Curve}{}负责的曲线段的四个控制点很简单。
+\begin{lstlisting}
+`\initcode{Compute object-space control points for curve segment, cpObj}{=}`
+`\refvar{Point3f}{}` cpObj[4];
+cpObj[0] = `\refvar{BlossomBezier}{}`(`\refvar{common}{}`->`\refvar{cpObj}{}`, `\refvar{uMin}{}`, `\refvar{uMin}{}`, `\refvar{uMin}{}`);
+cpObj[1] = `\refvar{BlossomBezier}{}`(`\refvar{common}{}`->`\refvar{cpObj}{}`, `\refvar{uMin}{}`, `\refvar{uMin}{}`, `\refvar{uMax}{}`);
+cpObj[2] = `\refvar{BlossomBezier}{}`(`\refvar{common}{}`->`\refvar{cpObj}{}`, `\refvar{uMin}{}`, `\refvar{uMax}{}`, `\refvar{uMax}{}`);
+cpObj[3] = `\refvar{BlossomBezier}{}`(`\refvar{common}{}`->`\refvar{cpObj}{}`, `\refvar{uMax}{}`, `\refvar{uMax}{}`, `\refvar{uMax}{}`);
+\end{lstlisting}

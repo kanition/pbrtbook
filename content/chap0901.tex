@@ -53,8 +53,8 @@ static constexpr int `\initvar{MaxBxDFs}{}` = 8;
     `\refvar{Spectrum}{}` f(0.f);
     for (int i = 0; i < `\refvar{nBxDFs}{}`; ++i)
         if (`\refvar{bxdfs}{}`[i]->`\refvar{MatchesFlags}{}`(flags) &&
-        ((reflect && (`\refvar{bxdfs}{}`[i]->type & `\refvar[BSDFREFLECTION]{BSDF\_REFLECTION}{}`)) ||
-        (!reflect && (`\refvar{bxdfs}{}`[i]->type & `\refvar[BSDFTRANSMISSION]{BSDF\_TRANSMISSION}{}`))))
+        ((reflect && (`\refvar{bxdfs}{}`[i]->`\refvar[BxDF::type]{type}{}` & `\refvar[BSDFREFLECTION]{BSDF\_REFLECTION}{}`)) ||
+        (!reflect && (`\refvar{bxdfs}{}`[i]->`\refvar[BxDF::type]{type}{}` & `\refvar[BSDFTRANSMISSION]{BSDF\_TRANSMISSION}{}`))))
             f += `\refvar{bxdfs}{}`[i]->`\refvar[BxDF::f]{f}{}`(wo, wi);
     return f;
 }

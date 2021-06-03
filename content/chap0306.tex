@@ -596,7 +596,7 @@ if (determinant == 0) {
 最后，有必要处理矩阵是奇异的而不能求逆的情况。
 注意这只在用户提供的每个顶点参数化值是退化的时候发生。
 这种情况下，\refvar{Triangle}{}只选择
-关于三角形曲面法线的任一坐标系统，确保它是正交的
+关于三角形曲面法线的任一坐标系统，确保它是正交的：
 \begin{lstlisting}
 `\initcode{Handle zero determinant for triangle partial derivative matrix}{=}`
 `\refvar{CoordinateSystem}{}`(`\refvar{Normalize}{}`(`\refvar{Cross}{}`(p2 - p0, p1 - p0)), &dpdu, &dpdv);

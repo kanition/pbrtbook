@@ -61,7 +61,7 @@
     \end{align}
     在$[a,b]$上选取$x_0$作为初始近似值，使用如下迭代公式
     \begin{align}\label{eq:02ex0307}
-        x_{k+1}=\varphi(x_k),\quad k=0,1,\cdots\, ,
+        x_{k+1}=\varphi(x_k),\quad k=0,1,\ldots\, ,
     \end{align}
     构造序列$\{x_k\}_{k=0}^\infty$。
     若有$\displaystyle\lim\limits_{k\rightarrow\infty}{x_k}=x^*$，
@@ -84,7 +84,7 @@
         \item 对于任意$x_0\in[a,b]$，迭代公\refeq{02ex0307}收敛，且\begin{align}\label{eq:02ex0308}
                   \lim\limits_{k\rightarrow\infty}{x_k}=x^*\, ;
               \end{align}
-        \item 对于$k=1,2,\cdots$，迭代公\refeq{02ex0307}的后验和先验误差估计式分别为
+        \item 对于$k=1,2,\ldots$，迭代公\refeq{02ex0307}的后验和先验误差估计式分别为
               \begin{align}
                   |x_k-x^*| & \le\frac{L}{1-L}|x_k-x_{k-1}|\, , \label{eq:02ex0309} \\
                   |x_k-x^*| & \le\frac{L^k}{1-L}|x_1-x_0|\, ;\label{eq:02ex0310}
@@ -108,22 +108,22 @@
     所以$g(x)$在$[a,b]$上是严格单调增函数，存在唯一零点，
     即$x=\varphi(x)$在区间$[a,b]$上有唯一实根，记为$x^*$。
 
-    (2) 由$x_0\in[a,b]$及条件1知$x_k\in[a,b]$，$k=1,2,\cdots$。
+    (2) 由$x_0\in[a,b]$及条件1知$x_k\in[a,b]$，$k=1,2,\ldots$。
     考虑到$x_{k+1}=\varphi(x_k)$以及$x^*=\varphi(x^*)$，
     两者作差并利用拉格朗日中值定理得
     \begin{align}\label{eq:02ex0314}
-        x_{k+1}-x^*=\varphi(x_k)-\varphi(x^*)=\varphi'(\xi_k)(x_k-x^*),\quad k=0,1,\cdots\, ,
+        x_{k+1}-x^*=\varphi(x_k)-\varphi(x^*)=\varphi'(\xi_k)(x_k-x^*),\quad k=0,1,\ldots\, ,
     \end{align}
     其中$\xi_k$介于$x_k$与$x^*$之间。所以由条件2得
     \begin{align}\label{eq:02ex0314.5}
-        |x_{k+1}-x^*|\le L|x_k-x^*|,\quad k=0,1,\cdots\, .
+        |x_{k+1}-x^*|\le L|x_k-x^*|,\quad k=0,1,\ldots\, .
     \end{align}
     反复递推得
     \begin{align}\label{eq:02ex0315}
         0\le|x_{k+1}-x^*| & \le L|x_k-x^*|\nonumber                     \\
                           & \le L^2|x_{k-1}-x^*|\nonumber               \\
                           & \le\cdots\nonumber                          \\
-                          & \le L^{k+1}|x_0-x^*|,\quad k=0,1,\cdots\, .
+                          & \le L^{k+1}|x_0-x^*|,\quad k=0,1,\ldots\, .
     \end{align}
     因为$L\in(0,1)$，所以对上式取极限易得$\displaystyle\lim\limits_{k\rightarrow\infty}{|x_{k+1}-x^*|}=0$，
     即$\displaystyle\lim\limits_{k\rightarrow\infty}{x_k}=x^*$。
@@ -132,30 +132,30 @@
     \begin{align}\label{eq:02ex0316}
         |x_k-x^*| & =|x_k-x_{k+1}+x_{k+1}-x^*|\nonumber                \\
                   & \le|x_k-x_{k+1}|+|x_{k+1}-x^*|\nonumber            \\
-                  & \le|x_{k+1}-x_k|+L|x_k-x^*|,\quad k=0,1,\cdots\, ,
+                  & \le|x_{k+1}-x_k|+L|x_k-x^*|,\quad k=0,1,\ldots\, ,
     \end{align}
     从而
     \begin{align}\label{eq:02ex0317}
-        |x_k-x^*|\le\frac{1}{1-L}|x_{k+1}-x_k|,\quad k=0,1,\cdots\, .
+        |x_k-x^*|\le\frac{1}{1-L}|x_{k+1}-x_k|,\quad k=0,1,\ldots\, .
     \end{align}
     又因为根据拉格朗日中值定理有
     \begin{align}\label{eq:02ex0318}
         |x_{k+1}-x_k| & =|\varphi(x_k)-\varphi(x_{k-1})|\nonumber \\
                       & =|\varphi'(\eta_k)(x_k-x_{k-1})|\nonumber \\
-                      & \le L|x_k-x_{k-1}|,\quad k=1,2,\cdots\, ,
+                      & \le L|x_k-x_{k-1}|,\quad k=1,2,\ldots\, ,
     \end{align}
     其中$\eta_k$介于$x_k$与$x_{k-1}$之间。反复递推得
     \begin{align}\label{eq:02ex0319}
-        |x_k-x_{k-1}|\le L |x_{k-1}-x_{k-2}|\le\cdots\le L^{k-1}|x_1-x_0|,\quad k=1,2,\cdots\, .
+        |x_k-x_{k-1}|\le L |x_{k-1}-x_{k-2}|\le\cdots\le L^{k-1}|x_1-x_0|,\quad k=1,2,\ldots\, .
     \end{align}
     联合\refeq{02ex0317}、\refeq{02ex0318}和\refeq{02ex0319}得误差估计
     \begin{align}\label{eq:02ex0320}
-        |x_k-x^*|\le\frac{L}{1-L}|x_k-x_{k-1}|\le\frac{L^k}{1-L}|x_1-x_0|,\quad k=1,2,\cdots\, .
+        |x_k-x^*|\le\frac{L}{1-L}|x_k-x_{k-1}|\le\frac{L^k}{1-L}|x_1-x_0|,\quad k=1,2,\ldots\, .
     \end{align}
 
     (4) 由\refeq{02ex0314}得
     \begin{align}\label{eq:02ex0321}
-        \frac{x_{k+1}-x^*}{x_k-x^*}=\varphi'(\xi_k),\quad k=0,1,\cdots\, .
+        \frac{x_{k+1}-x^*}{x_k-x^*}=\varphi'(\xi_k),\quad k=0,1,\ldots\, .
     \end{align}
     注意$\xi_k$介于$x_k$与$x^*$之间，故$\displaystyle\lim\limits_{k\rightarrow\infty}{\xi_k}=x^*$。
     由$\varphi'(x)$的连续性，上式取极限得

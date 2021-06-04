@@ -393,7 +393,8 @@ p2t.y += Sy * p2t.z;
 我们将用三角形面积的该表达式定义有符号的\keyindex{边函数}{edge function}{}：
 给定两个三角形顶点$\bm p_0$和$\bm p_1$，
 则我们可以定义定向边函数$e$，它给出由$\bm p_0$和$\bm p_1$以及
-给定的第三点$\bm p$指定的三角形面积的两倍（见\reffig{3.14}）：
+给定的第三点$\bm p$指定的三角形面积的两倍（见\reffig{3.14}）
+\sidenote{译者注：原图符号和题注写反了，与正文矛盾，已修正。}：
 \begin{align}\label{eq:3.1}
     e(\bm p)=(p_{1x}-p_{0x})(p_y-p_{0y})-(p_x-p_{0x})(p_{1y}-p_{0y})\, .
 \end{align}
@@ -467,9 +468,9 @@ if (det == 0)
 有了这些值后，三角形中交点的\keyindex{重心坐标}{barycentric coordinate}{coordinate坐标}可
 用于在三角形间对其插值。它们由每个边函数值除以边函数值之和得到
 \sidenote{译者注：提示：$b_i$其实表示了原点接近$\bm p_i$的程度。
-利用向量知识可以证明，2D中对于包围了点$O$（不在边缘上）的$\triangle P_0P_1P_2$，
-存在比例固定的系数$e_i$使得$e_0\overrightarrow{OP_0}+e_1\overrightarrow{OP_1}+e_2\overrightarrow{OP_2}=\bm 0$，
-且三角形面积满足$\displaystyle\frac{|e_0|}{S_{\triangle OP_1P_2}}=\frac{|e_1|}{S_{\triangle OP_2P_0}}=\frac{|e_2|}{S_{\triangle OP_0P_1}}$。}：
+    利用向量知识可以证明，2D中对于包围了点$O$（不在边缘上）的$\triangle P_0P_1P_2$，
+    存在比例固定的系数$e_i$使得$e_0\overrightarrow{OP_0}+e_1\overrightarrow{OP_1}+e_2\overrightarrow{OP_2}=\bm 0$，
+    且三角形面积满足$\displaystyle\frac{|e_0|}{S_{\triangle OP_1P_2}}=\frac{|e_1|}{S_{\triangle OP_2P_0}}=\frac{|e_2|}{S_{\triangle OP_0P_1}}$。}：
 \begin{align*}
     b_i=\frac{e_i}{e_0+e_1+e_2}\, .
 \end{align*}

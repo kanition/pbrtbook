@@ -260,6 +260,29 @@ bool `\refvar{Curve}{}`::`\initvar[Curve::Intersect]{\refvar[Shape::Intersect]{I
                               `\refvar{uMin}{}`, `\refvar{uMax}{}`, maxDepth);
 }
 \end{lstlisting}
+
+如同\refsub{三角形相交}的光线-三角形相交算法，
+光线-曲线相交测试基于把曲线变换到射线端点在原点、
+射线方向对齐$+z$轴的坐标系统。
+一开始就执行该变换极大减少了相交测试必须执行的运算量。
+
+对于\refvar{Curve}{}形状，我们需要变换的显式表示，
+所以这里用函数\refvar{LookAt}{()}来生成它。
+原点是射线的端点，“注视”点是从原点沿射线方向偏移的点，
+“向上”方向是正交于射线方向的任意方向。
+\begin{lstlisting}
+`\initcode{Project curve control points to plane perpendicular to ray}{=}`
+`\refvar{Vector3f}{}` dx, dy;
+`\refvar{CoordinateSystem}{}`(ray.`\refvar[Ray::d]{d}{}`, &dx, &dy);
+`\refvar{Transform}{}` objectToRay = `\refvar{LookAt}{}`(ray.`\refvar[Ray::o]{o}{}`, ray.`\refvar[Ray::o]{o}{}` + ray.`\refvar[Ray::d]{d}{}`, dx);
+`\refvar{Point3f}{}` cp[4] = { objectToRay(cpObj[0]), objectToRay(cpObj[1]),
+                  objectToRay(cpObj[2]), objectToRay(cpObj[3]) };
+\end{lstlisting}
+
+计算细分曲线的最大次数，这样与最精细级别的最终线性化曲线的距离
+就被限定在小于某微小固定的距离内。
+我们不深入该计算的细节，
+它在代码片\refcode{Compute refinement depth for curve, maxDepth}{}中实现。
 \begin{lstlisting}
 `\initcode{Compute refinement depth for curve, maxDepth}{=}`
 `\refvar{Float}{}` L0 = 0;
@@ -276,4 +299,58 @@ int r0 = (int)std::round(fr0);
 int maxDepth = `\refvar{Clamp}{}`(r0, 0, 10);
 \end{lstlisting}
 
-如图\refsub{三角形相交}的光线-三角形相交算法，
+然后方法\refvar{recursiveIntersect}{()}测试给定射线是否与
+在给定参数范围{\ttfamily [u0,u1]}内的曲线段相交。
+\begin{lstlisting}
+`\refcode{Curve Method Definitions}{+=}\lastcode{CurveMethodDefinitions}`
+bool `\refvar{Curve}{}`::`\initvar{recursiveIntersect}{}`(const `\refvar{Ray}{}` &ray, `\refvar{Float}{}` *tHit,
+        `\refvar{SurfaceInteraction}{}` *isect, const `\refvar{Point3f}{}` cp[4],
+        const `\refvar{Transform}{}` &rayToObject, `\refvar{Float}{}` u0, `\refvar{Float}{}` u1,
+        int depth) const {
+    `\refcode{Try to cull curve segment versus ray}{}`
+    if (depth > 0) {
+        `\refcode{Split curve segment into sub-segments and test for intersection}{}`
+    } else {
+        `\refcode{Intersect ray with curve segment}{}`
+    }
+}
+\end{lstlisting}
+
+该方法先开始检查射线是否与曲线段的边界框相交；
+如果没有，则不可能相交，它就立即返回。
+\begin{lstlisting}
+`\initcode{Try to cull curve segment versus ray}{=}`
+`\refcode{Compute bounding box of curve segment, curveBounds}{}`
+`\refcode{Compute bounding box of ray, rayBounds}{}`
+if (`\refvar{Overlaps}{}`(curveBounds, rayBounds) == false)
+    return false;
+\end{lstlisting}
+
+沿着\refvar{Curve::ObjectBound}{()}的实现路线，
+可以通过接收曲线控制点的边界并在曲线考虑的$u$范围内
+展开最大宽度的一半来求得该段的保守边界框。
+\begin{lstlisting}
+`\initcode{Compute bounding box of curve segment, curveBounds}{=}`
+`\refvar{Bounds3f}{}` curveBounds =
+    `\refvar[Union2]{Union}{}`(`\refvar{Bounds3f}{}`(cp[0], cp[1]), `\refvar{Bounds3f}{}`(cp[2], cp[3]));
+`\refvar{Float}{}` maxWidth = std::max(`\refvar{Lerp}{}`(u0, `\refvar{common}{}`->`\refvar[CurveCommon::width]{width}{}`[0], `\refvar{common}{}`->`\refvar[CurveCommon::width]{width}{}`[1]),
+                          `\refvar{Lerp}{}`(u1, `\refvar{common}{}`->`\refvar[CurveCommon::width]{width}{}`[0], `\refvar{common}{}`->`\refvar[CurveCommon::width]{width}{}`[1]));
+curveBounds = `\refvar{Expand}{}`(curveBounds, 0.5 * maxWidth);
+\end{lstlisting}
+
+因为在相交空间内射线端点在$(0,0,0)$且其方向对齐$+z$轴，
+所以其边界框只包含$x$和$y$原点（\reffig{3.20}）；
+其$z$范围由参数范围覆盖的相应部分给出。
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap03/ray-origin-vs-curve.tex}
+    \caption{光线-曲线边界测试。在光线坐标系统中，射线的端点为$(0,0,0)$且
+        其方向对齐$+z$轴。因此，如果2D点$(x,y)=(0,0)$在曲线段边界框外，
+        则光线不可能与曲线相交。}
+    \label{fig:3.20}
+\end{figure}
+\begin{lstlisting}
+`\initcode{Compute bounding box of ray, rayBounds}{=}` 
+`\refvar{Float}{}` rayLength = ray.`\refvar[Ray::d]{d}{}`.`\refvar{Length}{}`();
+`\refvar{Float}{}` zMax = rayLength * ray.`\refvar{tMax}{}`;
+`\refvar{Bounds3f}{}` rayBounds(`\refvar{Point3f}{}`(0, 0, 0), `\refvar{Point3f}{}`(0, 0, zMax));
+\end{lstlisting}

@@ -181,7 +181,7 @@ struct `\initvar{CurveCommon}{}` {
 但\refvar{Curve}{}实例通常需要对应其$u$范围的
 表示贝塞尔曲线的四个控制点。
 这些控制点用称为\keyindex{开花}{blossoming}{}的技术计算。
-三次贝塞尔样条的花簇\sidenote{译者注：原文blossom。}$\bm p(u_0,u_1,u_2)$由三个阶段的线性插值定义，
+三次贝塞尔样条簇\sidenote{译者注：原文blossom。}$\bm p(u_0,u_1,u_2)$由三个阶段的线性插值定义，
 从原始控制点开始：
 \begin{align}\label{eq:3.4}
     \bm a_i & =(1-u_0)\bm p_i+u_0\bm p_{i+1},\quad i\in[0,1,2]\nonumber\, , \\
@@ -189,7 +189,7 @@ struct `\initvar{CurveCommon}{}` {
     \bm c   & =(1-u_2)\bm b_0+u_2\bm b_1\, .
 \end{align}
 
-花簇$\bm p(u,u,u)$给出了在位置$u$处的曲线值
+簇$\bm p(u,u,u)$给出了在位置$u$处的曲线值
 （要自己验证的话，用$u_i=u$展开\refeq{3.4}，化简，并和\refeq{3.3}比较）。
 
 \refvar{BlossomBezier}{()}实现了该计算。
@@ -206,13 +206,26 @@ static `\refvar{Point3f}{}` `\initvar{BlossomBezier}{}`(const `\refvar{Point3f}{
 \end{lstlisting}
 \begin{figure}[htbp]
     \centering\input{Pictures/chap03/blossom-pts.tex}
-    \caption{为一段贝塞尔曲线开花寻找控制点。
-        \protect\refeq{3.5}中的四个花簇给出了从$u_{\min}$到$u_{\max}$的曲线控制点。
-        开花提供了优雅方法计算表示整条曲线子集的曲线的贝塞尔控制点。}
+    \caption{一段贝塞尔曲线开花求控制点。
+        \protect\refeq{3.5}中四簇给出从$u_{\min}$到$u_{\max}$的曲线控制点。
+        开花提供了优雅方法计算整条曲线的子集曲线的贝塞尔控制点。}
     \label{fig:3.19}
 \end{figure}
 
-范围从$u_{\min}$到$u_{\max}$的曲线段的四个控制点由花簇给出（\reffig{3.19}）：
+范围从$u_{\min}$到$u_{\max}$的曲线段的四个控制点由簇给出
+\sidenote{译者注：通过繁琐但没有技巧性的多项式代换可以证明：
+对于由控制点集$A=\{\bm p_i\}_{i=0}^3$定义的
+三次贝塞尔样条簇$\bm p_A(u_0,u_1,u_2)$，
+其中任意截取$u_j\in[u_j^0,u_j^1],j=0,1,2$，
+并设$u_j^k(i)=\left\{\begin{array}{l}
+        u_j^0,\ \text{若}i<k, \\
+        u_j^1,\ \text{其他},
+    \end{array}\right.$
+然后取新控制点集$B=\{\bm q_i\}_{i=0}^3$，
+其中$\bm q_i=\bm p(u_0^3(i),u_1^2(i),u_2^1(i))$，
+并设新参数变量$\displaystyle v_j=\frac{u_j-u_j^0}{u_j^1-u_j^0}$，
+则有$\bm p_B(v_0,v_1,v_2)\equiv\bm p_A(u_0,u_1,u_2)$，
+即实现控制点集$A$到$B$的等价变换。}（\reffig{3.19}）：
 \begin{align}\label{eq:3.5}
     \bm p_0 & =\bm p(u_{\min},u_{\min},u_{\min})\nonumber\, , \\
     \bm p_1 & =\bm p(u_{\min},u_{\min},u_{\max})\nonumber\, , \\
@@ -229,3 +242,38 @@ cpObj[1] = `\refvar{BlossomBezier}{}`(`\refvar{common}{}`->`\refvar{cpObj}{}`, `
 cpObj[2] = `\refvar{BlossomBezier}{}`(`\refvar{common}{}`->`\refvar{cpObj}{}`, `\refvar{uMin}{}`, `\refvar{uMax}{}`, `\refvar{uMax}{}`);
 cpObj[3] = `\refvar{BlossomBezier}{}`(`\refvar{common}{}`->`\refvar{cpObj}{}`, `\refvar{uMax}{}`, `\refvar{uMax}{}`, `\refvar{uMax}{}`);
 \end{lstlisting}
+
+\refvar{Curve}{}相交算法基于尽快抛弃可以确定一定不会与光线相交的曲线段，
+否则就递归地将曲线对半分为更小的两个曲线段然后再测试。
+最终，曲线被线性近似以进行高效相交测试。
+在一些准备工作后，\refvar{recursiveIntersect}{()}调用
+使用\refvar{Curve}{}表示的整段曲线启动该进程。
+\begin{lstlisting}
+`\refcode{Curve Method Definitions}{+=}\lastnext{CurveMethodDefinitions}`
+bool `\refvar{Curve}{}`::`\initvar[Curve::Intersect]{\refvar[Shape::Intersect]{Intersect}{}}{}`(const `\refvar{Ray}{}` &r, `\refvar{Float}{}` *tHit,
+        `\refvar{SurfaceInteraction}{}` *isect, bool testAlphaTexture) const {
+    `\refcode{Transform Ray to object space}{}`
+    `\refcode{Compute object-space control points for curve segment, cpObj}{}`
+    `\refcode{Project curve control points to plane perpendicular to ray}{}`
+    `\refcode{Compute refinement depth for curve, maxDepth}{}`
+    return `\refvar{recursiveIntersect}{}`(ray, tHit, isect, cp, `\refvar[Transform::Inverse]{Inverse}{}`(objectToRay),
+                              `\refvar{uMin}{}`, `\refvar{uMax}{}`, maxDepth);
+}
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{Compute refinement depth for curve, maxDepth}{=}`
+`\refvar{Float}{}` L0 = 0;
+for (int i = 0; i < 2; ++i)
+    L0 = std::max(L0,
+         std::max(std::max(std::abs(cp[i].x - 2 * cp[i + 1].x + cp[i + 2].x),
+                           std::abs(cp[i].y - 2 * cp[i + 1].y + cp[i + 2].y)),
+                  std::abs(cp[i].z - 2 * cp[i + 1].z + cp[i + 2].z)));
+`\refvar{Float}{}` eps = std::max(`\refvar{common}{}`->`\refvar[CurveCommon::width]{width}{}`[0], `\refvar{common}{}`->`\refvar[CurveCommon::width]{width}{}`[1]) * .05f; // width / 20
+#define LOG4(x) (std::log(x) * 0.7213475108f)
+`\refvar{Float}{}` fr0 = LOG4(1.41421356237f * 12.f * L0 / (8.f * eps));
+#undef LOG4
+int r0 = (int)std::round(fr0);
+int maxDepth = `\refvar{Clamp}{}`(r0, 0, 10);
+\end{lstlisting}
+
+如图\refsub{三角形相交}的光线-三角形相交算法，

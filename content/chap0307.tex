@@ -382,8 +382,8 @@ return (`\refvar{recursiveIntersect}{}`(ray, tHit, isect, &cpSplit[0], rayToObje
 但可以利用我们总是恰好在参数范围的中点处划分曲线的事实更高效地计算它们。
 函数\refvar{SubdivideBezier}{()}实现了该计算；
 其计算的七个控制点对应使用$(0,0,0),(0,0,\frac{1}{2}),
-(0,\frac{1}{2},\frac{1}{2}),(\frac{1}{2},\frac{1}{2},\frac{1}{2}),
-(\frac{1}{2},\frac{1}{2},1),(\frac{1}{2},1,1)$和$(1,1,1)$作为\refeq{3.4}中的簇。
+    (0,\frac{1}{2},\frac{1}{2}),(\frac{1}{2},\frac{1}{2},\frac{1}{2}),
+    (\frac{1}{2},\frac{1}{2},1),(\frac{1}{2},1,1)$和$(1,1,1)$作为\refeq{3.4}中的簇。
 \begin{lstlisting}
 `\refcode{Curve Utility Functions}{+=}\lastnext{CurveUtilityFunctions}`
 inline void `\initvar{SubdivideBezier}{}`(const `\refvar{Point3f}{}` cp[4], `\refvar{Point3f}{}` cpSplit[7]) {
@@ -414,9 +414,9 @@ return true;
 \begin{figure}[htbp]
     \centering\input{Pictures/chap03/curve-segment-edges.tex}
     \caption{曲线段边界。一段大曲线的相交测试
-    对垂直于段终点的直线（虚线）计算边函数。
-    如果潜在交点（实心点）与曲线段在该边的不同侧，则被拒绝；
-    应换为另一曲线段（如果出现在那侧）考虑该相交。}
+        对垂直于段终点的直线（虚线）计算边函数。
+        如果潜在交点（实心点）与曲线段在该边的不同侧，则被拒绝；
+        应换为另一曲线段（如果出现在那侧）考虑该相交。}
     \label{fig:3.21}
 \end{figure}
 
@@ -428,6 +428,44 @@ return true;
 `\refcode{Test sample point against tangent perpendicular at curve start}{}`
 `\refcode{Test sample point against tangent perpendicular at curve end}{}`
 \end{lstlisting}
+
+将曲线控制点投影到射线坐标系统有两个原因让该测试更高效。
+第一，因为射线方向朝向$+z$轴，问题简化为$x$和$y$的2D测试。
+第二，因为射线端点在坐标系统原点，我们需要分类的点是$(0,0)$，
+这简化了边函数求值，就像光线-三角形相交测试那样。
+
+边函数已在光线-三角形相交测试的\refeq{3.1}介绍了；也可见\reffig{3.14}。
+为了定义边函数，我们需要垂直于曲线且过其起点的直线上任意的两点。
+第一个控制点$\bm p_0$是第一个点的不错选择。
+对于第二个点，我们将计算垂直于曲线切线的向量并将该偏移量加到控制点上。
+
+\refeq{3.3}的微分说明曲线在第一个控制点$\bm p_0$处的切线为$3(\bm p_1-\bm p_0)$。
+缩放因子在这里无关紧要，所以我们这里用$\bm t=\bm p_1-\bm p_0$。
+在2D中计算垂直于切线的向量很容易：只需要交换$x$和$y$坐标并让其中一个取相反数。
+（为了理解为什么这样可行，考虑点积$(x,y)\cdot(y,-x)=xy+(-yx)=0$。
+因为两个向量夹角的余弦为零，它们一定垂直。）
+因此，边上的第二个点为
+\begin{align*}
+    \bm p_0+(p_{1y}-p_{0y},-(p_{1x}-p_{0x}))=\bm p_0+(p_{1y}-p_{0y},p_{0x}-p_{1x})\, .
+\end{align*}
+将这两点代入边函数的定义\refeq{3.1}，化简得
+\begin{align*}
+    e(\bm p)=(p_{1y}-p_{0y})(p_y-p_{0y})-(p_x-p_{0x})(p_{0x}-p_{1x})\, .
+\end{align*}
+最后，代入$\bm p=(0,0)$得到最后测试的表达式：
+\begin{align*}
+    e((0,0))=(p_{1y}-p_{0y})(-p_{0y})+p_{0x}(p_{0x}-p_{1x})\, .
+\end{align*}
+\begin{lstlisting}
+`\initcode{Test sample point against tangent perpendicular at curve start}{=}`
+`\refvar{Float}{}` edge = (cp[1].y - cp[0].y) * -cp[0].y +
+              cp[0].x * (cp[0].x - cp[1].x);
+if (edge < 0)
+    return false;
+\end{lstlisting}
+
+代码片\refcode{Test sample point against tangent perpendicular at curve end}{}则
+对曲线终点做相应测试。
 \begin{lstlisting}
 `\initcode{Test sample point against tangent perpendicular at curve end}{=}`
 edge = (cp[2].y - cp[3].y) * -cp[3].y +
@@ -435,3 +473,18 @@ edge = (cp[2].y - cp[3].y) * -cp[3].y +
 if (edge < 0)
     return false;
 \end{lstlisting}
+
+测试的下一部分是确定点$(0,0)$离曲线最近处沿曲线段的$u$值。
+如果到那点中心的距离不超过曲线宽度，则这就是交点。
+对三次贝塞尔曲线确定该距离并不高效，
+所以该相交方法替换为用线段近似曲线来计算该$u$值。
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap03/curve-approx-linear.tex}
+    \caption{用线段近似三次贝塞尔曲线。
+        对于这部分光线-曲线相交测试，我们用过其起点和终点的线段（虚线）
+        近似三次贝塞尔曲线（实际中，被划分后，曲线几乎已经是线性的了，
+        所以误差比该图中画的更小）。}
+    \label{fig:3.22}
+\end{figure}
+
+我们将用从其起点$\bm p_0$到其终点$\bm p_3$的由$u$参数化的线段线性近似贝塞尔曲线。

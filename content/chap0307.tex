@@ -283,7 +283,7 @@ bool `\refvar{Curve}{}`::`\initvar[Curve::Intersect]{\refvar[Shape::Intersect]{I
 就被限定在小于某微小固定的距离内。
 我们不深入该计算的细节
 \sidenote{译者注：我对这段代码的理解是：
-通过比较{\scshape\ttfamily cp[1]}与{\ttfamily cp[0]、cp[2]}的中点之差以及
+通过比较{\ttfamily cp[1]}与{\ttfamily cp[0]、cp[2]}的中点之差以及
 {\ttfamily cp[2]}与{\ttfamily cp[1]、cp[3]}的中点之差，并取全部维度的最大绝对值，
 {\ttfamily L0}表示了曲线的弯曲程度；{\ttfamily eps}表示最大宽度的一半。
 {\ttfamily L0}与{\ttfamily eps}的比值反映了相应精度要求，
@@ -502,5 +502,110 @@ if (edge < 0)
     \label{fig:3.23}
 \end{figure}
 
-\refeq{2.1}给了我们两个向量点积、它们的长度以及夹角余弦之间的关系。
-特别地，它向我们展示了计算
+\refeq{2.1}给出了两向量点积、它们的长度以及夹角余弦的关系。
+特别地，它向我们展示了怎样计算从$\bm p_0$到$\bm p$的向量
+与从$\bm p_0$到$\bm p_3$的向量之间夹角的余弦：
+\begin{align*}
+    \cos\theta=\frac{(\bm p-\bm p_0)\cdot(\bm p_3-\bm p_0)}{\|\bm p-\bm p_0\|\|\bm p_3-\bm p_0\|}\, .
+\end{align*}
+
+因为从$\bm p'$到$\bm p$的向量垂直于该直线（\reffig{3.23}(b)），
+则我们可以计算沿直线从$\bm p_0$到$\bm p'$的距离为
+\begin{align*}
+    d=\|\bm p-\bm p_0\|\cos\theta=\frac{(\bm p-\bm p_0)\cdot(\bm p_3-\bm p_0)}{\|\bm p_3-\bm p_0\|}\, .
+\end{align*}
+
+最后，沿直线的参数偏移量$w$是$d$与直线长度的比值，
+\begin{align*}
+    w=\frac{d}{\|\bm p_3-\bm p_0\|}=\frac{(\bm p-\bm p_0)\cdot(\bm p_3-\bm p_0)}{\|\bm p_3-\bm p_0\|^2}\, .
+\end{align*}
+
+因为事实上相交坐标系统中$\bm p=(0,0)$，所以$w$值的计算最后有所简化。
+\begin{lstlisting}
+`\initcode{Compute line w that gives minimum distance to sample point}{=}`
+`\refvar{Vector2f}{}` segmentDirection = `\refvar{Point2f}{}`(cp[3]) - `\refvar{Point2f}{}`(cp[0]);
+`\refvar{Float}{}` denom = segmentDirection.`\refvar{LengthSquared}{}`();
+if (denom == 0)
+    return false;
+`\refvar{Float}{}` w = `\refvar{Dot}{}`(-`\refvar{Vector2f}{}`(cp[0]), segmentDirection) / denom;
+\end{lstlisting}
+
+贝塞尔曲线上到候选交点最近（假定）点的参数$u$坐标通过
+沿该段$u$的范围线性插值算得。
+给定该值，就能计算曲线在该点处的宽度。
+\begin{lstlisting}
+`\initcode{Compute u coordinate of curve intersection point and hitWidth}{=}`
+`\refvar{Float}{}` u = `\refvar{Clamp}{}`(`\refvar{Lerp}{}`(w, u0, u1), u0, u1);
+`\refvar{Float}{}` hitWidth = `\refvar{Lerp}{}`(u, `\refvar{common}{}`->`\refvar[CurveCommon::width]{width}{}`[0], `\refvar{common}{}`->`\refvar[CurveCommon::width]{width}{}`[1]);
+`\refvar{Normal3f}{}` nHit;
+if (`\refvar{common}{}`->`\refvar[CurveCommon::type]{type}{}` == `\refvar{CurveType}{}`::`\refvar{Ribbon}{}`) {
+    `\refcode{Scale hitWidth based on ribbon orientation}{}`
+}
+\end{lstlisting}
+
+对于\refvar{Ribbon}{}曲线，曲线并不总是朝向光线。
+相反，它的朝向是在给定于每个端点处的曲面法线之间插值的。
+这里，球面线性插值用于插值$u$处的法线（回想\refsub{四元数插值}）。
+再用规范化的射线方向与丝带朝向间的夹角余弦缩放曲线宽度，
+这样它就反映了给定方向的曲线可见宽度。
+\begin{lstlisting}
+`\initcode{Scale hitWidth based on ribbon orientation}{=}`
+`\refvar{Float}{}` sin0 = std::sin((1 - u) * `\refvar{common}{}`->`\refvar{normalAngle}{}`) *
+    `\refvar{common}{}`->`\refvar{invSinNormalAngle}{}`;
+`\refvar{Float}{}` sin1 = std::sin(u * `\refvar{common}{}`->`\refvar{normalAngle}{}`) *
+    `\refvar{common}{}`->`\refvar{invSinNormalAngle}{}`;
+nHit = sin0 * `\refvar{common}{}`->`\refvar[CurveCommon::n]{n}{}`[0] + sin1 * `\refvar{common}{}`->`\refvar[CurveCommon::n]{n}{}`[1];
+hitWidth *= `\refvar{AbsDot}{}`(nHit, ray.`\refvar[Ray::d]{d}{}`) / rayLength;
+\end{lstlisting}
+
+为了最终将可能的相交处分类为命中或未命中，
+必须用函数\refvar{EvalBezier}{()}
+求贝塞尔曲线在$u$处的值
+（因为控制点{\ttfamily cp}表示当前考虑的曲线段，
+然而既然$w$在范围$[0,1]$内，在函数调用中使用$w$而不是$u$就很重要）。
+曲线在该点的导数很快也会有用，所以现在记录下来。
+
+我们想测试从$\bm p$到曲线上该点{\ttfamily pc}的
+距离是否小于曲线宽度的一半。
+因为$\bm p=(0,0)$，我们可以等价地测试从{\ttfamily pc}到原点
+的距离是否小于宽度的一半，或者等价地，
+平方距离是否小于宽度平方的四分之一。
+如果该测试通过，最后一件事是检查交点是否在射线的参数$t$范围内。
+\begin{lstlisting}
+`\initcode{Test intersection point against curve width}{=}`
+`\refvar{Vector3f}{}` dpcdw;
+`\refvar{Point3f}{}` pc = `\refvar{EvalBezier}{}`(cp, `\refvar{Clamp}{}`(w, 0, 1), &dpcdw);
+`\refvar{Float}{}` ptCurveDist2 = pc.x * pc.x + pc.y * pc.y;
+if (ptCurveDist2 > hitWidth * hitWidth * .25)
+    return false;
+if (pc.z < 0 || pc.z > zMax)
+    return false;
+\end{lstlisting}
+
+\refvar{EvalBezier}{()}计算簇$\bm p(u,u,u)$来求贝塞尔样条上的一点。
+它也可选地返回曲线在该点处的导数\sidenote{译者注：读者可以动手验算一下。}。
+\begin{lstlisting}
+`\refcode{Curve Utility Functions}{+=}\lastcode{CurveUtilityFunctions}`
+static `\refvar{Point3f}{}` `\initvar{EvalBezier}{}`(const `\refvar{Point3f}{}` cp[4], `\refvar{Float}{}` u,
+        `\refvar{Vector3f}{}` *deriv = nullptr) {
+    `\refvar{Point3f}{}` cp1[3] = { `\refvar{Lerp}{}`(u, cp[0], cp[1]), `\refvar{Lerp}{}`(u, cp[1], cp[2]),
+                       `\refvar{Lerp}{}`(u, cp[2], cp[3]) };
+    `\refvar{Point3f}{}` cp2[2] = { `\refvar{Lerp}{}`(u, cp1[0], cp1[1]), `\refvar{Lerp}{}`(u, cp1[1], cp1[2]) };
+    if (deriv)
+        *deriv = (`\refvar{Float}{}`)3 * (cp2[1] - cp2[0]);
+    return `\refvar{Lerp}{}`(u, cp2[0], cp2[1]);
+}
+\end{lstlisting}
+
+最后，计算偏导数，相交处的\refvar{SurfaceInteraction}{}可以初始化了。
+\begin{lstlisting}
+`\initcode{Compute hit t and partial derivatives for curve intersection}{=}`
+if (tHit != nullptr) {
+    *tHit = pc.z / rayLength;
+    `\refcode{Compute error bounds for curve intersection}{}`
+    `\refcode{Compute $\partial$p/$\partial$u and $\partial$p/$\partial$v for curve intersection}{}`
+    *isect = (*`\refvar{ObjectToWorld}{}`)(`\refvar{SurfaceInteraction}{}`(
+        ray(pc.z), pError, `\refvar{Point2f}{}`(u, v), -ray.`\refvar[Ray::d]{d}{}`, dpdu, dpdv,
+        `\refvar{Normal3f}{}`(0, 0, 0), `\refvar{Normal3f}{}`(0, 0, 0), ray.`\refvar[Ray::time]{time}{}`, this));
+}
+\end{lstlisting}

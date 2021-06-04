@@ -281,7 +281,13 @@ bool `\refvar{Curve}{}`::`\initvar[Curve::Intersect]{\refvar[Shape::Intersect]{I
 
 计算细分曲线的最大次数，这样与最精细级别的最终线性化曲线的距离
 就被限定在小于某微小固定的距离内。
-我们不深入该计算的细节，
+我们不深入该计算的细节
+\sidenote{译者注：我对这段代码的理解是：
+通过比较{\scshape\ttfamily cp[1]}与{\ttfamily cp[0]、cp[2]}的中点之差以及
+{\ttfamily cp[2]}与{\ttfamily cp[1]、cp[3]}的中点之差，并取全部维度的最大绝对值，
+{\ttfamily L0}表示了曲线的弯曲程度；{\ttfamily eps}表示最大宽度的一半。
+{\ttfamily L0}与{\ttfamily eps}的比值反映了相应精度要求，
+取对数后对应最大划分次数。}，
 它在代码片\refcode{Compute refinement depth for curve, maxDepth}{}中实现。
 \begin{lstlisting}
 `\initcode{Compute refinement depth for curve, maxDepth}{=}`
@@ -353,4 +359,79 @@ curveBounds = `\refvar{Expand}{}`(curveBounds, 0.5 * maxWidth);
 `\refvar{Float}{}` rayLength = ray.`\refvar[Ray::d]{d}{}`.`\refvar{Length}{}`();
 `\refvar{Float}{}` zMax = rayLength * ray.`\refvar{tMax}{}`;
 `\refvar{Bounds3f}{}` rayBounds(`\refvar{Point3f}{}`(0, 0, 0), `\refvar{Point3f}{}`(0, 0, zMax));
+\end{lstlisting}
+
+如果光线与曲线的边界框相交且递归划分尚未触底，
+则曲线的参数$u$范围划分为两半。
+\refvar{SubdivideBezier}{()}计算七个控制点：
+前四个对应第一半划分曲线的四个控制点，
+后四个（从第一半的最后一个控制点开始）对应第二半的控制点。
+调用两次\refvar{recursiveIntersect}{()}测试两条子段。
+\begin{lstlisting}
+`\initcode{Split curve segment into sub-segments and test for intersection}{=}`
+`\refvar{Float}{}` uMid = 0.5f * (u0 + u1);
+`\refvar{Point3f}{}` cpSplit[7];
+`\refvar{SubdivideBezier}{}`(cp, cpSplit);
+return (`\refvar{recursiveIntersect}{}`(ray, tHit, isect, &cpSplit[0], rayToObject,
+                           u0, uMid, depth - 1) ||
+        `\refvar{recursiveIntersect}{}`(ray, tHit, isect, &cpSplit[3], rayToObject,
+                           uMid, u1, depth - 1));  
+\end{lstlisting}
+
+尽管我们可以用函数\refvar{BlossomBezier}{()}计算划分的曲线的控制点，
+但可以利用我们总是恰好在参数范围的中点处划分曲线的事实更高效地计算它们。
+函数\refvar{SubdivideBezier}{()}实现了该计算；
+其计算的七个控制点对应使用$(0,0,0),(0,0,\frac{1}{2}),
+(0,\frac{1}{2},\frac{1}{2}),(\frac{1}{2},\frac{1}{2},\frac{1}{2}),
+(\frac{1}{2},\frac{1}{2},1),(\frac{1}{2},1,1)$和$(1,1,1)$作为\refeq{3.4}中的簇。
+\begin{lstlisting}
+`\refcode{Curve Utility Functions}{+=}\lastnext{CurveUtilityFunctions}`
+inline void `\initvar{SubdivideBezier}{}`(const `\refvar{Point3f}{}` cp[4], `\refvar{Point3f}{}` cpSplit[7]) {
+    cpSplit[0] = cp[0];
+    cpSplit[1] = (cp[0] + cp[1]) / 2;
+    cpSplit[2] = (cp[0] + 2 * cp[1] + cp[2]) / 4;
+    cpSplit[3] = (cp[0] + 3 * cp[1] + 3 * cp[2] + cp[3]) / 8;
+    cpSplit[4] = (cp[1] + 2 * cp[2] + cp[3]) / 4;
+    cpSplit[5] = (cp[2] + cp[3]) / 2;
+    cpSplit[6] = cp[3];
+} 
+\end{lstlisting}
+
+在多次划分后，执行相交测试。
+通过使用曲线的线性近似，
+该测试的一部分得以更高效执行；
+变差缩减性允许我们做该近似而不引入太大误差。
+\begin{lstlisting}
+`\initcode{Intersect ray with curve segment}{=}`
+`\refcode{Test ray against segment endpoint boundaries}{}`
+`\refcode{Compute line w that gives minimum distance to sample point}{}`
+`\refcode{Compute u coordinate of curve intersection point and hitWidth}{}`
+`\refcode{Test intersection point against curve width}{}`
+`\refcode{Compute v coordinate of curve intersection point}{}`
+`\refcode{Compute hit t and partial derivatives for curve intersection}{}`
+return true;
+\end{lstlisting}
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap03/curve-segment-edges.tex}
+    \caption{曲线段边界。一段大曲线的相交测试
+    对垂直于段终点的直线（虚线）计算边函数。
+    如果潜在交点（实心点）与曲线段在该边的不同侧，则被拒绝；
+    应换为另一曲线段（如果出现在那侧）考虑该相交。}
+    \label{fig:3.21}
+\end{figure}
+
+重要的是，相交测试只接受位于当前考虑的那段\refvar{Curve}{}曲面上的相交处。
+因此，相交测试第一步是为垂直于曲线起点和终点的直线计算边函数并
+对与之可能相交的点分类（\reffig{3.21}）。
+\begin{lstlisting}
+`\initcode{Test ray against segment endpoint boundaries}{=}`
+`\refcode{Test sample point against tangent perpendicular at curve start}{}`
+`\refcode{Test sample point against tangent perpendicular at curve end}{}`
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{Test sample point against tangent perpendicular at curve end}{=}`
+edge = (cp[2].y - cp[3].y) * -cp[3].y +
+        cp[3].x * (cp[3].x - cp[2].x);
+if (edge < 0)
+    return false;
 \end{lstlisting}

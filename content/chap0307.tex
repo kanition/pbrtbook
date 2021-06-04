@@ -487,4 +487,20 @@ if (edge < 0)
     \label{fig:3.22}
 \end{figure}
 
-我们将用从其起点$\bm p_0$到其终点$\bm p_3$的由$u$参数化的线段线性近似贝塞尔曲线。
+我们将用从其起点$\bm p_0$到其终点$\bm p_3$的
+由$u$参数化的线段线性近似贝塞尔曲线。
+这时，$w=0$处的位置为$\bm p_0$，$w=1$处为$\bm p_3$（\reffig{3.22}）。
+我们现在的任务是计算直线上离点$\bm p$最近的$\bm p'$沿直线的$u$值。
+运用的关键是，在$\bm p'$处，从直线上相应点
+到$\bm p$的向量将垂直于该直线（\reffig{3.23}(a)）。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.5\linewidth]{chap03/Pointlinedistance.eps}
+    \caption{(a)给定无限直线和点$\bm p$，则从该点到直线上
+        最近点$\bm p'$的向量垂直于该直线。
+        (b)因为该向量垂直，我们可以计算从直线上第一点到
+        最近点$\bm p'$的距离为$d=\|\bm p-\bm p_0\|\cos\theta$。}
+    \label{fig:3.23}
+\end{figure}
+
+\refeq{2.1}给了我们两个向量点积、它们的长度以及夹角余弦之间的关系。
+特别地，它向我们展示了计算

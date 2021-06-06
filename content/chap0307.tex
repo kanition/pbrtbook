@@ -93,7 +93,7 @@ bool `\refvar{recursiveIntersect}{}`(const `\refvar{Ray}{}` &r, `\refvar{Float}{
 在拿真正的圆柱体场景作参考时这可能导致微小的矛盾。
 \begin{lstlisting}
 `\initcode{CurveType Declarations}{=}`
-enum class `\initvar{CurveType}{}` { `\initvar{Flat}{}`, `\initvar{Cylinder}{}`, `\initvar{Ribbon}{}` };
+enum class `\initvar{CurveType}{}` { `\initvar{Flat}{}`, `\initvar[CurveType::Cylinder]{Cylinder}{}`, `\initvar{Ribbon}{}` };
 \end{lstlisting}
 
 给定在pbrt场景描述文件中指定的曲线，
@@ -494,7 +494,7 @@ if (edge < 0)
 运用的关键是，在$\bm p'$处，从直线上相应点
 到$\bm p$的向量将垂直于该直线（\reffig{3.23}(a)）。
 \begin{figure}[htbp]
-    \centering\includegraphics[width=0.5\linewidth]{chap03/Pointlinedistance.eps}
+    \centering\includegraphics[width=0.4\linewidth]{chap03/Pointlinedistance.eps}
     \caption{(a)给定无限直线和点$\bm p$，则从该点到直线上
         最近点$\bm p'$的向量垂直于该直线。
         (b)因为该向量垂直，我们可以计算从直线上第一点到
@@ -597,6 +597,19 @@ static `\refvar{Point3f}{}` `\initvar{EvalBezier}{}`(const `\refvar{Point3f}{}` 
 }
 \end{lstlisting}
 
+如果之前的测试都通过了，我们就找到了有效的相交，
+现在可以计算交点的$v$坐标了。
+曲线的$v$坐标在0到1内变化，曲线中心取值为0.5；
+这里我们根据过曲线上的点{\ttfamily pc}和沿其导数的点的边函数
+将交点$(0,0)$分类，决定交点在中心的哪边以及该怎样计算$v$。
+\begin{lstlisting}
+`\initcode{Compute v coordinate of curve intersection point}{=}`
+`\refvar{Float}{}` ptCurveDist = std::sqrt(ptCurveDist2);
+`\refvar{Float}{}` edgeFunc = dpcdw.x * -pc.y + pc.x * dpcdw.y;
+`\refvar{Float}{}` v = (edgeFunc > 0) ? 0.5f + ptCurveDist / hitWidth :
+                           0.5f - ptCurveDist / hitWidth;
+\end{lstlisting}
+
 最后，计算偏导数，相交处的\refvar{SurfaceInteraction}{}可以初始化了。
 \begin{lstlisting}
 `\initcode{Compute hit t and partial derivatives for curve intersection}{=}`
@@ -609,3 +622,50 @@ if (tHit != nullptr) {
         `\refvar{Normal3f}{}`(0, 0, 0), `\refvar{Normal3f}{}`(0, 0, 0), ray.`\refvar[Ray::time]{time}{}`, this));
 }
 \end{lstlisting}
+
+偏导数$\displaystyle\frac{\partial \bm p}{\partial u}$直接
+来自于底层贝塞尔曲线的导数。
+第二个偏导数$\displaystyle\frac{\partial \bm p}{\partial v}$则
+基于曲线类型用不同方式计算。
+对于丝带，我们有$\displaystyle\frac{\partial \bm p}{\partial u}$和
+曲面法线，因此$\displaystyle\frac{\partial \bm p}{\partial v}$必须
+是使得$\displaystyle\frac{\partial \bm p}{\partial u}\times\frac{\partial \bm p}{\partial v}=\bm n$的向量
+且长度等于曲线宽度。
+\begin{lstlisting}
+`\initcode{Compute $\partial$p/$\partial$u and $\partial$p/$\partial$v for curve intersection}{=}`
+`\refvar{Vector3f}{}` dpdu, dpdv;
+`\refvar{EvalBezier}{}`(`\refvar{common}{}`->`\refvar{cpObj}{}`, u, &dpdu);
+if (`\refvar{common}{}`->`\refvar[CurveCommon::type]{type}{}` == `\refvar{CurveType}{}`::`\refvar{Ribbon}{}`)
+    dpdv = `\refvar{Normalize}{}`(`\refvar{Cross}{}`(nHit, dpdu)) * hitWidth;
+else {
+    `\refcode{Compute curve $\partial$p/$\partial$v for flat and cylinder curves}{}`
+}
+\end{lstlisting}
+
+对于平坦和圆柱曲线，我们变换$\displaystyle\frac{\partial \bm p}{\partial u}$到相交坐标系统。
+对于平坦曲线，我们知道$\displaystyle\frac{\partial \bm p}{\partial v}$位于$xy$平面内、
+垂直于$\displaystyle\frac{\partial \bm p}{\partial u}$且长度等于{\ttfamily hitWidth}。
+我们可以用和之前求垂直于曲线段的边界边同样的方法求得2D垂直向量。
+\begin{lstlisting}
+`\initcode{Compute curve $\partial$p/$\partial$v for flat and cylinder curves}{=}`
+`\refvar{Vector3f}{}` dpduPlane = (`\refvar[Transform::Inverse]{Inverse}{}`(rayToObject))(dpdu);
+`\refvar{Vector3f}{}` dpdvPlane = `\refvar{Normalize}{}`(`\refvar{Vector3f}{}`(-dpduPlane.y, dpduPlane.x, 0)) *
+                     hitWidth;
+if (`\refvar{common}{}`->`\refvar[CurveCommon::type]{type}{}` == `\refvar{CurveType}{}`::`\refvar[CurveType::Cylinder]{Cylinder}{}`) {
+    `\refcode{Rotate dpdvPlane to give cylindrical appearance}{}`
+}
+dpdv = rayToObject(dpdvPlane);
+\end{lstlisting}
+
+圆柱曲线的向量$\displaystyle\frac{\partial \bm p}{\partial v}$沿轴{\ttfamily dpduPlane}旋转
+使其外观像圆柱体横截面。
+\begin{lstlisting}
+`\initcode{Rotate dpdvPlane to give cylindrical appearance}{=}`
+`\refvar{Float}{}` theta = `\refvar{Lerp}{}`(v, -90., 90.);
+`\refvar{Transform}{}` rot = `\refvar{Rotate}{}`(-theta, dpduPlane);
+dpdvPlane = rot(dpdvPlane);
+\end{lstlisting}
+
+这里没有介绍的方法\refvar{Curve::Area}{()}首先
+用其控制点连线长度近似曲线长度。
+然后它再用该长度乘以其范围内宽度的均值以近似整个曲面面积。

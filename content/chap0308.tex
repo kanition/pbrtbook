@@ -83,8 +83,8 @@ std::vector<std::shared_ptr<`\refvar{Shape}{}`>> `\initvar{LoopSubdivide}{}`(
         const `\refvar{Transform}{}` *ObjectToWorld, const `\refvar{Transform}{}` *WorldToObject,
         bool reverseOrientation, int nLevels, int nIndices,
         const int *vertexIndices, int nVertices, const `\refvar{Point3f}{}` *p) {
-    std::vector<`\refvar{SDVertex}{}` *> vertices;
-    std::vector<`\refvar{SDFace}{}` *> faces;
+    std::vector<`\refvar{SDVertex}{}` *> `\initvar{vertices}{}`;
+    std::vector<`\refvar{SDFace}{}` *> `\initvar{faces}{}`;
     `\refcode{Allocate LoopSubdiv vertices and faces}{}`
     `\refcode{Set face to vertex pointers}{}`
     `\refcode{Set neighbor pointers in faces}{}`
@@ -96,5 +96,94 @@ std::vector<std::shared_ptr<`\refvar{Shape}{}`>> `\initvar{LoopSubdivide}{}`(
 \subsection{网格表示}\label{sub:网格表示}
 \refvar{LoopSubdivide}{()}的参数用和\refvar{TriangleMesh}{}构造函数中
 一样的格式指定了三角网格（\refsec{三角形网格}）：
+每个面由三个整数顶点索引描述，
+给出面的三个顶点在顶点数组{\ttfamily p}中的偏移量。
+我们需要处理该数据以决定哪些面彼此相邻，
+哪些面和哪些顶点相邻等等，以实现细分算法。
 
+我们将很快定义结构体\refvar{SDVertex}{}和\refvar{SDFace}{}，
+它们存有细分网格中顶点和面的数据。
+\refvar{LoopSubdivide}{()}从为网格中的每个顶点分配
+一个\refvar{SDVertex}{}实例以及为每个面分配\refvar{SDFace}{}开始。
+现在，它们几乎都没有初始化。
+\begin{lstlisting}
+`\initcode{Allocate LoopSubdiv vertices and faces}{=}`
+std::unique_ptr<`\refvar{SDVertex}{}`[]> verts(new `\refvar{SDVertex}{}`[nVertices]);
+for (int i = 0; i < nVertices; ++i) {
+    verts[i] = `\refvar{SDVertex}{}`(p[i]);
+    `\refvar{vertices}{}`.push_back(&verts[i]);
+}
+int nFaces = nIndices / 3;
+std::unique_ptr<`\refvar{SDFace}{}`[]> fs(new `\refvar{SDFace}{}`[nFaces]);
+for (int i = 0; i < nFaces; ++i)
+    `\refvar{faces}{}`.push_back(&fs[i]);
+\end{lstlisting}
+
+Loop细分方案像多数其他细分方案那样，
+假设控制网格是\keyindex{流形}{manifold}{}——
+共享任意给定边的面不超过两个。
+这样的网格可能是闭合的或开放的：\keyindex{闭合网格}{closed mesh}{mesh网格}没有
+边界且所有面的每条边都有邻接面。\keyindex{开放网格}{open mesh}{mesh网格}有
+一些面没有全部三个邻居。
+这里的实现同时支持闭合和开放网格。
+
+在三角网格内部，大多数顶点和六个面相邻且
+有六个相邻顶点通过边直接与其相连。
+在开放网格的边界上，大多数顶点与三个面和四个顶点相邻。
+与一个顶点直接相邻的顶点数称为该顶点的\keyindex{价}{valence}{}。
+价不是六的内部顶点或价不是四的边界顶点
+称为\keyindex{非凡顶点}{extraordinary vertex}{vertex顶点}；
+否则称为\keyindex{正则的}{regular}{}\footnote{这些术语常用于建模文献中，
+    尽管“irregular”对“regular”或者“extraordinary”对“ordinary”更符合直觉。}。
+Loop细分曲面在除非凡顶点外的任意处都是光滑的。
+
+每个\refvar{SDVertex}{}存储其位置\refvar[SDVertex::p]{p}{}、
+表示它是正则还是非凡顶点的布尔量以及
+记录它是否位于网格边界上的布尔量。
+它也存有指向任意与之相邻的面的指针；
+该指针给出了寻找其所有相邻面的起点。
+最后如果有的话，有一个指针为下一级的细分存储相应的\refvar{SDVertex}{}。
+\begin{lstlisting}
+`\initcode{LoopSubdiv Local Structures}{=}\initnext{LoopSubdivLocalStructures}`
+struct `\initvar{SDVertex}{}` {
+    `\refcode{SDVertex Constructor}{}`
+    `\refcode{SDVertex Methods}{}`
+    `\refvar{Point3f}{}` `\initvar[SDVertex::p]{p}{}`;
+    `\refvar{SDFace}{}` *`\initvar{startFace}{}` = nullptr;
+    `\refvar{SDVertex}{}` *`\initvar{child}{}` = nullptr;
+    bool `\initvar{regular}{}` = false, `\initvar[SDVertex::boundary]{boundary}{}` = false;
+};
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{SDVertex Constructor}{=}`
+`\refvar{SDVertex}{}`(const `\refvar{Point3f}{}` &p = `\refvar{Point3f}{}`(0, 0, 0)) : `\refvar[SDVertex::p]{p}{}`(p) { }
+\end{lstlisting}
+
+结构体\refvar{SDFace}{}存有最多关于网格的拓扑信息的地方。
+因为所有面都是三角形，面总是存有指向其三个顶点的指针以及
+指向其三条边相邻的面的指针。
+如果面在开放网格边缘上则相应的相邻面指针为{\ttfamily nullptr}。
+
+相邻面指针索引是，如果我们把从{\ttfamily\refvar[SDFace::v]{v}{}[i]}到{\ttfamily\refvar[SDFace::v]{v}{}[(i+1)\%3]}的边
+标为第{\ttfamily i}边，则该边的相邻面存于{\ttfamily\refvar[SDFace::f]{f}{}[i]}（\reffig{3.27}）。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.35\linewidth]{chap03/Subdivvertfacepointers.eps}
+    \caption{每个三角形面存有三个指向\protect\refvar{SDVertex}{}对象的
+    指针{\ttfamily\protect\refvar[SDFace::v]{v}{}[i]}以及三个
+    指向相邻面的指针{\ttfamily\protect\refvar[SDFace::f]{f}{}[i]}。
+    相邻面索引使用的约定是第{\ttfamily i}边是
+    从{\ttfamily\protect\refvar[SDFace::v]{v}{}[i]}到{\ttfamily\protect\refvar[SDFace::v]{v}{}[(i+1)\%3]}的边，
+    且第{\ttfamily i}边的邻居在{\ttfamily\protect\refvar[SDFace::f]{f}{}[i]}中。}
+    \label{fig:3.27}
+\end{figure}
+\begin{lstlisting}
+`\refcode{LoopSubdiv Local Structures}{+=}\lastnext{LoopSubdivLocalStructures}`
+struct `\initvar{SDFace}{}` {
+    `\refcode{SDFace Constructor}{}`
+    `\refcode{SDFace Methods}{}`
+    `\refvar{SDVertex}{}` *`\initvar[SDFace::v]{v}{}`[3];
+    `\refvar{SDFace}{}` *`\initvar[SDFace::f]{f}{}`[3];
+    `\refvar{SDFace}{}` *`\initvar{children}{}`[4];
+};
+\end{lstlisting}
 \subsection{细分}\label{sub:细分}

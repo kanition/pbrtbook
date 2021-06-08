@@ -10,12 +10,12 @@
 \end{figure}
 
 尽管自然的表示是用{\ttfamily Triangle}形状实现，
-每个三角形都存储它三个顶点的位置，
-但内存更高效的表示是用一个顶点位置数组分开存储整个\keyindex{三角网格}{triangle mesh}{}，
-每个独立三角形只存储它三个顶点对该数组的三个偏移量。
+每个三角形都存储其三个\keyindex{顶点}{vertex}{}的位置，
+但内存更高效的表示是用顶点位置数组分开存储整个\keyindex{三角网格}{triangle mesh}{mesh网格}，
+每个独立三角形只存储其三个顶点对该数组的三个偏移量。
 
-为了理解为什么是这样，考虑著名的\keyindex{欧拉-庞加莱公式}{Euler-Poincaré formula}{}，
-它将闭合离散网格的顶点数$V$、边数$E$和面数$F$联系起来：
+为了理解该做法，考虑著名的\keyindex{欧拉-庞加莱公式}{Euler-Poincaré formula}{}，
+它将闭合离散\keyindex{网格}{mesh}{}的顶点数$V$、\keyindex{边}{edge}{}数$E$和\keyindex{面}{face}{}数$F$联系起来：
 \begin{align*}
     V-E+F=2(1-g)\, ,
 \end{align*}

@@ -61,4 +61,40 @@
 
 这里，我们将介绍\keyindex{Loop细分曲面}{Loop subdivision surface}{surface曲面}
 \footnote{以所用的细分规则发明者Charles Loop的名字命名。}的一种实现。
+Loop细分规则基于控制网格中的三角形面；
+开始时具有超过三个顶点的面被三角剖分。
+在每步细分中，所有面分为四个子面（\reffig{3.26}）。
+沿原始网格的所有边添加新顶点，
+使用相邻顶点的加权平均计算位置。
+而且，每个原始顶点的位置也用其位置和新邻居位置的加权平均更新。
+这里的实现使用的权值基于Hoppe等\parencite*{10.1145/192161.192233}开发的
+对Loop方法的改进。
+我们这里不涵盖关于怎样推导出这些权值的讨论。
+虽然需要精妙的数学推导证明它们确实满足了这一点，
+但必须谨慎选择它们以保证极限曲面确实有特定期望的光滑性质。
+
+细分曲面不是在pbrt中实现为\refvar{Shape}{}，
+而是由函数\refvar{LoopSubdivide}{()}推广，
+它将细分规则应用到一系列顶点和顶点索引表示的网格上
+并返回表示最终细分网格的\refvar{Triangle}{}向量。
+\begin{lstlisting}
+`\initcode{LoopSubdiv Function Definitions}{=}\initnext{LoopSubdivFunctionDefinitions}`
+std::vector<std::shared_ptr<`\refvar{Shape}{}`>> `\initvar{LoopSubdivide}{}`(
+        const `\refvar{Transform}{}` *ObjectToWorld, const `\refvar{Transform}{}` *WorldToObject,
+        bool reverseOrientation, int nLevels, int nIndices,
+        const int *vertexIndices, int nVertices, const `\refvar{Point3f}{}` *p) {
+    std::vector<`\refvar{SDVertex}{}` *> vertices;
+    std::vector<`\refvar{SDFace}{}` *> faces;
+    `\refcode{Allocate LoopSubdiv vertices and faces}{}`
+    `\refcode{Set face to vertex pointers}{}`
+    `\refcode{Set neighbor pointers in faces}{}`
+    `\refcode{Finish vertex initialization}{}`
+    `\refcode{Refine subdivision mesh into triangles}{}`
+}
+\end{lstlisting}
+
+\subsection{网格表示}\label{sub:网格表示}
+\refvar{LoopSubdivide}{()}的参数用和\refvar{TriangleMesh}{}构造函数中
+一样的格式指定了三角网格（\refsec{三角形网格}）：
+
 \subsection{细分}\label{sub:细分}

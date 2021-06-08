@@ -99,14 +99,13 @@ $t$称为曲线的\keyindex{参数}{parameter}{}。
 
 \begin{definition}
     给出曲线上一点$P$，点$Q$是曲线上$P$的邻近一点，
-    使点$Q$沿曲线趋近于点$P$，若\keyindex{割线}{secant line}{}$PQ$趋近于一定位置，
-    则把$PQ$的这个极限位置称为曲线在$P$点的\keyindex{切线}{tangent line}{}，
-    而定点$P$称为\keyindex{切点}{tangent point}{}。
+    使点$Q$沿曲线趋近于点$P$，若\keyindex{割线}{secant line}{}$PQ$趋近于特定位置，
+    则把$PQ$的该极限位置称为曲线在$P$点的\keyindex{切线}{tangent line}{}，
+    定点$P$称为\keyindex{切点}{tangent point}{}。
 \end{definition}
 
 \begin{definition}
-    设曲线参数方程是$\bm r=\bm r(t)$，点$P$对应参数$t_0$，
-    若$\bm r(t)$在$t_0$处可微，则
+    若曲线$\bm r=\bm r(t)$上的点$P$对应参数$t_0$且$\bm r(t)$在$t_0$处可微，则
     \begin{align}\label{eq:03ex01.5}
         \bm r'(t_0)=\lim\limits_{\Delta t\rightarrow0}{\frac{\bm r(t_0+\Delta t)-\bm r(t_0)}{\Delta t}}
     \end{align}
@@ -208,7 +207,7 @@ $u$和$v$称为曲面的\keyindex{参数}{parameter}{}或\keyindex{曲纹坐标}
 以后我们假定所讨论的曲面都是光滑的。
 
 \begin{definition}
-    在曲面$\bm r=\bm r(u,v)$上$(u_0,v_0)$点处两条坐标曲线的切向量分别为
+    曲面$\bm r=\bm r(u,v)$上$(u_0,v_0)$点处两条坐标曲线的切向量分别为
     \begin{align}\label{eq:03ex01.12}
         \bm r_u(u_0,v_0) & =\frac{\partial \bm r}{\partial u}(u_0,v_0)\, , \\
         \bm r_v(u_0,v_0) & =\frac{\partial \bm r}{\partial v}(u_0,v_0)\, .
@@ -240,9 +239,9 @@ $u$和$v$称为曲面的\keyindex{参数}{parameter}{}或\keyindex{曲纹坐标}
 其中$\bm r_u$和$\bm r_v$分别是在该点的两条坐标曲线的切向量。
 $\bm r'(t),\bm r_u$和$\bm r_v$共面。
 \begin{definition}
-    曲面上正常点处的所有切方向都在
+    曲面上正常点的所有切方向都在
     过该点的坐标曲线的切向量$\bm r_u$和$\bm r_v$所决定的平面上，
-    该平面称为曲面在这一点的\keyindex{切平面}{tangent plane}{}。
+    该平面称为曲面在该点的\keyindex{切平面}{tangent plane}{}。
 \end{definition}
 \begin{corollary}
     曲面$\bm r=\bm r(u,v)$在点$P_0(u_0,v_0)$处的切平面方程为

@@ -46,5 +46,19 @@
     \item 细分曲面非常适合描述有复杂拓扑结构的物体，
           因为它们以任意（\keyindex{流形}{manifold}{}）拓扑结构的控制网格为起点。
           参数化曲面模型一般不能很好地处理复杂拓扑结构。
+    \item 细分方法常常是基于样条的曲面表示的推广，
+          所以样条曲面常常可以由通用细分曲面渲染器运行。
+    \item 通过简单地对控制网格的适当部分添加面，它能轻松对细分曲面局部区域添加细节。
+          用样条表示则要困难得多。
 \end{itemize}
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap03/Subdivrefinement.tex}
+    \caption{Loop细分的基本细化过程。（左）细分之前的控制网格。
+        （右）一步细分后的新网格。通过划分每条边并连接新顶点和新边，
+        网格的每个三角形面都被细分为四个新面。}
+    \label{fig:3.26}
+\end{figure}
+
+这里，我们将介绍\keyindex{Loop细分曲面}{Loop subdivision surface}{surface曲面}
+\footnote{以所用的细分规则发明者Charles Loop的名字命名。}的一种实现。
 \subsection{细分}\label{sub:细分}

@@ -83,8 +83,8 @@ std::vector<std::shared_ptr<`\refvar{Shape}{}`>> `\initvar{LoopSubdivide}{}`(
         const `\refvar{Transform}{}` *ObjectToWorld, const `\refvar{Transform}{}` *WorldToObject,
         bool reverseOrientation, int nLevels, int nIndices,
         const int *vertexIndices, int nVertices, const `\refvar{Point3f}{}` *p) {
-    std::vector<`\refvar{SDVertex}{}` *> `\initvar{vertices}{}`;
-    std::vector<`\refvar{SDFace}{}` *> `\initvar{faces}{}`;
+    std::vector<`\refvar{SDVertex}{}` *> vertices;
+    std::vector<`\refvar{SDFace}{}` *> faces;
     `\refcode{Allocate LoopSubdiv vertices and faces}{}`
     `\refcode{Set face to vertex pointers}{}`
     `\refcode{Set neighbor pointers in faces}{}`
@@ -111,12 +111,12 @@ std::vector<std::shared_ptr<`\refvar{Shape}{}`>> `\initvar{LoopSubdivide}{}`(
 std::unique_ptr<`\refvar{SDVertex}{}`[]> verts(new `\refvar{SDVertex}{}`[nVertices]);
 for (int i = 0; i < nVertices; ++i) {
     verts[i] = `\refvar{SDVertex}{}`(p[i]);
-    `\refvar{vertices}{}`.push_back(&verts[i]);
+    vertices.push_back(&verts[i]);
 }
 int nFaces = nIndices / 3;
 std::unique_ptr<`\refvar{SDFace}{}`[]> fs(new `\refvar{SDFace}{}`[nFaces]);
 for (int i = 0; i < nFaces; ++i)
-    `\refvar{faces}{}`.push_back(&fs[i]);
+    faces.push_back(&fs[i]);
 \end{lstlisting}
 
 Loop细分方案像多数其他细分方案那样，
@@ -203,4 +203,45 @@ struct `\initvar{SDFace}{}` {
 除了需要流形网格外，细分代码希望用户指定的控制网格
 是\keyindex{相容次序}{consistently ordered}{}的——
 网格中的每条\keyindex{有向边}{directed edge}{edge边}只能出现一次。
+两个面的公共边须由每个面指定为不同方向。
+考虑两个顶点$\bm v_0$和$\bm v_1$以及连接它们的边。
+我们希望一个拥有该边的三角形面指定其三个顶点时$\bm v_0$在$\bm v_1$之前，
+另一个面指定顶点时$\bm v_1$在$\bm v_0$之前（\reffig{3.28}）。
+\keyindex{莫比乌斯带}{Möbius strip}{}是一个无法相容次序的曲面例子，
+但渲染中几乎不会遇到这样的曲面，所以实践中该限制没有问题。
+然而不能创建相容次序网格的程序给出的构建得很差的网格数据可能会造成问题。
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap03/Subdivfaceorientation.tex}
+    \caption{输入网格中的所有面必须指定为让每条公共边在每个方向最多出现一次。
+        这里，从$\bm v_0$到$\bm v_1$的边被一个面从$\bm v_0$到$\bm v_1$穿过
+        而被另一个面从$\bm v_1$到$\bm v_0$穿过。
+        另一个看待方式是考虑面朝向：从网格外边观察时，
+        所有面的顶点应该统一地以顺时针或逆时针顺序给出。}
+    \label{fig:3.28}
+\end{figure}
+
+有了关于输入数据的该假设，\refvar{LoopSubdivide}{()}现在
+可以初始化网格的拓扑数据结构了。
+它首先遍历所有面并设置它们的指针\refvar[SDFace::v]{v}{}指向它们的三个顶点。
+它还设置每个顶点的指针\refvar[startFace]{SDVertex::startFace}{}指向
+该顶点相邻面中的一个。具体使用哪一个相邻面并不重要，
+所以每次遇到该顶点关联的另一个面时，该实现就重设它，
+这条保证所有顶点在遍历完成前都有非空的面指针。
+\begin{lstlisting}
+`\initcode{Set face to vertex pointers}{=}`
+const int *vp = vertexIndices;
+for (int i = 0; i < nFaces; ++i, vp += 3) {
+    SDFace *f = faces[i];
+    for (int j = 0; j < 3; ++j) {
+        SDVertex *v = vertices[vp[j]];
+        f->`\refvar[SDFace::v]{v}{}`[j] = v;
+        v->`\refvar{startFace}{}` = f;
+    }
+}
+\end{lstlisting}
+
+现在
+
+
+
 \subsection{细分}\label{sub:细分}

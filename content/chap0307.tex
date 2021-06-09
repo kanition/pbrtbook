@@ -4,7 +4,7 @@
 \end{remark}
 
 虽然三角形可用于表示细小形状来建模细微几何体如头发、皮毛或草地，
-但为了更高效地渲染这类物体，拥有专门的\refvar{Shape}{}的值得的，
+但为了更高效地渲染这类物体，拥有专门的\refvar{Shape}{}是值得的，
 因为经常出现它们的许多实例。
 本节介绍的\refvar{Curve}{}形状即表示
 用\keyindex{三次贝塞尔样条}{cubic Bézier spline}{spline样条}建模的细小几何体，
@@ -181,7 +181,22 @@ struct `\initvar{CurveCommon}{}` {
 但\refvar{Curve}{}实例通常需要对应其$u$范围的
 表示贝塞尔曲线的四个控制点。
 这些控制点用称为\keyindex{开花}{blossoming}{}的技术计算。
-三次贝塞尔样条簇\sidenote{译者注：原文blossom。}$\bm p(u_0,u_1,u_2)$由三个阶段的线性插值定义，
+三次贝塞尔样条簇
+\sidenote{译者注：原文blossom。
+通过繁琐但没有技巧性的多项式代换可以证明：
+对于由控制点集$A=\{\bm p_i\}_{i=0}^3$定义的
+三次贝塞尔样条簇$\bm p_A(u_0,u_1,u_2)$，
+其中任意截取$u_j\in[u_j^0,u_j^1],j=0,1,2$，
+并设$u_j^k(i)=\left\{\begin{array}{l}
+        u_j^0,\ \text{若}i<k, \\
+        u_j^1,\ \text{其他},
+    \end{array}\right.$
+然后取新控制点集$B=\{\bm q_i\}_{i=0}^3$，
+其中$\bm q_i=\bm p(u_0^3(i),u_1^2(i),u_2^1(i))$，
+并设新参数变量$\displaystyle v_j=\frac{u_j-u_j^0}{u_j^1-u_j^0}$，
+则有$\bm p_B(v_0,v_1,v_2)\equiv\bm p_A(u_0,u_1,u_2)$，
+即实现控制点集$A$到$B$的等价变换。}
+$\bm p(u_0,u_1,u_2)$由三个阶段的线性插值定义，
 从原始控制点开始：
 \begin{align}\label{eq:3.4}
     \bm a_i & =(1-u_0)\bm p_i+u_0\bm p_{i+1},\quad i\in[0,1,2]\nonumber\, , \\
@@ -212,20 +227,7 @@ static `\refvar{Point3f}{}` `\initvar{BlossomBezier}{}`(const `\refvar{Point3f}{
     \label{fig:3.19}
 \end{figure}
 
-范围从$u_{\min}$到$u_{\max}$的曲线段的四个控制点由簇给出
-\sidenote{译者注：通过繁琐但没有技巧性的多项式代换可以证明：
-对于由控制点集$A=\{\bm p_i\}_{i=0}^3$定义的
-三次贝塞尔样条簇$\bm p_A(u_0,u_1,u_2)$，
-其中任意截取$u_j\in[u_j^0,u_j^1],j=0,1,2$，
-并设$u_j^k(i)=\left\{\begin{array}{l}
-        u_j^0,\ \text{若}i<k, \\
-        u_j^1,\ \text{其他},
-    \end{array}\right.$
-然后取新控制点集$B=\{\bm q_i\}_{i=0}^3$，
-其中$\bm q_i=\bm p(u_0^3(i),u_1^2(i),u_2^1(i))$，
-并设新参数变量$\displaystyle v_j=\frac{u_j-u_j^0}{u_j^1-u_j^0}$，
-则有$\bm p_B(v_0,v_1,v_2)\equiv\bm p_A(u_0,u_1,u_2)$，
-即实现控制点集$A$到$B$的等价变换。}（\reffig{3.19}）：
+范围从$u_{\min}$到$u_{\max}$的曲线段的四个控制点由簇给出（\reffig{3.19}）：
 \begin{align}\label{eq:3.5}
     \bm p_0 & =\bm p(u_{\min},u_{\min},u_{\min})\nonumber\, , \\
     \bm p_1 & =\bm p(u_{\min},u_{\min},u_{\max})\nonumber\, , \\

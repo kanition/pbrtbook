@@ -176,6 +176,7 @@ struct `\initvar{SDVertex}{}` {
     且第{\ttfamily i}边的邻居在{\ttfamily\protect\refvar[SDFace::f]{f}{}[i]}中。}
     \label{fig:3.27}
 \end{figure}
+
 \begin{lstlisting}
 `\refcode{LoopSubdiv Local Structures}{+=}\lastnext{LoopSubdivLocalStructures}`
 struct `\initvar{SDFace}{}` {
@@ -186,4 +187,20 @@ struct `\initvar{SDFace}{}` {
     `\refvar{SDFace}{}` *`\initvar{children}{}`[4];
 };
 \end{lstlisting}
+
+\refvar{SDFace}{}构造函数很简单——它简单地把这些不同的指针设置为{\ttfamily nullptr}——
+所以这里不再展示。
+
+为简化\refvar{SDFace}{}的数据结构导航，
+我们提供宏使得决定特定索引前后的顶点和面索引更容易。
+这些宏添加适合的偏移量并计算模三结果以负责循环。
+\begin{lstlisting}
+`\initcode{LoopSubdiv Macros}{=}`
+#define `\initvar{NEXT}{}`(i) (((i) + 1) % 3)
+#define `\initvar{PREV}{}`(i) (((i) + 2) % 3)
+\end{lstlisting}
+
+除了需要流形网格外，细分代码希望用户指定的控制网格
+是\keyindex{相容次序}{consistently ordered}{}的——
+网格中的每条\keyindex{有向边}{directed edge}{edge边}只能出现一次。
 \subsection{细分}\label{sub:细分}

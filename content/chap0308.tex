@@ -202,14 +202,14 @@ struct `\initvar{SDFace}{}` {
 
 除了需要流形网格外，细分代码希望用户指定的控制网格
 是\keyindex{相容次序}{consistently ordered}{}的——
-网格中的每条\keyindex{有向边}{directed edge}{edge边}只能出现一次。
+网格中每条\keyindex{有向边}{directed edge}{edge边}只出现一次。
 两个面的公共边须由每个面指定为不同方向。
-考虑两个顶点$\bm v_0$和$\bm v_1$以及连接它们的边。
-我们希望一个拥有该边的三角形面指定其三个顶点时$\bm v_0$在$\bm v_1$之前，
+考虑两个顶点$\bm v_0$和$\bm v_1$与连接它们的边。
+我们希望拥有该边的三角形面指定其三个顶点时$\bm v_0$在$\bm v_1$之前，
 另一个面指定顶点时$\bm v_1$在$\bm v_0$之前（\reffig{3.28}）。
-\keyindex{莫比乌斯带}{Möbius strip}{}是一个无法相容次序的曲面例子，
-但渲染中几乎不会遇到这样的曲面，所以实践中该限制没有问题。
-然而不能创建相容次序网格的程序给出的构建得很差的网格数据可能会造成问题。
+\keyindex{莫比乌斯带}{Möbius strip}{}是无法相容次序的曲面例子，
+但渲染中几乎不会遇到这样的曲面，所以实践中该限制没问题。
+然而不能创建相容次序网格的程序给出的没构建好的网格数据可能会造成问题。
 \begin{figure}[htbp]
     \centering\input{Pictures/chap03/Subdivfaceorientation.tex}
     \caption{输入网格中的所有面必须指定为让每条公共边在每个方向最多出现一次。
@@ -240,8 +240,63 @@ for (int i = 0; i < nFaces; ++i, vp += 3) {
 }
 \end{lstlisting}
 
-现在
+现在有必要将每个面的\refvar[SDFace::f]{f}{}指针设置为指向其相邻面。
+这有些棘手，因为传入
+\refvar{LoopSubdivide}{()}的数据并不直接指定面的相邻信息。
+这里的实现遍历面并为其三条边的每一条都创建\refvar{SDEdge}{}对象。
+当遇到另一个面共享同一边时，它就更新两个面的相邻指针。
+\begin{lstlisting}
+`\refcode{LoopSubdiv Local Structures}{+=}\lastcode{LoopSubdivLocalStructures}`
+struct `\initvar{SDEdge}{}` {
+    `\refcode{SDEdge Constructor}{}`
+    `\refcode{SDEdge Comparison Function}{}`
+    `\refvar{SDVertex}{}` *`\initvar[SDEdge::v]{v}{}`[2];
+    `\refvar{SDFace}{}` *`\initvar[SDEdge::f]{f}{}`[2];
+    int `\initvar{f0edgeNum}{}`;
+};
+\end{lstlisting}
 
+\refvar{SDEdge}{}构造函数接收指向边的两端顶点的指针。
+它对指针排序使得{\ttfamily\refvar[SDEdge::v]{v}{}[0]}是
+排在内存中最前面的那个。这段代码可能看起来很奇怪，
+但它简单依赖于这样的事实即C++中的指针是可以像整数那样高效操作的数字
+\footnote{尽管是分段架构。}而一边的顶点顺序是任意的。
+基于其指针地址排列这两个顶点保证了边$(\bm v_a,\bm v_b)$可以
+被正确认作和边$(\bm v_b,\bm v_a)$相同，而不管提供的顶点顺序是什么。
+\begin{lstlisting}
+`\initcode{SDEdge Constructor}{=}`
+`\refvar{SDEdge}{}`(`\refvar{SDVertex}{}` *v0 = nullptr, `\refvar{SDVertex}{}` *v1 = nullptr) {
+    `\refvar[SDEdge::v]{v}{}`[0] = std::min(v0, v1);
+    `\refvar[SDEdge::v]{v}{}`[1] = std::max(v0, v1);
+    `\refvar[SDEdge::f]{f}{}`[0] = `\refvar[SDEdge::f]{f}{}`[1] = nullptr;
+    `\refvar{f0edgeNum}{}` = -1;
+}
+\end{lstlisting}
 
+该类还定义了\refvar{SDEdge}{}对象的排序操作
+这样它们就能存于其他依赖良好顺序定义的数据结构。
+\begin{lstlisting}
+`\initcode{SDEdge Comparison Function}{=}`
+bool operator<(const `\refvar{SDEdge}{}` &e2) const {
+    if (`\refvar[SDEdge::v]{v}{}`[0] == e2.`\refvar[SDEdge::v]{v}{}`[0]) return `\refvar[SDEdge::v]{v}{}`[1] < e2.`\refvar[SDEdge::v]{v}{}`[1];
+    return `\refvar[SDEdge::v]{v}{}`[0] < e2.`\refvar[SDEdge::v]{v}{}`[0];
+}
+\end{lstlisting}
 
+现在函数\refvar{LoopSubdivide}{()}可以开始工作了，
+遍历所有面的边并随之更新相邻指针。
+它用{\ttfamily set}存储目前只有一个相邻面的边。
+{\ttfamily set}让在$O(\log{n})$时间内搜索特定边成为可能。
+\begin{lstlisting}
+`\initcode{Set neighbor pointers in faces}{=}`
+std::set<`\refvar{SDEdge}{}`> edges;
+for (int i = 0; i < nFaces; ++i) {
+    `\refvar{SDFace}{}` *f = faces[i];
+    for (int edgeNum = 0; edgeNum < 3; ++edgeNum) {
+        `\refcode{Update neighbor pointer for edgeNum}{}`
+    }
+}
+\end{lstlisting}
+
+对于每个面中的每条边
 \subsection{细分}\label{sub:细分}

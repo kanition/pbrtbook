@@ -717,7 +717,8 @@ virtual `\refvar{Spectrum}{}` `\initvar{Li}{}`(const `\refvar{RayDifferential}{}
 渲染器监控这种和具有负数贡献光谱等可能的情况，
 并在遇到时打印错误信息。
 此处我们不介绍执行这些的
-代码片\refcode{Issue warning if unexpected radiance value is returned}{}\sidenote{译者注：我把它补充上来了。}。
+代码片\refcode{Issue warning if unexpected radiance value is returned}{}
+\sidenote{译者注：我把它补充上来了。后续被原文省略的代码如果被补充上来，我就删掉这样的表述了。}。
 如果你对其细节感兴趣可以查看\href{https://github.com/mmp/pbrt-v3/tree/master/src/core/integrator.cpp}{\ttfamily core/integrator.cpp}里的实现。
 
 知道到达光线原点的辐亮度后，就能更新图像了：

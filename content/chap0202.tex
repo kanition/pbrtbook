@@ -257,7 +257,7 @@ inline T `\initvar{AbsDot}{}`(const `\refvar{Vector3}{}`<T> &v1, const `\refvar{
 给定两个3D向量，叉积$\bm v\times\bm w$是同时垂直于它们的向量。
 给定正交向量$\bm v$和$\bm w$，
 则$\bm v\times\bm w$定义为
-令$(\bm v,\bm w,\bm v\times\bm w)$构成正交坐标系统的向量。
+令$(\bm v,\bm w,\bm v\times\bm w)$构成正交坐标系的向量。
 
 叉积定义为：
 \begin{align*}
@@ -281,8 +281,8 @@ inline T `\initvar{AbsDot}{}`(const `\refvar{Vector3}{}`<T> &v1, const `\refvar{
 因为该矩阵的元素混有标量和向量。
 
 此处的实现中，函数\refvar{Cross}{()}在减法前将
-向量元素转化为双精度（不论\refvar{Float}{}的类型）。
-这里使用32位浮点数值的额外精度能防止巨量消失
+向量元素转化为双精度（不论\refvar{Float}{}
+的类型）。这里使用32位浮点数值的额外精度能防止巨量消失
 \sidenote{译者注：原文catastrophic cancellation。}
 造成的误差，即两个值非常接近的浮点数相减造成的误差。
 这不是理论问题：这种改变对于修复以前由此造成的bug是必要的。
@@ -393,10 +393,10 @@ template <typename T> `\refvar{Vector3}{}`<T>
 }
 \end{lstlisting}
 
-\subsection{来自向量的坐标系统}\label{sub:来自向量的坐标系统}
-我们经常需要在给定单个3D向量时构造一个局部坐标系统。
+\subsection{来自向量的坐标系}\label{sub:来自向量的坐标系}
+我们经常需要在给定单个3D向量时构造一个局部坐标系。
 因为两个向量的叉积与它们正交，
-所以我们可以运用两次叉积为坐标系统得到三个正交向量。
+所以我们可以运用两次叉积为坐标系得到三个正交向量。
 注意该技术生成的两个向量在不考虑绕给定向量旋转的情况下是唯一的。
 
 该函数的实现假设传入的向量{\ttfamily v1}已经规范化了。

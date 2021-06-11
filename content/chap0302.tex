@@ -138,7 +138,7 @@ bool `\refvar{Sphere}{}`::`\initvar[Sphere::Intersect]{\refvar[Shape::Intersect]
 \end{lstlisting}
 
 首先，所给世界空间光线被变换到球的物体空间。
-相交测试的剩余部分将在那个坐标系统内进行。
+相交测试的剩余部分将在那个坐标系内进行。
 {\ttfamily oErr}和{\ttfamily dErr}变量分别定界
 在变换射线端点和方向时因为施加变换而引入的浮点舍入误差
 （更多关于浮点算术和其对于准确光线相交计算实现的更多信息见\refsec{控制舍入误差}）。
@@ -353,7 +353,7 @@ $\displaystyle\frac{\partial p_x}{\partial u}$；
 例如，第\refchap{纹理}的抗锯齿技术就依赖于该信息来消除物体曲面上反射可见的纹理锯齿。
 法线的微分变化量$\displaystyle\frac{\partial \bm n}{\partial u}$和
 $\displaystyle\frac{\partial \bm n}{\partial v}$由微分几何学
-的\keyindex{Weingarten方程}{Weingarten equation}{}给出
+中\keyindex{曲面的外恩加滕公式}{Weingarten formula of surfaces}{surface曲面}给出
 \sidenote{译者注：得名于德国数学家Julius Weingarten。
     相关简要推导详见译者整理补充的\refsec{译者补充：微分几何基础}。
     注意该公式其实隐含了对$\bm n$的规范化要求。

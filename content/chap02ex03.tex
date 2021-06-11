@@ -26,7 +26,7 @@
         f(x)=(x-x^*)^mg(x)\, ,
     \end{align}
     其中$g(x)$在$x^*$邻域内连续，$g(x^*)\neq0$，且$m$为正整数，
-    则称$x^*$为该方程的$m$\keyindex{重根}{multiple root}{root根}。
+    则称$x^*$为该方程的$m$\keyindex{重根}{repeated root}{root根}。
     当$m=1$时，称$x^*$为该方程的\keyindex{单根}{simple root}{root根}。
 \end{definition}
 
@@ -45,7 +45,7 @@
 \begin{corollary}
     若实值函数$f$在闭区间$[a,b]$上连续，且$f(a)f(b)<0$，则必存在$\xi\in(a,b)$使得$f(\xi)=0$。
 \end{corollary}
-\begin{theorem}[\protect\keyindex{拉格朗日中值定理}{Lagrange's mean value theorem}{}]
+\begin{theorem}[\protect\keyindex{拉格朗日中值定理}{Lagrange mean value theorem}{}]
     若实值函数$f$在闭区间$[a,b]$上连续，在开区间$(a,b)$上可导，其中$a<b$，
     则存在$\xi\in(a,b)$使得
     \begin{align}\label{eq:02ex0305}
@@ -195,7 +195,7 @@
 \end{definition}
 
 \subsection{牛顿迭代法}\label{sub:牛顿迭代法}
-\begin{theorem}[\keyindex{泰勒中值定理}{Taylor's mean value theorem}{}]
+\begin{theorem}[\keyindex{泰勒中值定理}{Taylor mean value theorem}{}]
     若函数$f(x)$在含$x_0$的开区间$(a,b)$上有直到$(n+1)$阶导数，则对任意$x\in(a,b)$有
     \begin{align}\label{eq:02ex0325.1}
         f(x)=f(x_0)+f'(x_0)(x-x_0)+\frac{f''(x_0)}{2!}(x-x_0)^2+\cdots+\frac{f^{(n)}(x_0)}{n!}(x-x_0)^n+R_n(x)\, ,
@@ -207,7 +207,7 @@
     这里$\xi$介于$x$和$x_0$之间。
     $R_n(x)$称为\refeq{02ex0325.1}的\keyindex{拉格朗日型余项}{Lagrange form of the remainder}{}。
     \refeq{02ex0325.1}称为$f(x)$按$(x-x_0)$的幂展开的
-    带有拉格朗日型余项的$n$阶\keyindex{泰勒公式}{Taylor's formula}{}。
+    带有拉格朗日型余项的$n$阶\keyindex{泰勒公式}{Taylor formula}{}。
 \end{theorem}
 
 求解非线性方程$f(x)=0$时，将简单迭代法中的迭代函数取为

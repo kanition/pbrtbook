@@ -255,11 +255,11 @@ $\displaystyle(\bm q_{xyz}\sin\frac{\theta}{2},\cos\frac{\theta}{2})$表示
     \label{fig:2.17}
 \end{figure}
 
-一个计算$\bm q'$的简单方法是先在四元数空间中计算一个正交坐标系统，
+一个计算$\bm q'$的简单方法是先在四元数空间中计算一个正交坐标系，
 一个轴为$\bm q_1$，另一个是与$\bm q_1$正交的四元数，
 这样两轴就构成张开$\bm q_1$和$\bm q_2$的基。
 
-有了这个坐标系统，我们就能计算关于$\bm q_1$的旋转
+有了这个坐标系，我们就能计算关于$\bm q_1$的旋转
 （见\reffig{2.17}展示的2D设置下的概念）。
 正交向量$\bm q_{\perp}$可以通过将$\bm q_2$投影到$\bm q_1$并
 从$\bm q_2$减去该正交投影得到；
@@ -267,7 +267,7 @@ $\displaystyle(\bm q_{xyz}\sin\frac{\theta}{2},\cos\frac{\theta}{2})$表示
 \begin{align}\label{eq:2.7}
     \bm q_{\perp}=\bm q_2-(\bm q_1\cdot\bm q_2)\bm q_1\, .
 \end{align}
-给定坐标系统和规范化的$\bm q_{\perp}$，沿动画路径的四元数为
+给定坐标系和规范化的$\bm q_{\perp}$，沿动画路径的四元数为
 \begin{align}\label{eq:2.8}
     \bm q'=\bm q_1\cos(\theta t)+\hat{\bm q}_{\perp}\sin(\theta t)\, .
 \end{align}
@@ -343,7 +343,7 @@ bool `\initvar{hasRotation}{}`;
     \bm M=\bm T\bm R\bm S\, ,
 \end{align}
 其中$\bm M$是给定变换，$\bm T$是平移，$\bm R$是旋转，$\bm S$是缩放。
-$\bm S$实际上是一种表示在\emph{某些}坐标系统下的通用缩放
+$\bm S$实际上是一种表示在\emph{某些}坐标系下的通用缩放
 （Shoemake和Duff称之为拉伸\sidenote{译者注：原文stretch。}），
 而不一定在是当前坐标系下。
 不论哪种情况，它都仍然可以按分量正确地线性插值。

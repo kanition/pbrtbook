@@ -8,12 +8,12 @@
     给出两个集合$E$和$E'$，如果集合$E$中的每一个点（或称元素）$x$，
     有$E'$中的点$x'$和它对应，
     则我们说给定了$E$到$E'$的一个\keyindex{映射}{mapping}{}$f$。
-    $x'$称为点$x$的\keyindex{像}{image}{}，
-    $x$称为$x'$的\keyindex{原像}{preimage}{}。
+    $x'$称为点$x$的\keyindex{象}{image}{}，
+    $x$称为$x'$的\keyindex{原象}{inverse image}{}。
 \end{definition}
 \begin{definition}
     对于任取集合$E$中的点$x_1$和$x_2$，如果$x_1\neq x_2$时有$f(x_1)\neq f(x_2)$，
-    则称映射$f$是\keyindex{一一的}{one-to-one}{}（或称\keyindex{单的}{injective}{}）。
+    则称映射$f$是\keyindex{一一映射}{one-one mapping}{mapping映射}或\keyindex{单射}{injection}{}。
 \end{definition}
 \begin{definition}
     在欧氏空间中给出两个集合$E,E'$，
@@ -23,13 +23,13 @@
     则称映射$f$为\keyindex{连续}{continuous}{}的。
 \end{definition}
 \begin{definition}
-    如果$f(E)=E'$，就说$f$是从$E$到$E'$的\keyindex{在上映射}{onto mapping}{mapping映射}
-    （或称\keyindex{满映射}{surjective mapping}{mapping映射}）。
+    如果$f(E)=E'$，则称$f$是从$E$到$E'$的\keyindex{到上映射}{onto mapping}{mapping映射}
+    或\keyindex{满射}{surjection}{mapping映射}。
 \end{definition}
 \begin{definition}
-    如果一个开的直线段到三维欧氏空间内建立的对应$f$是一一的、双方连续的在上映射
-    （这种映射称为\keyindex{拓扑映射}{topological mapping}{mapping映射}或\keyindex{同胚}{homeomorphism}{}），
-    则我们把三维欧氏空间中的映射的像称为\keyindex{简单曲线段}{%simple curve segment
+    如果一个开的直线段到三维欧氏空间内建立的对应$f$是一一的、双方连续的到上映射
+    （这种映射称为\keyindex{拓扑映射}{topological mapping}{mapping映射}或\keyindex{同态映射}{homeomorphic mapping}{mapping映射}），
+    则我们把三维欧氏空间中的映射的象称为\keyindex{简单曲线段}{%simple curve segment
     }{curve曲线}。
 \end{definition}
 
@@ -73,9 +73,8 @@ $t$称为曲线的\keyindex{参数}{parameter}{}。
 \begin{definition}
     如果曲线的参数表示式中的函数
     是\keyindex{$k$阶连续可微}{$k$-times continuously differentiable}{}的函数，
-    则把该曲线称为\keyindex{$C^k$类曲线}{%$C^k$-curve
-    }{curve曲线}。
-    当$k=1$时，也就是$C^1$类曲线
+    则把该曲线称为\keyindex{$C^k$阶曲线}{$C^k$-curve}{curve曲线}。
+    当$k=1$时，也就是$C^1$阶曲线
     又称为\keyindex{光滑曲线}{smooth curve}{curve曲线}。
 \end{definition}
 
@@ -84,17 +83,15 @@ $t$称为曲线的\keyindex{参数}{parameter}{}。
     \begin{align}\label{eq:03ex01.4}
         \bm r'(t_0)\neq \bm 0\, ,
     \end{align}
-    则这一点称为曲线的\keyindex{正常点}{%regular point
-    }{point点}。
+    则这一点称为曲线的\keyindex{正则点}{regular point}{point点}。
     注意\refeq{03ex01.4}表示$x'(t_0),y'(t_0),z'(t_0)$中至少有一个不等于零。
 \end{definition}
 
-以后我们只考虑曲线的正常点。实际上$\bm r'(t_0)=\bm 0$是很特殊的。
+以后我们只考虑曲线的正则点。实际上$\bm r'(t_0)=\bm 0$是很特殊的。
 如果在一段曲线上$\bm r'(t_0)\equiv\bm 0$，则$\bm r(t)$变成常向量，
 这时这段曲线缩成一点，所以一段曲线上$\bm r'(t_0)=\bm 0$的点一般是孤立点。
 \begin{definition}
-    曲线上所有点都是正常点时，称该曲线为\keyindex{正则曲线}{%regular curve
-    }{curve曲线}。
+    曲线上所有点都是正则点时，称该曲线为\keyindex{正则曲线}{regular curve}{curve曲线}。
 \end{definition}
 
 \begin{definition}
@@ -112,7 +109,7 @@ $t$称为曲线的\keyindex{参数}{parameter}{}。
     称为曲线在点$P$的\keyindex{切向量}{tangent vector}{vector向量}。
 \end{definition}
 
-由于我们已经规定只研究曲线的正常点，所以曲线上一点的切向量是存在的，
+由于我们已经规定只研究曲线的正则点，所以曲线上一点的切向量是存在的，
 它就是切线上的一个非零向量，其正向和曲线参数$t$的增量方向一致。
 
 \begin{corollary}
@@ -152,8 +149,8 @@ $t$称为曲线的\keyindex{参数}{parameter}{}。
 \end{example}
 
 \begin{definition}
-    如果平面上初等区域到三维欧氏空间内建立的映射是一一的、双方连续的在上映射，
-    则把三维欧氏空间中的像称为\keyindex{简单曲面}{%simple surface
+    如果平面上初等区域到三维欧氏空间内建立的映射是一一的、双方连续的到上映射，
+    则把三维欧氏空间中的象称为\keyindex{简单曲面}{%simple surface
     }{surface曲面}。
 \end{definition}
 \begin{example}
@@ -163,7 +160,7 @@ $t$称为曲线的\keyindex{参数}{parameter}{}。
 我们假定以后所讨论的曲面都是简单曲面，不另作说明。
 
 给出平面上一初等区域$\mathscr{D}$，$\mathscr{D}$中的点的笛卡尔坐标是$(u,v)$，
-$\mathscr{D}$经过上述映射$f$后的像是曲面$S$。
+$\mathscr{D}$经过上述映射$f$后的象是曲面$S$。
 对于空间的笛卡尔坐标系来说，$S$上的点的坐标是$(x,y,z)$，
 则可以写出$f$的解析表达式：
 \begin{align}\label{eq:03ex01.9}
@@ -174,8 +171,7 @@ $\mathscr{D}$经过上述映射$f$后的像是曲面$S$。
     \end{array}\quad (u,v)\in \mathscr{D}\, .
 \end{align}
 称\refeq{03ex01.9}为曲面$S$的\keyindex{参数表示}{parametric representation}{}或\keyindex{参数方程}{parametric equation}{}，
-$u$和$v$称为曲面的\keyindex{参数}{parameter}{}或\keyindex{曲纹坐标}{%curvilinear coordinate
-}{coordinate坐标}。
+$u$和$v$称为曲面的\keyindex{参数}{parameter}{}或\keyindex{曲纹坐标}{curve coordinate}{coordinate坐标}。
 
 习惯上常把\refeq{03ex01.9}中的函数关系符号$f_1,f_2$和$f_3$分别写成$x,y$和$z$，即
 \begin{align}\label{eq:03ex01.10}
@@ -192,16 +188,16 @@ $u$和$v$称为曲面的\keyindex{参数}{parameter}{}或\keyindex{曲纹坐标}
 
 \begin{definition}
     初等区域$\mathscr{D}$所在平面上的坐标直线$v=$常数或$u=$常数
-    在曲面上的像称为曲面的\keyindex{坐标曲线}{coordinate curve}{}。
+    在曲面上的象称为曲面的\keyindex{坐标曲线}{coordinate curve}{}。
     使$v$等于常数$v_0$而$u$变动时的曲线$\bm r=\bm r(u,v_0)$叫$u$-曲线；
     使$u$等于常数$u_0$而$v$变动时的曲线$\bm r=\bm r(u_0,v)$叫$v$-曲线。
-    这两族坐标曲线在曲面上构成的坐标网称为曲面上的\keyindex{曲纹坐标网}{}{coordinate坐标}。
+    这两族坐标曲线在曲面上构成的坐标网称为曲面上的\keyindex{曲纹坐标网}{curve coordinate net}{}。
 \end{definition}
 
 \begin{definition}
     若曲面方程中的函数有直到$k$阶的连续\keyindex{偏微商}{partial derivative}{}，
-    则该曲面称为\keyindex{$k$阶正则曲面}{}{surface曲面}或\keyindex{$C^k$类曲面}{}{surface曲面}。
-    特别地，$C^1$类曲面又称为\keyindex{光滑曲面}{}{surface曲面}。
+    则该曲面称为\keyindex{$k$阶正则曲面}{}{surface曲面}或\keyindex{$C^k$阶曲面}{$C^k$-surface}{surface曲面}。
+    特别地，$C^1$阶曲面又称为\keyindex{光滑曲面}{}{surface曲面}。
 \end{definition}
 
 以后我们假定所讨论的曲面都是光滑的。
@@ -213,10 +209,10 @@ $u$和$v$称为曲面的\keyindex{参数}{parameter}{}或\keyindex{曲纹坐标}
         \bm r_v(u_0,v_0) & =\frac{\partial \bm r}{\partial v}(u_0,v_0)\, .
     \end{align}
     若它们不平行，即$\bm r_u\times\bm r_v$在$(u_0,v_0)$点不等于$\bm 0$，
-    则称该点为曲面的\keyindex{正常点}{}{point点}。
+    则称该点为曲面的\keyindex{正则点}{regular point}{point点}。
 \end{definition}
 
-以后我们只讨论曲面的正常点。
+以后我们只讨论曲面的正则点。
 
 若曲面上点的曲纹坐标由下列方程确定：
 \begin{align}\label{eq:03ex01.13}
@@ -239,7 +235,7 @@ $u$和$v$称为曲面的\keyindex{参数}{parameter}{}或\keyindex{曲纹坐标}
 其中$\bm r_u$和$\bm r_v$分别是在该点的两条坐标曲线的切向量。
 $\bm r'(t),\bm r_u$和$\bm r_v$共面。
 \begin{definition}
-    曲面上正常点的所有切方向都在
+    曲面上正则点的所有切方向都在
     过该点的坐标曲线的切向量$\bm r_u$和$\bm r_v$所决定的平面上，
     该平面称为曲面在该点的\keyindex{切平面}{tangent plane}{}。
 \end{definition}
@@ -256,7 +252,7 @@ $\bm r'(t),\bm r_u$和$\bm r_v$共面。
 \end{corollary}
 
 \begin{definition}
-    曲线在正常点处垂直于切平面的方向称为曲面的\keyindex{法方向}{normal direction}{direction方向}。
+    曲线在正则点处垂直于切平面的方向称为曲面的\keyindex{法方向}{normal direction}{direction方向}。
     过该点平行于法方向的直线称为曲面在该点的\keyindex{法线}{normal}{}。
 \end{definition}
 \begin{corollary}
@@ -286,7 +282,7 @@ $\bm r'(t),\bm r_u$和$\bm r_v$共面。
 \end{corollary}
 
 \begin{definition}
-    曲面$\bm r=\bm r(u,v)$的\keyindex{第一基本形式}{the first fundamental form}{}为
+    \keyindex{曲面的第一基本形式}{first fundamental form of a surface}{}为
     \begin{align}\label{eq:03ex01.18}
         \uppercase\expandafter{\romannumeral1}=\mathrm{d}\bm r^2=E\mathrm{d}u^2+2F\mathrm{d}u\mathrm{d}v+G\mathrm{d}v^2\, .
     \end{align}
@@ -294,7 +290,7 @@ $\bm r'(t),\bm r_u$和$\bm r_v$共面。
     \begin{align}\label{eq:03ex01.19}
         E=\bm r_u\cdot\bm r_u,\quad F=\bm r_u\cdot\bm r_v,\quad G=\bm r_v\cdot\bm r_v
     \end{align}
-    称为曲面的\keyindex{第一类基本量}{the first fundamental form coefficient}{}。
+    称为\keyindex{曲面的第一类基本量}{fundamental quantities of first kind for surfaces}{}。
 \end{definition}
 
 \begin{corollary}
@@ -327,8 +323,8 @@ $\bm r'(t),\bm r_u$和$\bm r_v$共面。
 \end{corollary}
 
 \begin{definition}
-    $C^2$类曲面$\bm r=\bm r(u,v)$中$\bm r(u,v)$有连续的二阶导函数$\bm r_{uu},\bm r_{uv},\bm r_{vv}$，
-    单位法向量为$\bm n$，则该曲面的\keyindex{第二基本形式}{the second fundamental form}{}为
+    $C^2$阶曲面中$\bm r(u,v)$有连续的二阶导函数$\bm r_{uu},\bm r_{uv},\bm r_{vv}$，
+    单位法向量为$\bm n$，则该\keyindex{曲面的第二基本形式}{second fundamental form of a surface}{}为
     \begin{align}\label{eq:03ex01.23}
         \uppercase\expandafter{\romannumeral2}=\bm n\cdot\mathrm{d}^2\bm r=-\mathrm{d}\bm n\cdot\mathrm{d}\bm r=L\mathrm{d}u^2+2M\mathrm{d}u\mathrm{d}v+N\mathrm{d}v^2\, ,
     \end{align}
@@ -338,13 +334,13 @@ $\bm r'(t),\bm r_u$和$\bm r_v$共面。
         M & =\bm r_{uv}\cdot\bm n=-\bm r_u\cdot\bm n_v=-\bm r_v\cdot\bm n_u, \\
         N & =\bm r_{vv}\cdot\bm n=-\bm r_v\cdot\bm n_v\,
     \end{align}
-    称为曲面的\keyindex{第二类基本量}{the second fundamental form coefficient}{}。
+    称为\keyindex{曲面的第二类基本量}{fundamental quantities of second kind for surfaces}{}。
 \end{definition}
 
 曲面的第二基本形式近似等于曲面与切平面的有向距离的两倍，刻画了曲面在空间中的弯曲性。
 当曲面在给定点向$\bm n$的正侧弯曲时为正，反之为负。
 
-\subsection{曲面的基本方程}\label{sub:曲面的基本方程}
+\subsection{曲面的基本公式}\label{sub:曲面的基本公式}
 \begin{notation}
     为了让式子更简洁规律，本小节采用新的符号来表示之前的量：
     \begin{align*}%\label{eq:03ex01.25}
@@ -355,7 +351,7 @@ $\bm r'(t),\bm r_u$和$\bm r_v$共面。
     \end{align*}
 \end{notation}
 
-对于一个$C^3$类曲面$S$即$\bm r=\bm r(u^1,u^2)$（这里$u^2$中2是上标，不是平方），它确定了向量
+对于一个$C^3$阶曲面$S$即$\bm r=\bm r(u^1,u^2)$（这里$u^2$中2是上标，不是平方），它确定了向量
 \begin{align}\label{eq:03ex01.26}
     \bm r_1=\frac{\partial \bm r}{\partial u^1}, \quad \bm r_2=\frac{\partial \bm r}{\partial u^2}, \quad \bm n=\frac{\bm r_1\times\bm r_2}{\sqrt{g}}\, .
 \end{align}
@@ -402,21 +398,21 @@ $\bm r'(t),\bm r_u$和$\bm r_v$共面。
 \end{align}
 于是我们得到了$\bm r_1,\bm r_2$和$\bm n$的导向量。
 \begin{theorem}
-    $C^3$类曲面$S$有
+    $C^3$阶曲面$S$有
     \begin{align}\label{eq:03ex01.35}
         \left\{\begin{array}{l}
             \displaystyle\bm r_{ij}=L_{ij}\bm n+\sum\limits_{k}{\varGamma_{ij}^k\bm r_k}, \\
             \displaystyle\bm n_i=-\sum\limits_{j,k}{L_{ik}g^{kj}\bm r_j},
         \end{array}\right.\quad i,j=1,2\, ,
     \end{align}
-    上式称为\keyindex{曲面的基本方程}{}{surface曲面}，
-    其中第一式称为\keyindex{高斯方程}{Gauss equation}{}，
-    第二式称为\keyindex{Weingarten方程}{Weingarten equation}{}，
+    上式称为\keyindex{曲面的基本公式}{fundamental formulas for surfaces}{surface曲面}，
+    其中第一式称为\keyindex{曲面的高斯公式}{Gauss formula of surfaces}{surface曲面}，
+    第二式称为\keyindex{曲面的外恩加滕公式}{Weingarten formula of surfaces}{surface曲面}，
     系数
     \begin{align}\label{eq:03ex01.36}
         \varGamma_{ij}^k=\frac{1}{2}\sum\limits_{l}{g^{lk}\left(\frac{\partial g_{il}}{\partial u^j}+\frac{\partial g_{jl}}{\partial u^i}-\frac{\partial g_{ij}}{\partial u^l}\right)},\quad i,j,k=1,2
     \end{align}
-    称为\keyindex{第二类Christoffel符号}{Christoffel symbol of the second kind}{}。
+    称为\keyindex{第二类Christoffel符号}{Christoffel symbol of the second kind}{}或\keyindex{联络系数}{coefficient of connection}{}。
 \end{theorem}
 \begin{notation}
     将曲面基本方程中的新记号用旧记号表示：

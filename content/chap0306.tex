@@ -254,9 +254,9 @@ bool `\initvar{Triangle::Intersect}{}`(const `\refvar{Ray}{}` &ray, `\refvar{Flo
 \end{lstlisting}
 
 pbrt的光线-三角形相交测试基于首先计算仿射变换
-使得射线在变换后的坐标系统里端点被变换为$(0,0,0)$且其方向沿$+z$轴。
-在执行相机测试之前三角形顶点也变换到该坐标系统。
-下面我们将看到应用该坐标系统变换会简化相交测试逻辑，
+使得射线在变换后的坐标系里端点被变换为$(0,0,0)$且其方向沿$+z$轴。
+在执行相机测试之前三角形顶点也变换到该坐标系。
+下面我们将看到应用该坐标系变换会简化相交测试逻辑，
 例如任何交点的$x$和$y$坐标必须为零。
 之后在\refsub{稳定的三角形相交}，我们会看到该变换让
 拥有\keyindex{水密的}{watertight}{}光线-三角形相交算法成为可能，
@@ -284,7 +284,7 @@ pbrt的光线-三角形相交测试基于首先计算仿射变换
 `\refcode{Apply shear transformation to translated vertex positions}{}`
 \end{lstlisting}
 
-将射线端点放置在坐标系统的原点的平移是：
+将射线端点放置在坐标系的原点的平移是：
 \begin{align*}
     \bm T=\left[\begin{array}{cccc}
             1 & 0 & 0 & -o_x \\
@@ -358,13 +358,13 @@ p2t.y += Sy * p2t.z;
 我们可能想一次性计算这些值并保存在类\refvar{Ray}{}里，
 而不是为与光线相交的每个三角形重新计算它们。
 
-三角形顶点变换到该坐标系统后，我们现在的任务是求从原点出发
+三角形顶点变换到该坐标系后，我们现在的任务是求从原点出发
 并沿$+z$的光线是否与变换后的三角形相交。
-因为构造坐标系统的方式，该问题等价于2D问题即
+因为构造坐标系的方式，该问题等价于2D问题即
 确定$x,y$坐标$(0,0)$是否在三角形的$xy$投影内（\reffig{3.12}）。
 \begin{figure}[htbp]
     \centering\input{Pictures/chap03/Triisectcoordinatesystem.tex}
-    \caption{在光线-三角形相交坐标系统中，从原点出发的光线沿$+z$轴射出。
+    \caption{在光线-三角形相交坐标系中，从原点出发的光线沿$+z$轴射出。
         可通过只考虑光线和三角形顶点的$xy$投影执行相交测试，
         转而简化为确定2D点$(0,0)$是否在三角形内。}
     \label{fig:3.12}
@@ -410,7 +410,7 @@ p2t.y += Sy * p2t.z;
 因此若某点的边函数值对三角形三条边有相同符号，
 它一定在三条边的同侧并因此必在三角形内。
 
-得益于坐标系统变换，我们要测试的点$\bm p$是$(0,0)$。
+得益于坐标系变换，我们要测试的点$\bm p$是$(0,0)$。
 这简化了边函数表达式。例如，对于从$\bm p_1$到$\bm p_2$的边$e_0$，我们有：
 \begin{align}\label{eq:3.2}
     e_0(\bm p) & =(p_{2x}-p_{1x})(p_y-p_{1y})-(p_x-p_{1x})(p_{2y}-p_{1y})\nonumber \\
@@ -480,7 +480,7 @@ if (det == 0)
 \begin{align*}
     z=b_0z_0+b_1z_1+b_2z_2\, ,
 \end{align*}
-其中$z_i$是光线-三角形相交坐标系统中三个顶点的坐标。
+其中$z_i$是光线-三角形相交坐标系中三个顶点的坐标。
 
 为了节约计算$b_i$的浮点除法开销避免最后的$t$值超出有效$t$值范围，
 这里的实现先用$e_i$插值$z_i$来计算$t$
@@ -597,7 +597,7 @@ if (determinant == 0) {
 最后，有必要处理矩阵是奇异的而不能求逆的情况。
 注意这只在用户提供的每个顶点参数化值是退化的时候发生。
 这种情况下，\refvar{Triangle}{}只选择
-关于三角形曲面法线的任一坐标系统，确保它是正交的：
+关于三角形曲面法线的任一坐标系，确保它是标准正交的：
 \begin{lstlisting}
 `\initcode{Handle zero determinant for triangle partial derivative matrix}{=}`
 `\refvar{CoordinateSystem}{}`(`\refvar{Normalize}{}`(`\refvar{Cross}{}`(p2 - p0, p1 - p0)), &dpdu, &dpdv);
@@ -738,7 +738,7 @@ else
 这保证{\ttfamily ss}和{\ttfamily ts}的叉积是{\ttfamily ns}。
 因此，如果提供了每个顶点的$\bm n$和$\bm s$值
 且插值的$\bm n$和$\bm s$值并不完全正交，
-则$\bm n$会被保留而$\bm s$被修改使得坐标系统是正交的。
+则$\bm n$会被保留而$\bm s$被修改使得坐标系是正交的。
 \begin{lstlisting}
 `\initcode{Compute shading bitangent ts for triangle and adjust ss}{=}`
 `\refvar{Vector3f}{}` ts = `\refvar{Cross}{}`(ns, ss);

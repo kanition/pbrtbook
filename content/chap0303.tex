@@ -157,7 +157,7 @@ if (pHit.z < `\refvar[Cylinder::zMin]{zMin}{}` || pHit.z > `\refvar[Cylinder::zM
 `\refvar{Vector3f}{}` dpdv(0, 0, `\refvar[Cylinder::zMax]{zMax}{}` - `\refvar[Cylinder::zMin]{zMin}{}`);
 \end{lstlisting}
 
-我们又用Weingarten方程计算圆柱法线的参数化偏导数。
+我们又用外恩加滕方程计算圆柱法线的参数化偏导数。
 相关偏导数为：
 \begin{align*}
     \frac{\partial^2\bm p}{\partial u^2}         & =-\varphi_{\max}^2(x,y,0)\, , \\

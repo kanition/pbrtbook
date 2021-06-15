@@ -81,7 +81,7 @@ pbrt用的变换插值方法基于\keyindex{矩阵分解}{matrix decomposition}{
 
 四元数是一个四元组，
 \begin{align}\label{eq:2.4}
-    \bm q=(x,y,z,w)=w+x\mathbf{i}+y\mathbf{j}+z\mathbf{k}\, ,
+    \bm q=[x,y,z,w]=w+x\mathbf{i}+y\mathbf{j}+z\mathbf{k}\, ,
 \end{align}
 其中$\mathbf{i}, \mathbf{j}, \mathbf{k}$定义
 \footnote{Hamilton发现分量之间的这种关系非常有趣，
@@ -91,7 +91,7 @@ pbrt用的变换插值方法基于\keyindex{矩阵分解}{matrix decomposition}{
 $\mathbf{j}\mathbf{i}=-\mathbf{k}$。
 这说明四元数乘法一般是不可交换的。
 
-四元数可以表示为四元组$\bm q=(q_x,q_y,q_z,q_w)$或$(\bm q_{xyz},q_w)$，
+四元数可以表示为四元组$\bm q=[q_x,q_y,q_z,q_w]$或$[\bm q_{xyz},q_w]$，
 其中$\bm q_{xyz}$是虚部三维向量，$q_w$是实部。
 本节中我们会穿插使用这两种表示。
 
@@ -109,7 +109,7 @@ $\mathbf{j}\mathbf{i}=-\mathbf{k}$。
 
 单位四元数（分量满足$x^2+y^2+z^2+w^2=1$的四元数）和
 $\mathbb{R}^3$空间中的旋转之间有一很有用的关系：具体来说，
-绕着可以映射为单位四元数$(\hat{\bm v}\sin\theta,\cos\theta)$的
+绕着可以映射为单位四元数$[\hat{\bm v}\sin\theta,\cos\theta]$的
 单位轴$\hat{\bm v}$旋转角度$2\theta$时，
 下列四元数乘积等效于将旋转施加到点$\bm p$后表达为齐次坐标形式：
 \begin{align*}
@@ -194,7 +194,7 @@ inline `\refvar{Quaternion}{}` `\initvar[Quaternion::Normalize]{Normalize}{}`(co
 \end{lstlisting}
 
 注意我们可以利用一个单位四元数
-$\displaystyle(\bm q_{xyz}\sin\frac{\theta}{2},\cos\frac{\theta}{2})$表示
+$\displaystyle[\bm q_{xyz}\sin\frac{\theta}{2},\cos\frac{\theta}{2}]$表示
 绕单位轴$\hat{\bm q}_{xyz}$旋转角度$\theta$的事实计算旋转矩阵。
 首先我们计算出旋转角度为$\theta=2\arccos q_w$，
 然后利用之前定义的函数\refvar{Rotate}{()}，

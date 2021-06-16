@@ -298,5 +298,58 @@ for (int i = 0; i < nFaces; ++i) {
 }
 \end{lstlisting}
 
-对于每个面中的每条边
+对于每个面中的每条边，循环体创建一个边对象并检查之前是否已经见过同样的边。
+如果是，它就初始化共享该边的两个面的相邻指针。
+如果否，它就将该边添加到边的集合中。
+该边两端两个顶点的索引{\ttfamily v0}和{\ttfamily v1}，
+分别等于边的索引和边的边的索引加一。
+\begin{lstlisting}
+`\initcode{Update neighbor pointer for edgeNum}{=}`
+int v0 = edgeNum, v1 = `\refvar{NEXT}{}`(edgeNum);
+`\refvar{SDEdge}{}` e(f->`\refvar[SDFace::v]{v}{}`[v0], f->`\refvar[SDFace::v]{v}{}`[v1]);
+if (edges.find(e) == edges.end()) {
+    `\refcode{Handle new edge}{}`
+} else {
+    `\refcode{Handle previously seen edge}{}`
+}
+\end{lstlisting}
+
+给定之前没遇到的边，当前的面的指针存储于边对象的成员{\ttfamily\refvar[SDEdge::f]{f}{}[0]}中。
+因为假设输入网格是流形，所以最多还有另一个面共享这条边。
+当发现该面时，可以用它初始化相邻面的域。
+在当前的面中存储该边的号码能让相邻面初始化其相应相邻边的指针。
+\begin{lstlisting}
+`\initcode{Handle new edge}{=}`
+e.`\refvar[SDEdge::f]{f}{}`[0] = f;
+e.`\refvar{f0edgeNum}{}` = edgeNum;
+edges.insert(e);
+\end{lstlisting}
+
+当找到该边上的第二个面时，两个面都设置相邻指针。
+然后从边的集合中移除该边，因为没有边可以被两个以上的面共享。
+\begin{lstlisting}
+`\initcode{Handle previously seen edge}{=}`
+e = *edges.find(e);
+e.`\refvar[SDEdge::f]{f}{}`[0]->`\refvar[SDFace::f]{f}{}`[e.`\refvar{f0edgeNum}{}`] = f;
+f->`\refvar[SDFace::f]{f}{}`[edgeNum] = e.`\refvar[SDEdge::f]{f}{}`[0];
+edges.erase(e);
+\end{lstlisting}
+
+现在所有面都有合适的相邻指针，
+可以设置每个顶点中的标志\refvar[SDVertex::boundary]{boundary}{}和
+\refvar{regular}{}了。为了确定顶点是否是边界顶点，我们将定义围绕顶点的面顺序（\reffig{3.29}）。
+对于面{\ttfamily f}上的顶点{\ttfamily\refvar[SDFace::v]{v}{}[i]}，
+我们定义顶点的\emph{下一面}是邻接从{\ttfamily\refvar[SDFace::v]{v}{}[i]}到{\ttfamily\refvar[SDFace::v]{v}{}[\refvar{NEXT}{}(i)]}的边的面，
+\emph{上一面}是邻接从{\ttfamily\refvar[SDFace::v]{v}{}[\refvar{PREV}{}(i)]}到{\ttfamily\refvar[SDFace::v]{v}{}[i]}的边的面。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.5\linewidth]{chap03/Subdivprevnextface.eps}
+    \caption{给定顶点{\ttfamily\refvar[SDFace::v]{v}{}[i]}和附带的面{\ttfamily f}，
+    我们定义\emph{下一面}为与{\ttfamily f}通过
+    从{\ttfamily\protect\refvar[SDFace::v]{v}{}[i]}到{\ttfamily\protect\refvar[SDFace::v]{v}{}[\protect\refvar{NEXT}{}(i)]}的边邻接的面。
+    上一面的定义类似。}
+    \label{fig:3.29}
+\end{figure}
+
+通过依次转到围绕\refvar[SDFace::v]{v}{}的下一面，
+我们可以
 \subsection{细分}\label{sub:细分}

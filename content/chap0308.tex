@@ -298,5 +298,187 @@ for (int i = 0; i < nFaces; ++i) {
 }
 \end{lstlisting}
 
-对于每个面中的每条边
+对于每个面中的每条边，循环体创建一个边对象并检查之前是否已经见过同样的边。
+如果是，它就初始化共享该边的两个面的相邻指针。
+如果否，它就将该边添加到边的集合中。
+该边两端两个顶点的索引{\ttfamily v0}和{\ttfamily v1}，
+分别等于边的索引和边的边的索引加一。
+\begin{lstlisting}
+`\initcode{Update neighbor pointer for edgeNum}{=}`
+int v0 = edgeNum, v1 = `\refvar{NEXT}{}`(edgeNum);
+`\refvar{SDEdge}{}` e(f->`\refvar[SDFace::v]{v}{}`[v0], f->`\refvar[SDFace::v]{v}{}`[v1]);
+if (edges.find(e) == edges.end()) {
+    `\refcode{Handle new edge}{}`
+} else {
+    `\refcode{Handle previously seen edge}{}`
+}
+\end{lstlisting}
+
+给定之前没遇到的边，当前的面的指针存储于边对象的成员{\ttfamily\refvar[SDEdge::f]{f}{}[0]}中。
+因为假设输入网格是流形，所以最多还有另一个面共享这条边。
+当发现该面时，可以用它初始化相邻面的域。
+在当前的面中存储该边的号码能让相邻面初始化其相应相邻边的指针。
+\begin{lstlisting}
+`\initcode{Handle new edge}{=}`
+e.`\refvar[SDEdge::f]{f}{}`[0] = f;
+e.`\refvar{f0edgeNum}{}` = edgeNum;
+edges.insert(e);
+\end{lstlisting}
+
+当找到该边上的第二个面时，两个面都设置相邻指针。
+然后从边的集合中移除该边，因为没有边可以被两个以上的面共享。
+\begin{lstlisting}
+`\initcode{Handle previously seen edge}{=}`
+e = *edges.find(e);
+e.`\refvar[SDEdge::f]{f}{}`[0]->`\refvar[SDFace::f]{f}{}`[e.`\refvar{f0edgeNum}{}`] = f;
+f->`\refvar[SDFace::f]{f}{}`[edgeNum] = e.`\refvar[SDEdge::f]{f}{}`[0];
+edges.erase(e);
+\end{lstlisting}
+
+现在所有面都有合适的相邻指针，
+可以设置每个顶点中的标志\refvar[SDVertex::boundary]{boundary}{}和
+\refvar{regular}{}了。为了确定顶点是否是边界顶点，我们将定义围绕顶点的面顺序（\reffig{3.29}）。
+对于面{\ttfamily f}上的顶点{\ttfamily\refvar[SDFace::v]{v}{}[i]}，
+我们定义顶点的\emph{下一面}是邻接从{\ttfamily\refvar[SDFace::v]{v}{}[i]}到{\ttfamily\refvar[SDFace::v]{v}{}[\refvar{NEXT}{}(i)]}的边的面，
+\emph{上一面}是邻接从{\ttfamily\refvar[SDFace::v]{v}{}[\refvar{PREV}{}(i)]}到{\ttfamily\refvar[SDFace::v]{v}{}[i]}的边的面。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.4\linewidth]{chap03/Subdivprevnextface.eps}
+    \caption{给定顶点{\ttfamily\refvar[SDFace::v]{v}{}[i]}和附带的面{\ttfamily f}，
+    我们定义\emph{下一面}为与{\ttfamily f}通过
+    从{\ttfamily\protect\refvar[SDFace::v]{v}{}[i]}到{\ttfamily\protect\refvar[SDFace::v]{v}{}[\protect\refvar{NEXT}{}(i)]}的边邻接的面。
+    上一面的定义类似。}
+    \label{fig:3.29}
+\end{figure}
+
+通过依次转到围绕\refvar[SDFace::v]{v}{}的下一面，
+我们可以遍历与之相邻的面。
+如果我们最终回到出发的面，则我们位于内部顶点上；
+如果我们遇到一条边的相邻指针是{\ttfamily nullptr}，
+则我们位于边界顶点上（\reffig{3.30}）。
+一旦初始化例程确定这是否是边界顶点，
+它就计算顶点的价，如果是价为6的内部顶点或价为4的边界顶点，
+就置位标志\refvar{regular}{}；否则这是个非凡顶点。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.5\linewidth]{chap03/Subdivdetermineboundary.eps}
+    \caption{我们可以通过从相邻面\protect\refvar{startFace}{}开始
+        并跟随围绕该顶点的下一面指针来确定一个顶点是否是边界顶点。
+        如果我们遇到一个没有下一相邻面的面，则该顶点在边界上。
+        如果我们回到\protect\refvar{startFace}{}，则它是内部顶点。}
+    \label{fig:3.30}
+\end{figure}
+
+\begin{lstlisting}
+`\initcode{Finish vertex initialization}{=}`
+for (int i = 0; i < nVertices; ++i) {
+    `\refvar{SDVertex}{}` *v = vertices[i];
+    `\refvar{SDFace}{}` *f = v->`\refvar{startFace}{}`;
+    do {
+        f = f->`\refvar{nextFace}{}`(v);
+    } while (f && f != v->`\refvar{startFace}{}`);
+    v->`\refvar[SDVertex::boundary]{boundary}{}` = (f == nullptr);
+    if (!v->`\refvar[SDVertex::boundary]{boundary}{}` && v->`\refvar{valence}{}`() == 6)
+        v->`\refvar{regular}{}` = true;
+    else if (v->`\refvar[SDVertex::boundary]{boundary}{}` && v->`\refvar{valence}{}`() == 4)
+        v->`\refvar{regular}{}` = true;
+    else
+        v->`\refvar{regular}{}` = false;
+}
+\end{lstlisting}
+
+因为经常需要顶点的价，所以我们提供方法\refvar[valence]{SDVertex::valence}{()}。
+\begin{lstlisting}
+`\initcode{LoopSubdiv Inline Functions}{=}\initnext{LoopSubdivInlineFunctions}`
+inline int `\refvar{SDVertex}{}`::`\initvar{valence}{}`() {
+    `\refvar{SDFace}{}` *f = `\refvar{startFace}{}`;
+    if (!`\refvar[SDVertex::boundary]{boundary}{}`) {
+        `\refcode{Compute valence of interior vertex}{}`
+    } else {
+        `\refcode{Compute valence of boundary vertex}{}`
+    }
+}
+\end{lstlisting}
+
+为了计算非边界顶点的价，该方法跟随每个面围绕该顶点的相邻指针
+开始计算相邻面的数量，直到它回到出发的面。
+价等于访问的面的数量。
+\begin{lstlisting}
+`\initcode{Compute valence of interior vertex}{=}`
+int nf = 1;
+while ((f = f->`\refvar{nextFace}{}`(this)) != `\refvar{startFace}{}`)
+    ++nf;
+return nf;
+\end{lstlisting}
+
+对于边界顶点我们可以用相同的方法，但这种情况下价比相邻面的数量多一。
+这里遍历相邻面稍微更复杂些：它跟随围绕该顶点的下一面指针直到遇到边界，计算见过的面的数量。
+然后它再次从\refvar{startFace}{}开始并跟随上一面指针直到在另一方向遇到边界。
+\begin{lstlisting}
+`\initcode{Compute valence of boundary vertex}{=}`
+int nf = 1;
+while ((f = f->`\refvar{nextFace}{}`(this)) != nullptr)
+    ++nf;
+f = `\refvar{startFace}{}`;
+while ((f = f->`\refvar{prevFace}{}`(this)) != nullptr)
+    ++nf;
+return nf + 1;
+\end{lstlisting}
+
+\refvar[vnum]{SDFace::vnum}{()}是查找给定顶点指针的索引的实用函数。
+传入一个不属于当前的面的顶点指针是致命错误——
+这种情况表明细分代码中有bug。
+\begin{lstlisting}
+`\initcode{SDFace Methods}{=}\initnext{SDFaceMethods}`
+int `\initvar{vnum}{}`(`\refvar{SDVertex}{}` *vert) const {
+    for (int i = 0; i < 3; ++i)
+        if (`\refvar[SDFace::v]{v}{}`[i] == vert) return i;
+    `\refvar{Severe}{}`("Basic logic error in SDFace::vnum()");
+    return -1;
+}
+\end{lstlisting}
+
+因为面{\ttfamily f}上顶点{\ttfamily\refvar[SDFace::v]{v}{}[i]}的
+下一面在第i边上（回想\reffig{3.27}中相邻边指针的映射），
+给定实用函数\refvar{vnum}{()}提供的顶点索引{\ttfamily i}，
+我们可轻松找出合适的相邻面指针。
+上一面邻接从{\ttfamily\refvar{PREV}{}(i)}到{\ttfamily i}的边，
+所以对于上一面该方法返回{\ttfamily \refvar[SDFace::f]{f}{}[\refvar{PREV}{}(i)]}。
+\begin{lstlisting}
+`\refcode{SDFace Methods}{+=}\lastnext{SDFaceMethods}`
+`\refvar{SDFace}{}` *`\initvar{nextFace}{}`(`\refvar{SDVertex}{}` *vert) {
+    return `\refvar[SDFace::f]{f}{}`[`\refvar{vnum}{}`(vert)];
+}
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{SDFace Methods}{+=}\lastnext{SDFaceMethods}`
+`\refvar{SDFace}{}` *`\initvar{prevFace}{}`(`\refvar{SDVertex}{}` *vert) {
+    return `\refvar[SDFace::f]{f}{}`[`\refvar{PREV}{}`(`\refvar{vnum}{}`(vert))];
+}
+\end{lstlisting}
+
+能够从任意顶点开始获取围绕一个面的上一个和下一个顶点也很有用。
+方法\refvar[nextVert]{SDFace::nextVert}{()}和\refvar[prevVert]{SDFace::prevVert}{()}就是干这个的（\reffig{3.31}）。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.35\linewidth]{chap03/Subdivprevnextvert.eps}
+    \caption{给定顶点{\ttfamily v}和面{\ttfamily f}，
+    方法{\ttfamily f->\protect\refvar{prevVert}{}(v)}返回
+    从{\ttfamily v}起绕该面的上一个顶点，
+    而{\ttfamily f->\protect\refvar{nextVert}{}(v)}返回下一个顶点，
+    其中“下一个”和“上一个”由定义该面时的顶点原始顺序定义。}
+    \label{fig:3.31}
+\end{figure}
+
+\begin{lstlisting}
+`\refcode{SDFace Methods}{+=}\lastnext{SDFaceMethods}`
+`\refvar{SDVertex}{}` *`\initvar{nextVert}{}`(`\refvar{SDVertex}{}` *vert) {
+    return `\refvar[SDFace::v]{v}{}`[`\refvar{NEXT}{}`(`\refvar{vnum}{}`(vert))];
+}
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{SDFace Methods}{+=}\lastnext{SDFaceMethods}`
+`\refvar{SDVertex}{}` *`\initvar{prevVert}{}`(`\refvar{SDVertex}{}` *vert) {
+    return `\refvar[SDFace::v]{v}{}`[`\refvar{PREV}{}`(`\refvar{vnum}{}`(vert))];
+}
+\end{lstlisting}
+
 \subsection{细分}\label{sub:细分}
+现在我们可以展示怎样用修改后的Loop规则进行细分了。

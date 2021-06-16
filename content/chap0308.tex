@@ -422,4 +422,63 @@ while ((f = f->`\refvar{prevFace}{}`(this)) != nullptr)
     ++nf;
 return nf + 1;
 \end{lstlisting}
+
+\refvar[vnum]{SDFace::vnum}{()}是查找给定顶点指针的索引的实用函数。
+传入一个不属于当前的面的顶点指针是致命错误——
+这种情况表明细分代码中有bug。
+\begin{lstlisting}
+`\initcode{SDFace Methods}{=}\initnext{SDFaceMethods}`
+int `\initvar{vnum}{}`(`\refvar{SDVertex}{}` *vert) const {
+    for (int i = 0; i < 3; ++i)
+        if (`\refvar[SDFace::v]{v}{}`[i] == vert) return i;
+    `\refvar{Severe}{}`("Basic logic error in SDFace::vnum()");
+    return -1;
+}
+\end{lstlisting}
+
+因为面{\ttfamily f}上顶点{\ttfamily\refvar[SDFace::v]{v}{}[i]}的
+下一面在第i边上（回想\reffig{3.27}中相邻边指针的映射），
+给定实用函数\refvar{vnum}{()}提供的顶点索引{\ttfamily i}，
+我们可轻松找出合适的相邻面指针。
+上一面邻接从{\ttfamily\refvar{PREV}{}(i)}到{\ttfamily i}的边，
+所以对于上一面该方法返回{\ttfamily \refvar[SDFace::f]{f}{}[\refvar{PREV}{}(i)]}。
+\begin{lstlisting}
+`\refcode{SDFace Methods}{+=}\lastnext{SDFaceMethods}`
+`\refvar{SDFace}{}` *`\initvar{nextFace}{}`(`\refvar{SDVertex}{}` *vert) {
+    return `\refvar[SDFace::f]{f}{}`[`\refvar{vnum}{}`(vert)];
+}
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{SDFace Methods}{+=}\lastnext{SDFaceMethods}`
+`\refvar{SDFace}{}` *`\initvar{prevFace}{}`(`\refvar{SDVertex}{}` *vert) {
+    return `\refvar[SDFace::f]{f}{}`[`\refvar{PREV}{}`(`\refvar{vnum}{}`(vert))];
+}
+\end{lstlisting}
+
+能够从任意顶点开始获取围绕一个面的上一个和下一个顶点也很有用。
+方法\refvar[nextVert]{SDFace::nextVert}{()}和\refvar[prevVert]{SDFace::prevVert}{()}就是干这个的（\reffig{3.31}）。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.35\linewidth]{chap03/Subdivprevnextvert.eps}
+    \caption{给定顶点{\ttfamily v}和面{\ttfamily f}，
+    方法{\ttfamily f->\protect\refvar{prevVert}{}(v)}返回
+    从{\ttfamily v}起绕该面的上一个顶点，
+    而{\ttfamily f->\protect\refvar{nextVert}{}(v)}返回下一个顶点，
+    其中“下一个”和“上一个”由定义该面时的顶点原始顺序定义。}
+    \label{fig:3.31}
+\end{figure}
+
+\begin{lstlisting}
+`\refcode{SDFace Methods}{+=}\lastnext{SDFaceMethods}`
+`\refvar{SDVertex}{}` *`\initvar{nextVert}{}`(`\refvar{SDVertex}{}` *vert) {
+    return `\refvar[SDFace::v]{v}{}`[`\refvar{NEXT}{}`(`\refvar{vnum}{}`(vert))];
+}
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{SDFace Methods}{+=}\lastnext{SDFaceMethods}`
+`\refvar{SDVertex}{}` *`\initvar{prevVert}{}`(`\refvar{SDVertex}{}` *vert) {
+    return `\refvar[SDFace::v]{v}{}`[`\refvar{PREV}{}`(`\refvar{vnum}{}`(vert))];
+}
+\end{lstlisting}
+
 \subsection{细分}\label{sub:细分}
+现在我们可以展示怎样用修改后的Loop规则进行细分了。

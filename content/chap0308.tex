@@ -231,9 +231,9 @@ struct `\initvar{SDFace}{}` {
 `\initcode{Set face to vertex pointers}{=}`
 const int *vp = vertexIndices;
 for (int i = 0; i < nFaces; ++i, vp += 3) {
-    SDFace *f = faces[i];
+    `\refvar{SDFace}{}` *f = faces[i];
     for (int j = 0; j < 3; ++j) {
-        SDVertex *v = vertices[vp[j]];
+        `\refvar{SDVertex}{}` *v = vertices[vp[j]];
         f->`\refvar[SDFace::v]{v}{}`[j] = v;
         v->`\refvar{startFace}{}` = f;
     }
@@ -260,7 +260,7 @@ struct `\initvar{SDEdge}{}` {
 它对指针排序使得{\ttfamily\refvar[SDEdge::v]{v}{}[0]}是
 排在内存中最前面的那个。这段代码可能看起来很奇怪，
 但它简单依赖于这样的事实即C++中的指针是可以像整数那样高效操作的数字
-\footnote{尽管是分段架构。}而一边的顶点顺序是任意的。
+\footnote{尽管是分段架构。}而边的顶点顺序是任意的。
 基于其指针地址排列这两个顶点保证了边$(\bm v_a,\bm v_b)$可以
 被正确认作和边$(\bm v_b,\bm v_a)$相同，而不管提供的顶点顺序是什么。
 \begin{lstlisting}
@@ -351,7 +351,8 @@ edges.erase(e);
 \end{figure}
 
 通过依次转到围绕\refvar[SDFace::v]{v}{}的下一面，
-我们可以遍历与之相邻的面。
+我们可以遍历与之相邻的面
+\sidenote{译者注：思考一下，相容次序的性质为这种遍历提供了什么便利。}。
 如果我们最终回到出发的面，则我们位于内部顶点上；
 如果我们遇到一条边的相邻指针是{\ttfamily nullptr}，
 则我们位于边界顶点上（\reffig{3.30}）。

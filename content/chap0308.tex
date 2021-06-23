@@ -207,7 +207,7 @@ struct `\initvar{SDFace}{}` {
 考虑两个顶点$\bm v_0$和$\bm v_1$与连接它们的边。
 我们希望拥有该边的三角形面指定其三个顶点时$\bm v_0$在$\bm v_1$之前，
 另一个面指定顶点时$\bm v_1$在$\bm v_0$之前（\reffig{3.28}）。
-\keyindex{莫比乌斯带}{Möbius strip}{}是无法相容次序的曲面例子，
+\keyindex{默比乌斯带}{Möbius strip}{}是无法相容次序的曲面例子，
 但渲染中几乎不会遇到这样的曲面，所以实践中该限制没问题。
 然而不能创建相容次序网格的程序给出的没构建好的网格数据可能会造成问题。
 \begin{figure}[htbp]
@@ -559,3 +559,52 @@ for (`\refvar{SDFace}{}` *face : f) {
 
 \subsubsection*{计算新顶点的位置}
 在担心细分网格的拓扑初始化之前，细化方法先为网格中的所有顶点计算位置。
+首先，它考虑所有已经出现于网格中的顶点的更新位置计算问题；
+这些顶点称为\keyindex{偶顶点}{even vertex}{vertex顶点}。
+然后它计算分割边上的新顶点，称为\keyindex{奇顶点}{odd vertex}{vertex顶点}。
+\begin{lstlisting}
+`\initcode{Update vertex positions and create new edge vertices}{=}`
+`\refcode{Update vertex positions for even vertices}{}`
+`\refcode{Compute new odd edge vertices}{}`
+\end{lstlisting}
+
+对于偶顶点的每种不同类型——正则与非凡、边界与内部，
+计算更新位置使用的技术不同。这给出了四种要处理的情况。
+\begin{lstlisting}
+`\initcode{Update vertex positions for even vertices}{=}`
+for (`\refvar{SDVertex}{}` *vertex : v) {
+    if (!vertex->`\refvar[SDVertex::boundary]{boundary}{}`) {
+        `\refcode{Apply one-ring rule for even vertex}{}`
+    } else {
+        `\refcode{Apply boundary rule for even vertex}{}`
+    }
+}
+\end{lstlisting}
+
+对于内部顶点的两种类型，我们取每个顶点的相邻顶点集合
+（称为绕它的\keyindex{一环}{one-ring}{}，反映了它是一圈邻居的事实）
+并用权重$\beta$为每个邻居顶点赋权（\reffig{3.33}）。
+我们正在更新的中心顶点赋权为$1-n\beta$，其中$n$为该顶点的价。
+因此，顶点$\bm v$对应的新顶点$\bm v'$为
+\begin{align*}
+    \bm v'=(1-n\beta)\bm v+\sum\limits_{i=1}^{N}{\beta \bm v_i}\, .
+\end{align*}
+
+该公式确保权重之和为一，保证了Loop细分曲面的凸包性质，
+确保最终网格在控制网格的凸包内。
+正在更新的顶点位置只受附近顶点的影响；
+这称为\keyindex{局部支撑}{local support}{}。
+Loop细分尤其高效，因为其细分规则均有该性质。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.3\linewidth]{chap03/Subdivoneringweighting.eps}
+    \caption{顶点$\bm v$的新顶点$\bm v'$通过用权重$\beta$对相邻顶点$\bm v_i$赋权、
+        用$(1-n\beta)$对$\bm v$赋权计算得到，其中$n$为$\bm v$的价。
+        相邻顶点$\bm v_i$统称为绕$\bm v$的\emph{一环}。}
+    \label{fig:3.33}
+\end{figure}
+
+该步骤所用的指定权重$\beta$是细分方法的关键组成，
+必须仔细选取以保证极限曲面的光滑性以及其他所需的性质
+\footnote{再次见本节开头和“扩展阅读”一节引用的文献
+    了解关于如何推导出$\beta$等值的信息。}。
+函数\refvar{beta}{()}

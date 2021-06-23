@@ -29,7 +29,7 @@ uint8_t *`\initvar{currentBlock}{}` = nullptr;
 
 \begin{lstlisting}
 `\refcode{MemoryArena Public Methods}{+=}\lastnext{MemoryArenaPublicMethods}`
-void *`\initvar{Alloc}{}`(size_t nBytes) {
+void *`\initvar[MemoryArena:Alloc1]{Alloc}{}`(size_t nBytes) {
     `\refcode{Round up nBytes to minimum machine alignment}{}`
     if (`\refvar{currentBlockPos}{}` + nBytes > `\refvar{currentAllocSize}{}`) {
         `\refcode{Add current block to usedBlocks list}{}`
@@ -37,6 +37,17 @@ void *`\initvar{Alloc}{}`(size_t nBytes) {
     }
     void *ret = `\refvar{currentBlock}{}` + `\refvar{currentBlockPos}{}`;
     `\refvar{currentBlockPos}{}` += nBytes;
+    return ret;
+}
+\end{lstlisting}
+
+\begin{lstlisting}
+`\refcode{MemoryArena Public Methods}{+=}\lastnext{MemoryArenaPublicMethods}`
+template<typename T> T *`\initvar[MemoryArena:Alloc2]{Alloc}{}`(size_t n = 1, bool runConstructor = true) {
+    T *ret = (T *)`\refvar[MemoryArena:Alloc1]{Alloc}{}`(n * sizeof(T));
+    if (runConstructor)
+        for (size_t i = 0; i < n; ++i)
+            new (&ret[i]) T();
     return ret;
 }
 \end{lstlisting}

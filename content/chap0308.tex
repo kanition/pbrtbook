@@ -537,5 +537,25 @@ std::vector<`\refvar{SDVertex}{}` *> newVertices;
 `\refcode{Prepare for next level of subdivision}{}`
 \end{lstlisting}
 
-首先，为已经出现在输入网格中的顶点的更新值分配存储。
-该方法还为子面分配存储。但它不
+首先，为已经出现在输入网格中的顶点的更新值分配存储。该方法还为子面分配存储。
+但除了设置顶点的标志\refvar{regular}{}和\refvar[SDVertex::boundary]{boundary}{}外，
+它还没对新顶点和面做任何初始化，因为细分让边界顶点仍在边界上，
+内部顶点仍在内部，且不改变网格中顶点的价。
+\begin{lstlisting}
+`\initcode{Allocate next level of children in mesh tree}{=}`
+for (`\refvar{SDVertex}{}` *vertex : v) {
+    vertex->`\refvar{child}{}` = arena.`\refvar[MemoryArena:Alloc2]{Alloc}{}`<`\refvar{SDVertex}{}`>();
+    vertex->`\refvar{child}{}`->`\refvar{regular}{}` = vertex->`\refvar{regular}{}`;
+    vertex->`\refvar{child}{}`->`\refvar[SDVertex::boundary]{boundary}{}` = vertex->`\refvar[SDVertex::boundary]{boundary}{}`;
+    newVertices.push_back(vertex->`\refvar{child}{}`);
+}
+for (`\refvar{SDFace}{}` *face : f) {
+    for (int k = 0; k < 4; ++k) {
+        face->`\refvar{children}{}`[k] = arena.`\refvar[MemoryArena:Alloc2]{Alloc}{}`<`\refvar{SDFace}{}`>();
+        newFaces.push_back(face->`\refvar{children}{}`[k]);
+    }
+}
+\end{lstlisting}
+
+\subsubsection*{计算新顶点的位置}
+在担心细分网格的拓扑初始化之前，细化方法先为网格中的所有顶点计算位置。

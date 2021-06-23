@@ -63,5 +63,5 @@ static constexpr int `\initvar{MaxBxDFs}{}` = 8;
 \subsection{BSDF内存管理}\label{sub:BSDF内存管理}
 \begin{lstlisting}
 `\initcode{Memory Declarations}{=}\initnext{MemoryDeclarations}`
-#define ARENA_ALLOC(arena, Type) new (arena.`\refvar{Alloc}{}`(sizeof(Type))) Type
+#define ARENA_ALLOC(arena, Type) new (arena.`\refvar[MemoryArena:Alloc1]{Alloc}{}`(sizeof(Type))) Type
 \end{lstlisting}

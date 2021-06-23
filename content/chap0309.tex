@@ -11,7 +11,7 @@ static constexpr `\refvar{Float}{}` `\initvar{MaxFloat}{}` = std::numeric_limits
 static constexpr `\refvar{Float}{}` `\initvar{Infinity}{}` = std::numeric_limits<`\refvar{Float}{}`>::infinity();
 \end{lstlisting}
 
-\subsubsection*{实用例程}\label{subsub:实用例程}
+\subsubsection*{实用例程}
 
 \begin{lstlisting}
 `\initcode{Global Inline Functions}{=}\initnext{GlobalInlineFunctions}`
@@ -22,14 +22,14 @@ inline uint32_t `\initvar{FloatToBits}{}`(float f) {
 }
 \end{lstlisting}
 
-\subsubsection*{算术运算}\label{subsub:算术运算}
+\subsubsection*{算术运算}
 \begin{lstlisting}
 `\refcode{Global Constants}{+=}\lastnext{GlobalConstants}`
 static constexpr `\refvar{Float}{}` `\initvar{MachineEpsilon}{}` =
        std::numeric_limits<`\refvar{Float}{}`>::epsilon() * 0.5;
 \end{lstlisting}
 
-\subsubsection*{误差传播}\label{subsub:误差传播}
+\subsubsection*{误差传播}
 \begin{lstlisting}
 `\refcode{Global Inline Functions}{+=}\lastnext{GlobalInlineFunctions}`
 inline constexpr `\refvar{Float}{}` `\initvar{gamma}{}`(int n) {
@@ -37,7 +37,7 @@ inline constexpr `\refvar{Float}{}` `\initvar{gamma}{}`(int n) {
 }
 \end{lstlisting}
 
-\subsubsection*{运行误差分析}\label{subsub:运行误差分析}
+\subsubsection*{运行误差分析}
 \begin{lstlisting}
 `\initcode{EFloat Public Methods}{=}\initnext{EFloatPublicMethods}`
 `\initvar{EFloat}{}`() { }

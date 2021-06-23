@@ -231,9 +231,9 @@ struct `\initvar{SDFace}{}` {
 `\initcode{Set face to vertex pointers}{=}`
 const int *vp = vertexIndices;
 for (int i = 0; i < nFaces; ++i, vp += 3) {
-    SDFace *f = faces[i];
+    `\refvar{SDFace}{}` *f = faces[i];
     for (int j = 0; j < 3; ++j) {
-        SDVertex *v = vertices[vp[j]];
+        `\refvar{SDVertex}{}` *v = vertices[vp[j]];
         f->`\refvar[SDFace::v]{v}{}`[j] = v;
         v->`\refvar{startFace}{}` = f;
     }
@@ -260,7 +260,7 @@ struct `\initvar{SDEdge}{}` {
 它对指针排序使得{\ttfamily\refvar[SDEdge::v]{v}{}[0]}是
 排在内存中最前面的那个。这段代码可能看起来很奇怪，
 但它简单依赖于这样的事实即C++中的指针是可以像整数那样高效操作的数字
-\footnote{尽管是分段架构。}而一边的顶点顺序是任意的。
+\footnote{尽管是分段架构。}而边的顶点顺序是任意的。
 基于其指针地址排列这两个顶点保证了边$(\bm v_a,\bm v_b)$可以
 被正确认作和边$(\bm v_b,\bm v_a)$相同，而不管提供的顶点顺序是什么。
 \begin{lstlisting}
@@ -351,7 +351,8 @@ edges.erase(e);
 \end{figure}
 
 通过依次转到围绕\refvar[SDFace::v]{v}{}的下一面，
-我们可以遍历与之相邻的面。
+我们可以遍历与之相邻的面
+\sidenote{译者注：思考一下，相容次序为这种遍历提供了什么便利？}。
 如果我们最终回到出发的面，则我们位于内部顶点上；
 如果我们遇到一条边的相邻指针是{\ttfamily nullptr}，
 则我们位于边界顶点上（\reffig{3.30}）。
@@ -385,7 +386,9 @@ for (int i = 0; i < nVertices; ++i) {
 }
 \end{lstlisting}
 
-因为经常需要顶点的价，所以我们提供方法\refvar[valence]{SDVertex::valence}{()}。
+因为经常需要顶点的价，所以我们提供方法\refvar[valence]{SDVertex::valence}{()}
+\sidenote{译者注：我认为该方法可能不适合处理一些极其特殊罕见的情况，
+    但确实够用了，详见\url{https://github.com/mmp/pbrt-v4/issues/143}。}。
 \begin{lstlisting}
 `\initcode{LoopSubdiv Inline Functions}{=}\initnext{LoopSubdivInlineFunctions}`
 inline int `\refvar{SDVertex}{}`::`\initvar{valence}{}`() {
@@ -482,3 +485,77 @@ int `\initvar{vnum}{}`(`\refvar{SDVertex}{}` *vert) const {
 
 \subsection{细分}\label{sub:细分}
 现在我们可以展示怎样用修改后的Loop规则进行细分了。
+这里的实现施加固定次数的细分来为渲染生成三角网格；
+本章末习题7讨论了自适应细分，每个原始面都被细分足够的次数
+使得从特定视点观察的结果是光滑的，而不是仅用固定层级数的细分，
+否则一些区域可能过细分而同时另一些则欠细分。
+
+代码片\refcode{Refine subdivision mesh into triangles}{}反复
+对网格运用细分规则，每次都生成一个新网格用作下一步的输入。
+每次细分步骤后，数组{\ttfamily f}和{\ttfamily v}都更新为
+指向来自刚完成的细分层级的面和顶点。
+当细分完成时，便返回曲面的三角网格表示。
+
+类\refvar{MemoryArena}{}的实例用于在该过程中分配临时存储。
+该类定义于\refsub{基于Arena的分配}，提供了快速的自定义内存分配方法，
+当它离开作用域时会自动释放内存。
+
+\begin{lstlisting}
+`\initcode{Refine subdivision mesh into triangles}{=}`
+std::vector<`\refvar{SDFace}{}` *> f = faces;
+std::vector<`\refvar{SDVertex}{}` *> v = vertices;
+`\refvar{MemoryArena}{}` arena;
+for (int i = 0; i < nLevels; ++i) {
+    `\refcode{Update f and v for next level of subdivision}{}`
+}
+`\refcode{Push vertices to limit surface}{}`
+`\refcode{Compute vertex tangents on limit surface}{}`
+`\refcode{Create triangle mesh from subdivision mesh}{}`
+\end{lstlisting}
+
+细分步骤主循环的过程如下：它创建{\ttfamily vector}来存储
+当前细分层级的顶点和面，并继续计算新顶点位置，更新细化网格的拓扑表示。
+\reffig{3.32}展示了网格中面的基本细化规则。
+每个面被分为四个子面，第{\ttfamily i}个子面
+与输入面的第{\ttfamily i}个顶点相邻且最后一个面位于中心。
+然后沿原始面的分割边计算三个新顶点。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.6\linewidth]{chap03/Subdivrefinementnaming.eps}
+    \caption{单个三角面的基本细分。创建和排序四个子面，第{\ttfamily i}个子面
+    与原始面的第{\ttfamily i}个顶点相邻且第四个子面位于细分面的中心。
+    需要计算三条边上的顶点；它们的编号满足第{\ttfamily i}个边上顶点在原始面的第{\ttfamily i}条边上。}
+    \label{fig:3.32}
+\end{figure}
+
+\begin{lstlisting}
+`\initcode{Update f and v for next level of subdivision}{=}`
+std::vector<`\refvar{SDFace}{}` *> newFaces;
+std::vector<`\refvar{SDVertex}{}` *> newVertices;
+`\refcode{Allocate next level of children in mesh tree}{}`
+`\refcode{Update vertex positions and create new edge vertices}{}`
+`\refcode{Update new mesh topology}{}`
+`\refcode{Prepare for next level of subdivision}{}`
+\end{lstlisting}
+
+首先，为已经出现在输入网格中的顶点的更新值分配存储。该方法还为子面分配存储。
+但除了设置顶点的标志\refvar{regular}{}和\refvar[SDVertex::boundary]{boundary}{}外，
+它还没对新顶点和面做任何初始化，因为细分让边界顶点仍在边界上，
+内部顶点仍在内部，且不改变网格中顶点的价。
+\begin{lstlisting}
+`\initcode{Allocate next level of children in mesh tree}{=}`
+for (`\refvar{SDVertex}{}` *vertex : v) {
+    vertex->`\refvar{child}{}` = arena.`\refvar[MemoryArena:Alloc2]{Alloc}{}`<`\refvar{SDVertex}{}`>();
+    vertex->`\refvar{child}{}`->`\refvar{regular}{}` = vertex->`\refvar{regular}{}`;
+    vertex->`\refvar{child}{}`->`\refvar[SDVertex::boundary]{boundary}{}` = vertex->`\refvar[SDVertex::boundary]{boundary}{}`;
+    newVertices.push_back(vertex->`\refvar{child}{}`);
+}
+for (`\refvar{SDFace}{}` *face : f) {
+    for (int k = 0; k < 4; ++k) {
+        face->`\refvar{children}{}`[k] = arena.`\refvar[MemoryArena:Alloc2]{Alloc}{}`<`\refvar{SDFace}{}`>();
+        newFaces.push_back(face->`\refvar{children}{}`[k]);
+    }
+}
+\end{lstlisting}
+
+\subsubsection*{计算新顶点的位置}
+在担心细分网格的拓扑初始化之前，细化方法先为网格中的所有顶点计算位置。

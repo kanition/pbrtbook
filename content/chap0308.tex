@@ -352,7 +352,7 @@ edges.erase(e);
 
 通过依次转到围绕\refvar[SDFace::v]{v}{}的下一面，
 我们可以遍历与之相邻的面
-\sidenote{译者注：思考一下，相容次序的性质为这种遍历提供了什么便利。}。
+\sidenote{译者注：思考一下，相容次序为这种遍历提供了什么便利？}。
 如果我们最终回到出发的面，则我们位于内部顶点上；
 如果我们遇到一条边的相邻指针是{\ttfamily nullptr}，
 则我们位于边界顶点上（\reffig{3.30}）。
@@ -386,7 +386,9 @@ for (int i = 0; i < nVertices; ++i) {
 }
 \end{lstlisting}
 
-因为经常需要顶点的价，所以我们提供方法\refvar[valence]{SDVertex::valence}{()}。
+因为经常需要顶点的价，所以我们提供方法\refvar[valence]{SDVertex::valence}{()}
+\sidenote{译者注：我认为该方法可能不适合处理一些极其特殊罕见的情况，
+    但确实够用了，详见\url{https://github.com/mmp/pbrt-v4/issues/143}。}。
 \begin{lstlisting}
 `\initcode{LoopSubdiv Inline Functions}{=}\initnext{LoopSubdivInlineFunctions}`
 inline int `\refvar{SDVertex}{}`::`\initvar{valence}{}`() {
@@ -483,3 +485,57 @@ int `\initvar{vnum}{}`(`\refvar{SDVertex}{}` *vert) const {
 
 \subsection{细分}\label{sub:细分}
 现在我们可以展示怎样用修改后的Loop规则进行细分了。
+这里的实现施加固定次数的细分来为渲染生成三角网格；
+本章末习题7讨论了自适应细分，每个原始面都被细分足够的次数
+使得从特定视点观察的结果是光滑的，而不是仅用固定层级数的细分，
+否则一些区域可能过细分而同时另一些则欠细分。
+
+代码片\refcode{Refine subdivision mesh into triangles}{}反复
+对网格运用细分规则，每次都生成一个新网格用作下一步的输入。
+每次细分步骤后，数组{\ttfamily f}和{\ttfamily v}都更新为
+指向来自刚完成的细分层级的面和顶点。
+当细分完成时，便返回曲面的三角网格表示。
+
+类\refvar{MemoryArena}{}的实例用于在该过程中分配临时存储。
+该类定义于\refsub{基于Arena的分配}，提供了快速的自定义内存分配方法，
+当它离开作用域时会自动释放内存。
+
+\begin{lstlisting}
+`\initcode{Refine subdivision mesh into triangles}{=}`
+std::vector<`\refvar{SDFace}{}` *> f = faces;
+std::vector<`\refvar{SDVertex}{}` *> v = vertices;
+`\refvar{MemoryArena}{}` arena;
+for (int i = 0; i < nLevels; ++i) {
+    `\refcode{Update f and v for next level of subdivision}{}`
+}
+`\refcode{Push vertices to limit surface}{}`
+`\refcode{Compute vertex tangents on limit surface}{}`
+`\refcode{Create triangle mesh from subdivision mesh}{}`
+\end{lstlisting}
+
+细分步骤主循环的过程如下：它创建{\ttfamily vector}来存储
+当前细分层级的顶点和面，并继续计算新顶点位置，更新细化网格的拓扑表示。
+\reffig{3.32}展示了网格中面的基本细化规则。
+每个面被分为四个子面，第{\ttfamily i}个子面
+与输入面的第{\ttfamily i}个顶点相邻且最后一个面位于中心。
+然后沿原始面的分割边计算三个新顶点。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.6\linewidth]{chap03/Subdivrefinementnaming.eps}
+    \caption{单个三角面的基本细分。创建和排序四个子面，第{\ttfamily i}个子面
+    与原始面的第{\ttfamily i}个顶点相邻且第四个子面位于细分面的中心。
+    需要计算三条边上的顶点；它们的编号满足第{\ttfamily i}个边上顶点在原始面的第{\ttfamily i}条边上。}
+    \label{fig:3.32}
+\end{figure}
+
+\begin{lstlisting}
+`\initcode{Update f and v for next level of subdivision}{=}`
+std::vector<`\refvar{SDFace}{}` *> newFaces;
+std::vector<`\refvar{SDVertex}{}` *> newVertices;
+`\refcode{Allocate next level of children in mesh tree}{}`
+`\refcode{Update vertex positions and create new edge vertices}{}`
+`\refcode{Update new mesh topology}{}`
+`\refcode{Prepare for next level of subdivision}{}`
+\end{lstlisting}
+
+首先，为已经出现在输入网格中的顶点的更新值分配存储。
+该方法还为子面分配存储。但它不

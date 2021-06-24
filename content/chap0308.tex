@@ -943,4 +943,81 @@ v = newVertices;
 \end{lstlisting}
 
 \subsubsection*{逼近极限曲面并输出}
-细分曲面的显著性质之一是
+细分曲面的显著性质之一是，如果我们永远继续细分下去，
+特殊的细分规则可以给出网格顶点将有的位置。
+这里我们用这些规则初始化极限曲面位置的数组{\ttfamily pLimit}。
+注意计算中在顶点之外的地方临时存储极限曲面的位置很重要。
+因为每个顶点的极限曲面位置依赖于其周围顶点的原始位置，
+所有顶点的原始位置必须保持不变直到完成计算。
+
+边界顶点的极限规则对两个相邻顶点赋权$\displaystyle\frac{1}{5}$，
+中心顶点赋权$\displaystyle\frac{3}{5}$。
+内部顶点的规则基于函数\refvar{loopGamma}{()}，
+它基于顶点的价计算合适的顶点权重。
+\begin{lstlisting}
+`\initcode{Push vertices to limit surface}{=}`
+std::unique_ptr<`\refvar{Point3f}{}`[]> pLimit(new `\refvar{Point3f}{}`[v.size()]);
+for (size_t i = 0; i < v.size(); ++i) {
+    if (v[i]->`\refvar[SDVertex::boundary]{boundary}{}`)
+        pLimit[i] =  `\refvar{weightBoundary}{}`(v[i], 1.f / 5.f);
+    else
+        pLimit[i] =  `\refvar{weightOneRing}{}`(v[i], `\refvar{loopGamma}{}`(v[i]->`\refvar{valence}{}`()));
+}
+for (size_t i = 0; i < v.size(); ++i)
+    v[i]->`\refvar[SDVertex::p]{p}{}` = pLimit[i];
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{LoopSubdiv Inline Functions}{+=}\lastcode{LoopSubdivInlineFunctions}`
+inline `\refvar{Float}{}` `\initvar{loopGamma}{}`(int valence) {
+    return 1.f / (valence + 3.f / (8.f * `\refvar{beta}{}`(valence)));
+}
+\end{lstlisting}
+
+为了生成看起来光滑的、带有每个顶点曲面法线的三角网格，
+每个顶点处都计算极限曲面一对不平行的切向量。
+与位置的极限规则一样，这是给出实际极限曲面上精确切线的解析计算。
+\begin{lstlisting}
+`\initcode{Compute vertex tangents on limit surface}{=}`
+std::vector<`\refvar{Normal3f}{}`> Ns;
+Ns.reserve(v.size());
+std::vector<`\refvar{Point3f}{}`> pRing(16, `\refvar{Point3f}{}`());
+for (`\refvar{SDVertex}{}` *vertex : v) {
+    `\refvar{Vector3f}{}` S(0,0,0), T(0,0,0);
+    int valence = vertex->`\refvar{valence}{}`();
+    if (valence > (int)pRing.size())
+        pRing.resize(valence);
+    vertex->`\refvar{oneRing}{}`(&pRing[0]);
+    if (!vertex->`\refvar[SDVertex::boundary]{boundary}{}`) {
+        `\refcode{Compute tangents of interior face}{}`
+    } else {
+        `\refcode{Compute tangents of boundary face}{}`
+    }
+    Ns.push_back(`\refvar{Normal3f}{}`(`\refvar{Cross}{}`(S, T)));
+}
+\end{lstlisting}
+
+\reffig{3.37}展示了计算网格内部切线的设置。
+中心顶点赋权为零，邻居赋权为$w_i$。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.35\linewidth]{chap03/Subdivtangents.eps}
+    \caption{计算内部顶点的切线，一环顶点赋权为$w_i$。计算切线的中心顶点总是赋权为零。}
+    \label{fig:3.37}
+\end{figure}
+
+为了计算首个切向量$\bm s$，权重为
+\begin{align*}
+    w_i=\cos{\left(\frac{2\pi i}{n}\right)}\, ,
+\end{align*}
+其中$n$为该顶点的价。计算第二个切向量$\bm t$用的权重为
+\begin{align*}
+    w_i=\sin{\left(\frac{2\pi i}{n}\right)}\, .
+\end{align*}
+
+\begin{lstlisting}
+`\initcode{Compute tangents of interior face}{=}`
+for (int j = 0; j < valence; ++j) {
+    S += std::cos(2 * `\refvar{Pi}{}` * j / valence) * `\refvar{Vector3f}{}`(pRing[j]);
+    T += std::sin(2 * `\refvar{Pi}{}` * j / valence) * `\refvar{Vector3f}{}`(pRing[j]);
+}
+\end{lstlisting}
+

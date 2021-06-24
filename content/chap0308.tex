@@ -301,7 +301,7 @@ for (int i = 0; i < nFaces; ++i) {
 对于每个面中的每条边，循环体创建一个边对象并检查之前是否已经见过同样的边。
 如果是，它就初始化共享该边的两个面的相邻指针。
 如果否，它就将该边添加到边的集合中。
-该边两端两个顶点的索引{\ttfamily v0}和{\ttfamily v1}，
+该边两端顶点的索引{\ttfamily v0}和{\ttfamily v1}，
 分别等于边的索引和边的边的索引加一。
 \begin{lstlisting}
 `\initcode{Update neighbor pointer for edgeNum}{=}`
@@ -727,14 +727,14 @@ static `\refvar{Point3f}{}` `\initvar{weightBoundary}{}`(`\refvar{SDVertex}{}` *
 
 现在细化方法计算奇顶点的位置——沿网格分割边的新顶点。
 它遍历网格中每个面的每条边，计算划分边的新顶点（\reffig{3.35}）。
-对于内部边，通过赋权边两端的两个顶点以及
+对于内部边，通过赋权边两端的顶点以及
 该边相邻面的相对顶点可以求得新顶点。
 它遍历每个面的全部三条边，每次遇到之前没见过的边它就
 计算对应该边的新的奇顶点并存于关联的{\ttfamily edgeVerts}数组中。
 \begin{figure}[htbp]
     \centering\includegraphics[width=0.75\linewidth]{chap03/Subdivedgesplit.eps}
     \caption{边分割的细分规则。空心圆标出的新的奇顶点的位置是通过
-        赋权该边两端的两个顶点以及相邻三角形与之相对的两个顶点求得的。
+        赋权该边两端的顶点以及相邻三角形与之相对的两个顶点求得的。
         (a)内部顶点的权重；(b)边界顶点的权重。}
     \label{fig:3.35}
 \end{figure}
@@ -751,3 +751,65 @@ for (`\refvar{SDFace}{}` *face : f) {
 
 就像设置原始网格中的相邻面指针做的那样，
 为每条边创建\refvar{SDEdge}{}对象并检查它是否在已访问的边集合中。
+如果没在，则计算该边上的新顶点并添入{\ttfamily map}，
+它是高效执行查找的关联数组结构。
+\begin{lstlisting}
+`\initcode{Compute odd vertex on kth edge}{=}`
+`\refvar{SDEdge}{}` edge(face->`\refvar[SDFace::v]{v}{}`[k], face->`\refvar[SDFace::v]{v}{}`[`\refvar{NEXT}{}`(k)]);
+`\refvar{SDVertex}{}` *vert = edgeVerts[edge];
+if (!vert) {
+    `\refcode{Create and initialize new odd vertex}{}`
+    `\refcode{Apply edge rules to compute new vertex position}{}`
+    edgeVerts[edge] = vert;
+}
+\end{lstlisting}
+
+在Loop细分中，细分加入的新顶点总是正则的
+（这意味着非凡顶点相对于正则顶点的比例会随着每级细分下降）。
+因此，新顶点的成员\refvar{regular}{}可以立即设为{\ttfamily true}。
+成员\refvar[SDVertex::boundary]{boundary}{}也很容易通过检查正在分割的边是否有相邻面来初始化。
+最后，新顶点的指针\refvar{startFace}{}也可在这里设置。
+对于一个面的边上任何一个奇顶点，中心孩子（三号子面）保证与新顶点相邻。
+\begin{lstlisting}
+`\initcode{Create and initialize new odd vertex}{=}`
+vert = arena.`\refvar[MemoryArena:Alloc2]{Alloc}{}`<`\refvar{SDVertex}{}`>();
+newVertices.push_back(vert);
+vert->`\refvar{regular}{}` = true;
+vert->`\refvar[SDVertex::boundary]{boundary}{}` = (face->`\refvar[SDFace::f]{f}{}`[k] == nullptr);
+vert->`\refvar{startFace}{}` = face->`\refvar{children}{}`[3];
+\end{lstlisting}
+
+对于边界奇顶点，新顶点只是两个相邻顶点的均值。
+对于内部奇顶点，该边两端顶点被赋权$\displaystyle\frac{3}{8}$，
+与该边相对的两个顶点被赋权$\displaystyle\frac{1}{8}$（\reffig{3.35}）。
+后两个顶点可用实用函数\refvar[otherVert]{SDFace::otherVert}{()}找到，
+返回一个面与给定边相对的顶点。
+\begin{lstlisting}
+`\initcode{Apply edge rules to compute new vertex position}{=}`
+if (vert->`\refvar[SDVertex::boundary]{boundary}{}`) {
+    vert->`\refvar[SDVertex::p]{p}{}` =  0.5f * edge.`\refvar[SDEdge::v]{v}{}`[0]->`\refvar[SDVertex::p]{p}{}`;
+    vert->`\refvar[SDVertex::p]{p}{}` += 0.5f * edge.`\refvar[SDEdge::v]{v}{}`[1]->`\refvar[SDVertex::p]{p}{}`;
+} else {
+    vert->`\refvar[SDVertex::p]{p}{}` =  3.f/8.f * edge.`\refvar[SDEdge::v]{v}{}`[0]->`\refvar[SDVertex::p]{p}{}`;
+    vert->`\refvar[SDVertex::p]{p}{}` += 3.f/8.f * edge.`\refvar[SDEdge::v]{v}{}`[1]->`\refvar[SDVertex::p]{p}{}`;
+    vert->`\refvar[SDVertex::p]{p}{}` += 1.f/8.f * face->`\refvar{otherVert}{}`(edge.`\refvar[SDEdge::v]{v}{}`[0], edge.`\refvar[SDEdge::v]{v}{}`[1])->`\refvar[SDVertex::p]{p}{}`;
+    vert->`\refvar[SDVertex::p]{p}{}` += 1.f/8.f *
+        face->`\refvar[SDFace::f]{f}{}`[k]->`\refvar{otherVert}{}`(edge.`\refvar[SDEdge::v]{v}{}`[0], edge.`\refvar[SDEdge::v]{v}{}`[1])->`\refvar[SDVertex::p]{p}{}`;
+}
+\end{lstlisting}
+
+方法\refvar[otherVert]{SDFace::otherVert}{()}不言自明
+\sidenote{译者注：我认为第6行提示有些不准确，已修改。详见\url{https://github.com/mmp/pbrt-v4/issues/146}。}：
+\begin{lstlisting}
+`\refcode{SDFace Methods}{+=}\lastcode{SDFaceMethods}`
+`\refvar{SDVertex}{}` *`\initvar{otherVert}{}`(`\refvar{SDVertex}{}` *v0, `\refvar{SDVertex}{}` *v1) {
+    for (int i = 0; i < 3; ++i)
+        if (`\refvar[SDFace::v]{v}{}`[i] != v0 && `\refvar[SDFace::v]{v}{}`[i] != v1)
+            return `\refvar[SDFace::v]{v}{}`[i];
+    `\refvar{Severe}{}`("Basic logic error in SDFace::otherVert()");
+    return nullptr;
+}
+\end{lstlisting}
+
+\subsubsection*{更新网格拓扑}
+为了

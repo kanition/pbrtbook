@@ -99,7 +99,12 @@ std::vector<std::shared_ptr<`\refvar{Shape}{}`>> `\initvar{LoopSubdivide}{}`(
 每个面由三个整数顶点索引描述，
 给出面的三个顶点在顶点数组{\ttfamily p}中的偏移量。
 我们需要处理该数据以决定哪些面彼此相邻，
-哪些面和哪些顶点相邻等等，以实现细分算法。
+哪些面和哪些顶点相邻
+\sidenote{译者注：文中“相邻”是一个宽泛的概念。
+    面与面“相邻”指两个面有公共边；
+    面与点“相邻”指该点是该面的顶点；
+    面与边“相邻”指该边是该面的一条边。
+    边与点“相邻”指该点是该边的端点……下文同。}等等，以实现细分算法。
 
 我们将很快定义结构体\refvar{SDVertex}{}和\refvar{SDFace}{}，
 它们存有细分网格中顶点和面的数据。
@@ -824,3 +829,56 @@ if (vert->`\refvar[SDVertex::boundary]{boundary}{}`) {
 \end{figure}
 
 更新细化网格的拓扑指针需要四大任务：
+\begin{enumerate}
+    \item 奇顶点的指针\refvar[startFace]{SDVertex::startFace}{}需存储指向其相邻面之一的指针。
+    \item 同样，必须设置偶顶点的指针\refvar[startFace]{SDVertex::startFace}{}。
+    \item 需要设置新面的相邻指针{\ttfamily\refvar[SDFace::f]{f}{}[i]}指向相邻面。
+    \item 新面的指针{\ttfamily\refvar[SDFace::v]{v}{}[i]}需要指向合适的顶点。
+\end{enumerate}
+
+奇顶点的指针\refvar{startFace}{}在首次创建时就已经初始化了。
+这里我们依次处理其余三个任务。
+\begin{lstlisting}
+`\initcode{Update new mesh topology}{=}`
+`\refcode{Update even vertex face pointers}{}`
+`\refcode{Update face neighbor pointers}{}`
+`\refcode{Update face vertex pointers}{}`
+\end{lstlisting}
+
+如果一个顶点是其\refvar{startFace}{}的第{\ttfamily i}顶点，
+则它保证会与\refvar{startFace}{}的第{\ttfamily i}子面相邻。
+因此，只需要遍历网格中所有父顶点，
+对每一个求取它在其\refvar{startFace}{}中的顶点索引。
+然后可用该索引找到与新的偶顶点相邻的子面。
+\begin{lstlisting}
+`\initcode{Update even vertex face pointers}{=}`
+for (`\refvar{SDVertex}{}` *vertex : v) {
+    int vertNum = vertex->`\refvar{startFace}{}`->`\refvar{vnum}{}`(vertex);
+    vertex->`\refvar{child}{}`->`\refvar{startFace}{}` = 
+        vertex->`\refvar{startFace}{}`->`\refvar{children}{}`[vertNum];
+}
+\end{lstlisting}
+
+接着，更新新建面的相邻面指针。
+我们将其分为两步：一个是更新同父的子面间的邻居，
+一个是更新异父的子面间的邻居。这涉及一些棘手的指针操作。
+\begin{lstlisting}
+`\initcode{Update face neighbor pointers}{=}`
+for (`\refvar{SDFace}{}` *face : f) {
+    for (int j = 0; j < 3; ++j) {
+        `\refcode{Update children f pointers for siblings}{}`
+        `\refcode{Update children f pointers for neighbor children}{}`
+    }
+}
+\end{lstlisting}
+
+对于第一步，回想内部子面总是存于{\ttfamily\refvar{children}{}[3]}。
+而且（对于$k=0,1,2$）第$k+1$子面相邻于内部面的第$k$边，
+内部面相邻于第$k$面的第$k+1$边。
+\begin{lstlisting}
+`\initcode{Update children f pointers for siblings}{=}`
+face->`\refvar{children}{}`[3]->`\refvar[SDFace::f]{f}{}`[j] = face->`\refvar{children}{}`[`\refvar{NEXT}{}`(j)];
+face->`\refvar{children}{}`[j]->`\refvar[SDFace::f]{f}{}`[`\refvar{NEXT}{}`(j)] = face->`\refvar{children}{}`[3];
+\end{lstlisting}
+
+我们现在更新

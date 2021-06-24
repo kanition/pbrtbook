@@ -812,4 +812,15 @@ if (vert->`\refvar[SDVertex::boundary]{boundary}{}`) {
 \end{lstlisting}
 
 \subsubsection*{更新网格拓扑}
-为了
+为了让拓扑更新的细节尽可能简单，
+仔细选取细分面及其顶点的编号方案（\reffig{3.36}）。
+仔细看图；所示约定是后面几页的关键。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=\linewidth]{chap03/Subdivvertfacepointerupdate.eps}
+    \caption{每个面都分为四个子面，第{\ttfamily i}子面与原始面的第{\ttfamily i}顶点相邻，
+    第{\ttfamily i}子面的第{\ttfamily i}顶点是原始面的第{\ttfamily i}顶点。
+    中心子面的顶点朝向为第{\ttfamily i}顶点是沿父面第{\ttfamily i}边的奇顶点。}
+    \label{fig:3.36}
+\end{figure}
+
+更新细化网格的拓扑指针需要四大任务：

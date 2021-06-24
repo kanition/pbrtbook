@@ -873,12 +873,74 @@ for (`\refvar{SDFace}{}` *face : f) {
 \end{lstlisting}
 
 对于第一步，回想内部子面总是存于{\ttfamily\refvar{children}{}[3]}。
-而且（对于$k=0,1,2$）第$k+1$子面相邻于内部面的第$k$边，
-内部面相邻于第$k$面的第$k+1$边。
+而且（对于{\ttfamily k}=0,1,2）第{\ttfamily k+1}子面相邻于内部面的第{\ttfamily k}边，
+内部面相邻于第{\ttfamily k}面的第{\ttfamily k+1}边。
 \begin{lstlisting}
 `\initcode{Update children f pointers for siblings}{=}`
 face->`\refvar{children}{}`[3]->`\refvar[SDFace::f]{f}{}`[j] = face->`\refvar{children}{}`[`\refvar{NEXT}{}`(j)];
 face->`\refvar{children}{}`[j]->`\refvar[SDFace::f]{f}{}`[`\refvar{NEXT}{}`(j)] = face->`\refvar{children}{}`[3];
 \end{lstlisting}
 
-我们现在更新
+我们现在更新子面的指向其他父亲之子的相邻指针。
+这里只有前三个子面需要处理；内部子面的相邻指针已经完全初始化了。
+观察\reffig{3.36}可知第{\ttfamily k}个子面
+\sidenote{译者注：原文写为第{\ttfamily i}个子面，我认为是笔误，此处已修正。}需要设置
+第{\ttfamily k}和{\ttfamily\refvar{PREV}{}(k)}边。
+为了设置第{\ttfamily k}子面的第{\ttfamily k}边，
+我们先求父面的第{\ttfamily k}边，
+则相邻父面{\ttfamily f2}与那条边相邻。
+若{\ttfamily f2}存在（意味着我们不在边界上），
+则求得顶点{\ttfamily v[k]}的相邻父索引。
+该索引等于我们正在搜索的相邻子面的索引。
+然后重复该过程寻找与第{\ttfamily\refvar{PREV}{}(k)}边相邻的子面。
+\begin{lstlisting}
+`\initcode{Update children f pointers for neighbor children}{=}`
+`\refvar{SDFace}{}` *f2 = face->`\refvar[SDFace::f]{f}{}`[j];
+face->`\refvar{children}{}`[j]->`\refvar[SDFace::f]{f}{}`[j] =
+    f2 ? f2->`\refvar{children}{}`[f2->`\refvar{vnum}{}`(face->`\refvar[SDFace::v]{v}{}`[j])] : nullptr;
+f2 = face->`\refvar[SDFace::f]{f}{}`[`\refvar{PREV}{}`(j)];
+face->`\refvar{children}{}`[j]->`\refvar[SDFace::f]{f}{}`[`\refvar{PREV}{}`(j)] = 
+    f2 ? f2->`\refvar{children}{}`[f2->`\refvar{vnum}{}`(face->`\refvar[SDFace::v]{v}{}`[j])] : nullptr;
+\end{lstlisting}
+
+最后，我们处理拓扑更新的第四步：设置子面的顶点指针。
+\begin{lstlisting}
+`\initcode{Update face vertex pointers}{=}`
+for (`\refvar{SDFace}{}` *face : f) {
+    for (int j = 0; j < 3; ++j) {
+        `\refcode{Update child vertex pointer to new even vertex}{}`
+        `\refcode{Update child vertex pointer to new odd vertex}{}`
+    }
+}
+\end{lstlisting}
+
+对于（{\ttfamily k}=0,1,2）第{\ttfamily k}子面，
+第{\ttfamily k}顶点对应于与该子面相邻的偶顶点。
+对于非内部子面，有一个偶顶点和两个奇顶点；对于内部子面，有三个奇顶点。
+通过跟随从父面获取的父顶点的子指针可以找到该顶点。
+\begin{lstlisting}
+`\initcode{Update child vertex pointer to new even vertex}{=}`
+face->`\refvar{children}{}`[j]->`\refvar[SDFace::v]{v}{}`[j] = face->`\refvar[SDFace::v]{v}{}`[j]->`\refvar{child}{}`;
+\end{lstlisting}
+
+为了更新剩余顶点指针，再次用关联数组{\ttfamily edgeVerts}为父面的每条分割边寻找奇顶点。
+三个子面以该顶点为事件\sidenote{译者注：原文incident。}顶点。
+再次基于\reffig{3.36}中建立的编号方案，很容易求得该顶点在这三个面中的索引。
+\begin{lstlisting}
+`\initcode{Update child vertex pointer to new odd vertex}{=}`
+`\refvar{SDVertex}{}` *vert = edgeVerts[`\refvar{SDEdge}{}`(face->`\refvar[SDFace::v]{v}{}`[j], face->`\refvar[SDFace::v]{v}{}`[`\refvar{NEXT}{}`(j)])];
+face->`\refvar{children}{}`[j]->`\refvar[SDFace::v]{v}{}`[`\refvar{NEXT}{}`(j)] = vert;
+face->`\refvar{children}{}`[`\refvar{NEXT}{}`(j)]->`\refvar[SDFace::v]{v}{}`[j] = vert;
+face->`\refvar{children}{}`[3]->`\refvar[SDFace::v]{v}{}`[j] = vert;
+\end{lstlisting}
+
+一个细分步骤完成几何和拓扑工作后，
+新建的顶点和面移入数组{\ttfamily v}和{\ttfamily f}：
+\begin{lstlisting}
+`\initcode{Prepare for next level of subdivision}{=}`
+f = newFaces;
+v = newVertices;
+\end{lstlisting}
+
+\subsubsection*{逼近极限曲面并输出}
+细分曲面的显著性质之一是

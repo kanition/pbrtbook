@@ -729,3 +729,25 @@ static `\refvar{Point3f}{}` `\initvar{weightBoundary}{}`(`\refvar{SDVertex}{}` *
 它遍历网格中每个面的每条边，计算划分边的新顶点（\reffig{3.35}）。
 对于内部边，通过赋权边两端的两个顶点以及
 该边相邻面的相对顶点可以求得新顶点。
+它遍历每个面的全部三条边，每次遇到之前没见过的边它就
+计算对应该边的新的奇顶点并存于关联的{\ttfamily edgeVerts}数组中。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.75\linewidth]{chap03/Subdivedgesplit.eps}
+    \caption{边分割的细分规则。空心圆标出的新的奇顶点的位置是通过
+        赋权该边两端的两个顶点以及相邻三角形与之相对的两个顶点求得的。
+        (a)内部顶点的权重；(b)边界顶点的权重。}
+    \label{fig:3.35}
+\end{figure}
+
+\begin{lstlisting}
+`\initcode{Compute new odd edge vertices}{=}`
+std::map<`\refvar{SDEdge}{}`, `\refvar{SDVertex}{}` *> edgeVerts;
+for (`\refvar{SDFace}{}` *face : f) {
+    for (int k = 0; k < 3; ++k) {
+        `\refcode{Compute odd vertex on kth edge}{}`
+    }
+}
+\end{lstlisting}
+
+就像设置原始网格中的相邻面指针做的那样，
+为每条边创建\refvar{SDEdge}{}对象并检查它是否在已访问的边集合中。

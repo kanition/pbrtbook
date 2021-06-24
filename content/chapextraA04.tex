@@ -1,5 +1,11 @@
 \section{内存管理}\label{sec:内存管理}
 
+\subsection{可变堆栈分配}\label{sub:可变堆栈分配}
+\begin{lstlisting}
+`\initcode{Global Macros}{=}`
+#define `\initvar{ALLOCA}{}`(TYPE, COUNT) (TYPE *)alloca((COUNT) * sizeof(TYPE))
+\end{lstlisting}
+
 \subsection{基于Arena的分配}\label{sub:基于Arena的分配}
 \begin{lstlisting}
 `\refcode{Memory Declarations}{+=}\lastnext{MemoryDeclarations}`

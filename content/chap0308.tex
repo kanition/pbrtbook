@@ -607,4 +607,125 @@ Loop细分尤其高效，因为其细分规则均有该性质。
 必须仔细选取以保证极限曲面的光滑性以及其他所需的性质
 \footnote{再次见本节开头和“扩展阅读”一节引用的文献
     了解关于如何推导出$\beta$等值的信息。}。
-函数\refvar{beta}{()}
+下面的函数\refvar{beta}{()}基于顶点的价计算能够保证光滑性的$\beta$值。
+对于正则内部顶点，\refvar{beta}{()}返回$\displaystyle\frac{1}{16}$。
+因为这是常见情况，所以实现直接用$\displaystyle\frac{1}{16}$而不是每次都调用\refvar{beta}{()}。
+\begin{lstlisting}
+`\initcode{Apply one-ring rule for even vertex}{=}`
+if (vertex->`\refvar{regular}{}`)
+    vertex->`\refvar{child}{}`->`\refvar[SDVertex::p]{p}{}` = `\refvar{weightOneRing}{}`(vertex, 1.f / 16.f);
+else
+    vertex->`\refvar{child}{}`->`\refvar[SDVertex::p]{p}{}` = `\refvar{weightOneRing}{}`(vertex, `\refvar{beta}{}`(vertex->`\refvar{valence}{}`()));
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{LoopSubdiv Inline Functions}{+=}\lastnext{LoopSubdivInlineFunctions}`
+inline `\refvar{Float}{}` `\initvar{beta}{}`(int valence) {
+    if (valence == 3) return 3.f / 16.f;
+    else return 3.f / (8.f * valence);
+}
+\end{lstlisting}
+
+函数\refvar{weightOneRing}{()}遍历一环相邻顶点并用给定权重计算新顶点位置。
+它用后面定义的方法\refvar[oneRing]{SDVertex::oneRing}{()}
+返回绕顶点{\ttfamily vert}的顶点位置。
+\begin{lstlisting}
+`\refcode{LoopSubdiv Function Definitions}{+=}\lastnext{LoopSubdivFunctionDefinitions}`
+static `\refvar{Point3f}{}` `\initvar{weightOneRing}{}`(`\refvar{SDVertex}{}` *vert, `\refvar{Float}{}` beta) {
+    `\refcode{Put vert one-ring in pRing}{}`
+    `\refvar{Point3f}{}` p = (1 - valence * beta) * vert->`\refvar[SDVertex::p]{p}{}`;
+    for (int i = 0; i < valence; ++i)
+        p += beta * pRing[i];
+    return p;
+}  
+\end{lstlisting}
+
+因为一环内有不定数量的顶点，所以我们用宏\refvar{ALLOCA}{()}来
+高效分配空间存储它们的位置。
+\begin{lstlisting}
+`\initcode{Put vert one-ring in pRing}{=}`
+int valence = vert->`\refvar{valence}{}`();
+`\refvar{Point3f}{}` *pRing = `\refvar{ALLOCA}{}`(`\refvar{Point3f}{}`, valence);
+vert->`\refvar{oneRing}{}`(pRing);
+\end{lstlisting}
+
+方法\refvar{oneRing}{()}假设传入的指针指向一片足够大的内存区域以存储绕该顶点的一环。
+\begin{lstlisting}
+`\refcode{LoopSubdiv Function Definitions}{+=}\lastnext{LoopSubdivFunctionDefinitions}`
+void `\refvar{SDVertex}{}`::`\initvar{oneRing}{}`(`\refvar{Point3f}{}` *p) {
+    if (!`\refvar[SDVertex::boundary]{boundary}{}`) {
+        `\refcode{Get one-ring vertices for interior vertex}{}`
+    } else {
+        `\refcode{Get one-ring vertices for boundary vertex}{}`
+    }
+}
+\end{lstlisting}
+
+获取绕内部顶点的一环相对简单，可以通过遍历与该顶点相邻的面并
+对每个面保留中心顶点后面的那个顶点来实现
+（用笔纸简单打个草稿你就能理解该过程会返回一环内的所有顶点）。
+\begin{lstlisting}
+`\initcode{Get one-ring vertices for interior vertex}{=}`
+`\refvar{SDFace}{}` *face = `\refvar{startFace}{}`;
+do {
+    *p++ = face->`\refvar{nextVert}{}`(this)->`\refvar[SDVertex::p]{p}{}`;
+    face = face-`\refvar{nextFace}{}`(this);
+} while (face != `\refvar{startFace}{}`);
+\end{lstlisting}
+
+绕边界顶点的一环有些棘手。
+这里的实现在给定的\refvar{Point3f}{}数组中仔细存储一环，
+使数组中首尾元素是沿边界的相邻顶点。
+该顺序很重要，因为相邻边界顶点的赋权常常不同于网格内部的相邻顶点。
+这样做要求我们先遍历周围相邻面直到到达边界，
+然后朝另一个方向遍历，并一个接一个地存储顶点。
+\begin{lstlisting}
+`\initcode{Get one-ring vertices for boundary vertex}{=}`
+`\refvar{SDFace}{}` *face = `\refvar{startFace}{}`, *f2;
+while ((f2 = face->`\refvar{nextFace}{}`(this)) != nullptr)
+    face = f2;
+*p++ = face->`\refvar{nextVert}{}`(this)->`\refvar[SDVertex::p]{p}{}`;
+do {
+    *p++ = face->`\refvar{prevVert}{}`(this)->`\refvar[SDVertex::p]{p}{}`;
+    face = face->`\refvar{prevFace}{}`(this);
+} while (face != nullptr);
+\end{lstlisting}
+
+对于边界上的顶点，新顶点的位置只基于两个邻接边界顶点（\reffig{3.34}）。
+不依赖内部顶点保证了共享着边界上相同顶点的
+两个邻接\sidenote{译者注：原文abutting。}曲面会有邻接的极限曲面。
+实用函数\refvar{weightBoundary}{()}将给定权重赋给
+两个相邻顶点$\bm v_1$和$\bm v_2$来算得新位置$\bm v'$为
+\begin{align*}
+    \bm v'=(1-2\beta)\bm v+\beta\bm v_1+\beta\bm v_2\, .
+\end{align*}
+
+正则和非凡顶点都用相同的权重$\displaystyle\frac{1}{8}$。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.25\linewidth]{chap03/Subdivboundaryweighting.eps}
+    \caption{边界边上的细分。中心顶点的新位置通过对它和它的两个相邻顶点赋予所示权重算得。}
+    \label{fig:3.34}
+\end{figure}
+
+\begin{lstlisting}
+`\initcode{Apply boundary rule for even vertex}{=}`
+vertex->`\refvar{child}{}`->`\refvar[SDVertex::p]{p}{}` = `\refvar{weightBoundary}{}`(vertex, 1.f / 8.f);
+\end{lstlisting}
+
+实用函数\refvar{weightBoundary}{()}将给定权重赋给边界顶点。
+它的实现很简单，因为函数\refvar[oneRing]{SDVertex::oneRing}{()}将
+边界顶点的一环排成首尾元素是边界邻居。
+\begin{lstlisting}
+`\refcode{LoopSubdiv Function Definitions}{+=}\lastcode{LoopSubdivFunctionDefinitions}`
+static `\refvar{Point3f}{}` `\initvar{weightBoundary}{}`(`\refvar{SDVertex}{}` *vert, `\refvar{Float}{}` beta) {
+    `\refcode{Put vert one-ring in pRing}{}`
+    `\refvar{Point3f}{}` p = (1 - 2 * beta) * vert->`\refvar[SDVertex::p]{p}{}`;
+    p += beta * pRing[0];
+    p += beta * pRing[valence - 1];
+    return p;
+}
+\end{lstlisting}
+
+现在细化方法计算奇顶点的位置——沿网格分割边的新顶点。
+它遍历网格中每个面的每条边，计算划分边的新顶点（\reffig{3.35}）。
+对于内部边，通过赋权边两端的两个顶点以及
+该边相邻面的相对顶点可以求得新顶点。

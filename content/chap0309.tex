@@ -32,9 +32,32 @@
 
 在光线追踪中解决该问题的典型实践是将生成的射线偏移固定的“射线epsilon”值
 \sidenote{译者注：epsilon即希腊字母$\epsilon$。}，
-忽略任何
+忽略沿射线$\bm p+t\bm d$比某个$t_{\min}$还近的任何相交。
+\reffig{3.40}展示了为什么该方法需要很高的$t_{\min}$值才能高效工作：
+如果生成的射线相对于曲面非常倾斜，
+则在离射线很远处可能会发生错误的射线相交。
+不幸的是，大的$t_{\min}$值会造成射线端点相对远离原始交点，
+这又反过来造成错过附近的有效相交，导致阴影和反射丢失细节。
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap03/Selfintersectionobliqueray.tex}
+    \caption{如果算得的交点（实心圆）低于曲面且生成的射线是斜的，
+        在与射线端点有一定距离的地方可能会发生错误的再相交（空心圆）。
+        如果用沿射线的最小$t$值消除附近的相交，
+        需要相对大的$t_{\min}$才能处理好倾斜射线。}
+    \label{fig:3.40}
+\end{figure}
+
+本节中，我们将介绍浮点算术基本思想并描述分析浮点计算误差的技术。
+然后我们将这些方法用于本章之前介绍的光线——形状算法
+并展示怎样计算带有有界误差的光线交点。
+这将允许我们保守地定位射线端点，这样就永远不会求得错误的自相交，
+而又保留了与实际交点极其接近的射线端点使得错误脱靶被最小化。
+反过来也不需要额外的“射线epsilon”值。
 
 \subsection{浮点算术}\label{sub:浮点算术}
+计算只能在容于有限量内存的数字的有限表示上执行。
+
+
 \begin{lstlisting}
 `\initcode{Global Constants}{=}\initnext{GlobalConstants}`
 static constexpr `\refvar{Float}{}` `\initvar{MaxFloat}{}` = std::numeric_limits<`\refvar{Float}{}`>::max();

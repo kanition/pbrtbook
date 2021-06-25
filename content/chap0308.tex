@@ -1024,25 +1024,24 @@ for (int j = 0; j < valence; ++j) {
 边界顶点的切线有些棘手。\reffig{3.38}展示了后续讨论要求的一环顶点顺序
 \sidenote{译者注：原图没有正确显示脚标，已修正。}。
 \begin{figure}[htbp]
-    \centering\includegraphics[width=0.3\linewidth]{chap03/Subdivedgetangents.eps}
+    \centering\includegraphics[width=0.35\linewidth]{chap03/Subdivedgetangents.eps}
     \caption{边界顶点的切线也计算为相邻顶点的加权平均。
         然而，一些边界切线规则并入了中心顶点的值。}
     \label{fig:3.38}
 \end{figure}
 
-第一条切线称为\keyindex{跨越切线}{across tangent}{tangent line切线}，
-由两个相邻边界顶点之间的向量给出：
+第一条切线叫\keyindex{跨越切线}{across tangent}{tangent line切线}，
+由两相邻边界顶点间的向量给出：
 \begin{align*}
     \bm s=\bm v_{n-1}-\bm v_0\, .
 \end{align*}
 
-第二条切线称为\keyindex{横断切线}{transverse tangent}{tangent line切线}，
-是基于顶点的价算得的。
+第二条切线叫\keyindex{横断切线}{transverse tangent}{tangent line切线}，
+基于顶点的价算得。
 中心顶点赋权$w_{\mathrm{c}}$，一环顶点赋权指定为向量$(w_0,w_1,\ldots,w_{n-1})$。
-我们将使用的横断切线规则是
-\begin{table*}[h]
-    \centering
-    \begin{tabular}{lll}
+我们的横断切线规则是
+\begin{table}[h]
+    \centering\begin{tabular}{lll}
         \toprule
         价        & $w_{\mathrm{c}}$ & $w_i$       \\
         \midrule
@@ -1051,7 +1050,7 @@ for (int j = 0; j < valence; ++j) {
         4（正则） & -2               & (-1,2,2,-1) \\
         \bottomrule
     \end{tabular}
-\end{table*}
+\end{table}
 
 价为5及以上时，$w_{\mathrm{c}}=0$且
 \begin{align*}
@@ -1063,7 +1062,7 @@ for (int j = 0; j < valence; ++j) {
     \theta=\frac{\pi}{n-1}\, .
 \end{align*}
 
-尽管这里我们没有证明，但对于所有$i$值这些权重和为零。
+尽管这里我们没有证明，但对于所有$i$值这些权重都有和为零。
 这保证了加权和实际上是切向量。
 \begin{lstlisting}
 `\initcode{Compute tangents of boundary face}{=}`
@@ -1088,7 +1087,7 @@ else {
 
 最后，代码片\refcode{Create triangle mesh from subdivision mesh}{}初始化
 对应于极限曲面三角化的\refvar{Triangle}{}向量。
-它就是简单地将细分的网格变换为索引化的三角网格。
+它即简单将细分网格转为索引化的三角网格。
 \begin{lstlisting}
 `\initcode{Create triangle mesh from subdivision mesh}{=}`
 {

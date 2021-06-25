@@ -99,7 +99,12 @@ std::vector<std::shared_ptr<`\refvar{Shape}{}`>> `\initvar{LoopSubdivide}{}`(
 每个面由三个整数顶点索引描述，
 给出面的三个顶点在顶点数组{\ttfamily p}中的偏移量。
 我们需要处理该数据以决定哪些面彼此相邻，
-哪些面和哪些顶点相邻等等，以实现细分算法。
+哪些面和哪些顶点相邻
+\sidenote{译者注：文中“相邻”是一个宽泛的概念。
+    面与面“相邻”指两个面有公共边；
+    面与点“相邻”指该点是该面的顶点；
+    面与边“相邻”指该边是该面的一条边。
+    边与点“相邻”指该点是该边的端点……下文同。}等等，以实现细分算法。
 
 我们将很快定义结构体\refvar{SDVertex}{}和\refvar{SDFace}{}，
 它们存有细分网格中顶点和面的数据。
@@ -207,7 +212,7 @@ struct `\initvar{SDFace}{}` {
 考虑两个顶点$\bm v_0$和$\bm v_1$与连接它们的边。
 我们希望拥有该边的三角形面指定其三个顶点时$\bm v_0$在$\bm v_1$之前，
 另一个面指定顶点时$\bm v_1$在$\bm v_0$之前（\reffig{3.28}）。
-\keyindex{莫比乌斯带}{Möbius strip}{}是无法相容次序的曲面例子，
+\keyindex{默比乌斯带}{Möbius strip}{}是无法相容次序的曲面例子，
 但渲染中几乎不会遇到这样的曲面，所以实践中该限制没问题。
 然而不能创建相容次序网格的程序给出的没构建好的网格数据可能会造成问题。
 \begin{figure}[htbp]
@@ -301,7 +306,7 @@ for (int i = 0; i < nFaces; ++i) {
 对于每个面中的每条边，循环体创建一个边对象并检查之前是否已经见过同样的边。
 如果是，它就初始化共享该边的两个面的相邻指针。
 如果否，它就将该边添加到边的集合中。
-该边两端两个顶点的索引{\ttfamily v0}和{\ttfamily v1}，
+该边两端顶点的索引{\ttfamily v0}和{\ttfamily v1}，
 分别等于边的索引和边的边的索引加一。
 \begin{lstlisting}
 `\initcode{Update neighbor pointer for edgeNum}{=}`
@@ -559,3 +564,547 @@ for (`\refvar{SDFace}{}` *face : f) {
 
 \subsubsection*{计算新顶点的位置}
 在担心细分网格的拓扑初始化之前，细化方法先为网格中的所有顶点计算位置。
+首先，它考虑所有已经出现于网格中的顶点的更新位置计算问题；
+这些顶点称为\keyindex{偶顶点}{even vertex}{vertex顶点}。
+然后它计算分割边上的新顶点，称为\keyindex{奇顶点}{odd vertex}{vertex顶点}。
+\begin{lstlisting}
+`\initcode{Update vertex positions and create new edge vertices}{=}`
+`\refcode{Update vertex positions for even vertices}{}`
+`\refcode{Compute new odd edge vertices}{}`
+\end{lstlisting}
+
+对于偶顶点的每种不同类型——正则与非凡、边界与内部，
+计算更新位置使用的技术不同。这给出了四种要处理的情况。
+\begin{lstlisting}
+`\initcode{Update vertex positions for even vertices}{=}`
+for (`\refvar{SDVertex}{}` *vertex : v) {
+    if (!vertex->`\refvar[SDVertex::boundary]{boundary}{}`) {
+        `\refcode{Apply one-ring rule for even vertex}{}`
+    } else {
+        `\refcode{Apply boundary rule for even vertex}{}`
+    }
+}
+\end{lstlisting}
+
+对于内部顶点的两种类型，我们取每个顶点的相邻顶点集合
+（称为绕它的\keyindex{一环}{one-ring}{}，反映了它是一圈邻居的事实）
+并用权重$\beta$为每个邻居顶点赋权（\reffig{3.33}）。
+我们正在更新的中心顶点赋权为$1-n\beta$，其中$n$为该顶点的价。
+因此，顶点$\bm v$对应的新顶点$\bm v'$为
+\begin{align*}
+    \bm v'=(1-n\beta)\bm v+\sum\limits_{i=1}^{N}{\beta \bm v_i}\, .
+\end{align*}
+
+该公式确保权重之和为一，保证了Loop细分曲面的凸包性质，
+确保最终网格在控制网格的凸包内。
+正在更新的顶点位置只受附近顶点的影响；
+这称为\keyindex{局部支撑}{local support}{}。
+Loop细分尤其高效，因为其细分规则均有该性质。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.3\linewidth]{chap03/Subdivoneringweighting.eps}
+    \caption{顶点$\bm v$的新顶点$\bm v'$通过用权重$\beta$对相邻顶点$\bm v_i$赋权、
+        用$(1-n\beta)$对$\bm v$赋权计算得到，其中$n$为$\bm v$的价。
+        相邻顶点$\bm v_i$统称为绕$\bm v$的\emph{一环}。}
+    \label{fig:3.33}
+\end{figure}
+
+该步骤所用的指定权重$\beta$是细分方法的关键组成，
+必须仔细选取以保证极限曲面的光滑性以及其他所需的性质
+\footnote{再次见本节开头和“扩展阅读”一节引用的文献
+    了解关于如何推导出$\beta$等值的信息。}。
+下面的函数\refvar{beta}{()}基于顶点的价计算能够保证光滑性的$\beta$值。
+对于正则内部顶点，\refvar{beta}{()}返回$\displaystyle\frac{1}{16}$。
+因为这是常见情况，所以实现直接用$\displaystyle\frac{1}{16}$而不是每次都调用\refvar{beta}{()}。
+\begin{lstlisting}
+`\initcode{Apply one-ring rule for even vertex}{=}`
+if (vertex->`\refvar{regular}{}`)
+    vertex->`\refvar{child}{}`->`\refvar[SDVertex::p]{p}{}` = `\refvar{weightOneRing}{}`(vertex, 1.f / 16.f);
+else
+    vertex->`\refvar{child}{}`->`\refvar[SDVertex::p]{p}{}` = `\refvar{weightOneRing}{}`(vertex, `\refvar{beta}{}`(vertex->`\refvar{valence}{}`()));
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{LoopSubdiv Inline Functions}{+=}\lastnext{LoopSubdivInlineFunctions}`
+inline `\refvar{Float}{}` `\initvar{beta}{}`(int valence) {
+    if (valence == 3) return 3.f / 16.f;
+    else return 3.f / (8.f * valence);
+}
+\end{lstlisting}
+
+函数\refvar{weightOneRing}{()}遍历一环相邻顶点并用给定权重计算新顶点位置。
+它用后面定义的方法\refvar[oneRing]{SDVertex::oneRing}{()}
+返回绕顶点{\ttfamily vert}的顶点位置。
+\begin{lstlisting}
+`\refcode{LoopSubdiv Function Definitions}{+=}\lastnext{LoopSubdivFunctionDefinitions}`
+static `\refvar{Point3f}{}` `\initvar{weightOneRing}{}`(`\refvar{SDVertex}{}` *vert, `\refvar{Float}{}` beta) {
+    `\refcode{Put vert one-ring in pRing}{}`
+    `\refvar{Point3f}{}` p = (1 - valence * beta) * vert->`\refvar[SDVertex::p]{p}{}`;
+    for (int i = 0; i < valence; ++i)
+        p += beta * pRing[i];
+    return p;
+}  
+\end{lstlisting}
+
+因为一环内有不定数量的顶点，所以我们用宏\refvar{ALLOCA}{()}来
+高效分配空间存储它们的位置。
+\begin{lstlisting}
+`\initcode{Put vert one-ring in pRing}{=}`
+int valence = vert->`\refvar{valence}{}`();
+`\refvar{Point3f}{}` *pRing = `\refvar{ALLOCA}{}`(`\refvar{Point3f}{}`, valence);
+vert->`\refvar{oneRing}{}`(pRing);
+\end{lstlisting}
+
+方法\refvar{oneRing}{()}假设传入的指针指向一片足够大的内存区域以存储绕该顶点的一环。
+\begin{lstlisting}
+`\refcode{LoopSubdiv Function Definitions}{+=}\lastnext{LoopSubdivFunctionDefinitions}`
+void `\refvar{SDVertex}{}`::`\initvar{oneRing}{}`(`\refvar{Point3f}{}` *p) {
+    if (!`\refvar[SDVertex::boundary]{boundary}{}`) {
+        `\refcode{Get one-ring vertices for interior vertex}{}`
+    } else {
+        `\refcode{Get one-ring vertices for boundary vertex}{}`
+    }
+}
+\end{lstlisting}
+
+获取绕内部顶点的一环相对简单，可以通过遍历与该顶点相邻的面并
+对每个面保留中心顶点后面的那个顶点来实现
+（用笔纸简单打个草稿你就能理解该过程会返回一环内的所有顶点）。
+\begin{lstlisting}
+`\initcode{Get one-ring vertices for interior vertex}{=}`
+`\refvar{SDFace}{}` *face = `\refvar{startFace}{}`;
+do {
+    *p++ = face->`\refvar{nextVert}{}`(this)->`\refvar[SDVertex::p]{p}{}`;
+    face = face-`\refvar{nextFace}{}`(this);
+} while (face != `\refvar{startFace}{}`);
+\end{lstlisting}
+
+绕边界顶点的一环有些棘手。
+这里的实现在给定的\refvar{Point3f}{}数组中仔细存储一环，
+使数组中首尾元素是沿边界的相邻顶点。
+该顺序很重要，因为相邻边界顶点的赋权常常不同于网格内部的相邻顶点。
+这样做要求我们先遍历周围相邻面直到到达边界，
+然后朝另一个方向遍历，并一个接一个地存储顶点。
+\begin{lstlisting}
+`\initcode{Get one-ring vertices for boundary vertex}{=}`
+`\refvar{SDFace}{}` *face = `\refvar{startFace}{}`, *f2;
+while ((f2 = face->`\refvar{nextFace}{}`(this)) != nullptr)
+    face = f2;
+*p++ = face->`\refvar{nextVert}{}`(this)->`\refvar[SDVertex::p]{p}{}`;
+do {
+    *p++ = face->`\refvar{prevVert}{}`(this)->`\refvar[SDVertex::p]{p}{}`;
+    face = face->`\refvar{prevFace}{}`(this);
+} while (face != nullptr);
+\end{lstlisting}
+
+对于边界上的顶点，新顶点的位置只基于两个邻接边界顶点（\reffig{3.34}）。
+不依赖内部顶点保证了共享着边界上相同顶点的
+两个邻接\sidenote{译者注：原文abutting。}曲面会有邻接的极限曲面。
+实用函数\refvar{weightBoundary}{()}将给定权重赋给
+两个相邻顶点$\bm v_1$和$\bm v_2$来算得新位置$\bm v'$为
+\begin{align*}
+    \bm v'=(1-2\beta)\bm v+\beta\bm v_1+\beta\bm v_2\, .
+\end{align*}
+
+正则和非凡顶点都用相同的权重$\displaystyle\frac{1}{8}$。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.25\linewidth]{chap03/Subdivboundaryweighting.eps}
+    \caption{边界边上的细分。中心顶点的新位置通过对它和它的两个相邻顶点赋予所示权重算得。}
+    \label{fig:3.34}
+\end{figure}
+
+\begin{lstlisting}
+`\initcode{Apply boundary rule for even vertex}{=}`
+vertex->`\refvar{child}{}`->`\refvar[SDVertex::p]{p}{}` = `\refvar{weightBoundary}{}`(vertex, 1.f / 8.f);
+\end{lstlisting}
+
+实用函数\refvar{weightBoundary}{()}将给定权重赋给边界顶点。
+它的实现很简单，因为函数\refvar[oneRing]{SDVertex::oneRing}{()}将
+边界顶点的一环排成首尾元素是边界邻居。
+\begin{lstlisting}
+`\refcode{LoopSubdiv Function Definitions}{+=}\lastcode{LoopSubdivFunctionDefinitions}`
+static `\refvar{Point3f}{}` `\initvar{weightBoundary}{}`(`\refvar{SDVertex}{}` *vert, `\refvar{Float}{}` beta) {
+    `\refcode{Put vert one-ring in pRing}{}`
+    `\refvar{Point3f}{}` p = (1 - 2 * beta) * vert->`\refvar[SDVertex::p]{p}{}`;
+    p += beta * pRing[0];
+    p += beta * pRing[valence - 1];
+    return p;
+}
+\end{lstlisting}
+
+现在细化方法计算奇顶点的位置——沿网格分割边的新顶点。
+它遍历网格中每个面的每条边，计算划分边的新顶点（\reffig{3.35}）。
+对于内部边，通过赋权边两端的顶点以及
+该边相邻面的相对顶点可以求得新顶点。
+它遍历每个面的全部三条边，每次遇到之前没见过的边它就
+计算对应该边的新的奇顶点并存于关联的{\ttfamily edgeVerts}数组中。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.75\linewidth]{chap03/Subdivedgesplit.eps}
+    \caption{边分割的细分规则。空心圆标出的新的奇顶点的位置是通过
+        赋权该边两端的顶点以及相邻三角形与之相对的两个顶点求得的。
+        (a)内部顶点的权重；(b)边界顶点的权重。}
+    \label{fig:3.35}
+\end{figure}
+
+\begin{lstlisting}
+`\initcode{Compute new odd edge vertices}{=}`
+std::map<`\refvar{SDEdge}{}`, `\refvar{SDVertex}{}` *> edgeVerts;
+for (`\refvar{SDFace}{}` *face : f) {
+    for (int k = 0; k < 3; ++k) {
+        `\refcode{Compute odd vertex on kth edge}{}`
+    }
+}
+\end{lstlisting}
+
+就像设置原始网格中的相邻面指针做的那样，
+为每条边创建\refvar{SDEdge}{}对象并检查它是否在已访问的边集合中。
+如果没在，则计算该边上的新顶点并添入{\ttfamily map}，
+它是高效执行查找的关联数组结构。
+\begin{lstlisting}
+`\initcode{Compute odd vertex on kth edge}{=}`
+`\refvar{SDEdge}{}` edge(face->`\refvar[SDFace::v]{v}{}`[k], face->`\refvar[SDFace::v]{v}{}`[`\refvar{NEXT}{}`(k)]);
+`\refvar{SDVertex}{}` *vert = edgeVerts[edge];
+if (!vert) {
+    `\refcode{Create and initialize new odd vertex}{}`
+    `\refcode{Apply edge rules to compute new vertex position}{}`
+    edgeVerts[edge] = vert;
+}
+\end{lstlisting}
+
+在Loop细分中，细分加入的新顶点总是正则的
+（这意味着非凡顶点相对于正则顶点的比例会随着每级细分下降）。
+因此，新顶点的成员\refvar{regular}{}可以立即设为{\ttfamily true}。
+成员\refvar[SDVertex::boundary]{boundary}{}也很容易通过检查正在分割的边是否有相邻面来初始化。
+最后，新顶点的指针\refvar{startFace}{}也可在这里设置。
+对于一个面的边上任何一个奇顶点，中心孩子（三号子面）保证与新顶点相邻。
+\begin{lstlisting}
+`\initcode{Create and initialize new odd vertex}{=}`
+vert = arena.`\refvar[MemoryArena:Alloc2]{Alloc}{}`<`\refvar{SDVertex}{}`>();
+newVertices.push_back(vert);
+vert->`\refvar{regular}{}` = true;
+vert->`\refvar[SDVertex::boundary]{boundary}{}` = (face->`\refvar[SDFace::f]{f}{}`[k] == nullptr);
+vert->`\refvar{startFace}{}` = face->`\refvar{children}{}`[3];
+\end{lstlisting}
+
+对于边界奇顶点，新顶点只是两个相邻顶点的均值。
+对于内部奇顶点，该边两端顶点被赋权$\displaystyle\frac{3}{8}$，
+与该边相对的两个顶点被赋权$\displaystyle\frac{1}{8}$（\reffig{3.35}）。
+后两个顶点可用实用函数\refvar[otherVert]{SDFace::otherVert}{()}找到，
+返回一个面与给定边相对的顶点。
+\begin{lstlisting}
+`\initcode{Apply edge rules to compute new vertex position}{=}`
+if (vert->`\refvar[SDVertex::boundary]{boundary}{}`) {
+    vert->`\refvar[SDVertex::p]{p}{}` =  0.5f * edge.`\refvar[SDEdge::v]{v}{}`[0]->`\refvar[SDVertex::p]{p}{}`;
+    vert->`\refvar[SDVertex::p]{p}{}` += 0.5f * edge.`\refvar[SDEdge::v]{v}{}`[1]->`\refvar[SDVertex::p]{p}{}`;
+} else {
+    vert->`\refvar[SDVertex::p]{p}{}` =  3.f/8.f * edge.`\refvar[SDEdge::v]{v}{}`[0]->`\refvar[SDVertex::p]{p}{}`;
+    vert->`\refvar[SDVertex::p]{p}{}` += 3.f/8.f * edge.`\refvar[SDEdge::v]{v}{}`[1]->`\refvar[SDVertex::p]{p}{}`;
+    vert->`\refvar[SDVertex::p]{p}{}` += 1.f/8.f * face->`\refvar{otherVert}{}`(edge.`\refvar[SDEdge::v]{v}{}`[0], edge.`\refvar[SDEdge::v]{v}{}`[1])->`\refvar[SDVertex::p]{p}{}`;
+    vert->`\refvar[SDVertex::p]{p}{}` += 1.f/8.f *
+        face->`\refvar[SDFace::f]{f}{}`[k]->`\refvar{otherVert}{}`(edge.`\refvar[SDEdge::v]{v}{}`[0], edge.`\refvar[SDEdge::v]{v}{}`[1])->`\refvar[SDVertex::p]{p}{}`;
+}
+\end{lstlisting}
+
+方法\refvar[otherVert]{SDFace::otherVert}{()}不言自明
+\sidenote{译者注：我认为第6行提示有些不准确，已修改。详见\url{https://github.com/mmp/pbrt-v4/issues/146}。}：
+\begin{lstlisting}
+`\refcode{SDFace Methods}{+=}\lastcode{SDFaceMethods}`
+`\refvar{SDVertex}{}` *`\initvar{otherVert}{}`(`\refvar{SDVertex}{}` *v0, `\refvar{SDVertex}{}` *v1) {
+    for (int i = 0; i < 3; ++i)
+        if (`\refvar[SDFace::v]{v}{}`[i] != v0 && `\refvar[SDFace::v]{v}{}`[i] != v1)
+            return `\refvar[SDFace::v]{v}{}`[i];
+    `\refvar{Severe}{}`("Basic logic error in SDFace::otherVert()");
+    return nullptr;
+}
+\end{lstlisting}
+
+\subsubsection*{更新网格拓扑}
+为了让拓扑更新的细节尽可能简单，
+仔细选取细分面及其顶点的编号方案（\reffig{3.36}）。
+仔细看图；所示约定是后面几页的关键。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=\linewidth]{chap03/Subdivvertfacepointerupdate.eps}
+    \caption{每个面都分为四个子面，第{\ttfamily i}子面与原始面的第{\ttfamily i}顶点相邻，
+    第{\ttfamily i}子面的第{\ttfamily i}顶点是原始面的第{\ttfamily i}顶点。
+    中心子面的顶点朝向为第{\ttfamily i}顶点是沿父面第{\ttfamily i}边的奇顶点。}
+    \label{fig:3.36}
+\end{figure}
+
+更新细化网格的拓扑指针需要四大任务：
+\begin{enumerate}
+    \item 奇顶点的指针\refvar[startFace]{SDVertex::startFace}{}需存储指向其相邻面之一的指针。
+    \item 同样，必须设置偶顶点的指针\refvar[startFace]{SDVertex::startFace}{}。
+    \item 需要设置新面的相邻指针{\ttfamily\refvar[SDFace::f]{f}{}[i]}指向相邻面。
+    \item 新面的指针{\ttfamily\refvar[SDFace::v]{v}{}[i]}需要指向合适的顶点。
+\end{enumerate}
+
+奇顶点的指针\refvar{startFace}{}在首次创建时就已经初始化了。
+这里我们依次处理其余三个任务。
+\begin{lstlisting}
+`\initcode{Update new mesh topology}{=}`
+`\refcode{Update even vertex face pointers}{}`
+`\refcode{Update face neighbor pointers}{}`
+`\refcode{Update face vertex pointers}{}`
+\end{lstlisting}
+
+如果一个顶点是其\refvar{startFace}{}的第{\ttfamily i}顶点，
+则它保证会与\refvar{startFace}{}的第{\ttfamily i}子面相邻。
+因此，只需要遍历网格中所有父顶点，
+对每一个求取它在其\refvar{startFace}{}中的顶点索引。
+然后可用该索引找到与新的偶顶点相邻的子面。
+\begin{lstlisting}
+`\initcode{Update even vertex face pointers}{=}`
+for (`\refvar{SDVertex}{}` *vertex : v) {
+    int vertNum = vertex->`\refvar{startFace}{}`->`\refvar{vnum}{}`(vertex);
+    vertex->`\refvar{child}{}`->`\refvar{startFace}{}` = 
+        vertex->`\refvar{startFace}{}`->`\refvar{children}{}`[vertNum];
+}
+\end{lstlisting}
+
+接着，更新新建面的相邻面指针。
+我们将其分为两步：一个是更新同父的子面间的邻居，
+一个是更新异父的子面间的邻居。这涉及一些棘手的指针操作。
+\begin{lstlisting}
+`\initcode{Update face neighbor pointers}{=}`
+for (`\refvar{SDFace}{}` *face : f) {
+    for (int j = 0; j < 3; ++j) {
+        `\refcode{Update children f pointers for siblings}{}`
+        `\refcode{Update children f pointers for neighbor children}{}`
+    }
+}
+\end{lstlisting}
+
+对于第一步，回想内部子面总是存于{\ttfamily\refvar{children}{}[3]}。
+而且（对于{\ttfamily k}=0,1,2）第{\ttfamily k+1}子面相邻于内部面的第{\ttfamily k}边，
+内部面相邻于第{\ttfamily k}面的第{\ttfamily k+1}边。
+\begin{lstlisting}
+`\initcode{Update children f pointers for siblings}{=}`
+face->`\refvar{children}{}`[3]->`\refvar[SDFace::f]{f}{}`[j] = face->`\refvar{children}{}`[`\refvar{NEXT}{}`(j)];
+face->`\refvar{children}{}`[j]->`\refvar[SDFace::f]{f}{}`[`\refvar{NEXT}{}`(j)] = face->`\refvar{children}{}`[3];
+\end{lstlisting}
+
+我们现在更新子面的指向其他父亲之子的相邻指针。
+这里只有前三个子面需要处理；内部子面的相邻指针已经完全初始化了。
+观察\reffig{3.36}可知第{\ttfamily k}个子面
+\sidenote{译者注：原文写为第{\ttfamily i}个子面，我认为是笔误，此处已修正。}需要设置
+第{\ttfamily k}和{\ttfamily\refvar{PREV}{}(k)}边。
+为了设置第{\ttfamily k}子面的第{\ttfamily k}边，
+我们先求父面的第{\ttfamily k}边，
+则相邻父面{\ttfamily f2}与那条边相邻。
+若{\ttfamily f2}存在（意味着我们不在边界上），
+则求得顶点{\ttfamily v[k]}的相邻父索引。
+该索引等于我们正在搜索的相邻子面的索引。
+然后重复该过程寻找与第{\ttfamily\refvar{PREV}{}(k)}边相邻的子面。
+\begin{lstlisting}
+`\initcode{Update children f pointers for neighbor children}{=}`
+`\refvar{SDFace}{}` *f2 = face->`\refvar[SDFace::f]{f}{}`[j];
+face->`\refvar{children}{}`[j]->`\refvar[SDFace::f]{f}{}`[j] =
+    f2 ? f2->`\refvar{children}{}`[f2->`\refvar{vnum}{}`(face->`\refvar[SDFace::v]{v}{}`[j])] : nullptr;
+f2 = face->`\refvar[SDFace::f]{f}{}`[`\refvar{PREV}{}`(j)];
+face->`\refvar{children}{}`[j]->`\refvar[SDFace::f]{f}{}`[`\refvar{PREV}{}`(j)] = 
+    f2 ? f2->`\refvar{children}{}`[f2->`\refvar{vnum}{}`(face->`\refvar[SDFace::v]{v}{}`[j])] : nullptr;
+\end{lstlisting}
+
+最后，我们处理拓扑更新的第四步：设置子面的顶点指针。
+\begin{lstlisting}
+`\initcode{Update face vertex pointers}{=}`
+for (`\refvar{SDFace}{}` *face : f) {
+    for (int j = 0; j < 3; ++j) {
+        `\refcode{Update child vertex pointer to new even vertex}{}`
+        `\refcode{Update child vertex pointer to new odd vertex}{}`
+    }
+}
+\end{lstlisting}
+
+对于（{\ttfamily k}=0,1,2）第{\ttfamily k}子面，
+第{\ttfamily k}顶点对应于与该子面相邻的偶顶点。
+对于非内部子面，有一个偶顶点和两个奇顶点；对于内部子面，有三个奇顶点。
+通过跟随从父面获取的父顶点的子指针可以找到该顶点。
+\begin{lstlisting}
+`\initcode{Update child vertex pointer to new even vertex}{=}`
+face->`\refvar{children}{}`[j]->`\refvar[SDFace::v]{v}{}`[j] = face->`\refvar[SDFace::v]{v}{}`[j]->`\refvar{child}{}`;
+\end{lstlisting}
+
+为了更新剩余顶点指针，再次用关联数组{\ttfamily edgeVerts}为父面的每条分割边寻找奇顶点。
+三个子面以该顶点为事件\sidenote{译者注：原文incident。}顶点。
+再次基于\reffig{3.36}中建立的编号方案，很容易求得该顶点在这三个面中的索引。
+\begin{lstlisting}
+`\initcode{Update child vertex pointer to new odd vertex}{=}`
+`\refvar{SDVertex}{}` *vert = edgeVerts[`\refvar{SDEdge}{}`(face->`\refvar[SDFace::v]{v}{}`[j], face->`\refvar[SDFace::v]{v}{}`[`\refvar{NEXT}{}`(j)])];
+face->`\refvar{children}{}`[j]->`\refvar[SDFace::v]{v}{}`[`\refvar{NEXT}{}`(j)] = vert;
+face->`\refvar{children}{}`[`\refvar{NEXT}{}`(j)]->`\refvar[SDFace::v]{v}{}`[j] = vert;
+face->`\refvar{children}{}`[3]->`\refvar[SDFace::v]{v}{}`[j] = vert;
+\end{lstlisting}
+
+一个细分步骤完成几何和拓扑工作后，
+新建的顶点和面移入数组{\ttfamily v}和{\ttfamily f}：
+\begin{lstlisting}
+`\initcode{Prepare for next level of subdivision}{=}`
+f = newFaces;
+v = newVertices;
+\end{lstlisting}
+
+\subsubsection*{逼近极限曲面并输出}
+细分曲面的显著性质之一是，如果我们永远继续细分下去，
+特殊的细分规则可以给出网格顶点将有的位置。
+这里我们用这些规则初始化极限曲面位置的数组{\ttfamily pLimit}。
+注意计算中在顶点之外的地方临时存储极限曲面的位置很重要。
+因为每个顶点的极限曲面位置依赖于其周围顶点的原始位置，
+所有顶点的原始位置必须保持不变直到完成计算。
+
+边界顶点的极限规则对两个相邻顶点赋权$\displaystyle\frac{1}{5}$，
+中心顶点赋权$\displaystyle\frac{3}{5}$。
+内部顶点的规则基于函数\refvar{loopGamma}{()}，
+它基于顶点的价计算合适的顶点权重。
+\begin{lstlisting}
+`\initcode{Push vertices to limit surface}{=}`
+std::unique_ptr<`\refvar{Point3f}{}`[]> pLimit(new `\refvar{Point3f}{}`[v.size()]);
+for (size_t i = 0; i < v.size(); ++i) {
+    if (v[i]->`\refvar[SDVertex::boundary]{boundary}{}`)
+        pLimit[i] =  `\refvar{weightBoundary}{}`(v[i], 1.f / 5.f);
+    else
+        pLimit[i] =  `\refvar{weightOneRing}{}`(v[i], `\refvar{loopGamma}{}`(v[i]->`\refvar{valence}{}`()));
+}
+for (size_t i = 0; i < v.size(); ++i)
+    v[i]->`\refvar[SDVertex::p]{p}{}` = pLimit[i];
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{LoopSubdiv Inline Functions}{+=}\lastcode{LoopSubdivInlineFunctions}`
+inline `\refvar{Float}{}` `\initvar{loopGamma}{}`(int valence) {
+    return 1.f / (valence + 3.f / (8.f * `\refvar{beta}{}`(valence)));
+}
+\end{lstlisting}
+
+为了生成看起来光滑的、带有每个顶点曲面法线的三角网格，
+每个顶点处都计算极限曲面一对不平行的切向量。
+与位置的极限规则一样，这是给出实际极限曲面上精确切线的解析计算。
+\begin{lstlisting}
+`\initcode{Compute vertex tangents on limit surface}{=}`
+std::vector<`\refvar{Normal3f}{}`> Ns;
+Ns.reserve(v.size());
+std::vector<`\refvar{Point3f}{}`> pRing(16, `\refvar{Point3f}{}`());
+for (`\refvar{SDVertex}{}` *vertex : v) {
+    `\refvar{Vector3f}{}` S(0,0,0), T(0,0,0);
+    int valence = vertex->`\refvar{valence}{}`();
+    if (valence > (int)pRing.size())
+        pRing.resize(valence);
+    vertex->`\refvar{oneRing}{}`(&pRing[0]);
+    if (!vertex->`\refvar[SDVertex::boundary]{boundary}{}`) {
+        `\refcode{Compute tangents of interior face}{}`
+    } else {
+        `\refcode{Compute tangents of boundary face}{}`
+    }
+    Ns.push_back(`\refvar{Normal3f}{}`(`\refvar{Cross}{}`(S, T)));
+}
+\end{lstlisting}
+
+\reffig{3.37}展示了计算网格内部切线的设置。
+中心顶点赋权为零，邻居赋权$w_i$。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.35\linewidth]{chap03/Subdivtangents.eps}
+    \caption{计算内部顶点的切线，一环顶点赋权为$w_i$。计算切线的中心顶点总是赋权为零。}
+    \label{fig:3.37}
+\end{figure}
+
+为了计算首个切向量$\bm s$，权重为
+\begin{align*}
+    w_i=\cos{\left(\frac{2\pi i}{n}\right)}\, ,
+\end{align*}
+其中$n$为该顶点的价。计算第二个切向量$\bm t$用的权重为
+\begin{align*}
+    w_i=\sin{\left(\frac{2\pi i}{n}\right)}\, .
+\end{align*}
+
+\begin{lstlisting}
+`\initcode{Compute tangents of interior face}{=}`
+for (int j = 0; j < valence; ++j) {
+    S += std::cos(2 * `\refvar{Pi}{}` * j / valence) * `\refvar{Vector3f}{}`(pRing[j]);
+    T += std::sin(2 * `\refvar{Pi}{}` * j / valence) * `\refvar{Vector3f}{}`(pRing[j]);
+}
+\end{lstlisting}
+
+边界顶点的切线有些棘手。\reffig{3.38}展示了后续讨论要求的一环顶点顺序
+\sidenote{译者注：原图没有正确显示脚标，已修正。}。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.35\linewidth]{chap03/Subdivedgetangents.eps}
+    \caption{边界顶点的切线也计算为相邻顶点的加权平均。
+        然而，一些边界切线规则并入了中心顶点的值。}
+    \label{fig:3.38}
+\end{figure}
+
+第一条切线叫\keyindex{跨越切线}{across tangent}{tangent line切线}，
+由两相邻边界顶点间的向量给出：
+\begin{align*}
+    \bm s=\bm v_{n-1}-\bm v_0\, .
+\end{align*}
+
+第二条切线叫\keyindex{横断切线}{transverse tangent}{tangent line切线}，
+基于顶点的价算得。
+中心顶点赋权$w_{\mathrm{c}}$，一环顶点赋权指定为向量$(w_0,w_1,\ldots,w_{n-1})$。
+我们的横断切线规则是
+\begin{table}[h]
+    \centering\begin{tabular}{lll}
+        \toprule
+        价        & $w_{\mathrm{c}}$ & $w_i$       \\
+        \midrule
+        2         & -2               & (1,1)       \\
+        3         & -1               & (0,1,0)     \\
+        4（正则） & -2               & (-1,2,2,-1) \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+价为5及以上时，$w_{\mathrm{c}}=0$且
+\begin{align*}
+    w_0 & =w_{n-1}=\sin{\theta}\, ,              \\
+    w_i & =(2\cos{\theta}-2)\sin{(\theta i)}\, ,
+\end{align*}
+其中
+\begin{align*}
+    \theta=\frac{\pi}{n-1}\, .
+\end{align*}
+
+尽管这里我们没有证明，但对于所有$i$值这些权重都有和为零。
+这保证了加权和实际上是切向量。
+\begin{lstlisting}
+`\initcode{Compute tangents of boundary face}{=}`
+S = pRing[valence - 1] - pRing[0];
+if (valence == 2)
+    T = `\refvar{Vector3f}{}`(pRing[0] + pRing[1] - 2 * vertex->`\refvar[SDVertex::p]{p}{}`);
+else if (valence == 3)
+    T = pRing[1] - vertex->`\refvar[SDVertex::p]{p}{}`;
+else if (valence == 4) // regular
+    T = `\refvar{Vector3f}{}`(-1 * pRing[0] +  2 * pRing[1] + 2 * pRing[2] + 
+                 -1 * pRing[3] + -2 * vertex->`\refvar[SDVertex::p]{p}{}`);
+else {
+    `\refvar{Float}{}` theta = `\refvar{Pi}{}` / float(valence - 1);
+    T = `\refvar{Vector3f}{}`(std::sin(theta) * (pRing[0] + pRing[valence - 1]));
+    for (int k = 1; k < valence - 1; ++k) {
+        `\refvar{Float}{}` wt = (2 * std::cos(theta) - 2) * std::sin((k) * theta);
+        T += `\refvar{Vector3f}{}`(wt * pRing[k]);
+    }
+    T = -T;
+}
+\end{lstlisting}
+
+最后，代码片\refcode{Create triangle mesh from subdivision mesh}{}初始化
+对应于极限曲面三角化的\refvar{Triangle}{}向量。
+它即简单将细分网格转为索引化的三角网格。
+\begin{lstlisting}
+`\initcode{Create triangle mesh from subdivision mesh}{=}`
+{
+    size_t ntris = f.size();
+    std::unique_ptr<int[]> verts(new int[3*ntris]);
+    int *vp = verts.get();
+    size_t totVerts = v.size();
+    std::map<`\refvar{SDVertex}{}` *, int> usedVerts;
+    for (size_t i = 0; i < totVerts; ++i)
+        usedVerts[v[i]] = i;
+    for (size_t i = 0; i < ntris; ++i) {
+        for (int j = 0; j < 3; ++j) {
+            *vp = usedVerts[f[i]->`\refvar[SDFace::v]{v}{}`[j]];
+            ++vp;
+        }
+    }
+    return `\refvar{CreateTriangleMesh}{}`(ObjectToWorld, WorldToObject, reverseOrientation, ntris, verts.get(),
+        totVerts, pLimit.get(), nullptr, &Ns[0], nullptr, nullptr);
+}
+\end{lstlisting}

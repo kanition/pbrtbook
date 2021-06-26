@@ -154,14 +154,14 @@ $e_{\mathrm{b}}=2$，所以$e=129=10000001_2$且$m=10100000000000000000000_2$。
     s\times0.0\ldots0_2\times2^{-127}=0\, .
 \end{align*}
 
-消除有效数字前导一位也能表示\keyindex{非规范化的}{denormalized}{}数：
+去掉有效数字前导一位也能表示\sidenote{译者注：我完善了这两个式子。}\keyindex{非规范化的}{denormalized}{}数：
 如果总是出现前导一，则最小的32位浮点是
 \begin{align*}
-    1.0\ldots0_2\times2^{-127}\approx5.8774718\times10^{-39}\, .
+    {1.{\underbrace{0\ldots0}_{\text{23个0}}}}\ _2\times2^{-127}\approx5.8774718\times10^{-39}\, .
 \end{align*}
 没有前导一位，最小值是
 \begin{align*}
-    0.00\ldots1_2\times2^{-126}=2^{-126}\times2^{-23}\approx1.4012985\times10^{-45}\, .
+    \underbrace{0.0\ldots0}_{\text{22个0}}1_2\times2^{-127}=2^{-22}\times2^{-127}\approx1.4012985\times10^{-45}\, .
 \end{align*}
 
 

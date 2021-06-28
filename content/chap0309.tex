@@ -209,7 +209,33 @@ NaN随计算传播：\keyindex{运算对象}{operand}{}之一
 为了清楚起见，我们用C++标准库函数{\ttfamily std::isnan()}来检查NaN值。
 
 \subsubsection*{实用例程}
+对于某些底层运算，能将浮点值解释为其组成位以及将表示浮点值的数位
+转换为实际的{\ttfamily float}或{\ttfamily double}很有用。
 
+一个自然的方法是取指向要转换的值的指针并将其强制转换为另一类型：
+{\ttfamily\newline\noindent
+float f = ...;\newline\noindent
+uint32\_t bits = *((uint32\_t *)\&f);\newline
+}
+然而，现代版本的C++规定将一种{\ttfamily float}指针强制转换为
+不同类型{\ttfamily uint32\_t}是非法的
+（该限制允许编译器在分析两个指针是否可能指向
+同一内存位置时进行更激进的优化，禁止在寄存器中保存值）。
+
+另一常见方法是对两种类型的元素使用{\ttfamily union}，赋予一种类型并按另一种读取：
+{\ttfamily\newline\noindent
+union FloatBits \{\newline\noindent
+\indent float f;\newline\noindent
+\indent uint32\_t ui;\newline\noindent
+\};\newline\noindent
+FloatBits fb;\newline\noindent
+fb.f = ...;\newline\noindent
+uint32\_t bits = fb.ui;
+}
+
+这也是非法的：C++标准说从{\ttfamily union}读取和最后一次赋值时不同的元素是未定义行为。
+
+可以用{\ttfamily memcpy()}将指向源类型的指针复制到指向目标类型的指针来正确执行这些转换。
 \begin{lstlisting}
 `\initcode{Global Inline Functions}{=}\initnext{GlobalInlineFunctions}`
 inline uint32_t `\initvar{FloatToBits}{}`(float f) {
@@ -218,8 +244,69 @@ inline uint32_t `\initvar{FloatToBits}{}`(float f) {
     return ui;
 }
 \end{lstlisting}
+\begin{lstlisting}
+`\refcode{Global Inline Functions}{+=}\lastnext{GlobalInlineFunctions}`
+inline float `\initvar{BitsToFloat}{}`(uint32_t ui) {
+    float f;
+    memcpy(&f, &ui, sizeof(uint32_t));
+    return f;
+}
+\end{lstlisting}
+
+尽管调用函数{\ttfamily memcpy()}以避免这些问题可能看起来太昂贵了，
+但实际中好的编译器会将其变为无操作而只是将寄存器或内存中的内容重新解释为另一类型
+（pbrt中还有这些函数在{\ttfamily double}和{\ttfamily uint64\_t}之间
+转换的类似版本，所以这里就不介绍了）。
+
+这些转换可用于实现函数即把浮点值向上或向下调整到相邻更大或更小的可表示浮点值
+\footnote{这些函数等价于{\ttfamily std::nextafter(v, Infinity)}和{\ttfamily std::nextafter(v, -Infinity)}但更加高效，
+因为它们不负责处理NaN值或浮点信号异常。}。
+它们对我们接下来的代码中需要的某些保守的舍入操作很有用。
+多亏浮点在内存中表示的特殊性，这些操作很高效。
+\begin{lstlisting}
+`\refcode{Global Inline Functions}{+=}\lastnext{GlobalInlineFunctions}`
+inline float `\initvar{NextFloatUp}{}`(float v) {
+    `\refcode{Handle infinity and negative zero for NextFloatUp()}{}`
+    `\refcode{Advance v to next higher float}{}`
+}
+\end{lstlisting}
+
+有两种重要的特殊情况：如果{\ttfamily v}为正无穷，则该函数就返回没变的{\ttfamily v}。
+在继续执行有效数字的代码之前让负零向前跳到正零。
+这一步必须显式处理，因为-0.0和0.0的位模式不相邻。
+\begin{lstlisting}
+`\initcode{Handle infinity and negative zero for NextFloatUp()}{=}`
+if (std::isinf(v) && v > 0.)
+    return v;
+if (v == -0.f)
+    v = 0.f;
+\end{lstlisting}
+
+概念上，给定一浮点值，我们想对有效数字增加一，
+如果结果\keyindex{溢出}{overflow}{}，
+则有效数字重置为零且指数增加一。
+意外的是对浮点在内存中的整数表示加一实现了这点：
+因为指数在有效数字之上的高位，所以如果有效数字全是一，
+则有效数字低位加一会将一一路带到指数去，
+否则就在当前指数下推进到相邻更大的有效数字。
+还要注意当增加最大可表示的有限浮点值数位表示时，
+会得到正的浮点无穷数位模式。
+
+对于负值，从数位表示减一类似地推进到相邻值。
+\begin{lstlisting}
+`\initcode{Advance v to next higher float}{=}`
+uint32_t ui = `\refvar{FloatToBits}{}`(v);
+if (v >= 0) ++ui;
+else        --ui;
+return `\refvar{BitsToFloat}{}`(ui);
+\end{lstlisting}
+
+这里没有介绍函数\refvar{NextFloatDown}{()}了，
+它遵循相同的逻辑但高效地取反。
+pbrt也提供了这些函数的{\ttfamily double}版本。
 
 \subsubsection*{算术运算}
+IEEE 754提供了关于浮点算术的重要保证：
 \begin{lstlisting}
 `\refcode{Global Constants}{+=}\lastnext{GlobalConstants}`
 static constexpr `\refvar{Float}{}` `\initvar{MachineEpsilon}{}` =

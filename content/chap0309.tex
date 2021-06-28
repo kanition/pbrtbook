@@ -389,6 +389,63 @@ static constexpr `\refvar{Float}{}` `\initvar{MachineEpsilon}{}` =
 
 \subsubsection*{误差传播}
 利用IEEE浮点算术的保证，可以开发方法分析并界定给定浮点计算的误差。
+关于该话题的更多细节，详见\citet{doi:10.1137/1.9780898718027}的优秀书籍
+以及\citet{10.5555/1096474}的早期经典
+\sidenote{译者注：笔者将引用换成了1994年新版。}。
+
+在这项工作中有两种有用的误差度量：绝对的和相对的。
+如果我们执行某浮点计算并得到舍入的结果$\tilde{a}$，
+我们说$\tilde{a}$和以实数进行该计算的结果之间的
+差的大小为\keyindex{绝对误差}{absolute error}{}$\delta_{\mathrm{a}}$：
+\begin{align*}
+    \delta_{\mathrm{a}}=|\tilde{a}-a|\, .
+\end{align*}
+
+\keyindex{相对误差}{relative error}{}$\delta_{\mathrm{r}}$是
+绝对误差和精确结果的比值：
+\begin{align}\label{eq:3.9}
+    \delta_{\mathrm{r}}=\left|\frac{\tilde{a}-a}{a}\right|=\left|\frac{\delta_{\mathrm{a}}}{a}\right|\, ,
+\end{align}
+只要$a\neq0$。利用相对误差定义，
+我们可将算得的值$\tilde{a}$写作准确结果$a$的扰动：
+\begin{align*}
+    \tilde{a}=a\pm\delta_{\mathrm{a}}=a(1\pm\delta_{\mathrm{r}})\, .
+\end{align*}
+
+作为这些思想的首个应用，考虑计算四个表示为浮点的数$a,b,c$和$d$的和。
+如果我们将该和算为{\ttfamily r = (((a + b) + c) + d)}，\refeq{3.8}给出
+\begin{align*}
+    (((a\oplus b)\oplus c)\oplus d) & \in((((a+b)(1\pm\epsilon_{\mathrm{m}}))+c)(1\pm\epsilon_{\mathrm{m}})+d)(1\pm\epsilon_{\mathrm{m}}) \\
+                                    & =(a+b)(1\pm\epsilon_{\mathrm{m}})^3+c(1\pm\epsilon_{\mathrm{m}})^2+d(1\pm\epsilon_{\mathrm{m}})\, .
+\end{align*}
+因为$\epsilon_{\mathrm{m}}$很小，所以$\epsilon_{\mathrm{m}}$的的高次幂可以被额外的项$\epsilon_{\mathrm{m}}$限定，
+于是我们可以将$(1\pm\epsilon_{\mathrm{m}})^n$限为
+\begin{align*}
+    (1\pm\epsilon_{\mathrm{m}})^n\le1\pm(n+1)\epsilon_{\mathrm{m}}\, .
+\end{align*}
+（实际情况是，$1\pm n\epsilon_{\mathrm{m}}$几乎界定了这些项，
+因为$\epsilon_{\mathrm{m}}$的更高次幂变小得很快，但上面是完全保守的界。）
+
+该界让我们把加法的结果化简为：
+\begin{align*}
+      & (a+b)(1\pm4\epsilon_{\mathrm{m}})+c(1\pm3\epsilon_{\mathrm{m}})+d(1\pm2\epsilon_{\mathrm{m}})    \\
+    = & a+b+c+d+[\pm4\epsilon_{\mathrm{m}}(a+b)\pm3\epsilon_{\mathrm{m}}c\pm2\epsilon_{\mathrm{m}}d]\, .
+\end{align*}
+
+方括号内的项给出了绝对误差：其大小限定为
+\begin{align}\label{eq:3.10}
+    \pm4\epsilon_{\mathrm{m}}|a+b|\pm3\epsilon_{\mathrm{m}}|c|\pm2\epsilon_{\mathrm{m}}|d|\, .
+\end{align}
+
+因此，如果我们按上述括号把四个浮点数加在一起，
+我们可以确定最后舍入的结果与假设我们
+用无限精度实数相加得到的结果之间的差被\refeq{3.10}界定。
+给定$a,b,c$和$d$的具体值很容易计算该误差界。
+
+这个结果很有趣；我们看到$a+b$的大小对误差界作相对较大的贡献，
+尤其是和$d$相比的时候
+（这个结果给出了一种情况，即为什么如果大量浮点数相加时，
+将他们从小到大排序一般会给出比任意顺序有更低最终误差的结果）。
 
 \begin{lstlisting}
 `\refcode{Global Inline Functions}{+=}\lastnext{GlobalInlineFunctions}`

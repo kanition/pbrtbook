@@ -157,19 +157,56 @@ $e_{\mathrm{b}}=2$，所以$e=129=10000001_2$且$m=10100000000000000000000_2$。
 去掉有效数字前导一位也能表示\sidenote{译者注：我完善了这两个式子。}\keyindex{非规范化的}{denormalized}{}数：
 如果总是出现前导一，则最小的32位浮点是
 \begin{align*}
-    {1.{\underbrace{0\ldots0}_{\text{23个0}}}}\ _2\times2^{-127}\approx5.8774718\times10^{-39}\, .
+    1.{\underbrace{0\ldots0}_{\text{23个0}}}\ _2\times2^{-127}\approx5.8774718\times10^{-39}\, .
 \end{align*}
 没有前导一位，最小值是
 \begin{align*}
-    \underbrace{0.0\ldots0}_{\text{22个0}}1_2\times2^{-127}=2^{-22}\times2^{-127}\approx1.4012985\times10^{-45}\, .
+    0.\underbrace{0\ldots0}_{\text{22个0}}1_2\times2^{-126}=2^{-23}\times2^{-126}\approx1.4012985\times10^{-45}\, .
+\end{align*}
+有了一些表示这些小值的能力可以避免需要将非常小的数舍入为零。
+
+注意该表示同时有“正”和“负”零值。
+该细节对程序员大多是透明的。
+例如，标准保证了比较{\ttfamily -0.0 == 0.0}为真，
+即使这两值在内存中的表示不同。
+
+最大指数，$e=255$，也保留作特殊对待。
+因此，可以表示的最大规范化浮点值有$e=254$（或$e_{\mathrm{b}}=127$）且约为\sidenote{译者注：我完善了该式。}
+\begin{align*}
+    1.{\underbrace{1\ldots1}_{\text{23个1}}}\ _2\times2^{127}=(2-2^{-23})\times2^{127}\approx3.402823\times10^{38}\, .
 \end{align*}
 
+对于$e=255$，若有效数字位全是零，则该值依据符号位对应正或负无穷。
+例如，在浮点中执行像1/0的计算会得到无穷值。
+对无穷的算术运算得到无穷。
+比较时，正无穷大于任何非无穷值，负无穷类似。
 
+常数\refvar{MaxFloat}{}和\refvar{Infinity}{}分别初始化为可表示的最大和“无穷”浮点值。
+我们令其可在单独的常数中获取，这样使用这些值的代码
+就不需要用唠叨的C++标准库调用来获取它们的值了。
 \begin{lstlisting}
 `\initcode{Global Constants}{=}\initnext{GlobalConstants}`
 static constexpr `\refvar{Float}{}` `\initvar{MaxFloat}{}` = std::numeric_limits<`\refvar{Float}{}`>::max();
 static constexpr `\refvar{Float}{}` `\initvar{Infinity}{}` = std::numeric_limits<`\refvar{Float}{}`>::infinity();
 \end{lstlisting}
+
+对于$e=255$，非零有效数字位对应
+特殊的NaN值\sidenote{译者注：原文误写为$e_b=255$，已修正。}，
+它由诸如取负数平方根或尝试计算0/0的运算得到。
+NaN随计算传播：\keyindex{运算对象}{operand}{}之一
+为NaN本身的任何算术运算总是返回NaN。
+因此，如果NaN出现于一长串计算中，
+我们就知道该方式中的某处出错了。
+在调试构建中，pbrt有许多\refvar{Assert}{()}语句检查NaN值，
+因为我们几乎从不希望它们出现在事件的常规过程中。
+任何与NaN值的比较返回假；
+因此检查{\ttfamily !(x == x)}用来检查值是否不是数字
+\footnote{这是编译器不得对包含浮点值的表达式执行
+看似明显且安全的代数简化的少数几个地方之一——
+这个特别的比较不得简化为{\ttfamily false}。
+启用编译器的“快速数学”或“执行不安全的数学优化”标志
+可能会允许执行这些优化。但是错误行为可能引入pbrt中。}。
+为了清楚起见，我们用C++标准库函数{\ttfamily std::isnan()}来检查NaN值。
 
 \subsubsection*{实用例程}
 

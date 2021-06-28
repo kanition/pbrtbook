@@ -80,16 +80,16 @@
 能计算特定计算中引入误差的保守边界。
 对于光线追踪计算，该误差常意外地小。
 
-现代CPU和GPU几乎无处不在地基于电气与电子工程师协会
+现代CPU和GPU几乎都基于电气与电子工程师协会
 \sidenote{译者注：即Institute of Electrical and Electronics Engineers (IEEE)，
     是电气工程与电子工程以及相关学科的专业协会，成立于1963年1月，总部在美国纽约。
     其范围已经扩展到电气、电子、通信、计算机工程、计算机科学与信息技术等诸多领域，
     是世界上最大的技术专业组织。}
-颁布的标准\parencite*{10.1109/IEEESTD.1985.82928,10.1109/IEEESTD.2008.4610935}实现了浮点算术模型。
-（今后当我们说浮点时，我们特指IEEE 754规定的32位浮点数。）
+颁布的标准\parencite*{10.1109/IEEESTD.1985.82928,10.1109/IEEESTD.2008.4610935}实现浮点算术模型。
+（今后我们说的浮点特指IEEE 754规定的32位浮点数。）
 IEEE 754技术标准规定了内存中浮点数的格式以及
 精度和浮点计算舍入的特定规则；
-正是这些规则使得对给定浮点值中出现的误差进行严格推导成为可能。
+正是这些规则使得能对给定浮点值中出现的误差进行严格推导。
 
 \subsubsection*{浮点表示}
 IEEE标准规定32位浮点用1位符号、8位指数和23位有效数字表示。
@@ -113,7 +113,7 @@ IEEE标准规定32位浮点用1位符号、8位指数和23位有效数字表示�
 例如，浮点数6.5可以通过规范化的有效数字写作$1.101_2\times2^2$，
 其中下标2表示以2为底的值\sidenote{译者注：即二进制。}
 （如果非整数的二进制数不够直观，可以注意
-小数点右边第一个数表示$\displaystyle 2^{-1}=\frac{1}{2}$，以此类推）。
+小数点右边第一个数表示$\displaystyle 2^{-1}=1/2$，以此类推）。
 因此，我们有
 \begin{align*}
     (1\times2^0+1\times2^{-1}+0\times2^{-2}+1\times2^{-3})\times2^2=1.625\times2^2=6.5\, .
@@ -163,6 +163,7 @@ $e_{\mathrm{b}}=2$，所以$e=129=10000001_2$且$m=10100000000000000000000_2$。
 \begin{align*}
     0.\underbrace{0\ldots0}_{\text{22个0}}1_2\times2^{-126}=2^{-23}\times2^{-126}\approx1.4012985\times10^{-45}\, .
 \end{align*}
+
 有了一些表示这些小值的能力可以避免需要将非常小的数舍入为零。
 
 注意该表示同时有“正”和“负”零值。
@@ -222,7 +223,7 @@ uint32\_t bits = *((uint32\_t *)\&f);\newline
 （该限制允许编译器在分析两个指针是否可能指向
 同一内存位置时进行更激进的优化，禁止在寄存器中保存值）。
 
-另一常见方法是对两种类型的元素使用{\ttfamily union}，赋予一种类型并按另一种读取：
+另一常见方法是对两类元素使用{\ttfamily union}，赋予一种类型并按另一种读取：
 {\ttfamily\newline\noindent
 union FloatBits \{\newline\noindent
 \indent float f;\newline\noindent
@@ -307,6 +308,34 @@ pbrt也提供了这些函数的{\ttfamily double}版本。
 
 \subsubsection*{算术运算}
 IEEE 754提供了关于浮点算术的重要保证：
+具体而言，它保证了加法、减法、乘法、除法和平方根
+在输入相同时给出相同结果且这些结果的浮点数最接近于
+在无限精度算术下执行底层计算的结果
+\footnote{IEEE浮点允许用户选一种数字舍入模式，
+    但我们这里假设用默认的——舍入到最近的偶数。}。
+值得注意的是这在有限精度数字计算机上是完全可能的；
+IEEE 754的成就之一是证明了这种级别的精度是可能的且
+能在硬件上很高效地实现。
+
+用圆圈运算符表示浮点算术运算符，用sqrt表示浮点平方根，
+这些精度保证可以写作：
+\begin{align}
+    a\oplus b        & =\mathrm{round}(a+b)\, ,\nonumber      \\
+    a\ominus b       & =\mathrm{round}(a-b)\, ,\nonumber      \\
+    a\otimes b       & =\mathrm{round}(a*b)\, ,\label{eq:3.7} \\
+    a\oslash b       & =\mathrm{round}(a/b)\, ,\nonumber      \\
+    \mathrm{sqrt}(a) & =\mathrm{round}(\sqrt{a})\, ,\nonumber
+\end{align}
+其中$\mathrm{round}(x)$表示将实数舍入到最接近的浮点值的结果。
+
+舍入误差的界可以表示为实数区间：例如，
+对于加法，我们可以说舍入的结果在区间内
+\begin{align}
+    a\oplus b & =\mathrm{round}(a+b)\in(a+b)(1\pm\epsilon)\nonumber \\
+              & =[(a+b)(1-\epsilon),(a+b)(1+\epsilon)]
+    \label{eq:3.8}
+\end{align}
+
 \begin{lstlisting}
 `\refcode{Global Constants}{+=}\lastnext{GlobalConstants}`
 static constexpr `\refvar{Float}{}` `\initvar{MachineEpsilon}{}` =

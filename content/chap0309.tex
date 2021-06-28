@@ -368,9 +368,28 @@ static constexpr `\refvar{Float}{}` `\initvar{MachineEpsilon}{}` =
 \end{align*}
 
 类似的关系对其他算术运算符和平方根运算符成立
-\footnote{该界假设计算中没有上溢或下溢；}。
+\footnote{该界假设计算中没有上溢或\protect\keyindex{下溢}{underflow}{}；
+    可以很容易处理这些可能的情况\citep[p.56]{doi:10.1137/1.9780898718027}但
+    一般对于我们这里的应用并不重要。}。
+
+可以从\refeq{3.7}直接得到许多有用的性质。
+对于浮点数$x$，
+\begin{itemize}
+    \item $1\otimes x=x$。
+    \item $x\oslash x=1$。
+    \item $x\oplus 0=x$。
+    \item $x\ominus x=0$。
+    \item $2\otimes x$和$x\oslash 2$是准确的；计算最终结果没有执行舍入。
+          更一般地，任何乘以或除以二的幂都得到准确结果（假设没有上溢或下溢）。
+    \item $x\oslash 2^i=x\otimes 2^{-i}$对所有整数$i$成立，假设$2^i$不溢出。
+\end{itemize}
+
+所有这些性质都是从结果必须是与实际结果最接近的浮点值这一原则推出的；
+当结果可以准确表示时，必须算得准确结果。
 
 \subsubsection*{误差传播}
+利用IEEE浮点算术的保证，可以开发方法分析并界定给定浮点计算的误差。
+
 \begin{lstlisting}
 `\refcode{Global Inline Functions}{+=}\lastnext{GlobalInlineFunctions}`
 inline constexpr `\refvar{Float}{}` `\initvar{gamma}{}`(int n) {

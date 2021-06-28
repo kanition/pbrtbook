@@ -141,7 +141,7 @@ $e_{\mathrm{b}}=2$，所以$e=129=10000001_2$且$m=10100000000000000000000_2$。
     2^{e-23}\, .
 \end{align}
 因此对1和2之间的浮点数，$e=0$，
-浮点值间的间隔为$2^{-23}\approx1.19209\ldots\times10^{-7}$。
+浮点值间的间隔为$2^{-23}\approx1.19209\times10^{-7}$。
 该间隔也称为\keyindex{最后一位上的单位值}{unit in last place}{}(ulp)\sidenote{译者注：也叫“最小精度单位”。}的大小；
 注意一个ulp的大小由相应浮点值决定——更大的数的ulp比更小的数的ulp相对更大。
 
@@ -309,7 +309,7 @@ pbrt也提供了这些函数的{\ttfamily double}版本。
 \subsubsection*{算术运算}
 IEEE 754提供了关于浮点算术的重要保证：
 具体而言，它保证了加法、减法、乘法、除法和平方根
-在输入相同时给出相同结果且这些结果的浮点数最接近于
+在相同输入下给出相同结果且这些结果的浮点数最接近于
 在无限精度算术下执行底层计算的结果
 \footnote{IEEE浮点允许用户选一种数字舍入模式，
     但我们这里假设用默认的——舍入到最近的偶数。}。
@@ -328,19 +328,47 @@ IEEE 754的成就之一是证明了这种级别的精度是可能的且
 \end{align}
 其中$\mathrm{round}(x)$表示将实数舍入到最接近的浮点值的结果。
 
-舍入误差的界可以表示为实数区间：例如，
-对于加法，我们可以说舍入的结果在区间内
+舍入误差的界可以表示为实数区间：例如
+对于加法，我们可以说舍入的结果在与某个$\epsilon$有关的区间内
 \begin{align}
     a\oplus b & =\mathrm{round}(a+b)\in(a+b)(1\pm\epsilon)\nonumber \\
-              & =[(a+b)(1-\epsilon),(a+b)(1+\epsilon)]
+              & =[(a+b)(1-\epsilon),(a+b)(1+\epsilon)]\, ,
     \label{eq:3.8}
 \end{align}
+该舍入引入的误差量不超过在$a+b$处的浮点间隔的一半——
+如果它超过浮点间隔的一半，则它会以更小误差舍入到另一个不同的浮点数（\reffig{3.41}）。
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap03/IEEEfloatspacing.tex}
+    \caption{IEEE标准规定浮点计算必须实现为假设以无限精度的实数
+        执行计算再舍入到最接近的可表示浮点。
+        这里，无限精度得到的实数表示为实心点，
+        它附近可表示的浮点表示为数轴上的刻度。
+        我们可以看到舍入到最近浮点引入的误差$\delta$不超过
+        浮点之间间隔的一半。}
+    \label{fig:3.41}
+\end{figure}
 
+对于32位浮点，我们可以用\refeq{3.6}确定
+在$a+b$处的浮点间隔（即该值处的ulp）上界为$(a+b)2^{-23}$，
+所以间隔一半的上界为$(a+b)2^{-24}$，所以$|\epsilon|\le2^{-24}$。
+该界称为\keyindex{机器$\epsilon$}{machine epsilon}{}
+\footnote{不幸的是，C和C++标准用它们自己的特殊方式定义了机器$\epsilon$，
+    即数字1之上一个ulp的大小。对于32位浮点，该值为$2^{-23}$，
+    是数值分析用的术语机器$\epsilon$的两倍大。}。
+对于32位浮点，$\epsilon_{\mathrm{m}}=2^{-24}\approx5.960464\times10^{-8}$。
 \begin{lstlisting}
 `\refcode{Global Constants}{+=}\lastnext{GlobalConstants}`
 static constexpr `\refvar{Float}{}` `\initvar{MachineEpsilon}{}` =
        std::numeric_limits<`\refvar{Float}{}`>::epsilon() * 0.5;
 \end{lstlisting}
+因此我们有
+\begin{align*}
+    a\oplus b & =\mathrm{round}(a+b)\in(a+b)(1\pm\epsilon_{\mathrm{m}})\nonumber     \\
+              & =[(a+b)(1-\epsilon_{\mathrm{m}}),(a+b)(1+\epsilon_{\mathrm{m}})]\, ,
+\end{align*}
+
+类似的关系对其他算术运算符和平方根运算符成立
+\footnote{该界假设计算中没有上溢或下溢；}。
 
 \subsubsection*{误差传播}
 \begin{lstlisting}

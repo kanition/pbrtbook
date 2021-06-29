@@ -302,7 +302,7 @@ else        --ui;
 return `\refvar{BitsToFloat}{}`(ui);
 \end{lstlisting}
 
-这里没有介绍函数\refvar{NextFloatDown}{()}了，
+这里没有介绍函数{\initvar{NextFloatDown}{()}}了，
 它遵循相同的逻辑但高效地取反。
 pbrt也提供了这些函数的{\ttfamily double}版本。
 
@@ -569,9 +569,19 @@ inline constexpr `\refvar{Float}{}` `\initvar{gamma}{}`(int n) {
 \subsubsection*{运行误差分析}
 除了用代数算出误差边界外，我们还可以让计算机在执行计算时为我们完成这项工作。
 该方法称为\keyindex{运行误差分析}{running error analysis}{}。
-其后的思想很简单：每次执行浮点运算时，我们也基于\refeq{3.7}计算给出区间的项
+其背后的思想很简单：每次执行浮点运算时，我们也基于\refeq{3.7}计算给出区间的项
 以算出目前已积累误差的运行边界。
+尽管该方法比推导直接给出误差边界的表达式有更高的运行时开销，
+但当推导变得很难时它会很方便。
 
+pbrt提供了简单的类\refvar{EFloat}{}，
+绝大部分就像常规的{\ttfamily float}那样
+但使用运算符重载提供了浮点的所有常规算术运算并计算它们的误差边界。
+
+和\refchap{几何与变换}的类\refvar{Interval}{}相似，
+\refvar{EFloat}{}跟踪一个描述感兴趣的值不确定性的区间。
+与\refvar{Interval}{}相比，\refvar{EFloat}{}的区间是
+由于中间浮点算术的误差产生的而不是输入参数的不确定性。
 \begin{lstlisting}
 `\initcode{EFloat Public Methods}{=}\initnext{EFloatPublicMethods}`
 `\initvar{EFloat}{}`() { }
@@ -586,6 +596,15 @@ float `\initvar[EFloat::v]{v}{}`;
 float `\initvar[EFloat::err]{err}{}`;
 \end{lstlisting}
 
+在调试构建中，\refvar{EFloat}{}还维护\refvar[EFloat::v]{v}{}的高精度版本
+用作参考值以计算相对误差的精确近似。
+在优化构建中，我们一般不为计算该额外值花费开销。
+\begin{lstlisting}
+`\initcode{Store high-precision reference value in EFloat}{=}`
+#ifndef NDEBUG
+ld = v;
+#endif // NDEBUG
+\end{lstlisting}
 \begin{lstlisting}
 `\refcode{EFloat Private Data}{+=}\lastcode{EFloatPrivateData}`
 #ifndef NDEBUG
@@ -593,11 +612,87 @@ long double `\initvar[EFloat::ld]{ld}{}`;
 #endif // NDEBUG
 \end{lstlisting}
 
+该类的加法运算实现本质上是相关定义的实现。我们有：
+\begin{align*}
+    (a\pm\delta_a)\oplus(b\pm\delta_b) & =((a\pm\delta_a)+(b\pm\delta_b))(1\pm\gamma_1)                                          \\
+                                       & =a+b+(\pm\delta_a\pm\delta_b\pm(a+b)\gamma_1\pm\gamma_1\delta_a\pm\gamma_1\delta_b)\, .
+\end{align*}
+所以（括号里的）绝对误差定界为
+\begin{align*}
+    \delta_a+\delta_b+\gamma_1(|a+b|+\delta_a+\delta_b)\, .
+\end{align*}
+\begin{lstlisting}
+`\refcode{EFloat Public Methods}{+=}\lastnext{EFloatPublicMethods}` 
+`\refvar{EFloat}{}` operator+(`\refvar{EFloat}{}` f) const {
+    `\refvar{EFloat}{}` r;
+    r.`\refvar[EFloat::v]{v}{}` = `\refvar[EFloat::v]{v}{}` + f.`\refvar[EFloat::v]{v}{}`;
+#ifndef NDEBUG
+    r.`\refvar[EFloat::ld]{ld}{}` = `\refvar[EFloat::ld]{ld}{}` + f.`\refvar[EFloat::ld]{ld}{}`;
+#endif  // DEBUG
+    r.`\refvar[EFloat::err]{err}{}` = `\refvar[EFloat::err]{err}{}` + f.`\refvar[EFloat::err]{err}{}` +
+        `\refvar{gamma}{}`(1) * (std::abs(`\refvar[EFloat::v]{v}{}` + f.`\refvar[EFloat::v]{v}{}`) + `\refvar[EFloat::err]{err}{}` + f.`\refvar[EFloat::err]{err}{}`);
+    return r;
+}
+\end{lstlisting}
+
+\refvar{EFloat}{}的其他算术运算实现是类似的。
+
+注意该实现忽略了计算误差本身也受到舍入误差影响的问题。
+如果这有问题，我们可以切换浮点舍入模式使误差边界总是向正无穷大舍入，
+但这会是开销很大的操作，因为它在当前处理器上引发完全的管道刷新
+\sidenote{译者注：原文a full pipeline flush。}。
+这里我们用默认舍入模式：后文中，当它们用于解决该问题时，
+误差边界扩展一个ulp。
+
+\refvar{EFloat}{}中的{\ttfamily float}值可通过类型转换运算符获取；
+它有修饰符{\ttfamily explicit}以要求调用者
+用显式{\ttfamily (float)}转换来提取浮点值。
+使用显式转换降低了无意从\refvar{EFloat}{}到\refvar{Float}{}以及
+倒回的风险而丢失积累的误差边界。
+\begin{lstlisting}
+`\refcode{EFloat Public Methods}{+=}\lastnext{EFloatPublicMethods}`
+explicit operator float() const { return `\refvar[EFloat::v]{v}{}`; }
+\end{lstlisting}
+
+如果用\refvar{EFloat}{}而不是浮点类型变量执行一系列计算，
+则计算中的任何地方都可以调用方法\refvar{GetAbsoluteError}{()}求得
+算得值的绝对误差边界。
+\begin{lstlisting}
+`\refcode{EFloat Public Methods}{+=}\lastnext{EFloatPublicMethods}`
+float `\initvar{GetAbsoluteError}{}`() const { return `\refvar[EFloat::err]{err}{}`; }
+\end{lstlisting}
+
+误差区间边界可通过方法\refvar{UpperBound}{()}和\refvar{LowerBound}{()}获取。
+它们的实现分别使用\refvar{NextFloatUp}{()}和\refvar{NextFloatDown}{()}将
+返回的值扩展一个ulp，保证区间是保守的。
 \begin{lstlisting}
 `\refcode{EFloat Public Methods}{+=}\lastnext{EFloatPublicMethods}`
 float `\initvar{UpperBound}{}`() const { return `\refvar{NextFloatUp}{}`(`\refvar[EFloat::v]{v}{}` + `\refvar[EFloat::err]{err}{}`); }
 float `\initvar{LowerBound}{}`() const { return `\refvar{NextFloatDown}{}`(`\refvar[EFloat::v]{v}{}` - `\refvar[EFloat::err]{err}{}`); }
 \end{lstlisting}
+
+在调试构建中，可以用方法获取相对误差和维护在\refvar[EFloat::ld]{ld}{}中的精确值。
+\begin{lstlisting}
+`\refcode{EFloat Public Methods}{+=}\lastcode{EFloatPublicMethods}`
+#ifndef NDEBUG
+float `\initvar{GetRelativeError}{}`() const { return std::abs((`\refvar[EFloat::ld]{ld}{}` - `\refvar[EFloat::v]{v}{}`)/`\refvar[EFloat::ld]{ld}{}`); }
+long double `\initvar{PreciseValue}{}`() const { return `\refvar[EFloat::ld]{ld}{}`; }
+#endif
+\end{lstlisting}
+
+pbrt还提供了函数\refvar{Quadratic}{()}的变种，
+它在可能有误差的系数上运算并返回{\ttfamily t0}和{\ttfamily t1}值以及误差边界。
+其实现和常规函数\refvar{Quadratic}{()}一样，只是使用了\refvar{EFloat}{}。
+\begin{lstlisting}
+`\initcode{EFloat Inline Functions}{=}`
+inline bool `\initvar[Quadratic:2]{\refvar{Quadratic}{}}{}`(`\refvar{EFloat}{}` A, `\refvar{EFloat}{}` B, `\refvar{EFloat}{}` C,
+                      `\refvar{EFloat}{}` *t0, `\refvar{EFloat}{}` *t1);
+\end{lstlisting}
+
+有了浮点误差基本知识，我们现在专注用这些工具提供稳定的相交运算。
+
+\subsection{保守的光线——边界框相交}
+浮点舍入误差可能造成光线——边界框相交测试错失光线实际上与框相交了的情况。
 
 \subsection{稳定的三角形相交}\label{sub:稳定的三角形相交}
 

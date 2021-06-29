@@ -4,15 +4,239 @@
     本节含有高级内容，第一次阅读时可以跳过。
 \end{remark}
 
+到目前为止，我们都是根据基于实数的理想化算术运算
+纯粹地讨论光线——形状相交算法。该方法已经让我们走得很远了，
+尽管有个重要事实是计算机只能表示有限的数量，
+因此它实际上不能表示所有实数。
+计算机用浮点数代替实数，它有固定的存储要求。
+然而，因为结果可能无法在特定量的内存中表示，
+每执行一次浮点运算就可能引入误差。
+
+该误差的累积对相交测试的精度有些许影响。
+首先，它可能造成完全错过有效的相交——
+例如，一个精确值是正数的相交处$t$值算成了负的。
+而且，算得的光线——形状交点可能在形状实际曲面的上面或下面。
+这导致一个问题：当从算得的交点开始为阴影射线和反射光线追踪新光线时，
+若射线端点在实际曲面之下，我们可能求得一次与曲面错误的再相交。
+反之，若端点在曲面上面离得太远，阴影和反射可能会脱钩（见\reffig{3.39}）。
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap03/Selfintersectioncases.tex}
+    \caption{可能在图像中造成可见错误的舍入误差问题几何设置。
+        左边的入射光线与曲面相交。在左图中，算得的交点（黑圆圈）略低于曲面
+        且阴影射线端点过低的“epsilon”偏移可能导致错误的自相交，
+        因为阴影射线端点（白圆圈）仍在曲面之下；因此错误地认定光源被遮挡了。
+        右图中，太高的“epsilon”导致错过了有效相交，
+        因为射线端点通过了遮挡面。}
+    \label{fig:3.39}
+\end{figure}
+
+在光线追踪中解决该问题的典型实践是将生成的射线偏移固定的“射线epsilon”值
+\sidenote{译者注：epsilon即希腊字母$\epsilon$。}，
+忽略沿射线$\bm p+t\bm d$比某个$t_{\min}$还近的任何相交。
+\reffig{3.40}展示了为什么该方法需要很高的$t_{\min}$值才能高效工作：
+如果生成的射线相对于曲面非常倾斜，
+则在离射线很远处可能会发生错误的射线相交。
+不幸的是，大的$t_{\min}$值会造成射线端点相对远离原始交点，
+这又反过来造成错过附近的有效相交，导致阴影和反射丢失细节。
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap03/Selfintersectionobliqueray.tex}
+    \caption{如果算得的交点（实心圆）低于曲面且生成的射线是斜的，
+        在与射线端点有一定距离的地方可能会发生错误的再相交（空心圆）。
+        如果用沿射线的最小$t$值消除附近的相交，
+        需要相对大的$t_{\min}$才能处理好倾斜射线。}
+    \label{fig:3.40}
+\end{figure}
+
+本节中，我们将介绍浮点算术基本思想并描述分析浮点计算误差的技术。
+然后我们将这些方法用于本章之前介绍的光线——形状算法
+并展示怎样计算带有有界误差的光线交点。
+这将允许我们保守地定位射线端点，这样就永远不会求得错误的自相交，
+而又保留了与实际交点极其接近的射线端点使得错误脱靶被最小化。
+反过来也不需要额外的“射线epsilon”值。
+
 \subsection{浮点算术}\label{sub:浮点算术}
+计算必须在容纳于有限量内存的数字的有限表示上执行；
+计算机上无法表示实数的无限集合。
+一种这样的有限表示是定点，例如给定一个16位整数，
+有人可能通过除以256将其映射为正实数。
+这允许我们表示值之间具有相等间距$\displaystyle\frac{1}{256}$的
+范围$\displaystyle\left[0,\frac{65535}{256}\right]=\left[0,255+\frac{255}{256}\right]$。
+\keyindex{定点数}{fixed-point number}{}可以用整数算术运算高效实现
+（该特性使其在早期不支持浮点计算的个人计算机上很流行），
+但是它们受制于许多缺点：其中，它们能表示的最大数字是受限的，
+且不能精确表示非常小的接近于零的数。
+
+计算机上实数的另一种表示是\keyindex{浮点数}{floating-point number}{}。
+它用\keyindex{符号}{sign}{}、\keyindex{有效数字}{significand}{}\footnote{单词“\protect\keyindex{尾数}{mantissa}{}”
+    常用来代替“有效数字”，但浮点纯粹主义者注意到“尾数”在对数上下文中
+    有不同含义而因此更偏爱“有效数字”。这里我们遵循该用法。}和\keyindex{指数}{exponent}{}表示数字：
+本质上和\keyindex{科学计数法}{scientific notation}{}相同但用固定数量的数字表示有效数字和指数。
+（下文中，我们将只讨论以2为底的数字。）
+这种表示能够用固定数量的存储对极大范围的数字进行表示和执行计算。
+
+用浮点算术的程序员通常知道浮点是不精确的；
+有时这种看法导致了浮点算术是不可预测的观念。
+本节中我们将看到浮点算术有精心设计的基础反而
+能计算特定计算中引入误差的保守边界。
+对于光线追踪计算，该误差常意外地小。
+
+现代CPU和GPU几乎都基于电气与电子工程师协会
+\sidenote{译者注：即Institute of Electrical and Electronics Engineers (IEEE)，
+    是电气工程与电子工程以及相关学科的专业协会，成立于1963年1月，总部在美国纽约。
+    其范围已经扩展到电气、电子、通信、计算机工程、计算机科学与信息技术等诸多领域，
+    是世界上最大的技术专业组织。}
+颁布的标准\parencite*{10.1109/IEEESTD.1985.82928,10.1109/IEEESTD.2008.4610935}实现浮点算术模型。
+（今后我们说的浮点特指IEEE 754规定的32位浮点数。）
+IEEE 754技术标准规定了内存中浮点数的格式以及
+精度和浮点计算舍入的特定规则；
+正是这些规则使得能对给定浮点值中出现的误差进行严格推导。
+
+\subsubsection*{浮点表示}
+IEEE标准规定32位浮点用1位符号、8位指数和23位有效数字表示。
+用了8位的指数$e$范围为从0到255；
+实际用的指数$e_{\mathrm{b}}$是通过偏置$e$算得的：
+\begin{align*}
+    e_{\mathrm{b}}=e-127\, .
+\end{align*}
+
+当存储\keyindex{规范化的}{normalized}{}浮点值时有效数字实际有24位精度。
+当有效数字和指数表示规范化的数字时，有效数字中没有前导零。
+在\keyindex{二进制}{binary}{}中，这意味着有效数字开头的数字必须是一；
+反过来，没必要显式存储该值。
+因此，隐式前导的1位和编码有效数字小数部分的23位给出了总共24位的精度。
+
+给定符号$s=\pm 1$、有效数字$m$和指数$e$，相应的浮点值为
+\begin{align*}
+    s\times 1.m\times2^{e-127}\, .
+\end{align*}
+
+例如，浮点数6.5可以通过规范化的有效数字写作$1.101_2\times2^2$，
+其中下标2表示以2为底的值\sidenote{译者注：即二进制。}
+（如果非整数的二进制数不够直观，可以注意
+小数点右边第一个数表示$2^{-1}$，以此类推）。
+因此，我们有
+\begin{align*}
+    (1\times2^0+1\times2^{-1}+0\times2^{-2}+1\times2^{-3})\times2^2=1.625\times2^2=6.5\, .
+\end{align*}
+$e_{\mathrm{b}}=2$，所以$e=129=10000001_2$且$m=10100000000000000000000_2$。
+
+浮点在内存中的布局是符号位在32位值的最高位
+（负号用一位编码），然后是指数和有效数字。
+因此，对于值6.5其内存中的二进制表示是
+\begin{align*}
+    0\ 10000001\ 10100000000000000000000=40\mathrm{d}00000_{16}\, .
+\end{align*}
+
+同样，浮点值1.0有$m=0\ldots0_2$和$e_{\mathrm{b}}=0$，所以$e=127=01111111_2$，它的二进制表示为
+\begin{align*}
+    0\ 01111111\ 00000000000000000000000=3\mathrm{f}800000_{16}\, .
+\end{align*}
+
+该\keyindex{十六进制}{hexadecimal}{}值值得记住，因为调试时它常出现于内存转储。
+
+该表示隐含了整个范围内两个相邻的二的幂次之间
+可表示的浮点数之间的间隔是均匀的（它对应于有效数字位增一）。
+在范围$[2^e,2^{e+1})$内，间隔为
+\begin{align}\label{eq:3.6}
+    2^{e-23}\, .
+\end{align}
+因此对1和2之间的浮点数，$e=0$，
+浮点值间的间隔为$2^{-23}\approx1.19209\times10^{-7}$。
+该间隔也称为\keyindex{最后一位上的单位值}{unit in last place}{}(ulp)\sidenote{译者注：也叫“最小精度单位”。}的大小；
+注意一个ulp的大小由相应浮点值决定——更大的数的ulp比更小的数的ulp相对更大。
+
+按我们目前描述的表示是不可能恰好将零表示为浮点数的。
+这事显然不可接受，所以最小指数$e=0$，
+或说$e_{\mathrm{b}}=-127$，被留出来特殊对待。
+对于该指数，浮点值解释为有效数字中没有隐式前导一位，
+这意味全零位的有效数字会得到
+\begin{align*}
+    s\times0.0\ldots0_2\times2^{-127}=0\, .
+\end{align*}
+
+去掉有效数字前导一位也能表示\sidenote{译者注：我完善了这两个式子。}\keyindex{非规范化的}{denormalized}{}数：
+如果总是出现前导一，则最小的32位浮点是
+\begin{align*}
+    1.{\underbrace{0\ldots0}_{\text{23个0}}}\ _2\times2^{-127}\approx5.8774718\times10^{-39}\, .
+\end{align*}
+没有前导一位，最小值是
+\begin{align*}
+    0.\underbrace{0\ldots0}_{\text{22个0}}1_2\times2^{-126}=2^{-23}\times2^{-126}\approx1.4012985\times10^{-45}\, .
+\end{align*}
+
+有了一些表示这些小值的能力可以避免需要将非常小的数舍入为零。
+
+注意该表示同时有“正”和“负”零值。
+该细节对程序员大多是透明的。
+例如，标准保证了比较{\ttfamily -0.0 == 0.0}为真，
+即使这两值在内存中的表示不同。
+
+最大指数，$e=255$，也保留作特殊对待。
+因此，可以表示的最大规范化浮点值有$e=254$（或$e_{\mathrm{b}}=127$）且约为\sidenote{译者注：我完善了该式。}
+\begin{align*}
+    1.{\underbrace{1\ldots1}_{\text{23个1}}}\ _2\times2^{127}=(2-2^{-23})\times2^{127}\approx3.402823\times10^{38}\, .
+\end{align*}
+
+对于$e=255$，若有效数字位全是零，则该值依据符号位对应正或负无穷。
+例如，在浮点中执行像1/0的计算会得到无穷值。
+对无穷的算术运算得到无穷。
+比较时，正无穷大于任何非无穷值，负无穷类似。
+
+常数\refvar{MaxFloat}{}和\refvar{Infinity}{}分别初始化为可表示的最大和“无穷”浮点值。
+我们令其可在单独的常数中获取，这样使用这些值的代码
+就不需要用唠叨的C++标准库调用来获取它们的值了。
 \begin{lstlisting}
 `\initcode{Global Constants}{=}\initnext{GlobalConstants}`
 static constexpr `\refvar{Float}{}` `\initvar{MaxFloat}{}` = std::numeric_limits<`\refvar{Float}{}`>::max();
 static constexpr `\refvar{Float}{}` `\initvar{Infinity}{}` = std::numeric_limits<`\refvar{Float}{}`>::infinity();
 \end{lstlisting}
 
-\subsubsection*{实用例程}
+对于$e=255$，非零有效数字位对应
+特殊的NaN值\sidenote{译者注：原文误写为$e_b=255$，已修正。}，
+它由诸如取负数平方根或尝试计算0/0的运算得到。
+NaN随计算传播：\keyindex{运算对象}{operand}{}之一
+为NaN本身的任何算术运算总是返回NaN。
+因此，如果NaN出现于一长串计算中，
+我们就知道该方式中的某处出错了。
+在调试构建中，pbrt有许多\refvar{Assert}{()}语句检查NaN值，
+因为我们几乎从不希望它们出现在事件的常规过程中。
+任何与NaN值的比较返回假；
+因此检查{\ttfamily !(x == x)}用来检查值是否不是数字
+\footnote{这是编译器不得对包含浮点值的表达式执行
+看似明显且安全的代数简化的少数几个地方之一——
+这个特别的比较不得简化为{\ttfamily false}。
+启用编译器的“快速数学”或“执行不安全的数学优化”标志
+可能会允许执行这些优化。但是错误行为可能引入pbrt中。}。
+为了清楚起见，我们用C++标准库函数{\ttfamily std::isnan()}来检查NaN值。
 
+\subsubsection*{实用例程}
+对于某些底层运算，能将浮点值解释为其组成位以及将表示浮点值的数位
+转换为实际的{\ttfamily float}或{\ttfamily double}很有用。
+
+一个自然的方法是取指向要转换的值的指针并将其强制转换为另一类型：
+{\ttfamily\newline\noindent
+float f = ...;\newline\noindent
+uint32\_t bits = *((uint32\_t *)\&f);\newline
+}
+然而，现代版本的C++规定将一种{\ttfamily float}指针强制转换为
+不同类型{\ttfamily uint32\_t}是非法的
+（该限制允许编译器在分析两个指针是否可能指向
+同一内存位置时进行更激进的优化，禁止在寄存器中保存值）。
+
+另一常见方法是对两类元素使用{\ttfamily union}，赋予一种类型并按另一种读取：
+{\ttfamily\newline\noindent
+union FloatBits \{\newline\noindent
+\indent float f;\newline\noindent
+\indent uint32\_t ui;\newline\noindent
+\};\newline\noindent
+FloatBits fb;\newline\noindent
+fb.f = ...;\newline\noindent
+uint32\_t bits = fb.ui;
+}
+
+这也是非法的：C++标准说从{\ttfamily union}读取和最后一次赋值时不同的元素是未定义行为。
+
+可以用{\ttfamily memcpy()}将指向源类型的指针复制到指向目标类型的指针来正确执行这些转换。
 \begin{lstlisting}
 `\initcode{Global Inline Functions}{=}\initnext{GlobalInlineFunctions}`
 inline uint32_t `\initvar{FloatToBits}{}`(float f) {
@@ -21,15 +245,262 @@ inline uint32_t `\initvar{FloatToBits}{}`(float f) {
     return ui;
 }
 \end{lstlisting}
+\begin{lstlisting}
+`\refcode{Global Inline Functions}{+=}\lastnext{GlobalInlineFunctions}`
+inline float `\initvar{BitsToFloat}{}`(uint32_t ui) {
+    float f;
+    memcpy(&f, &ui, sizeof(uint32_t));
+    return f;
+}
+\end{lstlisting}
+
+尽管调用函数{\ttfamily memcpy()}以避免这些问题可能看起来太昂贵了，
+但实际中好的编译器会将其变为无操作而只是将寄存器或内存中的内容重新解释为另一类型
+（pbrt中还有这些函数在{\ttfamily double}和{\ttfamily uint64\_t}之间
+转换的类似版本，所以这里就不介绍了）。
+
+这些转换可用于实现函数即把浮点值向上或向下调整到相邻更大或更小的可表示浮点值
+\footnote{这些函数等价于{\ttfamily std::nextafter(v, Infinity)}和{\ttfamily std::nextafter(v, -Infinity)}但更加高效，
+因为它们不负责处理NaN值或浮点信号异常。}。
+它们对我们接下来的代码中需要的某些保守的舍入操作很有用。
+多亏浮点在内存中表示的特殊性，这些操作很高效。
+\begin{lstlisting}
+`\refcode{Global Inline Functions}{+=}\lastnext{GlobalInlineFunctions}`
+inline float `\initvar{NextFloatUp}{}`(float v) {
+    `\refcode{Handle infinity and negative zero for NextFloatUp()}{}`
+    `\refcode{Advance v to next higher float}{}`
+}
+\end{lstlisting}
+
+有两种重要的特殊情况：如果{\ttfamily v}为正无穷，则该函数就返回没变的{\ttfamily v}。
+在继续执行有效数字的代码之前让负零向前跳到正零。
+这一步必须显式处理，因为-0.0和0.0的位模式不相邻。
+\begin{lstlisting}
+`\initcode{Handle infinity and negative zero for NextFloatUp()}{=}`
+if (std::isinf(v) && v > 0.)
+    return v;
+if (v == -0.f)
+    v = 0.f;
+\end{lstlisting}
+
+概念上，给定一浮点值，我们想对有效数字增加一，
+如果结果\keyindex{溢出}{overflow}{}，
+则有效数字重置为零且指数增加一。
+意外的是对浮点在内存中的整数表示加一实现了这点：
+因为指数在有效数字之上的高位，所以如果有效数字全是一，
+则有效数字低位加一会将一一路带到指数去，
+否则就在当前指数下推进到相邻更大的有效数字。
+还要注意当增加最大可表示的有限浮点值数位表示时，
+会得到正的浮点无穷数位模式。
+
+对于负值，从数位表示减一类似地推进到相邻值。
+\begin{lstlisting}
+`\initcode{Advance v to next higher float}{=}`
+uint32_t ui = `\refvar{FloatToBits}{}`(v);
+if (v >= 0) ++ui;
+else        --ui;
+return `\refvar{BitsToFloat}{}`(ui);
+\end{lstlisting}
+
+这里没有介绍函数{\initvar{NextFloatDown}{()}}了，
+它遵循相同的逻辑但高效地取反。
+pbrt也提供了这些函数的{\ttfamily double}版本。
 
 \subsubsection*{算术运算}
+IEEE 754提供了关于浮点算术的重要保证：
+具体而言，它保证了加法、减法、乘法、除法和平方根
+在相同输入下给出相同结果且这些结果的浮点数最接近于
+在无限精度算术下执行底层计算的结果
+\footnote{IEEE浮点允许用户选一种数字舍入模式，
+    但我们这里假设用默认的——舍入到最近的偶数。}。
+值得注意的是这在有限精度数字计算机上是完全可能的；
+IEEE 754的成就之一是证明了这种级别的精度是可能的且
+能在硬件上很高效地实现。
+
+用圆圈运算符表示浮点算术运算符，用sqrt表示浮点平方根，
+这些精度保证可以写作：
+\begin{align}
+    a\oplus b        & =\mathrm{round}(a+b)\, ,\nonumber      \\
+    a\ominus b       & =\mathrm{round}(a-b)\, ,\nonumber      \\
+    a\otimes b       & =\mathrm{round}(a*b)\, ,\label{eq:3.7} \\
+    a\oslash b       & =\mathrm{round}(a/b)\, ,\nonumber      \\
+    \mathrm{sqrt}(a) & =\mathrm{round}(\sqrt{a})\, ,\nonumber
+\end{align}
+其中$\mathrm{round}(x)$表示将实数舍入到最接近的浮点值的结果。
+
+舍入误差的界可以表示为实数区间：例如
+对于加法，我们可以说舍入的结果在与某个$\epsilon$有关的区间内
+\begin{align}
+    a\oplus b & =\mathrm{round}(a+b)\in(a+b)(1\pm\epsilon)\nonumber \\
+              & =[(a+b)(1-\epsilon),(a+b)(1+\epsilon)]\, ,
+    \label{eq:3.8}
+\end{align}
+该舍入引入的误差量不超过在$a+b$处的浮点间隔的一半——
+如果它超过浮点间隔的一半，则它会以更小误差舍入到另一个不同的浮点数（\reffig{3.41}）。
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap03/IEEEfloatspacing.tex}
+    \caption{IEEE标准规定浮点计算必须实现为假设以无限精度的实数
+        执行计算再舍入到最接近的可表示浮点。
+        这里，无限精度得到的实数表示为实心点，
+        它附近可表示的浮点表示为数轴上的刻度。
+        我们可以看到舍入到最近浮点引入的误差$\delta$不超过
+        浮点之间间隔的一半。}
+    \label{fig:3.41}
+\end{figure}
+
+对于32位浮点，我们可以用\refeq{3.6}确定
+在$a+b$处的浮点间隔（即该值处的ulp）上界为$(a+b)2^{-23}$，
+所以间隔一半的上界为$(a+b)2^{-24}$，所以$|\epsilon|\le2^{-24}$。
+该界称为\keyindex{机器$\epsilon$}{machine epsilon}{}
+\footnote{不幸的是，C和C++标准用它们自己的特殊方式定义了机器$\epsilon$，
+    即数字1之上一个ulp的大小。对于32位浮点，该值为$2^{-23}$，
+    是数值分析用的术语机器$\epsilon$的两倍大。}。
+对于32位浮点，$\epsilon_{\mathrm{m}}=2^{-24}\approx5.960464\times10^{-8}$。
 \begin{lstlisting}
 `\refcode{Global Constants}{+=}\lastnext{GlobalConstants}`
 static constexpr `\refvar{Float}{}` `\initvar{MachineEpsilon}{}` =
        std::numeric_limits<`\refvar{Float}{}`>::epsilon() * 0.5;
 \end{lstlisting}
+因此我们有
+\begin{align*}
+    a\oplus b & =\mathrm{round}(a+b)\in(a+b)(1\pm\epsilon_{\mathrm{m}})\nonumber     \\
+              & =[(a+b)(1-\epsilon_{\mathrm{m}}),(a+b)(1+\epsilon_{\mathrm{m}})]\, ,
+\end{align*}
+
+类似的关系对其他算术运算符和平方根运算符成立
+\footnote{该界假设计算中没有上溢或\protect\keyindex{下溢}{underflow}{}；
+    可以很容易处理这些可能的情况\citep[p.56]{doi:10.1137/1.9780898718027}但
+    一般对于我们这里的应用并不重要。}。
+
+可以从\refeq{3.7}直接得到许多有用的性质。
+对于浮点数$x$，
+\begin{itemize}
+    \item $1\otimes x=x$。
+    \item $x\oslash x=1$。
+    \item $x\oplus 0=x$。
+    \item $x\ominus x=0$。
+    \item $2\otimes x$和$x\oslash 2$是准确的；计算最终结果没有执行舍入。
+          更一般地，任何乘以或除以二的幂都得到准确结果（假设没有上溢或下溢）。
+    \item $x\oslash 2^i=x\otimes 2^{-i}$对所有整数$i$成立，假设$2^i$不溢出。
+\end{itemize}
+
+所有这些性质都是从结果必须是与实际结果最接近的浮点值这一原则推出的；
+当结果可以准确表示时，必须算得准确结果。
 
 \subsubsection*{误差传播}
+利用IEEE浮点算术的保证，可以开发方法分析并界定给定浮点计算的误差。
+关于该话题的更多细节，详见\citet{doi:10.1137/1.9780898718027}的优秀书籍
+以及\citet{10.5555/1096474}的早期经典
+\sidenote{译者注：笔者将引用换成了1994年新版。}。
+
+在这项工作中有两种有用的误差度量：绝对的和相对的。
+如果我们执行某浮点计算并得到舍入的结果$\tilde{a}$，
+我们说$\tilde{a}$和以实数进行该计算的结果之间的
+差的大小为\keyindex{绝对误差}{absolute error}{}$\delta_{\mathrm{a}}$：
+\begin{align*}
+    \delta_{\mathrm{a}}=|\tilde{a}-a|\, .
+\end{align*}
+
+\keyindex{相对误差}{relative error}{}$\delta_{\mathrm{r}}$是
+绝对误差和精确结果的比值：
+\begin{align}\label{eq:3.9}
+    \delta_{\mathrm{r}}=\left|\frac{\tilde{a}-a}{a}\right|=\left|\frac{\delta_{\mathrm{a}}}{a}\right|\, ,
+\end{align}
+只要$a\neq0$。利用相对误差定义，
+我们可将算得的值$\tilde{a}$写作准确结果$a$的扰动：
+\begin{align*}
+    \tilde{a}=a\pm\delta_{\mathrm{a}}=a(1\pm\delta_{\mathrm{r}})\, .
+\end{align*}
+
+作为这些思想的首个应用，考虑计算四个表示为浮点的数$a,b,c$和$d$的和。
+如果我们将该和算为{\ttfamily r = (((a + b) + c) + d)}，\refeq{3.8}给出
+\begin{align*}
+    (((a\oplus b)\oplus c)\oplus d) & \in((((a+b)(1\pm\epsilon_{\mathrm{m}}))+c)(1\pm\epsilon_{\mathrm{m}})+d)(1\pm\epsilon_{\mathrm{m}}) \\
+                                    & =(a+b)(1\pm\epsilon_{\mathrm{m}})^3+c(1\pm\epsilon_{\mathrm{m}})^2+d(1\pm\epsilon_{\mathrm{m}})\, .
+\end{align*}
+因$\epsilon_{\mathrm{m}}$很小，$\epsilon_{\mathrm{m}}$的高次幂可被额外项$\epsilon_{\mathrm{m}}$限定，
+所以我们可将$(1\pm\epsilon_{\mathrm{m}})^n$限为
+\begin{align*}
+    (1\pm\epsilon_{\mathrm{m}})^n\le1\pm(n+1)\epsilon_{\mathrm{m}}\, .
+\end{align*}
+（实际情况是，$1\pm n\epsilon_{\mathrm{m}}$几乎界定了这些项，
+因为$\epsilon_{\mathrm{m}}$的更高次幂变小得很快，但上面是完全保守的界。）
+
+该界让我们把加法的结果化简为：
+\begin{align*}
+      & (a+b)(1\pm4\epsilon_{\mathrm{m}})+c(1\pm3\epsilon_{\mathrm{m}})+d(1\pm2\epsilon_{\mathrm{m}})    \\
+    = & a+b+c+d+[\pm4\epsilon_{\mathrm{m}}(a+b)\pm3\epsilon_{\mathrm{m}}c\pm2\epsilon_{\mathrm{m}}d]\, .
+\end{align*}
+
+方括号内的项给出了绝对误差：其大小限定为
+\begin{align}\label{eq:3.10}
+    \pm4\epsilon_{\mathrm{m}}|a+b|\pm3\epsilon_{\mathrm{m}}|c|\pm2\epsilon_{\mathrm{m}}|d|\, .
+\end{align}
+
+因此，如果我们按上述括号把四个浮点数加在一起，
+我们可以确定最后舍入的结果与假设我们
+用无限精度实数相加得到的结果之间的差被\refeq{3.10}界定。
+给定$a,b,c$和$d$的具体值很容易计算该误差界。
+
+这个结果很有趣；我们看到$a+b$的大小对误差界作相对较大的贡献，
+尤其是和$d$相比的时候
+（这个结果给出了一种情况，即为什么如果大量浮点数相加时，
+将他们从小到大排序一般会给出比任意顺序有更低最终误差的结果）。
+
+这里我们的分析隐含假设编译器会根据定义该和的表达式生成指令。
+编译器应遵循给定浮点表达式的形式以避免破坏仔细设计的能最小化舍入误差的计算。
+这又有某些用整数表达式时有效的转换不能安全用于浮点计算的情况。
+
+如果我们把表达式改为算术等价的{\ttfamily float r = (a + b) + (c + d)}会怎么样？
+相应的浮点计算为
+\begin{align*}
+    ((a\oplus b)\oplus(c\oplus d))\, .
+\end{align*}
+
+如果我们采用运用\refeq{3.8}的相同过程，展开项，
+将高次项$(1\pm\epsilon_{\mathrm{m}})^n$转换为$1\pm(n+1)\epsilon_{\mathrm{m}}$，
+我们得到绝对误差界为
+\begin{align*}
+    3\epsilon_{\mathrm{m}}|a+b|+3\epsilon_{\mathrm{m}}|c+d|\, ,
+\end{align*}
+它在$|a+b|$相对较大时低于第一种算法，但若$|d|$相对较大则可能更高。
+
+这种计算误差的方法称为\keyindex{前向误差分析}{forward error analysis}{}；
+给定计算输入，我们可用很机械的过程提供结果误差的保守边界。
+结果中推导的界可能夸大了实际误差——
+实际中误差项的符号通常是混合的，所以当它们相加时会有抵消
+\footnote{一些数值分析员用的经验法则是，因为中间结果误差抵消，
+    实际误差的ulp数通常接近于ulp的边界数的平方根。}
+\sidenote{译者注：这句脚注看不懂。}。
+另一种方法是\keyindex{后向误差分析}{backward error analysis}{}，
+把算得结果当做准确的并提供所给结果相同时对输入扰动的界。
+当分析数值算法的稳定性时该方法更有用，
+但不太适合于推导我们这里关注的几何计算的保守误差界。
+
+用$1\pm(n+1)\epsilon_{\mathrm{m}}$作为$(1\pm\epsilon_{\mathrm{m}})^n$的
+保守边界还是有点不满意，因为它仅是加上整个$\epsilon_{\mathrm{m}}$项以
+保守地界定各个$\epsilon_{\mathrm{m}}$高次项的和。
+\citet[3.1节]{doi:10.1137/1.9780898718027}给出了
+一个更紧致界定误差项$1\pm\epsilon_{\mathrm{m}}$之积的方法
+\sidenote{译者注：笔者无法阅读到该文献，
+    但认为可以利用级数展开和二项式展开证明相应不等式成立。}。
+如果我们有$(1\pm\epsilon_{\mathrm{m}})^n$，
+则可以证明该值被$1+\theta_n$界定，其中
+\begin{align}\label{eq:3.11}
+    |\theta_n|\le\frac{n\epsilon_{\mathrm{m}}}{1-n\epsilon_{\mathrm{m}}}\, ,
+\end{align}
+只要$n\epsilon_{\mathrm{m}}<1$（当然是我们考虑计算的情况）
+\sidenote{译者注：更确切说是$0\le n\epsilon_{\mathrm{m}}<1$。}。
+注意到对于合理$n$值该表达式的分母会小于一，
+所以它只是稍稍增大$n\epsilon_{\mathrm{m}}$以获得保守边界。
+
+我们用$\gamma_n$表示该界：
+\begin{align*}
+    \gamma_n=\frac{n\epsilon_{\mathrm{m}}}{1-n\epsilon_{\mathrm{m}}}\, .
+\end{align*}
+
+计算该值的函数声明为{\ttfamily constexpr}，
+这样任何带有编译时常量的调用都会被替换为相应的浮点返回值。
 \begin{lstlisting}
 `\refcode{Global Inline Functions}{+=}\lastnext{GlobalInlineFunctions}`
 inline constexpr `\refvar{Float}{}` `\initvar{gamma}{}`(int n) {
@@ -37,7 +508,80 @@ inline constexpr `\refvar{Float}{}` `\initvar{gamma}{}`(int n) {
 }
 \end{lstlisting}
 
+使用$\gamma$符号，四个值之和的误差被界定为
+\begin{align*}
+    |a+b|\gamma_3+|c|\gamma_2+|d|\gamma_1\, .
+\end{align*}
+
+该方法的一个优点是$(1\pm\epsilon_{\mathrm{m}})^n$项的商也可以用$\gamma$函数定界。
+给定
+\begin{align*}
+    \frac{(1\pm\epsilon_{\mathrm{m}})^m}{(1\pm\epsilon_{\mathrm{m}})^n}\, ,
+\end{align*}
+该区间以$1\pm\gamma_{m+n}$为界
+\sidenote{译者注：我没有理解为何有这个结论，希望读者提供帮助。}。
+因此，$\gamma$可通过除法用于合并方程两边的$\epsilon_{\mathrm{m}}$项；
+在下面一些推导中这会很有用
+（注意因为$1\pm\epsilon_{\mathrm{m}}$项表示区间，消去它们是错的：
+\begin{align*}
+    \frac{(1\pm\epsilon_{\mathrm{m}})^m}{(1\pm\epsilon_{\mathrm{m}})^n}\neq(1\pm\epsilon_{\mathrm{m}})^{m-n}\, ;
+\end{align*}
+必须换为边界$\gamma_{m+n}$）。
+
+给定一些本身带有一定量误差的计算输入，
+观察该误差如何被带到各种基本算术运算中是有益的。
+给定都带有之前运算累积误差的
+两个值$a(1\pm\gamma_i)$和$b(1\pm\gamma_j)$，考虑它们的积。
+利用$\otimes$的定义，结果在区间
+\begin{align*}
+    a(1\pm\gamma_i)\otimes b(1\pm\gamma_j)\in ab(1\pm\gamma_{i+j+1})
+\end{align*}
+中，其中我们用了直接从\refeq{3.11}推得的关系$(1\pm\gamma_i)(1\pm\gamma_j)\in(1\pm\gamma_{i+j})$。
+
+该结果的相对误差界定为：
+\begin{align*}
+    \left|\frac{ab\gamma_{i+j+1}}{ab}\right|=\gamma_{i+j+1}\, ,
+\end{align*}
+因此最终误差大约为乘积值处ulp的$\displaystyle\frac{1}{2}(i+j+1)$——和我们希望的乘法误差一样好
+（除法的情况也一样好）。
+
+不幸的是，加减法中相对误差可能大幅增加。
+使用相同运算值定义，考虑
+\begin{align*}
+    a(1\pm\gamma_i)\oplus b(1\pm\gamma_j)\, ,
+\end{align*}
+它在区间$a(1\pm\gamma_{i+1})+b(1\pm\gamma_{j+1})$内，
+所以绝对误差定界为$|a|\gamma_{i+1}+|b|\gamma_{j+1}$。
+
+如果$a$和$b$同号，则绝对误差定界为$|a+b|\gamma_{i+j+1}$且
+相对误差约为算得值附近ulp的$\displaystyle\frac{1}{2}(i+j+1)$。
+
+然而，如果$a$和$b$异号（或者等价地，它们同号但做减法），
+则相对误差可能很高。考虑$a\approx-b$的情况：相对误差为
+\begin{align*}
+    \frac{|a|\gamma_{i+1}+|b|\gamma_{j+1}}{a+b}\approx\frac{2|a|\gamma_{i+j+1}}{a+b}\, .
+\end{align*}
+分子的大小与原始值$|a|$成正比但除以一个非常小的数，因此相对误差很高。
+这种相对误差的大幅增加称为\keyindex{灾难性抵消}{catastrophic cancellation}{}。
+等价地，我们从绝对误差取决于$|a|$值大小的事实中感受到了问题所在，
+尽管现在问题在于一个远小于$a$的值。
+
 \subsubsection*{运行误差分析}
+除了用代数算出误差边界外，我们还可以让计算机在执行计算时为我们完成这项工作。
+该方法称为\keyindex{运行误差分析}{running error analysis}{}。
+其背后的思想很简单：每次执行浮点运算时，我们也基于\refeq{3.7}计算给出区间的项
+以算出目前已积累误差的运行边界。
+尽管该方法比推导直接给出误差边界的表达式有更高的运行时开销，
+但当推导变得很难时它会很方便。
+
+pbrt提供了简单的类\refvar{EFloat}{}，
+绝大部分就像常规的{\ttfamily float}那样
+但使用运算符重载提供了浮点的所有常规算术运算并计算它们的误差边界。
+
+和\refchap{几何与变换}的类\refvar{Interval}{}相似，
+\refvar{EFloat}{}跟踪一个描述感兴趣的值不确定性的区间。
+与\refvar{Interval}{}相比，\refvar{EFloat}{}的区间是
+由于中间浮点算术的误差产生的而不是输入参数的不确定性。
 \begin{lstlisting}
 `\initcode{EFloat Public Methods}{=}\initnext{EFloatPublicMethods}`
 `\initvar{EFloat}{}`() { }
@@ -52,6 +596,15 @@ float `\initvar[EFloat::v]{v}{}`;
 float `\initvar[EFloat::err]{err}{}`;
 \end{lstlisting}
 
+在调试构建中，\refvar{EFloat}{}还维护\refvar[EFloat::v]{v}{}的高精度版本
+用作参考值以计算相对误差的精确近似。
+在优化构建中，我们一般不为计算该额外值花费开销。
+\begin{lstlisting}
+`\initcode{Store high-precision reference value in EFloat}{=}`
+#ifndef NDEBUG
+ld = v;
+#endif // NDEBUG
+\end{lstlisting}
 \begin{lstlisting}
 `\refcode{EFloat Private Data}{+=}\lastcode{EFloatPrivateData}`
 #ifndef NDEBUG
@@ -59,11 +612,87 @@ long double `\initvar[EFloat::ld]{ld}{}`;
 #endif // NDEBUG
 \end{lstlisting}
 
+该类的加法运算实现本质上是相关定义的实现。我们有：
+\begin{align*}
+    (a\pm\delta_a)\oplus(b\pm\delta_b) & =((a\pm\delta_a)+(b\pm\delta_b))(1\pm\gamma_1)                                          \\
+                                       & =a+b+(\pm\delta_a\pm\delta_b\pm(a+b)\gamma_1\pm\gamma_1\delta_a\pm\gamma_1\delta_b)\, .
+\end{align*}
+所以（括号里的）绝对误差定界为
+\begin{align*}
+    \delta_a+\delta_b+\gamma_1(|a+b|+\delta_a+\delta_b)\, .
+\end{align*}
+\begin{lstlisting}
+`\refcode{EFloat Public Methods}{+=}\lastnext{EFloatPublicMethods}` 
+`\refvar{EFloat}{}` operator+(`\refvar{EFloat}{}` f) const {
+    `\refvar{EFloat}{}` r;
+    r.`\refvar[EFloat::v]{v}{}` = `\refvar[EFloat::v]{v}{}` + f.`\refvar[EFloat::v]{v}{}`;
+#ifndef NDEBUG
+    r.`\refvar[EFloat::ld]{ld}{}` = `\refvar[EFloat::ld]{ld}{}` + f.`\refvar[EFloat::ld]{ld}{}`;
+#endif  // DEBUG
+    r.`\refvar[EFloat::err]{err}{}` = `\refvar[EFloat::err]{err}{}` + f.`\refvar[EFloat::err]{err}{}` +
+        `\refvar{gamma}{}`(1) * (std::abs(`\refvar[EFloat::v]{v}{}` + f.`\refvar[EFloat::v]{v}{}`) + `\refvar[EFloat::err]{err}{}` + f.`\refvar[EFloat::err]{err}{}`);
+    return r;
+}
+\end{lstlisting}
+
+\refvar{EFloat}{}的其他算术运算实现是类似的。
+
+注意该实现忽略了计算误差本身也受到舍入误差影响的问题。
+如果这有问题，我们可以切换浮点舍入模式使误差边界总是向正无穷大舍入，
+但这会是开销很大的操作，因为它在当前处理器上引发完全的管道刷新
+\sidenote{译者注：原文a full pipeline flush。}。
+这里我们用默认舍入模式：后文中，当它们用于解决该问题时，
+误差边界扩展一个ulp。
+
+\refvar{EFloat}{}中的{\ttfamily float}值可通过类型转换运算符获取；
+它有修饰符{\ttfamily explicit}以要求调用者
+用显式{\ttfamily (float)}转换来提取浮点值。
+使用显式转换降低了无意从\refvar{EFloat}{}到\refvar{Float}{}以及
+倒回的风险而丢失积累的误差边界。
+\begin{lstlisting}
+`\refcode{EFloat Public Methods}{+=}\lastnext{EFloatPublicMethods}`
+explicit operator float() const { return `\refvar[EFloat::v]{v}{}`; }
+\end{lstlisting}
+
+如果用\refvar{EFloat}{}而不是浮点类型变量执行一系列计算，
+则计算中的任何地方都可以调用方法\refvar{GetAbsoluteError}{()}求得
+算得值的绝对误差边界。
+\begin{lstlisting}
+`\refcode{EFloat Public Methods}{+=}\lastnext{EFloatPublicMethods}`
+float `\initvar{GetAbsoluteError}{}`() const { return `\refvar[EFloat::err]{err}{}`; }
+\end{lstlisting}
+
+误差区间边界可通过方法\refvar{UpperBound}{()}和\refvar{LowerBound}{()}获取。
+它们的实现分别使用\refvar{NextFloatUp}{()}和\refvar{NextFloatDown}{()}将
+返回的值扩展一个ulp，保证区间是保守的。
 \begin{lstlisting}
 `\refcode{EFloat Public Methods}{+=}\lastnext{EFloatPublicMethods}`
 float `\initvar{UpperBound}{}`() const { return `\refvar{NextFloatUp}{}`(`\refvar[EFloat::v]{v}{}` + `\refvar[EFloat::err]{err}{}`); }
 float `\initvar{LowerBound}{}`() const { return `\refvar{NextFloatDown}{}`(`\refvar[EFloat::v]{v}{}` - `\refvar[EFloat::err]{err}{}`); }
 \end{lstlisting}
+
+在调试构建中，可以用方法获取相对误差和维护在\refvar[EFloat::ld]{ld}{}中的精确值。
+\begin{lstlisting}
+`\refcode{EFloat Public Methods}{+=}\lastcode{EFloatPublicMethods}`
+#ifndef NDEBUG
+float `\initvar{GetRelativeError}{}`() const { return std::abs((`\refvar[EFloat::ld]{ld}{}` - `\refvar[EFloat::v]{v}{}`)/`\refvar[EFloat::ld]{ld}{}`); }
+long double `\initvar{PreciseValue}{}`() const { return `\refvar[EFloat::ld]{ld}{}`; }
+#endif
+\end{lstlisting}
+
+pbrt还提供了函数\refvar{Quadratic}{()}的变种，
+它在可能有误差的系数上运算并返回{\ttfamily t0}和{\ttfamily t1}值以及误差边界。
+其实现和常规函数\refvar{Quadratic}{()}一样，只是使用了\refvar{EFloat}{}。
+\begin{lstlisting}
+`\initcode{EFloat Inline Functions}{=}`
+inline bool `\initvar[Quadratic:2]{\refvar{Quadratic}{}}{}`(`\refvar{EFloat}{}` A, `\refvar{EFloat}{}` B, `\refvar{EFloat}{}` C,
+                      `\refvar{EFloat}{}` *t0, `\refvar{EFloat}{}` *t1);
+\end{lstlisting}
+
+有了浮点误差基本知识，我们现在专注用这些工具提供稳定的相交运算。
+
+\subsection{保守的光线——边界框相交}
+浮点舍入误差可能造成光线——边界框相交测试错失光线实际上与框相交了的情况。
 
 \subsection{稳定的三角形相交}\label{sub:稳定的三角形相交}
 

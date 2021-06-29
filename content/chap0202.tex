@@ -282,7 +282,7 @@ inline T `\initvar{AbsDot}{}`(const `\refvar{Vector3}{}`<T> &v1, const `\refvar{
 
 此处的实现中，函数\refvar{Cross}{()}在减法前将
 向量元素转化为双精度（不论\refvar{Float}{}
-的类型）。这里使用32位浮点数值的额外精度能防止巨量消失
+的类型）。这里使用32位浮点数值的额外精度能防止灾难性抵消
 \sidenote{译者注：原文catastrophic cancellation。}
 造成的误差，即两个值非常接近的浮点数相减造成的误差。
 这不是理论问题：这种改变对于修复以前由此造成的bug是必要的。

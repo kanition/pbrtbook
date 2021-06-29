@@ -113,7 +113,7 @@ IEEE标准规定32位浮点用1位符号、8位指数和23位有效数字表示�
 例如，浮点数6.5可以通过规范化的有效数字写作$1.101_2\times2^2$，
 其中下标2表示以2为底的值\sidenote{译者注：即二进制。}
 （如果非整数的二进制数不够直观，可以注意
-小数点右边第一个数表示$\displaystyle 2^{-1}=1/2$，以此类推）。
+小数点右边第一个数表示$2^{-1}$，以此类推）。
 因此，我们有
 \begin{align*}
     (1\times2^0+1\times2^{-1}+0\times2^{-2}+1\times2^{-3})\times2^2=1.625\times2^2=6.5\, .
@@ -418,8 +418,8 @@ static constexpr `\refvar{Float}{}` `\initvar{MachineEpsilon}{}` =
     (((a\oplus b)\oplus c)\oplus d) & \in((((a+b)(1\pm\epsilon_{\mathrm{m}}))+c)(1\pm\epsilon_{\mathrm{m}})+d)(1\pm\epsilon_{\mathrm{m}}) \\
                                     & =(a+b)(1\pm\epsilon_{\mathrm{m}})^3+c(1\pm\epsilon_{\mathrm{m}})^2+d(1\pm\epsilon_{\mathrm{m}})\, .
 \end{align*}
-因为$\epsilon_{\mathrm{m}}$很小，所以$\epsilon_{\mathrm{m}}$的的高次幂可以被额外的项$\epsilon_{\mathrm{m}}$限定，
-于是我们可以将$(1\pm\epsilon_{\mathrm{m}})^n$限为
+因$\epsilon_{\mathrm{m}}$很小，$\epsilon_{\mathrm{m}}$的高次幂可被额外项$\epsilon_{\mathrm{m}}$限定，
+所以我们可将$(1\pm\epsilon_{\mathrm{m}})^n$限为
 \begin{align*}
     (1\pm\epsilon_{\mathrm{m}})^n\le1\pm(n+1)\epsilon_{\mathrm{m}}\, .
 \end{align*}
@@ -447,6 +447,60 @@ static constexpr `\refvar{Float}{}` `\initvar{MachineEpsilon}{}` =
 （这个结果给出了一种情况，即为什么如果大量浮点数相加时，
 将他们从小到大排序一般会给出比任意顺序有更低最终误差的结果）。
 
+这里我们的分析隐含假设编译器会根据定义该和的表达式生成指令。
+编译器应遵循给定浮点表达式的形式以避免破坏仔细设计的能最小化舍入误差的计算。
+这又有某些用整数表达式时有效的转换不能安全用于浮点计算的情况。
+
+如果我们把表达式改为算术等价的{\ttfamily float r = (a + b) + (c + d)}会怎么样？
+相应的浮点计算为
+\begin{align*}
+    ((a\oplus b)\oplus(c\oplus d))\, .
+\end{align*}
+
+如果我们采用运用\refeq{3.8}的相同过程，展开项，
+将高次项$(1\pm\epsilon_{\mathrm{m}})^n$转换为$1\pm(n+1)\epsilon_{\mathrm{m}}$，
+我们得到绝对误差界为
+\begin{align*}
+    3\epsilon_{\mathrm{m}}|a+b|+3\epsilon_{\mathrm{m}}|c+d|\, ,
+\end{align*}
+它在$|a+b|$相对较大时低于第一种算法，但若$|d|$相对较大则可能更高。
+
+这种计算误差的方法称为\keyindex{前向误差分析}{forward error analysis}{}；
+给定计算输入，我们可用很机械的过程提供结果误差的保守边界。
+结果中推导的界可能夸大了实际误差——
+实际中误差项的符号通常是混合的，所以当它们相加时会有抵消
+\footnote{一些数值分析员用的经验法则是，因为中间结果误差抵消，
+    实际误差的ulp数通常接近于ulp的边界数的平方根。}
+\sidenote{译者注：这句脚注看不懂。}。
+另一种方法是\keyindex{后向误差分析}{backward error analysis}{}，
+把算得结果当做准确的并提供所给结果相同时对输入扰动的界。
+当分析数值算法的稳定性时该方法更有用，
+但不太适合于推导我们这里关注的几何计算的保守误差界。
+
+用$1\pm(n+1)\epsilon_{\mathrm{m}}$作为$(1\pm\epsilon_{\mathrm{m}})^n$的
+保守边界还是有点不满意，因为它仅是加上整个$\epsilon_{\mathrm{m}}$项以
+保守地界定各个$\epsilon_{\mathrm{m}}$高次项的和。
+\citet[3.1节]{doi:10.1137/1.9780898718027}给出了
+一个更紧致界定误差项$1\pm\epsilon_{\mathrm{m}}$之积的方法
+\sidenote{译者注：笔者无法阅读到该文献，
+    但认为可以利用级数展开和二项式展开证明相应不等式成立。}。
+如果我们有$(1\pm\epsilon_{\mathrm{m}})^n$，
+则可以证明该值被$1+\theta_n$界定，其中
+\begin{align}\label{eq:3.11}
+    |\theta_n|\le\frac{n\epsilon_{\mathrm{m}}}{1-n\epsilon_{\mathrm{m}}}\, ,
+\end{align}
+只要$n\epsilon_{\mathrm{m}}<1$（当然是我们考虑计算的情况）
+\sidenote{译者注：更确切说是$0\le n\epsilon_{\mathrm{m}}<1$。}。
+注意到对于合理$n$值该表达式的分母会小于一，
+所以它只是稍稍增大$n\epsilon_{\mathrm{m}}$以获得保守边界。
+
+我们用$\gamma_n$表示该界：
+\begin{align*}
+    \gamma_n=\frac{n\epsilon_{\mathrm{m}}}{1-n\epsilon_{\mathrm{m}}}\, .
+\end{align*}
+
+计算该值的函数声明为{\ttfamily constexpr}，
+这样任何带有编译时常量的调用都会被替换为相应的浮点返回值。
 \begin{lstlisting}
 `\refcode{Global Inline Functions}{+=}\lastnext{GlobalInlineFunctions}`
 inline constexpr `\refvar{Float}{}` `\initvar{gamma}{}`(int n) {
@@ -454,7 +508,70 @@ inline constexpr `\refvar{Float}{}` `\initvar{gamma}{}`(int n) {
 }
 \end{lstlisting}
 
+使用$\gamma$符号，四个值之和的误差被界定为
+\begin{align*}
+    |a+b|\gamma_3+|c|\gamma_2+|d|\gamma_1\, .
+\end{align*}
+
+该方法的一个优点是$(1\pm\epsilon_{\mathrm{m}})^n$项的商也可以用$\gamma$函数定界。
+给定
+\begin{align*}
+    \frac{(1\pm\epsilon_{\mathrm{m}})^m}{(1\pm\epsilon_{\mathrm{m}})^n}\, ,
+\end{align*}
+该区间以$1\pm\gamma_{m+n}$为界
+\sidenote{译者注：我没有理解为何有这个结论，希望读者提供帮助。}。
+因此，$\gamma$可通过除法用于合并方程两边的$\epsilon_{\mathrm{m}}$项；
+在下面一些推导中这会很有用
+（注意因为$1\pm\epsilon_{\mathrm{m}}$项表示区间，消去它们是错的：
+\begin{align*}
+    \frac{(1\pm\epsilon_{\mathrm{m}})^m}{(1\pm\epsilon_{\mathrm{m}})^n}\neq(1\pm\epsilon_{\mathrm{m}})^{m-n}\, ;
+\end{align*}
+必须换为边界$\gamma_{m+n}$）。
+
+给定一些本身带有一定量误差的计算输入，
+观察该误差如何被带到各种基本算术运算中是有益的。
+给定都带有之前运算累积误差的
+两个值$a(1\pm\gamma_i)$和$b(1\pm\gamma_j)$，考虑它们的积。
+利用$\otimes$的定义，结果在区间
+\begin{align*}
+    a(1\pm\gamma_i)\otimes b(1\pm\gamma_j)\in ab(1\pm\gamma_{i+j+1})
+\end{align*}
+中，其中我们用了直接从\refeq{3.11}推得的关系$(1\pm\gamma_i)(1\pm\gamma_j)\in(1\pm\gamma_{i+j})$。
+
+该结果的相对误差界定为：
+\begin{align*}
+    \left|\frac{ab\gamma_{i+j+1}}{ab}\right|=\gamma_{i+j+1}\, ,
+\end{align*}
+因此最终误差大约为乘积值处ulp的$\displaystyle\frac{1}{2}(i+j+1)$——和我们希望的乘法误差一样好
+（除法的情况也一样好）。
+
+不幸的是，加减法中相对误差可能大幅增加。
+使用相同运算值定义，考虑
+\begin{align*}
+    a(1\pm\gamma_i)\oplus b(1\pm\gamma_j)\, ,
+\end{align*}
+它在区间$a(1\pm\gamma_{i+1})+b(1\pm\gamma_{j+1})$内，
+所以绝对误差定界为$|a|\gamma_{i+1}+|b|\gamma_{j+1}$。
+
+如果$a$和$b$同号，则绝对误差定界为$|a+b|\gamma_{i+j+1}$且
+相对误差约为算得值附近ulp的$\displaystyle\frac{1}{2}(i+j+1)$。
+
+然而，如果$a$和$b$异号（或者等价地，它们同号但做减法），
+则相对误差可能很高。考虑$a\approx-b$的情况：相对误差为
+\begin{align*}
+    \frac{|a|\gamma_{i+1}+|b|\gamma_{j+1}}{a+b}\approx\frac{2|a|\gamma_{i+j+1}}{a+b}\, .
+\end{align*}
+分子的大小与原始值$|a|$成正比但除以一个非常小的数，因此相对误差很高。
+这种相对误差的大幅增加称为\keyindex{灾难性抵消}{catastrophic cancellation}{}。
+等价地，我们从绝对误差取决于$|a|$值大小的事实中感受到了问题所在，
+尽管现在问题在于一个远小于$a$的值。
+
 \subsubsection*{运行误差分析}
+除了用代数算出误差边界外，我们还可以让计算机在执行计算时为我们完成这项工作。
+该方法称为\keyindex{运行误差分析}{running error analysis}{}。
+其后的思想很简单：每次执行浮点运算时，我们也基于\refeq{3.7}计算给出区间的项
+以算出目前已积累误差的运行边界。
+
 \begin{lstlisting}
 `\initcode{EFloat Public Methods}{=}\initnext{EFloatPublicMethods}`
 `\initvar{EFloat}{}`() { }

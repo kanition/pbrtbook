@@ -4,14 +4,15 @@
 ![Landscape view-3 @pbrt-v3-scenes/landscape](Pictures/view-3.png)
 
 ## 作者信息
-- 原著 Matt Pharr, Wenzel Jakob & Greg Humphreys
-- 翻译 Kanition
+- 原著 [Matt Pharr](https://pharr.org/matt), [Wenzel Jakob](https://rgl.epfl.ch/people/wjakob) & Greg Humphreys
+- 翻译 [Kanition](https://github.com/kanition)
 
 ## 下载地址：[https://github.com/kanition/pbrtbook/releases](https://github.com/kanition/pbrtbook/releases)
 ## 友情链接
 ### 第三版
 * 原书官网：[https://www.pbr-book.org/](https://www.pbr-book.org/)
 * 原书源码：[https://github.com/mmp/pbrt-v3](https://github.com/mmp/pbrt-v3)
+* 原书代码：[https://github.com/mmp/pbr-book-website](https://github.com/mmp/pbr-book-website)
 ### 第四版
 * 原书源码：[https://github.com/mmp/pbrt-v4](https://github.com/mmp/pbrt-v4)
 ### 中译版讨论区
@@ -28,7 +29,7 @@
 [https://github.com/kanition/pbrtbook/blob/main/CONTRIBUTING.md](https://github.com/kanition/pbrtbook/blob/main/CONTRIBUTING.md)
 
 ## 简介
-本中译版（以下简称“本书”）系译者（笔名Kanition）自学英文经典书籍《Physically Based Rendering: From Theory To Implementation》第三版时自行翻译而成。使用本书及其源码须遵循相关许可证协议。
+本中译版（以下简称“本书”）系译者（笔名[Kanition](https://github.com/kanition)）自学英文经典书籍《Physically Based Rendering: From Theory To Implementation》第三版时自行翻译而成。使用本书及其源码须遵循相关许可证协议。
 
 本书在翻译时并不完全遵照原书编排，而是根据我自己的学习情况作出了调整，包括但不限于调整顺序、增删内容、修改内容。例如扩展阅读和高阶内容部分往往超出了我的能力范围，这些内容可能会被省略；再如有一些公式可能存在笔误，我会改写并注明。
 

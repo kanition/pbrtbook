@@ -741,7 +741,7 @@ tFar *= 1 + 2 * `\refvar{gamma}{}`(3);
 方法\refvar[Bounds3::IntersectP2]{Bounds3::IntersectP}{()}的代码片
 \refcode{Update tMax and tyMax to ensure robust bounds intersection}{}和
 \refcode{Update tzMax to ensure robust bounds intersection}{}也类似，
-此处不再详细介绍。
+此处不再介绍\sidenote{译者注：我加回来了。}。
 \begin{lstlisting}
 `\initcode{Update tMax and tyMax to ensure robust bounds intersection}{=}`
 tMax *= 1 + 2 * `\refvar{gamma}{}`(3);
@@ -757,4 +757,34 @@ tzMax *= 1 + 2 * `\refvar{gamma}{}`(3);
 避免光线错误地穿过两个相邻三角形共享的边或点而不生成相交。
 有该保证的相交算法被形象地称为\keyindex{水密的}{watertight}{}。
 
+回想算法基于把三角形顶点变换到射线端点为原点且射线方向沿$+z$轴对齐的坐标系中。
+尽管将顶点位置变换到该坐标系统中可能会引入舍入误差，
+但该误差不影响相交测试的水密性，
+因为所有的三角形都被施加了同样的变换
+（而且该误差非常小，对算得的交点精度没有明显影响）。
+
+给定该坐标系统的顶点，计算\refeq{3.1}中定义的三个边函数在点$(0,0)$处的值；
+对应的表达式即\refeq{3.2}非常简单。
+算法稳定性的关键是，通过浮点算术，保证边函数值有正确的符号。
+一般地，我们有
+\begin{align}\label{eq:3.12}
+    (a\otimes b)\ominus(c\otimes d)\, .
+\end{align}
+
+首先，注意如果$ab=cd$，则\refeq{3.12}的值恰好为零，即使是浮点数也如此。
+因此我们只需要证明如果$ab>cd$，则$(a\otimes b)\ominus(c\otimes d)$永不为负。
+如果$ab>cd$，则$(a\otimes b)$一定大于或等于$(c\otimes d)$。
+反过来，它们的差一定大于或等于零
+（这些性质都从浮点算术运算都舍入到最接近的可表示浮点值的事实推出）。
+
+如果边函数的值是零，则无法分辨它是恰好为零还是零附近很小的正值或负值。
+这种情况下，代码片\refcode{Fall back to double-precision test at triangle edges}{}重新
+用双浮点精度计算边函数值；
+给定32位浮点输入，可以证明精度加倍足以准确区分这些情况。
+
+该额外预防措施的开销很小：在8800万次光线相交测试基准中，
+只有低于0.0000023\%的情况使用了双精度回退。
+
 \subsection{定界交点误差}\label{sub:定界交点误差}
+我们现在应用该机制分析舍入误差推导算得光线-形状交点绝对误差的保守边界，
+这允许我们构造保证包含实际曲面上的交点的边界框（）。

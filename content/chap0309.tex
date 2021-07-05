@@ -1014,4 +1014,68 @@ pbrt中该方法用于圆锥体、抛物面和双曲面。
 为了定界算得交点中的误差而要注意的最后一点细节是变换的效应，
 当它们施加到算得的交点上时会引入额外舍入误差。
 
+pbrt中的二次曲面\refvar{Shape}{}在执行光线-物体相交前
+将世界空间射线变换到物体空间，之后再将算得的交点变换回世界空间。
+为了保证交点周围有稳定的世界空间边界，需要考虑这两步变换引入的舍入误差。
+
+如果可能的话，最好是尽力避免光线和交点的坐标系变换。
+例如，将三角形顶点变换到世界空间并与世界空间光线相交比
+将光线变换到物体空间再将交点变换到世界空间更好
+\footnote{尽管（例如）把三角形顶点变换到世界空间时引入了舍入误差，
+    但该误差不会增加计算交点时需要处理的误差。
+    换句话说，变换后的顶点可能代表一个扰动过的场景表示，
+    但它们是给定变换下最精确的表示了。}。
+变换仍然是有用的——例如对于二次曲面和对象实例化，
+所以我们将展示怎样定界它们引入的误差。
+
+我们将从考虑变换准确点$(x,y,z)$引入的误差开始——即该点没有任何累积误差。
+给定元素记为$m_{i,j}$的$4\times4$非投影变换矩阵，变换后的坐标$x'$为
+\begin{align*}
+    x' & =((m_{0,0}\otimes x)\oplus(m_{0,1}\otimes y))\oplus((m_{0,2}\otimes z)\oplus m_{0,3})                                                                      \\
+       & \in m_{0,0}x(1\pm\epsilon_{\mathrm{m}})^3+m_{0,1}y(1\pm\epsilon_{\mathrm{m}})^3+m_{0,2}z(1\pm\epsilon_{\mathrm{m}})^3+m_{0,3}(1\pm\epsilon_{\mathrm{m}})^2 \\
+       & \subset (m_{0,0}x+m_{0,1}y+m_{0,2}z+m_{0,3})+\gamma_3(\pm m_{0,0}x\pm m_{0,1}y\pm m_{0,2}z\pm m_{0,3})                                                     \\
+       & \subset (m_{0,0}x+m_{0,1}y+m_{0,2}z+m_{0,3})\pm\gamma_3(|m_{0,0}x|+|m_{0,1}y|+|m_{0,2}z|+|m_{0,3}|)\, .
+\end{align*}
+因此，结果中的绝对误差定界为
+\begin{align}\label{eq:3.16}
+    \gamma_3(|m_{0,0}x|+|m_{0,1}y|+|m_{0,2}z|+|m_{0,3}|)\, .
+\end{align}
+对于变换后的$y'$和$z'$坐标也有同样的边界。
+
+我们将用该结果向类\refvar{Transform}{}增加一种
+也根据施加的变换在变换后的点中返回绝对误差的方法。
+\begin{lstlisting}
+`\refcode{Transform Inline Functions}{+=}\lastcode{TransformInlineFunctions}`
+template <typename T> inline `\refvar{Point3}{}`<T>
+`\refvar{Transform}{}`::operator()(const `\refvar{Point3}{}`<T> &p, `\refvar{Vector3}{}`<T> *pError) const {
+    T x = p.x, y = p.y, z = p.z;
+    `\refcode{Compute transformed coordinates from point pt}{}`
+    `\refcode{Compute absolute error for transformed point}{}`
+    if (wp == 1) return `\refvar{Point3}{}`<T>(xp, yp, zp);
+    else         return `\refvar{Point3}{}`<T>(xp, yp, zp) / wp;
+}
+\end{lstlisting}
+
+代码片\refcode{Compute transformed coordinates from point pt}{}像\refsec{施加变换}那样
+实现同样的矩阵/点乘法。
+\begin{lstlisting}
+`\initcode{Compute transformed coordinates from point pt}{=}`
+T xp = `\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[0][0] * x + `\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[0][1] * y + `\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[0][2] * z + `\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[0][3];
+T yp = `\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[1][0] * x + `\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[1][1] * y + `\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[1][2] * z + `\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[1][3];
+T zp = `\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[2][0] * x + `\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[2][1] * y + `\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[2][2] * z + `\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[2][3];
+T wp = `\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[3][0] * x + `\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[3][1] * y + `\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[3][2] * z + `\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[3][3];
+\end{lstlisting}
+
+注意如果矩阵是投影的且投影后点的齐次$w$坐标不是一，则计算误差边界的代码是错的；
+目前该小bug对于pbrt对该方法的使用不是问题。
+\begin{lstlisting}
+`\initcode{Compute absolute error for transformed point}{=}`
+T xAbsSum = (std::abs(`\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[0][0] * x) + std::abs(`\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[0][1] * y) +
+             std::abs(`\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[0][2] * z) + std::abs(`\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[0][3]));
+T yAbsSum = (std::abs(`\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[1][0] * x) + std::abs(`\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[1][1] * y) +
+             std::abs(`\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[1][2] * z) + std::abs(`\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[1][3]));
+T zAbsSum = (std::abs(`\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[2][0] * x) + std::abs(`\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[2][1] * y) +
+             std::abs(`\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[2][2] * z) + std::abs(`\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[2][3]));
+*pError = `\refvar{gamma}{}`(3) * `\refvar{Vector3}{}`<T>(xAbsSum, yAbsSum, zAbsSum);
+\end{lstlisting}
 \subsection{稳定触发的射线端点}\label{sub:稳定触发的射线端点}

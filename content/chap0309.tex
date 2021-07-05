@@ -786,5 +786,33 @@ tzMax *= 1 + 2 * `\refvar{gamma}{}`(3);
 只有低于0.0000023\%的情况使用了双精度回退。
 
 \subsection{定界交点误差}\label{sub:定界交点误差}
-我们现在应用该机制分析舍入误差推导算得光线-形状交点绝对误差的保守边界，
-这允许我们构造保证包含实际曲面上的交点的边界框（）。
+我们现在应用该机制分析舍入误差来推导算得光线-形状交点绝对误差的保守边界，
+这允许我们构造保证包含实际曲面上的交点的边界框（\reffig{3.43}）。
+这些边界框为生成将于\refsub{稳定触发的射线端点}介绍的触发的射线端点提供了算法基础。
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap03/Intersectionanderrorbox.tex}
+    \caption{pbrt中的形状相交算法计算交点，这里用2D设置下的实心圆表示。
+        该点的绝对误差定界为$\delta_x$和$\delta_y$，给出了绕该点的小框。
+        因为这些边界是保守的，我们知道曲面上的实际交点（空心圆）一定位于框中的某处。}
+    \label{fig:3.43}
+\end{figure}
+
+从计算交点的传统方法中的误差源开始梳理很有用。
+光线追踪中计算3D交点的常见做法是首先求解参数射线方程$\bm o+t\bm d$中
+射线与曲面相交的$t_{\text{hit}}$值，
+再用$\bm p=\bm o+t_{\text{hit}}\bm d$计算命中点$\bm p$。
+如果$t_{\text{hit}}$携带一些误差$\delta_t$，
+则我们可以在算得的交点中定界该误差。
+例如考虑$x$坐标，我们有
+\begin{align*}
+    x & =o_x\oplus(t_{\text{hit}}\pm\delta_t)\otimes d_x                                                              \\
+      & \in o_x\oplus(t_{\text{hit}}\pm\delta_t)d_x(1\pm\gamma_1)                                                     \\
+      & \subset o_x(1\pm\gamma_1)+(t_{\text{hit}}\pm\delta_t)d_x(1\pm\gamma_2)                                        \\
+      & =o_x+t_{\text{hit}}d_x+[\pm o_x\gamma_1\pm\delta_td_x\pm t_{\text{hit}}d_x\gamma_2\pm\delta_td_x\gamma_2]\, .
+\end{align*}
+（方括号中的）误差项定界为
+\begin{align}\label{eq:3.13}
+    \gamma_1|o_x|+\delta_t(1+\gamma_2)|d_x|+\gamma_2|t_{\text{hit}}d_x|\, .
+\end{align}
+
+\subsection{稳定触发的射线端点}\label{sub:稳定触发的射线端点}

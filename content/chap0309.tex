@@ -854,4 +854,81 @@ tzMax *= 1 + 2 * `\refvar{gamma}{}`(3);
 （而且可能离最准确的交点很远）的点，
 算得非常接近实际曲面的交点对我们更有利，哪怕它偏移了可能最准确的交点。
 
+比起做可能不仅计算开销大而且在算得$t$值中仍有误差的完整再相交计算，
+一个高效方法是通过将算得交点重投影到曲面上来改善它们。
+这些重投影点的误差边界通常极其小。
+
+要注意的是这些重投影误差边界不会涵盖原始交点$\bm p$中的切向误差——
+这里主要关注检测可能让重投影点$\bm p'$掉到曲面之下的误差。
+
+考虑光线-球体相交：给定算得的交点（例如来自射线方程）$\bm p$以及
+位于原点处半径为$r$的球体，我们可以通过用球体半径与算得的该点到原点距离的比例
+缩放该点来将其重投影到球面上，并用下式计算新点$\bm p'=(x',y',z')$
+\begin{align*}
+    x'=x\frac{r}{\sqrt{x^2+y^2+z^2}}\, ,
+\end{align*}
+等等。浮点计算\sidenote{译者注：建议读者动手推导一下。}为
+\begin{align*}
+    x' & =x\otimes r\oslash \text{sqrt}((x\otimes x)\oplus(y\otimes y)\oplus(z\otimes z))                                                                                                \\
+       & \in\frac{xr(1\pm\epsilon_{\mathrm{m}})^2}{\sqrt{x^2(1\pm\epsilon_{\mathrm{m}})^3+y^2(1\pm\epsilon_{\mathrm{m}})^3+z^2(1\pm\epsilon_{\mathrm{m}})^2}(1\pm\epsilon_{\mathrm{m}})} \\
+       & \subset\frac{xr(1\pm\gamma_2)}{\sqrt{x^2(1\pm\gamma_3)+y^2(1\pm\gamma_3)+z^2(1\pm\gamma_2)}(1\pm\gamma_1)}\, .
+\end{align*}
+因为$x^2$、$y^2$和$z^2$都是正数，平方根中的项可以共享同样的$\gamma$项，所以我们有
+\begin{align}\label{eq:3.14}
+    x' & \in\frac{xr(1\pm\gamma_2)}{\sqrt{(x^2+y^2+z^2)(1\pm\gamma_4)}(1\pm\gamma_1)}\nonumber  \\
+       & =\frac{xr(1\pm\gamma_2)}{\sqrt{x^2+y^2+z^2}\sqrt{1\pm\gamma_4}(1\pm\gamma_1)}\nonumber \\
+       & \subset \frac{xr}{\sqrt{x^2+y^2+z^2}}(1\pm\gamma_5)\nonumber                           \\
+       & =x'(1\pm\gamma_5)\, .
+\end{align}
+
+因此，球面上的点的重投影$x$坐标的绝对误差
+定界为$\gamma_5|x'|$（且$y'$和$z'$同理）且因此每个维度不超过2.5个ulp。
+
+这里是为形状\refvar{Sphere}{}重投影交点的代码片。
+\begin{lstlisting}
+`\initcode{Refine sphere intersection point}{=}`
+pHit *= `\refvar[Sphere::radius]{radius}{}` / `\refvar{Distance}{}`(pHit, `\refvar{Point3f}{}`(0, 0, 0));
+\end{lstlisting}
+
+误差边界遵循\refeq{3.14}。
+\begin{lstlisting}
+`\initcode{Compute error bounds for sphere intersection}{=}`
+`\refvar{Vector3f}{}` pError = `\refvar{gamma}{}`(5) * `\refvar[Vector3::Abs]{Abs}{}`((`\refvar{Vector3f}{}`)pHit);
+\end{lstlisting}
+
+其他二次曲面的重投影算法和误差边界也可以类似地定义：例如，对于对齐$z$轴的圆柱体，
+只有$x$和$y$坐标需要重投影，$x$和$y$中的误差边界变为仅有其大小的$\gamma_3$倍。
+\begin{lstlisting}
+`\initcode{Refine cylinder intersection point}{=}`
+`\refvar{Float}{}` hitRad = std::sqrt(pHit.x * pHit.x + pHit.y * pHit.y);
+pHit.x *= `\refvar[Cylinder::radius]{radius}{}` / hitRad;
+pHit.y *= `\refvar[Cylinder::radius]{radius}{}` / hitRad;
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{Compute error bounds for cylinder intersection}{=}`
+`\refvar{Vector3f}{}` pError = `\refvar{gamma}{}`(3) * `\refvar[Vector3::Abs]{Abs}{}`(`\refvar{Vector3f}{}`(pHit.x, pHit.y, 0));
+\end{lstlisting}
+
+圆盘形状特别简单；我们只需设置点的$z$坐标位于圆盘平面上。
+\begin{lstlisting}
+`\initcode{Refine disk intersection point}{=}`
+pHit.z = `\refvar[Disk::height]{height}{}`;
+\end{lstlisting}
+
+反过来，我们有零误差的点；它恰好位于圆盘表面上。
+\begin{lstlisting}
+`\initcode{Compute error bounds for disk intersection}{=}`
+`\refvar{Vector3f}{}` pError(0, 0, 0);
+\end{lstlisting}
+
+\subsubsection*{参数求值：三角形}
+另一个高效计算精确交点的方法是用形状的参数表示计算准确交点。
+例如，\refsub{三角形相交}的三角形相交算法计算三个边函数值$e_0$、$e_1$和$e_2$并且
+如果全部三个都有相同的符号则报告相交。
+它们的值可用于寻找重心坐标
+\begin{align}
+    b_i=\frac{e_i}{e_0+e_1+e_2}\, .
+\end{align}
+
+
 \subsection{稳定触发的射线端点}\label{sub:稳定触发的射线端点}

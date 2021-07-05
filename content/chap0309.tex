@@ -930,5 +930,88 @@ pHit.z = `\refvar[Disk::height]{height}{}`;
     b_i=\frac{e_i}{e_0+e_1+e_2}\, .
 \end{align}
 
+三角形顶点处的属性$v_i$（包括顶点位置）可以在三角形平面上用下式插值
+\begin{align*}
+    v'=b_0v_0+b_1v_1+b_2v_2\, .
+\end{align*}
+
+我们现在可以证明用这种方式插值顶点位置给出的点非常接近三角形面。
+首先考虑预先计算的$e_i$之和的倒数：
+\begin{align*}
+    d & =1\oslash(e_0\oplus e_1\oplus e_2)                                                                                \\
+      & \in\frac{1}{(e_0+e_1)(1\pm\epsilon_{\mathrm{m}})^2+e_2(1\pm\epsilon_{\mathrm{m}})}(1\pm\epsilon_{\mathrm{m}})\, .
+\end{align*}
+因为如果相交则所有$e_i$同号，所有我们可以合并$e_i$项并保守地定界$d$：
+\begin{align*}
+    d & \in\frac{1}{(e_0+e_1+e_2)(1\pm\epsilon_{\mathrm{m}})^2}(1\pm\epsilon_{\mathrm{m}}) \\
+      & \subset \frac{1}{e_0+e_1+e_2}(1\pm\gamma_3)\, .
+\end{align*}
+如果我们现在考虑在三角形中插值对应于边函数值的位置的$x$坐标，我们有
+\begin{align*}
+    x' & =((e_0\otimes x_0)\oplus(e_1\otimes x_1)\oplus(e_2\otimes x_2))\otimes d                                                                     \\
+       & \in(e_0x_0(1\pm\epsilon_{\mathrm{m}})^3+e_1x_1(1\pm\epsilon_{\mathrm{m}})^3+e_2x_2(1\pm\epsilon_{\mathrm{m}})^2)d(1\pm\epsilon_{\mathrm{m}}) \\
+       & \subset (e_0x_0(1\pm\gamma_4)+e_1x_1(1\pm\gamma_4)+e_2x_2(1\pm\gamma_3))d\, .
+\end{align*}
+使用$d$上的边界\sidenote{译者注：原书写的$x\in\ldots$可能是笔误，已修正。}，
+\begin{align*}
+    x' & \in\frac{e_0x_0(1\pm\gamma_7)+e_1x_1(1\pm\gamma_7)+e_2x_2(1\pm\gamma_6)}{e_0+e_1+e_2} \\
+       & =b_0x_0(1\pm\gamma_7)+b_1x_1(1\pm\gamma_7)+b_2x_2(1\pm\gamma_6)\, .
+\end{align*}
+因此，我们最终可以看到算得的$x'$值中的绝对误差在区间
+\begin{align*}
+    \pm b_0x_0\gamma_7\pm b_1x_1\gamma_7\pm b_2x_2\gamma_7\,
+\end{align*}
+内，它定界为
+\begin{align}\label{eq:3.15}
+    \gamma_7(|b_0x_0|+|b_1x_1|+|b_2x_2|)\, .
+\end{align}
+（注意$b_2x_2$项本应有因子$\gamma_6$而不是$\gamma_7$，
+但两者的差别非常小，所以我们选择稍稍简化最终表达式。）
+对$y'$和$z'$也有同样的等价边界。
+
+\refeq{3.15}让我们定界\refvar{Triangle::Intersect}{()}中计算的插值点的误差。
+\begin{lstlisting}
+`\initcode{Compute error bounds for triangle intersection}{=}`
+`\refvar{Float}{}` xAbsSum = (std::abs(b0 * p0.x) + std::abs(b1 * p1.x) +
+                 std::abs(b2 * p2.x));
+`\refvar{Float}{}` yAbsSum = (std::abs(b0 * p0.y) + std::abs(b1 * p1.y) +
+                 std::abs(b2 * p2.y));
+`\refvar{Float}{}` zAbsSum = (std::abs(b0 * p0.z) + std::abs(b1 * p1.z) +
+                 std::abs(b2 * p2.z));
+`\refvar{Vector3f}{}` pError = `\refvar{gamma}{}`(7) * `\refvar{Vector3f}{}`(xAbsSum, yAbsSum, zAbsSum);
+\end{lstlisting}
+
+\subsubsection*{其他形状}
+对于我们可能不想推导重投影方法和严格误差边界的形状，
+运行误差分析会非常有用：我们用\refvar{EFloat}{}代替\refvar{Float}{}实现所有相交计算，
+计算$t_{\text{hit}}$值，并用参数射线方程计算命中点。
+然后我们可以通过方法\refvar{GetAbsoluteError}{()}求得
+算得的交点中误差的保守边界。
+\begin{lstlisting}
+`\initcode{Compute error bounds for intersection computed with ray equation}{}`
+`\refvar{EFloat}{}` px = ox + tShapeHit * dx;
+`\refvar{EFloat}{}` py = oy + tShapeHit * dy;
+`\refvar{EFloat}{}` pz = oz + tShapeHit * dz;
+`\refvar{Vector3f}{}` pError = `\refvar{Vector3f}{}`(px.`\refvar{GetAbsoluteError}{}`(), py.`\refvar{GetAbsoluteError}{}`(),
+                           pz.`\refvar{GetAbsoluteError}{}`());
+\end{lstlisting}
+
+pbrt中该方法用于圆锥体、抛物面和双曲面。
+\begin{lstlisting}
+`\initcode{Compute error bounds for cone intersection}{=}`
+`\refcode{Compute error bounds for intersection computed with ray equation}{}`
+\end{lstlisting}
+
+因为形状\refvar{Curve}{}让自己面向入射光线，
+离开它的光线为了在曲线再次朝向它们时不会错误地再相交，
+一定偏移了曲线宽度的两倍。
+\begin{lstlisting}
+`\initcode{Compute error bounds for curve intersection}{=}`
+`\refvar{Vector3f}{}` pError(2 * hitWidth, 2 * hitWidth, 2 * hitWidth);
+\end{lstlisting}
+
+\subsubsection*{变换的效应}
+为了定界算得交点中的误差而要注意的最后一点细节是变换的效应，
+当它们施加到算得的交点上时会引入额外舍入误差。
 
 \subsection{稳定触发的射线端点}\label{sub:稳定触发的射线端点}

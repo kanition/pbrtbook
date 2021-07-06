@@ -926,9 +926,9 @@ pHit.z = `\refvar[Disk::height]{height}{}`;
 例如，\refsub{三角形相交}的三角形相交算法计算三个边函数值$e_0$、$e_1$和$e_2$并且
 如果全部三个都有相同的符号则报告相交。
 它们的值可用于寻找重心坐标
-\begin{align}
+\begin{align*}
     b_i=\frac{e_i}{e_0+e_1+e_2}\, .
-\end{align}
+\end{align*}
 
 三角形顶点处的属性$v_i$（包括顶点位置）可以在三角形平面上用下式插值
 \begin{align*}
@@ -1078,4 +1078,48 @@ T zAbsSum = (std::abs(`\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[
              std::abs(`\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[2][2] * z) + std::abs(`\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[2][3]));
 *pError = `\refvar{gamma}{}`(3) * `\refvar{Vector3}{}`<T>(xAbsSum, yAbsSum, zAbsSum);
 \end{lstlisting}
+
+\refeq{3.16}的结果假设被变换的点是准确的。
+如果该点自己有误差边界$\delta_x$、$\delta_y$和$\delta_z$，
+则变换后的$x$坐标为
+\begin{align*}
+    x'=(m_{0,0}\otimes (x\pm\delta_x)\oplus m_{0,1}\otimes (y\pm\delta_y))\oplus(m_{0,2}\otimes (z\pm\delta_z)\oplus m_{0,3})\, .
+\end{align*}
+运用浮点加法和乘法误差边界的定义，我们有：
+\begin{align*}
+    x' & =m_{0,0}(x\pm\delta_x)(1\pm\epsilon_{\mathrm{m}})^3+m_{0,1}(y\pm\delta_y)(1\pm\epsilon_{\mathrm{m}})^3+m_{0,2}(z\pm\delta_z)(1\pm\epsilon_{\mathrm{m}})^3+m_{0,3}(1\pm\epsilon_{\mathrm{m}})^2\, .
+\end{align*}
+用$\gamma$转换，我们可以求得绝对误差项定界为
+\begin{align}\label{eq:3.17}
+    (\gamma_3+1)(|m_{0,0}|\delta_x+|m_{0,1}|\delta_y+|m_{0,2}|\delta_z)+\gamma_3(|m_{0,0}x|+|m_{0,1}y|+|m_{0,2}z|+|m_{0,3}|)\, .
+\end{align}
+
+类\refvar{Transform}{}也提供了{\ttfamily operator()}接收一点
+及其自己的绝对误差并用\refeq{3.17}在结果中返回绝对误差。
+其定义很简单，所以本文这里不再介绍。
+\begin{lstlisting}
+`\refcode{Transform Public Methods}{+=}\lastnext{TransformPublicMethods}`
+template <typename T> inline `\refvar{Point3}{}`<T>
+operator()(const `\refvar{Point3}{}`<T> &p, const `\refvar{Vector3}{}`<T> &pError,
+           `\refvar{Vector3}{}`<T> *pTransError) const;
+\end{lstlisting}
+
+类\refvar{Transform}{}也提供了变换向量和射线的方法，返回结果误差。
+向量误差边界的推导（以及实现）和点非常类似，所以这里不再介绍。
+\begin{lstlisting}
+`\refcode{Transform Public Methods}{+=}\lastcode{TransformPublicMethods}`
+template <typename T> inline `\refvar{Vector3}{}`<T>
+operator()(const `\refvar{Vector3}{}`<T> &v, `\refvar{Vector3}{}`<T> *vTransError) const;
+template <typename T> inline `\refvar{Vector3}{}`<T>
+operator()(const `\refvar{Vector3}{}`<T> &v, const `\refvar{Vector3}{}`<T> &vError,
+           `\refvar{Vector3}{}`<T> *vTransError) const;
+\end{lstlisting}
+
+该方法用于\refvar{SurfaceInteraction}{}在方法\refvar{Transform}{::operator()}中变换交点及其误差边界。
+\begin{lstlisting}
+`\initcode{Transform p and pError in SurfaceInteraction}{=}`
+ret.`\refvar[Interaction::p]{p}{}` = (*this)(si.`\refvar[Interaction::p]{p}{}`, si.`\refvar{pError}{}`, &ret.`\refvar{pError}{}`);
+\end{lstlisting}
+
 \subsection{稳定触发的射线端点}\label{sub:稳定触发的射线端点}
+算得的交点及其误差边界给了我们一个限定一片空间区域的小3D盒。

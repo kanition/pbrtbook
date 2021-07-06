@@ -1147,4 +1147,52 @@ ret.`\refvar[Interaction::p]{p}{}` = (*this)(si.`\refvar[Interaction::p]{p}{}`, 
 \end{align*}
 平面被隐式定义为$f(x,y,z)=0$，法线为$(n_x,n_y,n_z)$。
 
-对于不在平面上的点，平面方程的值$f(x,y,z)$
+对于不在平面上的点，平面方程的值$f(x,y,z)$给出了过该点的平面沿法线的偏移量。
+我们想对误差边界框的八个顶点求$f(x,y,z)$的最大值\sidenote{译者注：指最大绝对值。}；
+如果我们将平面偏移正负偏移量，我们就有两个不与误差框相交的
+且应该在曲面（局部）对侧的平面，至少是在算得的交点沿法线偏移的两侧（\reffig{3.45}）。
+
+若误差边界框八个顶点给定为$(\pm\delta_x,\pm\delta_y,\pm\delta_z)$，
+则易算出$f(x,y,z)$最大值：
+\begin{align*}
+    d=|n_x|\delta_x+|n_y|\delta_y+|n_z|\delta_z\, .
+\end{align*}
+
+通过沿曲面法线偏移的这种方式计算触发射线的端点有几个优点：
+假设曲面是局部平坦的（这是合理假设，尤其是在交点误差边界非常小的尺度上时），
+沿法线移动允许我们在移动最短距离时能从曲面的一侧到另一侧。
+通常，最小化射线端点偏移距离对于保持阴影和反射细节是可取的。
+\begin{lstlisting}
+`\refcode{Geometry Inline Functions}{+=}\lastnext{GeometryInlineFunctions}`
+inline `\refvar{Point3f}{}` `\initvar{OffsetRayOrigin}{}`(const `\refvar{Point3f}{}` &p, const `\refvar{Vector3f}{}` &pError,
+                               const `\refvar{Normal3f}{}` &n, const `\refvar{Vector3f}{}` &w) {
+    `\refvar{Float}{}` d = `\refvar{Dot}{}`(`\refvar[Vector3::Abs]{Abs}{}`(n), pError);
+    `\refvar{Vector3f}{}` offset = d * `\refvar{Vector3f}{}`(n);
+    if (`\refvar{Dot}{}`(w, n) < 0)
+        offset = -offset;
+    `\refvar{Point3f}{}` po = p + offset;
+    `\refcode{Round offset point po away from p}{}`
+    return po;
+}
+\end{lstlisting}
+
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap03/Offsetandroundup.tex}
+    \caption{\protect\refvar{OffsetRayOrigin}{()}中算得的
+    偏移点{\ttfamily p+offset}的舍入值结果可能是在误差框的内部而不是边界上，
+    如果舍入点在曲面的错误一侧，则这反过来引入了错误自相交的风险。
+    推进算得点的每个坐标远离{\ttfamily p}一个浮点值保证了它在误差框之外。}
+    \label{fig:3.46}
+\end{figure}
+
+当计算偏移点时我们还必须处理舍入误差：
+当{\ttfamily offset}加到{\ttfamily p}上时，
+结果一般需要舍入到最近的浮点值。
+反过来，它可能朝{\ttfamily p}向下舍入使得
+结果点在误差框的内部而不是在边界上（\reffig{3.46}）。
+因此，这里将偏移点舍入远离{\ttfamily p}以保证它不在框内
+\footnote{细心的读者现在可能担心当计算传入该函数的误差边界时舍入误差会有何影响。
+    确实，这些边界的计算也该朝着正无穷舍入。
+    但我们忽略了这个问题，因为这里额外的一个ulp偏移量足够补偿该误差了。}。
+
+或者，

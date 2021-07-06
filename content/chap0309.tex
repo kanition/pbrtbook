@@ -5,7 +5,7 @@
 \end{remark}
 
 到目前为止，我们都是根据基于实数的理想化算术运算
-纯粹地讨论光线——形状相交算法。该方法已经让我们走得很远了，
+纯粹地讨论光线-形状相交算法。该方法已经让我们走得很远了，
 尽管有个重要事实是计算机只能表示有限的数量，
 因此它实际上不能表示所有实数。
 计算机用浮点数代替实数，它有固定的存储要求。
@@ -15,7 +15,7 @@
 该误差的累积对相交测试的精度有些许影响。
 首先，它可能造成完全错过有效的相交——
 例如，一个精确值是正数的相交处$t$值算成了负的。
-而且，算得的光线——形状交点可能在形状实际曲面的上面或下面。
+而且，算得的光线-形状交点可能在形状实际曲面的上面或下面。
 这导致一个问题：当从算得的交点开始为阴影射线和反射光线追踪新光线时，
 若射线端点在实际曲面之下，我们可能求得一次与曲面错误的再相交。
 反之，若端点在曲面上面离得太远，阴影和反射可能会脱钩（见\reffig{3.39}）。
@@ -48,7 +48,7 @@
 \end{figure}
 
 本节中，我们将介绍浮点算术基本思想并描述分析浮点计算误差的技术。
-然后我们将这些方法用于本章之前介绍的光线——形状算法
+然后我们将这些方法用于本章之前介绍的光线-形状算法
 并展示怎样计算带有有界误差的光线交点。
 这将允许我们保守地定位射线端点，这样就永远不会求得错误的自相交，
 而又保留了与实际交点极其接近的射线端点使得错误脱靶被最小化。
@@ -154,17 +154,18 @@ $e_{\mathrm{b}}=2$，所以$e=129=10000001_2$且$m=10100000000000000000000_2$。
     s\times0.0\ldots0_2\times2^{-127}=0\, .
 \end{align*}
 
-去掉有效数字前导一位也能表示\sidenote{译者注：我完善了这两个式子。}\keyindex{非规范化的}{denormalized}{}数：
-如果总是出现前导一，则最小的32位浮点是
+去掉有效数字前导一位也能表示\keyindex{非规范化的}{denormalized}{}数：
+如果总是出现前导一\sidenote{译者注：我完善了该式。}，则最小的32位浮点是
 \begin{align*}
     1.{\underbrace{0\ldots0}_{\text{23个0}}}\ _2\times2^{-127}\approx5.8774718\times10^{-39}\, .
 \end{align*}
-没有前导一位，最小值是
+没有前导一位\sidenote{译者注：我完善了该式；如果你难以理解为何指数变成了$2^{-126}$，
+也可以等价地看作$\underbrace{0.0\ldots0}_{22\text{个}0}1_2\times2^{-127}=2^{-22}\times2^{-127}$。}，最小值是
 \begin{align*}
     0.\underbrace{0\ldots0}_{\text{22个0}}1_2\times2^{-126}=2^{-23}\times2^{-126}\approx1.4012985\times10^{-45}\, .
 \end{align*}
 
-有了一些表示这些小值的能力可以避免需要将非常小的数舍入为零。
+有了表示这些小值的能力可以避免需要将非常小的数舍入为零。
 
 注意该表示同时有“正”和“负”零值。
 该细节对程序员大多是透明的。
@@ -691,9 +692,434 @@ inline bool `\initvar[Quadratic:2]{\refvar{Quadratic}{}}{}`(`\refvar{EFloat}{}` 
 
 有了浮点误差基本知识，我们现在专注用这些工具提供稳定的相交运算。
 
-\subsection{保守的光线——边界框相交}
-浮点舍入误差可能造成光线——边界框相交测试错失光线实际上与框相交了的情况。
+\subsection{保守的光线-边界框相交}
+浮点舍入误差可能造成光线-边界框相交测试错失光线实际上与框相交了的情况。
+尽管光线-边界框相交测试中偶尔有假正例是可以接受的，
+但我们希望永远不要错过实际的相交——处理好它对于\refsec{层次包围盒}中
+加速数据结构\refvar{BVHAccel}{}的正确性很重要，
+这样就不会错过有效的光线-形状相交。
+\refsub{光线-边界相交}介绍的光线-边界框测试
+基于计算一系列光线-厚板相交来寻找光线上
+对应光线进入边界框的参数$t_{\min}$和对应光线退出的$t_{\max}$。
+如果$t_{\min}<t_{\max}$，则光线穿过了框；否则就错开了。
+用浮点算术计算的$t$值可能有误差——如果算得的$t_{\min}$值
+纯粹是因舍入误差比$t_{\max}$大的，相交测试会错误地返回假结果。
+
+回想计算求解光线与在$x$点处垂直于$x$轴的平面
+相交的$t$值是$\displaystyle t=\frac{x-o_x}{d_x}$。
+表达为浮点计算并运用\refeq{3.7}，我们有
+\begin{align*}
+    t=(x\ominus o_x)\otimes(1\oslash d_x)\in\frac{x-o_x}{d_x}(1\pm\epsilon)^3\, ,
+\end{align*}
+所以
+\begin{align*}
+    t(1\pm\gamma_3)=\frac{x-o_x}{d_x}\, .
+\end{align*}
+算得的结果$t$与精确结果之间的差定界为$|\gamma_3|t$。
+
+如果我们考虑围绕算得$t$值的、定界了完全精确$t$值的区间，
+则我们关心的情况是区间什么时候重叠；
+如果没有重叠，则比较算得的值可以给出正确结果（\reffig{3.42}）。
+如果区间重叠，则无法知道$t$值的实际顺序。
+这种情况下，在比较之前对$t_{\max}$增加误差边界的两倍$2\gamma_3t_{\max}$，
+保证我们对该情况保守地返回真。
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap03/Rayerrortmintmax.tex}
+    \caption{如果算得的$t_{\min}$和$t_{\max}$的误差边界重叠，
+    比较$t_{\min}<t_{\max}$可能不能实际反映出光线是否命中边界框。
+    这种情况下保守地返回真比错过确有的相交更好。
+    用$t_{\max}$误差的两倍对其扩展保证比较是保守的。}
+    \label{fig:3.42}
+\end{figure}
+
+我们现在可以定义\refsub{光线-边界相交}中做出该调整的光线-边界框测试的代码片了。
+\begin{lstlisting}
+`\initcode{Update tFar to ensure robust ray–bounds intersection}{=}`
+tFar *= 1 + 2 * `\refvar{gamma}{}`(3);
+\end{lstlisting}
+
+方法\refvar[Bounds3::IntersectP2]{Bounds3::IntersectP}{()}的代码片
+\refcode{Update tMax and tyMax to ensure robust bounds intersection}{}和
+\refcode{Update tzMax to ensure robust bounds intersection}{}也类似，
+此处不再介绍\sidenote{译者注：我加回来了。}。
+\begin{lstlisting}
+`\initcode{Update tMax and tyMax to ensure robust bounds intersection}{=}`
+tMax *= 1 + 2 * `\refvar{gamma}{}`(3);
+tyMax *= 1 + 2 * `\refvar{gamma}{}`(3);
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{Update tzMax to ensure robust bounds intersection}{=}`
+tzMax *= 1 + 2 * `\refvar{gamma}{}`(3);
+\end{lstlisting}
 
 \subsection{稳定的三角形相交}\label{sub:稳定的三角形相交}
+\refsub{三角形相交}中精心设计了光线-三角形相交算法的细节以
+避免光线错误地穿过两个相邻三角形共享的边或点而不生成相交。
+有该保证的相交算法被形象地称为\keyindex{水密的}{watertight}{}。
+
+回想算法基于把三角形顶点变换到射线端点为原点且射线方向沿$+z$轴对齐的坐标系中。
+尽管将顶点位置变换到该坐标系统中可能会引入舍入误差，
+但该误差不影响相交测试的水密性，
+因为所有的三角形都被施加了同样的变换
+（而且该误差非常小，对算得的交点精度没有明显影响）。
+
+给定该坐标系统的顶点，计算\refeq{3.1}中定义的三个边函数在点$(0,0)$处的值；
+对应的表达式即\refeq{3.2}非常简单。
+算法稳定性的关键是，通过浮点算术，保证边函数值有正确的符号。
+一般地，我们有
+\begin{align}\label{eq:3.12}
+    (a\otimes b)\ominus(c\otimes d)\, .
+\end{align}
+
+首先，注意如果$ab=cd$，则\refeq{3.12}的值恰好为零，即使是浮点数也如此。
+因此我们只需要证明如果$ab>cd$，则$(a\otimes b)\ominus(c\otimes d)$永不为负。
+如果$ab>cd$，则$(a\otimes b)$一定大于或等于$(c\otimes d)$。
+反过来，它们的差一定大于或等于零
+（这些性质都从浮点算术运算都舍入到最接近的可表示浮点值的事实推出）。
+
+如果边函数的值是零，则无法分辨它是恰好为零还是零附近很小的正值或负值。
+这种情况下，代码片\refcode{Fall back to double-precision test at triangle edges}{}重新
+用双浮点精度计算边函数值；
+给定32位浮点输入，可以证明精度加倍足以准确区分这些情况。
+
+该额外预防措施的开销很小：在8800万次光线相交测试基准中，
+只有低于0.0000023\%的情况使用了双精度回退。
 
 \subsection{定界交点误差}\label{sub:定界交点误差}
+我们现在应用该机制分析舍入误差来推导算得光线-形状交点绝对误差的保守边界，
+这允许我们构造保证包含实际曲面上的交点的边界框（\reffig{3.43}）。
+这些边界框为生成将于\refsub{稳定触发的射线端点}介绍的触发的射线端点提供了算法基础。
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap03/Intersectionanderrorbox.tex}
+    \caption{pbrt中的形状相交算法计算交点，这里用2D设置下的实心圆表示。
+        该点的绝对误差定界为$\delta_x$和$\delta_y$，给出了绕该点的小框。
+        因为这些边界是保守的，我们知道曲面上的实际交点（空心圆）一定位于框中的某处。}
+    \label{fig:3.43}
+\end{figure}
+
+从计算交点的传统方法中的误差源开始梳理很有用。
+光线追踪中计算3D交点的常见做法是首先求解参数射线方程$\bm o+t\bm d$中
+射线与曲面相交的$t_{\text{hit}}$值，
+再用$\bm p=\bm o+t_{\text{hit}}\bm d$计算命中点$\bm p$。
+如果$t_{\text{hit}}$携带一些误差$\delta_t$，
+则我们可以在算得的交点中定界该误差。
+例如考虑$x$坐标，我们有
+\begin{align*}
+    x & =o_x\oplus(t_{\text{hit}}\pm\delta_t)\otimes d_x                                                              \\
+      & \in o_x\oplus(t_{\text{hit}}\pm\delta_t)d_x(1\pm\gamma_1)                                                     \\
+      & \subset o_x(1\pm\gamma_1)+(t_{\text{hit}}\pm\delta_t)d_x(1\pm\gamma_2)                                        \\
+      & =o_x+t_{\text{hit}}d_x+[\pm o_x\gamma_1\pm\delta_td_x\pm t_{\text{hit}}d_x\gamma_2\pm\delta_td_x\gamma_2]\, .
+\end{align*}
+（方括号中的）误差项定界为
+\begin{align}\label{eq:3.13}
+    \gamma_1|o_x|+\delta_t(1+\gamma_2)|d_x|+\gamma_2|t_{\text{hit}}d_x|\, .
+\end{align}
+
+从\refeq{3.13}中可以看出两点：第一，贡献于算得交点误差的项
+（$o_x$、$d_x$和$t_{\text{hit}}d_x$）的量级可能与交点的量级相差很大。
+因此在交点算得的值中存在灾难性抵消的危险。
+第二，光线相交算法一般执行十来次浮点运算以计算$t$值，
+反过来意味着我们估计$\delta_t$至少有$\gamma_nt$的量级，
+其中$n$为十量级（且由于灾难性抵消可能更大）。
+这些项的每一个与点$x$的大小都可能是相当的。
+
+总之这些因素会导致算得交点中有较大误差。
+我们将很快开发更好方法。
+
+\subsubsection*{重投影：二次曲面}
+我们想可靠地计算曲面上仅有几个ulp误差的交点而不是
+用参数射线方程算得可能有上百ulp误差的交点。
+以前对于光线-多边形相交，Woo等\parencite*{536271}建议用
+第一个算得的交点作为第二次光线-平面相交的起始点。
+从\refeq{3.13}的边界中，我们可以看到为什么第二个交点会比第一个接近曲面得多：
+沿第二射线的$t_{\text{hit}}$值非常接近于零，
+所以$t_{\text{hit}}$中的绝对误差大小会非常小，
+因此在参数射线方程中使用该值会给出非常接近曲面的点（\reffig{3.44}）。
+而且，射线端点会有与交点同样的量级，所以该项不会引入太多额外误差。
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap03/Reintersectrefine.tex}
+    \caption{再相交以提升算得交点的准确度。给定一射线和曲面，
+        已经用射线方程算得初始交点（实心圆）。
+        该点可能因为舍入误差而非常不准确但可以用作第二次
+        光线-形状相交的端点。从该二次相交算得的交点（空心圆）
+        接近曲面得多，尽管它可能因为第一次相交计算中的误差而
+        偏移了真正的交点。}
+    \label{fig:3.44}
+\end{figure}
+
+尽管用该方法算得的第二个交点接近表面平面得多，
+它仍然因为第一次相交计算的误差而受到偏移误差的影响。
+射线端点离交点越远（且因此$t_{\text{hit}}$中的绝对误差越大），该误差就越大。
+尽管有该误差，该方法也有优点：比起在曲面上方或下面有一定距离
+（而且可能离最准确的交点很远）的点，
+算得非常接近实际曲面的交点对我们更有利，哪怕它偏移了可能最准确的交点。
+
+比起做可能不仅计算开销大而且在算得$t$值中仍有误差的完整再相交计算，
+一个高效方法是通过将算得交点重投影到曲面上来改善它们。
+这些重投影点的误差边界通常极其小。
+
+要注意的是这些重投影误差边界不会涵盖原始交点$\bm p$中的切向误差——
+这里主要关注检测可能让重投影点$\bm p'$掉到曲面之下的误差。
+
+考虑光线-球体相交：给定算得的交点（例如来自射线方程）$\bm p$以及
+位于原点处半径为$r$的球体，我们可以通过用球体半径与算得的该点到原点距离的比例
+缩放该点来将其重投影到球面上，并用下式计算新点$\bm p'=(x',y',z')$
+\begin{align*}
+    x'=x\frac{r}{\sqrt{x^2+y^2+z^2}}\, ,
+\end{align*}
+等等。浮点计算\sidenote{译者注：建议读者动手推导一下。}为
+\begin{align*}
+    x' & =x\otimes r\oslash \text{sqrt}((x\otimes x)\oplus(y\otimes y)\oplus(z\otimes z))                                                                                                \\
+       & \in\frac{xr(1\pm\epsilon_{\mathrm{m}})^2}{\sqrt{x^2(1\pm\epsilon_{\mathrm{m}})^3+y^2(1\pm\epsilon_{\mathrm{m}})^3+z^2(1\pm\epsilon_{\mathrm{m}})^2}(1\pm\epsilon_{\mathrm{m}})} \\
+       & \subset\frac{xr(1\pm\gamma_2)}{\sqrt{x^2(1\pm\gamma_3)+y^2(1\pm\gamma_3)+z^2(1\pm\gamma_2)}(1\pm\gamma_1)}\, .
+\end{align*}
+因为$x^2$、$y^2$和$z^2$都是正数，平方根中的项可以共享同样的$\gamma$项，所以我们有
+\begin{align}\label{eq:3.14}
+    x' & \in\frac{xr(1\pm\gamma_2)}{\sqrt{(x^2+y^2+z^2)(1\pm\gamma_4)}(1\pm\gamma_1)}\nonumber  \\
+       & =\frac{xr(1\pm\gamma_2)}{\sqrt{x^2+y^2+z^2}\sqrt{1\pm\gamma_4}(1\pm\gamma_1)}\nonumber \\
+       & \subset \frac{xr}{\sqrt{x^2+y^2+z^2}}(1\pm\gamma_5)\nonumber                           \\
+       & =x'(1\pm\gamma_5)\, .
+\end{align}
+
+因此，球面上的点的重投影$x$坐标的绝对误差
+定界为$\gamma_5|x'|$（且$y'$和$z'$同理）且因此每个维度不超过2.5个ulp。
+
+这里是为形状\refvar{Sphere}{}重投影交点的代码片。
+\begin{lstlisting}
+`\initcode{Refine sphere intersection point}{=}`
+pHit *= `\refvar[Sphere::radius]{radius}{}` / `\refvar{Distance}{}`(pHit, `\refvar{Point3f}{}`(0, 0, 0));
+\end{lstlisting}
+
+误差边界遵循\refeq{3.14}。
+\begin{lstlisting}
+`\initcode{Compute error bounds for sphere intersection}{=}`
+`\refvar{Vector3f}{}` pError = `\refvar{gamma}{}`(5) * `\refvar[Vector3::Abs]{Abs}{}`((`\refvar{Vector3f}{}`)pHit);
+\end{lstlisting}
+
+其他二次曲面的重投影算法和误差边界也可以类似地定义：例如，对于对齐$z$轴的圆柱体，
+只有$x$和$y$坐标需要重投影，$x$和$y$中的误差边界变为仅有其大小的$\gamma_3$倍。
+\begin{lstlisting}
+`\initcode{Refine cylinder intersection point}{=}`
+`\refvar{Float}{}` hitRad = std::sqrt(pHit.x * pHit.x + pHit.y * pHit.y);
+pHit.x *= `\refvar[Cylinder::radius]{radius}{}` / hitRad;
+pHit.y *= `\refvar[Cylinder::radius]{radius}{}` / hitRad;
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{Compute error bounds for cylinder intersection}{=}`
+`\refvar{Vector3f}{}` pError = `\refvar{gamma}{}`(3) * `\refvar[Vector3::Abs]{Abs}{}`(`\refvar{Vector3f}{}`(pHit.x, pHit.y, 0));
+\end{lstlisting}
+
+圆盘形状特别简单；我们只需设置点的$z$坐标位于圆盘平面上。
+\begin{lstlisting}
+`\initcode{Refine disk intersection point}{=}`
+pHit.z = `\refvar[Disk::height]{height}{}`;
+\end{lstlisting}
+
+反过来，我们有零误差的点；它恰好位于圆盘表面上。
+\begin{lstlisting}
+`\initcode{Compute error bounds for disk intersection}{=}`
+`\refvar{Vector3f}{}` pError(0, 0, 0);
+\end{lstlisting}
+
+\subsubsection*{参数求值：三角形}
+另一个高效计算精确交点的方法是用形状的参数表示计算准确交点。
+例如，\refsub{三角形相交}的三角形相交算法计算三个边函数值$e_0$、$e_1$和$e_2$并且
+如果全部三个都有相同的符号则报告相交。
+它们的值可用于寻找重心坐标
+\begin{align*}
+    b_i=\frac{e_i}{e_0+e_1+e_2}\, .
+\end{align*}
+
+三角形顶点处的属性$v_i$（包括顶点位置）可以在三角形平面上用下式插值
+\begin{align*}
+    v'=b_0v_0+b_1v_1+b_2v_2\, .
+\end{align*}
+
+我们现在可以证明用这种方式插值顶点位置给出的点非常接近三角形面。
+首先考虑预先计算的$e_i$之和的倒数：
+\begin{align*}
+    d & =1\oslash(e_0\oplus e_1\oplus e_2)                                                                                \\
+      & \in\frac{1}{(e_0+e_1)(1\pm\epsilon_{\mathrm{m}})^2+e_2(1\pm\epsilon_{\mathrm{m}})}(1\pm\epsilon_{\mathrm{m}})\, .
+\end{align*}
+因为如果相交则所有$e_i$同号，所有我们可以合并$e_i$项并保守地定界$d$：
+\begin{align*}
+    d & \in\frac{1}{(e_0+e_1+e_2)(1\pm\epsilon_{\mathrm{m}})^2}(1\pm\epsilon_{\mathrm{m}}) \\
+      & \subset \frac{1}{e_0+e_1+e_2}(1\pm\gamma_3)\, .
+\end{align*}
+如果我们现在考虑在三角形中插值对应于边函数值的位置的$x$坐标，我们有
+\begin{align*}
+    x' & =((e_0\otimes x_0)\oplus(e_1\otimes x_1)\oplus(e_2\otimes x_2))\otimes d                                                                     \\
+       & \in(e_0x_0(1\pm\epsilon_{\mathrm{m}})^3+e_1x_1(1\pm\epsilon_{\mathrm{m}})^3+e_2x_2(1\pm\epsilon_{\mathrm{m}})^2)d(1\pm\epsilon_{\mathrm{m}}) \\
+       & \subset (e_0x_0(1\pm\gamma_4)+e_1x_1(1\pm\gamma_4)+e_2x_2(1\pm\gamma_3))d\, .
+\end{align*}
+使用$d$上的边界\sidenote{译者注：原书写的$x\in\ldots$可能是笔误，已修正。}，
+\begin{align*}
+    x' & \in\frac{e_0x_0(1\pm\gamma_7)+e_1x_1(1\pm\gamma_7)+e_2x_2(1\pm\gamma_6)}{e_0+e_1+e_2} \\
+       & =b_0x_0(1\pm\gamma_7)+b_1x_1(1\pm\gamma_7)+b_2x_2(1\pm\gamma_6)\, .
+\end{align*}
+因此，我们最终可以看到算得的$x'$值中的绝对误差在区间
+\begin{align*}
+    \pm b_0x_0\gamma_7\pm b_1x_1\gamma_7\pm b_2x_2\gamma_7\,
+\end{align*}
+内，它定界为
+\begin{align}\label{eq:3.15}
+    \gamma_7(|b_0x_0|+|b_1x_1|+|b_2x_2|)\, .
+\end{align}
+（注意$b_2x_2$项本应有因子$\gamma_6$而不是$\gamma_7$，
+但两者的差别非常小，所以我们选择稍稍简化最终表达式。）
+对$y'$和$z'$也有同样的等价边界。
+
+\refeq{3.15}让我们定界\refvar{Triangle::Intersect}{()}中计算的插值点的误差。
+\begin{lstlisting}
+`\initcode{Compute error bounds for triangle intersection}{=}`
+`\refvar{Float}{}` xAbsSum = (std::abs(b0 * p0.x) + std::abs(b1 * p1.x) +
+                 std::abs(b2 * p2.x));
+`\refvar{Float}{}` yAbsSum = (std::abs(b0 * p0.y) + std::abs(b1 * p1.y) +
+                 std::abs(b2 * p2.y));
+`\refvar{Float}{}` zAbsSum = (std::abs(b0 * p0.z) + std::abs(b1 * p1.z) +
+                 std::abs(b2 * p2.z));
+`\refvar{Vector3f}{}` pError = `\refvar{gamma}{}`(7) * `\refvar{Vector3f}{}`(xAbsSum, yAbsSum, zAbsSum);
+\end{lstlisting}
+
+\subsubsection*{其他形状}
+对于我们可能不想推导重投影方法和严格误差边界的形状，
+运行误差分析会非常有用：我们用\refvar{EFloat}{}代替\refvar{Float}{}实现所有相交计算，
+计算$t_{\text{hit}}$值，并用参数射线方程计算命中点。
+然后我们可以通过方法\refvar{GetAbsoluteError}{()}求得
+算得的交点中误差的保守边界。
+\begin{lstlisting}
+`\initcode{Compute error bounds for intersection computed with ray equation}{}`
+`\refvar{EFloat}{}` px = ox + tShapeHit * dx;
+`\refvar{EFloat}{}` py = oy + tShapeHit * dy;
+`\refvar{EFloat}{}` pz = oz + tShapeHit * dz;
+`\refvar{Vector3f}{}` pError = `\refvar{Vector3f}{}`(px.`\refvar{GetAbsoluteError}{}`(), py.`\refvar{GetAbsoluteError}{}`(),
+                           pz.`\refvar{GetAbsoluteError}{}`());
+\end{lstlisting}
+
+pbrt中该方法用于圆锥体、抛物面和双曲面。
+\begin{lstlisting}
+`\initcode{Compute error bounds for cone intersection}{=}`
+`\refcode{Compute error bounds for intersection computed with ray equation}{}`
+\end{lstlisting}
+
+因为形状\refvar{Curve}{}让自己面向入射光线，
+离开它的光线为了在曲线再次朝向它们时不会错误地再相交，
+一定偏移了曲线宽度的两倍。
+\begin{lstlisting}
+`\initcode{Compute error bounds for curve intersection}{=}`
+`\refvar{Vector3f}{}` pError(2 * hitWidth, 2 * hitWidth, 2 * hitWidth);
+\end{lstlisting}
+
+\subsubsection*{变换的效应}
+为了定界算得交点中的误差而要注意的最后一点细节是变换的效应，
+当它们施加到算得的交点上时会引入额外舍入误差。
+
+pbrt中的二次曲面\refvar{Shape}{}在执行光线-物体相交前
+将世界空间射线变换到物体空间，之后再将算得的交点变换回世界空间。
+为了保证交点周围有稳定的世界空间边界，需要考虑这两步变换引入的舍入误差。
+
+如果可能的话，最好是尽力避免光线和交点的坐标系变换。
+例如，将三角形顶点变换到世界空间并与世界空间光线相交比
+将光线变换到物体空间再将交点变换到世界空间更好
+\footnote{尽管（例如）把三角形顶点变换到世界空间时引入了舍入误差，
+    但该误差不会增加计算交点时需要处理的误差。
+    换句话说，变换后的顶点可能代表一个扰动过的场景表示，
+    但它们是给定变换下最精确的表示了。}。
+变换仍然是有用的——例如对于二次曲面和对象实例化，
+所以我们将展示怎样定界它们引入的误差。
+
+我们将从考虑变换准确点$(x,y,z)$引入的误差开始——即该点没有任何累积误差。
+给定元素记为$m_{i,j}$的$4\times4$非投影变换矩阵，变换后的坐标$x'$为
+\begin{align*}
+    x' & =((m_{0,0}\otimes x)\oplus(m_{0,1}\otimes y))\oplus((m_{0,2}\otimes z)\oplus m_{0,3})                                                                      \\
+       & \in m_{0,0}x(1\pm\epsilon_{\mathrm{m}})^3+m_{0,1}y(1\pm\epsilon_{\mathrm{m}})^3+m_{0,2}z(1\pm\epsilon_{\mathrm{m}})^3+m_{0,3}(1\pm\epsilon_{\mathrm{m}})^2 \\
+       & \subset (m_{0,0}x+m_{0,1}y+m_{0,2}z+m_{0,3})+\gamma_3(\pm m_{0,0}x\pm m_{0,1}y\pm m_{0,2}z\pm m_{0,3})                                                     \\
+       & \subset (m_{0,0}x+m_{0,1}y+m_{0,2}z+m_{0,3})\pm\gamma_3(|m_{0,0}x|+|m_{0,1}y|+|m_{0,2}z|+|m_{0,3}|)\, .
+\end{align*}
+因此，结果中的绝对误差定界为
+\begin{align}\label{eq:3.16}
+    \gamma_3(|m_{0,0}x|+|m_{0,1}y|+|m_{0,2}z|+|m_{0,3}|)\, .
+\end{align}
+对于变换后的$y'$和$z'$坐标也有同样的边界。
+
+我们将用该结果向类\refvar{Transform}{}增加一种
+也根据施加的变换在变换后的点中返回绝对误差的方法。
+\begin{lstlisting}
+`\refcode{Transform Inline Functions}{+=}\lastcode{TransformInlineFunctions}`
+template <typename T> inline `\refvar{Point3}{}`<T>
+`\refvar{Transform}{}`::operator()(const `\refvar{Point3}{}`<T> &p, `\refvar{Vector3}{}`<T> *pError) const {
+    T x = p.x, y = p.y, z = p.z;
+    `\refcode{Compute transformed coordinates from point pt}{}`
+    `\refcode{Compute absolute error for transformed point}{}`
+    if (wp == 1) return `\refvar{Point3}{}`<T>(xp, yp, zp);
+    else         return `\refvar{Point3}{}`<T>(xp, yp, zp) / wp;
+}
+\end{lstlisting}
+
+代码片\refcode{Compute transformed coordinates from point pt}{}像\refsec{施加变换}那样
+实现同样的矩阵/点乘法。
+\begin{lstlisting}
+`\initcode{Compute transformed coordinates from point pt}{=}`
+T xp = `\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[0][0] * x + `\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[0][1] * y + `\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[0][2] * z + `\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[0][3];
+T yp = `\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[1][0] * x + `\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[1][1] * y + `\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[1][2] * z + `\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[1][3];
+T zp = `\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[2][0] * x + `\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[2][1] * y + `\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[2][2] * z + `\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[2][3];
+T wp = `\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[3][0] * x + `\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[3][1] * y + `\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[3][2] * z + `\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[3][3];
+\end{lstlisting}
+
+注意如果矩阵是投影的且投影后点的齐次$w$坐标不是一，则计算误差边界的代码是错的；
+目前该小bug对于pbrt对该方法的使用不是问题。
+\begin{lstlisting}
+`\initcode{Compute absolute error for transformed point}{=}`
+T xAbsSum = (std::abs(`\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[0][0] * x) + std::abs(`\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[0][1] * y) +
+             std::abs(`\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[0][2] * z) + std::abs(`\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[0][3]));
+T yAbsSum = (std::abs(`\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[1][0] * x) + std::abs(`\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[1][1] * y) +
+             std::abs(`\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[1][2] * z) + std::abs(`\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[1][3]));
+T zAbsSum = (std::abs(`\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[2][0] * x) + std::abs(`\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[2][1] * y) +
+             std::abs(`\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[2][2] * z) + std::abs(`\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[2][3]));
+*pError = `\refvar{gamma}{}`(3) * `\refvar{Vector3}{}`<T>(xAbsSum, yAbsSum, zAbsSum);
+\end{lstlisting}
+
+\refeq{3.16}的结果假设被变换的点是准确的。
+如果该点自己有误差边界$\delta_x$、$\delta_y$和$\delta_z$，
+则变换后的$x$坐标为
+\begin{align*}
+    x'=(m_{0,0}\otimes (x\pm\delta_x)\oplus m_{0,1}\otimes (y\pm\delta_y))\oplus(m_{0,2}\otimes (z\pm\delta_z)\oplus m_{0,3})\, .
+\end{align*}
+运用浮点加法和乘法误差边界的定义，我们有：
+\begin{align*}
+    x' & =m_{0,0}(x\pm\delta_x)(1\pm\epsilon_{\mathrm{m}})^3+m_{0,1}(y\pm\delta_y)(1\pm\epsilon_{\mathrm{m}})^3+m_{0,2}(z\pm\delta_z)(1\pm\epsilon_{\mathrm{m}})^3+m_{0,3}(1\pm\epsilon_{\mathrm{m}})^2\, .
+\end{align*}
+用$\gamma$转换，我们可以求得绝对误差项定界为
+\begin{align}\label{eq:3.17}
+    (\gamma_3+1)(|m_{0,0}|\delta_x+|m_{0,1}|\delta_y+|m_{0,2}|\delta_z)+\gamma_3(|m_{0,0}x|+|m_{0,1}y|+|m_{0,2}z|+|m_{0,3}|)\, .
+\end{align}
+
+类\refvar{Transform}{}也提供了{\ttfamily operator()}接收一点
+及其自己的绝对误差并用\refeq{3.17}在结果中返回绝对误差。
+其定义很简单，所以本文这里不再介绍。
+\begin{lstlisting}
+`\refcode{Transform Public Methods}{+=}\lastnext{TransformPublicMethods}`
+template <typename T> inline `\refvar{Point3}{}`<T>
+operator()(const `\refvar{Point3}{}`<T> &p, const `\refvar{Vector3}{}`<T> &pError,
+           `\refvar{Vector3}{}`<T> *pTransError) const;
+\end{lstlisting}
+
+类\refvar{Transform}{}也提供了变换向量和射线的方法，返回结果误差。
+向量误差边界的推导（以及实现）和点非常类似，所以这里不再介绍。
+\begin{lstlisting}
+`\refcode{Transform Public Methods}{+=}\lastcode{TransformPublicMethods}`
+template <typename T> inline `\refvar{Vector3}{}`<T>
+operator()(const `\refvar{Vector3}{}`<T> &v, `\refvar{Vector3}{}`<T> *vTransError) const;
+template <typename T> inline `\refvar{Vector3}{}`<T>
+operator()(const `\refvar{Vector3}{}`<T> &v, const `\refvar{Vector3}{}`<T> &vError,
+           `\refvar{Vector3}{}`<T> *vTransError) const;
+\end{lstlisting}
+
+该方法用于\refvar{SurfaceInteraction}{}在方法\refvar{Transform}{::operator()}中变换交点及其误差边界。
+\begin{lstlisting}
+`\initcode{Transform p and pError in SurfaceInteraction}{=}`
+ret.`\refvar[Interaction::p]{p}{}` = (*this)(si.`\refvar[Interaction::p]{p}{}`, si.`\refvar{pError}{}`, &ret.`\refvar{pError}{}`);
+\end{lstlisting}
+
+\subsection{稳定触发的射线端点}\label{sub:稳定触发的射线端点}
+算得的交点及其误差边界给了我们一个限定一片空间区域的小3D盒。

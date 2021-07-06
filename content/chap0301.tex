@@ -243,11 +243,6 @@ if (tMin > tyMax || tyMin > tMax)
 if (tyMin > tMin) tMin = tyMin; 
 if (tyMax < tMax) tMax = tyMax;
 \end{lstlisting}
-\begin{lstlisting}
-`\initcode{Update tMax and tyMax to ensure robust bounds intersection}{=}`
-tMax *= 1 + 2 * `\refvar{gamma}{}`(3);
-tyMax *= 1 + 2 * `\refvar{gamma}{}`(3);
-\end{lstlisting}
 
 代码片\refcode{Check for ray intersection against z slab}{}类似，这里就不介绍了
 \sidenote{译者注：笔者还是补充上来了。}。
@@ -262,10 +257,6 @@ if (tzMin > tMin)
     tMin = tzMin;
 if (tzMax < tMax)
     tMax = tzMax;
-\end{lstlisting}
-\begin{lstlisting}
-`\initcode{Update tzMax to ensure robust bounds intersection}{=}`
-tzMax *= 1 + 2 * `\refvar{gamma}{}`(3);
 \end{lstlisting}
 
 相交测试是遍历\refsec{层次包围盒}介绍的加速结构\refvar{BVHAccel}{}的核心。

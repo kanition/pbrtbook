@@ -1195,4 +1195,69 @@ inline `\refvar{Point3f}{}` `\initvar{OffsetRayOrigin}{}`(const `\refvar{Point3f
     确实，这些边界的计算也该朝着正无穷舍入。
     但我们忽略了这个问题，因为这里额外的一个ulp偏移量足够补偿该误差了。}。
 
-或者，
+或者，也可以把浮点舍入模式设为朝正或负无穷舍入（基于值的符号）。
+改变舍入模式通常开销非常大，所以我们这里只是将浮点值移动一个ulp。
+有时这会造成已经在误差框外的值稍稍超出它，
+但因为浮点间隔如此之小所以这在实践中是没问题的。
+\begin{lstlisting}
+`\initcode{Round offset point po away from p}{=}`
+for (int i = 0; i < 3; ++i) {
+    if (offset[i] > 0)      po[i] = `\refvar{NextFloatUp}{}`(po[i]);
+    else if (offset[i] < 0) po[i] = `\refvar{NextFloatDown}{}`(po[i]);
+}
+\end{lstlisting}
+
+有了函数\refvar{OffsetRayOrigin}{()}，我们现在可以实现\refvar{Interaction}{}中
+生成离开交点射线的方法了。
+\begin{lstlisting}
+`\refcode{Interaction Public Methods}{+=}\lastnext{InteractionPublicMethods}` 
+`\refvar{Ray}{}` `\initvar{SpawnRay}{}`(const `\refvar{Vector3f}{}` &d) const {
+    `\refvar{Point3f}{}` o = `\refvar{OffsetRayOrigin}{}`(`\refvar[Interaction::p]{p}{}`, `\refvar{pError}{}`, `\refvar[Interaction::n]{n}{}`, d);
+    return `\refvar{Ray}{}`(o, d, `\refvar{Infinity}{}`, `\refvar[Interaction::time]{time}{}`, `\refvar{GetMedium}{}`(d));
+}
+\end{lstlisting}
+
+目前我们开发的方法解决了离开曲面射线端点处的浮点误差影响；
+有一个与面光源的阴影射线相关的问题：
+我们想求得任何与非常接近光源且实际阻挡了它的形状的相交处，
+同时避免报告与光源曲面的错误相交。
+不幸的是，我们的实现没有解决这个问题，
+所以我们将阴影射线的\refvar{tMax}{}值设为一以下，
+这样它们会在光源曲面之前停止。
+\begin{lstlisting}
+`\refcode{Interaction Public Methods}{+=}\lastnext{InteractionPublicMethods}`
+`\refvar{Ray}{}` `\initvar{SpawnRayTo}{}`(const `\refvar{Point3f}{}` &p2) const {
+    `\refvar{Point3f}{}` origin = `\refvar{OffsetRayOrigin}{}`(`\refvar[Interaction::p]{p}{}`, `\refvar{pError}{}`, `\refvar[Interaction::n]{n}{}`, p2 - `\refvar[Interaction::p]{p}{}`);
+    `\refvar{Vector3f}{}` d = p2 - origin;
+    return `\refvar{Ray}{}`(origin, d, 1 - `\refvar{ShadowEpsilon}{}`, `\refvar[Interaction::time]{time}{}`, `\refvar{}{}`GetMedium(d));
+}
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{Global Constants}{+=}\lastnext{GlobalConstants}`
+const `\refvar{Float}{}` `\initvar{ShadowEpsilon}{}` = 0.0001f;
+\end{lstlisting}
+
+另一个接收\refvar{Interaction}{}的\refvar{SpawnRayTo}{()}变体是类似的。
+
+为了保持稳定触发射线端点，最后要解决的问题是：执行变换时引入的误差。
+给定一个坐标系内的射线，其端点经仔细计算后位于某曲面适当的一侧，
+将该射线变换到另一坐标系可能会在变换后的端点中引入误差使得
+端点不再位于触发它的曲面的正确一侧。
+
+因此，无论何时用（\refsub{射线}实现的）{\ttfamily Transform::operator()}的\refvar{Ray}{}变体，
+其端点都朝该变换引入的误差边界的边上推进。
+如果有的话，这保证了端点保守地留在触发它的曲面的正确一侧。
+\begin{lstlisting}
+`\initcode{Offset ray origin to edge of error bounds and compute tMax}{=}`
+`\refvar{Float}{}` lengthSquared = d.`\refvar{LengthSquared}{}`();
+`\refvar{Float}{}` tMax = r.`\refvar{tMax}{}`;
+if (lengthSquared > 0) {
+    `\refvar{Float}{}` dt = `\refvar{Dot}{}`(Abs(d), oError) / lengthSquared;
+    o += d * dt;
+    tMax -= dt;
+}
+\end{lstlisting}
+
+\subsection{避免射线端点之后的相交}\label{sub:避免射线端点之后的相交}
+定界算得的交点的误差允许我们计算保证在曲面正确一侧的射线端点，
+这样有无限精度的射线不会与它离开的曲面错误地相交。

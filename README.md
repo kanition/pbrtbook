@@ -1,7 +1,7 @@
 # 基于物理的渲染：从理论到实现 中文整合翻译计划
 ## Physically Based Rendering: From Theory To Implementation (pbrt book) 
 
-![Landscape view-3 @pbrt-v3-scenes/landscape](Pictures/view-3.png)
+![Landscape view-3 @pbrt-v3-scenes/landscape](Pictures/title.png)
 
 ## 作者信息
 - 原著 [Matt Pharr](https://pharr.org/matt), [Wenzel Jakob](https://rgl.epfl.ch/people/wjakob) & Greg Humphreys

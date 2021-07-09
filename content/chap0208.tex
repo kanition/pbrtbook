@@ -92,10 +92,11 @@ template <typename T> inline `\refvar{Normal3}{}`<T>
 变换射线在概念上很简单：变换构成的端点和方向并复制其他数据成员即可
 （pbrt也为变换\refvar{RayDifferential}{}提供了同样的方法）。
 
-pbrt中用于控制浮点舍入误差的方法引入了一些微妙之处，
-需要对变换后的射线端点作小的调整。
-代码片\refcode{Offset ray origin to edge of error bounds}{}负责这些细节；
-它定义于\refsub{定界交点误差}，并讨论了舍入误差和pbrt的处理机制。
+pbrt用于控制浮点舍入误差的方法引入了一些微妙之处，
+需要对变换后的射线端点作小调整。
+代码片\refcode{Offset ray origin to edge of error bounds and compute tMax}{}负责该细节；
+它定义于\refsub{稳定触发的射线端点}并讨论了舍入误差和pbrt的处理机制
+\sidenote{译者注：本段原文引用存在笔误，已修正。}。
 \begin{lstlisting}
 `\refcode{Transform Inline Functions}{+=}\lastnext{TransformInlineFunctions}`
 inline `\refvar{Ray}{}` `\refvar{Transform}{}`::operator()(const `\refvar{Ray}{}` &r) const { 

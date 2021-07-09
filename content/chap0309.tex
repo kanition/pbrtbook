@@ -692,7 +692,7 @@ inline bool `\initvar[Quadratic:2]{\refvar{Quadratic}{}}{}`(`\refvar{EFloat}{}` 
 
 有了浮点误差基本知识，我们现在专注用这些工具提供稳定的相交运算。
 
-\subsection{保守的光线-边界框相交}
+\subsection{保守的光线-边界框相交}\label{sub:保守的光线-边界框相交}
 浮点舍入误差可能造成光线-边界框相交测试错失光线实际上与框相交了的情况。
 尽管光线-边界框相交测试中偶尔有假正例是可以接受的，
 但我们希望永远不要错过实际的相交——处理好它对于\refsec{层次包围盒}中
@@ -719,10 +719,15 @@ inline bool `\initvar[Quadratic:2]{\refvar{Quadratic}{}}{}`(`\refvar{EFloat}{}` 
 
 如果我们考虑围绕算得$t$值的、定界了完全精确$t$值的区间，
 则我们关心的情况是区间什么时候重叠；
-如果没有重叠，则比较算得的值可以给出正确结果（\reffig{3.42}）。
-如果区间重叠，则无法知道$t$值的实际顺序。
+若没有重叠，则比较算得的值可以给出正确结果（\reffig{3.42}）。
+若区间重叠，则无法知道$t$值的实际顺序。
 这种情况下，在比较之前对$t_{\max}$增加误差边界的两倍$2\gamma_3t_{\max}$，
-保证我们对该情况保守地返回真。
+保证我们对该情况保守地返回真
+\sidenote{译者注：关于为什么是两倍，
+    我的理解是哪怕极端情况下取到$t_{\max}(1-\gamma_3)(1+2\gamma_3)$，
+    因为$\gamma_3$是接近$0$的正数，
+    所以$(1-\gamma_3)(1+2\gamma_3)=1+\gamma_3(1-2\gamma_3)>1$，
+    此时对$t_{\max}$仍有保守的放大作用。若只取一倍则不能保证这一点。}。
 \begin{figure}[htbp]
     \centering\input{Pictures/chap03/Rayerrortmintmax.tex}
     \caption{如果算得的$t_{\min}$和$t_{\max}$的误差边界重叠，
@@ -1122,4 +1127,263 @@ ret.`\refvar[Interaction::p]{p}{}` = (*this)(si.`\refvar[Interaction::p]{p}{}`, 
 \end{lstlisting}
 
 \subsection{稳定触发的射线端点}\label{sub:稳定触发的射线端点}
-算得的交点及其误差边界给了我们一个限定一片空间区域的小3D盒。
+算得交点及其误差边界给了我们限定一片空间区域的小3D框。
+我们知道精确交点必在该框中的某处且因此曲面必穿过该框
+（至少足以表示点在哪里相交）（回想\reffig{3.43}）。
+有了这些框就能定位离开曲面的射线端点，
+这样它们总在曲面的正确一侧而不与之错误地再相交。
+当追踪触发的离开交点$\bm p$的光线时，我们充分偏移其端点
+以保证它们错开误差框边界而不会与曲面错误地再相交。
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap03/Offsetrayoriginwithnormalanderror.tex}
+    \caption{给定算得的交点（实心圆）和曲面法线（箭头）以及误差边界（矩形），
+        我们计算两个沿法线偏移足够远以至于不会与误差边界相交的平面。
+        算得的交点沿法线落在这些平面上的点给了我们触发的射线的端点（空心圆）；
+        基于射线方向选择两个中的一个使得触发的射线不会穿过误差边界框。
+        通过构造，这样的射线不会错误地与实际曲面（粗线）再相交。}
+    \label{fig:3.45}
+\end{figure}
+
+为了保证触发射线的端点确实在曲面正确的一侧，
+我们沿法线移动足够远使得垂直于法线的平面在误差边界框之外。
+为了理解怎样做到这点，考虑算得的交点位于原点，过该交点的平面方程为
+\begin{align*}
+    f(x,y,z)=n_xx+n_yy+n_zz\, ,
+\end{align*}
+平面被隐式定义为$f(x,y,z)=0$，法线为$(n_x,n_y,n_z)$。
+
+对于不在平面上的点，平面方程的值$f(x,y,z)$给出了过该点的平面沿法线的偏移量。
+我们想对误差边界框的八个顶点求$f(x,y,z)$的最大值\sidenote{译者注：指最大绝对值。}；
+如果我们将平面偏移正负偏移量，我们就有两个不与误差框相交的
+且应该在曲面（局部）对侧的平面，至少是在算得的交点沿法线偏移的两侧（\reffig{3.45}）。
+
+若误差边界框八个顶点给定为$(\pm\delta_x,\pm\delta_y,\pm\delta_z)$，
+则易算出$f(x,y,z)$最大值：
+\begin{align*}
+    d=|n_x|\delta_x+|n_y|\delta_y+|n_z|\delta_z\, .
+\end{align*}
+
+通过沿曲面法线偏移的这种方式计算触发射线的端点有几个优点：
+假设曲面是局部平坦的（这是合理假设，尤其是在交点误差边界非常小的尺度上时），
+沿法线移动允许我们在移动最短距离时能从曲面的一侧到另一侧。
+通常，最小化射线端点偏移距离对于保持阴影和反射细节是可取的。
+\begin{lstlisting}
+`\refcode{Geometry Inline Functions}{+=}\lastnext{GeometryInlineFunctions}`
+inline `\refvar{Point3f}{}` `\initvar{OffsetRayOrigin}{}`(const `\refvar{Point3f}{}` &p, const `\refvar{Vector3f}{}` &pError,
+                               const `\refvar{Normal3f}{}` &n, const `\refvar{Vector3f}{}` &w) {
+    `\refvar{Float}{}` d = `\refvar{Dot}{}`(`\refvar[Vector3::Abs]{Abs}{}`(n), pError);
+    `\refvar{Vector3f}{}` offset = d * `\refvar{Vector3f}{}`(n);
+    if (`\refvar{Dot}{}`(w, n) < 0)
+        offset = -offset;
+    `\refvar{Point3f}{}` po = p + offset;
+    `\refcode{Round offset point po away from p}{}`
+    return po;
+}
+\end{lstlisting}
+
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap03/Offsetandroundup.tex}
+    \caption{\protect\refvar{OffsetRayOrigin}{()}中算得的
+    偏移点{\ttfamily p+offset}的舍入值结果可能是在误差框的内部而不是边界上，
+    如果舍入点在曲面的错误一侧，则这反过来引入了错误自相交的风险。
+    推进算得点的每个坐标远离{\ttfamily p}一个浮点值保证了它在误差框之外。}
+    \label{fig:3.46}
+\end{figure}
+
+当计算偏移点时我们还必须处理舍入误差：
+当{\ttfamily offset}加到{\ttfamily p}上时，
+结果一般需要舍入到最近的浮点值。
+反过来，它可能朝{\ttfamily p}向下舍入使得
+结果点在误差框的内部而不是在边界上（\reffig{3.46}）。
+因此，这里将偏移点舍入远离{\ttfamily p}以保证它不在框内
+\footnote{细心的读者现在可能担心当计算传入该函数的误差边界时舍入误差会有何影响。
+    确实，这些边界的计算也该朝着正无穷舍入。
+    但我们忽略了这个问题，因为这里额外的一个ulp偏移量足够补偿该误差了。}。
+
+或者，也可以把浮点舍入模式设为朝正或负无穷舍入（基于值的符号）。
+改变舍入模式通常开销非常大，所以我们这里只是将浮点值移动一个ulp。
+有时这会造成已经在误差框外的值稍稍超出它，
+但因为浮点间隔如此之小所以这在实践中是没问题的。
+\begin{lstlisting}
+`\initcode{Round offset point po away from p}{=}`
+for (int i = 0; i < 3; ++i) {
+    if (offset[i] > 0)      po[i] = `\refvar{NextFloatUp}{}`(po[i]);
+    else if (offset[i] < 0) po[i] = `\refvar{NextFloatDown}{}`(po[i]);
+}
+\end{lstlisting}
+
+有了函数\refvar{OffsetRayOrigin}{()}，我们现在可以实现\refvar{Interaction}{}中
+生成离开交点射线的方法了。
+\begin{lstlisting}
+`\refcode{Interaction Public Methods}{+=}\lastnext{InteractionPublicMethods}` 
+`\refvar{Ray}{}` `\initvar{SpawnRay}{}`(const `\refvar{Vector3f}{}` &d) const {
+    `\refvar{Point3f}{}` o = `\refvar{OffsetRayOrigin}{}`(`\refvar[Interaction::p]{p}{}`, `\refvar{pError}{}`, `\refvar[Interaction::n]{n}{}`, d);
+    return `\refvar{Ray}{}`(o, d, `\refvar{Infinity}{}`, `\refvar[Interaction::time]{time}{}`, `\refvar{GetMedium}{}`(d));
+}
+\end{lstlisting}
+
+目前我们开发的方法解决了离开曲面射线端点处的浮点误差影响；
+有一个与面光源的阴影射线相关的问题：
+我们想求得任何与非常接近光源且实际阻挡了它的形状的相交处，
+同时避免报告与光源曲面的错误相交。
+不幸的是，我们的实现没有解决这个问题，
+所以我们将阴影射线的\refvar{tMax}{}值设为一以下，
+这样它们会在光源曲面之前停止。
+\begin{lstlisting}
+`\refcode{Interaction Public Methods}{+=}\lastnext{InteractionPublicMethods}`
+`\refvar{Ray}{}` `\initvar{SpawnRayTo}{}`(const `\refvar{Point3f}{}` &p2) const {
+    `\refvar{Point3f}{}` origin = `\refvar{OffsetRayOrigin}{}`(`\refvar[Interaction::p]{p}{}`, `\refvar{pError}{}`, `\refvar[Interaction::n]{n}{}`, p2 - `\refvar[Interaction::p]{p}{}`);
+    `\refvar{Vector3f}{}` d = p2 - origin;
+    return `\refvar{Ray}{}`(origin, d, 1 - `\refvar{ShadowEpsilon}{}`, `\refvar[Interaction::time]{time}{}`, `\refvar{}{}`GetMedium(d));
+}
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{Global Constants}{+=}\lastnext{GlobalConstants}`
+const `\refvar{Float}{}` `\initvar{ShadowEpsilon}{}` = 0.0001f;
+\end{lstlisting}
+
+另一个接收\refvar{Interaction}{}的\refvar{SpawnRayTo}{()}变体是类似的。
+
+为了保持稳定触发射线端点，最后要解决的问题是：执行变换时引入的误差。
+给定一个坐标系内的射线，其端点经仔细计算后位于某曲面适当的一侧，
+将该射线变换到另一坐标系可能会在变换后的端点中引入误差使得
+端点不再位于触发它的曲面的正确一侧。
+
+因此，无论何时用（\refsub{射线}实现的）{\ttfamily Transform::operator()}的\refvar{Ray}{}变体，
+其端点都朝该变换引入的误差边界的边上推进。
+如果有的话，这保证了端点保守地留在触发它的曲面的正确一侧。
+\begin{lstlisting}
+`\initcode{Offset ray origin to edge of error bounds and compute tMax}{=}`
+`\refvar{Float}{}` lengthSquared = d.`\refvar{LengthSquared}{}`();
+`\refvar{Float}{}` tMax = r.`\refvar{tMax}{}`;
+if (lengthSquared > 0) {
+    `\refvar{Float}{}` dt = `\refvar{Dot}{}`(`\refvar[Vector3::Abs]{Abs}{}`(d), oError) / lengthSquared;
+    o += d * dt;
+    tMax -= dt;
+}
+\end{lstlisting}
+
+\subsection{避免射线端点之后的相交}\label{sub:避免射线端点之后的相交}
+
+定界算得的交点的误差允许我们计算保证位于曲面正确一侧的射线端点，
+这样有无限精度的射线不会与它离开的曲面错误相交。
+然而还必须解决舍入误差的另一个来源：
+为光线-形状相交计算的参数$t$值的误差。
+舍入误差会使相交算法为交点计算的值$t>0$，
+哪怕实际相交的$t$值为负（且因此应被忽略掉）。
+
+可以证明一些相交测试算法总返回具有正确符号的$t$值；
+这是最好的情况，因为无需额外计算来定界算得$t$值的实际误差。
+例如，考虑射线-轴对齐厚板计算：$t=(x\ominus o_x)\oslash d_x$。
+IEEE保证若$a>b$，则$a\ominus b\ge0$（且若$a<b$，则$a\ominus b\le0$）。
+为了理解为何会这样，注意若$a>b$，则实数$a-b$必大于零。
+当舍入到浮点数时，结果一定要么为零要么是正浮点；
+最接近的浮点数不可能是负浮点数。
+其次，浮点除法返回正确的符号；
+这些合起来保证了算得的$t$值符号是正确的
+（或者$t=0$，但这种情况也行，因为我们的相交测试会仔细选择$t>0$）。
+
+对于使用\refvar{EFloat}{}的形状相交例程，最后算得的$t$值附有关联的误差边界，
+不再需要额外计算执行该测试了。详见\refsub{相交测试2}定义的
+代码片\refcode{Check quadric shape t0 and t1 for nearest intersection}{}。
+
+\subsubsection*{三角形}
+
+高效的相交代码对于更常用的形状更加重要，我们想为其避免\refvar{EFloat}{}引入的计算开销。
+对于这些形状，我们可以为算得$t$值推导求值高效的误差保守边界。
+\refsub{三角形相交}的光线-三角形相交算法通过计算三个边函数值$e_i$并
+用它们计算变换后的顶点$z$坐标$z_i$的重心加权和以计算最后的$t$值：
+\begin{align}\label{eq:3.18}
+    t=\frac{e_0z_0+e_1z_1+e_2z_2}{e_0+e_1+e_2}\, .
+\end{align}
+
+通过依次定界这些项和最后$t$值的误差，我们可保守地检查它们是否为正。
+\begin{lstlisting}
+`\initcode{Ensure that computed triangle t is conservatively greater than zero}{=}`
+`\refcode{Compute $\delta_z$ term for triangle t error bounds}{}`
+`\refcode{Compute $\delta_x$ and $\delta_y$ terms for triangle t error bounds}{}`
+`\refcode{Compute $\delta_e$ term for triangle t error bounds}{}`
+`\refcode{Compute $\delta_t$ term for triangle t error bounds and check t}{}`
+\end{lstlisting}
+
+给定端点为$\bm o$、方向为$\bm d$的射线$\bm r$以及三角形顶点$\bm p$，
+投影的$z$坐标为
+\begin{align*}
+    z=(1\oslash d_z)\otimes(p_z-o_z)\, .
+\end{align*}
+
+运用常规方法，我们可以发现
+\sidenote{译者注：我猜测同理于\protect\refsub{保守的光线-边界框相交}。}
+对于三角形三个顶点的每一个$\bm p_i$，
+其$z_i$中的最大误差定界为$\gamma_3|z_i|$，
+且我们因此会发现\emph{任何}$z$位置的误差保守上界取为这些误差的最大值：
+\begin{align*}
+    \delta_z=\gamma_3\max_i{|z_i|}\, .
+\end{align*}
+\begin{lstlisting}
+`\initcode{Compute $\delta_z$ term for triangle t error bounds}{=}`
+`\refvar{Float}{}` maxZt = `\refvar{MaxComponent}{}`(`\refvar[Vector3::Abs]{Abs}{}`(`\refvar{Vector3f}{}`(p0t.z, p1t.z, p2t.z)));
+`\refvar{Float}{}` deltaZ = `\refvar{gamma}{}`(3) * maxZt;
+\end{lstlisting}
+
+边函数值计算为两个变换后的$x$和$y$顶点位置之积的差：
+\begin{align*}
+    e_0 & =(x_1\otimes y_2)\ominus(y_1\otimes x_2)\, , \\
+    e_1 & =(x_2\otimes y_0)\ominus(y_2\otimes x_0)\, , \\
+    e_2 & =(x_0\otimes y_1)\ominus(y_0\otimes x_1)\, .
+\end{align*}
+
+变换后的位置$x_i$和$y_i$的误差边界
+\sidenote{译者注：我猜测是根据代码片\protect\refcode{Transform triangle vertices to ray coordinate space}{}的
+    步骤推导出来的，计算形式为$(\ominus)\oplus(-(\oslash)\otimes(\ominus))$，可对应到$\gamma_5$。}为
+\begin{align*}
+    \delta_x & =\gamma_5(\max_i{|x_i|}+\max_i{|z_i|})\, , \\
+    \delta_y & =\gamma_5(\max_i{|y_i|}+\max_i{|z_i|})\, .
+\end{align*}
+
+\begin{lstlisting}
+`\initcode{Compute $\delta_x$ and $\delta_y$ terms for triangle t error bounds}{=}`
+`\refvar{Float}{}` maxXt = `\refvar{MaxComponent}{}`(`\refvar[Vector3::Abs]{Abs}{}`(`\refvar{Vector3f}{}`(p0t.x, p1t.x, p2t.x)));
+`\refvar{Float}{}` maxYt = `\refvar{MaxComponent}{}`(`\refvar[Vector3::Abs]{Abs}{}`(`\refvar{Vector3f}{}`(p0t.y, p1t.y, p2t.y)));
+`\refvar{Float}{}` deltaX = `\refvar{gamma}{}`(5) * (maxXt + maxZt);
+`\refvar{Float}{}` deltaY = `\refvar{gamma}{}`(5) * (maxYt + maxZt);
+\end{lstlisting}
+
+取全部三个顶点的最大误差，边函数中积$x_i\otimes y_j$定界为
+\begin{align*}
+    (\max_i{|x_i|}+\delta_x)(\max_i{|y_i|}+\delta_y)(1\pm\epsilon_{\mathrm{m}})\, ,
+\end{align*}
+其绝对误差边界为
+\begin{align*}
+    \delta_{xy}=\gamma_1\max_i{|x_i|}\max_i{|y_i|}+\delta_y\max_i{|x_i|}+\delta_x\max_i{|y_i|}+\cdots\, .
+\end{align*}
+\pagebreak % TODO
+丢掉$\gamma$和$\delta$项之积（可忽略的）高阶项，
+边函数中两个$x$与$y$项之差的误差边界为
+\sidenote{译者注：我猜测的推导是：
+    先记$\hat{x}=\max\limits_i{|x_i|}$，
+    $\hat{y}=\max\limits_i{|y_i|}$，以$e_0$为例，则有
+    $e_0=(x_1y_2\pm\delta_{xy})\ominus(y_1x_2\pm\delta_{xy})=(x_1y_2-y_1x_2\pm2\delta_{xy})(1\pm\gamma_1)$。
+    于是$\delta_e=\gamma_1|x_1y_2-y_1x_2|+2\delta_{xy}(1+\gamma_1)$，
+    代入文中省略高阶项的$\delta_{xy}$并适当利用不等式缩放技巧，
+    有$\delta_e\le\gamma_1\cdot2\hat{x}\hat{y}+2\delta_{xy}(1+\gamma_1)
+        \approx2\gamma_1\hat{x}\hat{y}+2(\gamma_1\hat{x}\hat{y}+\delta_y\hat{x}+\delta_x\hat{y})(1+\gamma_1)
+        =2((\gamma_1^2+2\gamma_1)\hat{x}\hat{y}+\delta_y\hat{x}+\delta_x\hat{y})+2\gamma_1(\delta_y\hat{x}+\delta_x\hat{y})$，
+    再次忽略后一个括号的高阶项后只剩$2((\gamma_1^2+2\gamma_1)\hat{x}\hat{y}+\delta_y\hat{x}+\delta_x\hat{y})$。
+    注意到$\displaystyle\gamma_1^2+2\gamma_1
+        =\frac{\epsilon_{\mathrm{m}}^2}{(1-\epsilon_{\mathrm{m}})^2}+\frac{2\epsilon_{\mathrm{m}}}{1-\epsilon_{\mathrm{m}}}
+        =\frac{2\epsilon_{\mathrm{m}}-\epsilon_{\mathrm{m}}^2}{(1-\epsilon_{\mathrm{m}})^2}
+        <\frac{2\epsilon_{\mathrm{m}}}{1-2\epsilon_{\mathrm{m}}}=\gamma_2$，
+    于是取$\delta_e$为$2(\gamma_2\hat{x}\hat{y}+\delta_y\hat{x}+\delta_x\hat{y})$。}
+\begin{align*}
+    \delta_e=2(\gamma_2\max_i{|x_i|}\max_i{|y_i|}+\delta_y\max_i{|x_i|}+\delta_x\max_i{|y_i|})\, .
+\end{align*}
+
+\begin{lstlisting}
+`\initcode{Compute $\delta_e$ term for triangle t error bounds}{=}`
+`\refvar{Float}{}` deltaE = 2 * (`\refvar{gamma}{}`(2) * maxXt * maxYt + deltaY * maxXt +
+                    deltaX * maxYt);
+\end{lstlisting}
+
+再次通过取全部$e_i$项的最大误差来定界误差，
+\refeq{3.18}中算得的$t$的分子值误差边界为

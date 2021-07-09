@@ -692,7 +692,7 @@ inline bool `\initvar[Quadratic:2]{\refvar{Quadratic}{}}{}`(`\refvar{EFloat}{}` 
 
 有了浮点误差基本知识，我们现在专注用这些工具提供稳定的相交运算。
 
-\subsection{保守的光线-边界框相交}
+\subsection{保守的光线-边界框相交}\label{sub:保守的光线-边界框相交}
 浮点舍入误差可能造成光线-边界框相交测试错失光线实际上与框相交了的情况。
 尽管光线-边界框相交测试中偶尔有假正例是可以接受的，
 但我们希望永远不要错过实际的相交——处理好它对于\refsec{层次包围盒}中
@@ -1312,7 +1312,9 @@ IEEE保证若$a>b$，则$a\ominus b\ge0$（且若$a<b$，则$a\ominus b\le0$）�
     z=(1\oslash d_z)\otimes(p_z-o_z)\, .
 \end{align*}
 
-运用常规方法，我们可以发现对于三角形三个顶点的每一个$\bm p_i$，
+运用常规方法，我们可以发现
+\sidenote{译者注：我猜测同理于\protect\refsub{保守的光线-边界框相交}。}
+对于三角形三个顶点的每一个$\bm p_i$，
 其$z_i$中的最大误差定界为$\gamma_3|z_i|$，
 且我们因此会发现\emph{任何}$z$位置的误差保守上界取为这些误差的最大值：
 \begin{align*}
@@ -1331,7 +1333,9 @@ IEEE保证若$a>b$，则$a\ominus b\ge0$（且若$a<b$，则$a\ominus b\le0$）�
     e_2 & =(x_0\otimes y_1)\ominus(y_0\otimes x_1)\, .
 \end{align*}
 
-变换后的位置$x_i$和$y_i$的误差边界为
+变换后的位置$x_i$和$y_i$的误差边界
+\sidenote{译者注：我猜测是根据代码片\protect\refcode{Transform triangle vertices to ray coordinate space}{}的
+    步骤推导出来的，计算形式为$(\ominus)\oplus(-(\oslash)\otimes(\ominus))$，可对应到$\gamma_5$。}为
 \begin{align*}
     \delta_x & =\gamma_5(\max_i{|x_i|}+\max_i{|z_i|})\, , \\
     \delta_y & =\gamma_5(\max_i{|y_i|}+\max_i{|z_i|})\, .
@@ -1345,3 +1349,41 @@ IEEE保证若$a>b$，则$a\ominus b\ge0$（且若$a<b$，则$a\ominus b\le0$）�
 `\refvar{Float}{}` deltaY = `\refvar{gamma}{}`(5) * (maxYt + maxZt);
 \end{lstlisting}
 
+取全部三个顶点的最大误差，边函数中积$x_i\otimes y_j$定界为
+\begin{align*}
+    (\max_i{|x_i|}+\delta_x)(\max_i{|y_i|}+\delta_y)(1\pm\epsilon_{\mathrm{m}})\, ,
+\end{align*}
+其绝对误差边界为
+\begin{align*}
+    \delta_{xy}=\gamma_1\max_i{|x_i|}\max_i{|y_i|}+\delta_y\max_i{|x_i|}+\delta_x\max_i{|y_i|}+\cdots\, .
+\end{align*}
+\pagebreak % TODO
+丢掉$\gamma$和$\delta$项之积（可忽略的）高阶项，
+边函数中两个$x$与$y$项之差的误差边界为
+\sidenote{译者注：我猜测的推导是：
+    先记$\hat{x}=\max\limits_i{|x_i|}$，
+    $\hat{y}=\max\limits_i{|y_i|}$，以$e_0$为例，则有
+    $e_0=(x_1y_2\pm\delta_{xy})\ominus(y_1x_2\pm\delta_{xy})=(x_1y_2-y_1x_2\pm2\delta_{xy})(1\pm\gamma_1)$。
+    于是$\delta_e=\gamma_1|x_1y_2-y_1x_2|+2\delta_{xy}(1+\gamma_1)$，
+    代入文中省略高阶项的$\delta_{xy}$并适当利用不等式缩放技巧，
+    有$\delta_e\le\gamma_1\cdot2\hat{x}\hat{y}+2\delta_{xy}(1+\gamma_1)
+        \approx2\gamma_1\hat{x}\hat{y}+2(\gamma_1\hat{x}\hat{y}+\delta_y\hat{x}+\delta_x\hat{y})(1+\gamma_1)
+        =2((\gamma_1^2+2\gamma_1)\hat{x}\hat{y}+\delta_y\hat{x}+\delta_x\hat{y})+2\gamma_1(\delta_y\hat{x}+\delta_x\hat{y})$，
+    再次忽略后一个括号的高阶项后只剩$2((\gamma_1^2+2\gamma_1)\hat{x}\hat{y}+\delta_y\hat{x}+\delta_x\hat{y})$。
+    注意到$\displaystyle\gamma_1^2+2\gamma_1
+        =\frac{\epsilon_{\mathrm{m}}^2}{(1-\epsilon_{\mathrm{m}})^2}+\frac{2\epsilon_{\mathrm{m}}}{1-\epsilon_{\mathrm{m}}}
+        =\frac{2\epsilon_{\mathrm{m}}-\epsilon_{\mathrm{m}}^2}{(1-\epsilon_{\mathrm{m}})^2}
+        <\frac{2\epsilon_{\mathrm{m}}}{1-2\epsilon_{\mathrm{m}}}=\gamma_2$，
+    于是取$\delta_e$为$2(\gamma_2\hat{x}\hat{y}+\delta_y\hat{x}+\delta_x\hat{y})$。}
+\begin{align*}
+    \delta_e=2(\gamma_2\max_i{|x_i|}\max_i{|y_i|}+\delta_y\max_i{|x_i|}+\delta_x\max_i{|y_i|})\, .
+\end{align*}
+
+\begin{lstlisting}
+`\initcode{Compute $\delta_e$ term for triangle t error bounds}{=}`
+`\refvar{Float}{}` deltaE = 2 * (`\refvar{gamma}{}`(2) * maxXt * maxYt + deltaY * maxXt +
+                    deltaX * maxYt);
+\end{lstlisting}
+
+再次通过取全部$e_i$项的最大误差来定界误差，
+\refeq{3.18}中算得的$t$的分子值误差边界为

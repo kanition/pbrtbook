@@ -1217,3 +1217,13 @@ This chapter describes the quaternions and 4 x 4 matrices. Quaternions are stead
   pages   = {21-25},
   doi     = {10.1109/38.536271}
 }
+
+@phdthesis{Wächter_2008,
+  title        = {Quasi-Monte Carlo light transport simulation by efficient ray tracing},
+  url          = {https://oparu.uni-ulm.de/xmlui/handle/123456789/1001},
+  doi          = {10.18725/OPARU-974},
+  abstractnote = {Photorealistic image synthesis can be described by a path integral. This integral is numerically approximated by summing up contributions of transport paths that connect light sources and sensors like e.g. a camera or the eye. The paths are trajectories of Markov processes, whose edges are straight lines along rays of light and whose vertices are light scattering events. The goal of this thesis was to accelerate the simulation of light transport, to find new algorithms and data structures to efficiently trace rays, and to better approximate the distribution of light by simultaneously simulating an ensemble of paths instead of single trajectories, using quasi-Monte-Carlo methods. We first present new data structures and heuristics that feature a smaller memory footprint at improved numerical precision. In addition it is possible to ray trace even massive scenes in a strictly limited, a priori fixed, memory block using rapid construction techniques that allow to rebuild the complete data structure at interactive frame rates. All efforts were combined in a unified framework that further allows one to build the acceleration hierarchy using an on demand policy and optionally balance the construction time versus the ray intersection time. Besides finding faster ray tracing algorithms, the total number of rays to be shot was reduced by mathematical means. By simplifying complicated mathematical schemes in a non-obvious way, the time complexity of the quasi-Monte-Carlo simulation process was reduced. When concentrating on the fact that the underlying Fredholm integral equation is in fact of low dimensional structure if not solved by the Neumann series, the resulting algorithms are simpler and in addition much more efficient. The combination of these new techniques allows photorealistic image synthesis in almost realtime. The results are demonstrated by several academic and industrial applications.},
+  school       = {Universität Ulm},
+  author       = {Wächter, Carsten},
+  year         = {2008}
+}

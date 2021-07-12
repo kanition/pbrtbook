@@ -1299,34 +1299,6 @@ and two unusually shaped quartic surfaces, Kummer's quadruple and Steiner's surf
   year     = {2009}
 }
 
-@article{10.1145/964967.801137,
-  author     = {Kajiya, James T.},
-  title      = {New Techniques for Ray Tracing Procedurally Defined Objects},
-  year       = {1983},
-  issue_date = {July 1983},
-  publisher  = {Association for Computing Machinery},
-  address    = {New York, NY, USA},
-  volume     = {17},
-  number     = {3},
-  issn       = {0097-8930},
-  url        = {https://doi.org/10.1145/964967.801137},
-  doi        = {10.1145/964967.801137},
-  abstract   = {We present new algorithms for efficient ray tracing of three procedurally defined
-objects: fractal surfaces, prisms, and surfaces of revolution. The fractal surface
-algorithm performs recursive subdivision adaptively. Subsurfaces which cannot intersect
-a given ray are culled from further consideration. The prism algorithm transforms
-the three dimensional ray-surface intersection problem into a two dimensional ray-curve
-intersection problem, which is solved by the method of strip trees. The surface of
-revolution algorithm transforms the three dimensional ray-surface intersection problem
-into a two dimensional curve-curve intersection problem, which again is solved by
-strip trees.},
-  journal    = {SIGGRAPH Comput. Graph.},
-  month      = jul,
-  pages      = {91–102},
-  numpages   = {12},
-  keywords   = {Surfaces of revolution, Computer graphics, Ray tracing, Fractal surfaces, Stochastic models, Procedural modelling, Strip trees, Raster graphics}
-}
-
 @inproceedings{10.1145/800059.801137,
   author    = {Kajiya, James T.},
   title     = {New Techniques for Ray Tracing Procedurally Defined Objects},
@@ -1434,5 +1406,114 @@ to other 3-D deterministic fractals are also included.},
   month      = jul,
   pages      = {289–296},
   numpages   = {8}
+}
+
+@inproceedings{10.1145/800064.801287,
+  author    = {Kajiya, James T.},
+  title     = {Ray Tracing Parametric Patches},
+  year      = {1982},
+  isbn      = {0897910761},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/800064.801287},
+  doi       = {10.1145/800064.801287},
+  abstract  = {This paper describes an algorithm that uses ray tracing techniques to display bivariate
+polynomial surface patches. A new intersection algorithm is developed which uses ideas
+from algebraic geometry to obtain a numerical procedure for finding the intersection
+of a ray and a patch without subdivision. The algorithm may use complex coordinates
+for the (u, v)-parameters of the patches. The choice of these coordinates makes the
+computations more uniform, so that there are fewer special cases to be considered.
+In particular, the appearance and disappearance of silhouette edges can be handled
+quite naturally. The uniformity of these techniques may be suitable for implementation
+on either a general purpose pipelined machine, or on special purpose hardware.},
+  booktitle = {Proceedings of the 9th Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {245–254},
+  numpages  = {10},
+  keywords  = {Parametric patches, Ray tracing, Raster graphics, Computer graphics},
+  location  = {Boston, Massachusetts, USA},
+  series    = {SIGGRAPH '82}
+}
+
+@article{722295,
+  author  = {Stürzlinger, W.},
+  journal = {IEEE Transactions on Visualization and Computer Graphics},
+  title   = {Ray-tracing triangular trimmed free-form surfaces},
+  year    = {1998},
+  volume  = {4},
+  number  = {3},
+  pages   = {202-214},
+  doi     = {10.1109/2945.722295}
+}
+
+@article{doi:10.1080/10867651.2000.10487519,
+  author    = { William   Martin  and  Elaine   Cohen  and  Russell   Fish  and  Peter   Shirley },
+  title     = {Practical Ray Tracing of Trimmed NURBS Surfaces},
+  journal   = {Journal of Graphics Tools},
+  volume    = {5},
+  number    = {1},
+  pages     = {27-52},
+  year      = {2000},
+  publisher = {Taylor & Francis},
+  doi       = {10.1080/10867651.2000.10487519},
+  url       = {https://doi.org/10.1080/10867651.2000.10487519},
+  eprint    = {https://doi.org/10.1080/10867651.2000.10487519}
+}
+
+@article{https://doi.org/10.1111/1467-8659.00535,
+  author   = {Roth, S. H. Martin and Diezi, Patrick and Gross, Markus H.},
+  title    = {Ray Tracing Triangular Bézier Patches},
+  journal  = {Computer Graphics Forum},
+  volume   = {20},
+  number   = {3},
+  pages    = {422-432},
+  keywords = {Isosurface, Reconstruction filter, Octree, Quantization.},
+  doi      = {https://doi.org/10.1111/1467-8659.00535},
+  url      = {https://onlinelibrary.wiley.com/doi/abs/10.1111/1467-8659.00535},
+  eprint   = {https://onlinelibrary.wiley.com/doi/pdf/10.1111/1467-8659.00535},
+  abstract = {We present a new approach to finding ray–patch intersections with triangular Bernstein–Bézier patches of arbitrary degree. This paper extends and complements on the short presentation17 . Unlike a previous approach which was based on a combination of hierarchical subdivision and a Newton–like iteration scheme21 , this work adapts the concept of Bézier clipping to the triangular domain. The problem of reporting wrong intersections, inherent to the original Bézier clipping algorithm14 , is inves-tigated and opposed to the triangular case. It turns out that reporting wrong hits is very improbable, even close to impossible, in the triangular set–up. A combination of Bézier clipping and a simple hierarchy of nested bounding volumes offers a reliable and accurate solution to the problem of ray tracing triangular Bézier patches.},
+  year     = {2001}
+}
+
+@article{doi:10.1080/2151237X.2006.10129218,
+  author    = { Carsten   Benthin  and  Ingo   Wald  and  Philipp   Slusallek },
+  title     = {Techniques for Interactive Ray Tracing of Bézier Surfaces},
+  journal   = {Journal of Graphics Tools},
+  volume    = {11},
+  number    = {2},
+  pages     = {1-16},
+  year      = {2006},
+  publisher = {Taylor & Francis},
+  doi       = {10.1080/2151237X.2006.10129218},
+  url       = {https://doi.org/10.1080/2151237X.2006.10129218},
+  eprint    = {https://doi.org/10.1080/2151237X.2006.10129218}
+}
+
+@article{doi:10.1080/10867651.2004.10504896,
+  author    = { Shaun D.   Ramsey  and  Kristin   Potter  and  Charles   Hansen },
+  title     = {Ray Bilinear Patch Intersections},
+  journal   = {Journal of Graphics Tools},
+  volume    = {9},
+  number    = {3},
+  pages     = {41-47},
+  year      = {2004},
+  publisher = {Taylor & Francis},
+  doi       = {10.1080/10867651.2004.10504896},
+  url       = {https://doi.org/10.1080/10867651.2004.10504896},
+  eprint    = {https://doi.org/10.1080/10867651.2004.10504896}
+}
+
+@article{10.1111/j.1467-8659.2011.01993.x,
+  author   = {Ogaki, Shinji and Tokuyoshi, Yusuke},
+  title    = {Direct Ray Tracing of Phong Tessellation},
+  journal  = {Computer Graphics Forum},
+  volume   = {30},
+  number   = {4},
+  pages    = {1337-1344},
+  keywords = {I.3.7 Computer Graphics: Three-Dimensional Graphics and Realism—Raytracing},
+  doi      = {https://doi.org/10.1111/j.1467-8659.2011.01993.x},
+  url      = {https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1467-8659.2011.01993.x},
+  eprint   = {https://onlinelibrary.wiley.com/doi/pdf/10.1111/j.1467-8659.2011.01993.x},
+  abstract = {Abstract There are two major ways of calculating ray and parametric surface intersections in rendering. The first is through the use of tessellated triangles, and the second is to use parametric surfaces together with numerical methods such as Newton's method. Both methods are computationally expensive and complicated to implement. In this paper, we focus on Phong Tessellation and introduce a simple direct ray tracing method for Phong Tessellation. Our method enables rendering smooth surfaces in a computationally inexpensive yet robust way.},
+  year     = {2011}
 }
 

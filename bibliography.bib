@@ -129,22 +129,6 @@
   series    = {SIGGRAPH '89}
 }
 
-@inproceedings{10.1145/74333.74361,
-  author    = {Kajiya, J. T. and Kay, T. L.},
-  title     = {Rendering Fur with Three Dimensional Textures},
-  year      = {1989},
-  isbn      = {0897913124},
-  publisher = {Association for Computing Machinery},
-  address   = {New York, NY, USA},
-  url       = {https://doi.org/10.1145/74333.74361},
-  doi       = {10.1145/74333.74361},
-  abstract  = {We present a method for rendering scenes with fine detail via an object called a texel, a rendering primitive inspired by volume densities mixed with anisotropic lighting models. This technique solves a long outstanding problem in image synthesis: the rendering of furry surfaces.},
-  booktitle = {Proceedings of the 16th Annual Conference on Computer Graphics and Interactive Techniques},
-  pages     = {271–280},
-  numpages  = {10},
-  series    = {SIGGRAPH '89}
-}
-
 # 1.3.2
 @book{10.5555/136311,
   author    = {Levine, John R. and Mason, Tony and Brown, Doug},
@@ -1227,3 +1211,228 @@ This chapter describes the quaternions and 4 x 4 matrices. Quaternions are stead
   author       = {Wächter, Carsten},
   year         = {2008}
 }
+
+% 3.10
+@techreport{Heckbert84themathematics,
+  author      = {Paul S. Heckbert},
+  title       = {The Mathematics of Quadric Surface Rendering and SOID},
+  titleaddon  = {3-D Technical Memo 4},
+  institution = {New York Institute of Technology Computer Graphics Laboratory Three Dimensional Animation Systems Group},
+  year        = {1984},
+  month       = {July}
+}
+
+@inproceedings{10.1145/800059.801136,
+  author    = {Hanrahan, Pat},
+  title     = {Ray Tracing Algebraic Surfaces},
+  year      = {1983},
+  isbn      = {0897911091},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/800059.801136},
+  doi       = {10.1145/800059.801136},
+  abstract  = {Many interesting surfaces can be written as polynomial functions of the spatial coordinates,
+often of low degree. We present a method based on a ray casting algorithm, extended
+to work in more than three dimensions, to produce pictures of these surfaces. The
+method uses a symbolic algebra system to automatically derive the equation of intersection
+between the ray and the surface and then solves this equation using an exact polynomial
+root finding algorithm.Included are illustrations of the cusp catastrophe surface,
+and two unusually shaped quartic surfaces, Kummer's quadruple and Steiner's surface.},
+  booktitle = {Proceedings of the 10th Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {83–90},
+  numpages  = {8},
+  keywords  = {Polynomial roots, Ray tracing, Algebraic surfaces, Curved surface display, Symbolic algebra},
+  location  = {Detroit, Michigan, USA},
+  series    = {SIGGRAPH '83}
+}
+
+@article{10.1145/964967.801136,
+  author     = {Hanrahan, Pat},
+  title      = {Ray Tracing Algebraic Surfaces},
+  year       = {1983},
+  issue_date = {July 1983},
+  publisher  = {Association for Computing Machinery},
+  address    = {New York, NY, USA},
+  volume     = {17},
+  number     = {3},
+  issn       = {0097-8930},
+  url        = {https://doi.org/10.1145/964967.801136},
+  doi        = {10.1145/964967.801136},
+  abstract   = {Many interesting surfaces can be written as polynomial functions of the spatial coordinates,
+often of low degree. We present a method based on a ray casting algorithm, extended
+to work in more than three dimensions, to produce pictures of these surfaces. The
+method uses a symbolic algebra system to automatically derive the equation of intersection
+between the ray and the surface and then solves this equation using an exact polynomial
+root finding algorithm.Included are illustrations of the cusp catastrophe surface,
+and two unusually shaped quartic surfaces, Kummer's quadruple and Steiner's surface.},
+  journal    = {SIGGRAPH Comput. Graph.},
+  month      = jul,
+  pages      = {83–90},
+  numpages   = {8},
+  keywords   = {Symbolic algebra, Polynomial roots, Curved surface display, Ray tracing, Algebraic surfaces}
+}
+
+@inproceedings{10.5555/93267.93276,
+  author    = {Mitchell, D. P.},
+  title     = {Robust Ray Intersection with Interval Arithmetic},
+  year      = {1990},
+  publisher = {Canadian Information Processing Society},
+  address   = {CAN},
+  booktitle = {Proceedings on Graphics Interface '90},
+  pages     = {68–74},
+  numpages  = {7},
+  location  = {Halifax, Nova Scotia}
+}
+
+@article{10.1111/j.1467-8659.2008.01189.x,
+  author   = {Knoll, A. and Hijazi, Y. and Kensler, A. and Schott, M. and Hansen, C. and Hagen, H.},
+  title    = {Fast Ray Tracing of Arbitrary Implicit Surfaces with Interval and Affine Arithmetic},
+  journal  = {Computer Graphics Forum},
+  volume   = {28},
+  number   = {1},
+  pages    = {26-40},
+  keywords = {ray tracing, reduced affine arithmetic, shader metaprogramming, I.3.1, I.3.5, I.3.7 Computer Graphics: Graphics processors; curve, surface, solid and object representations; ray tracing},
+  doi      = {https://doi.org/10.1111/j.1467-8659.2008.01189.x},
+  url      = {https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1467-8659.2008.01189.x},
+  eprint   = {https://onlinelibrary.wiley.com/doi/pdf/10.1111/j.1467-8659.2008.01189.x},
+  abstract = {Abstract Existing techniques for rendering arbitrary-form implicit surfaces are limited, either in performance, correctness or flexibility. Ray tracing algorithms employing interval arithmetic (IA) or affine arithmetic (AA) for root-funding are robust and general in the class of surfaces they support, but traditionally slow. Nonetheless, implemented efficiently using a stack-driven iterative algorithm and SIMD vector instructions, these methods can achieve interactive performance for common algebraic surfaces on the CPU. A similar algorithm can also be implemented stacklessly, allowing for efficient ray tracing on the GPU. This paper presents these algorithms, as well as an inclusion-preserving reduced affine arithmetic (RAA) for faster ray-surface intersection. Shader metaprogramming allows for immediate and automatic generation of symbolic expressions and their interval or affine extensions. Moreover, we are able to render even complex forms robustly, in real-time at high resolution.},
+  year     = {2009}
+}
+
+@article{10.1145/964967.801137,
+  author     = {Kajiya, James T.},
+  title      = {New Techniques for Ray Tracing Procedurally Defined Objects},
+  year       = {1983},
+  issue_date = {July 1983},
+  publisher  = {Association for Computing Machinery},
+  address    = {New York, NY, USA},
+  volume     = {17},
+  number     = {3},
+  issn       = {0097-8930},
+  url        = {https://doi.org/10.1145/964967.801137},
+  doi        = {10.1145/964967.801137},
+  abstract   = {We present new algorithms for efficient ray tracing of three procedurally defined
+objects: fractal surfaces, prisms, and surfaces of revolution. The fractal surface
+algorithm performs recursive subdivision adaptively. Subsurfaces which cannot intersect
+a given ray are culled from further consideration. The prism algorithm transforms
+the three dimensional ray-surface intersection problem into a two dimensional ray-curve
+intersection problem, which is solved by the method of strip trees. The surface of
+revolution algorithm transforms the three dimensional ray-surface intersection problem
+into a two dimensional curve-curve intersection problem, which again is solved by
+strip trees.},
+  journal    = {SIGGRAPH Comput. Graph.},
+  month      = jul,
+  pages      = {91–102},
+  numpages   = {12},
+  keywords   = {Surfaces of revolution, Computer graphics, Ray tracing, Fractal surfaces, Stochastic models, Procedural modelling, Strip trees, Raster graphics}
+}
+
+@inproceedings{10.1145/800059.801137,
+  author    = {Kajiya, James T.},
+  title     = {New Techniques for Ray Tracing Procedurally Defined Objects},
+  year      = {1983},
+  isbn      = {0897911091},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/800059.801137},
+  doi       = {10.1145/800059.801137},
+  abstract  = {We present new algorithms for efficient ray tracing of three procedurally defined
+objects: fractal surfaces, prisms, and surfaces of revolution. The fractal surface
+algorithm performs recursive subdivision adaptively. Subsurfaces which cannot intersect
+a given ray are culled from further consideration. The prism algorithm transforms
+the three dimensional ray-surface intersection problem into a two dimensional ray-curve
+intersection problem, which is solved by the method of strip trees. The surface of
+revolution algorithm transforms the three dimensional ray-surface intersection problem
+into a two dimensional curve-curve intersection problem, which again is solved by
+strip trees.},
+  booktitle = {Proceedings of the 10th Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {91–102},
+  numpages  = {12},
+  keywords  = {Stochastic models, Procedural modelling, Fractal surfaces, Computer graphics, Ray tracing, Surfaces of revolution, Strip trees, Raster graphics},
+  location  = {Detroit, Michigan, USA},
+  series    = {SIGGRAPH '83}
+}
+
+@article{10.1145/358523.358553,
+  author     = {Fournier, Alain and Fussell, Don and Carpenter, Loren},
+  title      = {Computer Rendering of Stochastic Models},
+  year       = {1982},
+  issue_date = {June 1982},
+  publisher  = {Association for Computing Machinery},
+  address    = {New York, NY, USA},
+  volume     = {25},
+  number     = {6},
+  issn       = {0001-0782},
+  url        = {https://doi.org/10.1145/358523.358553},
+  doi        = {10.1145/358523.358553},
+  abstract   = {A recurrent problem in generating realistic pictures by computers is to represent
+natural irregular objects and phenomena without undue time or space overhead. We develop
+a new and powerful solution to this computer graphics problem by modeling objects
+as sample paths of stochastic processes. Of particular interest are those stochastic
+processes which previously have been found to be useful models of the natural phenomena
+to be represented. One such model applicable to the representation of terrains, known
+as “fractional Brownian motion,” has been developed by Mandelbrot.The value of a new
+approach to object modeling in computer graphics depends largely on the efficiency
+of the techniques used to implement the model. We introduce a new algorithm that computes
+a realistic, visually satisfactory approximation to fractional Brownian motion in
+faster time than with exact calculations. A major advantage of this technique is that
+it allows us to compute the surface to arbitrary levels of details without increasing
+the database. Thus objects with complex appearances can be displayed from a very small
+database. The character of the surface can be controlled by merely modifying a few
+parameters. A similar change allows complex motion to be created inexpensively.},
+  journal    = {Commun. ACM},
+  month      = jun,
+  pages      = {371–384},
+  numpages   = {14},
+  keywords   = {stochastic models, terrain models, fractals}
+}
+
+@inproceedings{10.1145/74333.74363,
+  author    = {Hart, J. C. and Sandin, D. J. and Kauffman, L. H.},
+  title     = {Ray Tracing Deterministic 3-D Fractals},
+  year      = {1989},
+  isbn      = {0897913124},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/74333.74363},
+  doi       = {10.1145/74333.74363},
+  abstract  = {As shown in 1982, Julia sets of quadratic functions as well as many other deterministic
+fractals exist in spaces of higher dimensionality than the complex plane. Originally
+a boundary-tracking algorithm was used to view these structures but required a large
+amount of storage space to operate. By ray tracing these objects, the storage facilities
+of a graphics workstation frame buffer are sufficient. A short discussion of a specific
+set of 3-D deterministic fractals precedes a full description of a ray-tracing algorithm
+applied to these objects. A comparison with the boundary-tracking method and applications
+to other 3-D deterministic fractals are also included.},
+  booktitle = {Proceedings of the 16th Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {289–296},
+  numpages  = {8},
+  series    = {SIGGRAPH '89}
+}
+
+@article{10.1145/74334.74363,
+  author     = {Hart, J. C. and Sandin, D. J. and Kauffman, L. H.},
+  title      = {Ray Tracing Deterministic 3-D Fractals},
+  year       = {1989},
+  issue_date = {July 1989},
+  publisher  = {Association for Computing Machinery},
+  address    = {New York, NY, USA},
+  volume     = {23},
+  number     = {3},
+  issn       = {0097-8930},
+  url        = {https://doi.org/10.1145/74334.74363},
+  doi        = {10.1145/74334.74363},
+  abstract   = {As shown in 1982, Julia sets of quadratic functions as well as many other deterministic
+fractals exist in spaces of higher dimensionality than the complex plane. Originally
+a boundary-tracking algorithm was used to view these structures but required a large
+amount of storage space to operate. By ray tracing these objects, the storage facilities
+of a graphics workstation frame buffer are sufficient. A short discussion of a specific
+set of 3-D deterministic fractals precedes a full description of a ray-tracing algorithm
+applied to these objects. A comparison with the boundary-tracking method and applications
+to other 3-D deterministic fractals are also included.},
+  journal    = {SIGGRAPH Comput. Graph.},
+  month      = jul,
+  pages      = {289–296},
+  numpages   = {8}
+}
+

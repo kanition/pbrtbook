@@ -1,6 +1,6 @@
 \section{扩展阅读}\label{sec:扩展阅读03}
 《\citetitle*{10.5555/94788}》有对光线-形状相交算法的大量综述\citep{10.5555/94788}。
-Goldstein和Nagel\parencite*{doi:10.1177/003754977101600104}讨论了光线-二次曲面相交，
+Goldstein和Nagel \parencite*{doi:10.1177/003754977101600104}讨论了光线-二次曲面相交，
 \citet{Heckbert84themathematics}详细讨论了图形应用中的二次曲面数学，
 引用了许多数学和其他领域的文献。
 \citet{10.1145/964967.801136}描述了为多项式隐式定义的曲面自动化推导光线相交例程过程的系统；
@@ -23,31 +23,31 @@ Martin等\parencite*{doi:10.1080/10867651.2000.10487519}
 Benthin等\parencite*{doi:10.1080/2151237X.2006.10129218}
 \sidenote{译者注：原文标注年份可能有误，已修正。}提供了更新结果并包含对之前工作的额外引用。
 Ramsey等\parencite*{doi:10.1080/10867651.2004.10504896}描述了一个计算与双线性块相交的高效算法，
-Ogaki和Tokuyoshi\parencite*{10.1111/j.1467-8659.2011.01993.x}介绍了
+Ogaki和Tokuyoshi \parencite*{10.1111/j.1467-8659.2011.01993.x}介绍了
 从三角网格生成的光滑曲面与每个顶点法线直接相交的技术。
 
 Gray等\parencite*{gray2017modern}\sidenote{译者注：此处引用文献改为了新版，章节可能无法对应。}写了
 对微分几何学的精彩介绍；该书的14.3节介绍了外恩加滕公式。
 
 \refsec{三角形网格}中的光线-三角形相交测试由Woop等\parencite*{Woop2013Watertight}开发。
-另一广泛使用的光线-三角形相交算法详见Möller和Trumbore\parencite*{doi:10.1080/10867651.1997.10487468}。
+另一广泛使用的光线-三角形相交算法详见Möller和Trumbore \parencite*{doi:10.1080/10867651.1997.10487468}。
 Lagae和Dutré\parencite*{doi:10.1080/2151237X.2005.10129208}、
 Shevtsov等\parencite*{shevtsov2007ray}描述了针对现代CPU架构
 高度优化的光线-三角形相交例程并包含了对其他最近方法的大量参考。
-Kensler和Shirley\parencite*{4061543}介绍了开发快速光线-三角形相交例程的有趣方法：
+Kensler和Shirley \parencite*{4061543}介绍了开发快速光线-三角形相交例程的有趣方法：
 他们实现了在数学上等价于光线-三角形测试的空间中执行搜索的程序，
 自动生成各种软件实现，然后对其做基准测试。
 最终，他们发现了比之前使用的更高效的光线-三角形例程。
 
-Phong和Crow\parencite*{phong1975improved}首次引入了插值每个顶点的着色法线
+Phong和Crow \parencite*{phong1975improved}首次引入了插值每个顶点的着色法线
 以得到来自多边形网格的光滑曲面外观的想法。
 
 内存中三角网格的布局\sidenote{译者注：原文layout。}在很多情况下对性能有重大影响。
 通常，如果3D空间中接近的三角形在内存中也接近，缓存命中率会更高，整个系统的性能会更好。
 在内存中创建缓存友好网格布局的算法详见
-Yoon等\parencite*{10.1145/1186822.1073278}以及Yoon和Lindstrom\parencite*{4015484}。
+Yoon等\parencite*{10.1145/1186822.1073278}以及Yoon和Lindstrom \parencite*{4015484}。
 
-\refsec{曲线}曲线相交算法基于Nakamaru和Ohno\parencite*{Nakamaru_raytracing}开发的方法。
+\refsec{曲线}曲线相交算法基于Nakamaru和Ohno \parencite*{Nakamaru_raytracing}开发的方法。
 更早计算光线与一般圆柱体相交的方法也用于渲染曲线，但低效得多\citep{10.1145/6116.6118,DeVoogt2000197}。
 \citet{10.5555/501891}的书籍提供了对样条的精彩概述，
 \refsec{曲线}用的开花方法由\citet{ramshaw1987blossoming}介绍。
@@ -58,12 +58,12 @@ Yoon等\parencite*{10.1145/1186822.1073278}以及Yoon和Lindstrom\parencite*{401
 最近，Qin等\parencite*{6684531}为毛发渲染描述了基于圆锥追踪的方法，它追踪细圆锥而不是光线。
 反过来，计算圆锥的贡献时可以考虑所有与圆锥相交的曲线，这允许每个像素用少量圆锥做高质量渲染。
 
-Doo和Sabin\parencite*{DOO1978356}以及Catmull和Clark\parencite*{CATMULL1978350}发明了细分曲面。
+Doo和Sabin \parencite*{DOO1978356}以及Catmull和Clark \parencite*{CATMULL1978350}发明了细分曲面。
 \citet{loop1987smooth}最初开发了Loop细分方法，尽管pbrt中的实现使用了
 由Hoppe等\parencite*{10.1145/192161.192233}开发的改进的细分规则和沿边界边缘的切线。
 细分曲面还有许多后续工作。
 SIGGRAPH课程笔记提供了2000年最先进技术的优秀总结并有大量参考\citep{zorin2000subdivision}。
-另见Warren和Weimer\parencite*{WARREN20021}\sidenote{译者注：原文少标注了一个作者，已修正。}关于此话题的书籍。
+另见Warren和Weimer \parencite*{WARREN20021}\sidenote{译者注：原文少标注了一个作者，已修正。}关于此话题的书籍。
 Müller等\parencite*{10.1111/1467-8659.t01-2-00703}描述了针对要测试相交的光线按需细化细分曲面的方法
 （另见Benthin等\parencite*{SCI:Ben2007a}的相关方法）。
 

@@ -1860,3 +1860,63 @@ optimization procedure.},
   keywords  = {parametrizations, linear algebra, eigenanalysis, surface evaluation, Catmull-Clark surfaces, subdivison surfaces},
   series    = {SIGGRAPH '98}
 }
+
+@inproceedings{10.1145/504502.504505,
+  author    = {Bolz, Jeffrey and Schr\"{o}der, Peter},
+  title     = {Rapid Evaluation of Catmull-Clark Subdivision Surfaces},
+  year      = {2002},
+  isbn      = {1581134681},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/504502.504505},
+  doi       = {10.1145/504502.504505},
+  abstract  = {Using subdivision as a basic primitive for the construction of arbitrary topology,
+smooth, free-form surfaces is attractive for content destined for display on devices
+with greatly varying rendering performance. Subdivision naturally supports level of
+detail rendering and powerful compression algorithms. While the underlying algorithms
+are conceptually simple it is difficult to implement player engines which achieve
+optimal performance on modern CPUs such as the Intel Pentium family.In this paper
+we describe a novel table driven evaluation strategy for subdivision surfaces using
+as an example the scheme of Catmull and Clark. Cache conscious design and exploitation
+of SIMD instructions allows us to achieve nearly 100% FPU utilization in the inner
+loop and achieve a composite performance of 1.2 flop/cycle on the Intel PIII and 1.8
+flop/cycle on the Intel P4 including all memory transfers. The algorithm supports
+tradeoffs between cache size and memory bus usage which we examine. A library which
+implements this engine is freely available from the authors.},
+  booktitle = {Proceedings of the Seventh International Conference on 3D Web Technology},
+  pages     = {11–17},
+  numpages  = {7},
+  location  = {Tempe, Arizona, USA},
+  series    = {Web3D '02}
+}
+
+@inproceedings{10.1145/1572769.1572785,
+  author    = {Patney, Anjul and Ebeida, Mohamed S. and Owens, John D.},
+  title     = {Parallel View-Dependent Tessellation of Catmull-Clark Subdivision Surfaces},
+  year      = {2009},
+  isbn      = {9781605586038},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/1572769.1572785},
+  doi       = {10.1145/1572769.1572785},
+  abstract  = {We present a strategy for performing view-adaptive, crack-free tessellation of Catmull-Clark
+subdivision surfaces entirely on programmable graphics hardware. Our scheme extends
+the concept of breadth-first subdivision, which up to this point has only been applied
+to parametric patches. While mesh representations designed for a CPU often involve
+pointer-based structures and irregular perelement storage, neither of these is well-suited
+to GPU execution. To solve this problem, we use a simple yet effective data structure
+for representing a subdivision mesh, and design a careful algorithm to update the
+mesh in a completely parallel manner. We demonstrate that in spite of the complexities
+of the subdivision procedure, real-time tessellation to pixel-sized primitives can
+be done.Our implementation does not rely on any approximation of the limit surface,
+and avoids both subdivision cracks and T-junctions in the subdivided mesh. Using the
+approach in this paper, we are able to perform real-time subdivision for several static
+as well as animated models. Rendering performance is scalable for increasingly complex
+models.},
+  booktitle = {Proceedings of the Conference on High Performance Graphics 2009},
+  pages     = {99–108},
+  numpages  = {10},
+  keywords  = {adaptive surface subdivision, subdivision surfaces, Catmull-Clark, GPGPU},
+  location  = {New Orleans, Louisiana},
+  series    = {HPG '09}
+}

@@ -57,3 +57,16 @@ Yoon等\parencite*{10.1145/1186822.1073278}以及Yoon和Lindstrom\parencite*{401
 计算\keyindex{体素}{voxel}{}网格来表示头发和毛发，并在一个小空间区域内保存许多毛发的聚合信息。
 最近，Qin等\parencite*{6684531}为毛发渲染描述了基于圆锥追踪的方法，它追踪细圆锥而不是光线。
 反过来，计算圆锥的贡献时可以考虑所有与圆锥相交的曲线，这允许每个像素用少量圆锥做高质量渲染。
+
+Doo和Sabin\parencite*{DOO1978356}以及Catmull和Clark\parencite*{CATMULL1978350}发明了细分曲面。
+\citet{loop1987smooth}最初开发了Loop细分方法，尽管pbrt中的实现使用了
+由Hoppe等\parencite*{10.1145/192161.192233}开发的改进的细分规则和沿边界边缘的切线。
+细分曲面还有许多后续工作。
+SIGGRAPH课程笔记提供了2000年最先进技术的优秀总结并有大量参考\citep{zorin2000subdivision}。
+另见Warren和Weimer\parencite*{WARREN20021}\sidenote{译者注：原文少标注了一个作者，已修正。}关于此话题的书籍。
+Müller等\parencite*{10.1111/1467-8659.t01-2-00703}描述了针对要测试相交的光线按需细化细分曲面的方法
+（另见Benthin等\parencite*{SCI:Ben2007a}的相关方法）。
+
+细分曲面令人兴奋的进展是在曲面上任意点求值的能力\citep{10.1145/280814.280945}。
+像本章那样的细分曲面实现经常相对低效，解引用指针和运用细分规则花费的时间一样多。
+\citeauthor{10.1145/280814.280945}的方法避免了低效率。

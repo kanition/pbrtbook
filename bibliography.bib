@@ -1629,7 +1629,7 @@ of the algorithms or runtime applications.},
 @inproceedings{Nakamaru_raytracing,
   title        = {Ray tracing for curves primitive},
   author       = {Nakamaru, Koji and Ohno, Yoshio},
-  editor       = {Skala, V},
+  editor       = {Skala, Václav},
   booksubtitle = {10th International Conference on Computer Graphics, Visualization and Computer Vision 2002},
   year         = {2002},
   month        = {02},
@@ -1735,4 +1735,128 @@ Guide a true classic.}
   number  = {8},
   pages   = {1178-1188},
   doi     = {10.1109/TVCG.2013.270}
+}
+
+@article{DOO1978356,
+  title    = {Behaviour of recursive division surfaces near extraordinary points},
+  journal  = {Computer-Aided Design},
+  volume   = {10},
+  number   = {6},
+  pages    = {356-360},
+  year     = {1978},
+  issn     = {0010-4485},
+  doi      = {https://doi.org/10.1016/0010-4485(78)90111-2},
+  url      = {https://www.sciencedirect.com/science/article/pii/0010448578901112},
+  author   = {D. Doo and M. Sabin},
+  abstract = {The behaviour of the limits surface defined by a recursive division construction can be analysed in terms of the eigenvalues of a set of matrices. This analysis predicts effects actually observed, and leads to suggestions for the further improvement of the method.}
+}
+
+@article{CATMULL1978350,
+  title    = {Recursively generated B-spline surfaces on arbitrary topological meshes},
+  journal  = {Computer-Aided Design},
+  volume   = {10},
+  number   = {6},
+  pages    = {350-355},
+  year     = {1978},
+  issn     = {0010-4485},
+  doi      = {https://doi.org/10.1016/0010-4485(78)90110-0},
+  url      = {https://www.sciencedirect.com/science/article/pii/0010448578901100},
+  author   = {E. Catmull and J. Clark},
+  abstract = {This paper describes a method for recursively generating surfaces that approximate points lying-on a mesh of arbitrary topology. The method is presented as a generalization of a recursive bicubic B-spline patch subdivision algorithm. For rectangular control-point meshes, the method generates a standard B-spline surface. For non-rectangular meshes, it generates surfaces that are shown to reduce to a standard B-spline surface except at a small number of points, called extraordinary points. Therefore, everywhere except at these points the surface is continuous in tangent and curvature. At the extraordinary points, the pictures of the surface indicate that the surface is at least continuous in tangent, but no proof of continuity is given. A similar algorithm for biquadratic B-splines is also presented.}
+}
+
+@mastersthesis{loop1987smooth,
+  author = {Loop, Charles},
+  title  = {Smooth subdivision surfaces based on triangles},
+  school = {University of Utah, Department of Mathematics},
+  year   = {1987}
+}
+
+@inproceedings{10.1145/192161.192233,
+  author    = {Hoppe, Hugues and DeRose, Tony and Duchamp, Tom and Halstead, Mark and Jin, Hubert and McDonald, John and Schweitzer, Jean and Stuetzle, Werner},
+  title     = {Piecewise Smooth Surface Reconstruction},
+  year      = {1994},
+  isbn      = {0897916670},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/192161.192233},
+  doi       = {10.1145/192161.192233},
+  abstract  = {We present a general method for automatic reconstruction of accurate, concise, piecewise
+smooth surface models from scattered range data. The method can be used in a variety
+of applications such as reverse engineering—the automatic generation of CAD models
+from physical objects. Novel aspects of the method are its ability to model surfaces
+of arbitrary topological type and to recover sharp features such as creases and corners.
+The method has proven to be effective, as demonstrated by a number of examples using
+both simulated and real data.A key ingredient in the method, and a principal contribution
+of this paper, is the introduction of a new class of piecewise smooth surface representations
+based on subdivision. These surfaces have a number of properties that make  them ideal
+for use in surface reconstruction: they are simple to implement, they can model sharp
+features concisely, and they can be fit to scattered range data using an unconstrained
+optimization procedure.},
+  booktitle = {Proceedings of the 21st Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {295–302},
+  numpages  = {8},
+  keywords  = {geometric modeling, shape recovery, range data analysis, surface fitting, subdivision surfaces},
+  series    = {SIGGRAPH '94}
+}
+
+@article{zorin2000subdivision,
+  title   = {Subdivision for modeling and animation},
+  author  = {Zorin, Denis and Schroder, P and DeRose, A and Kobbelt, L and Levin, A and Sweldens, W},
+  journal = {SIGGRAPH2000 course notes},
+  year    = {2000}
+}
+
+@book{WARREN20021,
+  author    = {Joe Warren and Henrik Weimer},
+  title     = {Subdivision Methods for Geometric Design},
+  subtitle  = {A Constructive Approach},
+  publisher = {Morgan Kaufmann},
+  year      = {2002},
+  address   = {San Francisco},
+  series    = {The Morgan Kaufmann Series in Computer Graphics},
+  isbn      = {978-1-55860-446-9},
+  doi       = {https://doi.org/10.1016/B978-1-55860-446-9.X5000-5},
+  url       = {https://www.sciencedirect.com/book/9781558604469/subdivision-methods-for-geometric-design}
+}
+
+@article{10.1111/1467-8659.t01-2-00703,
+  author   = {Müller, Kerstin and Techmann, Torsten and Fellner, Dieter},
+  title    = {Adaptive Ray Tracing of Subdivision Surfaces},
+  journal  = {Computer Graphics Forum},
+  volume   = {22},
+  number   = {3},
+  pages    = {553-562},
+  doi      = {https://doi.org/10.1111/1467-8659.t01-2-00703},
+  url      = {https://onlinelibrary.wiley.com/doi/abs/10.1111/1467-8659.t01-2-00703},
+  eprint   = {https://onlinelibrary.wiley.com/doi/pdf/10.1111/1467-8659.t01-2-00703},
+  abstract = {Abstract Subdivision Surfaces as well as (interactive) ray tracing have become an important issue in computer graphics.But ray tracing of subdivision surfaces has received only little attention. We present a new approach for raytracing of subdivision surfaces. The algorithm uses a projection of the ray onto the surface and works mainly intwo dimensions along this projection. While proceeding from patch to patch, we examine the bounding volume oftheir borders: the lower the distance between ray and subdivision surface, the more refinement steps are adaptivelyapplied to the surface but only along the projection of the ray. The adaptive refinement of a patch is controlled bycurvature, size, its membership to the silhouette, and its potential contribution to the light transport. The algorithmis simple and mainly consists of elementary geometric computations. Hence it is fast and easy to implementwithout the need for elaborate preprocessing. The algorithm is robust in the sense that it deals with all features ofsubdivision surfaces like creases and corners. Categories and Subject Descripters (according to ACM CCS): I.3.7 [Computer Graphics]: Raytracing},
+  year     = {2003}
+}
+
+@techreport{SCI:Ben2007a,
+  author      = {Carsten Benthin and Solomon Boulos and Dylan Lacewell and Ingo Wald and Carsten Benthin and Solomon Boulos and Dylan Lacewell and Ingo Wald},
+  title       = {Packet-based Ray Tracing of Catmull-Clark Subdivision Surfaces},
+  number      = {UUSCI-2007-011},
+  year        = {2007},
+  institution = {University of Utah},
+  type        = {{SCI} Institute Technical Report},
+  keywords    = {interactive rt distributed interactive ray tracing dirt, rtcenter},
+  url         = {http://www.sci.utah.edu/publications/SCITechReports/UUSCI-2007-011.pdf}
+}
+
+@inproceedings{10.1145/280814.280945,
+  author    = {Stam, Jos},
+  title     = {Exact Evaluation of Catmull-Clark Subdivision Surfaces at Arbitrary Parameter Values},
+  year      = {1998},
+  isbn      = {0897919998},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/280814.280945},
+  doi       = {10.1145/280814.280945},
+  booktitle = {Proceedings of the 25th Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {395–404},
+  numpages  = {10},
+  keywords  = {parametrizations, linear algebra, eigenanalysis, surface evaluation, Catmull-Clark surfaces, subdivison surfaces},
+  series    = {SIGGRAPH '98}
 }

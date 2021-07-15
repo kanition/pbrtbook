@@ -1183,7 +1183,7 @@ This chapter describes the quaternions and 4 x 4 matrices. Quaternions are stead
 }
 
 @book{10.5555/1096474,
-  author    = {Wilkinson, James H.},
+  author    = {Wilkinson, James Hardy},
   title     = {Rounding Errors in Algebraic Processes},
   year      = {1994},
   isbn      = {0486679993},
@@ -1920,3 +1920,193 @@ models.},
   location  = {New Orleans, Louisiana},
   series    = {HPG '09}
 }
+
+@article{10.1145/103162.103163,
+  author     = {Goldberg, David},
+  title      = {What Every Computer Scientist Should Know about Floating-Point Arithmetic},
+  year       = {1991},
+  issue_date = {March 1991},
+  publisher  = {Association for Computing Machinery},
+  address    = {New York, NY, USA},
+  volume     = {23},
+  number     = {1},
+  issn       = {0360-0300},
+  url        = {https://doi.org/10.1145/103162.103163},
+  doi        = {10.1145/103162.103163},
+  abstract   = {Floating-point arithmetic is considered as esoteric subject by many people. This is
+rather surprising, because floating-point is ubiquitous in computer systems: Almost
+every language has a floating-point datatype; computers from PCs to supercomputers
+have floating-point accelerators; most compilers will be called upon to compile floating-point
+algorithms from time to time; and virtually every operating system must respond to
+floating-point exceptions such as overflow. This paper presents a tutorial on the
+aspects of floating-point that have a direct impact on designers of computer systems.
+It begins with background on floating-point representation and rounding error, continues
+with a discussion of the IEEE floating point standard, and concludes with examples
+of how computer system builders can better support floating point.},
+  journal    = {ACM Comput. Surv.},
+  month      = mar,
+  pages      = {5–48},
+  numpages   = {44},
+  keywords   = {underflow, exception, guard digit, rounding error, NaN, gradual underflow, floating-point standard, denormalized number, relative error, ulp, floating-point, overflow, rounding mode}
+}
+
+@article{10.1145/1644001.1644003,
+  author     = {Daumas, Marc and Melquiond, Guillaume},
+  title      = {Certification of Bounds on Expressions Involving Rounded Operators},
+  year       = {2010},
+  issue_date = {January 2010},
+  publisher  = {Association for Computing Machinery},
+  address    = {New York, NY, USA},
+  volume     = {37},
+  number     = {1},
+  issn       = {0098-3500},
+  url        = {https://doi.org/10.1145/1644001.1644003},
+  doi        = {10.1145/1644001.1644003},
+  abstract   = {Gappa is a tool designed to formally verify the correctness of numerical software
+and hardware. It uses interval arithmetic and forward error analysis to bound mathematical
+expressions that involve rounded as well as exact operators. It then generates a theorem
+and its proof for each verified enclosure. This proof can be automatically checked
+with a proof assistant, such as Coq or HOL Light. It relies on a large companion library
+of facts that we have developed. This Coq library provides theorems dealing with addition,
+multiplication, division, and square root, for both fixed- and floating-point arithmetics.
+Gappa uses multiple-precision dyadic fractions for the endpoints of intervals and
+performs forward error analysis on rounded operators when necessary. When asked, Gappa
+reports the best bounds it is able to reach for a given expression in a given context.
+This feature can be used to identify where the set of facts and automatic techniques
+implemented in Gappa becomes insufficient. Gappa handles seamlessly additional properties
+expressed as interval properties or rewriting rules in order to establish more intricate
+bounds. Recent work showed that Gappa is suited to discharge proof obligations generated
+for small pieces of software. They may be produced by third-party tools and the first
+applications of Gappa use proof obligations written by designers or obtained from
+traces of execution.},
+  journal    = {ACM Trans. Math. Softw.},
+  month      = jan,
+  articleno  = {2},
+  numpages   = {20},
+  keywords   = {HOL Light, proof obligation, proof system, dyadic fraction, floating point, Forward error analysis, interval arithmetic, PVS, Coq}
+}
+
+@inbook{10.5555/94788.94790,
+  author    = {Haines, Eric},
+  title     = {Essential Ray Tracing Algorithms},
+  year      = {1989},
+  isbn      = {0122861604},
+  publisher = {Academic Press Ltd.},
+  address   = {GBR},
+  booktitle = {An Introduction to Ray Tracing},
+  pages     = {33–77},
+  numpages  = {45}
+}
+
+@inproceedings{Amanatides1990:27,
+  author    = {J. Amanatides and D. P. Mitchell},
+  title     = {Some Regularization Problems in Ray Tracing},
+  booktitle = {Proceedings of Graphics Interface '90},
+  series    = {GI '90},
+  year      = {1990},
+  issn      = {0713-5424},
+  location  = {Halifax, Nova Scotia, Canada},
+  pages     = {221--228},
+  numpages  = {8},
+  url       = {http://graphicsinterface.org/wp-content/uploads/gi1990-27.pdf},
+  publisher = {Canadian Man-Computer Communications Society},
+  address   = {Toronto, Ontario, Canada}
+}
+
+@inproceedings{10.1145/74333.74364,
+  author    = {Kalra, D. and Barr, A. H.},
+  title     = {Guaranteed Ray Intersections with Implicit Surfaces},
+  year      = {1989},
+  isbn      = {0897913124},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/74333.74364},
+  doi       = {10.1145/74333.74364},
+  abstract  = {In this paper, we present a robust and mathematically sound ray-intersection algorithm
+for implicit surfaces. The algorithm is guaranteed to numerically find the nearest
+intersection of the surface with a ray, and is guaranteed not to miss fine features
+of the surface. It does not require fine tuning or human choice of interactive parameters.
+Instead, it requires two upper bounds: "L" that limits the net rate of change of the
+implicit surface function f(x,y,z) and "G" that limits the rate of change of the gradient.
+We refer to an implicit surface with these rate limits as an "LG-implicit surface."Existing
+schemes to intersect a ray with an implicit surface have typically been guaranteed
+to work only for a limited set of implicit functions, such as quadric surfaces or
+polynomials, or else have been ad-hoc and have not been guaranteed to work. Our technique
+significantly extends the ability to intersect rays with implicit surfaces in a guaranteed
+fashion.},
+  booktitle = {Proceedings of the 16th Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {297–306},
+  numpages  = {10},
+  series    = {SIGGRAPH '89}
+}
+
+@article{10.1145/74334.74364,
+  author     = {Kalra, D. and Barr, A. H.},
+  title      = {Guaranteed Ray Intersections with Implicit Surfaces},
+  year       = {1989},
+  issue_date = {July 1989},
+  publisher  = {Association for Computing Machinery},
+  address    = {New York, NY, USA},
+  volume     = {23},
+  number     = {3},
+  issn       = {0097-8930},
+  url        = {https://doi.org/10.1145/74334.74364},
+  doi        = {10.1145/74334.74364},
+  abstract   = {In this paper, we present a robust and mathematically sound ray-intersection algorithm
+for implicit surfaces. The algorithm is guaranteed to numerically find the nearest
+intersection of the surface with a ray, and is guaranteed not to miss fine features
+of the surface. It does not require fine tuning or human choice of interactive parameters.
+Instead, it requires two upper bounds: "L" that limits the net rate of change of the
+implicit surface function f(x,y,z) and "G" that limits the rate of change of the gradient.
+We refer to an implicit surface with these rate limits as an "LG-implicit surface."Existing
+schemes to intersect a ray with an implicit surface have typically been guaranteed
+to work only for a limited set of implicit functions, such as quadric surfaces or
+polynomials, or else have been ad-hoc and have not been guaranteed to work. Our technique
+significantly extends the ability to intersect rays with implicit surfaces in a guaranteed
+fashion.},
+  journal    = {SIGGRAPH Comput. Graph.},
+  month      = jul,
+  pages      = {297–306},
+  numpages   = {10}
+}
+
+@inproceedings{4061542,
+  author    = {Dammertz, H. and Keller, A.},
+  booktitle = {2006 IEEE Symposium on Interactive Ray Tracing},
+  title     = {Improving Ray Tracing Precision by Object Space Intersection Computation},
+  year      = {2006},
+  volume    = {},
+  number    = {},
+  pages     = {25-31},
+  doi       = {10.1109/RT.2006.280211}
+}
+
+@inproceedings{10.1145/73833.73857,
+  author    = {Salesin, D. and Stolfi, J and Guibas, L.},
+  title     = {Epsilon Geometry: Building Robust Algorithms from Imprecise Computations},
+  year      = {1989},
+  isbn      = {0897913183},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/73833.73857},
+  doi       = {10.1145/73833.73857},
+  booktitle = {Proceedings of the Fifth Annual Symposium on Computational Geometry},
+  pages     = {208–217},
+  numpages  = {10},
+  location  = {Saarbruchen, West Germany},
+  series    = {SCG '89}
+}
+
+@article{Ize2013BVH,
+  author  = {Thiago Ize},
+  title   = {Robust {BVH} Ray Traversal},
+  year    = {2013},
+  month   = {July},
+  day     = {19},
+  journal = {Journal of Computer Graphics Techniques (JCGT)},
+  volume  = {2},
+  number  = {2},
+  pages   = {12--27},
+  url     = {http://jcgt.org/published/0002/02/02/},
+  issn    = {2331-7418}
+}          

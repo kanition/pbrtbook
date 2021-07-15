@@ -129,22 +129,6 @@
   series    = {SIGGRAPH '89}
 }
 
-@inproceedings{10.1145/74333.74361,
-  author    = {Kajiya, J. T. and Kay, T. L.},
-  title     = {Rendering Fur with Three Dimensional Textures},
-  year      = {1989},
-  isbn      = {0897913124},
-  publisher = {Association for Computing Machinery},
-  address   = {New York, NY, USA},
-  url       = {https://doi.org/10.1145/74333.74361},
-  doi       = {10.1145/74333.74361},
-  abstract  = {We present a method for rendering scenes with fine detail via an object called a texel, a rendering primitive inspired by volume densities mixed with anisotropic lighting models. This technique solves a long outstanding problem in image synthesis: the rendering of furry surfaces.},
-  booktitle = {Proceedings of the 16th Annual Conference on Computer Graphics and Interactive Techniques},
-  pages     = {271–280},
-  numpages  = {10},
-  series    = {SIGGRAPH '89}
-}
-
 # 1.3.2
 @book{10.5555/136311,
   author    = {Levine, John R. and Mason, Tony and Brown, Doug},
@@ -1199,7 +1183,7 @@ This chapter describes the quaternions and 4 x 4 matrices. Quaternions are stead
 }
 
 @book{10.5555/1096474,
-  author    = {Wilkinson, James H.},
+  author    = {Wilkinson, James Hardy},
   title     = {Rounding Errors in Algebraic Processes},
   year      = {1994},
   isbn      = {0486679993},
@@ -1227,3 +1211,902 @@ This chapter describes the quaternions and 4 x 4 matrices. Quaternions are stead
   author       = {Wächter, Carsten},
   year         = {2008}
 }
+
+% 3.10
+@techreport{Heckbert84themathematics,
+  author      = {Paul S. Heckbert},
+  title       = {The Mathematics of Quadric Surface Rendering and SOID},
+  titleaddon  = {3-D Technical Memo 4},
+  institution = {New York Institute of Technology Computer Graphics Laboratory Three Dimensional Animation Systems Group},
+  year        = {1984},
+  month       = {July}
+}
+
+@inproceedings{10.1145/800059.801136,
+  author    = {Hanrahan, Pat},
+  title     = {Ray Tracing Algebraic Surfaces},
+  year      = {1983},
+  isbn      = {0897911091},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/800059.801136},
+  doi       = {10.1145/800059.801136},
+  abstract  = {Many interesting surfaces can be written as polynomial functions of the spatial coordinates,
+often of low degree. We present a method based on a ray casting algorithm, extended
+to work in more than three dimensions, to produce pictures of these surfaces. The
+method uses a symbolic algebra system to automatically derive the equation of intersection
+between the ray and the surface and then solves this equation using an exact polynomial
+root finding algorithm.Included are illustrations of the cusp catastrophe surface,
+and two unusually shaped quartic surfaces, Kummer's quadruple and Steiner's surface.},
+  booktitle = {Proceedings of the 10th Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {83–90},
+  numpages  = {8},
+  keywords  = {Polynomial roots, Ray tracing, Algebraic surfaces, Curved surface display, Symbolic algebra},
+  location  = {Detroit, Michigan, USA},
+  series    = {SIGGRAPH '83}
+}
+
+@article{10.1145/964967.801136,
+  author     = {Hanrahan, Pat},
+  title      = {Ray Tracing Algebraic Surfaces},
+  year       = {1983},
+  issue_date = {July 1983},
+  publisher  = {Association for Computing Machinery},
+  address    = {New York, NY, USA},
+  volume     = {17},
+  number     = {3},
+  issn       = {0097-8930},
+  url        = {https://doi.org/10.1145/964967.801136},
+  doi        = {10.1145/964967.801136},
+  abstract   = {Many interesting surfaces can be written as polynomial functions of the spatial coordinates,
+often of low degree. We present a method based on a ray casting algorithm, extended
+to work in more than three dimensions, to produce pictures of these surfaces. The
+method uses a symbolic algebra system to automatically derive the equation of intersection
+between the ray and the surface and then solves this equation using an exact polynomial
+root finding algorithm.Included are illustrations of the cusp catastrophe surface,
+and two unusually shaped quartic surfaces, Kummer's quadruple and Steiner's surface.},
+  journal    = {SIGGRAPH Comput. Graph.},
+  month      = jul,
+  pages      = {83–90},
+  numpages   = {8},
+  keywords   = {Symbolic algebra, Polynomial roots, Curved surface display, Ray tracing, Algebraic surfaces}
+}
+
+@inproceedings{10.5555/93267.93276,
+  author    = {Mitchell, D. P.},
+  title     = {Robust Ray Intersection with Interval Arithmetic},
+  year      = {1990},
+  publisher = {Canadian Information Processing Society},
+  address   = {CAN},
+  booktitle = {Proceedings on Graphics Interface '90},
+  pages     = {68–74},
+  numpages  = {7},
+  location  = {Halifax, Nova Scotia}
+}
+
+@article{10.1111/j.1467-8659.2008.01189.x,
+  author   = {Knoll, A. and Hijazi, Y. and Kensler, A. and Schott, M. and Hansen, C. and Hagen, H.},
+  title    = {Fast Ray Tracing of Arbitrary Implicit Surfaces with Interval and Affine Arithmetic},
+  journal  = {Computer Graphics Forum},
+  volume   = {28},
+  number   = {1},
+  pages    = {26-40},
+  keywords = {ray tracing, reduced affine arithmetic, shader metaprogramming, I.3.1, I.3.5, I.3.7 Computer Graphics: Graphics processors; curve, surface, solid and object representations; ray tracing},
+  doi      = {https://doi.org/10.1111/j.1467-8659.2008.01189.x},
+  url      = {https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1467-8659.2008.01189.x},
+  eprint   = {https://onlinelibrary.wiley.com/doi/pdf/10.1111/j.1467-8659.2008.01189.x},
+  abstract = {Abstract Existing techniques for rendering arbitrary-form implicit surfaces are limited, either in performance, correctness or flexibility. Ray tracing algorithms employing interval arithmetic (IA) or affine arithmetic (AA) for root-funding are robust and general in the class of surfaces they support, but traditionally slow. Nonetheless, implemented efficiently using a stack-driven iterative algorithm and SIMD vector instructions, these methods can achieve interactive performance for common algebraic surfaces on the CPU. A similar algorithm can also be implemented stacklessly, allowing for efficient ray tracing on the GPU. This paper presents these algorithms, as well as an inclusion-preserving reduced affine arithmetic (RAA) for faster ray-surface intersection. Shader metaprogramming allows for immediate and automatic generation of symbolic expressions and their interval or affine extensions. Moreover, we are able to render even complex forms robustly, in real-time at high resolution.},
+  year     = {2009}
+}
+
+@inproceedings{10.1145/800059.801137,
+  author    = {Kajiya, James T.},
+  title     = {New Techniques for Ray Tracing Procedurally Defined Objects},
+  year      = {1983},
+  isbn      = {0897911091},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/800059.801137},
+  doi       = {10.1145/800059.801137},
+  abstract  = {We present new algorithms for efficient ray tracing of three procedurally defined
+objects: fractal surfaces, prisms, and surfaces of revolution. The fractal surface
+algorithm performs recursive subdivision adaptively. Subsurfaces which cannot intersect
+a given ray are culled from further consideration. The prism algorithm transforms
+the three dimensional ray-surface intersection problem into a two dimensional ray-curve
+intersection problem, which is solved by the method of strip trees. The surface of
+revolution algorithm transforms the three dimensional ray-surface intersection problem
+into a two dimensional curve-curve intersection problem, which again is solved by
+strip trees.},
+  booktitle = {Proceedings of the 10th Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {91–102},
+  numpages  = {12},
+  keywords  = {Stochastic models, Procedural modelling, Fractal surfaces, Computer graphics, Ray tracing, Surfaces of revolution, Strip trees, Raster graphics},
+  location  = {Detroit, Michigan, USA},
+  series    = {SIGGRAPH '83}
+}
+
+@article{10.1145/358523.358553,
+  author     = {Fournier, Alain and Fussell, Don and Carpenter, Loren},
+  title      = {Computer Rendering of Stochastic Models},
+  year       = {1982},
+  issue_date = {June 1982},
+  publisher  = {Association for Computing Machinery},
+  address    = {New York, NY, USA},
+  volume     = {25},
+  number     = {6},
+  issn       = {0001-0782},
+  url        = {https://doi.org/10.1145/358523.358553},
+  doi        = {10.1145/358523.358553},
+  abstract   = {A recurrent problem in generating realistic pictures by computers is to represent
+natural irregular objects and phenomena without undue time or space overhead. We develop
+a new and powerful solution to this computer graphics problem by modeling objects
+as sample paths of stochastic processes. Of particular interest are those stochastic
+processes which previously have been found to be useful models of the natural phenomena
+to be represented. One such model applicable to the representation of terrains, known
+as “fractional Brownian motion,” has been developed by Mandelbrot.The value of a new
+approach to object modeling in computer graphics depends largely on the efficiency
+of the techniques used to implement the model. We introduce a new algorithm that computes
+a realistic, visually satisfactory approximation to fractional Brownian motion in
+faster time than with exact calculations. A major advantage of this technique is that
+it allows us to compute the surface to arbitrary levels of details without increasing
+the database. Thus objects with complex appearances can be displayed from a very small
+database. The character of the surface can be controlled by merely modifying a few
+parameters. A similar change allows complex motion to be created inexpensively.},
+  journal    = {Commun. ACM},
+  month      = jun,
+  pages      = {371–384},
+  numpages   = {14},
+  keywords   = {stochastic models, terrain models, fractals}
+}
+
+@inproceedings{10.1145/74333.74363,
+  author    = {Hart, J. C. and Sandin, D. J. and Kauffman, L. H.},
+  title     = {Ray Tracing Deterministic 3-D Fractals},
+  year      = {1989},
+  isbn      = {0897913124},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/74333.74363},
+  doi       = {10.1145/74333.74363},
+  abstract  = {As shown in 1982, Julia sets of quadratic functions as well as many other deterministic
+fractals exist in spaces of higher dimensionality than the complex plane. Originally
+a boundary-tracking algorithm was used to view these structures but required a large
+amount of storage space to operate. By ray tracing these objects, the storage facilities
+of a graphics workstation frame buffer are sufficient. A short discussion of a specific
+set of 3-D deterministic fractals precedes a full description of a ray-tracing algorithm
+applied to these objects. A comparison with the boundary-tracking method and applications
+to other 3-D deterministic fractals are also included.},
+  booktitle = {Proceedings of the 16th Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {289–296},
+  numpages  = {8},
+  series    = {SIGGRAPH '89}
+}
+
+@article{10.1145/74334.74363,
+  author     = {Hart, J. C. and Sandin, D. J. and Kauffman, L. H.},
+  title      = {Ray Tracing Deterministic 3-D Fractals},
+  year       = {1989},
+  issue_date = {July 1989},
+  publisher  = {Association for Computing Machinery},
+  address    = {New York, NY, USA},
+  volume     = {23},
+  number     = {3},
+  issn       = {0097-8930},
+  url        = {https://doi.org/10.1145/74334.74363},
+  doi        = {10.1145/74334.74363},
+  abstract   = {As shown in 1982, Julia sets of quadratic functions as well as many other deterministic
+fractals exist in spaces of higher dimensionality than the complex plane. Originally
+a boundary-tracking algorithm was used to view these structures but required a large
+amount of storage space to operate. By ray tracing these objects, the storage facilities
+of a graphics workstation frame buffer are sufficient. A short discussion of a specific
+set of 3-D deterministic fractals precedes a full description of a ray-tracing algorithm
+applied to these objects. A comparison with the boundary-tracking method and applications
+to other 3-D deterministic fractals are also included.},
+  journal    = {SIGGRAPH Comput. Graph.},
+  month      = jul,
+  pages      = {289–296},
+  numpages   = {8}
+}
+
+@inproceedings{10.1145/800064.801287,
+  author    = {Kajiya, James T.},
+  title     = {Ray Tracing Parametric Patches},
+  year      = {1982},
+  isbn      = {0897910761},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/800064.801287},
+  doi       = {10.1145/800064.801287},
+  abstract  = {This paper describes an algorithm that uses ray tracing techniques to display bivariate
+polynomial surface patches. A new intersection algorithm is developed which uses ideas
+from algebraic geometry to obtain a numerical procedure for finding the intersection
+of a ray and a patch without subdivision. The algorithm may use complex coordinates
+for the (u, v)-parameters of the patches. The choice of these coordinates makes the
+computations more uniform, so that there are fewer special cases to be considered.
+In particular, the appearance and disappearance of silhouette edges can be handled
+quite naturally. The uniformity of these techniques may be suitable for implementation
+on either a general purpose pipelined machine, or on special purpose hardware.},
+  booktitle = {Proceedings of the 9th Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {245–254},
+  numpages  = {10},
+  keywords  = {Parametric patches, Ray tracing, Raster graphics, Computer graphics},
+  location  = {Boston, Massachusetts, USA},
+  series    = {SIGGRAPH '82}
+}
+
+@article{722295,
+  author  = {Stürzlinger, W.},
+  journal = {IEEE Transactions on Visualization and Computer Graphics},
+  title   = {Ray-tracing triangular trimmed free-form surfaces},
+  year    = {1998},
+  volume  = {4},
+  number  = {3},
+  pages   = {202-214},
+  doi     = {10.1109/2945.722295}
+}
+
+@article{doi:10.1080/10867651.2000.10487519,
+  author    = { William   Martin  and  Elaine   Cohen  and  Russell   Fish  and  Peter   Shirley },
+  title     = {Practical Ray Tracing of Trimmed NURBS Surfaces},
+  journal   = {Journal of Graphics Tools},
+  volume    = {5},
+  number    = {1},
+  pages     = {27-52},
+  year      = {2000},
+  publisher = {Taylor & Francis},
+  doi       = {10.1080/10867651.2000.10487519},
+  url       = {https://doi.org/10.1080/10867651.2000.10487519},
+  eprint    = {https://doi.org/10.1080/10867651.2000.10487519}
+}
+
+@article{https://doi.org/10.1111/1467-8659.00535,
+  author   = {Roth, S. H. Martin and Diezi, Patrick and Gross, Markus H.},
+  title    = {Ray Tracing Triangular Bézier Patches},
+  journal  = {Computer Graphics Forum},
+  volume   = {20},
+  number   = {3},
+  pages    = {422-432},
+  keywords = {Isosurface, Reconstruction filter, Octree, Quantization.},
+  doi      = {https://doi.org/10.1111/1467-8659.00535},
+  url      = {https://onlinelibrary.wiley.com/doi/abs/10.1111/1467-8659.00535},
+  eprint   = {https://onlinelibrary.wiley.com/doi/pdf/10.1111/1467-8659.00535},
+  abstract = {We present a new approach to finding ray–patch intersections with triangular Bernstein–Bézier patches of arbitrary degree. This paper extends and complements on the short presentation17 . Unlike a previous approach which was based on a combination of hierarchical subdivision and a Newton–like iteration scheme21 , this work adapts the concept of Bézier clipping to the triangular domain. The problem of reporting wrong intersections, inherent to the original Bézier clipping algorithm14 , is inves-tigated and opposed to the triangular case. It turns out that reporting wrong hits is very improbable, even close to impossible, in the triangular set–up. A combination of Bézier clipping and a simple hierarchy of nested bounding volumes offers a reliable and accurate solution to the problem of ray tracing triangular Bézier patches.},
+  year     = {2001}
+}
+
+@article{doi:10.1080/2151237X.2006.10129218,
+  author    = { Carsten   Benthin  and  Ingo   Wald  and  Philipp   Slusallek },
+  title     = {Techniques for Interactive Ray Tracing of Bézier Surfaces},
+  journal   = {Journal of Graphics Tools},
+  volume    = {11},
+  number    = {2},
+  pages     = {1-16},
+  year      = {2006},
+  publisher = {Taylor & Francis},
+  doi       = {10.1080/2151237X.2006.10129218},
+  url       = {https://doi.org/10.1080/2151237X.2006.10129218},
+  eprint    = {https://doi.org/10.1080/2151237X.2006.10129218}
+}
+
+@article{doi:10.1080/10867651.2004.10504896,
+  author    = { Shaun D.   Ramsey  and  Kristin   Potter  and  Charles   Hansen },
+  title     = {Ray Bilinear Patch Intersections},
+  journal   = {Journal of Graphics Tools},
+  volume    = {9},
+  number    = {3},
+  pages     = {41-47},
+  year      = {2004},
+  publisher = {Taylor & Francis},
+  doi       = {10.1080/10867651.2004.10504896},
+  url       = {https://doi.org/10.1080/10867651.2004.10504896},
+  eprint    = {https://doi.org/10.1080/10867651.2004.10504896}
+}
+
+@article{10.1111/j.1467-8659.2011.01993.x,
+  author   = {Ogaki, Shinji and Tokuyoshi, Yusuke},
+  title    = {Direct Ray Tracing of Phong Tessellation},
+  journal  = {Computer Graphics Forum},
+  volume   = {30},
+  number   = {4},
+  pages    = {1337-1344},
+  keywords = {I.3.7 Computer Graphics: Three-Dimensional Graphics and Realism—Raytracing},
+  doi      = {https://doi.org/10.1111/j.1467-8659.2011.01993.x},
+  url      = {https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1467-8659.2011.01993.x},
+  eprint   = {https://onlinelibrary.wiley.com/doi/pdf/10.1111/j.1467-8659.2011.01993.x},
+  abstract = {Abstract There are two major ways of calculating ray and parametric surface intersections in rendering. The first is through the use of tessellated triangles, and the second is to use parametric surfaces together with numerical methods such as Newton's method. Both methods are computationally expensive and complicated to implement. In this paper, we focus on Phong Tessellation and introduce a simple direct ray tracing method for Phong Tessellation. Our method enables rendering smooth surfaces in a computationally inexpensive yet robust way.},
+  year     = {2011}
+}
+
+@article{Woop2013Watertight,
+  author  = {Sven Woop and Carsten Benthin and Ingo Wald},
+  title   = {Watertight Ray/Triangle Intersection},
+  year    = {2013},
+  month   = {June},
+  day     = {28},
+  journal = {Journal of Computer Graphics Techniques (JCGT)},
+  volume  = {2},
+  number  = {1},
+  pages   = {65--82},
+  url     = {http://jcgt.org/published/0002/01/05/},
+  issn    = {2331-7418}
+}
+
+@article{doi:10.1080/10867651.1997.10487468,
+  author    = { Tomas   Möller  and  Ben   Trumbore },
+  title     = {Fast, Minimum Storage Ray-Triangle Intersection},
+  journal   = {Journal of Graphics Tools},
+  volume    = {2},
+  number    = {1},
+  pages     = {21-28},
+  year      = {1997},
+  publisher = {Taylor & Francis},
+  doi       = {10.1080/10867651.1997.10487468},
+  url       = {https://doi.org/10.1080/10867651.1997.10487468},
+  eprint    = {https://doi.org/10.1080/10867651.1997.10487468}
+}
+
+@article{doi:10.1080/2151237X.2005.10129208,
+  author    = { Ares   Lagae  and  Philip   Dutré },
+  title     = {An Efficient Ray-Quadrilateral Intersection Test},
+  journal   = {Journal of Graphics Tools},
+  volume    = {10},
+  number    = {4},
+  pages     = {23-32},
+  year      = {2005},
+  publisher = {Taylor & Francis},
+  doi       = {10.1080/2151237X.2005.10129208},
+  url       = {https://doi.org/10.1080/2151237X.2005.10129208},
+  eprint    = {https://doi.org/10.1080/2151237X.2005.10129208}
+}
+
+@inproceedings{shevtsov2007ray,
+  title     = {Ray-triangle intersection algorithm for modern CPU architectures},
+  author    = {Shevtsov, Maxim and Soupikov, Alexei and Kapustin, Alexander and Novorod, Nizhniy},
+  booktitle = {Proceedings of GraphiCon},
+  volume    = {2007},
+  pages     = {33--39},
+  year      = {2007}
+}
+
+@inproceedings{4061543,
+  author    = {Kensler, Andrew and Shirley, Peter},
+  booktitle = {2006 IEEE Symposium on Interactive Ray Tracing},
+  title     = {Optimizing Ray-Triangle Intersection via Automated Search},
+  year      = {2006},
+  volume    = {},
+  number    = {},
+  pages     = {33-38},
+  doi       = {10.1109/RT.2006.280212}
+}
+
+@inproceedings{phong1975improved,
+  title     = {Improved rendition of polygonal models of curved surfaces},
+  author    = {Phong, Bui Tuong and Crow, Franklin C},
+  booktitle = {Proc. of the 2nd USA-Japan Computer Conf},
+  year      = {1975}
+}
+
+@inproceedings{10.1145/1186822.1073278,
+  author    = {Yoon, Sung-Eui and Lindstrom, Peter and Pascucci, Valerio and Manocha, Dinesh},
+  title     = {Cache-Oblivious Mesh Layouts},
+  year      = {2005},
+  isbn      = {9781450378253},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/1186822.1073278},
+  doi       = {10.1145/1186822.1073278},
+  abstract  = {We present a novel method for computing cache-oblivious layouts of large meshes that
+improve the performance of interactive visualization and geometric processing algorithms.
+Given that the mesh is accessed in a reasonably coherent manner, we assume no particular
+data access patterns or cache parameters of the memory hierarchy involved in the computation.
+Furthermore, our formulation extends directly to computing layouts of multi-resolution
+and bounding volume hierarchies of large meshes.We develop a simple and practical
+cache-oblivious metric for estimating cache misses. Computing a coherent mesh layout
+is reduced to a combinatorial optimization problem. We designed and implemented an
+out-of-core multilevel minimization algorithm and tested its performance on unstructured
+meshes composed of tens to hundreds of millions of triangles. Our layouts can significantly
+reduce the number of cache misses. We have observed 2--20 times speedups in view-dependent
+rendering, collision detection, and isocontour extraction without any modification
+of the algorithms or runtime applications.},
+  booktitle = {ACM SIGGRAPH 2005 Papers},
+  pages     = {886–893},
+  numpages  = {8},
+  location  = {Los Angeles, California},
+  series    = {SIGGRAPH '05}
+}
+
+@article{4015484,
+  author  = {Yoon, Sung-eui and Lindstrom, Peter},
+  journal = {IEEE Transactions on Visualization and Computer Graphics},
+  title   = {Mesh Layouts for Block-Based Caches},
+  year    = {2006},
+  volume  = {12},
+  number  = {5},
+  pages   = {1213-1220},
+  doi     = {10.1109/TVCG.2006.162}
+}
+
+@inproceedings{Nakamaru_raytracing,
+  title        = {Ray tracing for curves primitive},
+  author       = {Nakamaru, Koji and Ohno, Yoshio},
+  editor       = {Skala, Václav},
+  booksubtitle = {10th International Conference on Computer Graphics, Visualization and Computer Vision 2002},
+  year         = {2002},
+  month        = {02},
+  address      = {UNIV W BOHEMIA, PLZEN, CZECH REPUBLIC},
+  pages        = {311-316},
+  publisher    = {UNIV WEST BOHEMIA},
+  location     = {PILSEN UNIVERZITNI 8, PLZEN 306 14, CZECH REPUBLIC},
+  abstract     = {The Curves primitive defined in RenderMan is useful for modelling and rendering ribbonlike objects. This paper gives a simple framework for ray-curve intersection tests in ray tracing, and provides concrete details for one form of the primitive. The form is especially important for fine objects such as hair and fur.}
+}
+
+@article{10.1145/6116.6118,
+  author     = {Bronsvoort, Willem F. and Klok, Fopke},
+  title      = {Ray Tracing Generalized Cylinders},
+  year       = {1985},
+  issue_date = {Oct. 1985},
+  publisher  = {Association for Computing Machinery},
+  address    = {New York, NY, USA},
+  volume     = {4},
+  number     = {4},
+  issn       = {0730-0301},
+  url        = {https://doi.org/10.1145/6116.6118},
+  doi        = {10.1145/6116.6118},
+  abstract   = {An algorithm is presented for ray tracing generalized cylinders, that is, objects
+defined by sweeping a two-dimensional contour along a three-dimensional trajectory.
+The contour can be any 'well-behaved' curve in the sense that it is continuous, and
+that the points where the tangent is horizontal or vertical can be determined, the
+trajectory can be any spline curve. First a definition is given of generalized cylinders
+in terms of the Frenet frame of the trajectory. Then the main problem in ray tracing
+these objects, the computation of the intersection points with a ray, is reduced to
+the problem of intersecting two two-dimensional curves. This problem is solved by
+a subdivision algorithm. The three-dimensional normal at the intersection point closest
+to the eye point, necessary to perform shading, is obtained by transforming the two-dimensional
+normal at the corresponding intersection point of the two two-dimensional curves.
+In this way it is possible to obtain highly realistic images for a very broad class
+of objects.},
+  journal    = {ACM Trans. Graph.},
+  month      = oct,
+  pages      = {291–303},
+  numpages   = {13}
+}
+
+@article{DeVoogt2000197,
+  author        = {De Voogt, E. and Van Der Helm, A. and Bronsvoort, W.F.},
+  title         = {Ray tracing deformed generalized cylinders},
+  journal       = {Visual Computer},
+  year          = {2000},
+  volume        = {16},
+  number        = {3},
+  pages         = {197-207},
+  doi           = {10.1007/s003710050208},
+  url           = {https://www.scopus.com/inward/record.uri?eid=2-s2.0-0033688047&doi=10.1007%2fs003710050208&partnerID=40&md5=b13933c103e0d5c8eb4c9ac3e3a49c1f},
+  document_type = {Article},
+  source        = {Scopus}
+}
+
+@book{10.5555/501891,
+  author    = {Farin, Gerald},
+  title     = {Curves and Surfaces for CAGD: A Practical Guide},
+  year      = {2001},
+  isbn      = {1558607374},
+  publisher = {Morgan Kaufmann Publishers Inc.},
+  address   = {San Francisco, CA, USA},
+  edition   = {5th},
+  abstract  = {This fifth edition has been fully updated to cover the many advances made in CAGD
+and curve and surface theory since 1997, when the fourth edition appeared. The theory
+material has been streamlined using the blossoming approach; the applications material
+includes least squares techniques in addition to the traditional interpolation methods.
+In all other respects, it is, thankfully, the same. This means you get the informal,
+friendly style and unique approach that has made Curves and Surfaces for CAGD: A Practical
+Guide a true classic.}
+}
+
+@techreport{ramshaw1987blossoming,
+  author      = {Ramshaw, Lyle},
+  title       = {Blossoming: A connect-the-dots approach to splines},
+  institution = {Digital Equipment Corporation Palo Alto},
+  year        = {1987},
+  month       = {June},
+  pagetotal   = {172}
+}
+
+@inproceedings{10.1145/1179849.1179904,
+  author    = {van Swaaij, Maurice},
+  title     = {Ray-Tracing Fur for {\it {I}ce {A}ge}: The Melt Down},
+  year      = {2006},
+  isbn      = {1595933646},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/1179849.1179904},
+  doi       = {10.1145/1179849.1179904},
+  booktitle = {ACM SIGGRAPH 2006 Sketches},
+  pages     = {44–es},
+  location  = {Boston, Massachusetts},
+  series    = {SIGGRAPH '06}
+}
+
+@article{6684531,
+  author  = {Qin, Hao and Chai, Menglei and Hou, Qiming and Ren, Zhong and Zhou, Kun},
+  journal = {IEEE Transactions on Visualization and Computer Graphics},
+  title   = {Cone Tracing for Furry Object Rendering},
+  year    = {2014},
+  volume  = {20},
+  number  = {8},
+  pages   = {1178-1188},
+  doi     = {10.1109/TVCG.2013.270}
+}
+
+@article{DOO1978356,
+  title    = {Behaviour of recursive division surfaces near extraordinary points},
+  journal  = {Computer-Aided Design},
+  volume   = {10},
+  number   = {6},
+  pages    = {356-360},
+  year     = {1978},
+  issn     = {0010-4485},
+  doi      = {https://doi.org/10.1016/0010-4485(78)90111-2},
+  url      = {https://www.sciencedirect.com/science/article/pii/0010448578901112},
+  author   = {D. Doo and M. Sabin},
+  abstract = {The behaviour of the limits surface defined by a recursive division construction can be analysed in terms of the eigenvalues of a set of matrices. This analysis predicts effects actually observed, and leads to suggestions for the further improvement of the method.}
+}
+
+@article{CATMULL1978350,
+  title    = {Recursively generated B-spline surfaces on arbitrary topological meshes},
+  journal  = {Computer-Aided Design},
+  volume   = {10},
+  number   = {6},
+  pages    = {350-355},
+  year     = {1978},
+  issn     = {0010-4485},
+  doi      = {https://doi.org/10.1016/0010-4485(78)90110-0},
+  url      = {https://www.sciencedirect.com/science/article/pii/0010448578901100},
+  author   = {E. Catmull and J. Clark},
+  abstract = {This paper describes a method for recursively generating surfaces that approximate points lying-on a mesh of arbitrary topology. The method is presented as a generalization of a recursive bicubic B-spline patch subdivision algorithm. For rectangular control-point meshes, the method generates a standard B-spline surface. For non-rectangular meshes, it generates surfaces that are shown to reduce to a standard B-spline surface except at a small number of points, called extraordinary points. Therefore, everywhere except at these points the surface is continuous in tangent and curvature. At the extraordinary points, the pictures of the surface indicate that the surface is at least continuous in tangent, but no proof of continuity is given. A similar algorithm for biquadratic B-splines is also presented.}
+}
+
+@mastersthesis{loop1987smooth,
+  author = {Loop, Charles},
+  title  = {Smooth subdivision surfaces based on triangles},
+  school = {University of Utah, Department of Mathematics},
+  year   = {1987}
+}
+
+@inproceedings{10.1145/192161.192233,
+  author    = {Hoppe, Hugues and DeRose, Tony and Duchamp, Tom and Halstead, Mark and Jin, Hubert and McDonald, John and Schweitzer, Jean and Stuetzle, Werner},
+  title     = {Piecewise Smooth Surface Reconstruction},
+  year      = {1994},
+  isbn      = {0897916670},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/192161.192233},
+  doi       = {10.1145/192161.192233},
+  abstract  = {We present a general method for automatic reconstruction of accurate, concise, piecewise
+smooth surface models from scattered range data. The method can be used in a variety
+of applications such as reverse engineering—the automatic generation of CAD models
+from physical objects. Novel aspects of the method are its ability to model surfaces
+of arbitrary topological type and to recover sharp features such as creases and corners.
+The method has proven to be effective, as demonstrated by a number of examples using
+both simulated and real data.A key ingredient in the method, and a principal contribution
+of this paper, is the introduction of a new class of piecewise smooth surface representations
+based on subdivision. These surfaces have a number of properties that make  them ideal
+for use in surface reconstruction: they are simple to implement, they can model sharp
+features concisely, and they can be fit to scattered range data using an unconstrained
+optimization procedure.},
+  booktitle = {Proceedings of the 21st Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {295–302},
+  numpages  = {8},
+  keywords  = {geometric modeling, shape recovery, range data analysis, surface fitting, subdivision surfaces},
+  series    = {SIGGRAPH '94}
+}
+
+@article{zorin2000subdivision,
+  title   = {Subdivision for modeling and animation},
+  author  = {Zorin, Denis and Schroder, P and DeRose, A and Kobbelt, L and Levin, A and Sweldens, W},
+  journal = {SIGGRAPH2000 course notes},
+  year    = {2000}
+}
+
+@book{WARREN20021,
+  author    = {Joe Warren and Henrik Weimer},
+  title     = {Subdivision Methods for Geometric Design},
+  subtitle  = {A Constructive Approach},
+  publisher = {Morgan Kaufmann},
+  year      = {2002},
+  address   = {San Francisco},
+  series    = {The Morgan Kaufmann Series in Computer Graphics},
+  isbn      = {978-1-55860-446-9},
+  doi       = {https://doi.org/10.1016/B978-1-55860-446-9.X5000-5},
+  url       = {https://www.sciencedirect.com/book/9781558604469/subdivision-methods-for-geometric-design}
+}
+
+@article{10.1111/1467-8659.t01-2-00703,
+  author   = {Müller, Kerstin and Techmann, Torsten and Fellner, Dieter},
+  title    = {Adaptive Ray Tracing of Subdivision Surfaces},
+  journal  = {Computer Graphics Forum},
+  volume   = {22},
+  number   = {3},
+  pages    = {553-562},
+  doi      = {https://doi.org/10.1111/1467-8659.t01-2-00703},
+  url      = {https://onlinelibrary.wiley.com/doi/abs/10.1111/1467-8659.t01-2-00703},
+  eprint   = {https://onlinelibrary.wiley.com/doi/pdf/10.1111/1467-8659.t01-2-00703},
+  abstract = {Abstract Subdivision Surfaces as well as (interactive) ray tracing have become an important issue in computer graphics.But ray tracing of subdivision surfaces has received only little attention. We present a new approach for raytracing of subdivision surfaces. The algorithm uses a projection of the ray onto the surface and works mainly intwo dimensions along this projection. While proceeding from patch to patch, we examine the bounding volume oftheir borders: the lower the distance between ray and subdivision surface, the more refinement steps are adaptivelyapplied to the surface but only along the projection of the ray. The adaptive refinement of a patch is controlled bycurvature, size, its membership to the silhouette, and its potential contribution to the light transport. The algorithmis simple and mainly consists of elementary geometric computations. Hence it is fast and easy to implementwithout the need for elaborate preprocessing. The algorithm is robust in the sense that it deals with all features ofsubdivision surfaces like creases and corners. Categories and Subject Descripters (according to ACM CCS): I.3.7 [Computer Graphics]: Raytracing},
+  year     = {2003}
+}
+
+@techreport{SCI:Ben2007a,
+  author      = {Carsten Benthin and Solomon Boulos and Dylan Lacewell and Ingo Wald and Carsten Benthin and Solomon Boulos and Dylan Lacewell and Ingo Wald},
+  title       = {Packet-based Ray Tracing of Catmull-Clark Subdivision Surfaces},
+  number      = {UUSCI-2007-011},
+  year        = {2007},
+  institution = {University of Utah},
+  type        = {{SCI} Institute Technical Report},
+  keywords    = {interactive rt distributed interactive ray tracing dirt, rtcenter},
+  url         = {http://www.sci.utah.edu/publications/SCITechReports/UUSCI-2007-011.pdf}
+}
+
+@inproceedings{10.1145/280814.280945,
+  author    = {Stam, Jos},
+  title     = {Exact Evaluation of Catmull-Clark Subdivision Surfaces at Arbitrary Parameter Values},
+  year      = {1998},
+  isbn      = {0897919998},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/280814.280945},
+  doi       = {10.1145/280814.280945},
+  booktitle = {Proceedings of the 25th Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {395–404},
+  numpages  = {10},
+  keywords  = {parametrizations, linear algebra, eigenanalysis, surface evaluation, Catmull-Clark surfaces, subdivison surfaces},
+  series    = {SIGGRAPH '98}
+}
+
+@inproceedings{10.1145/504502.504505,
+  author    = {Bolz, Jeffrey and Schröder, Peter},
+  title     = {Rapid Evaluation of Catmull-Clark Subdivision Surfaces},
+  year      = {2002},
+  isbn      = {1581134681},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/504502.504505},
+  doi       = {10.1145/504502.504505},
+  abstract  = {Using subdivision as a basic primitive for the construction of arbitrary topology,
+smooth, free-form surfaces is attractive for content destined for display on devices
+with greatly varying rendering performance. Subdivision naturally supports level of
+detail rendering and powerful compression algorithms. While the underlying algorithms
+are conceptually simple it is difficult to implement player engines which achieve
+optimal performance on modern CPUs such as the Intel Pentium family.In this paper
+we describe a novel table driven evaluation strategy for subdivision surfaces using
+as an example the scheme of Catmull and Clark. Cache conscious design and exploitation
+of SIMD instructions allows us to achieve nearly 100\% FPU utilization in the inner
+loop and achieve a composite performance of 1.2 flop/cycle on the Intel PIII and 1.8
+flop/cycle on the Intel P4 including all memory transfers. The algorithm supports
+tradeoffs between cache size and memory bus usage which we examine. A library which
+implements this engine is freely available from the authors.},
+  booktitle = {Proceedings of the Seventh International Conference on 3D Web Technology},
+  pages     = {11–17},
+  numpages  = {7},
+  location  = {Tempe, Arizona, USA},
+  series    = {Web3D '02}
+}
+
+@inproceedings{10.1145/1572769.1572785,
+  author    = {Patney, Anjul and Ebeida, Mohamed S. and Owens, John D.},
+  title     = {Parallel View-Dependent Tessellation of Catmull-Clark Subdivision Surfaces},
+  year      = {2009},
+  isbn      = {9781605586038},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/1572769.1572785},
+  doi       = {10.1145/1572769.1572785},
+  abstract  = {We present a strategy for performing view-adaptive, crack-free tessellation of Catmull-Clark
+subdivision surfaces entirely on programmable graphics hardware. Our scheme extends
+the concept of breadth-first subdivision, which up to this point has only been applied
+to parametric patches. While mesh representations designed for a CPU often involve
+pointer-based structures and irregular perelement storage, neither of these is well-suited
+to GPU execution. To solve this problem, we use a simple yet effective data structure
+for representing a subdivision mesh, and design a careful algorithm to update the
+mesh in a completely parallel manner. We demonstrate that in spite of the complexities
+of the subdivision procedure, real-time tessellation to pixel-sized primitives can
+be done.Our implementation does not rely on any approximation of the limit surface,
+and avoids both subdivision cracks and T-junctions in the subdivided mesh. Using the
+approach in this paper, we are able to perform real-time subdivision for several static
+as well as animated models. Rendering performance is scalable for increasingly complex
+models.},
+  booktitle = {Proceedings of the Conference on High Performance Graphics 2009},
+  pages     = {99–108},
+  numpages  = {10},
+  keywords  = {adaptive surface subdivision, subdivision surfaces, Catmull-Clark, GPGPU},
+  location  = {New Orleans, Louisiana},
+  series    = {HPG '09}
+}
+
+@article{10.1145/103162.103163,
+  author     = {Goldberg, David},
+  title      = {What Every Computer Scientist Should Know about Floating-Point Arithmetic},
+  year       = {1991},
+  issue_date = {March 1991},
+  publisher  = {Association for Computing Machinery},
+  address    = {New York, NY, USA},
+  volume     = {23},
+  number     = {1},
+  issn       = {0360-0300},
+  url        = {https://doi.org/10.1145/103162.103163},
+  doi        = {10.1145/103162.103163},
+  abstract   = {Floating-point arithmetic is considered as esoteric subject by many people. This is
+rather surprising, because floating-point is ubiquitous in computer systems: Almost
+every language has a floating-point datatype; computers from PCs to supercomputers
+have floating-point accelerators; most compilers will be called upon to compile floating-point
+algorithms from time to time; and virtually every operating system must respond to
+floating-point exceptions such as overflow. This paper presents a tutorial on the
+aspects of floating-point that have a direct impact on designers of computer systems.
+It begins with background on floating-point representation and rounding error, continues
+with a discussion of the IEEE floating point standard, and concludes with examples
+of how computer system builders can better support floating point.},
+  journal    = {ACM Comput. Surv.},
+  month      = mar,
+  pages      = {5–48},
+  numpages   = {44},
+  keywords   = {underflow, exception, guard digit, rounding error, NaN, gradual underflow, floating-point standard, denormalized number, relative error, ulp, floating-point, overflow, rounding mode}
+}
+
+@article{10.1145/1644001.1644003,
+  author     = {Daumas, Marc and Melquiond, Guillaume},
+  title      = {Certification of Bounds on Expressions Involving Rounded Operators},
+  year       = {2010},
+  issue_date = {January 2010},
+  publisher  = {Association for Computing Machinery},
+  address    = {New York, NY, USA},
+  volume     = {37},
+  number     = {1},
+  issn       = {0098-3500},
+  url        = {https://doi.org/10.1145/1644001.1644003},
+  doi        = {10.1145/1644001.1644003},
+  abstract   = {Gappa is a tool designed to formally verify the correctness of numerical software
+and hardware. It uses interval arithmetic and forward error analysis to bound mathematical
+expressions that involve rounded as well as exact operators. It then generates a theorem
+and its proof for each verified enclosure. This proof can be automatically checked
+with a proof assistant, such as Coq or HOL Light. It relies on a large companion library
+of facts that we have developed. This Coq library provides theorems dealing with addition,
+multiplication, division, and square root, for both fixed- and floating-point arithmetics.
+Gappa uses multiple-precision dyadic fractions for the endpoints of intervals and
+performs forward error analysis on rounded operators when necessary. When asked, Gappa
+reports the best bounds it is able to reach for a given expression in a given context.
+This feature can be used to identify where the set of facts and automatic techniques
+implemented in Gappa becomes insufficient. Gappa handles seamlessly additional properties
+expressed as interval properties or rewriting rules in order to establish more intricate
+bounds. Recent work showed that Gappa is suited to discharge proof obligations generated
+for small pieces of software. They may be produced by third-party tools and the first
+applications of Gappa use proof obligations written by designers or obtained from
+traces of execution.},
+  journal    = {ACM Trans. Math. Softw.},
+  month      = jan,
+  articleno  = {2},
+  numpages   = {20},
+  keywords   = {HOL Light, proof obligation, proof system, dyadic fraction, floating point, Forward error analysis, interval arithmetic, PVS, Coq}
+}
+
+@inbook{10.5555/94788.94790,
+  author    = {Haines, Eric},
+  title     = {Essential Ray Tracing Algorithms},
+  year      = {1989},
+  isbn      = {0122861604},
+  publisher = {Academic Press Ltd.},
+  address   = {GBR},
+  booktitle = {An Introduction to Ray Tracing},
+  pages     = {33–77},
+  numpages  = {45}
+}
+
+@inproceedings{Amanatides1990:27,
+  author    = {J. Amanatides and D. P. Mitchell},
+  title     = {Some Regularization Problems in Ray Tracing},
+  booktitle = {Proceedings of Graphics Interface '90},
+  series    = {GI '90},
+  year      = {1990},
+  issn      = {0713-5424},
+  location  = {Halifax, Nova Scotia, Canada},
+  pages     = {221--228},
+  numpages  = {8},
+  url       = {http://graphicsinterface.org/wp-content/uploads/gi1990-27.pdf},
+  publisher = {Canadian Man-Computer Communications Society},
+  address   = {Toronto, Ontario, Canada}
+}
+
+@inproceedings{10.1145/74333.74364,
+  author    = {Kalra, D. and Barr, A. H.},
+  title     = {Guaranteed Ray Intersections with Implicit Surfaces},
+  year      = {1989},
+  isbn      = {0897913124},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/74333.74364},
+  doi       = {10.1145/74333.74364},
+  abstract  = {In this paper, we present a robust and mathematically sound ray-intersection algorithm
+for implicit surfaces. The algorithm is guaranteed to numerically find the nearest
+intersection of the surface with a ray, and is guaranteed not to miss fine features
+of the surface. It does not require fine tuning or human choice of interactive parameters.
+Instead, it requires two upper bounds: "L" that limits the net rate of change of the
+implicit surface function f(x,y,z) and "G" that limits the rate of change of the gradient.
+We refer to an implicit surface with these rate limits as an "LG-implicit surface."Existing
+schemes to intersect a ray with an implicit surface have typically been guaranteed
+to work only for a limited set of implicit functions, such as quadric surfaces or
+polynomials, or else have been ad-hoc and have not been guaranteed to work. Our technique
+significantly extends the ability to intersect rays with implicit surfaces in a guaranteed
+fashion.},
+  booktitle = {Proceedings of the 16th Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {297–306},
+  numpages  = {10},
+  series    = {SIGGRAPH '89}
+}
+
+@article{10.1145/74334.74364,
+  author     = {Kalra, D. and Barr, A. H.},
+  title      = {Guaranteed Ray Intersections with Implicit Surfaces},
+  year       = {1989},
+  issue_date = {July 1989},
+  publisher  = {Association for Computing Machinery},
+  address    = {New York, NY, USA},
+  volume     = {23},
+  number     = {3},
+  issn       = {0097-8930},
+  url        = {https://doi.org/10.1145/74334.74364},
+  doi        = {10.1145/74334.74364},
+  abstract   = {In this paper, we present a robust and mathematically sound ray-intersection algorithm
+for implicit surfaces. The algorithm is guaranteed to numerically find the nearest
+intersection of the surface with a ray, and is guaranteed not to miss fine features
+of the surface. It does not require fine tuning or human choice of interactive parameters.
+Instead, it requires two upper bounds: "L" that limits the net rate of change of the
+implicit surface function f(x,y,z) and "G" that limits the rate of change of the gradient.
+We refer to an implicit surface with these rate limits as an "LG-implicit surface."Existing
+schemes to intersect a ray with an implicit surface have typically been guaranteed
+to work only for a limited set of implicit functions, such as quadric surfaces or
+polynomials, or else have been ad-hoc and have not been guaranteed to work. Our technique
+significantly extends the ability to intersect rays with implicit surfaces in a guaranteed
+fashion.},
+  journal    = {SIGGRAPH Comput. Graph.},
+  month      = jul,
+  pages      = {297–306},
+  numpages   = {10}
+}
+
+@inproceedings{4061542,
+  author    = {Dammertz, H. and Keller, A.},
+  booktitle = {2006 IEEE Symposium on Interactive Ray Tracing},
+  title     = {Improving Ray Tracing Precision by Object Space Intersection Computation},
+  year      = {2006},
+  volume    = {},
+  number    = {},
+  pages     = {25-31},
+  doi       = {10.1109/RT.2006.280211}
+}
+
+@inproceedings{10.1145/73833.73857,
+  author    = {Salesin, D. and Stolfi, J and Guibas, L.},
+  title     = {Epsilon Geometry: Building Robust Algorithms from Imprecise Computations},
+  year      = {1989},
+  isbn      = {0897913183},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/73833.73857},
+  doi       = {10.1145/73833.73857},
+  booktitle = {Proceedings of the Fifth Annual Symposium on Computational Geometry},
+  pages     = {208–217},
+  numpages  = {10},
+  location  = {Saarbruchen, West Germany},
+  series    = {SCG '89}
+}
+
+@article{Ize2013BVH,
+  author  = {Thiago Ize},
+  title   = {Robust {BVH} Ray Traversal},
+  year    = {2013},
+  month   = {July},
+  day     = {19},
+  journal = {Journal of Computer Graphics Techniques (JCGT)},
+  volume  = {2},
+  number  = {2},
+  pages   = {12--27},
+  url     = {http://jcgt.org/published/0002/02/02/},
+  issn    = {2331-7418}
+}          

@@ -197,7 +197,7 @@ IEEE浮点算术相关属性是对于所有{\ttfamily v>0}，{\ttfamily v/0=}$\i
 \begin{lstlisting}
 `\initcode{Update parametric interval from slab intersection t values}{=}`
 if (tNear > tFar) std::swap(tNear, tFar);
-`\refcode{Update tFar to ensure robust ray–bounds intersection}{}`
+`\refcode{Update tFar to ensure robust ray-bounds intersection}{}`
 t0 = tNear > t0 ? tNear : t0;
 t1 = tFar  < t1 ? tFar  : t1;
 if (t0 > t1) return false;

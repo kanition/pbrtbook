@@ -1,5 +1,93 @@
 \section{习题}\label{sec:习题03}
 
 \begin{enumerate}
-    \item \circletwo
+    \item \circletwo 像三角网格和细分曲面那样基于网格的形状的
+          一个良好性质是形状的顶点可以变换到世界空间，
+          这样在执行光线相交测试之前就不需要将射线变换到物体空间中。
+          有趣的是，光线-二次曲面相交也可以做同样的事。
+          本章二次曲面的隐式形式都形如
+          \begin{align*}
+              Ax^2+Bxy+Cxz+Dy^2+Eyz+Fz^2+G=0\, ,
+          \end{align*}
+          其中一些常数$A\ldots G$为零。更一般地，
+          我们可以用方程
+          \begin{align*}
+              Ax^2+By^2+Cz^2+2Dxy+2Eyz+2Fxz+2Gx+2Hy+2Iz+J=0
+          \end{align*}
+          定义二次曲面，其中参数$A\ldots J$的大多数并不与之前的$A\ldots G$直接相关。
+          该形式中，二次曲面可以表示为$4\times4$的对称矩阵$\bm Q$：
+          \begin{align*}
+              [x\ y\ z\ 1]\left[
+                  \begin{array}{cccc}
+                      A & D & F & G \\
+                      D & B & E & H \\
+                      F & E & C & I \\
+                      G & H & I & J
+                  \end{array}
+                  \right]\left[\begin{array}{c}
+                      x \\y\\z\\1
+                  \end{array}\right]=\bm p^{\mathrm{T}}\bm Q\bm p=0\, .
+          \end{align*}
+          有了该表示，首先证明表示被矩阵$\bm M$变换的二次曲面的矩阵$\bm Q'$为
+          \begin{align*}
+              \bm Q'=(\bm M^{\mathrm{T}})^{-1}\bm Q\bm M^{-1}\, .
+          \end{align*}
+          这样可以证明对于任意满足$\bm p^{\mathrm{T}}\bm Q\bm p=0$的点$\bm p$，
+          如果我们对$\bm p$施加变换$\bm M$并算得$\bm p'=\bm M\bm p$，
+          则我们会发现$\bm Q'$满足$(\bm p')^{\mathrm{T}}\bm Q'\bm p'=0$。
+          接着，将射线方程代入之前更一般的二次曲面方程计算二次方程$at^2+bt+c=0$
+          用传入函数\refvar{Quadratic}{()}的矩阵$\bm Q$的元素形式表示的系数。
+          现在在pbrt中实现该方法并用它替代原来的二次曲面相交例程。
+          注意如果$\theta_{\max}$等等不是$2\pi$，
+          则你仍需要将得到的世界空间命中点变换到物体空间以测试它们。
+          性能与原始方案相比如何？
+    \item \circleone 为二次曲面改进物体空间边界框例程
+          以适当考虑$\displaystyle\phi_{\max}<\frac{3\pi}{2}$，
+          并在可能时计算更紧的边界框。
+          当渲染部分二次曲面形状场景时性能提升了多少？
+    \item \circletwo 还有以许多方式优化pbrt中各种二次曲面图元实现的空间。
+          例如，对于完整球体而言相交例程中一些与部分球体相关的测试是不必要的。
+          此外，一些二次曲面调用的三角函数其实可以
+          用观察特定图元几何结构的方式变为更简单的表达式。
+          研究加速这些方法的方式。
+          当渲染二次曲面场景时这样做对pbrt总运行时间有多少改进？
+    \item \circleone 目前pbrt在三角形需要时每次都重新计算
+          偏导数$\displaystyle\frac{\partial \bm p}{\partial u}$
+          和$\displaystyle\frac{\partial \bm p}{\partial v}$，
+          即使它们对每个三角形都是常数。
+          预先计算这些向量并分析速度/存储取舍，尤其是对于大型三角网格。
+          场景的深度复杂度和图像中的三角形大小如何影响这种取舍？
+    \item \circletwo 在pbrt中将支持任意顶点数量和凸或\keyindex{凹}{concave}{}多边形
+          的通用\keyindex{多边形}{polygon}{}图元实现为新的\refvar{Shape}{}。
+          你可以假设已经提供了有效多边形且多边形的所有顶点都在同一平面上，
+          但你可能想在不是这种情况时发出警告。
+          计算光线-多边形相交的一个高效技术是由多边形的法线和该多边形所在平面上的一点求得该平面方程。
+          然后计算射线与该平面的相交并将交点和多边形顶点投影到2D。
+          再运用2D点在多边形内的测试确定该点是否在多边形内。
+          这样做的一个简单方式是高效进行2D光线追踪计算，
+          将射线与每条边线段相交，并计数它穿过了多少次。
+          如果它穿过了奇数次，则该点在多边形内且存在相交。
+          该思路的图示见\reffig{3.47}。
+          你可能发现阅读\citet{HAINES199424}调研了许多高效的点在多边形内测试方法的论文会很有帮助。
+          里面描述的一些技术可能有益于优化该测试。
+          此外，Schneider和Eberly \parencite*{10.5555/2821579}的13.3.3节
+          讨论了适用所有极端情况的策略：例如当2D射线精确对齐一边或穿过多边形顶点时。
+          \begin{figure}[htbp]
+              \centering\input{Pictures/chap03/Polygonintersectproject.tex}
+              \caption{光线-多边形相交测试可通过求射线与多边形平面交点、
+                  将命中点和多边形顶点投影到轴对齐平面以及做2D点在多边形内测试来完成。}
+              \label{fig:3.47}
+          \end{figure}
+    \item \circletwo \keyindex{体素构造表示}{constructive solid geometry}{}(CSG)是
+          经典的实体建模技术，通过考虑诸多图元形状的并、交、差构建复杂形状。
+          例如，如果一个形状建模为圆柱体和一组与之部分重合的球体的差，
+          则球体可用于创建圆柱体上的凹坑。
+          详见\citet{10.5555/74803}了解更多关于CSG的信息。
+          向pbrt添加CSG支持并渲染展示可以用CSG渲染的有趣图像。
+          你可能想阅读首次描述了光线追踪可以怎样用于渲染CSG描述的模型的\citet{ROTH1982109}，
+          以及讨论CSG光线追踪精度相关问题的\citet{10.5555/93267.93276}。
+    \item \circletwo 程序化描述参数曲面：编写一个接收形如$f(u,v)\rightarrow(x,y,z)$的通用数学表达式
+          将参数曲面描述为$(u,v)$函数的\refvar{Shape}{}。
+          在网格位置$(u,v)$处求给定函数的值，并创建近似该给定曲面的三角网格。
+    \item
 \end{enumerate}

@@ -520,7 +520,9 @@ inline constexpr `\refvar{Float}{}` `\initvar{gamma}{}`(int n) {
     \frac{(1\pm\epsilon_{\mathrm{m}})^m}{(1\pm\epsilon_{\mathrm{m}})^n}\, ,
 \end{align*}
 该区间以$1\pm\gamma_{m+n}$为界
-\sidenote{译者注：我没有理解为何有这个结论，希望读者提供帮助。}。
+\sidenote{译者注：通分构造函数并利用导数知识可以证明哪怕极端情况下
+    也有$\displaystyle\frac{(1+\epsilon_{\mathrm{m}})^m}{(1-\epsilon_{\mathrm{m}})^n}\le1+\gamma_{m+n}$
+    与$\displaystyle\frac{(1-\epsilon_{\mathrm{m}})^m}{(1+\epsilon_{\mathrm{m}})^n}\ge1-\gamma_{m+n}$恒成立。}。
 因此，$\gamma$可通过除法用于合并方程两边的$\epsilon_{\mathrm{m}}$项；
 在下面一些推导中这会很有用
 （注意因为$1\pm\epsilon_{\mathrm{m}}$项表示区间，消去它们是错的：

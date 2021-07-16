@@ -1382,32 +1382,6 @@ to other 3-D deterministic fractals are also included.},
   series    = {SIGGRAPH '89}
 }
 
-@article{10.1145/74334.74363,
-  author     = {Hart, J. C. and Sandin, D. J. and Kauffman, L. H.},
-  title      = {Ray Tracing Deterministic 3-D Fractals},
-  year       = {1989},
-  issue_date = {July 1989},
-  publisher  = {Association for Computing Machinery},
-  address    = {New York, NY, USA},
-  volume     = {23},
-  number     = {3},
-  issn       = {0097-8930},
-  url        = {https://doi.org/10.1145/74334.74363},
-  doi        = {10.1145/74334.74363},
-  abstract   = {As shown in 1982, Julia sets of quadratic functions as well as many other deterministic
-fractals exist in spaces of higher dimensionality than the complex plane. Originally
-a boundary-tracking algorithm was used to view these structures but required a large
-amount of storage space to operate. By ray tracing these objects, the storage facilities
-of a graphics workstation frame buffer are sufficient. A short discussion of a specific
-set of 3-D deterministic fractals precedes a full description of a ray-tracing algorithm
-applied to these objects. A comparison with the boundary-tracking method and applications
-to other 3-D deterministic fractals are also included.},
-  journal    = {SIGGRAPH Comput. Graph.},
-  month      = jul,
-  pages      = {289–296},
-  numpages   = {8}
-}
-
 @inproceedings{10.1145/800064.801287,
   author    = {Kajiya, James T.},
   title     = {Ray Tracing Parametric Patches},
@@ -2040,36 +2014,6 @@ fashion.},
   series    = {SIGGRAPH '89}
 }
 
-@article{10.1145/74334.74364,
-  author     = {Kalra, D. and Barr, A. H.},
-  title      = {Guaranteed Ray Intersections with Implicit Surfaces},
-  year       = {1989},
-  issue_date = {July 1989},
-  publisher  = {Association for Computing Machinery},
-  address    = {New York, NY, USA},
-  volume     = {23},
-  number     = {3},
-  issn       = {0097-8930},
-  url        = {https://doi.org/10.1145/74334.74364},
-  doi        = {10.1145/74334.74364},
-  abstract   = {In this paper, we present a robust and mathematically sound ray-intersection algorithm
-for implicit surfaces. The algorithm is guaranteed to numerically find the nearest
-intersection of the surface with a ray, and is guaranteed not to miss fine features
-of the surface. It does not require fine tuning or human choice of interactive parameters.
-Instead, it requires two upper bounds: "L" that limits the net rate of change of the
-implicit surface function f(x,y,z) and "G" that limits the rate of change of the gradient.
-We refer to an implicit surface with these rate limits as an "LG-implicit surface."Existing
-schemes to intersect a ray with an implicit surface have typically been guaranteed
-to work only for a limited set of implicit functions, such as quadric surfaces or
-polynomials, or else have been ad-hoc and have not been guaranteed to work. Our technique
-significantly extends the ability to intersect rays with implicit surfaces in a guaranteed
-fashion.},
-  journal    = {SIGGRAPH Comput. Graph.},
-  month      = jul,
-  pages      = {297–306},
-  numpages   = {10}
-}
-
 @inproceedings{4061542,
   author    = {Dammertz, H. and Keller, A.},
   booktitle = {2006 IEEE Symposium on Interactive Ray Tracing},
@@ -2160,4 +2104,271 @@ fashion.},
   eprint   = {https://onlinelibrary.wiley.com/doi/pdf/10.1111/1467-8659.t01-2-00647},
   abstract = {Abstract In this paper we introduce a new subdivision operator that unifies triangular and quadrilateral subdivision schemes. Designers often want the added flexibility of having both quads and triangles in their models. It is also well known that triangle meshes generate poor limit surfaces when using a quad scheme, while quad-only meshes behave poorly with triangular schemes. Our new scheme is a generalization of the well known Catmull-Clark and Loop subdivision algorithms. We show that our surfaces are C 1 everywhere and provide a proof that it is impossible to construct such a C 2 scheme at the quad/triangle boundary. However, we provide rules that produce surfaces with bounded curvature at the regular quad/triangle boundary and provide optimal masks that minimize the curvature divergence elsewhere. We demonstrate the visual quality of our surfaces with several examples. ACM CSS: I.3.5 Computer Graphics—Curve, surface, solid, and object representations},
   year     = {2003}
+}
+
+@inproceedings{10.1145/1661412.1618496,
+  author    = {Fisher, Matthew and Fatahalian, Kayvon and Boulos, Solomon and Akeley, Kurt and Mark, William R. and Hanrahan, Pat},
+  title     = {DiagSplit: Parallel, Crack-Free, Adaptive Tessellation for Micropolygon Rendering},
+  year      = {2009},
+  isbn      = {9781605588582},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/1661412.1618496},
+  doi       = {10.1145/1661412.1618496},
+  abstract  = {We present DiagSplit, a parallel algorithm for adaptively tessellating displaced parametric
+surfaces into high-quality, crack-free micropolygon meshes. DiagSplit modifies the
+split-dice tessellation algorithm to allow splits along non-isoparametric directions
+in the surface's parametric domain, and uses a dicing scheme that supports unique
+tessellation factors for each subpatch edge. Edge tessellation factors are computed
+using only information local to subpatch edges. These modifications allow all subpatches
+generated by DiagSplit to be processed independently without introducing T-junctions
+or mesh cracks and without incurring the tessellation overhead of binary dicing. We
+demonstrate that DiagSplit produces output that is better (in terms of image quality
+and number of micropolygons produced) than existing parallel tessellation schemes,
+and as good as highly adaptive split-dice implementations that are less amenable to
+parallelization.},
+  booktitle = {ACM SIGGRAPH Asia 2009 Papers},
+  articleno = {150},
+  numpages  = {10},
+  keywords  = {micropolygons, real-time rendering, tessellation},
+  location  = {Yokohama, Japan},
+  series    = {SIGGRAPH Asia '09}
+}
+
+@article{10.1111/1467-8659.t01-2-00647,
+  author   = {Stam, Jos and Loop, Charles},
+  title    = {Quad/Triangle Subdivision},
+  journal  = {Computer Graphics Forum},
+  volume   = {22},
+  number   = {1},
+  pages    = {79-85},
+  doi      = {https://doi.org/10.1111/1467-8659.t01-2-00647},
+  url      = {https://onlinelibrary.wiley.com/doi/abs/10.1111/1467-8659.t01-2-00647},
+  eprint   = {https://onlinelibrary.wiley.com/doi/pdf/10.1111/1467-8659.t01-2-00647},
+  abstract = {Abstract In this paper we introduce a new subdivision operator that unifies triangular and quadrilateral subdivision schemes. Designers often want the added flexibility of having both quads and triangles in their models. It is also well known that triangle meshes generate poor limit surfaces when using a quad scheme, while quad-only meshes behave poorly with triangular schemes. Our new scheme is a generalization of the well known Catmull-Clark and Loop subdivision algorithms. We show that our surfaces are C 1 everywhere and provide a proof that it is impossible to construct such a C 2 scheme at the quad/triangle boundary. However, we provide rules that produce surfaces with bounded curvature at the regular quad/triangle boundary and provide optimal masks that minimize the curvature divergence elsewhere. We demonstrate the visual quality of our surfaces with several examples. ACM CSS: I.3.5 Computer Graphics—Curve, surface, solid, and object representations},
+  year     = {2003}
+}
+
+@inproceedings{10.1145/344779.344936,
+  author    = {Pfister, Hanspeter and Zwicker, Matthias and van Baar, Jeroen and Gross, Markus},
+  title     = {Surfels: Surface Elements as Rendering Primitives},
+  year      = {2000},
+  isbn      = {1581132085},
+  publisher = {ACM Press/Addison-Wesley Publishing Co.},
+  address   = {USA},
+  url       = {https://doi.org/10.1145/344779.344936},
+  doi       = {10.1145/344779.344936},
+  abstract  = {Surface elements (surfels) are a powerful paradigm to efficiently render complex geometric
+objects at interactive frame rates. Unlike classical surface discretizations, i.e.,
+triangles or quadrilateral meshes, surfels are point primitives without explicit connectivity.
+Surfel attributes comprise depth, texture color, normal, and others. As a pre-process,
+an octree-based surfel representation of a geometric object is computed. During sampling,
+surfel positions and normals are optionally perturbed, and different levels of texture
+colors are prefiltered and stored per surfel. During rendering, a hierarchical forward
+warping algorithm projects surfels to a z-buffer. A novel method called visibility
+splatting determines visible surfels and holes in the z-buffer. Visible surfels are
+shaded using texture filtering, Phong illumination, and environment mapping using
+per-surfel normals. Several methods of image reconstruction, including supersampling,
+offer flexible speed-quality tradeoffs. Due to the simplicity of the operations, the
+surfel rendering pipeline is amenable for hardware implementation. Surfel objects
+offer complex shape, low rendering cost and high image quality, which makes them specifically
+suited for low-cost, real-time graphics, such as games.},
+  booktitle = {Proceedings of the 27th Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {335–342},
+  numpages  = {8},
+  keywords  = {texture mapping, rendering systems},
+  series    = {SIGGRAPH '00}
+}
+
+@inproceedings{10.1145/344779.344940,
+  author    = {Rusinkiewicz, Szymon and Levoy, Marc},
+  title     = {QSplat: A Multiresolution Point Rendering System for Large Meshes},
+  year      = {2000},
+  isbn      = {1581132085},
+  publisher = {ACM Press/Addison-Wesley Publishing Co.},
+  address   = {USA},
+  url       = {https://doi.org/10.1145/344779.344940},
+  doi       = {10.1145/344779.344940},
+  abstract  = {Advances in 3D scanning technologies have enabled the practical creation of meshes
+with hundreds of millions of polygons. Traditional algorithms for display, simplification,
+and progressive transmission of meshes are impractical for data sets of this size.
+We describe a system for representing and progressively displaying these meshes that
+combines a multiresolution hierarchy based on bounding spheres with a rendering system
+based on points. A single data structure is used for view frustum culling, backface
+culling, level-of-detail selection, and rendering. The representation is compact and
+can be computed quickly, making it suitable for large data sets. Our implementation,
+written for use in a large-scale 3D digitization project, launches quickly, maintains
+a user-settable interactive frame rate regardless of object complexity or camera position,
+yields reasonable image quality during motion, and refines progressively when idle
+to a high final image quality. We have demonstrated the system on scanned models containing
+hundreds of millions of samples.},
+  booktitle = {Proceedings of the 27th Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {343–352},
+  numpages  = {10},
+  keywords  = {level of detail algorithms, spatial data structures, compression algorithms, rendering systems},
+  series    = {SIGGRAPH '00}
+}
+
+@inproceedings{10.1007/978-3-7091-6303-0_29,
+  author    = {Schaufler, Gernot and Jensen, Henrik Wann},
+  editor    = {P{\'e}roche, Bernard and Rushmeier, Holly},
+  title     = {Ray Tracing Point Sampled Geometry},
+  booktitle = {Rendering Techniques 2000},
+  year      = {2000},
+  publisher = {Springer Vienna},
+  address   = {Vienna},
+  pages     = {319--328},
+  abstract  = {We present a novel technique for ray tracing geometry represented by points. Our approach makes it possible to render high quality ray traced images with global illumination using unstructured point-sampled data thus avoiding the time-consuming process of reconstructing the underlying surface or any topological information. Compared with previous point rendering methods, our approach allows for more complex illumination models while still maintaining the simplicity of the point primitive.},
+  isbn      = {978-3-7091-6303-0}
+}
+
+@article{10.1145/357306.357310,
+  author     = {Blinn, James F.},
+  title      = {A Generalization of Algebraic Surface Drawing},
+  year       = {1982},
+  issue_date = {July 1982},
+  publisher  = {Association for Computing Machinery},
+  address    = {New York, NY, USA},
+  volume     = {1},
+  number     = {3},
+  issn       = {0730-0301},
+  url        = {https://doi.org/10.1145/357306.357310},
+  doi        = {10.1145/357306.357310},
+  journal    = {ACM Trans. Graph.},
+  month      = jul,
+  pages      = {235–256},
+  numpages   = {22}
+}
+
+@article{Wyvill1989,
+  author  = {Wyvill, Brian and Wyvill, Geoff},
+  title   = {Field functions for implicit surfaces},
+  journal = {The Visual Computer},
+  volume  = {5},
+  number  = {1},
+  year    = {1989},
+  month   = {01},
+  pages   = {75-82},
+  issn    = {1432-2315},
+  url     = {https://doi.org/10.1007/BF01901483},
+  doi     = {10.1007/BF01901483}
+}
+
+@article{Hart1996,
+  author  = {Hart, John C.},
+  title   = {Sphere tracing: a geometric method for the antialiased ray tracing of implicit surfaces},
+  journal = {The Visual Computer},
+  volume  = {12},
+  number  = {10},
+  year    = {1996},
+  month   = {12},
+  pages   = {527-545},
+  issn    = {1432-2315},
+  url     = {https://doi.org/10.1007/s003710050084},
+  doi     = {10.1007/s003710050084}
+}
+
+@inproceedings{10.1145/800031.808571,
+  author    = {Smith, Alvy Ray},
+  title     = {Plants, Fractals, and Formal Languages},
+  year      = {1984},
+  isbn      = {0897911385},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/800031.808571},
+  doi       = {10.1145/800031.808571},
+  abstract  = {Although fractal models of natural phenomena have received much attention recently,
+there are other models of complex natural objects which have been around longer in
+Computer Imagery but are not widely known. These are procedural models of plants and
+trees. An interesting class of these models is presented here which handles plant
+growth, sports an efficient data representation, and has a high “database amplification”
+factor. It is based on an extension of the well-known formal languages of symbol strings
+to the lesser-known formal languages of labeled graphs. It is so tempting to describe
+these plant models as “fractal” that the similarities of this class of models with
+fractal models are explored in an attempt at rapprochement. The models are not fractal
+so the common parts of fractal theory and plant theory are abstracted to form a class
+of objects, the graftals. This class may prove to be of great interest to the future
+of Computer Imagery. Determinism is shown to provide adequate complexity, whereas
+randomness is only convenient and often inefficient. Finally, a nonfractal, nongraftal
+family of trees by Bill Reeves is introduced to emphasize some of the paper's nongrammatical
+themes.},
+  booktitle = {Proceedings of the 11th Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {1–10},
+  numpages  = {10},
+  keywords  = {Graftal, Tree, Plant, L-system, Database amplification, Parallel graph grammar, Fractal, Particle system, Computer imagery},
+  series    = {SIGGRAPH '84}
+}
+
+@inproceedings{Prusinkiewicz:1986:10.20380/GI1986.44,
+  author    = {Prusinkiewicz, Przemyslaw},
+  title     = {Graphical applications of L-systems},
+  booktitle = {Proceedings of Graphics Interface and Vision Interface '86},
+  series    = {GI + VI 1986},
+  year      = {1986},
+  issn      = {0713-5424},
+  location  = {Vancouver, British Columbia, Canada},
+  pages     = {247--253},
+  numpages  = {7},
+  doi       = {10.20380/GI1986.44},
+  publisher = {Canadian Information Processing Society},
+  address   = {Toronto, Ontario, Canada}
+}
+
+@inproceedings{10.1145/192161.192254,
+  author    = {Prusinkiewicz, Przemyslaw and James, Mark and M\v{e}ch, Radom\'{\i}r},
+  title     = {Synthetic Topiary},
+  year      = {1994},
+  isbn      = {0897916670},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/192161.192254},
+  doi       = {10.1145/192161.192254},
+  abstract  = {The paper extends Lindenmayer systems in a manner suitable for simulating the interaction
+between a developing plant and its environment. The formalism is illustrated by modeling
+the response of trees to pruning, which yields synthetic images of sculptured plants
+found in topiary gardens.},
+  booktitle = {Proceedings of the 21st Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {351–358},
+  numpages  = {8},
+  keywords  = {modeling of plants, topiary, L-system, image synthesis},
+  series    = {SIGGRAPH '94}
+}
+
+@inproceedings{10.1145/280814.280898,
+  author    = {Deussen, Oliver and Hanrahan, Pat and Lintermann, Bernd and M\v{e}ch, Radom\'{\i}r and Pharr, Matt and Prusinkiewicz, Przemyslaw},
+  title     = {Realistic Modeling and Rendering of Plant Ecosystems},
+  year      = {1998},
+  isbn      = {0897919998},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/280814.280898},
+  doi       = {10.1145/280814.280898},
+  booktitle = {Proceedings of the 25th Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {275–286},
+  numpages  = {12},
+  keywords  = {self-thinning, ecosystem simulation, plant model, vector quantization, modeling of natural phenomena, realistic image synthesis, approximate instancing},
+  series    = {SIGGRAPH '98}
+}
+
+@inproceedings{10.1145/383259.383291,
+  author    = {Prusinkiewicz, Przemyslaw and M\"{u}ndermann, Lars and Karwowski, Radoslaw and Lane, Brendan},
+  title     = {The Use of Positional Information in the Modeling of Plants},
+  year      = {2001},
+  isbn      = {158113374X},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/383259.383291},
+  doi       = {10.1145/383259.383291},
+  abstract  = {We integrate into plant models three elements of plant representation identified as
+important by artists: posture (manifested in curved stems and elongated leaves), gradual
+variation of features, and the progression of the drawing process from overall silhouette
+to local details. The resulting algorithms increase the visual realism of plant models
+by offering an intuitive control over plant form and supporting an interactive modeling
+process. The algorithms are united by the concept of expressing local attributes of
+plant architecture as functions of their location along the stems.},
+  booktitle = {Proceedings of the 28th Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {289–300},
+  numpages  = {12},
+  keywords  = {phyllotaxis, differential turtle geometry, realistic image synthesis, plant, generalized cylinder, interactive procedural modeling, Chomsky grammar, L-system, positional information},
+  series    = {SIGGRAPH '01}
 }

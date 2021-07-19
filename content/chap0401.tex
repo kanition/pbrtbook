@@ -90,6 +90,92 @@ virtual void `\initvar[Primitive::ComputeScatteringFunctions]{ComputeScatteringF
 
 \subsection{几何图元}\label{sub:几何图元}
 类\refvar{GeometricPrimitive}{}表示场景中的单个形状（例如一个球体）。
+用户提供的场景描述中的每个形状都被分配一个\refvar{GeometricPrimitive}{}。该类在文件
+\href{https://github.com/mmp/pbrt-v3/tree/master/src/core/primitive.h}{\ttfamily core/primitive.h}和
+\href{https://github.com/mmp/pbrt-v3/tree/master/src/core/primitive.cpp}{\ttfamily primitive.cpp}中实现。
+\begin{lstlisting}
+`\initcode{GeometricPrimitive Declarations}{=}`
+class `\initvar{GeometricPrimitive}{}` : public `\refvar{Primitive}{}` {
+public:
+    `\refcode{GeometricPrimitive Public Methods}{}`
+private:
+    `\refcode{GeometricPrimitive Private Data}{}`
+};
+\end{lstlisting}
 
+每个\refvar{GeometricPrimitive}{}持有
+对\refvar{Shape}{}及其\refvar{Material}{}的引用。
+此外，因为pbrt中的图元可能是面光源，
+它存储一个指向描述其发射特性的\refvar{AreaLight}{}对象的指针
+（如果该图元不发光则该指针设为{\ttfamily nullptr}）。
+最后，\refvar{MediumInterface}{}
+属性将关于图元内外部介质的信息编码。
+\begin{lstlisting}
+`\initcode{GeometricPrimitive Private Data}{=}`
+std::shared_ptr<`\refvar{Shape}{}`> `\initvar[GeometricPrimitive::shape]{shape}{}`;
+std::shared_ptr<`\refvar{Material}{}`> `\initvar[GeometricPrimitive::material]{material}{}`;
+std::shared_ptr<`\refvar{AreaLight}{}`> `\initvar[GeometricPrimitive::areaLight]{areaLight}{}`;
+`\refvar{MediumInterface}{}` `\initvar[GeometricPrimitive::mediumInterface]{mediumInterface}{}`;
+\end{lstlisting}
+
+\refvar{GeometricPrimitive}{}构造函数只从传入参数中初始化这些变量，很简单。
+\begin{lstlisting}
+`\initcode{GeometricPrimitive Public Methods}{=}`
+virtual `\refvar{Bounds3f}{}` `\initvar[GeometricPrimitive::WorldBound]{WorldBound}{}`() const;
+virtual bool `\refvar[GeometricPrimitive::Intersect]{Intersect}{}`(const `\refvar{Ray}{}` &r, `\refvar{SurfaceInteraction}{}` *isect) const;
+virtual bool `\initvar[GeometricPrimitive::IntersectP]{IntersectP}{}`(const `\refvar{Ray}{}` &r) const;
+`\refvar{GeometricPrimitive}{}`(const std::shared_ptr<`\refvar{Shape}{}`> &shape,
+        const std::shared_ptr<`\refvar{Material}{}`> &material,
+        const std::shared_ptr<`\refvar{AreaLight}{}`> &areaLight,
+        const `\refvar{MediumInterface}{}` &mediumInterface)
+    : `\refvar[GeometricPrimitive::shape]{shape}{}`(shape), `\refvar[GeometricPrimitive::material]{material}{}`(material), `\refvar[GeometricPrimitive::areaLight]{areaLight}{}`(areaLight),
+    `\refvar[GeometricPrimitive::mediumInterface]{mediumInterface}{}`(mediumInterface) {
+}
+const `\refvar{AreaLight}{}` *`\initvar{GetAreaLight}{}`() const;
+const `\refvar{Material}{}` *`\refvar{GetMaterial}{}`() const;
+void `\refvar[GeometricPrimitive::ComputeScatteringFunctions]{ComputeScatteringFunctions}{}`(`\refvar{SurfaceInteraction}{}` *isect, `\refvar{MemoryArena}{}` &arena,
+    `\refvar{TransportMode}{}` mode, bool allowMultipleLobes) const;
+\end{lstlisting}
+
+\refvar{Primitive}{}接口大多数与几何处理相关的方法
+都简单地由\refvar{Shape}{}相应的方法得到。
+例如，\refvar{GeometricPrimitive::Intersect}{()}调用
+其所附的\refvar{Shape}{}的方法\refvar{Shape::Intersect}{()}
+来进行实际的相交测试，如果有的话则初始化一个\refvar{SurfaceInteraction}{}来描述相交处。
+它也用返回的参数化命中距离来更新成员\refvar[tMax]{Ray::tMax}{}。
+在\refvar[tMax]{Ray::tMax}{}中存储到最近命中处距离的优点是更易
+避免对任何沿射线比已找到的相交处还远的图元执行相交测试。
+\begin{lstlisting}
+`\initcode{GeometricPrimitive Method Definitions}{=}\initnext{GeometricPrimitiveMethodDefinitions}`
+bool `\initvar{GeometricPrimitive::Intersect}{}`(const `\refvar{Ray}{}` &r,
+        `\refvar{SurfaceInteraction}{}` *isect) const {
+    `\refvar{Float}{}` tHit;
+    if (!`\refvar[GeometricPrimitive::shape]{shape}{}`->`\refvar[Shape::Intersect]{Intersect}{}`(r, &tHit, isect))
+        return false;
+    r.`\refvar{tMax}{}` = tHit;
+    isect->`\refvar{primitive}{}` = this;
+    `\refcode{Initialize SurfaceInteraction::mediumInterface after Shape intersection}{}`
+    return true;
+}
+\end{lstlisting}
+
+我们这里不再介绍\refvar{GeometricPrimitive}{}的方法
+\refvar[GeometricPrimitive::WorldBound]{WorldBound}{()}或\linebreak
+\refvar[GeometricPrimitive::IntersectP]{IntersectP}{()}的实现；
+它们只是以相同方式把这些请求传给\refvar{Shape}{}。同样，\linebreak
+\refvar{GetAreaLight}{()}只是返回成员\refvar{GeometricPrimitive::areaLight}{}。
+
+最后，方法\refvar[GeometricPrimitive::ComputeScatteringFunctions]{ComputeScatteringFunctions}{()}只是
+把请求传给\refvar{Material}{}。
+\begin{lstlisting}
+`\refcode{GeometricPrimitive Method Definitions}{+=}\lastcode{GeometricPrimitiveMethodDefinitions}`
+void `\initvar{GeometricPrimitive::ComputeScatteringFunctions}{}`(
+        `\refvar{SurfaceInteraction}{}` *isect, `\refvar{MemoryArena}{}` &arena, `\refvar{TransportMode}{}` mode,
+        bool allowMultipleLobes) const {
+    if (`\refvar[GeometricPrimitive::material]{material}{}`)
+        `\refvar[GeometricPrimitive::material]{material}{}`->`\refvar[Material::ComputeScatteringFunctions]{ComputeScatteringFunctions}{}`(isect, arena, mode,
+            allowMultipleLobes);
+}
+\end{lstlisting}
 
 \subsection{TransformedPrimitive：物体实例化与动画基元}\label{sub:TransformedPrimitive：物体实例化与动画基元}

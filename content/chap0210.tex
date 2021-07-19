@@ -107,7 +107,7 @@ public:
     `\refvar{Float}{}` time, const `\refvar{Shape}{}` *sh);
 void `\refvar{SetShadingGeometry}{}`(const `\refvar{Vector3f}{}` &dpdu, const `\refvar{Vector3f}{}` &dpdv,
      const `\refvar{Normal3f}{}` &dndu, const `\refvar{Normal3f}{}` &dndv, bool orientationIsAuthoritative);
-void `\initvar{ComputeScatteringFunctions}{}`(const `\refvar{RayDifferential}{}` &ray,
+void `\refvar[SurfaceInteraction::ComputeScatteringFunctions]{ComputeScatteringFunctions}{}`(const `\refvar{RayDifferential}{}` &ray,
     `\refvar{MemoryArena}{}` &arena, bool allowMultipleLobes = false,
     `\refvar{TransportMode}{}` mode = `\refvar{TransportMode}{}`::`\refvar{Radiance}{}`);
 void `\initvar{ComputeDifferentials}{}`(const `\refvar{RayDifferential}{}` &r) const;

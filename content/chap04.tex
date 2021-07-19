@@ -1,5 +1,47 @@
 \chapterimage{Pictures/chap04/landscape-above-1300x650.png}
 \chapter{图元和相交加速}\label{chap:图元和相交加速}
+\setcounter{sidenote}{1}
+
+上一章描述的类只关注表示3D对象的几何性质。
+虽然类\refvar{Shape}{}为诸如相交和定界等几何操作提供了方便的抽象，
+但它没有包含能完全描述场景中一个物体的足够信息。
+例如，有必要给每个形状\keyindex{绑定}{bind}{}材质属性以指定其外观。
+为了实现这个目标，本章介绍抽象基类\refvar{Primitive}{}并提供大量实现。
+
+要直接渲染的形状表示为类\refvar{GeometricPrimitive}{}。
+该类结合了\refvar{Shape}{}及其外观属性的描述。
+这样pbrt的几何与着色部分可以干净地分开，
+这些外观属性包含在第\refchap{材质}描述的类\refvar{Material}{}中。
+
+类\refvar{TransformedPrimitive}{}处理场景中\refvar{Shape}{}的两个更一般用途：
+动画变换矩阵和物体实例化，对于包含许多在不同位置的同一几何体的场景（例如\reffig{4.1}），
+它们能大大减少内存需求。
+实现这些特性本质上要求在世界空间\refvar{Shape}{}的表示
+和实际场景世界空间之间插入额外的变换矩阵。
+因此两者都由一个类处理。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=\linewidth]{chap04/landscape-above.png}
+    \caption{该室外场景大量运用实例化作为场景描述的压缩机制。
+        场景中只有2400万个不同的三角形，但因为通过实例化复用物体，
+        总的几何复杂度为31亿个三角形（场景由Laubwerk提供）。}
+    \label{fig:4.1}
+\end{figure}
+
+本章还介绍类\refvar{Aggregate}{}，
+它表示可以容纳许多\refvar{Primitive}{}的容器。
+pbrt用该类作为\keyindex{加速结构}{acceleration structure}{}的基础——
+帮助减少测试射线与场景中所有$n$个物体相交本来的复杂度$O(n)$。
+大多数射线只与少量图元相交而与剩下的错开很大距离。
+如果相交加速算法能一次拒绝整组图元，
+比起简单地依次测试每条射线与每个图元，性能会有巨大的提升。
+对这些加速结构复用\refvar{Primitive}{}接口的一个好处是
+让支持一种\keyindex{加速器}{accelerator}{}包含另一种加速器的混合方法更容易。
+
+本章描述了两个加速器的实现，
+第一个\refvar{BVHAccel}{}基于构建场景中围绕物体的边界框的层级，
+第二个\refvar{KdTreeAccel}{}基于自适应递归空间细分。
+虽然提出了许多其他的加速结构，但如今几乎所有光线追踪器都用这两种。
+本章末的“扩展阅读”一节有对其他可能性的大量参考。
 
 \input{content/chap0401.tex}
 

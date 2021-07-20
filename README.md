@@ -1,6 +1,6 @@
 # 基于物理的渲染：从理论到实现 中文整合翻译计划
 ## Physically Based Rendering: From Theory To Implementation (pbrt book) 
-[![](https://img.shields.io/badge/Made%20with-Tex-brightgreen?style=flat-square)](.)
+[![](https://img.shields.io/badge/Made%20with-TeX-brightgreen?style=flat-square)](.)
 [![](https://img.shields.io/github/downloads/kanition/pbrtbook/total?color=blue&style=flat-square)](https://github.com/kanition/pbrtbook/releases)
 [![](https://img.shields.io/github/v/release/kanition/pbrtbook?include_prereleases&style=flat-square&color=orange)](https://github.com/kanition/pbrtbook/releases/latest)
 

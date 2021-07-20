@@ -32,7 +32,7 @@ virtual bool `\initvar[Primitive::IntersectP]{IntersectP}{}`(const `\refvar{Ray}
 包括指向射线命中的\refvar{Primitive}{}的指针。
 \begin{lstlisting}
 `\refcode{SurfaceInteraction Public Data}{+=}\lastnext{SurfaceInteractionPublicData}`
-const `\refvar{Primitive}{}` *`\initvar{primitive}{}` = nullptr;
+const `\refvar{Primitive}{}` *`\initvar[SurfaceInteraction::primitive]{primitive}{}` = nullptr;
 \end{lstlisting}
 
 \refvar{Primitive}{}对象有一些方法也与非几何性质有关。
@@ -153,7 +153,7 @@ bool `\initvar{GeometricPrimitive::Intersect}{}`(const `\refvar{Ray}{}` &r,
     if (!`\refvar[GeometricPrimitive::shape]{shape}{}`->`\refvar[Shape::Intersect]{Intersect}{}`(r, &tHit, isect))
         return false;
     r.`\refvar{tMax}{}` = tHit;
-    isect->`\refvar{primitive}{}` = this;
+    isect->`\refvar[SurfaceInteraction::primitive]{primitive}{}` = this;
     `\refcode{Initialize SurfaceInteraction::mediumInterface after Shape intersection}{}`
     return true;
 }
@@ -179,3 +179,127 @@ void `\initvar{GeometricPrimitive::ComputeScatteringFunctions}{}`(
 \end{lstlisting}
 
 \subsection{TransformedPrimitive：物体实例化与动画基元}\label{sub:TransformedPrimitive：物体实例化与动画基元}
+\refvar{TransformedPrimitive}{}持有单个\refvar{Primitive}{}且
+还包括场景中底层图元及其表示之间插入的\refvar{AnimatedTransform}{}。
+该额外的变换启用了两个有用的功能：物体实例化和带有动画变换的图元。
+
+物体实例化是渲染中的经典技术，
+它在场景中的多个位置复用单组几何体变换后的副本。
+例如，一个音乐厅模型有上千张一样的座位，
+如果所有座位都引用单个座位的共享几何表示，则场景描述可大幅压缩。
+\reffig{4.1}的生态系统场景有不同种类的23241株植物，但只有31个不同的植物模型。
+因为每个植物模型都对每个实例用不同变换进行多次实例化，
+所以完整场景共有31亿个三角形，但由于通过物体实例化做图元复用，只有2400万个三角形存于内存中。
+当用物体实例化渲染该场景时pbrt只用了7GB多一点的内存
+（BVH占1.7GB，三角网格占2.3GB，纹理贴图占3GB），
+但不用实例化来渲染它需要516GB。
+
+动画变换通过类\refvar{AnimatedTransform}{}启用了场景中图元的\keyindex{刚体}{rigid-body}{}
+动画。见\reffig{2.15}展示动画变换引起的运动模糊。
+
+回想第\refchap{形状}的\refvar{Shape}{}本身有物体到世界的变换来将它们放置到场景中。
+如果一个形状被\refvar{TransformedPrimitive}{}持有，
+则形状的世界空间概念不再是实际的场景世界空间——
+只有在\refvar{TransformedPrimitive}{}的变换也被施加后形状才真正在世界空间中。
+对于此处的应用，让形状完全没有意识到被施加了额外的变换是有意义的。
+对于动画形状，这里把所有动画变换的处理隔离到一个类中
+比起要求所有类都支持\refvar{AnimatedTransform}{}会更简单。
+类似地，对于实例化图元，让\refvar{Shape}{}知道所有实例变换的作用有限：
+我们不想让\refvar{TriangleMesh}{}为每个实例变换都复制其每个顶点位置
+并一直将它们变换到世界空间，因为这会让物体实例化白节约内存。
+\begin{lstlisting}
+`\initcode{TransformedPrimitive Declarations}{=}`
+class `\initvar{TransformedPrimitive}{}` : public `\refvar{Primitive}{}` {
+public:
+    `\refcode{TransformedPrimitive Public Methods}{}`
+private:
+    `\refcode{TransformedPrimitive Private Data}{}`
+};
+\end{lstlisting}
+
+\refvar{TransformedPrimitive}{}构造函数接收
+对表示模型的\refvar{Primitive}{}以及将其放置于场景中的变换的引用。
+如果该几何体由多个\refvar{Primitive}{}描述，
+则调用代码负责将它们放入一个\refvar{Aggregate}{}实现，
+这样这里只需要保存一个\refvar{Primitive}{}。
+对于按需创建聚合体的代码，详见附录\refsub{物体实例化}
+\sidenote{译者注：原文这里两处章节引用有误，已修正。}
+针对图元实例情况的函数\linebreak\refvar{pbrtObjectInstance}{()}，
+以及\refsub{形状}针对动画形状的函数\refvar{pbrtShape}{()}。
+\begin{lstlisting}
+`\initcode{TransformedPrimitive Public Methods}{=}\initnext{TransformedPrimitivePublicMethods}`
+`\refvar{TransformedPrimitive}{}`(std::shared_ptr<`\refvar{Primitive}{}`> &primitive,
+        const `\refvar{AnimatedTransform}{}` &PrimitiveToWorld)
+    : `\refvar[TransformedPrimitive::primitive]{primitive}{}`(primitive), `\refvar{PrimitiveToWorld}{}`(PrimitiveToWorld) { }
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{TransformedPrimitive Private Data}{=}`
+std::shared_ptr<`\refvar{Primitive}{}`> `\initvar[TransformedPrimitive::primitive]{primitive}{}`;
+const `\refvar{AnimatedTransform}{}` `\initvar{PrimitiveToWorld}{}`;
+\end{lstlisting}
+
+\refvar{TransformedPrimitive}{}的关键任务是打通\refvar{Primitive}{}实现的接口
+与其持有的指针指向的\refvar{Primitive}{}，并考虑它持有的额外变换的影响。\linebreak
+\refvar{TransformedPrimitive}{}的\refvar{PrimitiveToWorld}{}变换
+定义了从几何体的这个特定实例的坐标系到世界空间的变换。
+如果成员\refvar[TransformedPrimitive::primitive]{primitive}{}有自己的变换，
+则它应该插值为从物体空间到\refvar{TransformedPrimitive}{}坐标系的变换。
+到世界空间的完整变换要求同时有这两种变换。
+
+因此，方法\refvar{TransformedPrimitive::Intersect}{()}将给定射线变换到
+图元的坐标系并将变换后的射线传入其\refvar[TransformedPrimitive::Intersect]{Intersect}{()}例程。
+如果找到命中处，则来自变换后射线的\refvar{tMax}{}值需要复制到原来
+传入\refvar[TransformedPrimitive::Intersect]{Intersect}{()}例程的射线{\ttfamily r}中。
+\begin{lstlisting}
+`\initcode{TransformedPrimitive Method Definitions}{=}`
+bool `\refvar{TransformedPrimitive}{}`::`\initvar[TransformedPrimitive::Intersect]{\refvar[Primitive::Intersect]{Intersect}{}}{}`(const `\refvar{Ray}{}` &r, 
+        `\refvar{SurfaceInteraction}{}` *isect) const {
+    `\refcode{Compute ray after transformation by PrimitiveToWorld}{}`
+    if (!`\refvar[TransformedPrimitive::primitive]{primitive}{}`->`\refvar[Primitive::Intersect]{Intersect}{}`(ray, isect))
+        return false;
+    r.`\refvar{tMax}{}` = ray.`\refvar{tMax}{}`;
+    `\refcode{Transform instance's intersection data to world space}{}`
+    return true;
+}
+\end{lstlisting}
+
+为了变换射线，我们需要基于射线的时间来插值变换。
+尽管我们想把射线{\ttfamily r}从世界空间变换到图元空间，
+但这里我们实际上是插值\refvar{PrimitiveToWorld}{}然后
+求所得\refvar{Transform}{}的逆来得到变换。
+由于\refsub{动画变换实现}中基于极分解的变换插值算法工作方式的缘故，
+这个奇怪的方法是必要的：\refvar{PrimitiveToWorld}{}插值到某个时间
+再求逆不一定与对它的逆即动画世界到图元的变换进行直接插值的结果一样。
+因为\refvar{Primitive::WorldBound}{()}用\refvar{PrimitiveToWorld}{}计算
+图元的边界框，我们这里为了一致性也必须插值\refvar{PrimitiveToWorld}{}。
+\begin{lstlisting}
+`\initcode{Compute ray after transformation by PrimitiveToWorld}{=}`
+`\refvar{Transform}{}` InterpolatedPrimToWorld;
+`\refvar{PrimitiveToWorld}{}`.`\refvar{Interpolate}{}`(r.`\refvar[Ray::time]{time}{}`, &InterpolatedPrimToWorld);
+`\refvar{Ray}{}` ray = `\refvar[Transform::Inverse]{Inverse}{}`(InterpolatedPrimToWorld)(r);
+\end{lstlisting}
+
+最后，交点处的\refvar{SurfaceInteraction}{}需要变换到世界空间；
+\refvar[SurfaceInteraction::primitive]{primitive}{}的相交成员
+将会把\refvar{SurfaceInteraction}{}变换到其世界空间的概念中，
+所以这里我们只需要施加持有的额外变换的效果。
+\begin{lstlisting}
+`\initcode{Transform instance's intersection data to world space}{=}`
+if (!InterpolatedPrimToWorld.`\refvar{IsIdentity}{}`())
+    *isect = InterpolatedPrimToWorld(*isect);
+\end{lstlisting}
+
+剩下的几何\refvar{Primitive}{}方法转到共享实例上，
+结果同样由变换\linebreak
+\refvar{TransformedPrimitive}{}按需变换。
+\begin{lstlisting}
+`\refcode{TransformedPrimitive Public Methods}{+=}\lastcode{TransformedPrimitivePublicMethods}`
+`\refvar{Bounds3f}{}` `\initvar[TransformedPrimitive::WorldBound]{WorldBound}{}`() const { 
+    return `\refvar{PrimitiveToWorld}{}`.`\refvar{MotionBounds}{}`(`\refvar[TransformedPrimitive::primitive]{primitive}{}`->`\refvar[Primitive::WorldBound]{WorldBound}{}`());
+}
+\end{lstlisting}
+
+\refvar{TransformedPrimitive}{}的方法\refvar{GetAreaLight}{()}、\refvar{GetMaterial}{()}和\linebreak
+\refvar[Primitive::ComputeScatteringFunctions]{ComputeScatteringFunctions}{()}永远不该被调用。
+应该始终调用射线实际命中的图元的相应方法。
+因此，任何调用这些方法的\refvar{TransformedPrimitive}{}实现（此处没有列出）的企图都会导致运行时错误。

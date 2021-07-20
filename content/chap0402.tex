@@ -1,5 +1,46 @@
 \section{聚合}\label{sec:聚合}
 
+加速结构是任何光线追踪器的核心部件之一。没有算法来减少不必要的光线相交测试数量，
+追踪穿过场景的一条光线会花掉与场景图元数量成线性关系的时间，
+因为光线会需要依次对每个图元测试来找出最近的相交处。
+然而，这样做在大多数场景里都非常浪费，因为光线不会穿过绝大部分图元。
+加速结构的目标是允许快速、同时拒绝\emph{成组}图元，
+由此理顺搜索过程使得附近的相交处更可能被首先找到而更远处的则可能被忽略了。
+
+因为光线-物体相交占据光线追踪器的大部分执行时间，
+所以有大量光线相交加速的研究。
+我们这里不会尝试探索所有工作但会让感兴趣的读者
+参考本章末“扩展阅读”一节的文献
+和《\citetitle*{10.5555/94788}》\citep{10.5555/94788}中Arvo和Kirk的章节，
+它对不同光线追踪加速方法有很好的分类。
+
+广义上说，有两种方法解决该问题：空间细分和物体细分。
+空间细分算法将3D空间分解为区域（例如在场景上叠加轴对齐的网格框）
+并记录哪些图元与哪些区域重叠。
+一些算法中，区域也可能基于与其重叠的图元数量自适应地细分。
+当需要求光线相交处时，计算该光线穿过的这些区域序列并且
+只有这些重叠区域内的图元才会被测试是否相交。
+
+相反，物体细分基于把场景中的物体渐进地分解为更小的组成物体集合。
+例如，一个房间模型可能被分解为四面墙、一块天花板和一把椅子。
+如果光线没有与房间的包围盒相交，则其所有图元都可以剔除掉。
+否则，光线就挨个对它们测试。
+例如，如果它命中了椅子的包围盒，
+则它可能又挨个对其椅腿、坐垫和靠背测试。
+反之则剔除椅子。
+
+这两种方法都非常成功地解决了光线相交计算要求的一般性问题；
+没有根本理由偏好其中一个。
+本章的\refvar{KdTreeAccel}{}基于空间细分方法，
+而\refvar{BVHAccel}{}则基于物体细分。
+
+类\refvar{Aggregate}{}为多个\refvar{Primitive}{}对象归为一组提供了接口。
+因为\refvar{Aggregate}{}
+自身实现了\refvar{Primitive}{}的接口，
+所以pbrt中其他地方对于相交加速不需要特殊支持。
+\refvar{Integrator}{}可以像场景中只有单个\refvar{Primitive}{}那样编写，
+检查相交处而不需要担心它们实际是怎样求得的。
+此外通过这种方式实现加速，很容易通过向pbrt添加新\refvar{Aggregate}{}图元来试验新加速技术。
 \begin{lstlisting}
 `\initcode{Aggregate Declarations}{=}`
 class `\initvar{Aggregate}{}` : public `\refvar{Primitive}{}` {
@@ -7,3 +48,10 @@ public:
     `\refcode{Aggregate Public Methods}{}`
 };
 \end{lstlisting}
+
+像\refvar{TransformedPrimitive}{}那样，\refvar{Aggregate}{}相交方法的实现让指针\linebreak
+\refvar{SurfaceInteraction::primitive}{}设为指向光线实际命中的图元，而不是持有该图元的聚合体。
+因为pbrt用该指针来获取命中图元的信息（其反射和发射性质），
+所以永远不应该调用\refvar{Aggregate}{}的方法\refvar{GetAreaLight}{()}、\refvar{GetMaterial}{()}和
+\refvar[Primitive::ComputeScatteringFunctions]{ComputeScatteringFunctions}{()}，
+否则这些方法的实现（此处没有列出）报运行时错误。

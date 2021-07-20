@@ -29,9 +29,9 @@ struct `\initvar{Interaction}{}` {
 `\initcode{Interaction Public Methods}{=}\initnext{InteractionPublicMethods}`
 `\refvar{Interaction}{}`(const `\refvar{Point3f}{}` &p, const `\refvar{Normal3f}{}` &n, const `\refvar{Vector3f}{}` &pError,
         const `\refvar{Vector3f}{}` &wo, `\refvar{Float}{}` time,
-        const `\refvar{MediumInterface}{}` &mediumInterface)
+        const `\refvar[Interaction::mediumInterface]{MediumInterface}{}` &mediumInterface)
     : `\refvar[Interaction::p]{p}{}`(p), `\refvar[Interaction::time]{time}{}`(time), `\refvar{pError}{}`(pError), `\refvar[Interaction::wo]{wo}{}`(wo), `\refvar[Interaction::n]{n}{}`(n),
-      `\refvar{mediumInterface}{}`(mediumInterface) { }
+      `\refvar[Interaction::mediumInterface]{mediumInterface}{}`(mediumInterface) { }
 \end{lstlisting}
 
 所有交互作用必须有关联的点$\bm p$和时间。
@@ -81,7 +81,7 @@ bool `\initvar{IsSurfaceInteraction}{}`() const {
 \refvar{MediumInterface}{}的实例负责处理。
 \begin{lstlisting}
 `\refcode{Interaction Public Data}{+=}\lastcode{InteractionPublicData}`
-`\refvar{MediumInterface}{}` `\initvar{mediumInterface}{}`;
+`\refvar{MediumInterface}{}` `\initvar[Interaction::mediumInterface]{mediumInterface}{}`;
 \end{lstlisting}
 
 \subsection{表面交互}\label{sub:表面交互}
@@ -107,7 +107,7 @@ public:
     `\refvar{Float}{}` time, const `\refvar{Shape}{}` *sh);
 void `\refvar{SetShadingGeometry}{}`(const `\refvar{Vector3f}{}` &dpdu, const `\refvar{Vector3f}{}` &dpdv,
      const `\refvar{Normal3f}{}` &dndu, const `\refvar{Normal3f}{}` &dndv, bool orientationIsAuthoritative);
-void `\initvar{ComputeScatteringFunctions}{}`(const `\refvar{RayDifferential}{}` &ray,
+void `\refvar[SurfaceInteraction::ComputeScatteringFunctions]{ComputeScatteringFunctions}{}`(const `\refvar{RayDifferential}{}` &ray,
     `\refvar{MemoryArena}{}` &arena, bool allowMultipleLobes = false,
     `\refvar{TransportMode}{}` mode = `\refvar{TransportMode}{}`::`\refvar{Radiance}{}`);
 void `\initvar{ComputeDifferentials}{}`(const `\refvar{RayDifferential}{}` &r) const;
@@ -127,7 +127,7 @@ void `\initvar{ComputeDifferentials}{}`(const `\refvar{RayDifferential}{}` &r) c
 `\refvar{Point2f}{}` `\initvar[SurfaceInteraction::uv]{uv}{}`;
 `\refvar{Vector3f}{}` `\initvar[SurfaceInteraction::dpdu]{dpdu}{}`, `\initvar[SurfaceInteraction::dpdv]{dpdv}{}`;
 `\refvar{Normal3f}{}` `\initvar[SurfaceInteraction::dndu]{dndu}{}`, `\initvar[SurfaceInteraction::dndv]{dndv}{}`;
-const `\refvar{Shape}{}` *`\initvar{shape}{}` = nullptr;
+const `\refvar{Shape}{}` *`\initvar[SurfaceInteraction::shape]{shape}{}` = nullptr;
 \end{lstlisting}
 
 \begin{figure}[htbp]
@@ -161,7 +161,7 @@ const `\refvar{Shape}{}` *`\initvar{shape}{}` = nullptr;
     : `\refvar{Interaction}{}`(p, `\refvar{Normal3f}{}`(`\refvar{Normalize}{}`(`\refvar{Cross}{}`(dpdu, dpdv))), pError, wo,
     time, nullptr),
     `\refvar[SurfaceInteraction::uv]{uv}{}`(uv), `\refvar[SurfaceInteraction::dpdu]{dpdu}{}`(dpdu), `\refvar[SurfaceInteraction::dpdv]{dpdv}{}`(dpdv), `\refvar[SurfaceInteraction::dndu]{dndu}{}`(dndu), `\refvar[SurfaceInteraction::dndv]{dndv}{}`(dndv),
-    `\refvar{shape}{}`(shape) {
+    `\refvar[SurfaceInteraction::shape]{shape}{}`(shape) {
     `\refcode{Initialize shading geometry from true geometry}{}`
     `\refcode{Adjust normal based on orientation and handedness}{}`
 }
@@ -220,8 +220,8 @@ pbrt输入文件中的\refvar{reverseOrientation}{}指令将法线翻转为相�
 如果都满足，它们的作用会抵消。异或运算测试该条件。
 \begin{lstlisting}
 `\initcode{Adjust normal based on orientation and handedness}{=}`
-if (`\refvar{shape}{}` && (`\refvar{shape}{}`->`\refvar{reverseOrientation}{}` ^
-              `\refvar{shape}{}`->`\refvar{transformSwapsHandedness}{}`)) {
+if (`\refvar[SurfaceInteraction::shape]{shape}{}` && (`\refvar[SurfaceInteraction::shape]{shape}{}`->`\refvar{reverseOrientation}{}` ^
+              `\refvar[SurfaceInteraction::shape]{shape}{}`->`\refvar{transformSwapsHandedness}{}`)) {
     `\refvar[Interaction::n]{n}{}` *= -1;
     `\refvar{shading}{}`.`\refvar[shading::n]{n}{}` *= -1;
 }
@@ -249,8 +249,8 @@ void `\refvar{SurfaceInteraction}{}`::`\initvar{SetShadingGeometry}{}`(const `\r
 \begin{lstlisting}
 `\initcode{Compute shading.n for SurfaceInteraction}{=}`
 `\refvar{shading}{}`.`\refvar[shading::n]{n}{}` = `\refvar{Normalize}{}`((`\refvar{Normal3f}{}`)`\refvar{Cross}{}`(dpdus, dpdvs));
-if (`\refvar{shape}{}` && (`\refvar{shape}{}`->`\refvar{reverseOrientation}{}` ^
-              `\refvar{shape}{}`->`\refvar{transformSwapsHandedness}{}`))
+if (`\refvar[SurfaceInteraction::shape]{shape}{}` && (`\refvar[SurfaceInteraction::shape]{shape}{}`->`\refvar{reverseOrientation}{}` ^
+              `\refvar[SurfaceInteraction::shape]{shape}{}`->`\refvar{transformSwapsHandedness}{}`))
     `\refvar{shading}{}`.`\refvar[shading::n]{n}{}` = -`\refvar{shading}{}`.`\refvar[shading::n]{n}{}`;
 if (orientationIsAuthoritative)
     `\refvar[Interaction::n]{n}{}` = `\refvar{Faceforward}{}`(`\refvar[Interaction::n]{n}{}`, `\refvar{shading}{}`.`\refvar[shading::n]{n}{}`);

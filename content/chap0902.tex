@@ -21,7 +21,7 @@ void `\refvar{SurfaceInteraction}{}`::`\initvar[SurfaceInteraction::ComputeScatt
     const `\refvar{RayDifferential}{}` &ray, `\refvar{MemoryArena}{}` &arena,
     bool allowMultipleLobes, `\refvar{TransportMode}{}` mode) {
     `\refvar{ComputeDifferentials}{}`(ray);
-    primitive->`\refvar{ComputeScatteringFunctions}{}`(this, arena, mode,
+    primitive->`\refvar[Primitive::ComputeScatteringFunctions]{ComputeScatteringFunctions}{}`(this, arena, mode,
     allowMultipleLobes);
 }
 \end{lstlisting}

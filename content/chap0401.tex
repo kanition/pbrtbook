@@ -1,5 +1,6 @@
 \section{图元接口与几何图元}\label{sec:图元接口与几何图元}
 
+抽象基类\refvar{Primitive}{}是pbrt的几何处理与着色子系统之间的桥梁。
 \begin{lstlisting}
 `\initcode{Primitive Declarations}{=}`
 class `\initvar{Primitive}{}` {
@@ -8,33 +9,297 @@ public:
 };
 \end{lstlisting}
 
+\refvar{Primitive}{}接口中有许多几何例程，它们全都与\refvar{Shape}{}相应的方法类似。
+首先，方法\refvar{Primitive::WorldBound}{()}返回世界空间中装入图元几何体的框。
+这样的框有许多用处；最重要之一是把\refvar{Primitive}{}放入加速数据结构。
 \begin{lstlisting}
 `\initcode{Primitive Interface}{=}\initnext{PrimitiveInterface}`
 virtual `\refvar{Bounds3f}{}` `\initvar[Primitive::WorldBound]{WorldBound}{()}` const = 0;
 \end{lstlisting}
 
+接下来两个方法提供了光线相交测试。两个基类的差别之一是\linebreak
+\refvar{Shape::Intersect}{()}在一个\refvar{Float}{*}输出变量中
+返回沿射线到相交处的参数距离，而
+\refvar{Primitive::Intersect}{()}则负责在找到相交处时用该值更新\refvar[tMax]{Ray::tMax}{}。
 \begin{lstlisting}
 `\refcode{Primitive Interface}{+=}\lastnext{PrimitiveInterface}`
 virtual bool `\initvar[Primitive::Intersect]{Intersect}{}`(const `\refvar{Ray}{}` &r, `\refvar{SurfaceInteraction}{}` *) const = 0;
 virtual bool `\initvar[Primitive::IntersectP]{IntersectP}{}`(const `\refvar{Ray}{}` &r) const = 0;
 \end{lstlisting}
 
+找到相交后，\refvar{Primitive}{}的方法\refvar[Primitive::Intersect]{Intersect}{()}也负责
+初始化额外的\linebreak\refvar{SurfaceInteraction}{}成员变量，
+包括指向射线命中的\refvar{Primitive}{}的指针。
+\begin{lstlisting}
+`\refcode{SurfaceInteraction Public Data}{+=}\lastnext{SurfaceInteractionPublicData}`
+const `\refvar{Primitive}{}` *`\initvar[SurfaceInteraction::primitive]{primitive}{}` = nullptr;
+\end{lstlisting}
+
+\refvar{Primitive}{}对象有一些方法也与非几何性质有关。
+首先，如果该图元本身是光源，
+则\refvar[GetAreaLight]{Primitive::GetAreaLight}{()}返回
+一个指向描述图元发射分布的\refvar{AreaLight}{}的指针。
+如果该图元不发光，则该方法应返回{\ttfamily nullptr}。
 \begin{lstlisting}
 `\refcode{Primitive Interface}{+=}\lastnext{PrimitiveInterface}`
 virtual const `\refvar{AreaLight}{}` *`\initvar{GetAreaLight}{}`() const = 0;
 \end{lstlisting}
 
+\refvar{GetMaterial}{()}返回指向赋给该图元的材质实例的指针。
+如果返回{\ttfamily nullptr}，则应该忽略与该图元的光线相交；
+该图元只用于描述介质的一块空间。
+通过比较其\refvar{Material}{}指针，该方法也用于检查两条光线是否相交于同一个物体。
+\begin{lstlisting}
+`\refcode{Primitive Interface}{+=}\lastnext{PrimitiveInterface}`
+virtual const `\refvar{Material}{}` *`\initvar{GetMaterial}{}`() const = 0;
+\end{lstlisting}
+
+第三个与材质有关的方法\refvar[Primitive::ComputeScatteringFunctions]{ComputeScatteringFunctions}{()}初始化
+曲面上交点处材质光散射性质的表示。
+\refvar{BSDF}{}对象（\refsec{BSDF}介绍）描述了
+交点处的局部光散射性质。
+如果可用，该方法还初始化一个\refvar{BSSRDF}{}描述
+图元内部的次表面散射——光照进入表面的点离退出的点很远。
+尽管次表面光传输对诸如金属、布料或塑料的物体外观影响很小，
+但它在生物材料如皮肤、粘稠液体如牛奶等的光散射机制中占主体。
+\refvar{BSSRDF}{}由\refchap{光传输II：体积渲染}讨论的
+扩展的光线追踪算法支持。
+
+除了\refvar{MemoryArena}{}为\refvar{BSDF}{}和/或\refvar{BSSRDF}{}分配内存外，该方法还接收枚举量\linebreak
+\refvar{TransportMode}{}表示找到该交点的光路是从相机开始还是从光源开始的；
+正如\refsec{路径-空间测量方程}讨论的，
+这些细节对怎样求取材质模型的某些部分给出了重要假设。
+参数{\ttfamily allowMultipleLobes}控制着怎样表示一些类型的BRDF的细节；
+它将于\refsec{材质接口与实现}讨论。
+\refsub{BSDF内存管理}更详细地讨论\refvar{MemoryArena}{}用于\refvar{BSDF}{}内存分配。
 \begin{lstlisting}
 `\refcode{Primitive Interface}{+=}\lastcode{PrimitiveInterface}`
-virtual void `\initvar{ComputeScatteringFunctions}{}`(`\refvar{SurfaceInteraction}{}` *isect,
+virtual void `\initvar[Primitive::ComputeScatteringFunctions]{ComputeScatteringFunctions}{}`(`\refvar{SurfaceInteraction}{}` *isect,
     `\refvar{MemoryArena}{}` &arena, `\refvar{TransportMode}{}` mode,
     bool allowMultipleLobes) const = 0;
 \end{lstlisting}
 
+该点的\refvar{BSDF}{}和\refvar{BSSRDF}{}指针
+存于传入\refvar[Primitive::ComputeScatteringFunctions]{ComputeScatteringFunctions}{()}的\linebreak
+\refvar{SurfaceInteraction}{}中。
 \begin{lstlisting}
 `\refcode{SurfaceInteraction Public Data}{+=}\lastnext{SurfaceInteractionPublicData}`
 `\refvar{BSDF}{}` *`\initvar{bsdf}{}` = nullptr;
 `\refvar{BSSRDF}{}` *`\initvar{bssrdf}{}` = nullptr;
 \end{lstlisting}
 
+\subsection{几何图元}\label{sub:几何图元}
+类\refvar{GeometricPrimitive}{}表示场景中的单个形状（例如一个球体）。
+用户提供的场景描述中的每个形状都被分配一个\refvar{GeometricPrimitive}{}。该类在文件
+\href{https://github.com/mmp/pbrt-v3/tree/master/src/core/primitive.h}{\ttfamily core/primitive.h}和
+\href{https://github.com/mmp/pbrt-v3/tree/master/src/core/primitive.cpp}{\ttfamily primitive.cpp}中实现。
+\begin{lstlisting}
+`\initcode{GeometricPrimitive Declarations}{=}`
+class `\initvar{GeometricPrimitive}{}` : public `\refvar{Primitive}{}` {
+public:
+    `\refcode{GeometricPrimitive Public Methods}{}`
+private:
+    `\refcode{GeometricPrimitive Private Data}{}`
+};
+\end{lstlisting}
+
+每个\refvar{GeometricPrimitive}{}持有
+对\refvar{Shape}{}及其\refvar{Material}{}的引用。
+此外，因为pbrt中的图元可能是面光源，
+它存储一个指向描述其发射特性的\refvar{AreaLight}{}对象的指针
+（如果该图元不发光则该指针设为{\ttfamily nullptr}）。
+最后，\refvar{MediumInterface}{}
+属性将关于图元内外部介质的信息编码。
+\begin{lstlisting}
+`\initcode{GeometricPrimitive Private Data}{=}`
+std::shared_ptr<`\refvar{Shape}{}`> `\initvar[GeometricPrimitive::shape]{shape}{}`;
+std::shared_ptr<`\refvar{Material}{}`> `\initvar[GeometricPrimitive::material]{material}{}`;
+std::shared_ptr<`\refvar{AreaLight}{}`> `\initvar[GeometricPrimitive::areaLight]{areaLight}{}`;
+`\refvar{MediumInterface}{}` `\initvar[GeometricPrimitive::mediumInterface]{mediumInterface}{}`;
+\end{lstlisting}
+
+\refvar{GeometricPrimitive}{}构造函数只从传入参数中初始化这些变量，很简单。
+\begin{lstlisting}
+`\initcode{GeometricPrimitive Public Methods}{=}`
+virtual `\refvar{Bounds3f}{}` `\initvar[GeometricPrimitive::WorldBound]{WorldBound}{}`() const;
+virtual bool `\refvar[GeometricPrimitive::Intersect]{Intersect}{}`(const `\refvar{Ray}{}` &r, `\refvar{SurfaceInteraction}{}` *isect) const;
+virtual bool `\initvar[GeometricPrimitive::IntersectP]{IntersectP}{}`(const `\refvar{Ray}{}` &r) const;
+`\refvar{GeometricPrimitive}{}`(const std::shared_ptr<`\refvar{Shape}{}`> &shape,
+        const std::shared_ptr<`\refvar{Material}{}`> &material,
+        const std::shared_ptr<`\refvar{AreaLight}{}`> &areaLight,
+        const `\refvar{MediumInterface}{}` &mediumInterface)
+    : `\refvar[GeometricPrimitive::shape]{shape}{}`(shape), `\refvar[GeometricPrimitive::material]{material}{}`(material), `\refvar[GeometricPrimitive::areaLight]{areaLight}{}`(areaLight),
+    `\refvar[GeometricPrimitive::mediumInterface]{mediumInterface}{}`(mediumInterface) {
+}
+const `\refvar{AreaLight}{}` *`\initvar{GetAreaLight}{}`() const;
+const `\refvar{Material}{}` *`\refvar{GetMaterial}{}`() const;
+void `\refvar[GeometricPrimitive::ComputeScatteringFunctions]{ComputeScatteringFunctions}{}`(`\refvar{SurfaceInteraction}{}` *isect, `\refvar{MemoryArena}{}` &arena,
+    `\refvar{TransportMode}{}` mode, bool allowMultipleLobes) const;
+\end{lstlisting}
+
+\refvar{Primitive}{}接口大多数与几何处理相关的方法
+都简单地由\refvar{Shape}{}相应的方法得到。
+例如，\refvar{GeometricPrimitive::Intersect}{()}调用
+其所附的\refvar{Shape}{}的方法\refvar{Shape::Intersect}{()}
+来进行实际的相交测试，如果有的话则初始化一个\refvar{SurfaceInteraction}{}来描述相交处。
+它也用返回的参数化命中距离来更新成员\refvar[tMax]{Ray::tMax}{}。
+在\refvar[tMax]{Ray::tMax}{}中存储到最近命中处距离的优点是更易
+避免对任何沿射线比已找到的相交处还远的图元执行相交测试。
+\begin{lstlisting}
+`\initcode{GeometricPrimitive Method Definitions}{=}\initnext{GeometricPrimitiveMethodDefinitions}`
+bool `\initvar{GeometricPrimitive::Intersect}{}`(const `\refvar{Ray}{}` &r,
+        `\refvar{SurfaceInteraction}{}` *isect) const {
+    `\refvar{Float}{}` tHit;
+    if (!`\refvar[GeometricPrimitive::shape]{shape}{}`->`\refvar[Shape::Intersect]{Intersect}{}`(r, &tHit, isect))
+        return false;
+    r.`\refvar{tMax}{}` = tHit;
+    isect->`\refvar[SurfaceInteraction::primitive]{primitive}{}` = this;
+    `\refcode{Initialize SurfaceInteraction::mediumInterface after Shape intersection}{}`
+    return true;
+}
+\end{lstlisting}
+
+我们这里不再介绍\refvar{GeometricPrimitive}{}的方法
+\refvar[GeometricPrimitive::WorldBound]{WorldBound}{()}或\linebreak
+\refvar[GeometricPrimitive::IntersectP]{IntersectP}{()}的实现；
+它们只是以相同方式把这些请求传给\refvar{Shape}{}。同样，\linebreak
+\refvar{GetAreaLight}{()}只是返回成员\refvar{GeometricPrimitive::areaLight}{}。
+
+最后，方法\refvar[GeometricPrimitive::ComputeScatteringFunctions]{ComputeScatteringFunctions}{()}只是
+把请求传给\refvar{Material}{}。
+\begin{lstlisting}
+`\refcode{GeometricPrimitive Method Definitions}{+=}\lastcode{GeometricPrimitiveMethodDefinitions}`
+void `\initvar{GeometricPrimitive::ComputeScatteringFunctions}{}`(
+        `\refvar{SurfaceInteraction}{}` *isect, `\refvar{MemoryArena}{}` &arena, `\refvar{TransportMode}{}` mode,
+        bool allowMultipleLobes) const {
+    if (`\refvar[GeometricPrimitive::material]{material}{}`)
+        `\refvar[GeometricPrimitive::material]{material}{}`->`\refvar[Material::ComputeScatteringFunctions]{ComputeScatteringFunctions}{}`(isect, arena, mode,
+            allowMultipleLobes);
+}
+\end{lstlisting}
+
 \subsection{TransformedPrimitive：物体实例化与动画基元}\label{sub:TransformedPrimitive：物体实例化与动画基元}
+\refvar{TransformedPrimitive}{}持有单个\refvar{Primitive}{}且
+还包括场景中底层图元及其表示之间插入的\refvar{AnimatedTransform}{}。
+该额外的变换启用了两个有用的功能：物体实例化和带有动画变换的图元。
+
+物体实例化是渲染中的经典技术，
+它在场景中的多个位置复用单组几何体变换后的副本。
+例如，一个音乐厅模型有上千张一样的座位，
+如果所有座位都引用单个座位的共享几何表示，则场景描述可大幅压缩。
+\reffig{4.1}的生态系统场景有不同种类的23241株植物，但只有31个不同的植物模型。
+因为每个植物模型都对每个实例用不同变换进行多次实例化，
+所以完整场景共有31亿个三角形，但由于通过物体实例化做图元复用，只有2400万个三角形存于内存中。
+当用物体实例化渲染该场景时pbrt只用了7GB多一点的内存
+（BVH占1.7GB，三角网格占2.3GB，纹理贴图占3GB），
+但不用实例化来渲染它需要516GB。
+
+动画变换通过类\refvar{AnimatedTransform}{}启用了场景中图元的\keyindex{刚体}{rigid-body}{}
+动画。见\reffig{2.15}展示动画变换引起的运动模糊。
+
+回想第\refchap{形状}的\refvar{Shape}{}本身有物体到世界的变换来将它们放置到场景中。
+如果一个形状被\refvar{TransformedPrimitive}{}持有，
+则形状的世界空间概念不再是实际的场景世界空间——
+只有在\refvar{TransformedPrimitive}{}的变换也被施加后形状才真正在世界空间中。
+对于此处的应用，让形状完全没有意识到被施加了额外的变换是有意义的。
+对于动画形状，这里把所有动画变换的处理隔离到一个类中
+比起要求所有类都支持\refvar{AnimatedTransform}{}会更简单。
+类似地，对于实例化图元，让\refvar{Shape}{}知道所有实例变换的作用有限：
+我们不想让\refvar{TriangleMesh}{}为每个实例变换都复制其每个顶点位置
+并一直将它们变换到世界空间，因为这会让物体实例化白节约内存。
+\begin{lstlisting}
+`\initcode{TransformedPrimitive Declarations}{=}`
+class `\initvar{TransformedPrimitive}{}` : public `\refvar{Primitive}{}` {
+public:
+    `\refcode{TransformedPrimitive Public Methods}{}`
+private:
+    `\refcode{TransformedPrimitive Private Data}{}`
+};
+\end{lstlisting}
+
+\refvar{TransformedPrimitive}{}构造函数接收
+对表示模型的\refvar{Primitive}{}以及将其放置于场景中的变换的引用。
+如果该几何体由多个\refvar{Primitive}{}描述，
+则调用代码负责将它们放入一个\refvar{Aggregate}{}实现，
+这样这里只需要保存一个\refvar{Primitive}{}。
+对于按需创建聚合体的代码，详见附录\refsub{物体实例化}
+\sidenote{译者注：原文这里两处章节引用有误，已修正。}
+针对图元实例情况的函数\linebreak\refvar{pbrtObjectInstance}{()}，
+以及\refsub{形状}针对动画形状的函数\refvar{pbrtShape}{()}。
+\begin{lstlisting}
+`\initcode{TransformedPrimitive Public Methods}{=}\initnext{TransformedPrimitivePublicMethods}`
+`\refvar{TransformedPrimitive}{}`(std::shared_ptr<`\refvar{Primitive}{}`> &primitive,
+        const `\refvar{AnimatedTransform}{}` &PrimitiveToWorld)
+    : `\refvar[TransformedPrimitive::primitive]{primitive}{}`(primitive), `\refvar{PrimitiveToWorld}{}`(PrimitiveToWorld) { }
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{TransformedPrimitive Private Data}{=}`
+std::shared_ptr<`\refvar{Primitive}{}`> `\initvar[TransformedPrimitive::primitive]{primitive}{}`;
+const `\refvar{AnimatedTransform}{}` `\initvar{PrimitiveToWorld}{}`;
+\end{lstlisting}
+
+\refvar{TransformedPrimitive}{}的关键任务是打通\refvar{Primitive}{}实现的接口
+与其持有的指针指向的\refvar{Primitive}{}，并考虑它持有的额外变换的影响。\linebreak
+\refvar{TransformedPrimitive}{}的\refvar{PrimitiveToWorld}{}变换
+定义了从几何体的这个特定实例的坐标系到世界空间的变换。
+如果成员\refvar[TransformedPrimitive::primitive]{primitive}{}有自己的变换，
+则它应该插值为从物体空间到\refvar{TransformedPrimitive}{}坐标系的变换。
+到世界空间的完整变换要求同时有这两种变换。
+
+因此，方法\refvar{TransformedPrimitive::Intersect}{()}将给定射线变换到
+图元的坐标系并将变换后的射线传入其\refvar[TransformedPrimitive::Intersect]{Intersect}{()}例程。
+如果找到命中处，则来自变换后射线的\refvar{tMax}{}值需要复制到原来
+传入\refvar[TransformedPrimitive::Intersect]{Intersect}{()}例程的射线{\ttfamily r}中。
+\begin{lstlisting}
+`\initcode{TransformedPrimitive Method Definitions}{=}`
+bool `\refvar{TransformedPrimitive}{}`::`\initvar[TransformedPrimitive::Intersect]{\refvar[Primitive::Intersect]{Intersect}{}}{}`(const `\refvar{Ray}{}` &r, 
+        `\refvar{SurfaceInteraction}{}` *isect) const {
+    `\refcode{Compute ray after transformation by PrimitiveToWorld}{}`
+    if (!`\refvar[TransformedPrimitive::primitive]{primitive}{}`->`\refvar[Primitive::Intersect]{Intersect}{}`(ray, isect))
+        return false;
+    r.`\refvar{tMax}{}` = ray.`\refvar{tMax}{}`;
+    `\refcode{Transform instance's intersection data to world space}{}`
+    return true;
+}
+\end{lstlisting}
+
+为了变换射线，我们需要基于射线的时间来插值变换。
+尽管我们想把射线{\ttfamily r}从世界空间变换到图元空间，
+但这里我们实际上是插值\refvar{PrimitiveToWorld}{}然后
+求所得\refvar{Transform}{}的逆来得到变换。
+由于\refsub{动画变换实现}中基于极分解的变换插值算法工作方式的缘故，
+这个奇怪的方法是必要的：\refvar{PrimitiveToWorld}{}插值到某个时间
+再求逆不一定与对它的逆即动画世界到图元的变换进行直接插值的结果一样。
+因为\refvar{Primitive::WorldBound}{()}用\refvar{PrimitiveToWorld}{}计算
+图元的边界框，我们这里为了一致性也必须插值\refvar{PrimitiveToWorld}{}。
+\begin{lstlisting}
+`\initcode{Compute ray after transformation by PrimitiveToWorld}{=}`
+`\refvar{Transform}{}` InterpolatedPrimToWorld;
+`\refvar{PrimitiveToWorld}{}`.`\refvar{Interpolate}{}`(r.`\refvar[Ray::time]{time}{}`, &InterpolatedPrimToWorld);
+`\refvar{Ray}{}` ray = `\refvar[Transform::Inverse]{Inverse}{}`(InterpolatedPrimToWorld)(r);
+\end{lstlisting}
+
+最后，交点处的\refvar{SurfaceInteraction}{}需要变换到世界空间；
+\refvar[SurfaceInteraction::primitive]{primitive}{}的相交成员
+将会把\refvar{SurfaceInteraction}{}变换到其世界空间的概念中，
+所以这里我们只需要施加持有的额外变换的效果。
+\begin{lstlisting}
+`\initcode{Transform instance's intersection data to world space}{=}`
+if (!InterpolatedPrimToWorld.`\refvar{IsIdentity}{}`())
+    *isect = InterpolatedPrimToWorld(*isect);
+\end{lstlisting}
+
+剩下的几何\refvar{Primitive}{}方法转到共享实例上，
+结果同样由变换\linebreak
+\refvar{TransformedPrimitive}{}按需变换。
+\begin{lstlisting}
+`\refcode{TransformedPrimitive Public Methods}{+=}\lastcode{TransformedPrimitivePublicMethods}`
+`\refvar{Bounds3f}{}` `\initvar[TransformedPrimitive::WorldBound]{WorldBound}{}`() const { 
+    return `\refvar{PrimitiveToWorld}{}`.`\refvar{MotionBounds}{}`(`\refvar[TransformedPrimitive::primitive]{primitive}{}`->`\refvar[Primitive::WorldBound]{WorldBound}{}`());
+}
+\end{lstlisting}
+
+\refvar{TransformedPrimitive}{}的方法\refvar{GetAreaLight}{()}、\refvar{GetMaterial}{()}和\linebreak
+\refvar[Primitive::ComputeScatteringFunctions]{ComputeScatteringFunctions}{()}永远不该被调用。
+应该始终调用射线实际命中的图元的相应方法。
+因此，任何调用这些方法的\refvar{TransformedPrimitive}{}实现（此处没有列出）的企图都会导致运行时错误。

@@ -24,7 +24,223 @@
     “扩展阅读”一节有关于邮箱的更多信息。}。
 该性质还意味着表示图元细分层次所需的内存量是有界的。
 对于每个叶子中保存单个图元的二叉BVH，节点总数为$2n-1$，其中$n$是图元数量。
-有$n$个叶子节点和$n-1$个内部节点。
+有$n$个叶子节点和$n-1$个内部节点
+\sidenote{译者注：这些结论利用了二叉BVH的前提：每个节点要么是叶子节点，要么是有两个孩子的内部节点。}。
 如果叶子保存了多个图元，则需要的节点更少。
 
-BVH加速器{\initvar{BVHAccel}{}}定义在
+构建BVH比kd树更高效，kd树分发光线相交测试通常比BVH稍快但构建时间长得多。
+另一方面，BVH通常数值更稳定，比起kd树更不容易因为舍入误差错过相交。
+
+BVH加速器{\refvar{BVHAccel}{}}定义在\href{https://github.com/mmp/pbrt-v3/tree/master/src/accelerators/bvh.h}{\ttfamily accelerators/bvh.h}
+和\href{https://github.com/mmp/pbrt-v3/tree/master/src/accelerators/bvh.cpp}{\ttfamily accelerators/bvh.cpp}
+中。除了要保存的图元以及任何叶子节点中的最大图元数目，
+其构造函数还接收一个描述当划分图元以构建树时要用四个算法中哪一个的枚举值。
+应该用默认值\refvar{SAH}{}，它表示\refsub{表面积启发法}讨论的基于“表面积启发法”的算法。
+另一个是\refsub{线性包围盒层次}讨论的\refvar{HLBVH}{}，
+它能更高效地构造（且更易并行化），但建立的树不如\refvar{SAH}{}高效。
+剩下的两种方法使用的计算量甚至更少，但创建的树的质量非常低。
+\begin{lstlisting}
+`\initcode{BVHAccel Public Types}{=}`
+enum class `\initvar{SplitMethod}{}` { `\initvar{SAH}{}`, `\initvar{HLBVH}{}`, `\initvar{Middle}{}`, `\initvar{EqualCounts}{}` };
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{BVHAccel Method Definitions}{=}\initnext{BVHAccelMethodDefinitions}`
+`\initvar{BVHAccel}{}`::`\refvar{BVHAccel}{}`(const std::vector<std::shared_ptr<`\refvar{Primitive}{}`>> &p,
+         int maxPrimsInNode, `\refvar{SplitMethod}{}` splitMethod)
+     : `\refvar{maxPrimsInNode}{}`(std::min(255, maxPrimsInNode)), `\refvar[BVHAccel::primitives]{primitives}{}`(p),
+       `\refvar{splitMethod}{}`(splitMethod) {
+    if (primitives.size() == 0)
+        return;
+    `\refcode{Build BVH from primitives}{}`
+}
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{BVHAccel Private Data}{=}\initnext{BVHAccelPrivateData}`
+const int `\initvar{maxPrimsInNode}{}`;
+const `\refvar{SplitMethod}{}` `\initvar{splitMethod}{}`;
+std::vector<std::shared_ptr<`\refvar{Primitive}{}`>> `\initvar[BVHAccel::primitives]{primitives}{}`;
+\end{lstlisting}
+
+\subsection{BVH构建}\label{sub:BVH构建}
+这里的实现中构建BVH有三个阶段。
+首先，计算关于每个图元的边界信息并保存到将于树构建期间使用的数组中。
+接着，用选择的编码于\refvar{SplitMethod}{}的算法构建树。
+结果是\keyindex{二叉树}{binary tree}{}每个内部节点
+都有指针指向其孩子且每个叶子节点都有指向一个或多个图元的引用。
+最后，该树转化为更紧实（且因此更高效）的无指针表示以供渲染时使用
+（虽然在构建树期间直接计算无指针表示也可以，但用该方法实现更简单）。
+\begin{lstlisting}
+`\initcode{Build BVH from primitives}{=}`
+`\refcode{Initialize primitiveInfo array for primitives}{}`
+`\refcode{Build BVH tree for primitives using primitiveInfo}{}`
+`\refcode{Compute representation of depth-first traversal of BVH tree}{}`
+\end{lstlisting}
+
+对于每个要存于BVH的图元，我们在结构体\refvar{BVHPrimitiveInfo}{}的一个实例中
+存储其边界框的形心、完整边界框以及它在\refvar{primitives}{}数组中的索引。
+\begin{lstlisting}
+`\initcode{Initialize primitiveInfo array for primitives}{=}`
+std::vector<`\refvar{BVHPrimitiveInfo}{}`> primitiveInfo(`\refvar[BVHAccel::primitives]{primitives}{}`.size());
+for (size_t i = 0; i < `\refvar[BVHAccel::primitives]{primitives}{}`.size(); ++i)
+    primitiveInfo[i] = { i, `\refvar[BVHAccel::primitives]{primitives}{}`[i]->`\refvar[Primitive::WorldBound]{WorldBound}{}`() };
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{BVHAccel Local Declarations}{=}\initnext{BVHAccelLocalDeclarations}`
+struct `\initvar{BVHPrimitiveInfo}{}` {
+    `\refvar{BVHPrimitiveInfo}{}`(size_t primitiveNumber, const `\refvar{Bounds3f}{}` &bounds)
+        : `\refvar{primitiveNumber}{}`(primitiveNumber), `\refvar[BVHPrimitiveInfo::bounds]{bounds}{}`(bounds),
+          `\refvar{centroid}{}`(.5f * bounds.`\refvar{pMin}{}` + .5f * bounds.`\refvar{pMax}{}`) { }
+    size_t `\initvar{primitiveNumber}{}`;
+    `\refvar{Bounds3f}{}` `\initvar[BVHPrimitiveInfo::bounds]{bounds}{}`;
+    `\refvar{Point3f}{}` `\initvar{centroid}{}`;
+};
+\end{lstlisting}
+
+现在可以开始层次构建了。如果选择HLBVH构建算法，则调用\refvar{HLBVHBuild}{()}
+构建树。其他三种构建算法都由\refvar{recursiveBuild}{()}负责。
+初始调用这些函数时传递了所有要存于树中的图元。
+它们返回一个指向树根的指针，用结构体\refvar{BVHBuildNode}{}表示。
+树节点应该用提供的\refvar{MemoryArena}{}分配内存，
+创建的总数应存于{\ttfamily *totalNodes}中。
+
+树构建过程的一个重要副作用是通过参数{\ttfamily orderedPrims}返回指向图元的新指针数组；
+该数组保存了有序的图元这样叶子节点的图元在数组中占有连续的范围。
+在树构建后它与原始的\refvar[BVHAccel::primitives]{primitives}{}数组交换。
+\begin{lstlisting}
+`\initcode{Build BVH tree for primitives using primitiveInfo}{=}`
+`\refvar{MemoryArena}{}` arena(1024 * 1024);
+int totalNodes = 0;
+std::vector<std::shared_ptr<`\refvar{Primitive}{}`>> orderedPrims;
+`\refvar{BVHBuildNode}{}` *root;
+if (splitMethod == `\refvar{SplitMethod}{}`::`\refvar{HLBVH}{}`)
+    root = `\refvar{HLBVHBuild}{}`(arena, primitiveInfo, &totalNodes, orderedPrims);
+else
+    root = `\refvar{recursiveBuild}{}`(arena, primitiveInfo, 0, `\refvar[BVHAccel::primitives]{primitives}{}`.size(),
+                          &totalNodes, orderedPrims);
+`\refvar[BVHAccel::primitives]{primitives}{}`.swap(orderedPrims);
+\end{lstlisting}
+
+每个\refvar{BVHBuildNode}{}表示一个BVH节点。
+所有节点存储一个\refvar{Bounds3f}{}以表示该节点下所有孩子的边界。
+每个内部节点在\refvar[BVHBuildNode::children]{children}{}中存有指向其两个孩子的指针。
+内部节点也记录图元沿哪个坐标轴划分分给它们的两个孩子；
+该信息用于提高遍历算法的性能。
+叶子节点需要记录哪个或哪些图元保存在它们中；
+数组\refvar{BVHAccel::primitives}{}中从偏移量\refvar{firstPrimOffset}{}起
+直到但不包括{\ttfamily\refvar{firstPrimOffset}{}+\refvar{nPrimitives}{}}的元素是叶子中的元素
+（因此需要记录图元数组，这样就可以利用该表示，
+而不是例如在每个叶子节点中保存一个大小可变的图元索引数组）。
+\begin{lstlisting}
+`\refcode{BVHAccel Local Declarations}{+=}\lastnext{BVHAccelLocalDeclarations}`
+struct `\initvar{BVHBuildNode}{}` {
+    `\refcode{BVHBuildNode Public Methods}{}`
+    `\refvar{Bounds3f}{}` `\initvar[BVHBuildNode::bounds]{bounds}{}`;
+    `\refvar{BVHBuildNode}{}` *`\initvar[BVHBuildNode::children]{children}{}`[2];
+    int `\initvar{splitAxis}{}`, `\initvar{firstPrimOffset}{}`, `\initvar{nPrimitives}{}`;
+};
+\end{lstlisting}
+
+我们将通过其孩子指针是否有值{\ttfamily nullptr}来分别区分叶子和内部节点。
+\begin{lstlisting}
+`\initcode{BVHBuildNode Public Methods}{=}\initnext{BVHBuildNodePublicMethods}`
+void `\initvar{InitLeaf}{}`(int first, int n, const `\refvar{Bounds3f}{}` &b) {
+    `\refvar{firstPrimOffset}{}` = first;
+    `\refvar{nPrimitives}{}` = n;
+    `\refvar[BVHBuildNode::bounds]{bounds}{}` = b;
+    `\refvar[BVHBuildNode::children]{children}{}`[0] = `\refvar[BVHBuildNode::children]{children}{}`[1] = nullptr;
+}
+\end{lstlisting}
+
+方法\refvar{InitInterior}{()}要求已创建两个孩子节点，这样它们的指针才能传入。
+该要求让计算内部节点的边界更加容易了，因为孩子的边界可以立刻获得。
+\begin{lstlisting}
+`\refcode{BVHBuildNode Public Methods}{+=}\lastcode{BVHBuildNodePublicMethods}`
+void `\initvar{InitInterior}{}`(int axis, `\refvar{BVHBuildNode}{}` *c0, `\refvar{BVHBuildNode}{}` *c1) {
+    `\refvar[BVHBuildNode::children]{children}{}`[0] = c0;
+    `\refvar[BVHBuildNode::children]{children}{}`[1] = c1;
+    `\refvar[BVHBuildNode::bounds]{bounds}{}` = `\refvar[Union2]{Union}{}`(c0->`\refvar[BVHBuildNode::bounds]{bounds}{}`, c1->`\refvar[BVHBuildNode::bounds]{bounds}{}`);
+    `\refvar{splitAxis}{}` = axis;
+    `\refvar{nPrimitives}{}` = 0;
+}
+\end{lstlisting}
+
+除了用于分配节点和\refvar{BVHPrimitiveInfo}{}结构体数组的\refvar{MemoryArena}{}外，\linebreak
+\refvar{recursiveBuild}{()}接收范围参数{\ttfamily[start,end)}。
+它负责为从{\ttfamily primitiveInfo [start]}直到并包括{\ttfamily primitiveInfo[end-1]}的
+范围表示的图元子集返回一个BVH。
+如果该范围只含有单个图元，则递归触底并创建一个叶子节点。
+否则，该方法用划分算法之一来划分数组该范围内的元素并相应地重新排列它们，
+这样范围{\ttfamily[start,mid)}和{\ttfamily[mid,end)}表示分开的子集。
+如果划分成功，则这两个图元集合又传入将会为当前节点的两个孩子返回节点指针的递归调用。
+
+{\ttfamily totalNodes}跟踪已创建的BVH节点总数；
+利用该数目使得之后可以分配数目恰好正确的更紧实的\refvar{LinearBVHNode}{}。
+最终，数组{\ttfamily orderedPrims}用于保存图元引用就像图元存于树的叶子节点一样。
+该数组初始化为空；当创建一个叶子节点时，\refvar{recursiveBuild}{()}把
+与之重合的图元添加到数列末尾，让叶子节点可以只存储对该数组的偏移量以及
+表示与之重合的图元集的图元数量。
+回想当完成树构建时，用这里创建的有序图元数组代替\refvar{BVHAccel::primitives}{}。
+\begin{lstlisting}
+`\refcode{BVHAccel Method Definitions}{+=}\lastnext{BVHAccelMethodDefinitions}`
+`\refvar{BVHBuildNode}{}` *`\refvar{BVHAccel}{}`::`\initvar{recursiveBuild}{}`(`\refvar{MemoryArena}{}` &arena,
+        std::vector<`\refvar{BVHPrimitiveInfo}{}`> &primitiveInfo, int start,
+        int end, int *totalNodes,
+        std::vector<std::shared_ptr<`\refvar{Primitive}{}`>> &orderedPrims) {
+    `\refvar{BVHBuildNode}{}` *node = arena.`\refvar[MemoryArena:Alloc2]{Alloc}{}`<`\refvar{BVHBuildNode}{}`>();
+    (*totalNodes)++;
+    `\refcode{Compute bounds of all primitives in BVH node}{}`
+    int nPrimitives = end - start;
+    if (nPrimitives == 1) {
+        `\refcode{Create leaf BVHBuildNode}{}`
+    } else {
+        `\refcode{Compute bound of primitive centroids, choose split dimension dim}{}`
+        `\refcode{Partition primitives into two sets and build children}{}`
+    }
+    return node;
+}
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{Compute bounds of all primitives in BVH node}{=}`
+`\refvar{Bounds3f}{}` bounds;
+for (int i = start; i < end; ++i)
+    bounds = `\refvar[Union2]{Union}{}`(bounds, primitiveInfo[i].`\refvar[BVHPrimitiveInfo::bounds]{bounds}{}`);
+\end{lstlisting}
+
+在叶子节点处，与该叶子重合的图元被添到{\ttfamily orderedPrims}数组末尾并初始化一个叶子节点对象。
+\begin{lstlisting}
+`\initcode{Create leaf BVHBuildNode}{=}`
+int firstPrimOffset = orderedPrims.size();
+for (int i = start; i < end; ++i) {
+    int primNum = primitiveInfo[i].`\refvar{primitiveNumber}{}`;
+    orderedPrims.push_back(`\refvar[BVHAccel::primitives]{primitives}{}`[primNum]);
+}
+node->`\refvar{InitLeaf}{}`(firstPrimOffset, nPrimitives, bounds);
+return node;
+\end{lstlisting}
+
+对于内部节点，一组图元必须在两个子树之间划分。
+给定$n$个图元，有$2^{n-1}-1$种\sidenote{译者注：原文误写为$2(n-1)-2$，已修正。}
+可能的方法将它们划分到两个非空组。
+实际中构建BVH时，一般考虑沿一个坐标轴划分，这意味着大约有$3n$个候选划分
+（沿每个轴方向，每个图元可能放到第一分区或第二分区）。
+
+这里我们就选择三个坐标轴的一个用来划分图元。
+当为当前图元集合投影边界框形心时，我们选择有最大范围的轴
+（另一种是尝试所有三个轴并选择给出最好结果的那个，但实际中本方法更好）。
+该方法在许多场景下给出良好划分；\reffig{4.3}说明了该策略。
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap04/BVHchoosesplitaxis.tex}
+    \caption{选择沿哪个轴划分图元。\protect\refvar{BVHAccel}{}基于
+        图元边界框形心在哪个轴有最大范围来选择划分图元所沿的轴。
+        这里在二维中，它们沿$y$轴的范围最大（轴上的实心点），所以图元会在$y$上划分。}
+    \label{fig:4.3}
+\end{figure}
+
+这里划分的一般目标是选择图元的一个划分使得
+得到的两个图元集合的边界框没有太多重合——
+如果有大量重合则在遍历树时它会更频繁地需要遍历两个子树，
+比起本应可以更高效剪除一些图元它需要更多计算量。
+
+\subsection{表面积启发法}\label{sub:表面积启发法}
+
+\subsection{线性包围盒层次}\label{sub:线性包围盒层次}

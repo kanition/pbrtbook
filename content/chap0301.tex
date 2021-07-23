@@ -259,7 +259,7 @@ if (tzMax < tMax)
     tMax = tzMax;
 \end{lstlisting}
 
-相交测试是遍历\refsec{层次包围盒}介绍的加速结构\refvar{BVHAccel}{}的核心。
+相交测试是遍历\refsec{包围盒层次}介绍的加速结构\refvar{BVHAccel}{}的核心。
 因为遍历BVH树时要执行如此多的光线-边界框相交测试，
 我们发现比起没有接收预计算方向导数和符号的\refvar{Bounds3::IntersectP}{()}，
 该优化方法在整个渲染时间中提供了大约15\%的性能提升。

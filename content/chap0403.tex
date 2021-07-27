@@ -240,6 +240,74 @@ return node;
 得到的两个图元集合的边界框没有太多重合——
 如果有大量重合则在遍历树时它会更频繁地需要遍历两个子树，
 比起本应可以更高效剪除一些图元它需要更多计算量。
+待会儿在讨论表面积启发法时会更严谨地表述该求取高效图元划分的思想。
+\begin{lstlisting}
+`\initcode{Compute bound of primitive centroids, choose split dimension dim}{=}`
+`\refvar{Bounds3f}{}` centroidBounds;
+for (int i = start; i < end; ++i)
+    centroidBounds = `\refvar[Union2]{Union}{}`(centroidBounds, primitiveInfo[i].`\refvar{centroid}{}`);
+int dim = centroidBounds.`\refvar{MaximumExtent}{}`();
+\end{lstlisting}
+
+如果所有形心点都在同一位置（即形心边界为零体积），
+则递归停止并用该图元创建一个叶子结点；
+这里没有划分方法能对那种（非常）情况有效。
+否则用选择的方法划分图元并传入两个对\refvar{recursiveBuild}{()}的递归调用。
+\begin{lstlisting}
+`\initcode{Partition primitives into two sets and build children}{=}`
+int mid = (start + end) / 2;
+if (centroidBounds.`\refvar{pMax}{}`[dim] == centroidBounds.`\refvar{pMin}{}`[dim]) {
+    `\refcode{Create leaf BVHBuildNode}{}`
+} else {
+    `\refcode{Partition primitives based on splitMethod}{}`
+    node->`\refvar{InitInterior}{}`(dim,
+                       `\refvar{recursiveBuild}{}`(arena, primitiveInfo, start, mid,
+                                      totalNodes, orderedPrims),
+                       `\refvar{recursiveBuild}{}`(arena, primitiveInfo, mid, end,
+                                      totalNodes, orderedPrims));
+}
+\end{lstlisting}
+
+代码片\refcode{Partition primitives based on splitMethod}{}只是用
+\refvar[splitMethod]{BVHAccel::splitMethod}{}
+的值决定该用哪个图元划分方案。接下来的几页将介绍这三个方案。
+\begin{lstlisting}
+`\initcode{Partition primitives based on splitMethod}{=}`
+switch (splitMethod) {
+case `\refvar{SplitMethod}{}`::`\refvar{Middle}{}`: {
+    `\refcode{Partition primitives through node's midpoint}{}`
+}
+case `\refvar{SplitMethod}{}`::`\refvar{EqualCounts}{}`: {
+    `\refcode{Partition primitives into equally sized subsets}{}`
+    break;
+}
+case `\refvar{SplitMethod}{}`::`\refvar{SAH}{}`:
+default: {
+    `\refcode{Partition primitives using approximate SAH}{}`
+    break;
+}
+}
+\end{lstlisting}
+
+\refvar{Middle}{}是一个简单的\refvar{SplitMethod}{}，
+它首先计算图元形心沿划分轴的中点。
+该方法在代码片\refcode{Partition primitives through node's midpoint}{}中实现。
+图元按其形心在中点之上还是之下分为两个集合。
+该划分用C++标准库函数{\ttfamily std::partition()}很容易完成，
+它接收数组中的一系列元素和比较函数，并对数组元素排序使得
+对于判定函数而言所有返回{\ttfamily true}的元素都出现在返回{\ttfamily false}的范围之前
+\footnote{在调用{\ttfamily std::partition()}时，
+注意数组{\ttfamily primitiveInfo}索引的特殊表达式即{\ttfamily \&primitiveInfo[end-1]+1}。
+这样写代码有些晦涩的理由。在C和C++程序语言中，
+计算数组末尾后下一个元素的指针是合法的，
+这样遍历数组元素能持续到当前指针等于末端点。
+为此，我们这里想就写成表达式{\ttfamily \&primitiveInfo[end]}。
+然而{\ttfamily primitiveInfo}分配为C++的{\ttfamily vector}；
+一些{\ttfamily vector}实现在传给其{\ttfamily []}操作符
+的偏移量是在数组末端之后时会报运行时错误。
+因为我们不会尝试引用数组末端后下一个元素的值而只是想计算其地址，
+所以该操作事实上是安全的。
+因此我们最终用这里的表达式计算同一地址，并且也满足任何{\ttfamily vector}错误检查。}。
 
 \subsection{表面积启发法}\label{sub:表面积启发法}
 

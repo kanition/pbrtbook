@@ -189,7 +189,7 @@ struct `\initvar{SDFace}{}` {
     `\refcode{SDFace Methods}{}`
     `\refvar{SDVertex}{}` *`\initvar[SDFace::v]{v}{}`[3];
     `\refvar{SDFace}{}` *`\initvar[SDFace::f]{f}{}`[3];
-    `\refvar{SDFace}{}` *`\initvar{children}{}`[4];
+    `\refvar{SDFace}{}` *`\initvar[SDFace::children]{children}{}`[4];
 };
 \end{lstlisting}
 
@@ -556,8 +556,8 @@ for (`\refvar{SDVertex}{}` *vertex : v) {
 }
 for (`\refvar{SDFace}{}` *face : f) {
     for (int k = 0; k < 4; ++k) {
-        face->`\refvar{children}{}`[k] = arena.`\refvar[MemoryArena:Alloc2]{Alloc}{}`<`\refvar{SDFace}{}`>();
-        newFaces.push_back(face->`\refvar{children}{}`[k]);
+        face->`\refvar[SDFace::children]{children}{}`[k] = arena.`\refvar[MemoryArena:Alloc2]{Alloc}{}`<`\refvar{SDFace}{}`>();
+        newFaces.push_back(face->`\refvar[SDFace::children]{children}{}`[k]);
     }
 }
 \end{lstlisting}
@@ -781,7 +781,7 @@ vert = arena.`\refvar[MemoryArena:Alloc2]{Alloc}{}`<`\refvar{SDVertex}{}`>();
 newVertices.push_back(vert);
 vert->`\refvar{regular}{}` = true;
 vert->`\refvar[SDVertex::boundary]{boundary}{}` = (face->`\refvar[SDFace::f]{f}{}`[k] == nullptr);
-vert->`\refvar{startFace}{}` = face->`\refvar{children}{}`[3];
+vert->`\refvar{startFace}{}` = face->`\refvar[SDFace::children]{children}{}`[3];
 \end{lstlisting}
 
 对于边界奇顶点，新顶点只是两个相邻顶点的均值。
@@ -855,7 +855,7 @@ if (vert->`\refvar[SDVertex::boundary]{boundary}{}`) {
 for (`\refvar{SDVertex}{}` *vertex : v) {
     int vertNum = vertex->`\refvar{startFace}{}`->`\refvar{vnum}{}`(vertex);
     vertex->`\refvar{child}{}`->`\refvar{startFace}{}` = 
-        vertex->`\refvar{startFace}{}`->`\refvar{children}{}`[vertNum];
+        vertex->`\refvar{startFace}{}`->`\refvar[SDFace::children]{children}{}`[vertNum];
 }
 \end{lstlisting}
 
@@ -872,13 +872,13 @@ for (`\refvar{SDFace}{}` *face : f) {
 }
 \end{lstlisting}
 
-对于第一步，回想内部子面总是存于{\ttfamily\refvar{children}{}[3]}。
+对于第一步，回想内部子面总是存于{\ttfamily\refvar[SDFace::children]{children}{}[3]}。
 而且（对于{\ttfamily k}=0,1,2）第{\ttfamily k+1}子面相邻于内部面的第{\ttfamily k}边，
 内部面相邻于第{\ttfamily k}面的第{\ttfamily k+1}边。
 \begin{lstlisting}
 `\initcode{Update children f pointers for siblings}{=}`
-face->`\refvar{children}{}`[3]->`\refvar[SDFace::f]{f}{}`[j] = face->`\refvar{children}{}`[`\refvar{NEXT}{}`(j)];
-face->`\refvar{children}{}`[j]->`\refvar[SDFace::f]{f}{}`[`\refvar{NEXT}{}`(j)] = face->`\refvar{children}{}`[3];
+face->`\refvar[SDFace::children]{children}{}`[3]->`\refvar[SDFace::f]{f}{}`[j] = face->`\refvar[SDFace::children]{children}{}`[`\refvar{NEXT}{}`(j)];
+face->`\refvar[SDFace::children]{children}{}`[j]->`\refvar[SDFace::f]{f}{}`[`\refvar{NEXT}{}`(j)] = face->`\refvar[SDFace::children]{children}{}`[3];
 \end{lstlisting}
 
 我们现在更新子面的指向其他父亲之子的相邻指针。
@@ -896,11 +896,11 @@ face->`\refvar{children}{}`[j]->`\refvar[SDFace::f]{f}{}`[`\refvar{NEXT}{}`(j)] 
 \begin{lstlisting}
 `\initcode{Update children f pointers for neighbor children}{=}`
 `\refvar{SDFace}{}` *f2 = face->`\refvar[SDFace::f]{f}{}`[j];
-face->`\refvar{children}{}`[j]->`\refvar[SDFace::f]{f}{}`[j] =
-    f2 ? f2->`\refvar{children}{}`[f2->`\refvar{vnum}{}`(face->`\refvar[SDFace::v]{v}{}`[j])] : nullptr;
+face->`\refvar[SDFace::children]{children}{}`[j]->`\refvar[SDFace::f]{f}{}`[j] =
+    f2 ? f2->`\refvar[SDFace::children]{children}{}`[f2->`\refvar{vnum}{}`(face->`\refvar[SDFace::v]{v}{}`[j])] : nullptr;
 f2 = face->`\refvar[SDFace::f]{f}{}`[`\refvar{PREV}{}`(j)];
-face->`\refvar{children}{}`[j]->`\refvar[SDFace::f]{f}{}`[`\refvar{PREV}{}`(j)] = 
-    f2 ? f2->`\refvar{children}{}`[f2->`\refvar{vnum}{}`(face->`\refvar[SDFace::v]{v}{}`[j])] : nullptr;
+face->`\refvar[SDFace::children]{children}{}`[j]->`\refvar[SDFace::f]{f}{}`[`\refvar{PREV}{}`(j)] = 
+    f2 ? f2->`\refvar[SDFace::children]{children}{}`[f2->`\refvar{vnum}{}`(face->`\refvar[SDFace::v]{v}{}`[j])] : nullptr;
 \end{lstlisting}
 
 最后，我们处理拓扑更新的第四步：设置子面的顶点指针。
@@ -920,7 +920,7 @@ for (`\refvar{SDFace}{}` *face : f) {
 通过跟随从父面获取的父顶点的子指针可以找到该顶点。
 \begin{lstlisting}
 `\initcode{Update child vertex pointer to new even vertex}{=}`
-face->`\refvar{children}{}`[j]->`\refvar[SDFace::v]{v}{}`[j] = face->`\refvar[SDFace::v]{v}{}`[j]->`\refvar{child}{}`;
+face->`\refvar[SDFace::children]{children}{}`[j]->`\refvar[SDFace::v]{v}{}`[j] = face->`\refvar[SDFace::v]{v}{}`[j]->`\refvar{child}{}`;
 \end{lstlisting}
 
 为了更新剩余顶点指针，再次用关联数组{\ttfamily edgeVerts}为父面的每条分割边寻找奇顶点。
@@ -929,9 +929,9 @@ face->`\refvar{children}{}`[j]->`\refvar[SDFace::v]{v}{}`[j] = face->`\refvar[SD
 \begin{lstlisting}
 `\initcode{Update child vertex pointer to new odd vertex}{=}`
 `\refvar{SDVertex}{}` *vert = edgeVerts[`\refvar{SDEdge}{}`(face->`\refvar[SDFace::v]{v}{}`[j], face->`\refvar[SDFace::v]{v}{}`[`\refvar{NEXT}{}`(j)])];
-face->`\refvar{children}{}`[j]->`\refvar[SDFace::v]{v}{}`[`\refvar{NEXT}{}`(j)] = vert;
-face->`\refvar{children}{}`[`\refvar{NEXT}{}`(j)]->`\refvar[SDFace::v]{v}{}`[j] = vert;
-face->`\refvar{children}{}`[3]->`\refvar[SDFace::v]{v}{}`[j] = vert;
+face->`\refvar[SDFace::children]{children}{}`[j]->`\refvar[SDFace::v]{v}{}`[`\refvar{NEXT}{}`(j)] = vert;
+face->`\refvar[SDFace::children]{children}{}`[`\refvar{NEXT}{}`(j)]->`\refvar[SDFace::v]{v}{}`[j] = vert;
+face->`\refvar[SDFace::children]{children}{}`[3]->`\refvar[SDFace::v]{v}{}`[j] = vert;
 \end{lstlisting}
 
 一个细分步骤完成几何和拓扑工作后，

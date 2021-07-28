@@ -273,7 +273,7 @@ if (centroidBounds.`\refvar{pMax}{}`[dim] == centroidBounds.`\refvar{pMin}{}`[di
 的值决定该用哪个图元划分方案。接下来的几页将介绍这三个方案。
 \begin{lstlisting}
 `\initcode{Partition primitives based on splitMethod}{=}`
-switch (splitMethod) {
+switch (`\refvar{splitMethod}{}`) {
 case `\refvar{SplitMethod}{}`::`\refvar{Middle}{}`: {
     `\refcode{Partition primitives through node's midpoint}{}`
 }
@@ -308,6 +308,55 @@ default: {
 因为我们不会尝试引用数组末端后下一个元素的值而只是想计算其地址，
 所以该操作事实上是安全的。
 因此我们最终用这里的表达式计算同一地址，并且也满足任何{\ttfamily vector}错误检查。}。
+{\ttfamily std::partition()}返回指向第一个对于判定有{\ttfamily false}值的元素的指针，
+它转化为对数组{\ttfamily primitiveInfo}的偏移量，这样我们就可以将其传入递归调用。
+\reffig{4.4}说明了该方法，包括其有效和无效的情况。
+
+如果图元都有巨大的重叠边界框，则该划分方法可能无法把图元分为两组。
+这种情况下，执行往下进入{\ttfamily \refvar{SplitMethod}{}::\refvar{EqualCounts}{}}方法再试一次。
+\begin{lstlisting}
+`\initcode{Partition primitives through node's midpoint}{=}`
+`\refvar{Float}{}` pmid = (centroidBounds.`\refvar{pMin}{}`[dim] + centroidBounds.`\refvar{pMax}{}`[dim]) / 2;
+`\refvar{BVHPrimitiveInfo}{}` *midPtr =
+    std::partition(&primitiveInfo[start], &primitiveInfo[end-1]+1,
+        [dim, pmid](const `\refvar{BVHPrimitiveInfo}{}` &pi) {
+            return pi.`\refvar{centroid}{}`[dim] < pmid;
+        });
+mid = midPtr - &primitiveInfo[0];
+if (mid != start && mid != end)
+    break;
+\end{lstlisting}
+
+当\refvar{splitMethod}{}是{\ttfamily\refvar{SplitMethod}{}::\refvar{EqualCounts}{}}时，
+则运行代码片\refcode{Partition primitives into equally sized subsets}{}。
+它把图元划分为两个数量相等的子集使得$n$个中前一半的$\displaystyle\frac{n}{2}$个
+沿所选轴的形心坐标最小，另一半的则有最大形心坐标值。
+尽管该方法有时能起效，但也有\reffig{4.4}(b)效果不好的情况。
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap04/Midpointgoodbadsplit.tex}
+    \caption{在一个轴上基于形心中点划分图元。(a)对于一些图元分布，
+        例如这里所展示的，沿所选轴（粗蓝线）基于形心中点的划分效果很好。
+        (b)对于像这个的分布，中点是次优选项；得到的两个边界框大量重叠。
+        (c)如果来自(b)的同一组图元换为用这里展示的线分开，得到的边界框
+        更小且根本不会重叠，使渲染时性能更好。}
+    \label{fig:4.4}
+\end{figure}
+
+该方案也易于调用标准库的{\ttfamily std::nth\_element()}实现。
+它接收起点、中点和终点指针以及一个比较函数。
+它对数组排序使得中点指针处元素的位置是，如果数组完全排序，
+则所有中点之前的元素都比中点元素小且所有后面的元素都比它大。
+对于$n$个元素该排序可以在$O(n)$时间内完成，
+比完全排序数组的$O(n\log{n})$更高效。
+\begin{lstlisting}
+`\initcode{Partition primitives into equally sized subsets}{}`
+mid = (start + end) / 2;
+std::nth_element(&primitiveInfo[start], &primitiveInfo[mid], 
+                 &primitiveInfo[end-1]+1,
+    [dim](const BVHPrimitiveInfo &a, const BVHPrimitiveInfo &b) { 
+        return a.`\refvar{centroid}{}`[dim] < b.`\refvar{centroid}{}`[dim];
+    });
+\end{lstlisting}
 
 \subsection{表面积启发法}\label{sub:表面积启发法}
 

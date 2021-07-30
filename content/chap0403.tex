@@ -390,4 +390,27 @@ $p_A$和$p_B$是光线穿过每个子节点（假设二分划分）的概率，
 $a_i$和$b_i$是两个子节点中图元的索引，
 $N_A$和$N_B$是与两个子节点区域重合的图元数量。
 怎样划分图元的选项会影响两个概率值以及划分出的两边的图元集合。
+
+pbrt中，我们将作出简化假设即所有图元的$t_{\mathrm{trav}}(i)$都相同；
+该假设可能和实际差不了多少，且它引入的任何误差看起来并不太影响加速器的性能。
+另一种可能是向\refvar{Primitive}{}添加一个方法返回估计的相交测试所需的CPU周期数。
+
+概率$p_A$和$p_B$可用来自几何概型的思想计算。
+可以证明当凸体$A$包含于另一凸体$B$中，
+穿过$B$的均匀分布的随机光线也穿过$A$的条件概率是它们表面积$s_A$与$s_B$的比：
+\begin{align*}
+    \displaystyle p(A|B)=\frac{s_A}{s_B}\, .
+\end{align*}
+
+因为我们对光线穿过节点的开销感兴趣，我们可以直接利用该结果。
+因此，如果我们考虑细化一空间区域$A$使得有两个新子区域边界为$B$和$C$（\reffig{4.5}），
+则穿过$A$的光线也会穿过两个子区域之一的概率很容易计算。
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap04/Surfaceareasplit.tex}
+    \caption{如果边界层次一个表面积为$s_A$的节点分为两个表面积为$s_B$和$s_C$的孩子，
+    则穿过$A$的光线也穿过$B$和$C$的概率分别为$\displaystyle\frac{s_B}{s_A}$和$\displaystyle\frac{s_C}{s_A}$。}
+    \label{fig:4.5}
+\end{figure}
+
+当\refvar{splitMethod}{}有
 \subsection{线性包围盒层次}\label{sub:线性包围盒层次}

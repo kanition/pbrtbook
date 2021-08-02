@@ -408,9 +408,49 @@ pbrt中，我们将作出简化假设即所有图元的$t_{\mathrm{trav}}(i)$都
 \begin{figure}[htbp]
     \centering\input{Pictures/chap04/Surfaceareasplit.tex}
     \caption{如果边界层次一个表面积为$s_A$的节点分为两个表面积为$s_B$和$s_C$的孩子，
-    则穿过$A$的光线也穿过$B$和$C$的概率分别为$\displaystyle\frac{s_B}{s_A}$和$\displaystyle\frac{s_C}{s_A}$。}
+        则穿过$A$的光线也穿过$B$和$C$的概率分别为$\displaystyle\frac{s_B}{s_A}$和$\displaystyle\frac{s_C}{s_A}$。}
     \label{fig:4.5}
 \end{figure}
 
-当\refvar{splitMethod}{}有
+当\refvar{splitMethod}{}值为{\ttfamily\refvar{SplitMethod}{}::\refvar{SAH}{}}时，SAH用于构建BVH；
+通过考虑大量候选划分来寻找沿所选轴给出最小SAH估计开销的图元划分
+（这是默认\refvar{SplitMethod}{}，且它为渲染创建最高效的树）。
+然而，一旦它细分少量图元，则实现切换为划分成等量的子集。
+这时应用SAH所增加的计算量是不划算的。
+\begin{lstlisting}
+`\initcode{Partition primitives using approximate SAH}{=}`
+if (nPrimitives <= 4) {
+    `\refcode{Partition primitives into equally sized subsets}{}`
+} else {
+    `\refcode{Allocate BucketInfo for SAH partition buckets}{}`
+    `\refcode{Initialize BucketInfo for SAH partition buckets}{}`
+    `\refcode{Compute costs for splitting after each bucket}{}`
+    `\refcode{Find bucket to split at that minimizes SAH metric}{}`
+    `\refcode{Either create leaf or split primitives at selected SAH bucket}{}`
+}
+\end{lstlisting}
+
+比起穷举沿该轴所有$2n$个可能的划分，这里的实现是
+将沿该轴的范围分为少量相等的较大范围，并为每个计算SAH以选择最好的。
+然后它只考虑在该范围边界内的划分。
+该方法比考虑所有划分更高效且通常仍产出几乎一样高效的划分。
+\reffig{4.6}说明了该思想。
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap04/BVHsplitbucketing.tex}
+    \caption{用表面积启发法为BVH选择划分平面。图元边界形心的投影范围被投影在选定的划分轴上。
+        每个图元都基于其边界形心被放在沿轴的一个桶中。
+        然后实现会估计沿每个桶的边界（粗蓝线）的平面划分图元的开销；
+        谁的表面积启发法开销最小就选谁。}
+    \label{fig:4.6}
+\end{figure}
+\begin{lstlisting}
+`\initcode{Allocate BucketInfo for SAH partition buckets}{=}`
+constexpr int nBuckets = 12;
+struct `\initvar{BucketInfo}{}` {
+    int `\initvar[BucketInfo::count]{count}{}` = 0;
+    `\refvar{Bounds3f}{}` `\initvar[BucketInfo::bounds]{bounds}{}`;
+};
+`\refvar{BucketInfo}{}` buckets[nBuckets];
+\end{lstlisting}
+
 \subsection{线性包围盒层次}\label{sub:线性包围盒层次}

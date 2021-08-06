@@ -332,12 +332,12 @@ if (mid != start && mid != end)
 它把图元划分为两个数量相等的子集使得$n$个中前一半的$\displaystyle\frac{n}{2}$个
 沿所选轴的形心坐标最小，另一半的则有最大形心坐标值。
 尽管该方法有时能起效，但也有\reffig{4.4}(b)效果不好的情况。
-\begin{figure}[htbp]
+\begin{figure}[htb]
     \centering\input{Pictures/chap04/Midpointgoodbadsplit.tex}
-    \caption{在一个轴上基于形心中点划分图元。(a)对于一些图元分布，
-        例如这里所展示的，沿所选轴（粗蓝线）基于形心中点的划分效果很好。
-        (b)对于像这个的分布，中点是次优选项；得到的两个边界框大量重叠。
-        (c)如果来自(b)的同一组图元换为用这里展示的线分开，得到的边界框
+    \caption{一轴上基于形心中点划分图元。(a)对于一些图元分布，
+        例如这里所示，沿所选轴（粗蓝线）基于形心中点的划分效果很好。
+        (b)对于像这个的分布，中点是次优选项；所得两个边界框大量重叠。
+        (c)若来自(b)的同一组图元换为用这里展示的线分开，所得边界框
         更小且根本不会重叠，使渲染时性能更好。}
     \label{fig:4.4}
 \end{figure}
@@ -359,5 +359,185 @@ std::nth_element(&primitiveInfo[start], &primitiveInfo[mid],
 \end{lstlisting}
 
 \subsection{表面积启发法}\label{sub:表面积启发法}
+上述两个图元划分方法对一些图元分布效果不错，
+但实际中它们经常选择性能较差的划分，导致光线要访问树的更多节点，
+因此带来渲染时不必要的低效光线-图元相交计算。
+当下光线追踪大部分最好的构建加速结构算法都基于“\keyindex{表面积启发法}{surface area heuristic}{}”(SAH)，
+它提供了全面的开销模型来回答问题，例如
+“大量图元划分中哪个会为光线-图元相交测试带来更好的BVH？”，
+或者“在空间划分方案里大量划分空间的可选位置中哪个会带来更好的加速结构？”
+
+SAH模型估计执行光线相交测试的开销，包括穿行树的节点花的时间和
+为特定的图元划分进行光线-图元相交测试花的时间。
+然后构建加速结构的算法可以遵循最小化总开销的目标。
+通常用贪婪算法独立地为正在构建的每个层次节点最小化开销。
+
+SAH开销模型背后的思想很简单：构建自适应加速结构（图元划分或空间划分）的任意点处，
+我们只用为当前区域和几何体创建一个叶子结点。
+这种情况下，任何穿过该区域的光线都要对所有重合的图元测试，
+且带来的开销为
+\begin{align*}
+    \sum\limits_{i=1}^{N}{t_{\mathrm{isect}}(i)}\, ,
+\end{align*}
+其中$N$是图元数量，$t_{\mathrm{isect}}(i)$是对第$i$个图元计算光线-物体相交的时间。
+
+另一选项是划分空间。这种情况下，光线会带来开销
+\begin{align}\label{eq:4.1}
+    c(A,B)=t_{\mathrm{trav}}+p_A\sum\limits_{i=1}^{N_A}{t_\mathrm{isect}(a_i)}+p_B\sum\limits_{i=1}^{N_B}{t_{\mathrm{isect}}(b_i)}\, ,
+\end{align}
+其中$t_{\mathrm{trav}}$是穿行内部节点并确定光线穿过哪个子树所花的时间，分别地，
+$p_A$和$p_B$是光线穿过每个子节点（假设二分划分）的概率，
+$a_i$和$b_i$是两个子节点中图元的索引，
+$N_A$和$N_B$是与两个子节点区域重合的图元数量。
+怎样划分图元的选项会影响两个概率值以及划分出的两边的图元集合。
+
+pbrt中，我们将作出简化假设即所有图元的$t_{\mathrm{trav}}(i)$都相同；
+该假设可能和实际差不了多少，且它引入的任何误差看起来并不太影响加速器的性能。
+另一种可能是向\refvar{Primitive}{}添加一个方法返回估计的相交测试所需的CPU周期数。
+
+概率$p_A$和$p_B$可用来自几何概型的思想计算。
+可以证明当凸体$A$包含于另一凸体$B$中，
+穿过$B$的均匀分布的随机光线也穿过$A$的条件概率是它们表面积$s_A$与$s_B$的比：
+\begin{align*}
+    \displaystyle p(A|B)=\frac{s_A}{s_B}\, .
+\end{align*}
+
+因为我们对光线穿过节点的开销感兴趣，我们可以直接利用该结果。
+因此，如果我们考虑细化一空间区域$A$使得有两个新子区域边界为$B$和$C$（\reffig{4.5}），
+则穿过$A$的光线也会穿过两个子区域之一的概率很容易计算。
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap04/Surfaceareasplit.tex}
+    \caption{如果边界层次一个表面积为$s_A$的节点分为两个表面积为$s_B$和$s_C$的孩子，
+        则穿过$A$的光线也穿过$B$和$C$的概率分别为$\displaystyle\frac{s_B}{s_A}$和$\displaystyle\frac{s_C}{s_A}$。}
+    \label{fig:4.5}
+\end{figure}
+
+当\refvar{splitMethod}{}值为{\ttfamily\refvar{SplitMethod}{}::\refvar{SAH}{}}时，SAH用于构建BVH；
+通过考虑大量候选划分来寻找沿所选轴给出最小SAH估计开销的图元划分
+（这是默认\refvar{SplitMethod}{}，且它为渲染创建最高效的树）。
+然而，一旦它细分少量图元，则实现切换为划分成等量的子集。
+这时应用SAH所增加的计算量是不划算的。
+\begin{lstlisting}
+`\initcode{Partition primitives using approximate SAH}{=}`
+if (nPrimitives <= 4) {
+    `\refcode{Partition primitives into equally sized subsets}{}`
+} else {
+    `\refcode{Allocate BucketInfo for SAH partition buckets}{}`
+    `\refcode{Initialize BucketInfo for SAH partition buckets}{}`
+    `\refcode{Compute costs for splitting after each bucket}{}`
+    `\refcode{Find bucket to split at that minimizes SAH metric}{}`
+    `\refcode{Either create leaf or split primitives at selected SAH bucket}{}`
+}
+\end{lstlisting}
+
+比起穷举沿该轴所有$2n$个可能的划分，这里的实现是
+将沿该轴的范围分为少量相等的较大范围，并为每个计算SAH以选择最好的。
+然后它只考虑在该范围边界内的划分。
+该方法比考虑所有划分更高效且通常仍产出几乎一样高效的划分。
+\reffig{4.6}说明了该思想。
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap04/BVHsplitbucketing.tex}
+    \caption{用表面积启发法为BVH选择划分平面。图元边界形心的投影范围被投影在选定的划分轴上。
+        每个图元都基于其边界形心被放在沿轴的一个桶中。
+        然后实现会估计沿每个桶的边界（粗蓝线）的平面划分图元的开销；
+        谁的表面积启发法开销最小就选谁。}
+    \label{fig:4.6}
+\end{figure}
+\begin{lstlisting}
+`\initcode{Allocate BucketInfo for SAH partition buckets}{=}`
+constexpr int nBuckets = 12;
+struct `\initvar{BucketInfo}{}` {
+    int `\initvar[BucketInfo::count]{count}{}` = 0;
+    `\refvar{Bounds3f}{}` `\initvar[BucketInfo::bounds]{bounds}{}`;
+};
+`\refvar{BucketInfo}{}` buckets[nBuckets];
+\end{lstlisting}
+
+对于该范围内的每个图元，我们确定包含其形心的桶\protect\sidenote{译者注：原文bucket。}并更新桶的边界以包含图元的边界。
+\begin{lstlisting}
+`\initcode{Initialize BucketInfo for SAH partition buckets}{=}`
+for (int i = start; i < end; ++i) {
+    int b = nBuckets * 
+        centroidBounds.`\refvar{Offset}{}`(primitiveInfo[i].`\refvar{centroid}{}`)[dim];
+    if (b == nBuckets) b = nBuckets - 1;
+    buckets[b].`\refvar[BucketInfo::count]{count}{}`++;
+    buckets[b].`\refvar[BucketInfo::bounds]{bounds}{}` = `\refvar[Union2]{Union}{}`(buckets[b].`\refvar[BucketInfo::bounds]{bounds}{}`, primitiveInfo[i].`\refvar[BVHPrimitiveInfo::bounds]{bounds}{}`);
+}
+\end{lstlisting}
+
+对于每个桶，我们现在都有图元数量以及全部相应边界框的边界。
+我们想用SAH估计在每个桶边界处作划分的开销。
+下面的代码片遍历所有桶并初始化数组{\ttfamily cost[i]}来
+保存估计的在第{\ttfamily i}个桶后划分的SAH开销
+（不考虑在最后一个桶之后划分，因为根据定义它并不划分图元）。
+
+我们任意设置估计的相交开销为1，然后设置估计的遍历开销
+为$\displaystyle\frac{1}{8}$（两者之一总是可以设为1，
+因为是估计的遍历和相交开销的相对量级而不是绝对量级决定其影响）。
+尽管遍历节点即光线-边界框相交的绝对计算量仅稍低于光线与形状相交所需的计算量，
+但pbrt中光线-图元相交测试经过了两次虚函数调用，增加了大量开销，
+所以这里我们估计其开销大于光线-框相交的八倍。
+
+基于对桶前向和后向扫描而增量式地计算、存储和计数边界的线性时间实现是可能的，
+但这里的计算关于桶的数量有$O(n^2)$复杂度。
+更加高度优化解决该低效问题的渲染器是值得的，
+但这里对于小的$n$，性能影响通常是可接受的。
+\begin{lstlisting}
+`\initcode{Compute costs for splitting after each bucket}{=}`
+`\refvar{Float}{}` cost[nBuckets - 1];
+for (int i = 0; i < nBuckets - 1; ++i) {
+    `\refvar{Bounds3f}{}` b0, b1;
+    int count0 = 0, count1 = 0;
+    for (int j = 0; j <= i; ++j) {
+        b0 = `\refvar[Union2]{Union}{}`(b0, buckets[j].`\refvar[BucketInfo::bounds]{bounds}{}`);
+        count0 += buckets[j].`\refvar[BucketInfo::count]{count}{}`;
+    }
+    for (int j = i+1; j < nBuckets; ++j) {
+        b1 = `\refvar[Union2]{Union}{}`(b1, buckets[j].`\refvar[BucketInfo::bounds]{bounds}{}`);
+        count1 += buckets[j].`\refvar[BucketInfo::count]{count}{}`;
+    }
+    cost[i] = .125f + (count0 * b0.`\refvar{SurfaceArea}{}`() +
+                       count1 * b1.`\refvar{SurfaceArea}{}`()) / bounds.`\refvar{SurfaceArea}{}`();
+}
+\end{lstlisting}
+
+有了所有开销，对数组{\ttfamily cost}的线性扫描找到最小开销的划分。
+\begin{lstlisting}
+`\initcode{Find bucket to split at that minimizes SAH metric}{=}`
+`\refvar{Float}{}` minCost = cost[0];
+int minCostSplitBucket = 0;
+for (int i = 1; i < nBuckets - 1; ++i) {
+    if (cost[i] < minCost) {
+        minCost = cost[i];
+        minCostSplitBucket = i;
+    }
+}
+\end{lstlisting}
+
+如果为划分选的桶边界有比用存在的图元构建节点更低的估计开销，
+或者出现一个节点的图元超过了允许的最大数量，
+则用函数{\ttfamily std::partition()}来完成
+在数组{\ttfamily primitiveInfo}中记录节点的工作。
+回想之前它的用法即该函数确保数组的所有对于给定判定函数返回{\ttfamily true}的元素
+都出现在返回{\ttfamily false}的之前，
+并且它返回指向第一个判定函数返回{\ttfamily false}的元素的指针。
+因为我们之前任意设置估计的相交开销为1，
+所以只是创建叶子结点的估计开销等于图元的数量{\ttfamily nPrimitives}。
+\begin{lstlisting}
+`\initcode{Either create leaf or split primitives at selected SAH bucket}{=}`
+`\refvar{Float}{}` leafCost = nPrimitives;
+if (nPrimitives > maxPrimsInNode || minCost < leafCost) {
+    `\refvar{BVHPrimitiveInfo}{}` *pmid = std::partition(&primitiveInfo[start],
+        &primitiveInfo[end-1]+1, 
+        [=](const `\refvar{BVHPrimitiveInfo}{}` &pi) {
+            int b = nBuckets * centroidBounds.`\refvar{Offset}{}`(pi.centroid)[dim];
+            if (b == nBuckets) b = nBuckets - 1;
+            return b <= minCostSplitBucket;
+        });
+    mid = pmid - &primitiveInfo[0];
+} else {
+    `\refcode{Create leaf BVHBuildNode}{}`
+}
+\end{lstlisting}
 
 \subsection{线性包围盒层次}\label{sub:线性包围盒层次}

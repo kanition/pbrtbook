@@ -453,4 +453,91 @@ struct `\initvar{BucketInfo}{}` {
 `\refvar{BucketInfo}{}` buckets[nBuckets];
 \end{lstlisting}
 
+对于该范围内的每个图元，我们确定包含其形心的桶\protect\sidenote{译者注：原文bucket。}并更新桶的边界以包含图元的边界。
+\begin{lstlisting}
+`\initcode{Initialize BucketInfo for SAH partition buckets}{=}`
+for (int i = start; i < end; ++i) {
+    int b = nBuckets * 
+        centroidBounds.`\refvar{Offset}{}`(primitiveInfo[i].`\refvar{centroid}{}`)[dim];
+    if (b == nBuckets) b = nBuckets - 1;
+    buckets[b].`\refvar[BucketInfo::count]{count}{}`++;
+    buckets[b].`\refvar[BucketInfo::bounds]{bounds}{}` = `\refvar[Union2]{Union}{}`(buckets[b].`\refvar[BucketInfo::bounds]{bounds}{}`, primitiveInfo[i].`\refvar[BVHPrimitiveInfo::bounds]{bounds}{}`);
+}
+\end{lstlisting}
+
+对于每个桶，我们现在都有图元数量以及全部相应边界框的边界。
+我们想用SAH估计在每个桶边界处作划分的开销。
+下面的代码片遍历所有桶并初始化数组{\ttfamily cost[i]}来
+保存估计的在第{\ttfamily i}个桶后划分的SAH开销
+（不考虑在最后一个桶之后划分，因为根据定义它并不划分图元）。
+
+我们任意设置估计的相交开销为1，然后设置估计的遍历开销
+为$\displaystyle\frac{1}{8}$（两者之一总是可以设为1，
+因为是估计的遍历和相交开销的相对量级而不是绝对量级决定其影响）。
+尽管遍历节点即光线-边界框相交的绝对计算量仅稍低于光线与形状相交所需的计算量，
+但pbrt中光线-图元相交测试经过了两次虚函数调用，增加了大量开销，
+所以这里我们估计其开销大于光线-框相交的八倍。
+
+基于对桶前向和后向扫描而增量式地计算、存储和计数边界的线性时间实现是可能的，
+但这里的计算关于桶的数量有$O(n^2)$复杂度。
+更加高度优化解决该低效问题的渲染器是值得的，
+但这里对于小的$n$，性能影响通常是可接受的。
+\begin{lstlisting}
+`\initcode{Compute costs for splitting after each bucket}{=}`
+`\refvar{Float}{}` cost[nBuckets - 1];
+for (int i = 0; i < nBuckets - 1; ++i) {
+    `\refvar{Bounds3f}{}` b0, b1;
+    int count0 = 0, count1 = 0;
+    for (int j = 0; j <= i; ++j) {
+        b0 = `\refvar[Union2]{Union}{}`(b0, buckets[j].`\refvar[BucketInfo::bounds]{bounds}{}`);
+        count0 += buckets[j].`\refvar[BucketInfo::count]{count}{}`;
+    }
+    for (int j = i+1; j < nBuckets; ++j) {
+        b1 = `\refvar[Union2]{Union}{}`(b1, buckets[j].`\refvar[BucketInfo::bounds]{bounds}{}`);
+        count1 += buckets[j].`\refvar[BucketInfo::count]{count}{}`;
+    }
+    cost[i] = .125f + (count0 * b0.`\refvar{SurfaceArea}{}`() +
+                       count1 * b1.`\refvar{SurfaceArea}{}`()) / bounds.`\refvar{SurfaceArea}{}`();
+}
+\end{lstlisting}
+
+有了所有开销，对数组{\ttfamily cost}的线性扫描找到最小开销的划分。
+\begin{lstlisting}
+`\initcode{Find bucket to split at that minimizes SAH metric}{=}`
+`\refvar{Float}{}` minCost = cost[0];
+int minCostSplitBucket = 0;
+for (int i = 1; i < nBuckets - 1; ++i) {
+    if (cost[i] < minCost) {
+        minCost = cost[i];
+        minCostSplitBucket = i;
+    }
+}
+\end{lstlisting}
+
+如果为划分选的桶边界有比用存在的图元构建节点更低的估计开销，
+或者出现一个节点的图元超过了允许的最大数量，
+则用函数{\ttfamily std::partition()}来完成
+在数组{\ttfamily primitiveInfo}中记录节点的工作。
+回想之前它的用法即该函数确保数组的所有对于给定判定函数返回{\ttfamily true}的元素
+都出现在返回{\ttfamily false}的之前，
+并且它返回指向第一个判定函数返回{\ttfamily false}的元素的指针。
+因为我们之前任意设置估计的相交开销为1，
+所以只是创建叶子结点的估计开销等于图元的数量{\ttfamily nPrimitives}。
+\begin{lstlisting}
+`\initcode{Either create leaf or split primitives at selected SAH bucket}{=}`
+`\refvar{Float}{}` leafCost = nPrimitives;
+if (nPrimitives > maxPrimsInNode || minCost < leafCost) {
+    `\refvar{BVHPrimitiveInfo}{}` *pmid = std::partition(&primitiveInfo[start],
+        &primitiveInfo[end-1]+1, 
+        [=](const `\refvar{BVHPrimitiveInfo}{}` &pi) {
+            int b = nBuckets * centroidBounds.`\refvar{Offset}{}`(pi.centroid)[dim];
+            if (b == nBuckets) b = nBuckets - 1;
+            return b <= minCostSplitBucket;
+        });
+    mid = pmid - &primitiveInfo[0];
+} else {
+    `\refcode{Create leaf BVHBuildNode}{}`
+}
+\end{lstlisting}
+
 \subsection{线性包围盒层次}\label{sub:线性包围盒层次}

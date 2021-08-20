@@ -542,8 +542,7 @@ if (nPrimitives > maxPrimsInNode || minCost < leafCost) {
 
 \subsection{线性包围盒层次}\label{sub:线性包围盒层次}
 尽管用表面积启发法构建包围盒层次给出了很好的结果，
-但该方法有两个缺点：第一，采用了场景图元上的许多通道
-来在树的所有层次上计算SAH开销\sidenote{译者注：本句翻译不确定。}。
+但该方法有两个缺点：第一，接收了许多传入的场景图元来在树的所有层次上计算SAH开销。
 第二，自顶向下的BVH构建难以很好地并行化：
 最明显的并行化方法——执行独立子树的并行化构建——
 在直到该树顶部几层构建好前都受困于有限的独立任务，
@@ -551,7 +550,7 @@ if (nPrimitives > maxPrimsInNode || minCost < leafCost) {
 （第二个问题在GPU上尤为突出，如果大规模并行化不可用则性能会很差）。
 
 开发\keyindex{线性包围盒层次}{linear bounding volume hierarchy}{}(LBVH)来解决这些问题。
-通过LBVH，以图元上少量的轻量级通道来构建树\sidenote{译者注：本句翻译不确定。}；
+通过LBVH，以传递轻量级小次数的图元来构建树；
 树的构建时间与图元数量呈线性关系。
 而且算法快速地把图元划分为可以独立处理的\keyindex{群集}{cluster}{}。
 该过程很容易并行化且很适合GPU实现。
@@ -747,3 +746,44 @@ inline uint32_t `\initvar{EncodeMorton3}{}`(const `\refvar{Vector3f}{}` &v) {
             `\refvar{LeftShift3}{}`(v.x);
 }
 \end{lstlisting}
+
+一旦计算了莫顿索引，我们将用\keyindex{基数排序}{radix sort}{}按莫顿索引值对
+\newline{\ttfamily mortonPrims}排序。
+我们已经发现对于BVH的构建，我们的基数排序实现明显快于使用我们系统标准库的{\ttfamily std::sort()}
+（它是\keyindex{快速排序}{quicksort}{}和\keyindex{插入排序}{insertion sort}{}的混合）。
+\begin{lstlisting}
+`\initcode{Radix sort primitive Morton indices}{=}`
+`\refvar{RadixSort}{}`(&mortonPrims);
+\end{lstlisting}
+
+回想基数排序和大多数排序算法的不同在于它不是基于比较一对值
+而是基于依赖一些键值的桶子项。基数排序可用于排序整数值，
+它从最右边数位到最左边每次排序一个数码。
+它尤其值得每次对二进制值排序多个数码；
+这样做减少了传递数据的次数。
+这里的实现中，{\ttfamily bitsPerPass}设置每次传递处理的位数；
+取值6后，我们有5次传递来排序30位。
+\begin{lstlisting}
+`\refcode{BVHAccel Utility Functions}{+=}\lastcode{BVHAccelUtilityFunctions}`
+static void `\initvar{RadixSort}{}`(std::vector<`\refvar{MortonPrimitive}{}`> *v) {
+    std::vector<`\refvar{MortonPrimitive}{}`> tempVector(v->size());
+    constexpr int bitsPerPass = 6;
+    constexpr int nBits = 30;
+    constexpr int nPasses = nBits / bitsPerPass;
+    for (int pass = 0; pass < nPasses; ++pass) {
+        `\refcode{Perform one pass of radix sort, sorting bitsPerPass bits}{}`
+    }
+    `\refcode{Copy final result from tempVector, if needed}{}`
+}
+\end{lstlisting}
+
+当前传递会排序{\ttfamily bitsPerPass}位，从{\ttfamily lowBit}开始。
+\begin{lstlisting}
+`\initcode{Perform one pass of radix sort, sorting bitsPerPass bits}{=}`
+int lowBit = pass * bitsPerPass;
+`\refcode{Set in and out vector pointers for radix sort pass}{}`
+`\refcode{Count number of zero bits in array for current radix sort bit}{}`
+`\refcode{Compute starting index in output array for each bucket}{}`
+`\refcode{Store sorted values in output array}{}`
+\end{lstlisting}
+

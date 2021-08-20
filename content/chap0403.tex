@@ -669,8 +669,8 @@ std::vector<`\refvar{MortonPrimitive}{}`> mortonPrims(primitiveInfo.size());
     }, primitiveInfo.size(), 512);
 \end{lstlisting}
 
-为每个图元都创建一个实例\refvar{MortonPrimitive}{}；它保存了图元在数组
-{\ttfamily primitiveInfo}中的图元索引及其莫顿码。
+为每个图元都创建一个实例\refvar{MortonPrimitive}{}；
+它保存了图元在数组\newline{\ttfamily primitiveInfo}中的图元索引及其莫顿码。
 \begin{lstlisting}
 `\refcode{BVHAccel Local Declarations}{+=}\lastnext{BVHAccelLocalDeclarations}`
 struct `\initvar{MortonPrimitive}{}` {
@@ -706,3 +706,44 @@ mortonPrims[i].`\refvar{mortonCode}{}` = `\refvar{EncodeMorton3}{}`(centroidOffs
 
 实现该操作最明显的方法，即单独移动每一位，并不是最高效的
 （它需要总共9次位移以及逻辑或来计算最终值）。
+取而代之的是，我们可以把每位的移动分解为多个幂2尺寸的移位且一并把数位值移到其最终位置。
+然后，所有需要移动给定幂2数位的位可以一并移动。
+函数\refvar{LeftShift3}{()}实现了该计算，\reffig{4.10}展示了它如何工作的。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.75\linewidth]{Pictures/chap04/Mortonpow2decomposition.eps}
+    \caption{莫顿移位的幂2分解。通过一系列幂2尺寸的移动来为每个3D坐标计算莫顿码执行移位。
+        首先，位8和9向左移16位，这把位8放在了其最终位置。接着位4到7移动8位。
+        移动4和2位后（适当掩模使每位最终都移动适当数位），所有数位都在正确的位置上。
+        该计算由函数\refvar{LeftShift3}{()}实现。}
+    \label{fig:4.10}
+\end{figure}
+
+\begin{lstlisting}
+`\initcode{BVHAccel Utility Functions}{=}\initnext{BVHAccelUtilityFunctions}`
+inline uint32_t `\initvar{LeftShift3}{}`(uint32_t x) {
+    if (x == (1 << 10)) --x;
+    x = (x | (x << 16)) & 0b00000011000000000000000011111111;
+    x = (x | (x <<  8)) & 0b00000011000000001111000000001111;
+    x = (x | (x <<  4)) & 0b00000011000011000011000011000011;
+    x = (x | (x <<  2)) & 0b00001001001001001001001001001001;
+    return x;
+}
+\end{lstlisting}
+
+\refvar{EncodeMorton3}{()}接收每个分量都是$0$到$2^{10}$之间浮点值的3D坐标值。
+它把这些值转换为整数然后通过展开三个10位量化值使第$i$位在位置$3i$上来计算莫顿码，
+然后$y$位再移一位，$z$位再移两位，全部结果求或（\reffig{4.11}）。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.75\linewidth]{chap04/Mortonxyzinterleave.eps}
+    \caption{最终交错坐标值。有了\refvar{LeftShift3}{()}为$x$、$y$和$z$计算的交错值，
+        最终莫顿编码值通过分别移动$y$和$z$一位和两位然后全部结果求或算得。}
+    \label{fig:4.11}
+\end{figure}
+
+\begin{lstlisting}
+`\refcode{BVHAccel Utility Functions}{+=}\lastnext{BVHAccelUtilityFunctions}`
+inline uint32_t `\initvar{EncodeMorton3}{}`(const `\refvar{Vector3f}{}` &v) {
+    return (`\refvar{LeftShift3}{}`(v.z) << 2) | (`\refvar{LeftShift3}{}`(v.y) << 1) |
+            `\refvar{LeftShift3}{}`(v.x);
+}
+\end{lstlisting}

@@ -541,3 +541,168 @@ if (nPrimitives > maxPrimsInNode || minCost < leafCost) {
 \end{lstlisting}
 
 \subsection{线性包围盒层次}\label{sub:线性包围盒层次}
+尽管用表面积启发法构建包围盒层次给出了很好的结果，
+但该方法有两个缺点：第一，采用了场景图元上的许多通道
+来在树的所有层次上计算SAH开销\sidenote{译者注：本句翻译不确定。}。
+第二，自顶向下的BVH构建难以很好地并行化：
+最明显的并行化方法——执行独立子树的并行化构建——
+在直到该树顶部几层构建好前都受困于有限的独立任务，
+这反过来又抑制了并行的可扩展性
+（第二个问题在GPU上尤为突出，如果大规模并行化不可用则性能会很差）。
+
+开发\keyindex{线性包围盒层次}{linear bounding volume hierarchy}{}(LBVH)来解决这些问题。
+通过LBVH，以图元上少量的轻量级通道来构建树\sidenote{译者注：本句翻译不确定。}；
+树的构建时间与图元数量呈线性关系。
+而且算法快速地把图元划分为可以独立处理的\keyindex{群集}{cluster}{}。
+该过程很容易并行化且很适合GPU实现。
+
+LBVH背后的关键思想是把BVH构建变为排序问题。
+因为没有排序多维数据的单一顺序函数，所以LBVH是基于\keyindex{莫顿码}{Morton code}{}的，
+它将$n$维中的邻近点映射为1D直线上的邻近点，使之有明显的排序函数。
+在图元排序后，空间上相邻的图元群集在排序数组的连续段内。
+
+莫顿码基于简单的变换：给定$n$维整数坐标值，
+其莫顿码表示由交错二进制坐标数位求得。
+例如，考虑一个2D坐标$(x,y)$，其中$x$和$y$的数位表示为$x_i$和$y_i$。
+相应的莫顿码值为
+\begin{align*}
+    \cdots y_3x_3y_2x_2y_1x_1y_0x_0\, .
+\end{align*}
+
+\reffig{4.7}展示了2D点按莫顿顺序的图示——
+注意沿递归的“z”形路径访问它们
+（因此莫顿路径有时也称为“z序”）。
+我们可以看到2D中坐标相近的点通常在莫顿曲线上也是相近的
+\footnote{许多GPU用莫顿布局在内存中存储纹理贴图。
+    这样做的一个优点是当在四个纹素值之间执行双线性插值时，
+    比起纹理按扫描线顺序排布，这些值更有极大可能在内存中相邻。
+    反过来，这有利于纹理缓存性能。}。
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap04/MortonBasic.tex}
+    \caption{沿莫顿曲线访问点的顺序。沿$x$和$y$轴的坐标值用二进制表示。
+        如果我们按其莫顿索引的顺序连接整数坐标点，我们可以看见莫顿曲线沿分层级的“z”形路径访问这些点。}
+    \label{fig:4.7}
+\end{figure}
+
+莫顿编码值也编码了关于点所表示的位置的有用信息。
+考虑2D中4位坐标值的情况：$x$和$y$坐标是$[0,15]$内的整数且
+莫顿码有8位：$y_3x_3y_2x_2y_1x_1y_0x_0$。
+编码会得出许多整数性质；一些例子包括：
+\begin{itemize}
+    \item 对于莫顿编码8位值中高位$y_3$置位的，我们就知道
+          其本身的$y$坐标高位置位且因此$y\ge8$（\reffig{4.8}(a)）。
+    \item 下一位值$x_3$在中间划分$x$轴（\reffig{4.8}(b)）。
+          例如如果$y_3$置位而$x_3$没有，则相应的点一定位于\reffig{4.8}(c)的阴影区。
+          具有许多高位匹配的点通常位于由匹配位值决定的幂2边长的对齐空间区域。
+    \item $y_2$值将$y$轴划分为四个区域（\reffig{4.8}(d)）。
+\end{itemize}
+\begin{figure}[htb]
+    \centering\input{Pictures/chap04/MortonBinary.tex}\\
+    \input{Pictures/chap04/MortonSplitHoriz.tex}
+    \input{Pictures/chap04/MortonSplitVert.tex}
+    \input{Pictures/chap04/MortonShadedRegion.tex}\\
+    \input{Pictures/chap04/MortonSplitHoriz3.tex}
+    \caption{莫顿编码的实现。莫顿值中不同位的值表示相应坐标所在的空间区域。
+        (a)在2D中，一个点坐标的莫顿编码值高位定义了沿$y$轴中点的划分平面。
+        如果该高位置位，则点在平面以上。(b)同样，莫顿值的第二高位在中间划分$x$轴。
+        (c)如果高$y$位是1且高$x$位是0，则该点一定在阴影区域内。
+        (d)第二高$y$位把$y$轴划分为四个区域。}
+    \label{fig:4.8}
+\end{figure}
+
+另一个解释这些基于数位的性质的方法是按莫顿编码值来。
+例如，\reffig{4.8}(a)对应在范围$[8,15]$内的索引，
+\reffig{4.8}(c)对应$[8,11]$。因此，给定一组排序了的莫顿索引，
+我们可以通过二分搜索找到对应于像\reffig{4.8}(c)区域那样的点的范围，
+以在数组中找到每个终点。
+
+LBVH是通过用每个空间区域中点处的划分平面
+（即等价于之前定义的路径\refvar[Middle]{SplitMethod::Middle}{}）划分图元而构建的BVH。
+因为它基于上述的莫顿编码性质，所以划分非常高效。
+
+仅仅以不同方式复现\refvar{Middle}{}并不有趣，所以这里的实现中我们将
+构建\keyindex{分层线性包围盒层次}{hierarchical linear bounding volume hierarchy}{linear bounding volume hierarchy线性包围盒层次}(HLBVH)。
+通过该方法使基于莫顿曲线的聚类用于首先为低层级构建树（以下称“小树”\sidenote{译者注：原文treelet。}），
+然后用表面积启发法创建高层级树。
+方法\refvar{HLBVHBuild}{()}实现了该方法并返回所得树的根节点。
+\begin{lstlisting}
+`\refcode{BVHAccel Method Definitions}{+=}\lastnext{BVHAccelMethodDefinitions}`
+`\refvar{BVHBuildNode}{}` *`\refvar{BVHAccel}{}`::`\initvar{HLBVHBuild}{}`(`\refvar{MemoryArena}{}` &arena, 
+        const std::vector<`\refvar{BVHPrimitiveInfo}{}`> &primitiveInfo,
+        int *totalNodes,
+        std::vector<std::shared_ptr<`\refvar{Primitive}{}`>> &orderedPrims) const {
+    `\refcode{Compute bounding box of all primitive centroids}{}`
+    `\refcode{Compute Morton indices of primitives}{}`
+    `\refcode{Radix sort primitive Morton indices}{}`
+    `\refcode{Create LBVH treelets at bottom of BVH}{}`
+    `\refcode{Create and return SAH BVH from LBVH treelets}{}`
+}
+\end{lstlisting}
+
+只用图元边界框形心构建BVH来对其排序——
+它不考虑每个图元的实际空间范围。
+该简化对HLBVH提供的性能很关键，
+但它也意味着对于一些占有很大尺寸范围的场景而言，
+构建的树不会像基于SAH的树那样考虑这些特例。
+
+因为莫顿编码在整数坐标上操作，我们首先需要定界所有图元的形心，
+这样我们就可以量化相对于整体边界的形心位置。
+\begin{lstlisting}
+`\initcode{Compute bounding box of all primitive centroids}{=}`
+`\refvar{Bounds3f}{}` bounds;
+for (const `\refvar{BVHPrimitiveInfo}{}` &pi : primitiveInfo)
+    bounds = `\refvar[Union2]{Union}{}`(bounds, pi.`\refvar{centroid}{}`);
+\end{lstlisting}
+
+有了整体边界，我现在可以为每个图元计算莫顿码了。
+这是非常轻量的计算，但假定可能有数百万图元，则它是值得并行化的。
+注意下面512的循环块尺寸传入\refvar{ParallelFor}{()}；
+这让工作线程每次要处理512组图元而不是默认的一组。
+因为每个图元计算莫顿码要执行的工作量相对较小，
+这粒度更好地把分布式任务的开销分摊给了工作线程。
+\begin{lstlisting}
+`\initcode{Compute Morton indices of primitives}{=}`
+std::vector<`\refvar{MortonPrimitive}{}`> mortonPrims(primitiveInfo.size());
+`\refvar{ParallelFor}{}`(
+    [&](int i) {
+        `\refcode{Initialize mortonPrims[i] for ith primitive}{}`
+    }, primitiveInfo.size(), 512);
+\end{lstlisting}
+
+为每个图元都创建一个实例\refvar{MortonPrimitive}{}；它保存了图元在数组
+{\ttfamily primitiveInfo}中的图元索引及其莫顿码。
+\begin{lstlisting}
+`\refcode{BVHAccel Local Declarations}{+=}\lastnext{BVHAccelLocalDeclarations}`
+struct `\initvar{MortonPrimitive}{}` {
+    int `\initvar{primitiveIndex}{}`;
+    uint32_t `\initvar{mortonCode}{}`;
+};
+\end{lstlisting}
+
+我们为每个$x$、$y$和$z$坐标用10位数，这样莫顿码一共30位。
+该粒度允许值与单个32位变量相容。
+边界框内的浮点形心偏移量在$[0,1]$内，
+所以我们用$2^{10}$缩放它们得到10位表示的整数坐标
+（对于恰等于1的边界情况，可能得到出界的量化值1024；
+这种情况在即将介绍的函数\refvar{LeftShift3}{()}中处理）。
+\begin{lstlisting}
+`\initcode{Initialize mortonPrims[i] for ith primitive}{=}`
+constexpr int mortonBits = 10;
+constexpr int mortonScale = 1 << mortonBits;
+mortonPrims[i].`\refvar{primitiveIndex}{}` = primitiveInfo[i].`\refvar{primitiveNumber}{}`;
+`\refvar{Vector3f}{}` centroidOffset = bounds.`\refvar{Offset}{}`(primitiveInfo[i].`\refvar{centroid}{}`);
+mortonPrims[i].`\refvar{mortonCode}{}` = `\refvar{EncodeMorton3}{}`(centroidOffset * mortonScale);
+\end{lstlisting}
+
+为计算3D莫顿码，首先我们定义一个辅助函数：\refvar{LeftShift3}{()}接收
+一个32位值并返回把第$i$位移到第$3i$位的结果，剩下位为零。
+\reffig{4.9}说明了该操作。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.75\linewidth]{chap04/LeftShift3.eps}
+    \caption{移位以计算3D莫顿码。函数\refvar{LeftShift3}{()}接收32位整数值，
+        且对于低10位，把第$i$位移到第$3i$位的位置——换句话说，向左移$2i$位。剩下全部位设为零。}
+    \label{fig:4.9}
+\end{figure}
+
+实现该操作最明显的方法，即单独移动每一位，并不是最高效的
+（它需要总共9次位移以及逻辑或来计算最终值）。

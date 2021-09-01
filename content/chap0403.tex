@@ -127,7 +127,7 @@ else
 该信息用于提高遍历算法的性能。
 叶子节点需要记录哪个或哪些图元保存在它们中；
 数组\refvar{BVHAccel::primitives}{}中从偏移量\refvar{firstPrimOffset}{}起
-直到但不包括{\ttfamily\refvar{firstPrimOffset}{}+\refvar{nPrimitives}{}}的元素是叶子中的元素
+直到但不包括{\ttfamily\refvar{firstPrimOffset}{}+\refvar[BVHBuildNode:nPrimitives]{nPrimitives}{}}的元素是叶子中的元素
 （因此需要记录图元数组，这样就可以利用该表示，
 而不是例如在每个叶子节点中保存一个大小可变的图元索引数组）。
 \begin{lstlisting}
@@ -136,7 +136,7 @@ struct `\initvar{BVHBuildNode}{}` {
     `\refcode{BVHBuildNode Public Methods}{}`
     `\refvar{Bounds3f}{}` `\initvar[BVHBuildNode::bounds]{bounds}{}`;
     `\refvar{BVHBuildNode}{}` *`\initvar[BVHBuildNode::children]{children}{}`[2];
-    int `\initvar{splitAxis}{}`, `\initvar{firstPrimOffset}{}`, `\initvar{nPrimitives}{}`;
+    int `\initvar{splitAxis}{}`, `\initvar{firstPrimOffset}{}`, `\initvar[BVHBuildNode:nPrimitives]{nPrimitives}{}`;
 };
 \end{lstlisting}
 
@@ -145,7 +145,7 @@ struct `\initvar{BVHBuildNode}{}` {
 `\initcode{BVHBuildNode Public Methods}{=}\initnext{BVHBuildNodePublicMethods}`
 void `\initvar{InitLeaf}{}`(int first, int n, const `\refvar{Bounds3f}{}` &b) {
     `\refvar{firstPrimOffset}{}` = first;
-    `\refvar{nPrimitives}{}` = n;
+    `\refvar[BVHBuildNode:nPrimitives]{nPrimitives}{}` = n;
     `\refvar[BVHBuildNode::bounds]{bounds}{}` = b;
     `\refvar[BVHBuildNode::children]{children}{}`[0] = `\refvar[BVHBuildNode::children]{children}{}`[1] = nullptr;
 }
@@ -160,7 +160,7 @@ void `\initvar{InitInterior}{}`(int axis, `\refvar{BVHBuildNode}{}` *c0, `\refva
     `\refvar[BVHBuildNode::children]{children}{}`[1] = c1;
     `\refvar[BVHBuildNode::bounds]{bounds}{}` = `\refvar[Union2]{Union}{}`(c0->`\refvar[BVHBuildNode::bounds]{bounds}{}`, c1->`\refvar[BVHBuildNode::bounds]{bounds}{}`);
     `\refvar{splitAxis}{}` = axis;
-    `\refvar{nPrimitives}{}` = 0;
+    `\refvar[BVHBuildNode:nPrimitives]{nPrimitives}{}` = 0;
 }
 \end{lstlisting}
 
@@ -787,3 +787,84 @@ int lowBit = pass * bitsPerPass;
 `\refcode{Store sorted values in output array}{}`
 \end{lstlisting}
 
+{\ttfamily in}和{\ttfamily out}引用分别对应于要排序的向量以及保存排序值的向量。
+每次通过循环的传递都在输入向量{\ttfamily *v}和临时向量之间交替。
+\begin{lstlisting}
+`\initcode{Set in and out vector pointers for radix sort pass}{=}`
+std::vector<`\refvar{MortonPrimitive}{}`> &in  = (pass & 1) ? tempVector : *v;
+std::vector<`\refvar{MortonPrimitive}{}`> &out = (pass & 1) ? *v : tempVector;
+\end{lstlisting}
+
+如果我们每次传递中排序$n$位，则每个值可能落入的桶有$2^n$个。
+我们先计数每个桶中会落入多少个值；这能让我们确定在输出数组中的何处保存排序值。
+为了给当前值计算桶索引，该实现对索引移位使得在索引{\ttfamily lowBit}上的位
+位于0号位，再掩模低处{\ttfamily bitsPerPass}个位。
+\begin{lstlisting}
+`\initcode{Count number of zero bits in array for current radix sort bit}{=}`
+constexpr int nBuckets = 1 << bitsPerPass;
+int bucketCount[nBuckets] = { 0 };
+constexpr int bitMask = (1 << bitsPerPass) - 1;
+for (const `\refvar{MortonPrimitive}{}` &mp : in) {
+    int bucket = (mp.`\refvar{mortonCode}{}` >> lowBit) & bitMask;
+    ++bucketCount[bucket];
+}
+\end{lstlisting}
+
+有了每个桶中落入值的数量，我们就可以计算在输出数组中
+每个桶的值开始处的偏移量；这就是之前的桶中落入值数量的和。
+\begin{lstlisting}
+`\initcode{Compute starting index in output array for each bucket}{=}`
+int outIndex[nBuckets];
+outIndex[0] = 0;
+for (int i = 1; i < nBuckets; ++i)
+    outIndex[i] = outIndex[i - 1] + bucketCount[i - 1];
+\end{lstlisting}
+
+现在我们知道每个桶在何处开始排序值了，
+可以接收另一次图元传递来重算每个图元所在的桶并
+将其\refvar{MortonPrimitive}{}保存在输出数组中。
+这为当前这组数位完成了排序传递。
+\begin{lstlisting}
+`\initcode{Store sorted values in output array}{=}`
+for (const `\refvar{MortonPrimitive}{}` &mp : in) {
+    int bucket = (mp.`\refvar{mortonCode}{}` >> lowBit) & bitMask;
+    out[outIndex[bucket]++] = mp;
+}
+\end{lstlisting}
+
+当完成排序时，如果执行了奇数次基数排序传递，则最终排序值需要
+从临时向量复制到原来传入\refvar{RadixSort}{()}的输出向量。
+\begin{lstlisting}
+`\initcode{Copy final result from tempVector, if needed}{}`
+if (nPasses & 1)
+    std::swap(*v, tempVector);
+\end{lstlisting}
+
+有了图元排序数组，我们将用附近的形心求得图元群集，
+再在每个群集内创建图元上的LBVH。
+这一步很适合并行化，因为通常有很多群集且每个群集都可以独立处理。
+\begin{lstlisting}
+`\initcode{Create LBVH treelets at bottom of BVH}{=}`
+`\refcode{Find intervals of primitives for each treelet}{}`
+`\refcode{Create LBVHs for treelets in parallel}{}`
+\end{lstlisting}
+
+每个图元群集都表示为一个\refvar{LBVHTreelet}{}。
+它对群集中第一个图元在{\ttfamily mortonPrims}数组中的索引
+以及后续图元的数量进行编码（见\reffig{4.12}）。
+\begin{lstlisting}
+`\refcode{BVHAccel Local Declarations}{+=}\lastnext{BVHAccelLocalDeclarations}`
+struct `\initvar{LBVHTreelet}{}` {
+   int `\initvar{startIndex}{}`, `\initvar[LBVHTreelet:nPrimitives]{nPrimitives}{}`;
+   `\refvar{BVHBuildNode}{}` *`\initvar{buildNodes}{}`;
+};
+\end{lstlisting}
+
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap04/LBVHtreeletclusters.tex}
+    \caption{LBVH小树的图元群集。图元形心聚类到覆盖其边界的均匀网格内。
+        为每个格子中位于排序后的莫顿索引值连续段内的图元群集创建LBVH。}
+    \label{fig:4.12}
+\end{figure}
+
+回想\reffig{4.8}中

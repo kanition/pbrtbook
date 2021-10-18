@@ -11,6 +11,14 @@
 - 翻译 [Kanition](https://github.com/kanition)
 
 ## 下载地址：[https://github.com/kanition/pbrtbook/releases](https://github.com/kanition/pbrtbook/releases)
+
+## 翻译进度：[https://github.com/kanition/pbrtbook/projects](https://github.com/kanition/pbrtbook/projects)
+
+## 你问我答：[https://github.com/kanition/pbrtbook/discussions](https://github.com/kanition/pbrtbook/discussions)
+
+## 我要报错：[https://github.com/kanition/pbrtbook/issues/new/choose](https://github.com/kanition/pbrtbook/issues/new/choose)
+
+## 长期求助文献传递：[https://github.com/kanition/pbrtbook/discussions/41](https://github.com/kanition/pbrtbook/discussions/41)
 ## 友情链接
 ### 第三版
 * 原书官网：[https://www.pbr-book.org/](https://www.pbr-book.org/)
@@ -18,15 +26,9 @@
 * 原书代码：[https://github.com/mmp/pbr-book-website](https://github.com/mmp/pbr-book-website)
 ### 第四版
 * 原书源码：[https://github.com/mmp/pbrt-v4](https://github.com/mmp/pbrt-v4)
-### 中译版讨论区
-[https://github.com/kanition/pbrtbook/discussions](https://github.com/kanition/pbrtbook/discussions)
-### 我要报错
-[https://github.com/kanition/pbrtbook/issues/new/choose](https://github.com/kanition/pbrtbook/issues/new/choose)
+
 
 **欢迎提出宝贵意见和建议。如果你发现本书存在错误，请一定要告诉我们！**
-
-### 翻译进度
-[https://github.com/kanition/pbrtbook/projects](https://github.com/kanition/pbrtbook/projects)
 
 ### 编译指南
 [https://github.com/kanition/pbrtbook/blob/main/CONTRIBUTING.md](https://github.com/kanition/pbrtbook/blob/main/CONTRIBUTING.md)

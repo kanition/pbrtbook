@@ -653,9 +653,9 @@ for (const `\refvar{BVHPrimitiveInfo}{}` &pi : primitiveInfo)
     bounds = `\refvar[Union2]{Union}{}`(bounds, pi.`\refvar{centroid}{}`);
 \end{lstlisting}
 
-有了整体边界，我现在可以为每个图元计算莫顿码了。
+有了整体边界，我们现在可以为每个图元计算莫顿码了。
 这是非常轻量的计算，但假定可能有数百万图元，则它是值得并行化的。
-注意下面512的循环块尺寸传入\refvar{ParallelFor}{()}；
+注意下面把512的循环块尺寸传入\refvar{ParallelFor}{()}；
 这让工作线程每次要处理512组图元而不是默认的一组。
 因为每个图元计算莫顿码要执行的工作量相对较小，
 这粒度更好地把分布式任务的开销分摊给了工作线程。
@@ -867,4 +867,73 @@ struct `\initvar{LBVHTreelet}{}` {
     \label{fig:4.12}
 \end{figure}
 
-回想\reffig{4.8}中
+回想\reffig{4.8}中，莫顿码高位值匹配的点集位于原始盒中一个幂2对齐和幂2边长的子集内。
+因为我们已经用莫顿编码值对数组{\ttfamily mortonPrims}排过序了，
+所以高位值匹配的图元已经位于一段连续数组中。
+
+这里我们将求30位莫顿码中有相同的高12位对应的图元集。
+通过线性浏览数组{\ttfamily mortonPrims}来求得群集并
+找到这12位中有任何一位发生变化的地方。
+这对应了在$2^{12}=4096$个规范网格中对图元聚类，
+每维有$2^4=16$个格子。
+实践中，许多网格是空的，
+尽管这里我们仍然希望求得许多独立的群集。
+\begin{lstlisting}
+`\initcode{Find intervals of primitives for each treelet}{=}`
+std::vector<`\refvar{LBVHTreelet}{}`> treeletsToBuild;
+for (int start = 0, end = 1; end <= (int)mortonPrims.size(); ++end) {
+    uint32_t mask = 0b00111111111111000000000000000000;
+    if (end == (int)mortonPrims.size() ||
+        ((mortonPrims[start].`\refvar{mortonCode}{}` & mask) !=
+         (mortonPrims[end].`\refvar{mortonCode}{}` & mask))) {
+        `\refcode{Add entry to treeletsToBuild for this treelet}{}`
+        start = end;
+    }
+}
+\end{lstlisting}
+
+当为一个小树求得一个图元群集后，就立即为它分配\refvar{BVHBuildNode}{}
+（回想一个BVH中的节点数量不超过叶子节点数量的两倍，而后者又不超过图元数量）。
+在现在的串行执行阶段中预分配这些内存比在LBVH的并行构建中分配更简单。
+
+这里的一个重要细节是传入\refvar[MemoryArena:Alloc2]{MemoryArena::Alloc}{()}的{\ttfamily false}值；
+它表示不要执行正在分配的底层对象的构造函数。
+令人惊讶的是，运行\refvar{BVHBuildNode}{}构造函数会引入很大开销
+并明显降低构建HLBVH时的整体性能。
+因为在后面的代码中\refvar{BVHBuildNode}{}的所有成员都会初始化，
+所以无论如何这里都没必要用构造函数执行初始化。
+
+\begin{lstlisting}
+`\initcode{Add entry to treeletsToBuild for this treelet}{=}`
+int nPrimitives = end - start;
+int maxBVHNodes = 2 * nPrimitives - 1;
+`\refvar{BVHBuildNode}{}` *nodes = arena.`\refvar[MemoryArena:Alloc2]{Alloc}{}`<`\refvar{BVHBuildNode}{}`>(maxBVHNodes, false);
+treeletsToBuild.push_back({start, nPrimitives, nodes});
+\end{lstlisting}
+
+一旦每个小树的图元都定好了，我们就可以并行地为它们创建LBVH了。
+当构建完成后，每个\refvar{LBVHTreelet}{}的指针\refvar{buildNodes}{}会指向相应LBVH的根。
+
+工作线程在构建LBVH时有两个地方必须相互配合。
+第一，需要计算所有LBVH中的节点总数并通过传入\refvar{HLBVHBuild}{()}的
+指针{\ttfamily totalNode}返回。
+第二，当为LBVH创建叶子节点时，
+需要数组{\ttfamily orderedPrims}的连续一段来
+记录叶子节点中图元的索引。
+我们的实现为两者都使用了原子变量——
+{\ttfamily atomicTotal}跟踪节点的数目，
+{\ttfamily orderedPrimsOffset}跟踪{\ttfamily orderedPrims}下一有效项的索引。
+\begin{lstlisting}
+`\initcode{Create LBVHs for treelets in parallel}{=}`
+std::atomic<int> atomicTotal(0), orderedPrimsOffset(0);
+orderedPrims.resize(primitives.size());
+`\refvar{ParallelFor}{}`(
+    [&](int i) {
+        `\refcode{Generate ith LBVH treelet}{}`
+    }, treeletsToBuild.size());
+*totalNodes = atomicTotal;
+\end{lstlisting}
+
+构建小树的工作由\refvar{emitLBVH}{()}执行，
+它取用形心位于某空间区域内的图元并不断用划分平面
+沿着三轴之一上的区域中心将当前空间区域划分为两半。

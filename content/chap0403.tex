@@ -937,3 +937,145 @@ orderedPrims.resize(primitives.size());
 构建小树的工作由\refvar{emitLBVH}{()}执行，
 它取用形心位于某空间区域内的图元并不断用划分平面
 沿着三轴之一上的区域中心将当前空间区域划分为两半。
+
+注意到\refvar{emitLBVH}{()}没有用
+指向原子变量{\ttfamily atomicTotal}的指针来计数创建的节点，
+而是更新一个非原子局部变量。
+然后当每棵小树建成时这里的代码片只对每棵小树更新一次{\ttfamily atomicTotal}。
+该方法比让工作线程在其执行过程中频繁修改{\ttfamily atomicTotal}具有明显更好的性能
+（见附录\refsub{内存连续模型与性能}关于多核内存连续模型开销的讨论）。
+\begin{lstlisting}
+`\initcode{Generate ith LBVH treelet}{=}`
+int nodesCreated = 0;
+const int firstBitIndex = 29 - 12;
+`\refvar{LBVHTreelet}{}` &tr = treeletsToBuild[i];
+tr.`\refvar{buildNodes}{}` = 
+    `\refvar{emitLBVH}{}`(tr.`\refvar{buildNodes}{}`, primitiveInfo, &mortonPrims[tr.`\refvar{startIndex}{}`],
+             tr.`\refvar[LBVHTreelet:nPrimitives]{nPrimitives}{}`, &nodesCreated, orderedPrims,
+             &orderedPrimsOffset, firstBitIndex);
+atomicTotal += nodesCreated;
+\end{lstlisting}
+
+幸好有莫顿编码，当前空间区域不需要在\refvar{emitLBVH}{()}中显式表示：
+传入的有序{\ttfamily mortonPrims}有一些匹配的高位，反过来对应了一个空间框。
+对于莫顿码中剩下的每一位，该函数尝试沿着对应于数位{\ttfamily bitIndex}的平面来划分图元
+（回想\reffig{4.8}(d)），然后再递归地调用自己。
+尝试用来划分的下一位索引被作为该函数的最后一个参数传入：它最初为$29-12$，
+因为29是从零计起的第30位索引，而我们之前用了高12位莫顿码值来聚类图元；
+所以，我们知道那些数位都一定匹配该群集。
+\begin{lstlisting}
+`\refcode{BVHAccel Method Definitions}{+=}\lastnext{BVHAccelMethodDefinitions}`
+`\refvar{BVHBuildNode}{}` *`\refvar{BVHAccel}{}`::`\initvar{emitLBVH}{}`(`\refvar{BVHBuildNode}{}` *&buildNodes,
+        const std::vector<`\refvar{BVHPrimitiveInfo}{}`> &primitiveInfo,
+        `\refvar{MortonPrimitive}{}` *mortonPrims, int nPrimitives, int *totalNodes,
+        std::vector<std::shared_ptr<`\refvar{Primitive}{}`>> &orderedPrims,
+        std::atomic<int> *orderedPrimsOffset, int bitIndex) const {
+    if (bitIndex == -1 || nPrimitives < maxPrimsInNode) {
+        `\refcode{Create and return leaf node of LBVH treelet}{}`
+    } else {
+        int mask = 1 << bitIndex;
+        `\refcode{Advance to next subtree level if there's no LBVH split for this bit}{}`
+        `\refcode{Find LBVH split point for this dimension}{}`
+        `\refcode{Create and return interior LBVH node}{}`
+    }
+}
+\end{lstlisting}
+
+在\refvar{emitLBVH}{()}用最后低位划分完图元后，
+不可能再有更多划分了，就创建一个叶子节点。
+或者它也可以在只有很少的图元时就停止并创建叶子节点。
+
+回想{\ttfamily orderedPrimsOffset}是数组{\ttfamily orderedPrims}中
+下一有效元素的偏置量。
+这里，对{\ttfamily fetch\_add()}的调用原子地将{\ttfamily nPrimitives}的值加到\newline
+{\ttfamily orderedPrimsOffset}上并返回相加前它的旧值。
+因为这些计算是原子的，多个LBVH构建线程可以
+同时分割数组{\ttfamily orderedPrims}中的空间且没有数据竞争。
+有了数组中的空间，叶子的构建和之前\refcode{Create leaf BVHBuildNode}{}中实现的方法一样。
+\begin{lstlisting}
+`\initcode{Create and return leaf node of LBVH treelet}{=}`
+(*totalNodes)++;
+`\refvar{BVHBuildNode}{}` *node = buildNodes++;
+`\refvar{Bounds3f}{}` bounds;
+int firstPrimOffset = orderedPrimsOffset->fetch_add(nPrimitives);
+for (int i = 0; i < nPrimitives; ++i) {
+    int primitiveIndex = mortonPrims[i].`\refvar{primitiveIndex}{}`;
+    orderedPrims[firstPrimOffset + i] = primitives[primitiveIndex];
+    bounds = `\refvar[Union2]{Union}{}`(bounds, primitiveInfo[primitiveIndex].`\refvar[BVHPrimitiveInfo::bounds]{bounds}{}`);
+}
+node->`\refvar{InitLeaf}{}`(firstPrimOffset, nPrimitives, bounds);
+return node;
+\end{lstlisting}
+
+可能有所有图元都位于划分平面同一侧的情况；因为图元按其莫顿索引排序，
+可以通过看该范围内第一个和最后一个图元对于该平面是否有相同的数位来高效检测该情况。
+这种情况下，\refvar{emitLBVH}{()}行进到下一位而不会无用地创建一个节点。
+\begin{lstlisting}
+`\initcode{Advance to next subtree level if there's no LBVH split for this bit}{=}`
+if ((mortonPrims[0].`\refvar{mortonCode}{}` & mask) ==
+    (mortonPrims[nPrimitives - 1].`\refvar{mortonCode}{}` & mask))
+    return `\refvar{emitLBVH}{}`(buildNodes, primitiveInfo, mortonPrims, nPrimitives,
+                    totalNodes, orderedPrims, orderedPrimsOffset,
+                    bitIndex - 1);
+\end{lstlisting}
+
+如果划分平面两侧都有图元，则二分搜索会高效地找到
+当前图元集中第{\ttfamily bitIndex}位从0变为1的划分点。
+\begin{lstlisting}
+`\initcode{Find LBVH split point for this dimension}{=}`
+int searchStart = 0, searchEnd = nPrimitives - 1;
+while (searchStart + 1 != searchEnd) {
+    int mid = (searchStart + searchEnd) / 2;
+    if ((mortonPrims[searchStart].`\refvar{mortonCode}{}` & mask) ==
+        (mortonPrims[mid].`\refvar{mortonCode}{}` & mask))
+        searchStart = mid;
+    else
+        searchEnd = mid;
+}
+int splitOffset = searchEnd;
+\end{lstlisting}
+
+有了划分偏置量，该方法现在可以声明一个节点用作中间节点
+并为划出的两个图元集递归地构建LBVH了。
+注意到莫顿编码还带来了一个方便：
+不需要为了划分而复制或记录数组{\ttfamily mortonPrims}中的项：
+因为它们都按莫顿码值排序了且从高到低处理数位，
+两部分图元已经在划分平面的正确一侧。
+\begin{lstlisting}
+`\initcode{Create and return interior LBVH node}{=}`
+(*totalNodes)++;
+`\refvar{BVHBuildNode}{}` *node = buildNodes++;
+`\refvar{BVHBuildNode}{}` *lbvh[2] = {
+    `\refvar{emitLBVH}{}`(buildNodes, primitiveInfo, mortonPrims, splitOffset,
+             totalNodes, orderedPrims, orderedPrimsOffset, bitIndex - 1),
+    `\refvar{emitLBVH}{}`(buildNodes, primitiveInfo, &mortonPrims[splitOffset],
+             nPrimitives - splitOffset, totalNodes, orderedPrims,
+             orderedPrimsOffset, bitIndex - 1)
+};
+int axis = bitIndex % 3;
+node->`\refvar{InitInterior}{}`(axis, lbvh[0], lbvh[1]);
+return node;
+\end{lstlisting}
+
+一旦创建好所有LBVH小树，
+\refvar{buildUpperSAH}{()}就为所有小树创建一个BVH。
+因为它们通常只有几十个或几百个（无论如何不超过4096），
+该步骤花的时间很少。
+\begin{lstlisting}
+`\initcode{Create and return SAH BVH from LBVH treelets}{=}`
+std::vector<`\refvar{BVHBuildNode}{}` *> finishedTreelets;
+for (`\refvar{LBVHTreelet}{}` &treelet : treeletsToBuild)
+    finishedTreelets.push_back(treelet.`\refvar{buildNodes}{}`);
+return `\refvar{buildUpperSAH}{}`(arena, finishedTreelets, 0,
+                     finishedTreelets.size(), totalNodes);
+\end{lstlisting}
+
+这里不介绍该方法的实现，
+因为它和完全基于SAH的BVH构建遵循相同的方法，
+只不过是在小树根节点上而不是在场景图元上进行。
+\begin{lstlisting}
+`\initcode{BVHAccel Private Methods}{=}`
+`\refvar{BVHBuildNode}{}` *`\initvar{buildUpperSAH}{}`(`\refvar{MemoryArena}{}` &arena,
+    std::vector<`\refvar{BVHBuildNode}{}` *> &treeletRoots, int start, int end,
+    int *totalNodes) const;
+\end{lstlisting}

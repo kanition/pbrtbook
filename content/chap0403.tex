@@ -921,7 +921,7 @@ treeletsToBuild.push_back({start, nPrimitives, nodes});
 需要数组{\ttfamily orderedPrims}的连续一段来
 记录叶子节点中图元的索引。
 我们的实现为两者都使用了原子变量——
-{\ttfamily atomicTotal}跟踪节点的数目，
+{\ttfamily atomicTotal}跟踪节点数目，
 {\ttfamily orderedPrimsOffset}跟踪{\ttfamily orderedPrims}下一有效项的索引。
 \begin{lstlisting}
 `\initcode{Create LBVHs for treelets in parallel}{=}`
@@ -986,7 +986,7 @@ atomicTotal += nodesCreated;
 或者它也可以在只有很少的图元时就停止并创建叶子节点。
 
 回想{\ttfamily orderedPrimsOffset}是数组{\ttfamily orderedPrims}中
-下一有效元素的偏置量。
+下一有效元素的偏移量。
 这里，对{\ttfamily fetch\_add()}的调用原子地将{\ttfamily nPrimitives}的值加到\newline
 {\ttfamily orderedPrimsOffset}上并返回相加前它的旧值。
 因为这些计算是原子的，多个LBVH构建线程可以
@@ -1035,7 +1035,7 @@ while (searchStart + 1 != searchEnd) {
 int splitOffset = searchEnd;
 \end{lstlisting}
 
-有了划分偏置量，该方法现在可以声明一个节点用作中间节点
+有了划分偏移量，该方法现在可以声明一个节点用作内部节点
 并为划出的两个图元集递归地构建LBVH了。
 注意到莫顿编码还带来了一个方便：
 不需要为了划分而复制或记录数组{\ttfamily mortonPrims}中的项：
@@ -1078,4 +1078,95 @@ return `\refvar{buildUpperSAH}{}`(arena, finishedTreelets, 0,
 `\refvar{BVHBuildNode}{}` *`\initvar{buildUpperSAH}{}`(`\refvar{MemoryArena}{}` &arena,
     std::vector<`\refvar{BVHBuildNode}{}` *> &treeletRoots, int start, int end,
     int *totalNodes) const;
+\end{lstlisting}
+
+\subsection{为遍历而压实的BVH}
+一旦建好BVH树，最后一步就是将其转换为紧凑的\sidenote{译者注：原文compact。}表达——
+这样做能提升缓存、内存以及整个系统的性能。
+最后的BVH存于内存中的一个线性数组内。
+原始树的节点按\keyindex{深度优先}{depth-first}{}顺序排布，
+即意味着在内存中每个内部节点的第一个孩子会立刻排在该节点之后。
+这种情况下，只需要显式保存每个内部节点第二个孩子的偏移量。
+见\reffig{4.13}关于树的拓扑与内存中节点顺序之间关系的图示。
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap04/BVHlinearization.tex}
+    \caption{BVH在内存中的线性排布。BVH的节点（左）按深度优先顺序（右）存储于内存中。
+    因此，对于该树的任意中间节点（例如该例中的A和B），
+    第一个孩子可在内存中父节点之后立刻找到。
+    第二个孩子则通过偏移指针找到，这里用带箭头的线表示。
+    树的叶子结点（D、E和C）没有孩子。}
+    \label{fig:4.13}
+\end{figure}
+
+结构体\refvar{LinearBVHNode}{}保存遍历BVH所需的信息。
+除了每个节点的边界框，它还为每个叶子节点保存偏移量和该节点内的图元数量。
+对于内部节点，它保存了第二个孩子的偏移量以及构建层次时
+是沿哪个坐标轴划分图元的；
+这些信息用于下面的遍历例程以沿着光线按从前往后的顺序访问节点。
+\begin{lstlisting}
+`\refcode{BVHAccel Local Declarations}{+=}\lastcode{BVHAccelLocalDeclarations}`
+struct `\initvar{LinearBVHNode}{}` {
+    `\refvar{Bounds3f}{}` `\initvar[LinearBVHNode::bounds]{bounds}{}`;
+    union {
+        int `\initvar{primitivesOffset}{}`;    // leaf
+        int `\initvar{secondChildOffset}{}`;   // interior
+    };
+    uint16_t `\initvar[LinearBVHNode::nPrimitives]{nPrimitives}{}`;  // 0 -> interior node
+    uint8_t `\initvar[LinearBVHNode::axis]{axis}{}`;          // interior node: xyz
+    uint8_t `\initvar[LinearBVHNode::pad]{pad}{}`[1];        // ensure 32 byte total size
+};
+\end{lstlisting}
+
+该结构体被填充了以保证是32字节大小。
+这样做保证了如果分配节点时第一个节点是对齐\keyindex{缓存行}{cache line}{}的，
+则后续节点不会跨越缓存行
+（只要缓存行大小至少为32字节，即现代CPU架构的情况）。
+
+建好的树被方法\refvar{flattenBVHTree}{()}变换为\refvar{LinearBVHNode}{}表示，
+它执行深度优先遍历并在内存中按线性顺序存储节点。
+\begin{lstlisting}
+`\initcode{Compute representation of depth-first traversal of BVH tree}{=}`
+nodes = AllocAligned<`\refvar{LinearBVHNode}{}`>(totalNodes);
+int offset = 0;
+`\refvar{flattenBVHTree}{}`(root, &offset);
+\end{lstlisting}
+
+指向\refvar{LinearBVHNode}{}数组的指针保存为\refvar{BVHAccel}{}的一个成员变量，
+所以它可以在\refvar{BVHAccel}{}的析构函数中释放。
+\begin{lstlisting}
+`\refcode{BVHAccel Private Data}{+=}\lastcode{BVHAccelPrivateData}`
+`\refvar{LinearBVHNode}{}` *`\initvar[BVHAccel::nodes]{nodes}{}` = nullptr;
+\end{lstlisting}
+
+将树展平为线性表示很简单；
+参数{\ttfamily *offset}跟踪当前在数组\refvar{BVHAccel::nodes}{}
+中的偏移量。注意在递归调用处理其孩子之前
+（如果该节点是内部节点）要把当前节点添加到该数组中。
+\begin{lstlisting}
+`\refcode{BVHAccel Method Definitions}{+=}\lastnext{BVHAccelMethodDefinitions}`
+int `\refvar{BVHAccel}{}`::`\initvar{flattenBVHTree}{}`(`\refvar{BVHBuildNode}{}` *node, int *offset) {
+    `\refvar{LinearBVHNode}{}` *linearNode = &`\refvar[BVHAccel::nodes]{nodes}{}`[*offset];
+    linearNode->`\refvar[LinearBVHNode::bounds]{bounds}{}` = node->`\refvar[BVHBuildNode::bounds]{bounds}{}`;
+    int myOffset = (*offset)++;
+    if (node->`\refvar[BVHBuildNode:nPrimitives]{nPrimitives}{}` > 0) {
+        linearNode->`\refvar{primitivesOffset}{}` = node->`\refvar{firstPrimOffset}{}`;
+        linearNode->`\refvar[LinearBVHNode::nPrimitives]{nPrimitives}{}` = node->`\refvar[BVHBuildNode:nPrimitives]{nPrimitives}{}`;
+    } else {
+        `\refcode{Create interior flattened BVH node}{}`
+    }
+    return myOffset;
+}
+\end{lstlisting}
+
+在内部节点时，递归调用会展平两棵子树。
+第一棵如愿在数组中当前节点之后立刻结束，
+而其递归调用\refvar{flattenBVHTree}{()}返回的第二棵偏移量
+则保存在该节点的成员\refvar{secondChildOffset}{}中。
+\begin{lstlisting}
+`\initcode{Create interior flattened BVH node}{=}`
+linearNode->`\refvar[LinearBVHNode::axis]{axis}{}` = node->`\refvar{splitAxis}{}`;
+linearNode->`\refvar[LinearBVHNode::nPrimitives]{nPrimitives}{}` = 0;
+`\refvar{flattenBVHTree}{}`(node->`\refvar[BVHBuildNode::children]{children}{}`[0], offset);
+linearNode->`\refvar{secondChildOffset}{}` =
+    `\refvar{flattenBVHTree}{}`(node->`\refvar[BVHBuildNode::children]{children}{}`[1], offset);
 \end{lstlisting}

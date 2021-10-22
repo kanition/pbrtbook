@@ -653,9 +653,9 @@ for (const `\refvar{BVHPrimitiveInfo}{}` &pi : primitiveInfo)
     bounds = `\refvar[Union2]{Union}{}`(bounds, pi.`\refvar{centroid}{}`);
 \end{lstlisting}
 
-有了整体边界，我现在可以为每个图元计算莫顿码了。
+有了整体边界，我们现在可以为每个图元计算莫顿码了。
 这是非常轻量的计算，但假定可能有数百万图元，则它是值得并行化的。
-注意下面512的循环块尺寸传入\refvar{ParallelFor}{()}；
+注意下面把512的循环块尺寸传入\refvar{ParallelFor}{()}；
 这让工作线程每次要处理512组图元而不是默认的一组。
 因为每个图元计算莫顿码要执行的工作量相对较小，
 这粒度更好地把分布式任务的开销分摊给了工作线程。
@@ -867,4 +867,400 @@ struct `\initvar{LBVHTreelet}{}` {
     \label{fig:4.12}
 \end{figure}
 
-回想\reffig{4.8}中
+回想\reffig{4.8}中，莫顿码高位值匹配的点集位于原始盒中一个幂2对齐和幂2边长的子集内。
+因为我们已经用莫顿编码值对数组{\ttfamily mortonPrims}排过序了，
+所以高位值匹配的图元已经位于一段连续数组中。
+
+这里我们将求30位莫顿码中有相同的高12位对应的图元集。
+通过线性浏览数组{\ttfamily mortonPrims}来求得群集并
+找到这12位中有任何一位发生变化的地方。
+这对应了在$2^{12}=4096$个规范网格中对图元聚类，
+每维有$2^4=16$个格子。
+实践中，许多网格是空的，
+尽管这里我们仍然希望求得许多独立的群集。
+\begin{lstlisting}
+`\initcode{Find intervals of primitives for each treelet}{=}`
+std::vector<`\refvar{LBVHTreelet}{}`> treeletsToBuild;
+for (int start = 0, end = 1; end <= (int)mortonPrims.size(); ++end) {
+    uint32_t mask = 0b00111111111111000000000000000000;
+    if (end == (int)mortonPrims.size() ||
+        ((mortonPrims[start].`\refvar{mortonCode}{}` & mask) !=
+         (mortonPrims[end].`\refvar{mortonCode}{}` & mask))) {
+        `\refcode{Add entry to treeletsToBuild for this treelet}{}`
+        start = end;
+    }
+}
+\end{lstlisting}
+
+当为一个小树求得一个图元群集后，就立即为它分配\refvar{BVHBuildNode}{}
+（回想一个BVH中的节点数量不超过叶子节点数量的两倍，而后者又不超过图元数量）。
+在现在的串行执行阶段中预分配这些内存比在LBVH的并行构建中分配更简单。
+
+这里的一个重要细节是传入\refvar[MemoryArena:Alloc2]{MemoryArena::Alloc}{()}的{\ttfamily false}值；
+它表示不要执行正在分配的底层对象的构造函数。
+令人惊讶的是，运行\refvar{BVHBuildNode}{}构造函数会引入很大开销
+并明显降低构建HLBVH时的整体性能。
+因为在后面的代码中\refvar{BVHBuildNode}{}的所有成员都会初始化，
+所以无论如何这里都没必要用构造函数执行初始化。
+
+\begin{lstlisting}
+`\initcode{Add entry to treeletsToBuild for this treelet}{=}`
+int nPrimitives = end - start;
+int maxBVHNodes = 2 * nPrimitives - 1;
+`\refvar{BVHBuildNode}{}` *nodes = arena.`\refvar[MemoryArena:Alloc2]{Alloc}{}`<`\refvar{BVHBuildNode}{}`>(maxBVHNodes, false);
+treeletsToBuild.push_back({start, nPrimitives, nodes});
+\end{lstlisting}
+
+一旦每个小树的图元都定好了，我们就可以并行地为它们创建LBVH了。
+当构建完成后，每个\refvar{LBVHTreelet}{}的指针\refvar{buildNodes}{}会指向相应LBVH的根。
+
+工作线程在构建LBVH时有两个地方必须相互配合。
+第一，需要计算所有LBVH中的节点总数并通过传入\refvar{HLBVHBuild}{()}的
+指针{\ttfamily totalNode}返回。
+第二，当为LBVH创建叶子节点时，
+需要数组{\ttfamily orderedPrims}的连续一段来
+记录叶子节点中图元的索引。
+我们的实现为两者都使用了原子变量——
+{\ttfamily atomicTotal}跟踪节点数目，
+{\ttfamily orderedPrimsOffset}跟踪{\ttfamily orderedPrims}下一有效项的索引。
+\begin{lstlisting}
+`\initcode{Create LBVHs for treelets in parallel}{=}`
+std::atomic<int> atomicTotal(0), orderedPrimsOffset(0);
+orderedPrims.resize(primitives.size());
+`\refvar{ParallelFor}{}`(
+    [&](int i) {
+        `\refcode{Generate ith LBVH treelet}{}`
+    }, treeletsToBuild.size());
+*totalNodes = atomicTotal;
+\end{lstlisting}
+
+构建小树的工作由\refvar{emitLBVH}{()}执行，
+它取用形心位于某空间区域内的图元并不断用划分平面
+沿着三轴之一上的区域中心将当前空间区域划分为两半。
+
+注意到\refvar{emitLBVH}{()}没有用
+指向原子变量{\ttfamily atomicTotal}的指针来计数创建的节点，
+而是更新一个非原子局部变量。
+然后当每棵小树建成时这里的代码片只对每棵小树更新一次{\ttfamily atomicTotal}。
+该方法比让工作线程在其执行过程中频繁修改{\ttfamily atomicTotal}具有明显更好的性能
+（见附录\refsub{内存连续模型与性能}关于多核内存连续模型开销的讨论）。
+\begin{lstlisting}
+`\initcode{Generate ith LBVH treelet}{=}`
+int nodesCreated = 0;
+const int firstBitIndex = 29 - 12;
+`\refvar{LBVHTreelet}{}` &tr = treeletsToBuild[i];
+tr.`\refvar{buildNodes}{}` = 
+    `\refvar{emitLBVH}{}`(tr.`\refvar{buildNodes}{}`, primitiveInfo, &mortonPrims[tr.`\refvar{startIndex}{}`],
+             tr.`\refvar[LBVHTreelet:nPrimitives]{nPrimitives}{}`, &nodesCreated, orderedPrims,
+             &orderedPrimsOffset, firstBitIndex);
+atomicTotal += nodesCreated;
+\end{lstlisting}
+
+幸好有莫顿编码，当前空间区域不需要在\refvar{emitLBVH}{()}中显式表示：
+传入的有序{\ttfamily mortonPrims}有一些匹配的高位，反过来对应了一个空间框。
+对于莫顿码中剩下的每一位，该函数尝试沿着对应于数位{\ttfamily bitIndex}的平面来划分图元
+（回想\reffig{4.8}(d)），然后再递归地调用自己。
+尝试用来划分的下一位索引被作为该函数的最后一个参数传入：它最初为$29-12$，
+因为29是从零计起的第30位索引，而我们之前用了高12位莫顿码值来聚类图元；
+所以，我们知道那些数位都一定匹配该群集。
+\begin{lstlisting}
+`\refcode{BVHAccel Method Definitions}{+=}\lastnext{BVHAccelMethodDefinitions}`
+`\refvar{BVHBuildNode}{}` *`\refvar{BVHAccel}{}`::`\initvar{emitLBVH}{}`(`\refvar{BVHBuildNode}{}` *&buildNodes,
+        const std::vector<`\refvar{BVHPrimitiveInfo}{}`> &primitiveInfo,
+        `\refvar{MortonPrimitive}{}` *mortonPrims, int nPrimitives, int *totalNodes,
+        std::vector<std::shared_ptr<`\refvar{Primitive}{}`>> &orderedPrims,
+        std::atomic<int> *orderedPrimsOffset, int bitIndex) const {
+    if (bitIndex == -1 || nPrimitives < maxPrimsInNode) {
+        `\refcode{Create and return leaf node of LBVH treelet}{}`
+    } else {
+        int mask = 1 << bitIndex;
+        `\refcode{Advance to next subtree level if there's no LBVH split for this bit}{}`
+        `\refcode{Find LBVH split point for this dimension}{}`
+        `\refcode{Create and return interior LBVH node}{}`
+    }
+}
+\end{lstlisting}
+
+在\refvar{emitLBVH}{()}用最后低位划分完图元后，
+不可能再有更多划分了，就创建一个叶子节点。
+或者它也可以在只有很少的图元时就停止并创建叶子节点。
+
+回想{\ttfamily orderedPrimsOffset}是数组{\ttfamily orderedPrims}中
+下一有效元素的偏移量。
+这里，对{\ttfamily fetch\_add()}的调用原子地将{\ttfamily nPrimitives}的值加到\newline
+{\ttfamily orderedPrimsOffset}上并返回相加前它的旧值。
+因为这些计算是原子的，多个LBVH构建线程可以
+同时分割数组{\ttfamily orderedPrims}中的空间且没有数据竞争。
+有了数组中的空间，叶子的构建和之前\refcode{Create leaf BVHBuildNode}{}中实现的方法一样。
+\begin{lstlisting}
+`\initcode{Create and return leaf node of LBVH treelet}{=}`
+(*totalNodes)++;
+`\refvar{BVHBuildNode}{}` *node = buildNodes++;
+`\refvar{Bounds3f}{}` bounds;
+int firstPrimOffset = orderedPrimsOffset->fetch_add(nPrimitives);
+for (int i = 0; i < nPrimitives; ++i) {
+    int primitiveIndex = mortonPrims[i].`\refvar{primitiveIndex}{}`;
+    orderedPrims[firstPrimOffset + i] = primitives[primitiveIndex];
+    bounds = `\refvar[Union2]{Union}{}`(bounds, primitiveInfo[primitiveIndex].`\refvar[BVHPrimitiveInfo::bounds]{bounds}{}`);
+}
+node->`\refvar{InitLeaf}{}`(firstPrimOffset, nPrimitives, bounds);
+return node;
+\end{lstlisting}
+
+可能有所有图元都位于划分平面同一侧的情况；因为图元按其莫顿索引排序，
+可以通过看该范围内第一个和最后一个图元对于该平面是否有相同的数位来高效检测该情况。
+这种情况下，\refvar{emitLBVH}{()}行进到下一位而不会无用地创建一个节点。
+\begin{lstlisting}
+`\initcode{Advance to next subtree level if there's no LBVH split for this bit}{=}`
+if ((mortonPrims[0].`\refvar{mortonCode}{}` & mask) ==
+    (mortonPrims[nPrimitives - 1].`\refvar{mortonCode}{}` & mask))
+    return `\refvar{emitLBVH}{}`(buildNodes, primitiveInfo, mortonPrims, nPrimitives,
+                    totalNodes, orderedPrims, orderedPrimsOffset,
+                    bitIndex - 1);
+\end{lstlisting}
+
+如果划分平面两侧都有图元，则二分搜索会高效地找到
+当前图元集中第{\ttfamily bitIndex}位从0变为1的划分点。
+\begin{lstlisting}
+`\initcode{Find LBVH split point for this dimension}{=}`
+int searchStart = 0, searchEnd = nPrimitives - 1;
+while (searchStart + 1 != searchEnd) {
+    int mid = (searchStart + searchEnd) / 2;
+    if ((mortonPrims[searchStart].`\refvar{mortonCode}{}` & mask) ==
+        (mortonPrims[mid].`\refvar{mortonCode}{}` & mask))
+        searchStart = mid;
+    else
+        searchEnd = mid;
+}
+int splitOffset = searchEnd;
+\end{lstlisting}
+
+有了划分偏移量，该方法现在可以声明一个节点用作内部节点
+并为划出的两个图元集递归地构建LBVH了。
+注意到莫顿编码还带来了一个方便：
+不需要为了划分而复制或记录数组{\ttfamily mortonPrims}中的项：
+因为它们都按莫顿码值排序了且从高到低处理数位，
+两部分图元已经在划分平面的正确一侧。
+\begin{lstlisting}
+`\initcode{Create and return interior LBVH node}{=}`
+(*totalNodes)++;
+`\refvar{BVHBuildNode}{}` *node = buildNodes++;
+`\refvar{BVHBuildNode}{}` *lbvh[2] = {
+    `\refvar{emitLBVH}{}`(buildNodes, primitiveInfo, mortonPrims, splitOffset,
+             totalNodes, orderedPrims, orderedPrimsOffset, bitIndex - 1),
+    `\refvar{emitLBVH}{}`(buildNodes, primitiveInfo, &mortonPrims[splitOffset],
+             nPrimitives - splitOffset, totalNodes, orderedPrims,
+             orderedPrimsOffset, bitIndex - 1)
+};
+int axis = bitIndex % 3;
+node->`\refvar{InitInterior}{}`(axis, lbvh[0], lbvh[1]);
+return node;
+\end{lstlisting}
+
+一旦创建好所有LBVH小树，
+\refvar{buildUpperSAH}{()}就为所有小树创建一个BVH。
+因为它们通常只有几十个或几百个（无论如何不超过4096），
+该步骤花的时间很少。
+\begin{lstlisting}
+`\initcode{Create and return SAH BVH from LBVH treelets}{=}`
+std::vector<`\refvar{BVHBuildNode}{}` *> finishedTreelets;
+for (`\refvar{LBVHTreelet}{}` &treelet : treeletsToBuild)
+    finishedTreelets.push_back(treelet.`\refvar{buildNodes}{}`);
+return `\refvar{buildUpperSAH}{}`(arena, finishedTreelets, 0,
+                     finishedTreelets.size(), totalNodes);
+\end{lstlisting}
+
+这里不介绍该方法的实现，
+因为它和完全基于SAH的BVH构建遵循相同的方法，
+只不过是在小树根节点上而不是在场景图元上进行。
+\begin{lstlisting}
+`\initcode{BVHAccel Private Methods}{=}`
+`\refvar{BVHBuildNode}{}` *`\initvar{buildUpperSAH}{}`(`\refvar{MemoryArena}{}` &arena,
+    std::vector<`\refvar{BVHBuildNode}{}` *> &treeletRoots, int start, int end,
+    int *totalNodes) const;
+\end{lstlisting}
+
+\subsection{为遍历而压实的BVH}
+一旦建好BVH树，最后一步就是将其转换为紧凑的\sidenote{译者注：原文compact。}表达——
+这样做能提升缓存、内存以及整个系统的性能。
+最后的BVH存于内存中的一个线性数组内。
+原始树的节点按\keyindex{深度优先}{depth-first}{}顺序排布，
+即意味着在内存中每个内部节点的第一个孩子会立刻排在该节点之后。
+这种情况下，只需要显式保存每个内部节点第二个孩子的偏移量。
+见\reffig{4.13}关于树的拓扑与内存中节点顺序之间关系的图示。
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap04/BVHlinearization.tex}
+    \caption{BVH在内存中的线性排布。BVH的节点（左）按深度优先顺序（右）存储于内存中。
+        因此，对于该树的任意中间节点（例如该例中的A和B），
+        第一个孩子可在内存中父节点之后立刻找到。
+        第二个孩子则通过偏移指针找到，这里用带箭头的线表示。
+        树的叶子结点（D、E和C）没有孩子。}
+    \label{fig:4.13}
+\end{figure}
+
+结构体\refvar{LinearBVHNode}{}保存遍历BVH所需的信息。
+除了每个节点的边界框，它还为每个叶子节点保存偏移量和该节点内的图元数量。
+对于内部节点，它保存了第二个孩子的偏移量以及构建层次时
+是沿哪个坐标轴划分图元的；
+这些信息用于下面的遍历例程以沿着光线按从前往后的顺序访问节点。
+\begin{lstlisting}
+`\refcode{BVHAccel Local Declarations}{+=}\lastcode{BVHAccelLocalDeclarations}`
+struct `\initvar{LinearBVHNode}{}` {
+    `\refvar{Bounds3f}{}` `\initvar[LinearBVHNode::bounds]{bounds}{}`;
+    union {
+        int `\initvar{primitivesOffset}{}`;    // leaf
+        int `\initvar{secondChildOffset}{}`;   // interior
+    };
+    uint16_t `\initvar[LinearBVHNode::nPrimitives]{nPrimitives}{}`;  // 0 -> interior node
+    uint8_t `\initvar[LinearBVHNode::axis]{axis}{}`;          // interior node: xyz
+    uint8_t `\initvar[LinearBVHNode::pad]{pad}{}`[1];        // ensure 32 byte total size
+};
+\end{lstlisting}
+
+该结构体被填充了以保证是32字节大小。
+这样做保证了如果分配节点时第一个节点是对齐\keyindex{缓存行}{cache line}{}的，
+则后续节点不会跨越缓存行
+（只要缓存行大小至少为32字节，即现代CPU架构的情况）。
+
+建好的树被方法\refvar{flattenBVHTree}{()}变换为\refvar{LinearBVHNode}{}表示，
+它执行深度优先遍历并在内存中按线性顺序存储节点。
+\begin{lstlisting}
+`\initcode{Compute representation of depth-first traversal of BVH tree}{=}`
+nodes = AllocAligned<`\refvar{LinearBVHNode}{}`>(totalNodes);
+int offset = 0;
+`\refvar{flattenBVHTree}{}`(root, &offset);
+\end{lstlisting}
+
+指向\refvar{LinearBVHNode}{}数组的指针保存为\refvar{BVHAccel}{}的一个成员变量，
+所以它可以在\refvar{BVHAccel}{}的析构函数中释放。
+\begin{lstlisting}
+`\refcode{BVHAccel Private Data}{+=}\lastcode{BVHAccelPrivateData}`
+`\refvar{LinearBVHNode}{}` *`\initvar[BVHAccel::nodes]{nodes}{}` = nullptr;
+\end{lstlisting}
+
+将树展平为线性表示很简单；
+参数{\ttfamily *offset}跟踪当前在数组\refvar{BVHAccel::nodes}{}
+中的偏移量。注意在递归调用处理其孩子之前
+（如果该节点是内部节点）要把当前节点添加到该数组中。
+\begin{lstlisting}
+`\refcode{BVHAccel Method Definitions}{+=}\lastnext{BVHAccelMethodDefinitions}`
+int `\refvar{BVHAccel}{}`::`\initvar{flattenBVHTree}{}`(`\refvar{BVHBuildNode}{}` *node, int *offset) {
+    `\refvar{LinearBVHNode}{}` *linearNode = &`\refvar[BVHAccel::nodes]{nodes}{}`[*offset];
+    linearNode->`\refvar[LinearBVHNode::bounds]{bounds}{}` = node->`\refvar[BVHBuildNode::bounds]{bounds}{}`;
+    int myOffset = (*offset)++;
+    if (node->`\refvar[BVHBuildNode:nPrimitives]{nPrimitives}{}` > 0) {
+        linearNode->`\refvar{primitivesOffset}{}` = node->`\refvar{firstPrimOffset}{}`;
+        linearNode->`\refvar[LinearBVHNode::nPrimitives]{nPrimitives}{}` = node->`\refvar[BVHBuildNode:nPrimitives]{nPrimitives}{}`;
+    } else {
+        `\refcode{Create interior flattened BVH node}{}`
+    }
+    return myOffset;
+}
+\end{lstlisting}
+
+在内部节点时，递归调用会展平两棵子树。
+第一棵如愿在数组中当前节点之后立刻结束，
+而其递归调用\refvar{flattenBVHTree}{()}返回的第二棵偏移量
+则保存在该节点的成员\refvar{secondChildOffset}{}中。
+\begin{lstlisting}
+`\initcode{Create interior flattened BVH node}{=}`
+linearNode->`\refvar[LinearBVHNode::axis]{axis}{}` = node->`\refvar{splitAxis}{}`;
+linearNode->`\refvar[LinearBVHNode::nPrimitives]{nPrimitives}{}` = 0;
+`\refvar{flattenBVHTree}{}`(node->`\refvar[BVHBuildNode::children]{children}{}`[0], offset);
+linearNode->`\refvar{secondChildOffset}{}` =
+    `\refvar{flattenBVHTree}{}`(node->`\refvar[BVHBuildNode::children]{children}{}`[1], offset);
+\end{lstlisting}
+
+\subsection{遍历}\label{sub:遍历}
+BVH的遍历代码非常简单——没有递归调用，只有少量数据用来维护当前遍历的状态。
+方法\refvar[BVHAccel::Intersect]{Intersect}{()}从
+预先计算一些与将要反复用到的光线相关的值开始。
+\begin{lstlisting}
+`\refcode{BVHAccel Method Definitions}{+=}\lastcode{BVHAccelMethodDefinitions}`
+bool `\refvar{BVHAccel}{}`::`\initvar[BVHAccel::Intersect]{Intersect}{}`(const `\refvar{Ray}{}` &ray,
+        `\refvar{SurfaceInteraction}{}` *isect) const {
+    bool hit = false;
+    `\refvar{Vector3f}{}` invDir(1 / ray.d.x, 1 / ray.d.y, 1 / ray.d.z);
+    int dirIsNeg[3] = { invDir.x < 0, invDir.y < 0, invDir.z < 0 };
+    `\refcode{Follow ray through BVH nodes to find primitive intersections}{}`
+    return hit;
+}
+\end{lstlisting}
+
+每当\refvar[BVHAccel::Intersect]{Intersect}{()}中的{\ttfamily while}循环开始一次迭代时，
+{\ttfamily currentNodeIndex}保有将要访问的节点在数组\refvar[BVHAccel::nodes]{nodes}{}中的偏移量。
+它起始于0值，表示树根。仍需要访问的节点存于数组{\ttfamily nodesToVisit[]}中，即充当一个栈；
+{\ttfamily toVisitOffset}存有栈中下一个可弹出元素的偏移量。
+\begin{lstlisting}
+`\initcode{Follow ray through BVH nodes to find primitive intersections}{=}`
+int toVisitOffset = 0, currentNodeIndex = 0;
+int nodesToVisit[64];
+while (true) {
+    const `\refvar{LinearBVHNode}{}` *node = &`\refvar[BVHAccel::nodes]{nodes}{}`[currentNodeIndex];
+    `\refcode{Check ray against BVH node}{}`
+}
+\end{lstlisting}
+
+对于每个节点，我们都检查光线是否与节点的边界框相交（或从其内部发射）。
+如果是我们就访问该节点，如果它是叶子节点就对其图元做相交测试，
+如果是内部节点就处理它的孩子。
+如果发现没有相交，就从{\ttfamily nodesToVisit[]}取出下一个将要访问的节点的偏移量
+（或者如果栈空了就完成遍历了）。
+\begin{lstlisting}
+`\initcode{Check ray against BVH node}{=}`
+if (node->`\refvar[LinearBVHNode::bounds]{bounds}{}`.`\refvar[Bounds3::IntersectP]{IntersectP}{}`(ray, invDir, dirIsNeg)) {
+    if (node->`\refvar[LinearBVHNode::nPrimitives]{nPrimitives}{}` > 0) {
+        `\refcode{Intersect ray with primitives in leaf BVH node}{}`
+    } else {
+        `\refcode{Put far BVH node on nodesToVisit stack, advance to near node}{}`
+    }
+} else {
+    if (toVisitOffset == 0) break;
+    currentNodeIndex = nodesToVisit[--toVisitOffset];
+}
+\end{lstlisting}
+
+如果当前节点是叶子，则该光线必须和它里面的图元做相交测试。
+然后从栈{\ttfamily nodesToVisit}中找到下一个要访问的节点；
+即使当前节点求得了交点，也必须访问剩下的节点，
+以防万一它们中有一个给出更近的交点。
+然而，如果求得一个交点，则该光线的\refvar{tMax}{}值将会更新为该相交距离；
+这样可以更高效地丢弃剩下的节点中任何比该距离更远的部分。
+\begin{lstlisting}
+`\initcode{Intersect ray with primitives in leaf BVH node}{=}`
+for (int i = 0; i < node->`\refvar[LinearBVHNode::nPrimitives]{nPrimitives}{}`; ++i)
+    if (`\refvar[BVHAccel::primitives]{primitives}{}`[node->`\refvar{primitivesOffset}{}` + i]->`\refvar[Primitive::Intersect]{Intersect}{}`(ray, isect))
+        hit = true;
+if (toVisitOffset == 0) break;
+currentNodeIndex = nodesToVisit[--toVisitOffset];
+\end{lstlisting}
+
+对于光线命中的内部节点，需要访问它的两个孩子。
+如上所述，万一与光线相交的图元在第一个里面，
+则访问光线穿过的第一个孩子再访问第二个是可取的，
+这样光线的\refvar{tMax}{}值就能更新，
+进而缩减光线的范围以及与之相交的边界框节点数目。
+
+一个执行从前往后遍历而不会因光线与两个子节点相交
+以及比较距离而带来开销的高效方法是使用光线方向向量
+在该节点划分图元时所沿的坐标轴上的符号：
+如果符号为负，我们应该先访问第二个孩子再访问第一个孩子，
+因为进入第二棵子树的图元在划分点的上面一侧
+（正号方向则反过来）。
+这样做很简单：先要访问的节点的偏移量被复制到{\ttfamily currentNodeIndex}，
+另一个节点的偏移量被加到栈{\ttfamily nodesToVisit}中
+（回想因为内存中节点按深度优先排列，第一个孩子正好在当前节点之后）。
+\begin{lstlisting}
+`\initcode{Put far BVH node on nodesToVisit stack, advance to near node}{=}`
+if (dirIsNeg[node->`\refvar[LinearBVHNode::axis]{axis}{}`]) {
+   nodesToVisit[toVisitOffset++] = currentNodeIndex + 1;
+   currentNodeIndex = node->`\refvar{secondChildOffset}{}`;
+} else {
+   nodesToVisit[toVisitOffset++] = node->`\refvar{secondChildOffset}{}`;
+   currentNodeIndex = currentNodeIndex + 1;
+}
+\end{lstlisting}
+
+方法{\initvar{BVHAccel::IntersectP}{()}}本质上和常规相交方法一样，有两处区别是，它调用了\refvar{Primitive}{}的
+方法\refvar[Primitive::IntersectP]{IntersectP}{()}而不是\refvar[Primitive::Intersect]{Intersect}{()}，
+以及当找到任何交点时就立刻停止遍历。

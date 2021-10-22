@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="Layer_1"
+   data-name="Layer 1"
+   viewBox="0 0 279.92 117.76"
+   version="1.1"
+   sodipodi:docname="BVHlinearization.svg"
+   inkscape:version="1.0.1 (3bc2e813f5, 2020-09-07)">
+  <metadata
+     id="metadata1211">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     id="namedview1209"
+     showgrid="false"
+     inkscape:zoom="1.964847"
+     inkscape:cx="132.40586"
+     inkscape:cy="144.70293"
+     inkscape:window-x="1912"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="Layer_1"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:snap-bbox="true"
+     inkscape:bbox-nodes="true"
+     inkscape:bbox-paths="true"
+     inkscape:snap-bbox-midpoints="true"
+     inkscape:snap-object-midpoints="true"
+     inkscape:snap-bbox-edge-midpoints="true" />
+  <defs
+     id="defs1140">
+    <rect
+       x="99.753314"
+       y="5.5984003"
+       width="24.17491"
+       height="20.103346"
+       id="rect5443" />
+    <style
+       id="style1138">.cls-1{fill:none;stroke:#000;stroke-miterlimit:10;}.cls-2{fill:#a6a6a6;}.cls-3{fill:#666;}</style>
+    <rect
+       x="99.753311"
+       y="5.5984001"
+       width="24.17491"
+       height="20.103346"
+       id="rect5443-0" />
+    <rect
+       x="99.753311"
+       y="5.5984001"
+       width="24.17491"
+       height="20.103346"
+       id="rect5456" />
+    <rect
+       x="99.753311"
+       y="5.5984001"
+       width="24.17491"
+       height="20.103346"
+       id="rect5443-0-4" />
+    <rect
+       x="99.753311"
+       y="5.5984001"
+       width="24.17491"
+       height="20.103346"
+       id="rect5492" />
+    <rect
+       x="99.753311"
+       y="5.5984001"
+       width="24.17491"
+       height="20.103346"
+       id="rect5443-0-9" />
+    <rect
+       x="99.753311"
+       y="5.5984001"
+       width="24.17491"
+       height="20.103346"
+       id="rect5492-6" />
+    <rect
+       x="99.753311"
+       y="5.5984001"
+       width="24.17491"
+       height="20.103346"
+       id="rect5443-0-97" />
+    <rect
+       x="99.753311"
+       y="5.5984001"
+       width="24.17491"
+       height="20.103346"
+       id="rect5492-3" />
+    <rect
+       x="99.753311"
+       y="5.5984001"
+       width="24.17491"
+       height="20.103346"
+       id="rect5443-7" />
+    <rect
+       x="99.753311"
+       y="5.5984001"
+       width="24.17491"
+       height="20.103346"
+       id="rect5558" />
+    <rect
+       x="99.753311"
+       y="5.5984001"
+       width="24.17491"
+       height="20.103346"
+       id="rect5443-0-6" />
+    <rect
+       x="99.753311"
+       y="5.5984001"
+       width="24.17491"
+       height="20.103346"
+       id="rect5586" />
+    <rect
+       x="99.753311"
+       y="5.5984001"
+       width="24.17491"
+       height="20.103346"
+       id="rect5443-0-9-3" />
+    <rect
+       x="99.753311"
+       y="5.5984001"
+       width="24.17491"
+       height="20.103346"
+       id="rect5616" />
+    <rect
+       x="99.753311"
+       y="5.5984001"
+       width="24.17491"
+       height="20.103346"
+       id="rect5443-0-97-3" />
+    <rect
+       x="99.753311"
+       y="5.5984001"
+       width="24.17491"
+       height="20.103346"
+       id="rect5646" />
+    <rect
+       x="99.753311"
+       y="5.5984001"
+       width="24.17491"
+       height="20.103346"
+       id="rect5443-0-4-1" />
+    <rect
+       x="99.753311"
+       y="5.5984001"
+       width="24.17491"
+       height="20.103346"
+       id="rect5676" />
+  </defs>
+  <title
+     id="title1142">BVH linearization</title>
+  <rect
+     class="cls-1"
+     x="54.02"
+     y="0.5"
+     width="27"
+     height="27"
+     id="rect1144" />
+  <rect
+     class="cls-1"
+     x="27.39"
+     y="45.12"
+     width="27"
+     height="27"
+     id="rect1148" />
+  <rect
+     class="cls-1"
+     x="81.22"
+     y="45.38"
+     width="27"
+     height="27"
+     id="rect1150" />
+  <rect
+     class="cls-1"
+     x="0.5"
+     y="90.25"
+     width="27"
+     height="27"
+     id="rect1152" />
+  <rect
+     class="cls-1"
+     x="54.37"
+     y="90.08"
+     width="27"
+     height="27"
+     id="rect1154" />
+  <line
+     class="cls-1"
+     x1="67.52"
+     y1="27.5"
+     x2="40.99"
+     y2="45.24"
+     id="line1164" />
+  <line
+     class="cls-1"
+     x1="67.21"
+     y1="27.66"
+     x2="95.15"
+     y2="45.08"
+     id="line1166" />
+  <line
+     class="cls-1"
+     x1="40.21"
+     y1="71.93"
+     x2="13.99"
+     y2="90.3"
+     id="line1168" />
+  <line
+     class="cls-1"
+     x1="40.68"
+     y1="72.09"
+     x2="68.15"
+     y2="89.82"
+     id="line1170" />
+  <rect
+     class="cls-1"
+     x="144.27"
+     y="54.17"
+     width="135.15"
+     height="27"
+     id="rect1172" />
+  <line
+     class="cls-1"
+     x1="171.13"
+     y1="54.5"
+     x2="171.13"
+     y2="81.03"
+     id="line1174" />
+  <line
+     class="cls-1"
+     x1="198.29"
+     y1="54.19"
+     x2="198.29"
+     y2="81.03"
+     id="line1176" />
+  <line
+     class="cls-1"
+     x1="225.13"
+     y1="54.19"
+     x2="225.13"
+     y2="81.35"
+     id="line1178" />
+  <line
+     class="cls-1"
+     x1="252.14"
+     y1="54.19"
+     x2="252.14"
+     y2="81.03"
+     id="line1180" />
+  <path
+     class="cls-1"
+     d="M183.93,54.5c0-8.49,19.53-14,27.81-14,5.61,0,15.43,2.25,21.16,6.22"
+     id="path1192" />
+  <polygon
+     points="224.8 47.08 231.75 46.77 233.19 39.96 237.42 53.44 224.8 47.08"
+     id="polygon1194" />
+  <polygon
+     class="cls-2"
+     points="226.72 47.49 236.57 52.44 232.16 47.25 226.72 47.49"
+     id="polygon1196" />
+  <polygon
+     class="cls-3"
+     points="233.28 41.93 236.57 52.44 232.16 47.25 233.28 41.93"
+     id="polygon1198" />
+  <path
+     class="cls-1"
+     d="M157.41,54.5c0-10,30.77-27.38,58.15-27.59,21-.16,39.12,10.79,46.43,19.83"
+     id="path1200" />
+  <polygon
+     points="254.26 45.43 261.14 46.45 263.85 40.04 265.43 54.08 254.26 45.43"
+     id="polygon1202" />
+  <polygon
+     class="cls-2"
+     points="256.07 46.2 264.79 52.93 261.45 47 256.07 46.2"
+     id="polygon1204" />
+  <polygon
+     class="cls-3"
+     points="263.57 41.99 264.79 52.93 261.45 47 263.57 41.99"
+     id="polygon1206" />
+  <text
+     xml:space="preserve"
+     id="text5441"
+     style="font-size:16px;line-height:1.25;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;shape-inside:url(#rect5443);"
+     transform="translate(-37.983906,-0.3816209)"><tspan
+       x="99.753906"
+       y="19.79959"><tspan
+         style="shape-inside:url(#rect5443)">A</tspan></tspan></text>
+  <text
+     xml:space="preserve"
+     id="text5441-7"
+     style="font-size:16px;line-height:1.25;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;shape-inside:url(#rect5443-0);"
+     transform="translate(-64.613907,44.238378)"><tspan
+       x="99.753906"
+       y="19.79959"><tspan>B</tspan></tspan></text>
+  <text
+     xml:space="preserve"
+     id="text5441-7-3"
+     style="font-size:16px;line-height:1.25;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;shape-inside:url(#rect5443-0-4);"
+     transform="translate(-10.783905,44.49838)"><tspan
+       x="99.753906"
+       y="19.79959"><tspan>C</tspan></tspan></text>
+  <text
+     xml:space="preserve"
+     id="text5441-7-2"
+     style="font-size:16px;line-height:1.25;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;shape-inside:url(#rect5443-0-9);"
+     transform="translate(-91.503906,89.368379)"><tspan
+       x="99.753906"
+       y="19.79959"><tspan>D</tspan></tspan></text>
+  <text
+     xml:space="preserve"
+     id="text5441-7-0"
+     style="font-size:16px;line-height:1.25;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;shape-inside:url(#rect5443-0-97);"
+     transform="translate(-37.633907,89.198381)"><tspan
+       x="99.753906"
+       y="19.79959"><tspan>E</tspan></tspan></text>
+  <text
+     xml:space="preserve"
+     id="text5441-2"
+     style="font-size:16px;line-height:1.25;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;shape-inside:url(#rect5443-7);"
+     transform="translate(51.770969,53.288378)"><tspan
+       x="99.753906"
+       y="19.79959"><tspan
+         style="shape-inside:url(#rect5443-7)">A</tspan></tspan></text>
+  <text
+     xml:space="preserve"
+     id="text5441-7-4"
+     style="font-size:16px;line-height:1.25;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;shape-inside:url(#rect5443-0-6);"
+     transform="translate(79.619294,53.167284)"><tspan
+       x="99.753906"
+       y="19.79959"><tspan>B</tspan></tspan></text>
+  <text
+     xml:space="preserve"
+     id="text5441-7-2-8"
+     style="font-size:16px;line-height:1.25;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;shape-inside:url(#rect5443-0-9-3);"
+     transform="translate(106.17077,53.167284)"><tspan
+       x="99.753906"
+       y="19.79959"><tspan>D</tspan></tspan></text>
+  <text
+     xml:space="preserve"
+     id="text5441-7-0-0"
+     style="font-size:16px;line-height:1.25;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;shape-inside:url(#rect5443-0-97-3);"
+     transform="translate(134.04254,53.167284)"><tspan
+       x="99.753906"
+       y="19.79959"><tspan>E</tspan></tspan></text>
+  <text
+     xml:space="preserve"
+     id="text5441-7-3-8"
+     style="font-size:16px;line-height:1.25;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;shape-inside:url(#rect5443-0-4-1);"
+     transform="translate(160.69166,53.167284)"><tspan
+       x="99.753906"
+       y="19.79959"><tspan>C</tspan></tspan></text>
+</svg>

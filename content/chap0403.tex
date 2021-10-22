@@ -1091,10 +1091,10 @@ return `\refvar{buildUpperSAH}{}`(arena, finishedTreelets, 0,
 \begin{figure}[htbp]
     \centering\input{Pictures/chap04/BVHlinearization.tex}
     \caption{BVH在内存中的线性排布。BVH的节点（左）按深度优先顺序（右）存储于内存中。
-    因此，对于该树的任意中间节点（例如该例中的A和B），
-    第一个孩子可在内存中父节点之后立刻找到。
-    第二个孩子则通过偏移指针找到，这里用带箭头的线表示。
-    树的叶子结点（D、E和C）没有孩子。}
+        因此，对于该树的任意中间节点（例如该例中的A和B），
+        第一个孩子可在内存中父节点之后立刻找到。
+        第二个孩子则通过偏移指针找到，这里用带箭头的线表示。
+        树的叶子结点（D、E和C）没有孩子。}
     \label{fig:4.13}
 \end{figure}
 
@@ -1170,3 +1170,97 @@ linearNode->`\refvar[LinearBVHNode::nPrimitives]{nPrimitives}{}` = 0;
 linearNode->`\refvar{secondChildOffset}{}` =
     `\refvar{flattenBVHTree}{}`(node->`\refvar[BVHBuildNode::children]{children}{}`[1], offset);
 \end{lstlisting}
+
+\subsection{遍历}\label{sub:遍历}
+BVH的遍历代码非常简单——没有递归调用，只有少量数据用来维护当前遍历的状态。
+方法\refvar[BVHAccel::Intersect]{Intersect}{()}从
+预先计算一些与将要反复用到的光线相关的值开始。
+\begin{lstlisting}
+`\refcode{BVHAccel Method Definitions}{+=}\lastcode{BVHAccelMethodDefinitions}`
+bool `\refvar{BVHAccel}{}`::`\initvar[BVHAccel::Intersect]{Intersect}{}`(const `\refvar{Ray}{}` &ray,
+        `\refvar{SurfaceInteraction}{}` *isect) const {
+    bool hit = false;
+    `\refvar{Vector3f}{}` invDir(1 / ray.d.x, 1 / ray.d.y, 1 / ray.d.z);
+    int dirIsNeg[3] = { invDir.x < 0, invDir.y < 0, invDir.z < 0 };
+    `\refcode{Follow ray through BVH nodes to find primitive intersections}{}`
+    return hit;
+}
+\end{lstlisting}
+
+每当\refvar[BVHAccel::Intersect]{Intersect}{()}中的{\ttfamily while}循环开始一次迭代时，
+{\ttfamily currentNodeIndex}保有将要访问的节点在数组\refvar[BVHAccel::nodes]{nodes}{}中的偏移量。
+它起始于0值，表示树根。仍需要访问的节点存于数组{\ttfamily nodesToVisit[]}中，即充当一个栈；
+{\ttfamily toVisitOffset}存有栈中下一个可弹出元素的偏移量。
+\begin{lstlisting}
+`\initcode{Follow ray through BVH nodes to find primitive intersections}{=}`
+int toVisitOffset = 0, currentNodeIndex = 0;
+int nodesToVisit[64];
+while (true) {
+    const `\refvar{LinearBVHNode}{}` *node = &`\refvar[BVHAccel::nodes]{nodes}{}`[currentNodeIndex];
+    `\refcode{Check ray against BVH node}{}`
+}
+\end{lstlisting}
+
+对于每个节点，我们都检查光线是否与节点的边界框相交（或从其内部发射）。
+如果是我们就访问该节点，如果它是叶子节点就对其图元做相交测试，
+如果是内部节点就处理它的孩子。
+如果发现没有相交，就从{\ttfamily nodesToVisit[]}取出下一个将要访问的节点的偏移量
+（或者如果栈空了就完成遍历了）。
+\begin{lstlisting}
+`\initcode{Check ray against BVH node}{=}`
+if (node->`\refvar[LinearBVHNode::bounds]{bounds}{}`.`\refvar[Bounds3::IntersectP]{IntersectP}{}`(ray, invDir, dirIsNeg)) {
+    if (node->`\refvar[LinearBVHNode::nPrimitives]{nPrimitives}{}` > 0) {
+        `\refcode{Intersect ray with primitives in leaf BVH node}{}`
+    } else {
+        `\refcode{Put far BVH node on nodesToVisit stack, advance to near node}{}`
+    }
+} else {
+    if (toVisitOffset == 0) break;
+    currentNodeIndex = nodesToVisit[--toVisitOffset];
+}
+\end{lstlisting}
+
+如果当前节点是叶子，则该光线必须和它里面的图元做相交测试。
+然后从栈{\ttfamily nodesToVisit}中找到下一个要访问的节点；
+即使当前节点求得了交点，也必须访问剩下的节点，
+以防万一它们中有一个给出更近的交点。
+然而，如果求得一个交点，则该光线的\refvar{tMax}{}值将会更新为该相交距离；
+这样可以更高效地丢弃剩下的节点中任何比该距离更远的部分。
+\begin{lstlisting}
+`\initcode{Intersect ray with primitives in leaf BVH node}{=}`
+for (int i = 0; i < node->`\refvar[LinearBVHNode::nPrimitives]{nPrimitives}{}`; ++i)
+    if (`\refvar[BVHAccel::primitives]{primitives}{}`[node->`\refvar{primitivesOffset}{}` + i]->`\refvar[Primitive::Intersect]{Intersect}{}`(ray, isect))
+        hit = true;
+if (toVisitOffset == 0) break;
+currentNodeIndex = nodesToVisit[--toVisitOffset];
+\end{lstlisting}
+
+对于光线命中的内部节点，需要访问它的两个孩子。
+如上所述，万一与光线相交的图元在第一个里面，
+则访问光线穿过的第一个孩子再访问第二个是可取的，
+这样光线的\refvar{tMax}{}值就能更新，
+进而缩减光线的范围以及与之相交的边界框节点数目。
+
+一个执行从前往后遍历而不会因光线与两个子节点相交
+以及比较距离而带来开销的高效方法是使用光线方向向量
+在该节点划分图元时所沿的坐标轴上的符号：
+如果符号为负，我们应该先访问第二个孩子再访问第一个孩子，
+因为进入第二棵子树的图元在划分点的上面一侧
+（正号方向则反过来）。
+这样做很简单：先要访问的节点的偏移量被复制到{\ttfamily currentNodeIndex}，
+另一个节点的偏移量被加到栈{\ttfamily nodesToVisit}中
+（回想因为内存中节点按深度优先排列，第一个孩子正好在当前节点之后）。
+\begin{lstlisting}
+`\initcode{Put far BVH node on nodesToVisit stack, advance to near node}{=}`
+if (dirIsNeg[node->`\refvar[LinearBVHNode::axis]{axis}{}`]) {
+   nodesToVisit[toVisitOffset++] = currentNodeIndex + 1;
+   currentNodeIndex = node->`\refvar{secondChildOffset}{}`;
+} else {
+   nodesToVisit[toVisitOffset++] = node->`\refvar{secondChildOffset}{}`;
+   currentNodeIndex = currentNodeIndex + 1;
+}
+\end{lstlisting}
+
+方法{\initvar{BVHAccel::IntersectP}{()}}本质上和常规相交方法一样，有两处区别是，它调用了\refvar{Primitive}{}的
+方法\refvar[Primitive::IntersectP]{IntersectP}{()}而不是\refvar[Primitive::Intersect]{Intersect}{()}，
+以及当找到任何交点时就立刻停止遍历。

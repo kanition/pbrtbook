@@ -172,7 +172,7 @@ private:
 
 注意该实现存储了指向第一个顶点\emph{索引}的指针，
 而非存储三个指向顶点自己的指针。
-这以另一级别的间接性为代价减少了每个\refvar{Triangle}{}所需的存储量。
+这以多一级间接性为代价减少了每个\refvar{Triangle}{}所需的存储量。
 \begin{lstlisting}
 `\initcode{Triangle Private Data}{=}`
 std::shared_ptr<`\refvar{TriangleMesh}{}`> `\initvar{mesh}{}`;
@@ -468,9 +468,9 @@ if (det == 0)
 为了计算该$z$值，我们先要继续对三角形顶点的$z$坐标施加错切变换。
 有了这些值后，三角形中交点的\keyindex{重心坐标}{barycentric coordinate}{coordinate坐标}可
 用于在三角形间对其插值。它们由每个边函数值除以边函数值之和得到
-\sidenote{译者注：提示：$b_i$其实表示了原点接近$\bm p_i$的程度。
+\sidenote{译者注：提示：$b_i$表示了原点接近$\bm p_i$的程度。
     利用向量知识可以证明，2D中对于包围了点$O$（不在边缘上）的$\triangle P_0P_1P_2$，
-    存在比例固定的系数$e_i$使得$e_0\overrightarrow{OP_0}+e_1\overrightarrow{OP_1}+e_2\overrightarrow{OP_2}=\bm 0$，
+    存在比例固定的非零系数$e_i$使得$e_0\overrightarrow{OP_0}+e_1\overrightarrow{OP_1}+e_2\overrightarrow{OP_2}=\bm 0$，
     且三角形面积满足$\displaystyle\frac{|e_0|}{S_{\triangle OP_1P_2}}=\frac{|e_1|}{S_{\triangle OP_2P_0}}=\frac{|e_2|}{S_{\triangle OP_0P_1}}$。}：
 \begin{align*}
     b_i=\frac{e_i}{e_0+e_1+e_2}\, .

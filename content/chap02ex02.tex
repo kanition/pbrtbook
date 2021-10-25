@@ -7,7 +7,8 @@
 给出分解旋转矩阵算法收敛性和最优性的证明。
 
 从只含有旋转$\bm R$和缩放$\bm S$的$3\times3$可逆矩阵$\bm M=\bm R\bm S$中
-分解出旋转矩阵，可以利用序列$\displaystyle\{\bm M_i\}_{i=0}^{\infty}$：
+分解出旋转矩阵\sidenote{这里的缩放矩阵$\bm S$是广义上的，非对角线元素可以不为零。}，
+可以利用序列$\displaystyle\{\bm M_i\}_{i=0}^{\infty}$：
 \begin{align}
     \bm M_0     & =\bm M\, ,                                                         \\
     \bm M_{i+1} & =\frac{1}{2}(\bm M_i+\bm M_i^{-\mathrm{T}}),\quad i=0,1,\ldots\, ,

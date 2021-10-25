@@ -511,7 +511,8 @@ if (edge < 0)
     \cos\theta=\frac{(\bm p-\bm p_0)\cdot(\bm p_3-\bm p_0)}{\|\bm p-\bm p_0\|\|\bm p_3-\bm p_0\|}\, .
 \end{align*}
 
-因为从$\bm p'$到$\bm p$的向量垂直于该直线（\reffig{3.23}(b)），
+因为从$\bm p'$到$\bm p$的向量垂直于该直线
+（\reffig{3.23}(b)\sidenote{译者注：原书中$d$的位置标错了，已改正。}），
 则我们可以计算沿直线从$\bm p_0$到$\bm p'$的距离为
 \begin{align*}
     d=\|\bm p-\bm p_0\|\cos\theta=\frac{(\bm p-\bm p_0)\cdot(\bm p_3-\bm p_0)}{\|\bm p_3-\bm p_0\|}\, .
@@ -546,7 +547,7 @@ if (`\refvar{common}{}`->`\refvar[CurveCommon::type]{type}{}` == `\refvar{CurveT
 \end{lstlisting}
 
 对于\refvar{Ribbon}{}曲线，曲线并不总是朝向光线。
-相反，它的朝向是在给定于每个端点处的曲面法线之间插值的。
+相反，它的朝向是在于每个端点处给定的曲面法线之间插值的。
 这里，球面线性插值用于插值$u$处的法线（回想\refsub{四元数插值}）。
 再用规范化的射线方向与丝带朝向间的夹角余弦缩放曲线宽度，
 这样它就反映了给定方向的曲线可见宽度。

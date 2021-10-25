@@ -307,7 +307,7 @@ for (int i = 0; i < nFaces; ++i) {
 如果是，它就初始化共享该边的两个面的相邻指针。
 如果否，它就将该边添加到边的集合中。
 该边两端顶点的索引{\ttfamily v0}和{\ttfamily v1}，
-分别等于边的索引和边的边的索引加一。
+分别等于边的索引和边的索引加一。
 \begin{lstlisting}
 `\initcode{Update neighbor pointer for edgeNum}{=}`
 int v0 = edgeNum, v1 = `\refvar{NEXT}{}`(edgeNum);
@@ -924,7 +924,7 @@ face->`\refvar[SDFace::children]{children}{}`[j]->`\refvar[SDFace::v]{v}{}`[j] =
 \end{lstlisting}
 
 为了更新剩余顶点指针，再次用关联数组{\ttfamily edgeVerts}为父面的每条分割边寻找奇顶点。
-三个子面以该顶点为事件\sidenote{译者注：原文incident。}顶点。
+三个子面以该顶点为触发\sidenote{译者注：原文incident。}顶点。
 再次基于\reffig{3.36}中建立的编号方案，很容易求得该顶点在这三个面中的索引。
 \begin{lstlisting}
 `\initcode{Update child vertex pointer to new odd vertex}{=}`

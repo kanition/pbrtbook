@@ -949,7 +949,7 @@ pHit.z = `\refvar[Disk::height]{height}{}`;
     d & =1\oslash(e_0\oplus e_1\oplus e_2)                                                                                \\
       & \in\frac{1}{(e_0+e_1)(1\pm\epsilon_{\mathrm{m}})^2+e_2(1\pm\epsilon_{\mathrm{m}})}(1\pm\epsilon_{\mathrm{m}})\, .
 \end{align*}
-因为如果相交则所有$e_i$同号，所有我们可以合并$e_i$项并保守地定界$d$：
+因为如果相交则所有$e_i$同号，所以我们可以合并$e_i$项并保守地定界$d$：
 \begin{align*}
     d & \in\frac{1}{(e_0+e_1+e_2)(1\pm\epsilon_{\mathrm{m}})^2}(1\pm\epsilon_{\mathrm{m}}) \\
       & \subset \frac{1}{e_0+e_1+e_2}(1\pm\gamma_3)\, .
@@ -1075,7 +1075,7 @@ T wp = `\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[3][0] * x + `\r
 \end{lstlisting}
 
 注意如果矩阵是投影的且投影后点的齐次$w$坐标不是一，则计算误差边界的代码是错的；
-目前该小bug对于pbrt对该方法的使用不是问题。
+目前该小bug不会给pbrt使用该方法带来问题。
 \begin{lstlisting}
 `\initcode{Compute absolute error for transformed point}{=}`
 T xAbsSum = (std::abs(`\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[0][0] * x) + std::abs(`\refvar[Transform::m]{m}{}`.`\refvar[Matrix4x4::m]{m}{}`[0][1] * y) +

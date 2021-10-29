@@ -38,7 +38,7 @@ const `\refvar{Primitive}{}` *`\initvar[SurfaceInteraction::primitive]{primitive
 \refvar{Primitive}{}对象有一些方法也与非几何性质有关。
 首先，如果该图元本身是光源，
 则\refvar[GetAreaLight]{Primitive::GetAreaLight}{()}返回
-一个指向描述图元发射分布的\refvar{AreaLight}{}的指针。
+一个指向描述图元辐射分布的\refvar{AreaLight}{}的指针。
 如果该图元不发光，则该方法应返回{\ttfamily nullptr}。
 \begin{lstlisting}
 `\refcode{Primitive Interface}{+=}\lastnext{PrimitiveInterface}`

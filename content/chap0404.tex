@@ -78,3 +78,59 @@ kd树是二叉树，每个内部节点总是有两个孩子且树的叶子存有
 \end{itemize}
 每个叶子节点只需要记录哪个图元与之重合。
 
+为了保证所有内部节点和许多叶子节点只用8字节内存
+（假设\refvar{Float}{}占4字节）而麻烦一下是值得的，
+因为这样做保证了八个节点契合一个64字节的缓存行。
+因为树中经常有许多节点且每条光线通常都要访问许多节点，
+最小化节点表示的大小能极大提高缓存性能。
+我们最初的实现使用了16字节节点表示；
+当我们把大小减少到8字节时我们得到了几乎20\%的提速。
+
+叶子和内部节点都用下面的结构体\refvar{KdAccelNode}{}表示。
+每个{\ttfamily union}成员后的注释都说明了特定域是用于内部节点、叶子节点还是两者都是。
+\begin{lstlisting}
+`\initcode{KdTreeAccel Local Declarations}{=}\initnext{KdTreeAccelLocalDeclarations}`
+struct `\initvar{KdAccelNode}{}` {
+    `\refcode{KdAccelNode Methods}{}`
+    union {
+        `\refvar{Float}{}` `\initvar[KdAccelNode::split]{split}{}`;                  // Interior
+        int `\initvar{onePrimitive}{}`;             // Leaf
+        int `\initvar{primitiveIndicesOffset}{}`;   // Leaf
+    };
+    union {
+        int `\initvar[KdAccelNode::flags]{flags}{}`;         // Both
+        int `\initvar{nPrims}{}`;        // Leaf
+        int `\initvar{aboveChild}{}`;    // Interior
+    };
+};
+\end{lstlisting}
+
+变量\refvar{KdAccelNode::flags}{}的低两位用于区分用$x,y$和$z$划分的内部节点
+（这些数位分别取值0,1和2）以及叶子节点（这些数位取值3）。
+在8字节中保存叶子节点相对简单：\refvar{KdAccelNode::flags}{}的低2位
+用于表示这是一个叶子，\refvar[nPrims]{KdAccelNode::nPrims}{}的高30位
+可用于记录有多少个图元与之重合。
+然后，如果只有一个图元与\refvar{KdAccelNode}{}叶子重合，
+则指向数组\refvar{KdTreeAccel::primitives}{}
+的整数索引会指出该\refvar{Primitive}{}。如果重合的图元多于一个，
+则它们的索引保存于\refvar[primitiveIndices]{KdTreeAccel::primitiveIndices}{}的一段中。
+该叶子第一个索引的偏移量存于\refvar[primitiveIndicesOffset]{KdAccelNode::primitiveIndicesOffset}{}且后面直接跟着剩下的索引。
+\begin{lstlisting}
+`\refcode{KdTreeAccel Private Data}{+=}\lastnext{KdTreeAccelPrivateData}`
+std::vector<int> `\initvar{primitiveIndices}{}`;
+\end{lstlisting}
+
+叶子节点很容易初始化，不过我们要注意细节，
+因为\refvar[KdAccelNode::flags]{flags}{}和\refvar{nPrims}{}共享同一存储；
+我们需要注意在初始化其中一个时不要搞乱了另一个。
+此外，在保存图元数量前必须向左移两位，
+这样\refvar{KdAccelNode::flags}{}的低两位可以都设为1以表示这是一个叶子节点。
+\begin{lstlisting}
+`\refcode{KdTreeAccel Method Definitions}{+=}\lastnext{KdTreeAccelMethodDefinitions}`
+void `\refvar{KdAccelNode}{}`::`\initvar[KdAccelNode::InitLeaf]{InitLeaf}{}`(int *primNums, int np,
+        std::vector<int> *primitiveIndices) {
+    `\refvar[KdAccelNode::flags]{flags}{}` = 3;
+    `\refvar{nPrims}{}` |= (np << 2);
+    `\refcode{Store primitive ids for leaf node}{}`
+}
+\end{lstlisting}

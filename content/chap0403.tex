@@ -143,7 +143,7 @@ struct `\initvar{BVHBuildNode}{}` {
 我们将通过其孩子指针是否有值{\ttfamily nullptr}来分别区分叶子和内部节点。
 \begin{lstlisting}
 `\initcode{BVHBuildNode Public Methods}{=}\initnext{BVHBuildNodePublicMethods}`
-void `\initvar{InitLeaf}{}`(int first, int n, const `\refvar{Bounds3f}{}` &b) {
+void `\initvar[BVHBuildNode::InitLeaf]{InitLeaf}{}`(int first, int n, const `\refvar{Bounds3f}{}` &b) {
     `\refvar{firstPrimOffset}{}` = first;
     `\refvar[BVHBuildNode:nPrimitives]{nPrimitives}{}` = n;
     `\refvar[BVHBuildNode::bounds]{bounds}{}` = b;
@@ -214,7 +214,7 @@ for (int i = start; i < end; ++i) {
     int primNum = primitiveInfo[i].`\refvar{primitiveNumber}{}`;
     orderedPrims.push_back(`\refvar[BVHAccel::primitives]{primitives}{}`[primNum]);
 }
-node->`\refvar{InitLeaf}{}`(firstPrimOffset, nPrimitives, bounds);
+node->`\refvar[BVHBuildNode::InitLeaf]{InitLeaf}{}`(firstPrimOffset, nPrimitives, bounds);
 return node;
 \end{lstlisting}
 
@@ -1005,7 +1005,7 @@ for (int i = 0; i < nPrimitives; ++i) {
     orderedPrims[firstPrimOffset + i] = primitives[primitiveIndex];
     bounds = `\refvar[Union2]{Union}{}`(bounds, primitiveInfo[primitiveIndex].`\refvar[BVHPrimitiveInfo::bounds]{bounds}{}`);
 }
-node->`\refvar{InitLeaf}{}`(firstPrimOffset, nPrimitives, bounds);
+node->`\refvar[BVHBuildNode::InitLeaf]{InitLeaf}{}`(firstPrimOffset, nPrimitives, bounds);
 return node;
 \end{lstlisting}
 

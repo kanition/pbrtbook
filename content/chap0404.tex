@@ -1,1 +1,80 @@
 \section{kd树加速器}\label{sec:kd树加速器}
+
+\keyindex{二叉空间划分}{binary space partitioning}{}(BSP)树用平面自适应地细分空间。
+一个BSP树从包含整个场景的边界框开始。
+如果框内图元的数量大于某个阈值，则用平面将该框分为两半。
+然后图元和与之重合的任意一半关联，
+同时位于两半里的图元就都与它们关联
+（相比之下，BVH中划分后每个图元只能分配到两个组中的一个）。
+
+划分过程递归进行，直到结果树中的每个叶子区域都包含足够少的图元或者达到最大深度。
+因为划分平面可以放置于整个框内的任意位置，
+且3D空间的不同部分可以精确到不同程度，
+所以BSP易于处理分布不均的几何体。
+
+BSP树的两个变种是\keyindex{kd树}{kd-tree}{tree树}和\keyindex{八叉树}{octree}{tree树}。
+kd树简单地限制划分平面垂直于一个坐标轴；
+这让树的遍历和构建都更高效，而在如何划分空间上牺牲一些灵活性。
+八叉树每一步用三个垂直于轴的平面同时将该框分为八个区域
+（通常在每个方向沿范围中心划分）。
+
+本节中，我们将在类\refvar{KdTreeAccel}{}中为光线相交加速实现一个kd树。
+该类源码可在文件\href{https://github.com/mmp/pbrt-v3/tree/master/src/accelerators/kdtreeaccel.h}{\ttfamily accelerators/kdtreeaccel.h}
+和\href{https://github.com/mmp/pbrt-v3/tree/master/src/accelerators/kdtreeaccel.cpp}{\ttfamily accelerators/kdtreeaccel.cpp}
+中找到。
+
+\begin{lstlisting}
+`\initcode{KdTreeAccel Declarations}{=}\initnext{KdTreeAccelDeclarations}`
+class `\initvar{KdTreeAccel}{}` : public `\refvar{Aggregate}{}` {
+public:
+    `\refcode{KdTreeAccel Public Methods}{}`
+private:
+    `\refcode{KdTreeAccel Private Methods}{}`
+    `\refcode{KdTreeAccel Private Data}{}`
+};
+\end{lstlisting}
+
+除了要保存的图元外，\refvar{KdTreeAccel}{}构造函数
+还接收一些参数用于在构建树时指导要作出的决定；
+这些参数存于成员变量中（\refvar{isectCost}{}、\refvar{traversalCost}{}、
+\refvar{maxPrims}{}、{\ttfamily maxDepth}和\refvar{emptyBonus}{}）留待后用。
+见\reffig{4.14}中构建树的图示。
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap04/kdtreesplits.tex}
+    \caption{通过沿坐标轴之一递归地划分场景几何边界框来构建kd树。这里，第一次划分沿$x$轴；
+    它摆放后使三角形刚好单独在右边区域而其余图元则在左边。
+    然后再用轴对齐的划分平面细化若干次左边的区域。
+    细化标准的细节——每一步用哪个轴划分空间、沿轴上哪个位置放置平面
+    以及何时结束细分——在实践中均会极大影响树的性能。}
+    \label{fig:4.14}
+\end{figure}
+
+\begin{lstlisting}
+`\initcode{KdTreeAccel Method Definitions}{=}\initnext{KdTreeAccelMethodDefinitions}`
+`\refvar{KdTreeAccel}{}`::`\refvar{KdTreeAccel}{}`(
+        const std::vector<std::shared_ptr<`\refvar{Primitive}{}`>> &p,
+        int isectCost, int traversalCost, `\refvar{Float}{}` emptyBonus,
+        int maxPrims, int maxDepth)
+    : `\refvar{isectCost}{}`(isectCost), `\refvar{traversalCost}{}`(traversalCost),
+      `\refvar{maxPrims}{}`(maxPrims), `\refvar{emptyBonus}{}`(emptyBonus), `\refvar[KdTreeAccel::primitives]{primitives}{}`(p) {
+    `\refcode{Build kd-tree for accelerator}{}`
+}
+\end{lstlisting}
+
+\begin{lstlisting}
+`\initcode{KdTreeAccel Private Data}{=}\initnext{KdTreeAccelPrivateData}`
+const int `\initvar{isectCost}{}`, `\initvar{traversalCost}{}`, `\initvar{maxPrims}{}`;
+const `\refvar{Float}{}` `\initvar{emptyBonus}{}`;
+std::vector<std::shared_ptr<`\refvar{Primitive}{}`>> `\initvar[KdTreeAccel::primitives]{primitives}{}`;
+\end{lstlisting}
+
+\subsection{树状表示}\label{sub:树状表示}
+kd树是二叉树，每个内部节点总是有两个孩子且树的叶子存有与之重合的图元。
+每个内部节点必须提供三块信息的访问渠道：
+\begin{itemize}
+    \item 划分轴：该节点划分了$x,y$和$z$中的哪一个轴；
+    \item 划分位置：划分平面沿该轴的位置；
+    \item 孩子：关于如何到达其下两个子节点的信息。
+\end{itemize}
+每个叶子节点只需要记录哪个图元与之重合。
+

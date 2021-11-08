@@ -192,3 +192,131 @@ int `\initvar{AboveChild}{()}` const { return `\refvar{aboveChild}{}` >> 2; }
 \end{lstlisting}
 
 \subsection{树的构建}\label{sub:树的构建}
+kd树是用递归自顶向下算法构建的。
+每一步中，我们有一个轴对齐空间区域和与该区域重合的图元集。
+要么该区域分为两个子区域且转化为内部节点，
+要么用重合的图元创建一个叶子节点，结束递归。
+
+正如讨论\refvar{KdAccelNode}{}时所提到的，
+所有树节点都保存于连续数组中。\newline
+\refvar[nextFreeNode]{KdTreeAccel::nextFreeNode}{}记录了该数组中下一个有效节点，
+\refvar[nAllocedNodes]{KdTreeAccel::\newline nAllocedNodes}{}记录了已经分配的总数。
+通过一开始设置两者为0且不分配任何节点，这里的实现保证了当初始化树的第一个节点时能立即完成分配。
+
+如果没有为构造函数给定，则还有必要确定树的最大深度。
+尽管树的构建过程通常会自然地在合理的深度结束，
+但限制最大深度很重要，这样极端情况下树所用的内存数量才不会无限增长。
+我们已经发现值$8+1.3\log(N)$为大量场景给出了合理的最大深度\sidenote{译者注：对数以2为底。}。
+
+\begin{lstlisting}
+`\initcode{Build kd-tree for accelerator}{=}`
+`\refvar{nextFreeNode}{}` = `\refvar{nAllocedNodes}{}` = 0;
+if (maxDepth <= 0)
+    maxDepth = std::round(8 + 1.3f * `\refvar{Log2Int}{}`(`\refvar[KdTreeAccel::primitives]{primitives}{}`.size()));
+`\refcode{Compute bounds for kd-tree construction}{}`
+`\refcode{Allocate working memory for kd-tree construction}{}`
+`\refcode{Initialize primNums for kd-tree construction}{}`
+`\refcode{Start recursive construction of kd-tree}{}`
+\end{lstlisting}
+
+\begin{lstlisting}
+`\refcode{KdTreeAccel Private Data}{+=}\lastnext{KdTreeAccelPrivateData}`
+`\refvar{KdAccelNode}{}` *`\initvar[KdTreeAccel::nodes]{nodes}{}`;
+int `\initvar{nAllocedNodes}{}`, `\initvar{nextFreeNode}{}`;
+\end{lstlisting}
+
+因为构建例程会一路重复使用图元边界框，
+所以在开始构建树前它们被保存在{\ttfamily vector}中，
+这样就不需重复调用可能更慢的方法\refvar{Primitive::WorldBound}{()}。
+\begin{lstlisting}
+`\initcode{Compute bounds for kd-tree construction}{=}`
+std::vector<`\refvar{Bounds3f}{}`> primBounds;
+for (const std::shared_ptr<`\refvar{Primitive}{}`> &prim : `\refvar[KdTreeAccel::primitives]{primitives}{}`) {
+    `\refvar{Bounds3f}{}` b = prim->`\refvar[Primitive::WorldBound]{WorldBound}{}`();
+    `\refvar[KdTreeAccel::bounds]{bounds}{}` = `\refvar[Union2]{Union}{}`(bounds, b);
+    primBounds.push_back(b);
+}
+\end{lstlisting}
+
+\begin{lstlisting}
+`\refcode{KdTreeAccel Private Data}{+=}\lastcode{KdTreeAccelPrivateData}`
+`\refvar{Bounds3f}{}` `\initvar[KdTreeAccel::bounds]{bounds}{}`;
+\end{lstlisting}
+
+树构建例程的参数之一是图元索引数组，表示哪个图元与当前节点重合。
+因为（当递归开始时）所有图元都和根节点重合，
+所以我们从初始化值为零到{\ttfamily primitives.size()-1}的数组开始。
+\begin{lstlisting}
+`\initcode{Initialize primNums for kd-tree construction}{=}`
+std::unique_ptr<int[]> primNums(new int[`\refvar[KdTreeAccel::primitives]{primitives}{}`.size()]);
+for (size_t i = 0; i < `\refvar[KdTreeAccel::primitives]{primitives}{}`.size(); ++i)
+    primNums[i] = i;
+\end{lstlisting}
+
+每个树节点都会调用\refvar{KdTreeAccel::buildTree}{()}。
+它负责决定该节点应该是内部节点还是叶子并适当更新数据结构。
+最后三个参数{\ttfamily edges}、{\ttfamily prims0}、{\ttfamily prims1}是
+指向分配于代码片\refcode{Allocate working memory for kd-tree construction}{}的数据的指针，
+稍后几页会对此作定义和介绍。
+\begin{lstlisting}
+`\initcode{Start recursive construction of kd-tree}{=}`
+`\refvar[KdTreeAccel::buildTree]{buildTree}{}`(0, `\refvar[KdTreeAccel::bounds]{bounds}{}`, primBounds, primNums.get(), `\refvar[KdTreeAccel::primitives]{primitives}{}`.size(), 
+          maxDepth, edges, prims0.get(), prims1.get());
+\end{lstlisting}
+
+\refvar{KdTreeAccel::buildTree}{()}的主要参数是供创建的节点使用的相对于
+\refvar{KdAccelNode}{}数组的偏移量{\ttfamily nodeNum}、
+给出该节点覆盖的空间区域边界框的{\ttfamily nodeBounds}，
+以及与之重合的图元索引{\ttfamily primNums}。
+其余参数稍后在快用到它们时阐述。
+\begin{lstlisting}
+`\refcode{KdTreeAccel Method Definitions}{+=}\lastnext{KdTreeAccelMethodDefinitions}`
+void `\refvar{KdTreeAccel}{}::\initvar[KdTreeAccel::buildTree]{buildTree}{}`(int nodeNum, const `\refvar{Bounds3f}{}` &nodeBounds,
+        const std::vector<`\refvar{Bounds3f}{}`> &allPrimBounds, int *primNums,
+        int nPrimitives, int depth,
+        const std::unique_ptr<`\refvar{BoundEdge}{}`[]> edges[3], 
+        int *prims0, int *prims1, int badRefines) {
+    `\refcode{Get next free node from nodes array}{}`
+    `\refcode{Initialize leaf node if termination criteria met}{}`
+    `\refcode{Initialize interior node and continue recursion}{}`
+}
+\end{lstlisting}
+
+如果所有分配的节点都已经用完了，则重新分配两倍数量的节点内存并复制旧值。
+第一次调用\refvar{KdTreeAccel::buildTree}{()}时，
+\refvar[nAllocedNodes]{KdTreeAccel::nAllocedNodes}{}
+为0并分配树节点的一个初始块。
+\begin{lstlisting}
+`\initcode{Get next free node from nodes array}{=}`
+if (`\refvar{nextFreeNode}{}` == `\refvar{nAllocedNodes}{}`) {
+    int nNewAllocNodes = std::max(2 * `\refvar{nAllocedNodes}{}`, 512);
+    `\refvar{KdAccelNode}{}` *n = `\refvar{AllocAligned}{}`<`\refvar{KdAccelNode}{}`>(nNewAllocNodes);
+    if (`\refvar{nAllocedNodes}{}` > 0) {
+        memcpy(n, `\refvar[KdTreeAccel::nodes]{nodes}{}`, `\refvar{nAllocedNodes}{}` * sizeof(`\refvar{KdAccelNode}{}`));
+        `\refvar{FreeAligned}{}`(`\refvar[KdTreeAccel::nodes]{nodes}{}`);
+    }
+    `\refvar[KdTreeAccel::nodes]{nodes}{}` = n;
+    `\refvar{nAllocedNodes}{}` = nNewAllocNodes;
+}
+++`\refvar{nextFreeNode}{}`;
+\end{lstlisting}
+
+当区域内有足够少量的图元或达到最大深度时就创建叶子节点（停止递归）。
+参数{\ttfamily depth}一开始为树的最大深度，且每一层递减。
+\begin{lstlisting}
+`\initcode{Initialize leaf node if termination criteria met}{=}`
+if (nPrimitives <= `\refvar{maxPrims}{}` || depth == 0) {
+    `\refvar[KdTreeAccel::nodes]{nodes}{}`[nodeNum].`\refvar[KdAccelNode::InitLeaf]{InitLeaf}{}`(primNums, nPrimitives, &`\refvar{primitiveIndices}{}`);
+    return;
+}
+\end{lstlisting}
+
+如果这是个内部节点，则需要选择一个划分平面，按该平面划分图元并递归。
+\begin{lstlisting}
+`\initcode{Initialize interior node and continue recursion}{=}`
+`\refcode{Choose split axis position for interior node}{}`
+`\refcode{Create leaf if no good splits were found}{}`
+`\refcode{Classify primitives with respect to split}{}`
+`\refcode{Recursively initialize children nodes}{}`
+\end{lstlisting}
+

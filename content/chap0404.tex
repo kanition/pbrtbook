@@ -134,3 +134,61 @@ void `\refvar{KdAccelNode}{}`::`\initvar[KdAccelNode::InitLeaf]{InitLeaf}{}`(int
     `\refcode{Store primitive ids for leaf node}{}`
 }
 \end{lstlisting}
+
+对于有零或一个重合图元的叶子节点，
+因为有\refvar[onePrimitive]{KdAccelNode::onePrimitive}{}
+域了，所以不再需要额外分配内存。
+对于有多个重合图元的情况，则在数组{\ttfamily primitiveIndices}中分配存储。
+\begin{lstlisting}
+`\initcode{Store primitive ids for leaf node}{=}`
+if (np == 0)
+    `\refvar{onePrimitive}{}` = 0;
+else if (np == 1)
+    `\refvar{onePrimitive}{}` = primNums[0];
+else {
+    `\refvar{primitiveIndicesOffset}{}` = primitiveIndices->size();
+    for (int i = 0; i < np; ++i)
+        primitiveIndices->push_back(primNums[i]);
+}
+\end{lstlisting}
+
+让内部节点减少到8字节也相当简单。
+一个\refvar{Float}{}（当\refvar{Float}{}定义为{\ttfamily float}时其大小为32位）
+保存了节点沿所选划分轴分割空间的位置，并且如之前所述，
+\refvar{KdAccelNode::flags}{}低两位用于记录该节点是沿哪个轴划分的。
+剩下的就是存储足够的信息使我们遍历树时能找到该节点的两个孩子。
+
+我们排布节点的方式是只存储一个孩子指针，而不是存储两个指针或偏移量：
+所有节点都分配到单个连续内存块，
+内部节点的对应划分平面下方空间的孩子在数组中的保存位置总是紧跟其父亲
+（通过在内存中保持至少一个孩子挨着其父亲，这样的排布也提高了缓存性能）。
+另一个对应于划分平面上方的孩子，则在数组其他某处出现；
+单个整数偏移量\refvar[aboveChild]{KdAccelNode::aboveChild}{}保存了它在节点数组中的位置。
+该表示和\refsub{为遍历而压实的BVH}中BVH节点用的类似。
+
+有了所有这些约定，初始化内部节点的代码就很简单了。
+就像方法\refvar[KdAccelNode::InitLeaf]{InitLeaf}{()}
+那样，在设置\refvar{aboveChild}{}前为\refvar[KdAccelNode::flags]{flags}{}赋值、
+计算移位的\refvar{aboveChild}{}逻辑或值很重要，
+这样才不会搞乱保存在\refvar[KdAccelNode::flags]{flags}{}中的数位。
+\begin{lstlisting}
+`\initcode{KdAccelNode Methods}{=}\initnext{KdAccelNodeMethods}`
+void `\initvar[KdAccelNode::InitInterior]{InitInterior}{}`(int axis, int ac, `\refvar{Float}{}` s) {
+    `\refvar[KdAccelNode::split]{split}{}` = s;
+    `\refvar[KdAccelNode::flags]{flags}{}` = axis;
+    `\refvar{aboveChild}{}` |= (ac << 2);
+}
+\end{lstlisting}
+
+最后，我们将提供一些方法从节点中提取各种值，
+这样调用者就不需要了解其内存表示的细节了。
+\begin{lstlisting}
+`\refcode{KdAccelNode Methods}{+=}\lastcode{KdAccelNodeMethods}`
+`\refvar{Float}{}` `\initvar{SplitPos}{()}` const { return `\refvar[KdAccelNode::split]{split}{}`; }
+int `\initvar[KdAccelNode::nPrimitives]{nPrimitives}{()}` const { return `\refvar{nPrims}{}` >> 2; }
+int `\initvar[KdAccelNode::SplitAxis]{SplitAxis}{()}` const { return `\refvar[KdAccelNode::flags]{flags}{}` & 3; }
+bool `\initvar{IsLeaf}{()}` const { return (`\refvar[KdAccelNode::flags]{flags}{}` & 3) == 3; }
+int `\initvar{AboveChild}{()}` const { return `\refvar{aboveChild}{}` >> 2; }
+\end{lstlisting}
+
+\subsection{树的构建}\label{sub:树的构建}

@@ -392,7 +392,7 @@ struct `\initvar{BoundEdge}{}` {
 对于任意树节点至多需要为{\ttfamily 2*\refvar[KdTreeAccel::primitives]{primitives}{}.size()}个\refvar{BoundEdge}{}计算开销，
 所以一次分配全部三轴上所有边界的内存然后再为每个创建的节点复用。
 \begin{lstlisting}
-`\initcode{Allocate working memory for kd-tree construction}{=}`
+`\initcode{Allocate working memory for kd-tree construction}{=}\initnext{Allocateworkingmemoryforkdtreeconstruction}`
 std::unique_ptr<`\refvar{BoundEdge}{}`[]> edges[3];
 for (int i = 0; i < 3; ++i)
     edges[i].reset(new `\refvar{BoundEdge}{}`[2 * `\refvar[KdTreeAccel::primitives]{primitives}{}`.size()]);
@@ -418,3 +418,187 @@ retrySplit:
 `\refcode{Initialize edges for axis}{}`
 `\refcode{Compute cost of all splits for axis to find best}{}`
 \end{lstlisting}
+
+该方法首先尝试沿具有最大空间范围的轴寻找一个划分；
+如果成功，该选项则有助于给出形状上趋于方形的空间区域。
+这在直觉上是合理的方法。
+如果沿该轴没有成功找到好的划分，则回退并依次尝试其他的。
+\begin{lstlisting}
+`\initcode{Choose which axis to split along}{=}`
+int axis = nodeBounds.`\refvar{MaximumExtent}{}`();
+\end{lstlisting}
+
+首先用重合图元的边界框初始化该轴的数组{\ttfamily edges}。
+然后该数组沿该轴从低到高存储，这样它就能从头到尾扫掠框的边界。
+\begin{lstlisting}
+`\initcode{Initialize edges for axis}{=}`
+for (int i = 0; i < nPrimitives; ++i) {
+    int pn = primNums[i];
+    const `\refvar{Bounds3f}{}` &bounds = allPrimBounds[pn];
+    edges[axis][2 * i] =     `\refvar{BoundEdge}{}`(bounds.`\refvar{pMin}{}`[axis], pn, true);
+    edges[axis][2 * i + 1] = `\refvar{BoundEdge}{}`(bounds.`\refvar{pMax}{}`[axis], pn, false);
+}
+`\refcode{Sort edges for axis}{}`
+\end{lstlisting}
+
+C++标准库例程{\ttfamily sort()}要求被排序的结构要定义顺序；
+这用值\refvar{BoundEdge::t}{}
+来完成。然而，一个细微之处是如果值\refvar{BoundEdge::t}{}相同，
+则需要通过比较节点类型来打破平局；
+这是必要的，因为{\ttfamily sort()}所取决的事实是
+{\ttfamily a < b}和{\ttfamily b < a}都为{\ttfamily false}的唯一时刻是{\ttfamily a == b}。
+\begin{lstlisting}
+`\initcode{Sort edges for axis}{=}`
+std::sort(&edges[axis][0], &edges[axis][2*nPrimitives],
+    [](const `\refvar{BoundEdge}{}` &e0, const `\refvar{BoundEdge}{}` &e1) -> bool {
+        if (e0.`\refvar[BoundEdge::t]{t}{}` == e1.`\refvar[BoundEdge::t]{t}{}`)
+            return (int)e0.`\refvar[BoundEdge::type]{type}{}` < (int)e1.`\refvar[BoundEdge::type]{type}{}`;
+        else return e0.`\refvar[BoundEdge::t]{t}{}` < e1.`\refvar[BoundEdge::t]{t}{}`; 
+    });
+\end{lstlisting}
+
+有了排好序的边界数组，我们想为它们中的每一处划分快速计算开销函数。
+光线穿过每个孩子节点的概率很容易用其表面积计算，
+划分处每侧的图元数量由变量{\ttfamily nBelow}和{\ttfamily nAbove}跟踪。
+我们想保持它们的值是最新的，这样如果我们在某次循环中选择在{\ttfamily edgeT}处划分，
+{\ttfamily nBelow}会给出最终在划分平面之下的图元数量而{\ttfamily nAbove}则给出之上的数量
+\footnote{当多个边界框面投影到轴上同一点时，这一特性在这些点处可能不成立。
+然而此处的实现只会高估数量，而且更重要的是，
+它会于在这些点的每一个上进行的多次循环中的某一次取到正确的值，
+所以无论如何最终算法的功能是正确的。}。
+
+在第一个边界处，依据定义所有图元必须在该边界之上，
+所以{\ttfamily nAbove}初始化为{\ttfamily nPrimitives}且{\ttfamily nBelow}设为0。
+当循环考虑在边界框范围尾部的划分时，
+{\ttfamily nAbove}需要递减，因为该框以前一定在划分平面之上，
+如果在该点完成划分则它不会再在平面之上。
+同样，计算划分开销后，如果划分候选项在边界框范围的起点处，
+则所有后续划分中该框都会在下侧。
+在循环体开头和结尾的测试为这两种情况更新了图元数量。
+\begin{lstlisting}
+`\initcode{Compute cost of all splits for axis to find best}{=}`
+int nBelow = 0, nAbove = nPrimitives;
+for (int i = 0; i < 2 * nPrimitives; ++i) {
+    if (edges[axis][i].`\refvar[BoundEdge::type]{type}{}` == `\refvar{EdgeType::End}{}`) --nAbove;
+    `\refvar{Float}{}` edgeT = edges[axis][i].`\refvar[BoundEdge::t]{t}{}`;
+    if (edgeT > nodeBounds.`\refvar{pMin}{}`[axis] &&
+        edgeT < nodeBounds.`\refvar{pMax}{}`[axis]) {
+        `\refcode{Compute cost for split at ith edge}{}`
+    }
+    if (edges[axis][i].`\refvar[BoundEdge::type]{type}{}` == `\refvar{EdgeType::Start}{}`) ++nBelow;
+}
+\end{lstlisting}
+
+{\ttfamily belowSA}和{\ttfamily aboveSA}持有两个候选孩子边框的表面积；
+通过把六个面的面积加在一起很容易将其算出来。
+\begin{lstlisting}
+`\initcode{Compute child surface areas for split at edgeT}{=}`
+int otherAxis0 = (axis + 1) % 3, otherAxis1 = (axis + 2) % 3;
+`\refvar{Float}{}` belowSA = 2 * (d[otherAxis0] * d[otherAxis1] +
+                     (edgeT - nodeBounds.`\refvar{pMin}{}`[axis]) * 
+                     (d[otherAxis0] + d[otherAxis1]));
+`\refvar{Float}{}` aboveSA = 2 * (d[otherAxis0] * d[otherAxis1] +
+                     (nodeBounds.`\refvar{pMax}{}`[axis] - edgeT) * 
+                     (d[otherAxis0] + d[otherAxis1]));
+\end{lstlisting}
+
+有了所有这些信息，就可以计算特定划分的开销了。
+\begin{lstlisting}
+`\initcode{Compute cost for split at ith edge}{=}`
+`\refcode{Compute child surface areas for split at edgeT}{}`
+`\refvar{Float}{}` pBelow = belowSA * invTotalSA; 
+`\refvar{Float}{}` pAbove = aboveSA * invTotalSA;
+`\refvar{Float}{}` eb = (nAbove == 0 || nBelow == 0) ? emptyBonus : 0;
+`\refvar{Float}{}` cost = `\refvar{traversalCost}{}` + 
+             `\refvar{isectCost}{}` * (1 - eb) * (pBelow * nBelow + pAbove * nAbove);
+`\refcode{Update best split if this is lowest cost so far}{}`
+\end{lstlisting}
+
+如果为该候选划分计算的开销是目前最好的，则记录该划分的细节。
+\begin{lstlisting}
+`\initcode{Update best split if this is lowest cost so far}{=}`
+if (cost < bestCost)  {
+    bestCost = cost;
+    bestAxis = axis;
+    bestOffset = i;
+}
+\end{lstlisting}
+
+可能在之前的测试中没有找到可行的划分（\reffig{4.16}展示了一种可能发生的情况）。
+这种情况下，沿当前轴不存在可以把该节点划分开的单个候选位置。
+这时，依次尝试另外两轴的划分。
+（当{\ttfamily retries}等于2时）如果它们也没有找到划分，
+则没有有用的方式细化该节点，因为两个孩子都仍会有同样多的重合图元。
+当这种条件发生时，所能做的就是放弃并构建一个叶子节点。
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap04/Overlappingbboxes.tex}
+    \caption{如果多个边界框（虚线）如上所示与一个kd树节点（实线）重合，
+    则不可能有划分位置能让其两侧的图元比总和更少。}
+    \label{fig:4.16}
+\end{figure}
+
+也可能最佳划分的开销仍高于根本不划分该节点的开销。
+如果它差得多且图元也不太多，就立即创建叶子节点。
+否则，{\ttfamily badRefines}保持追踪目前在树的当前节点以上已经做了多少次不良划分。
+允许稍微差些的细化是值得的，因为要考虑的图元子集更小后，之后的划分可能会找到更好的结果。
+\begin{lstlisting}
+`\initcode{Create leaf if no good splits were found}{=}`
+if (bestAxis == -1 && retries < 2) {
+    ++retries;
+    axis = (axis + 1) % 3;
+    goto retrySplit;
+}
+if (bestCost > oldCost) ++badRefines;
+if ((bestCost > 4 * oldCost && nPrimitives < 16) || 
+    bestAxis == -1 || badRefines == 3) {
+    nodes[nodeNum].`\refvar[KdAccelNode::InitLeaf]{InitLeaf}{}`(primNums, nPrimitives, &`\refvar{primitiveIndices}{}`);
+    return; 
+}
+\end{lstlisting}
+
+选好划分位置后，按照之前代码中跟踪{\ttfamily nBelow}和{\ttfamily nAbove}的同样方式，
+边界框的边界可用于把图元分为在划分处上方、下方或同在两侧。
+注意下面的循环中跳过了数组中的项{\ttfamily bestOffset}；
+这是必要的，这样边界框被用作划分处的图元不会被错误地分类为同时位于划分处的两侧。
+\begin{lstlisting}
+`\initcode{Classify primitives with respect to split}{=}`
+int n0 = 0, n1 = 0;
+for (int i = 0; i < bestOffset; ++i)
+    if (edges[bestAxis][i].`\refvar[BoundEdge::type]{type}{}` == `\refvar{EdgeType::Start}{}`)
+        prims0[n0++] = edges[bestAxis][i].`\refvar[BoundEdge::primNum]{primNum}{}`;
+for (int i = bestOffset + 1; i < 2 * nPrimitives; ++i)
+    if (edges[bestAxis][i].`\refvar[BoundEdge::type]{type}{}` == `\refvar{EdgeType::End}{}`)
+        prims1[n1++] = edges[bestAxis][i].`\refvar[BoundEdge::primNum]{primNum}{}`;
+\end{lstlisting}
+
+回想在kd树节点数组中该节点的“下方”孩子的节点序数是当前节点序数加一。
+在递归从树的这一侧返回后，偏移量\refvar{nextFreeNode}{}被用于“上方”孩子。
+这里唯一的重要细节是内存{\ttfamily prims0}被直接传入给两个孩子复用，
+而{\ttfamily prims1}指针则首先向前推进。
+这是必要的，因为当前对\refvar{KdTreeAccel::buildTree}{()}的调用取决于
+下文中它首次递归调用\refvar{KdTreeAccel::buildTree}{()}时贮藏的{\ttfamily prims1}值，
+毕竟它必须作为参数传给第二次调用。
+然而，在首次递归调用立即使用之后就没有相应的必要贮藏{\ttfamily edges}值或贮藏{\ttfamily prims0}了。
+\begin{lstlisting}
+`\initcode{Recursively initialize children nodes}{=}`
+`\refvar{Float}{}` tSplit = edges[bestAxis][bestOffset].`\refvar[BoundEdge::t]{t}{}`;
+`\refvar{Bounds3f}{}` bounds0 = nodeBounds, bounds1 = nodeBounds;
+bounds0.`\refvar{pMax}{}`[bestAxis] = bounds1.`\refvar{pMin}{}`[bestAxis] = tSplit;
+`\refvar[KdTreeAccel::buildTree]{buildTree}{}`(nodeNum + 1, bounds0, allPrimBounds, prims0, n0,
+          depth - 1, edges, prims0, prims1 + nPrimitives, badRefines);
+int aboveChild = `\refvar{nextFreeNode}{}`;
+nodes[nodeNum].`\refvar[KdAccelNode::InitInterior]{InitInterior}{}`(bestAxis, aboveChild, tSplit);
+`\refvar[KdTreeAccel::buildTree]{buildTree}{}`(aboveChild, bounds1, allPrimBounds, prims1, n1, 
+          depth - 1, edges, prims0, prims1 + nPrimitives, badRefines);
+\end{lstlisting}
+
+因此，整数数组{\ttfamily prims1}比数组{\ttfamily prims0}需要
+多得多的空间存储最坏情况下重合图元可能的数目，
+后者只需要一次处理单个层级的图元。
+\begin{lstlisting}
+`\refcode{Allocate working memory for kd-tree construction}{+=}\lastcode{Allocateworkingmemoryforkdtreeconstruction}`
+std::unique_ptr<int[]> prims0(new int[`\refvar[KdTreeAccel::primitives]{primitives}{}`.size()]);
+std::unique_ptr<int[]> prims1(new int[(maxDepth+1) * `\refvar[KdTreeAccel::primitives]{primitives}{}`.size()]);
+\end{lstlisting}
+
+\subsection{遍历}\label{sub:遍历2}

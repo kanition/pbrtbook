@@ -13,7 +13,7 @@
 所以BSP易于处理分布不均的几何体。
 
 BSP树的两个变种是\keyindex{kd树}{kd-tree}{tree树}和\keyindex{八叉树}{octree}{tree树}。
-kd树简单地限制划分平面垂直于一个坐标轴；
+kd树\sidenote{译者注：“kd”是k个维度的缩写。}简单地限制划分平面垂直于一个坐标轴；
 这让树的遍历和构建都更高效，而在如何划分空间上牺牲一些灵活性。
 八叉树每一步用三个垂直于轴的平面同时将该框分为八个区域
 （通常在每个方向沿范围中心划分）。
@@ -42,10 +42,10 @@ private:
 \begin{figure}[htbp]
     \centering\input{Pictures/chap04/kdtreesplits.tex}
     \caption{通过沿坐标轴之一递归地划分场景几何边界框来构建kd树。这里，第一次划分沿$x$轴；
-    它摆放后使三角形刚好单独在右边区域而其余图元则在左边。
-    然后再用轴对齐的划分平面细化若干次左边的区域。
-    细化标准的细节——每一步用哪个轴划分空间、沿轴上哪个位置放置平面
-    以及何时结束细分——在实践中均会极大影响树的性能。}
+        它摆放后使三角形刚好单独在右边区域而其余图元则在左边。
+        然后再用轴对齐的划分平面细化若干次左边的区域。
+        细化标准的细节——每一步用哪个轴划分空间、沿轴上哪个位置放置平面
+        以及何时结束细分——在实践中均会极大影响树的性能。}
     \label{fig:4.14}
 \end{figure}
 
@@ -311,7 +311,7 @@ if (nPrimitives <= `\refvar{maxPrims}{}` || depth == 0) {
 }
 \end{lstlisting}
 
-如果这是个内部节点，则需要选择一个划分平面，按该平面划分图元并递归。
+若这是个内部节点，则需要选择一个划分平面，按该平面划分图元并递归。
 \begin{lstlisting}
 `\initcode{Initialize interior node and continue recursion}{=}`
 `\refcode{Choose split axis position for interior node}{}`
@@ -320,3 +320,101 @@ if (nPrimitives <= `\refvar{maxPrims}{}` || depth == 0) {
 `\refcode{Recursively initialize children nodes}{}`
 \end{lstlisting}
 
+我们的实现选择用\refsub{表面积启发法}介绍的SAH来划分。
+SAH适用于kd树和BVH；为节点中一系列候选划分平面计算估计的开销，
+并选择给出最少开销的划分。
+
+在这里的实现中，相交开销$t_{\text{isect}}$和遍历开销$t_{\text{trav}}$可由用户设置；
+它们的默认值分别是80和1。
+重要的是，这两个值的比例决定了树构建算法的表现
+\footnote{该方法的许多其他实现似乎给这些开销使用了接近得多的值，
+    有时甚至接近相等值（例如，见Hurley等\parencite*{hurley2002fast}）。
+    在pbrt中这里所用的值为大量测试场景给出了最好的性能。
+    我们怀疑这一矛盾是因为pbrt中光线-图元相交测试需要两次虚函数调用
+    以及一次光线从世界到物体空间的变换这一事实，
+    此外还有执行实际相交测试的开销。
+    只支持三角图元的高度优化的光线追踪器不会有此类任何额外开销。
+    见\refsub{只有三角形}关于这一平衡设计的更多讨论。}。
+比起BVH所用的值，这些值之间更大的比例反映的事实是
+访问kd树的节点比访问BVH节点的开销更少。
+
+针对用于BVH树的SAH的一点修改是，对于kd树值得稍微偏好选择
+其中一个孩子没有与之重合的图元的划分，
+因为光线穿过这些区域可以立即进行到下一个kd树节点而无需任何光线-图元相交测试。
+因此，未划分和划分后区域的改进开销分别为
+\begin{align*}
+    t_{\text{isect}}N \quad \text{和} \quad t_{\text{trav}}+(1-b_{\mathrm{e}})(p_BN_Bt_{\text{isect}}+p_AN_At_{\text{isect}})\, ,
+\end{align*}
+其中$b_{\mathrm{e}}$是为零的“补贴”\sidenote{译者注：原文bonus。}值，
+除非两个区域之一完全为空，此时取值0到1。
+
+有了为开销模型计算概率的方法，唯一要解决的问题是
+怎么生成候选划分位置以及怎么为每个候选者高效计算开销。
+可以证明该模型最小开销能于在某一图元边界框的一个面上划分时取得——
+不需要考虑在中间位置的划分（为了帮助你自己理解，
+考虑一下开销函数在面的边界之间时的特性）。
+这里，我们将考虑该区域内三个坐标轴之一或以上的所有边界框面。
+
+利用精心构造的算法可以把检查所有这些候选者的开销维持在相对低的水平。
+为了计算这些开销，我们将扫掠边界框在每个轴上的投影并追踪开销最低的那些（\reffig{4.15}）。
+每个边界框在每个轴上有两处边界，每处都用结构体\refvar{BoundEdge}{}的实例表示。
+该结构体记录了边界沿轴的位置，它表示边界框的开始或结束
+（沿轴从低到高），以及哪个图元与之关联。
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap04/kdtreeprojectedbboxes.tex}
+    \caption{给定我们要考虑的可能划分所沿的轴，图元的边界框被投影到该轴上，
+    这带来了一个高效算法以追踪特定划分平面两侧会各有多少图元。
+    例如这里，在$a_1$处划分会让$A$完全留在划分平面下方，$B$横跨之，而$C$完全在其上方。
+    轴上每一个点$a_0,a_1,b_0,b_1,c_0$和$c_1$都由结构体\refvar{BoundEdge}{}的一个实例表示。}
+    \label{fig:4.15}
+\end{figure}
+\begin{lstlisting}
+`\refcode{KdTreeAccel Local Declarations}{+=}\lastnext{KdTreeAccelLocalDeclarations}`
+enum class `\initvar{EdgeType}{}` { `\initvar[EdgeType::Start]{Start}{}`, `\initvar[EdgeType::End]{End}{}` };
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{KdTreeAccel Local Declarations}{+=}\lastcode{KdTreeAccelLocalDeclarations}`
+struct `\initvar{BoundEdge}{}` {
+    `\refcode{BoundEdge Public Methods}{}`
+    `\refvar{Float}{}` `\initvar[BoundEdge::t]{t}{}`;
+    int `\initvar[BoundEdge::primNum]{primNum}{}`;
+    `\refvar{EdgeType}{}` `\initvar[BoundEdge::type]{type}{}`;
+};
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{BoundEdge Public Methods}{=}`
+`\refvar{BoundEdge}{}`(`\refvar{Float}{}` t, int primNum, bool starting)
+    : `\refvar[BoundEdge::t]{t}{}`(t), `\refvar[BoundEdge::primNum]{primNum}{}`(primNum) {
+    `\refvar[BoundEdge::type]{type}{}` = starting ? `\refvar{EdgeType::Start}{}` : `\refvar{EdgeType::End}{}`; 
+}
+\end{lstlisting}
+
+对于任意树节点至多需要为{\ttfamily 2*\refvar[KdTreeAccel::primitives]{primitives}{}.size()}个\refvar{BoundEdge}{}计算开销，
+所以一次分配全部三轴上所有边界的内存然后再为每个创建的节点复用。
+\begin{lstlisting}
+`\initcode{Allocate working memory for kd-tree construction}{=}`
+std::unique_ptr<`\refvar{BoundEdge}{}`[]> edges[3];
+for (int i = 0; i < 3; ++i)
+    edges[i].reset(new `\refvar{BoundEdge}{}`[2 * `\refvar[KdTreeAccel::primitives]{primitives}{}`.size()]);
+\end{lstlisting}
+
+在为创建的叶子确定估计的开销后，\refvar{KdTreeAccel::buildTree}{()}选择
+一个轴尝试沿其划分并为每个候选划分计算开销函数。
+{\ttfamily bestAxis}和{\ttfamily bestOffset}记录了该轴
+以及目前给出最低开销{\ttfamily bestCost}的边界框边界索引。
+{\ttfamily invTotalSA}初始化为节点表面积的倒数；
+当计算光线穿过每个候选孩子节点的概率时会用到它的值。
+\begin{lstlisting}
+`\initcode{Choose split axis position for interior node}{=}`
+int bestAxis = -1, bestOffset = -1;
+`\refvar{Float}{}` bestCost = `\refvar{Infinity}{}`;
+`\refvar{Float}{}` oldCost = `\refvar{isectCost}{}` * `\refvar{Float}{}`(nPrimitives);
+`\refvar{Float}{}` totalSA = nodeBounds.`\refvar{SurfaceArea}{}`();
+`\refvar{Float}{}` invTotalSA = 1 / totalSA;
+`\refvar{Vector3f}{}` d = nodeBounds.`\refvar{pMax}{}` - nodeBounds.`\refvar{pMin}{}`;
+`\refcode{Choose which axis to split along}{}`
+int retries = 0;
+retrySplit:
+`\refcode{Initialize edges for axis}{}`
+`\refcode{Compute cost of all splits for axis to find best}{}`
+\end{lstlisting}

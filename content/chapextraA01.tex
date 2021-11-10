@@ -55,6 +55,14 @@ inline `\refvar{Float}{}` `\initvar{Degrees}{}`(`\refvar{Float}{}` rad) {
 }
 \end{lstlisting}
 
+\subsubsection*{基于2的运算}
+\begin{lstlisting}
+`\refcode{Global Inline Functions}{+=}\lastnext{GlobalInlineFunctions}`
+inline int `\initvar{Log2Int}{}`(uint32_t v) {
+    return 31 - __builtin_clz(v);
+}
+\end{lstlisting}
+
 \subsection{伪随机数}\label{sub:伪随机数}
 {\initvar{RNG}{}}
 \begin{lstlisting}

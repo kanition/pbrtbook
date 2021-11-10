@@ -136,14 +136,14 @@ struct `\initvar{BVHBuildNode}{}` {
     `\refcode{BVHBuildNode Public Methods}{}`
     `\refvar{Bounds3f}{}` `\initvar[BVHBuildNode::bounds]{bounds}{}`;
     `\refvar{BVHBuildNode}{}` *`\initvar[BVHBuildNode::children]{children}{}`[2];
-    int `\initvar{splitAxis}{}`, `\initvar{firstPrimOffset}{}`, `\initvar[BVHBuildNode:nPrimitives]{nPrimitives}{}`;
+    int `\initvar[BVHBuildNode::splitAxis]{splitAxis}{}`, `\initvar{firstPrimOffset}{}`, `\initvar[BVHBuildNode:nPrimitives]{nPrimitives}{}`;
 };
 \end{lstlisting}
 
 我们将通过其孩子指针是否有值{\ttfamily nullptr}来分别区分叶子和内部节点。
 \begin{lstlisting}
 `\initcode{BVHBuildNode Public Methods}{=}\initnext{BVHBuildNodePublicMethods}`
-void `\initvar{InitLeaf}{}`(int first, int n, const `\refvar{Bounds3f}{}` &b) {
+void `\initvar[BVHBuildNode::InitLeaf]{InitLeaf}{}`(int first, int n, const `\refvar{Bounds3f}{}` &b) {
     `\refvar{firstPrimOffset}{}` = first;
     `\refvar[BVHBuildNode:nPrimitives]{nPrimitives}{}` = n;
     `\refvar[BVHBuildNode::bounds]{bounds}{}` = b;
@@ -151,15 +151,15 @@ void `\initvar{InitLeaf}{}`(int first, int n, const `\refvar{Bounds3f}{}` &b) {
 }
 \end{lstlisting}
 
-方法\refvar{InitInterior}{()}要求已创建两个孩子节点，这样它们的指针才能传入。
+方法\refvar[BVHBuildNode::InitInterior]{InitInterior}{()}要求已创建两个孩子节点，这样它们的指针才能传入。
 该要求让计算内部节点的边界更加容易了，因为孩子的边界可以立刻获得。
 \begin{lstlisting}
 `\refcode{BVHBuildNode Public Methods}{+=}\lastcode{BVHBuildNodePublicMethods}`
-void `\initvar{InitInterior}{}`(int axis, `\refvar{BVHBuildNode}{}` *c0, `\refvar{BVHBuildNode}{}` *c1) {
+void `\initvar[BVHBuildNode::InitInterior]{InitInterior}{}`(int axis, `\refvar{BVHBuildNode}{}` *c0, `\refvar{BVHBuildNode}{}` *c1) {
     `\refvar[BVHBuildNode::children]{children}{}`[0] = c0;
     `\refvar[BVHBuildNode::children]{children}{}`[1] = c1;
     `\refvar[BVHBuildNode::bounds]{bounds}{}` = `\refvar[Union2]{Union}{}`(c0->`\refvar[BVHBuildNode::bounds]{bounds}{}`, c1->`\refvar[BVHBuildNode::bounds]{bounds}{}`);
-    `\refvar{splitAxis}{}` = axis;
+    `\refvar[BVHBuildNode::splitAxis]{splitAxis}{}` = axis;
     `\refvar[BVHBuildNode:nPrimitives]{nPrimitives}{}` = 0;
 }
 \end{lstlisting}
@@ -214,7 +214,7 @@ for (int i = start; i < end; ++i) {
     int primNum = primitiveInfo[i].`\refvar{primitiveNumber}{}`;
     orderedPrims.push_back(`\refvar[BVHAccel::primitives]{primitives}{}`[primNum]);
 }
-node->`\refvar{InitLeaf}{}`(firstPrimOffset, nPrimitives, bounds);
+node->`\refvar[BVHBuildNode::InitLeaf]{InitLeaf}{}`(firstPrimOffset, nPrimitives, bounds);
 return node;
 \end{lstlisting}
 
@@ -260,7 +260,7 @@ if (centroidBounds.`\refvar{pMax}{}`[dim] == centroidBounds.`\refvar{pMin}{}`[di
     `\refcode{Create leaf BVHBuildNode}{}`
 } else {
     `\refcode{Partition primitives based on splitMethod}{}`
-    node->`\refvar{InitInterior}{}`(dim,
+    node->`\refvar[BVHBuildNode::InitInterior]{InitInterior}{}`(dim,
                        `\refvar{recursiveBuild}{}`(arena, primitiveInfo, start, mid,
                                       totalNodes, orderedPrims),
                        `\refvar{recursiveBuild}{}`(arena, primitiveInfo, mid, end,
@@ -1005,7 +1005,7 @@ for (int i = 0; i < nPrimitives; ++i) {
     orderedPrims[firstPrimOffset + i] = primitives[primitiveIndex];
     bounds = `\refvar[Union2]{Union}{}`(bounds, primitiveInfo[primitiveIndex].`\refvar[BVHPrimitiveInfo::bounds]{bounds}{}`);
 }
-node->`\refvar{InitLeaf}{}`(firstPrimOffset, nPrimitives, bounds);
+node->`\refvar[BVHBuildNode::InitLeaf]{InitLeaf}{}`(firstPrimOffset, nPrimitives, bounds);
 return node;
 \end{lstlisting}
 
@@ -1055,7 +1055,7 @@ int splitOffset = searchEnd;
              orderedPrimsOffset, bitIndex - 1)
 };
 int axis = bitIndex % 3;
-node->`\refvar{InitInterior}{}`(axis, lbvh[0], lbvh[1]);
+node->`\refvar[BVHBuildNode::InitInterior]{InitInterior}{}`(axis, lbvh[0], lbvh[1]);
 return node;
 \end{lstlisting}
 
@@ -1082,7 +1082,7 @@ return `\refvar{buildUpperSAH}{}`(arena, finishedTreelets, 0,
     int *totalNodes) const;
 \end{lstlisting}
 
-\subsection{为遍历而压实的BVH}
+\subsection{为遍历而压实的BVH}\label{sub:为遍历而压实的BVH}
 一旦建好BVH树，最后一步就是将其转换为紧凑的\sidenote{译者注：原文compact。}表达——
 这样做能提升缓存、内存以及整个系统的性能。
 最后的BVH存于内存中的一个线性数组内。
@@ -1166,7 +1166,7 @@ int `\refvar{BVHAccel}{}`::`\initvar{flattenBVHTree}{}`(`\refvar{BVHBuildNode}{}
 则保存在该节点的成员\refvar{secondChildOffset}{}中。
 \begin{lstlisting}
 `\initcode{Create interior flattened BVH node}{=}`
-linearNode->`\refvar[LinearBVHNode::axis]{axis}{}` = node->`\refvar{splitAxis}{}`;
+linearNode->`\refvar[LinearBVHNode::axis]{axis}{}` = node->`\refvar[BVHBuildNode::splitAxis]{splitAxis}{}`;
 linearNode->`\refvar[LinearBVHNode::nPrimitives]{nPrimitives}{}` = 0;
 `\refvar{flattenBVHTree}{}`(node->`\refvar[BVHBuildNode::children]{children}{}`[0], offset);
 linearNode->`\refvar{secondChildOffset}{}` =

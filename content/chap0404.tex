@@ -1,1 +1,819 @@
 \section{kd树加速器}\label{sec:kd树加速器}
+
+\keyindex{二叉空间划分}{binary space partitioning}{}(BSP)树用平面自适应地细分空间。
+一个BSP树从包含整个场景的边界框开始。
+如果框内图元的数量大于某个阈值，则用平面将该框分为两半。
+然后图元和与之重合的任意一半关联，
+同时位于两半里的图元就都与它们关联
+（相比之下，BVH中划分后每个图元只能分配到两个组中的一个）。
+
+划分过程递归进行，直到结果树中的每个叶子区域都包含足够少的图元或者达到最大深度。
+因为划分平面可以放置于整个框内的任意位置，
+且3D空间的不同部分可以精确到不同程度，
+所以BSP易于处理分布不均的几何体。
+
+BSP树的两个变种是\keyindex{kd树}{kd-tree}{tree树}和\keyindex{八叉树}{octree}{tree树}。
+kd树\sidenote{译者注：“kd”是k个维度的缩写。}简单地限制划分平面垂直于一个坐标轴；
+这让树的遍历和构建都更高效，而在如何划分空间上牺牲一些灵活性。
+八叉树每一步用三个垂直于轴的平面同时将该框分为八个区域
+（通常在每个方向沿范围中心划分）。
+
+本节中，我们将在类\refvar{KdTreeAccel}{}中为光线相交加速实现一个kd树。
+该类源码可在文件\href{https://github.com/mmp/pbrt-v3/tree/master/src/accelerators/kdtreeaccel.h}{\ttfamily accelerators/kdtreeaccel.h}
+和\href{https://github.com/mmp/pbrt-v3/tree/master/src/accelerators/kdtreeaccel.cpp}{\ttfamily accelerators/kdtreeaccel.cpp}
+中找到。
+
+\begin{lstlisting}
+`\initcode{KdTreeAccel Declarations}{=}\initnext{KdTreeAccelDeclarations}`
+class `\initvar{KdTreeAccel}{}` : public `\refvar{Aggregate}{}` {
+public:
+    `\refcode{KdTreeAccel Public Methods}{}`
+private:
+    `\refcode{KdTreeAccel Private Methods}{}`
+    `\refcode{KdTreeAccel Private Data}{}`
+};
+\end{lstlisting}
+
+除了要保存的图元外，\refvar{KdTreeAccel}{}构造函数
+还接收一些参数用于在构建树时指导要作出的决定；
+这些参数存于成员变量中（\refvar{isectCost}{}、\refvar{traversalCost}{}、
+\refvar{maxPrims}{}、{\ttfamily maxDepth}和\refvar{emptyBonus}{}）留待后用。
+见\reffig{4.14}中构建树的图示。
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap04/kdtreesplits.tex}
+    \caption{通过沿坐标轴之一递归地划分场景几何边界框来构建kd树。这里，第一次划分沿$x$轴；
+        它摆放后使三角形刚好单独在右边区域而其余图元则在左边。
+        然后再用轴对齐的划分平面细化若干次左边的区域。
+        细化标准的细节——每一步用哪个轴划分空间、沿轴上哪个位置放置平面
+        以及何时结束细分——在实践中均会极大影响树的性能。}
+    \label{fig:4.14}
+\end{figure}
+
+\begin{lstlisting}
+`\initcode{KdTreeAccel Method Definitions}{=}\initnext{KdTreeAccelMethodDefinitions}`
+`\refvar{KdTreeAccel}{}`::`\refvar{KdTreeAccel}{}`(
+        const std::vector<std::shared_ptr<`\refvar{Primitive}{}`>> &p,
+        int isectCost, int traversalCost, `\refvar{Float}{}` emptyBonus,
+        int maxPrims, int maxDepth)
+    : `\refvar{isectCost}{}`(isectCost), `\refvar{traversalCost}{}`(traversalCost),
+      `\refvar{maxPrims}{}`(maxPrims), `\refvar{emptyBonus}{}`(emptyBonus), `\refvar[KdTreeAccel::primitives]{primitives}{}`(p) {
+    `\refcode{Build kd-tree for accelerator}{}`
+}
+\end{lstlisting}
+
+\begin{lstlisting}
+`\initcode{KdTreeAccel Private Data}{=}\initnext{KdTreeAccelPrivateData}`
+const int `\initvar{isectCost}{}`, `\initvar{traversalCost}{}`, `\initvar{maxPrims}{}`;
+const `\refvar{Float}{}` `\initvar{emptyBonus}{}`;
+std::vector<std::shared_ptr<`\refvar{Primitive}{}`>> `\initvar[KdTreeAccel::primitives]{primitives}{}`;
+\end{lstlisting}
+
+\subsection{树状表示}\label{sub:树状表示}
+kd树是二叉树，每个内部节点总是有两个孩子且树的叶子存有与之重合的图元。
+每个内部节点必须提供三块信息的访问渠道：
+\begin{itemize}
+    \item 划分轴：该节点划分了$x,y$和$z$中的哪一个轴；
+    \item 划分位置：划分平面沿该轴的位置；
+    \item 孩子：关于如何到达其下两个子节点的信息。
+\end{itemize}
+每个叶子节点只需要记录哪个图元与之重合。
+
+为了保证所有内部节点和许多叶子节点只用8字节内存
+（假设\refvar{Float}{}占4字节）而麻烦一下是值得的，
+因为这样做保证了八个节点契合一个64字节的缓存行。
+因为树中经常有许多节点且每条光线通常都要访问许多节点，
+最小化节点表示的大小能极大提高缓存性能。
+我们最初的实现使用了16字节节点表示；
+当我们把大小减少到8字节时我们得到了几乎20\%的提速。
+
+叶子和内部节点都用下面的结构体\refvar{KdAccelNode}{}表示。
+每个{\ttfamily union}成员后的注释都说明了特定域是用于内部节点、叶子节点还是两者都是。
+\begin{lstlisting}
+`\initcode{KdTreeAccel Local Declarations}{=}\initnext{KdTreeAccelLocalDeclarations}`
+struct `\initvar{KdAccelNode}{}` {
+    `\refcode{KdAccelNode Methods}{}`
+    union {
+        `\refvar{Float}{}` `\initvar[KdAccelNode::split]{split}{}`;                  // Interior
+        int `\initvar{onePrimitive}{}`;             // Leaf
+        int `\initvar{primitiveIndicesOffset}{}`;   // Leaf
+    };
+    union {
+        int `\initvar[KdAccelNode::flags]{flags}{}`;         // Both
+        int `\initvar{nPrims}{}`;        // Leaf
+        int `\initvar{aboveChild}{}`;    // Interior
+    };
+};
+\end{lstlisting}
+
+变量\refvar{KdAccelNode::flags}{}的低两位用于区分用$x,y$和$z$划分的内部节点
+（这些数位分别取值0,1和2）以及叶子节点（这些数位取值3）。
+在8字节中保存叶子节点相对简单：\refvar{KdAccelNode::flags}{}的低2位
+用于表示这是一个叶子，\refvar[nPrims]{KdAccelNode::nPrims}{}的高30位
+可用于记录有多少个图元与之重合。
+然后，如果只有一个图元与\refvar{KdAccelNode}{}叶子重合，
+则指向数组\refvar{KdTreeAccel::primitives}{}
+的整数索引会指出该\refvar{Primitive}{}。如果重合的图元多于一个，
+则它们的索引保存于\refvar[primitiveIndices]{KdTreeAccel::primitiveIndices}{}的一段中。
+该叶子第一个索引的偏移量存于\refvar[primitiveIndicesOffset]{KdAccelNode::primitiveIndicesOffset}{}且后面直接跟着剩下的索引。
+\begin{lstlisting}
+`\refcode{KdTreeAccel Private Data}{+=}\lastnext{KdTreeAccelPrivateData}`
+std::vector<int> `\initvar{primitiveIndices}{}`;
+\end{lstlisting}
+
+叶子节点很容易初始化，不过我们要注意细节，
+因为\refvar[KdAccelNode::flags]{flags}{}和\refvar{nPrims}{}共享同一存储；
+我们需要注意在初始化其中一个时不要搞乱了另一个。
+此外，在保存图元数量前必须向左移两位，
+这样\refvar{KdAccelNode::flags}{}的低两位可以都设为1以表示这是一个叶子节点。
+\begin{lstlisting}
+`\refcode{KdTreeAccel Method Definitions}{+=}\lastnext{KdTreeAccelMethodDefinitions}`
+void `\refvar{KdAccelNode}{}`::`\initvar[KdAccelNode::InitLeaf]{InitLeaf}{}`(int *primNums, int np,
+        std::vector<int> *primitiveIndices) {
+    `\refvar[KdAccelNode::flags]{flags}{}` = 3;
+    `\refvar{nPrims}{}` |= (np << 2);
+    `\refcode{Store primitive ids for leaf node}{}`
+}
+\end{lstlisting}
+
+对于有零或一个重合图元的叶子节点，
+因为有\refvar[onePrimitive]{KdAccelNode::onePrimitive}{}
+域了，所以不再需要额外分配内存。
+对于有多个重合图元的情况，则在数组{\ttfamily primitiveIndices}中分配存储。
+\begin{lstlisting}
+`\initcode{Store primitive ids for leaf node}{=}`
+if (np == 0)
+    `\refvar{onePrimitive}{}` = 0;
+else if (np == 1)
+    `\refvar{onePrimitive}{}` = primNums[0];
+else {
+    `\refvar{primitiveIndicesOffset}{}` = primitiveIndices->size();
+    for (int i = 0; i < np; ++i)
+        primitiveIndices->push_back(primNums[i]);
+}
+\end{lstlisting}
+
+让内部节点减少到8字节也相当简单。
+一个\refvar{Float}{}（当\refvar{Float}{}定义为{\ttfamily float}时其大小为32位）
+保存了节点沿所选划分轴分割空间的位置，并且如之前所述，
+\refvar{KdAccelNode::flags}{}低两位用于记录该节点是沿哪个轴划分的。
+剩下的就是存储足够的信息使我们遍历树时能找到该节点的两个孩子。
+
+我们排布节点的方式是只存储一个孩子指针，而不是存储两个指针或偏移量：
+所有节点都分配到单个连续内存块，
+内部节点的对应划分平面下方空间的孩子在数组中的保存位置总是紧跟其父亲
+（通过在内存中保持至少一个孩子挨着其父亲，这样的排布也提高了缓存性能）。
+另一个对应于划分平面上方的孩子，则在数组其他某处出现；
+单个整数偏移量\refvar[aboveChild]{KdAccelNode::aboveChild}{}保存了它在节点数组中的位置。
+该表示和\refsub{为遍历而压实的BVH}中BVH节点用的类似。
+
+有了所有这些约定，初始化内部节点的代码就很简单了。
+就像方法\refvar[KdAccelNode::InitLeaf]{InitLeaf}{()}
+那样，在设置\refvar{aboveChild}{}前为\refvar[KdAccelNode::flags]{flags}{}赋值、
+计算移位的\refvar{aboveChild}{}逻辑或值很重要，
+这样才不会搞乱保存在\refvar[KdAccelNode::flags]{flags}{}中的数位。
+\begin{lstlisting}
+`\initcode{KdAccelNode Methods}{=}\initnext{KdAccelNodeMethods}`
+void `\initvar[KdAccelNode::InitInterior]{InitInterior}{}`(int axis, int ac, `\refvar{Float}{}` s) {
+    `\refvar[KdAccelNode::split]{split}{}` = s;
+    `\refvar[KdAccelNode::flags]{flags}{}` = axis;
+    `\refvar{aboveChild}{}` |= (ac << 2);
+}
+\end{lstlisting}
+
+最后，我们将提供一些方法从节点中提取各种值，
+这样调用者就不需要了解其内存表示的细节了。
+\begin{lstlisting}
+`\refcode{KdAccelNode Methods}{+=}\lastcode{KdAccelNodeMethods}`
+`\refvar{Float}{}` `\initvar{SplitPos}{()}` const { return `\refvar[KdAccelNode::split]{split}{}`; }
+int `\initvar[KdAccelNode::nPrimitives]{nPrimitives}{()}` const { return `\refvar{nPrims}{}` >> 2; }
+int `\initvar[KdAccelNode::SplitAxis]{SplitAxis}{()}` const { return `\refvar[KdAccelNode::flags]{flags}{}` & 3; }
+bool `\initvar{IsLeaf}{()}` const { return (`\refvar[KdAccelNode::flags]{flags}{}` & 3) == 3; }
+int `\initvar{AboveChild}{()}` const { return `\refvar{aboveChild}{}` >> 2; }
+\end{lstlisting}
+
+\subsection{树的构建}\label{sub:树的构建}
+kd树是用递归自顶向下算法构建的。
+每一步中，我们有一个轴对齐空间区域和与该区域重合的图元集。
+要么该区域分为两个子区域且转化为内部节点，
+要么用重合的图元创建一个叶子节点，结束递归。
+
+正如讨论\refvar{KdAccelNode}{}时所提到的，
+所有树节点都保存于连续数组中。\newline
+\refvar[nextFreeNode]{KdTreeAccel::nextFreeNode}{}记录了该数组中下一个有效节点，
+\refvar[nAllocedNodes]{KdTreeAccel::\newline nAllocedNodes}{}记录了已经分配的总数。
+通过一开始设置两者为0且不分配任何节点，这里的实现保证了当初始化树的第一个节点时能立即完成分配。
+
+如果没有为构造函数给定，则还有必要确定树的最大深度。
+尽管树的构建过程通常会自然地在合理的深度结束，
+但限制最大深度很重要，这样极端情况下树所用的内存数量才不会无限增长。
+我们已经发现值$8+1.3\log(N)$为大量场景给出了合理的最大深度\sidenote{译者注：对数以2为底。}。
+
+\begin{lstlisting}
+`\initcode{Build kd-tree for accelerator}{=}`
+`\refvar{nextFreeNode}{}` = `\refvar{nAllocedNodes}{}` = 0;
+if (maxDepth <= 0)
+    maxDepth = std::round(8 + 1.3f * `\refvar{Log2Int}{}`(`\refvar[KdTreeAccel::primitives]{primitives}{}`.size()));
+`\refcode{Compute bounds for kd-tree construction}{}`
+`\refcode{Allocate working memory for kd-tree construction}{}`
+`\refcode{Initialize primNums for kd-tree construction}{}`
+`\refcode{Start recursive construction of kd-tree}{}`
+\end{lstlisting}
+
+\begin{lstlisting}
+`\refcode{KdTreeAccel Private Data}{+=}\lastnext{KdTreeAccelPrivateData}`
+`\refvar{KdAccelNode}{}` *`\initvar[KdTreeAccel::nodes]{nodes}{}`;
+int `\initvar{nAllocedNodes}{}`, `\initvar{nextFreeNode}{}`;
+\end{lstlisting}
+
+因为构建例程会一路重复使用图元边界框，
+所以在开始构建树前它们被保存在{\ttfamily vector}中，
+这样就不需重复调用可能更慢的方法\refvar{Primitive::WorldBound}{()}。
+\begin{lstlisting}
+`\initcode{Compute bounds for kd-tree construction}{=}`
+std::vector<`\refvar{Bounds3f}{}`> primBounds;
+for (const std::shared_ptr<`\refvar{Primitive}{}`> &prim : `\refvar[KdTreeAccel::primitives]{primitives}{}`) {
+    `\refvar{Bounds3f}{}` b = prim->`\refvar[Primitive::WorldBound]{WorldBound}{}`();
+    `\refvar[KdTreeAccel::bounds]{bounds}{}` = `\refvar[Union2]{Union}{}`(bounds, b);
+    primBounds.push_back(b);
+}
+\end{lstlisting}
+
+\begin{lstlisting}
+`\refcode{KdTreeAccel Private Data}{+=}\lastcode{KdTreeAccelPrivateData}`
+`\refvar{Bounds3f}{}` `\initvar[KdTreeAccel::bounds]{bounds}{}`;
+\end{lstlisting}
+
+树构建例程的参数之一是图元索引数组，表示哪个图元与当前节点重合。
+因为（当递归开始时）所有图元都和根节点重合，
+所以我们从初始化值为零到{\ttfamily primitives.size()-1}的数组开始。
+\begin{lstlisting}
+`\initcode{Initialize primNums for kd-tree construction}{=}`
+std::unique_ptr<int[]> primNums(new int[`\refvar[KdTreeAccel::primitives]{primitives}{}`.size()]);
+for (size_t i = 0; i < `\refvar[KdTreeAccel::primitives]{primitives}{}`.size(); ++i)
+    primNums[i] = i;
+\end{lstlisting}
+
+每个树节点都会调用\refvar{KdTreeAccel::buildTree}{()}。
+它负责决定该节点应该是内部节点还是叶子并适当更新数据结构。
+最后三个参数{\ttfamily edges}、{\ttfamily prims0}、{\ttfamily prims1}是
+指向分配于代码片\refcode{Allocate working memory for kd-tree construction}{}的数据的指针，
+稍后几页会对此作定义和介绍。
+\begin{lstlisting}
+`\initcode{Start recursive construction of kd-tree}{=}`
+`\refvar[KdTreeAccel::buildTree]{buildTree}{}`(0, `\refvar[KdTreeAccel::bounds]{bounds}{}`, primBounds, primNums.get(), `\refvar[KdTreeAccel::primitives]{primitives}{}`.size(), 
+          maxDepth, edges, prims0.get(), prims1.get());
+\end{lstlisting}
+
+\refvar{KdTreeAccel::buildTree}{()}的主要参数是供创建的节点使用的相对于
+\refvar{KdAccelNode}{}数组的偏移量{\ttfamily nodeNum}、
+给出该节点覆盖的空间区域边界框的{\ttfamily nodeBounds}，
+以及与之重合的图元索引{\ttfamily primNums}。
+其余参数稍后在快用到它们时阐述。
+\begin{lstlisting}
+`\refcode{KdTreeAccel Method Definitions}{+=}\lastnext{KdTreeAccelMethodDefinitions}`
+void `\refvar{KdTreeAccel}{}::\initvar[KdTreeAccel::buildTree]{buildTree}{}`(int nodeNum, const `\refvar{Bounds3f}{}` &nodeBounds,
+        const std::vector<`\refvar{Bounds3f}{}`> &allPrimBounds, int *primNums,
+        int nPrimitives, int depth,
+        const std::unique_ptr<`\refvar{BoundEdge}{}`[]> edges[3], 
+        int *prims0, int *prims1, int badRefines) {
+    `\refcode{Get next free node from nodes array}{}`
+    `\refcode{Initialize leaf node if termination criteria met}{}`
+    `\refcode{Initialize interior node and continue recursion}{}`
+}
+\end{lstlisting}
+
+如果所有分配的节点都已经用完了，则重新分配两倍数量的节点内存并复制旧值。
+第一次调用\refvar{KdTreeAccel::buildTree}{()}时，
+\refvar[nAllocedNodes]{KdTreeAccel::nAllocedNodes}{}
+为0并分配树节点的一个初始块。
+\begin{lstlisting}
+`\initcode{Get next free node from nodes array}{=}`
+if (`\refvar{nextFreeNode}{}` == `\refvar{nAllocedNodes}{}`) {
+    int nNewAllocNodes = std::max(2 * `\refvar{nAllocedNodes}{}`, 512);
+    `\refvar{KdAccelNode}{}` *n = `\refvar{AllocAligned}{}`<`\refvar{KdAccelNode}{}`>(nNewAllocNodes);
+    if (`\refvar{nAllocedNodes}{}` > 0) {
+        memcpy(n, `\refvar[KdTreeAccel::nodes]{nodes}{}`, `\refvar{nAllocedNodes}{}` * sizeof(`\refvar{KdAccelNode}{}`));
+        `\refvar{FreeAligned}{}`(`\refvar[KdTreeAccel::nodes]{nodes}{}`);
+    }
+    `\refvar[KdTreeAccel::nodes]{nodes}{}` = n;
+    `\refvar{nAllocedNodes}{}` = nNewAllocNodes;
+}
+++`\refvar{nextFreeNode}{}`;
+\end{lstlisting}
+
+当区域内有足够少量的图元或达到最大深度时就创建叶子节点（停止递归）。
+参数{\ttfamily depth}一开始为树的最大深度，且每一层递减。
+\begin{lstlisting}
+`\initcode{Initialize leaf node if termination criteria met}{=}`
+if (nPrimitives <= `\refvar{maxPrims}{}` || depth == 0) {
+    `\refvar[KdTreeAccel::nodes]{nodes}{}`[nodeNum].`\refvar[KdAccelNode::InitLeaf]{InitLeaf}{}`(primNums, nPrimitives, &`\refvar{primitiveIndices}{}`);
+    return;
+}
+\end{lstlisting}
+
+若这是个内部节点，则需要选择一个划分平面，按该平面划分图元并递归。
+\begin{lstlisting}
+`\initcode{Initialize interior node and continue recursion}{=}`
+`\refcode{Choose split axis position for interior node}{}`
+`\refcode{Create leaf if no good splits were found}{}`
+`\refcode{Classify primitives with respect to split}{}`
+`\refcode{Recursively initialize children nodes}{}`
+\end{lstlisting}
+
+我们的实现选择用\refsub{表面积启发法}介绍的SAH来划分。
+SAH适用于kd树和BVH；为节点中一系列候选划分平面计算估计的开销，
+并选择给出最少开销的划分。
+
+在这里的实现中，相交开销$t_{\text{isect}}$和遍历开销$t_{\text{trav}}$可由用户设置；
+它们的默认值分别是80和1。
+重要的是，这两个值的比例决定了树构建算法的表现
+\footnote{该方法的许多其他实现似乎给这些开销使用了接近得多的值，
+    有时甚至接近相等值（例如，见Hurley等\parencite*{hurley2002fast}）。
+    在pbrt中这里所用的值为大量测试场景给出了最好的性能。
+    我们怀疑这一矛盾是因为pbrt中光线-图元相交测试需要两次虚函数调用
+    以及一次光线从世界到物体空间的变换这一事实，
+    此外还有执行实际相交测试的开销。
+    只支持三角图元的高度优化的光线追踪器不会有此类任何额外开销。
+    见\refsub{只有三角形}关于这一平衡设计的更多讨论。}。
+比起BVH所用的值，这些值之间更大的比例反映的事实是
+访问kd树的节点比访问BVH节点的开销更少。
+
+针对用于BVH树的SAH的一点修改是，对于kd树值得稍微偏好选择
+其中一个孩子没有与之重合的图元的划分，
+因为光线穿过这些区域可以立即进行到下一个kd树节点而无需任何光线-图元相交测试。
+因此，未划分和划分后区域的改进开销分别为
+\begin{align*}
+    t_{\text{isect}}N \quad \text{和} \quad t_{\text{trav}}+(1-b_{\mathrm{e}})(p_BN_Bt_{\text{isect}}+p_AN_At_{\text{isect}})\, ,
+\end{align*}
+其中$b_{\mathrm{e}}$是为零的“补贴”\sidenote{译者注：原文bonus。}值，
+除非两个区域之一完全为空，此时取值0到1。
+
+有了为开销模型计算概率的方法，唯一要解决的问题是
+怎么生成候选划分位置以及怎么为每个候选者高效计算开销。
+可以证明该模型最小开销能于在某一图元边界框的一个面上划分时取得——
+不需要考虑在中间位置的划分（为了帮助你自己理解，
+考虑一下开销函数在面的边界之间时的特性）。
+这里，我们将考虑该区域内三个坐标轴之一或以上的所有边界框面。
+
+利用精心构造的算法可以把检查所有这些候选者的开销维持在相对低的水平。
+为了计算这些开销，我们将扫掠边界框在每个轴上的投影并追踪开销最低的那些（\reffig{4.15}）。
+每个边界框在每个轴上有两处边界，每处都用结构体\refvar{BoundEdge}{}的实例表示。
+该结构体记录了边界沿轴的位置，它表示边界框的开始或结束
+（沿轴从低到高），以及哪个图元与之关联。
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap04/kdtreeprojectedbboxes.tex}
+    \caption{给定我们要考虑的可能划分所沿的轴，图元的边界框被投影到该轴上，
+    这带来了一个高效算法以追踪特定划分平面两侧会各有多少图元。
+    例如这里，在$a_1$处划分会让$A$完全留在划分平面下方，$B$横跨之，而$C$完全在其上方。
+    轴上每一个点$a_0,a_1,b_0,b_1,c_0$和$c_1$都由结构体\refvar{BoundEdge}{}的一个实例表示。}
+    \label{fig:4.15}
+\end{figure}
+\begin{lstlisting}
+`\refcode{KdTreeAccel Local Declarations}{+=}\lastnext{KdTreeAccelLocalDeclarations}`
+enum class `\initvar{EdgeType}{}` { `\initvar[EdgeType::Start]{Start}{}`, `\initvar[EdgeType::End]{End}{}` };
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{KdTreeAccel Local Declarations}{+=}\lastcode{KdTreeAccelLocalDeclarations}`
+struct `\initvar{BoundEdge}{}` {
+    `\refcode{BoundEdge Public Methods}{}`
+    `\refvar{Float}{}` `\initvar[BoundEdge::t]{t}{}`;
+    int `\initvar[BoundEdge::primNum]{primNum}{}`;
+    `\refvar{EdgeType}{}` `\initvar[BoundEdge::type]{type}{}`;
+};
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{BoundEdge Public Methods}{=}`
+`\refvar{BoundEdge}{}`(`\refvar{Float}{}` t, int primNum, bool starting)
+    : `\refvar[BoundEdge::t]{t}{}`(t), `\refvar[BoundEdge::primNum]{primNum}{}`(primNum) {
+    `\refvar[BoundEdge::type]{type}{}` = starting ? `\refvar{EdgeType::Start}{}` : `\refvar{EdgeType::End}{}`; 
+}
+\end{lstlisting}
+
+对于任意树节点至多需要为{\ttfamily 2*\refvar[KdTreeAccel::primitives]{primitives}{}.size()}个\refvar{BoundEdge}{}计算开销，
+所以一次分配全部三轴上所有边界的内存然后再为每个创建的节点复用。
+\begin{lstlisting}
+`\initcode{Allocate working memory for kd-tree construction}{=}\initnext{Allocateworkingmemoryforkdtreeconstruction}`
+std::unique_ptr<`\refvar{BoundEdge}{}`[]> edges[3];
+for (int i = 0; i < 3; ++i)
+    edges[i].reset(new `\refvar{BoundEdge}{}`[2 * `\refvar[KdTreeAccel::primitives]{primitives}{}`.size()]);
+\end{lstlisting}
+
+在为创建的叶子确定估计的开销后，\refvar{KdTreeAccel::buildTree}{()}选择
+一个轴尝试沿其划分并为每个候选划分计算开销函数。
+{\ttfamily bestAxis}和{\ttfamily bestOffset}记录了该轴
+以及目前给出最低开销{\ttfamily bestCost}的边界框边界索引。
+{\ttfamily invTotalSA}初始化为节点表面积的倒数；
+当计算光线穿过每个候选孩子节点的概率时会用到它的值。
+\begin{lstlisting}
+`\initcode{Choose split axis position for interior node}{=}`
+int bestAxis = -1, bestOffset = -1;
+`\refvar{Float}{}` bestCost = `\refvar{Infinity}{}`;
+`\refvar{Float}{}` oldCost = `\refvar{isectCost}{}` * `\refvar{Float}{}`(nPrimitives);
+`\refvar{Float}{}` totalSA = nodeBounds.`\refvar{SurfaceArea}{}`();
+`\refvar{Float}{}` invTotalSA = 1 / totalSA;
+`\refvar{Vector3f}{}` d = nodeBounds.`\refvar{pMax}{}` - nodeBounds.`\refvar{pMin}{}`;
+`\refcode{Choose which axis to split along}{}`
+int retries = 0;
+retrySplit:
+`\refcode{Initialize edges for axis}{}`
+`\refcode{Compute cost of all splits for axis to find best}{}`
+\end{lstlisting}
+
+该方法首先尝试沿具有最大空间范围的轴寻找一个划分；
+如果成功，该选项则有助于给出形状上趋于方形的空间区域。
+这在直觉上是合理的方法。
+如果沿该轴没有成功找到好的划分，则回退并依次尝试其他的。
+\begin{lstlisting}
+`\initcode{Choose which axis to split along}{=}`
+int axis = nodeBounds.`\refvar{MaximumExtent}{}`();
+\end{lstlisting}
+
+首先用重合图元的边界框初始化该轴的数组{\ttfamily edges}。
+然后该数组沿该轴从低到高存储，这样它就能从头到尾扫掠框的边界。
+\begin{lstlisting}
+`\initcode{Initialize edges for axis}{=}`
+for (int i = 0; i < nPrimitives; ++i) {
+    int pn = primNums[i];
+    const `\refvar{Bounds3f}{}` &bounds = allPrimBounds[pn];
+    edges[axis][2 * i] =     `\refvar{BoundEdge}{}`(bounds.`\refvar{pMin}{}`[axis], pn, true);
+    edges[axis][2 * i + 1] = `\refvar{BoundEdge}{}`(bounds.`\refvar{pMax}{}`[axis], pn, false);
+}
+`\refcode{Sort edges for axis}{}`
+\end{lstlisting}
+
+C++标准库例程{\ttfamily sort()}要求被排序的结构要定义顺序；
+这用值\refvar{BoundEdge::t}{}
+来完成。然而，一个细微之处是如果值\refvar{BoundEdge::t}{}相同，
+则需要通过比较节点类型来打破平局；
+这是必要的，因为{\ttfamily sort()}所取决的事实是
+{\ttfamily a < b}和{\ttfamily b < a}都为{\ttfamily false}的唯一时刻是{\ttfamily a == b}。
+\begin{lstlisting}
+`\initcode{Sort edges for axis}{=}`
+std::sort(&edges[axis][0], &edges[axis][2*nPrimitives],
+    [](const `\refvar{BoundEdge}{}` &e0, const `\refvar{BoundEdge}{}` &e1) -> bool {
+        if (e0.`\refvar[BoundEdge::t]{t}{}` == e1.`\refvar[BoundEdge::t]{t}{}`)
+            return (int)e0.`\refvar[BoundEdge::type]{type}{}` < (int)e1.`\refvar[BoundEdge::type]{type}{}`;
+        else return e0.`\refvar[BoundEdge::t]{t}{}` < e1.`\refvar[BoundEdge::t]{t}{}`; 
+    });
+\end{lstlisting}
+
+有了排好序的边界数组，我们想为它们中的每一处划分快速计算开销函数。
+光线穿过每个孩子节点的概率很容易用其表面积计算，
+划分处每侧的图元数量由变量{\ttfamily nBelow}和{\ttfamily nAbove}跟踪。
+我们想保持它们的值是最新的，这样如果我们在某次循环中选择在{\ttfamily edgeT}处划分，
+{\ttfamily nBelow}会给出最终在划分平面之下的图元数量而{\ttfamily nAbove}则给出之上的数量
+\footnote{当多个边界框面投影到轴上同一点时，这一特性在这些点处可能不成立。
+然而此处的实现只会高估数量，而且更重要的是，
+它会于在这些点的每一个上进行的多次循环中的某一次取到正确的值，
+所以无论如何最终算法的功能是正确的。}。
+
+在第一个边界处，依据定义所有图元必须在该边界之上，
+所以{\ttfamily nAbove}初始化为{\ttfamily nPrimitives}且{\ttfamily nBelow}设为0。
+当循环考虑在边界框范围尾部的划分时，
+{\ttfamily nAbove}需要递减，因为该框以前一定在划分平面之上，
+如果在该点完成划分则它不会再在平面之上。
+同样，计算划分开销后，如果划分候选项在边界框范围的起点处，
+则所有后续划分中该框都会在下侧。
+在循环体开头和结尾的测试为这两种情况更新了图元数量。
+\begin{lstlisting}
+`\initcode{Compute cost of all splits for axis to find best}{=}`
+int nBelow = 0, nAbove = nPrimitives;
+for (int i = 0; i < 2 * nPrimitives; ++i) {
+    if (edges[axis][i].`\refvar[BoundEdge::type]{type}{}` == `\refvar{EdgeType::End}{}`) --nAbove;
+    `\refvar{Float}{}` edgeT = edges[axis][i].`\refvar[BoundEdge::t]{t}{}`;
+    if (edgeT > nodeBounds.`\refvar{pMin}{}`[axis] &&
+        edgeT < nodeBounds.`\refvar{pMax}{}`[axis]) {
+        `\refcode{Compute cost for split at ith edge}{}`
+    }
+    if (edges[axis][i].`\refvar[BoundEdge::type]{type}{}` == `\refvar{EdgeType::Start}{}`) ++nBelow;
+}
+\end{lstlisting}
+
+{\ttfamily belowSA}和{\ttfamily aboveSA}持有两个候选孩子边框的表面积；
+通过把六个面的面积加在一起很容易将其算出来。
+\begin{lstlisting}
+`\initcode{Compute child surface areas for split at edgeT}{=}`
+int otherAxis0 = (axis + 1) % 3, otherAxis1 = (axis + 2) % 3;
+`\refvar{Float}{}` belowSA = 2 * (d[otherAxis0] * d[otherAxis1] +
+                     (edgeT - nodeBounds.`\refvar{pMin}{}`[axis]) * 
+                     (d[otherAxis0] + d[otherAxis1]));
+`\refvar{Float}{}` aboveSA = 2 * (d[otherAxis0] * d[otherAxis1] +
+                     (nodeBounds.`\refvar{pMax}{}`[axis] - edgeT) * 
+                     (d[otherAxis0] + d[otherAxis1]));
+\end{lstlisting}
+
+有了所有这些信息，就可以计算特定划分的开销了。
+\begin{lstlisting}
+`\initcode{Compute cost for split at ith edge}{=}`
+`\refcode{Compute child surface areas for split at edgeT}{}`
+`\refvar{Float}{}` pBelow = belowSA * invTotalSA; 
+`\refvar{Float}{}` pAbove = aboveSA * invTotalSA;
+`\refvar{Float}{}` eb = (nAbove == 0 || nBelow == 0) ? emptyBonus : 0;
+`\refvar{Float}{}` cost = `\refvar{traversalCost}{}` + 
+             `\refvar{isectCost}{}` * (1 - eb) * (pBelow * nBelow + pAbove * nAbove);
+`\refcode{Update best split if this is lowest cost so far}{}`
+\end{lstlisting}
+
+如果为该候选划分计算的开销是目前最好的，则记录该划分的细节。
+\begin{lstlisting}
+`\initcode{Update best split if this is lowest cost so far}{=}`
+if (cost < bestCost)  {
+    bestCost = cost;
+    bestAxis = axis;
+    bestOffset = i;
+}
+\end{lstlisting}
+
+可能在之前的测试中没有找到可行的划分（\reffig{4.16}展示了一种可能发生的情况）。
+这种情况下，沿当前轴不存在可以把该节点划分开的单个候选位置。
+这时，依次尝试另外两轴的划分。
+（当{\ttfamily retries}等于2时）如果它们也没有找到划分，
+则没有有用的方式细化该节点，因为两个孩子都仍会有同样多的重合图元。
+当这种条件发生时，所能做的就是放弃并构建一个叶子节点。
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap04/Overlappingbboxes.tex}
+    \caption{如果多个边界框（虚线）如上所示与一个kd树节点（实线）重合，
+    则不可能有划分位置能让其两侧的图元比总和更少。}
+    \label{fig:4.16}
+\end{figure}
+
+也可能最佳划分的开销仍高于根本不划分该节点的开销。
+如果它差得多且图元也不太多，就立即创建叶子节点。
+否则，{\ttfamily badRefines}保持追踪目前在树的当前节点以上已经做了多少次不良划分。
+允许稍微差些的细化是值得的，因为要考虑的图元子集更小后，之后的划分可能会找到更好的结果。
+\begin{lstlisting}
+`\initcode{Create leaf if no good splits were found}{=}`
+if (bestAxis == -1 && retries < 2) {
+    ++retries;
+    axis = (axis + 1) % 3;
+    goto retrySplit;
+}
+if (bestCost > oldCost) ++badRefines;
+if ((bestCost > 4 * oldCost && nPrimitives < 16) || 
+    bestAxis == -1 || badRefines == 3) {
+    nodes[nodeNum].`\refvar[KdAccelNode::InitLeaf]{InitLeaf}{}`(primNums, nPrimitives, &`\refvar{primitiveIndices}{}`);
+    return; 
+}
+\end{lstlisting}
+
+选好划分位置后，按照之前代码中跟踪{\ttfamily nBelow}和{\ttfamily nAbove}的同样方式，
+边界框的边界可用于把图元分为在划分处上方、下方或同在两侧。
+注意下面的循环中跳过了数组中的项{\ttfamily bestOffset}；
+这是必要的，这样边界框被用作划分处的图元不会被错误地分类为同时位于划分处的两侧。
+\begin{lstlisting}
+`\initcode{Classify primitives with respect to split}{=}`
+int n0 = 0, n1 = 0;
+for (int i = 0; i < bestOffset; ++i)
+    if (edges[bestAxis][i].`\refvar[BoundEdge::type]{type}{}` == `\refvar{EdgeType::Start}{}`)
+        prims0[n0++] = edges[bestAxis][i].`\refvar[BoundEdge::primNum]{primNum}{}`;
+for (int i = bestOffset + 1; i < 2 * nPrimitives; ++i)
+    if (edges[bestAxis][i].`\refvar[BoundEdge::type]{type}{}` == `\refvar{EdgeType::End}{}`)
+        prims1[n1++] = edges[bestAxis][i].`\refvar[BoundEdge::primNum]{primNum}{}`;
+\end{lstlisting}
+
+回想在kd树节点数组中该节点的“下方”孩子的节点序数是当前节点序数加一。
+在递归从树的这一侧返回后，偏移量\refvar{nextFreeNode}{}被用于“上方”孩子。
+这里唯一的重要细节是内存{\ttfamily prims0}被直接传入给两个孩子复用，
+而{\ttfamily prims1}指针则首先向前推进。
+这是必要的，因为当前对\refvar{KdTreeAccel::buildTree}{()}的调用取决于
+下文中它首次递归调用\refvar{KdTreeAccel::buildTree}{()}时贮藏的{\ttfamily prims1}值，
+毕竟它必须作为参数传给第二次调用。
+然而，在首次递归调用立即使用之后就没有相应的必要贮藏{\ttfamily edges}值或贮藏{\ttfamily prims0}了。
+\begin{lstlisting}
+`\initcode{Recursively initialize children nodes}{=}`
+`\refvar{Float}{}` tSplit = edges[bestAxis][bestOffset].`\refvar[BoundEdge::t]{t}{}`;
+`\refvar{Bounds3f}{}` bounds0 = nodeBounds, bounds1 = nodeBounds;
+bounds0.`\refvar{pMax}{}`[bestAxis] = bounds1.`\refvar{pMin}{}`[bestAxis] = tSplit;
+`\refvar[KdTreeAccel::buildTree]{buildTree}{}`(nodeNum + 1, bounds0, allPrimBounds, prims0, n0,
+          depth - 1, edges, prims0, prims1 + nPrimitives, badRefines);
+int aboveChild = `\refvar{nextFreeNode}{}`;
+nodes[nodeNum].`\refvar[KdAccelNode::InitInterior]{InitInterior}{}`(bestAxis, aboveChild, tSplit);
+`\refvar[KdTreeAccel::buildTree]{buildTree}{}`(aboveChild, bounds1, allPrimBounds, prims1, n1, 
+          depth - 1, edges, prims0, prims1 + nPrimitives, badRefines);
+\end{lstlisting}
+
+因此，整数数组{\ttfamily prims1}比数组{\ttfamily prims0}需要
+多得多的空间存储最坏情况下重合图元可能的数目，
+后者只需要一次处理单个层级的图元。
+\begin{lstlisting}
+`\refcode{Allocate working memory for kd-tree construction}{+=}\lastcode{Allocateworkingmemoryforkdtreeconstruction}`
+std::unique_ptr<int[]> prims0(new int[`\refvar[KdTreeAccel::primitives]{primitives}{}`.size()]);
+std::unique_ptr<int[]> prims1(new int[(maxDepth+1) * `\refvar[KdTreeAccel::primitives]{primitives}{}`.size()]);
+\end{lstlisting}
+
+\subsection{遍历}\label{sub:遍历2}
+\reffig{4.17}展示了光线遍历树的基本过程
+\sidenote{译者注：原文中该图题注将左右孩子写反了，已修正。}。
+让光线与树的整体边框相交给出了初始的{\ttfamily tMin}和{\ttfamily tMax}值，即图中标出的点。
+像本章的\refvar{BVHAccel}{}那样，如果光线错开了整体图元边框，
+则该方法可立即返回{\ttfamily false}。
+否则，它从根开始下沉到树中。
+在每个内部节点处，它确定光线首先进入两个孩子中的哪个并按顺序处理两个孩子。
+当光线退出树或者找到最近相交处时遍历结束。
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap04/kdraytraversal.tex}
+    \caption{光线遍历穿过kd树。(a)光线与树的边框相交，
+    给出了要考虑的初始参数范围$[t_{\min},t_{\max}]$。
+    (b)因为该范围非空，所以这里需要考虑根节点的两个孩子。
+    光线首先进入左侧孩子，标记为“near”，有参数范围$[t_{\min},t_{\text{split}}]$。
+    如果近处节点是含有图元是叶子节点，则执行光线-图元相交测试；
+    否则处理其孩子节点。(c)如果该节点内没有找到命中处，或者找到的命中处
+    超出了$[t_{\min},t_{\text{split}}]$，则处理右边的远处节点。
+    (d)继续该过程——按深度优先处理树节点，从前往后遍历——直到
+    求得最近相交处或者光线退出该树。}
+    \label{fig:4.17}
+\end{figure}
+\begin{lstlisting}
+`\refcode{KdTreeAccel Method Definitions}{+=}\lastcode{KdTreeAccelMethodDefinitions}`
+bool `\refvar{KdTreeAccel}{}`::`\initvar[KdTreeAccel::Intersect]{Intersect}{}`(const `\refvar{Ray}{}` &ray,
+        `\refvar{SurfaceInteraction}{}` *isect) const {
+    `\refcode{Compute initial parametric range of ray inside kd-tree extent}{}`
+    `\refcode{Prepare to traverse kd-tree for ray}{}`
+    `\refcode{Traverse kd-tree nodes in order for ray}{}`
+}
+\end{lstlisting}
+
+算法从寻找光线与树重合的整体参数范围$[t_{\min},t_{\max}]$开始，
+如果没有重合则立即退出。
+\begin{lstlisting}
+`\initcode{Compute initial parametric range of ray inside kd-tree extent}{=}`
+`\refvar{Float}{}` tMin, tMax;
+if (!bounds.`\refvar[Bounds3::IntersectP]{IntersectP}{}`(ray, &tMin, &tMax)) 
+    return false;
+\end{lstlisting}
+
+结构体\refvar{KdToDo}{}数组用于记录该光线目前要处理的节点；
+它排了序使得数组中最后一个活跃项是应该考虑的下一个节点。
+该数组中需要的最大项数是kd树的最大深度；
+下文所用的数组大小在实践中应该是绰绰有余的。
+\begin{lstlisting}
+`\initcode{Prepare to traverse kd-tree for ray}{=}`
+`\refvar{Vector3f}{}` invDir(1 / ray.`\refvar[Ray::d]{d}{}`.x, 1 / ray.`\refvar[Ray::d]{d}{}`.y, 1 / ray.`\refvar[Ray::d]{d}{}`.z);
+constexpr int maxTodo = 64;
+`\refvar{KdToDo}{}` todo[maxTodo];
+int todoPos = 0;
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{KdTreeAccel Declarations}{+=}\lastcode{KdTreeAccelDeclarations}`
+struct `\initvar{KdToDo}{}` {
+    const `\refvar{KdAccelNode}{}` *`\initvar[KdToDo::node]{node}{}`;
+    `\refvar{Float}{}` `\initvar[KdToDo::tMin]{tMin}{}`, `\initvar[KdToDo::tMax]{tMax}{}`;
+};
+\end{lstlisting}
+
+遍历继续穿过节点，循环中每次处理单个叶子或内部节点。
+值\refvar[KdToDo::tMin]{tMin}{}和\refvar[KdToDo::tMax]{tMax}{}总是持有
+光线与当前节点重合的参数范围。
+\begin{lstlisting}
+`\initcode{Traverse kd-tree nodes in order for ray}{=}`
+bool hit = false;
+const `\refvar{KdAccelNode}{}` *node = &`\refvar[KdTreeAccel::nodes]{nodes}{}`[0];
+while (node != nullptr) {
+    `\refcode{Bail out if we found a hit closer than the current node}{}`
+    if (!node->`\refvar{IsLeaf}{}`()) {
+        `\refcode{Process kd-tree interior node}{}`
+    } else {
+        `\refcode{Check for intersections inside leaf node}{}`
+        `\refcode{Grab next node to process from todo list}{}`
+    }
+}
+return hit;
+\end{lstlisting}
+
+对于和多个节点重合的图元可能以前就找到相交处了。
+首次检测到时如果相交处在当前节点之外，
+则有必要继续遍历树直到我们遇到一个节点的{\ttfamily tMin}超过相交处。
+只有这时才能确定和其他图元不会再有更近的相交处了。
+\begin{lstlisting}
+`\initcode{Bail out if we found a hit closer than the current node}{=}`
+if (ray.`\refvar{tMax}{}` < tMin) break;
+\end{lstlisting}
+
+对于内部节点要做的第一件事是让光线与节点的划分平面相交；
+有了交点后，我们可以确定需要处理一个还是两个孩子节点以及光线穿过它们的顺序。
+\begin{lstlisting}
+`\initcode{Process kd-tree interior node}{=}`
+`\refcode{Compute parametric distance along ray to split plane}{}`
+`\refcode{Get node children pointers for ray}{}`
+`\refcode{Advance to next child node, possibly enqueue other child}{}`
+\end{lstlisting}
+
+按照在光线-边界框测试中和计算光线与轴对齐平面相交一样的方式计算到划分平面的参数距离。
+循环中我们每次用预先计算的值{\ttfamily invDir}保存除数。
+\begin{lstlisting}
+`\initcode{Compute parametric distance along ray to split plane}{=}`
+int axis = node->`\refvar[KdAccelNode::SplitAxis]{SplitAxis}{}`();
+`\refvar{Float}{}` tPlane = (node->`\refvar{SplitPos}{}`() - ray.`\refvar[Ray::o]{o}{}`[axis]) * invDir[axis];
+\end{lstlisting}
+
+现在需要确定光线遇到孩子节点的顺序使得是沿光线按从前往后的顺序遍历树的。
+\reffig{4.18}展示了该计算的几何结构。
+射线端点关于划分平面的位置足够区分两种情况，
+现在忽略光线实际上没有穿过两个节点之一的情况。
+射线端点位于划分平面上的罕见情况需要仔细处理，
+需要改用它的方向来区分两种情况。
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap04/Raybelowabove.tex}
+    \caption{射线端点关于划分平面的位置可用于确定该首先处理该节点的哪个孩子。
+    如果射线如$\bm r_1$的端点在划分平面的“下方”一侧，
+    则我们在处理上方孩子前应该先处理下方孩子，反之亦然。}
+    \label{fig:4.18}
+\end{figure}
+\begin{lstlisting}
+`\initcode{Get node children pointers for ray}{=}`
+const `\refvar{KdAccelNode}{}` *firstChild, *secondChild;
+int belowFirst = (ray.`\refvar[Ray::o]{o}{}`[axis] <  node->`\refvar{SplitPos}{}`()) ||
+                 (ray.`\refvar[Ray::o]{o}{}`[axis] == node->`\refvar{SplitPos}{}`() && ray.`\refvar[Ray::d]{d}{}`[axis] <= 0);
+if (belowFirst) {
+    firstChild = node + 1;
+    secondChild = &`\refvar[KdTreeAccel::nodes]{nodes}{}`[node->`\refvar{AboveChild}{}`()];
+} else {
+    firstChild = &`\refvar[KdTreeAccel::nodes]{nodes}{}`[node->`\refvar{AboveChild}{}`()];
+    secondChild = node + 1;
+}
+\end{lstlisting}
+
+该节点的两个孩子可能没有必要都处理。
+\reffig{4.19}展示了一些光线只穿过一个孩子的配置。
+光线绝不会同时错过两个孩子，因为否则当前内部节点就不该被访问到。
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap04/kdskipanode.tex}
+    \caption{节点的两个孩子不需要都处理的两种情况，因为光线没有与之重合。
+    (a)上方光线与划分平面的相交超出了光线的$t_{\max}$位置，
+    因此没有进入更远的孩子。下方光线背对划分平面，这由负的$t_{\text{split}}$值表示。
+    (b)光线在其$t_{\min}$值之前与平面相交，意味着不需要处理近处孩子。}
+    \label{fig:4.19}
+\end{figure}
+
+下面的代码中第一个{\ttfamily if}测试与\reffig{4.19}(a)对应：
+如果可以证明由于光线背对平面或因$t_{\text{split}}>t_{\max}$没与节点重合，
+即光线没有与远处节点重合，则只有近处节点需要处理。
+\reffig{4.19}(b)展示了第二个{\ttfamily if}测试中类似的情况：
+如果光线没与之重合，则可能不需要处理近处节点。
+否则，{\ttfamily else}语句负责两个孩子都需要处理的情况；
+接着会处理近处节点，而远处节点列入列表{\ttfamily todo}。
+\begin{lstlisting}
+`\initcode{Advance to next child node, possibly enqueue other child}{=}`
+if (tPlane > tMax || tPlane <= 0)
+    node = firstChild;
+else if (tPlane < tMin)
+    node = secondChild;
+else {
+    `\refcode{Enqueue secondChild in todo list}{}`
+    node = firstChild;
+    tMax = tPlane;
+}
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{Enqueue secondChild in todo list}{=}`
+todo[todoPos].`\refvar[KdToDo::node]{node}{}` = secondChild;
+todo[todoPos].`\refvar[KdToDo::tMin]{tMin}{}` = tPlane;
+todo[todoPos].`\refvar[KdToDo::tMax]{tMax}{}` = tMax;
+++todoPos;
+\end{lstlisting}
+
+如果当前节点是叶子，则对叶子里的图元执行相交测试。
+\begin{lstlisting}
+`\initcode{Check for intersections inside leaf node}{=}`
+int nPrimitives = node->`\refvar[KdAccelNode::nPrimitives]{nPrimitives}{}`();
+if (nPrimitives == 1) {
+    const std::shared_ptr<`\refvar{Primitive}{}`> &p = `\refvar[KdTreeAccel::primitives]{primitives}{}`[node->`\refvar{onePrimitive}{}`];
+    `\refcode{Check one primitive inside leaf node}{}`
+} else {
+    for (int i = 0; i < nPrimitives; ++i) {
+        int index = `\refvar{primitiveIndices}{}`[node->`\refvar{primitiveIndicesOffset}{}` + i];
+        const std::shared_ptr<`\refvar{Primitive}{}`> &p = `\refvar[KdTreeAccel::primitives]{primitives}{}`[index];
+        `\refcode{Check one primitive inside leaf node}{}`
+    }
+}
+\end{lstlisting}
+
+处理单个图元就是把相交请求传给图元的事。
+\begin{lstlisting}
+`\initcode{Check one primitive inside leaf node}{=}`
+if (p->`\refvar[Primitive::Intersect]{Intersect}{}`(ray, isect)) 
+    hit = true;
+\end{lstlisting}
+
+在叶子节点做完相交测试后，从数组{\ttfamily todo}加载下一个要处理的节点。
+如果没有剩下更多节点了，则光线穿过该树没有命中任何东西。
+\begin{lstlisting}
+`\initcode{Grab next node to process from todo list}{=}`
+if (todoPos > 0) {
+    --todoPos;
+    node = todo[todoPos].`\refvar[KdToDo::node]{node}{}`;
+    tMin = todo[todoPos].`\refvar[KdToDo::tMin]{tMin}{}`;
+    tMax = todo[todoPos].`\refvar[KdToDo::tMax]{tMax}{}`;
+}
+else
+    break;
+\end{lstlisting}
+
+像\refvar{BVHAccel}{}那样，此处没有展示\refvar{KdTreeAccel}{}对于
+阴影射线的特殊化相交方法。它和方法\refvar[KdTreeAccel::Intersect]{Intersect}{()}类似
+但调用的是方法\refvar{Primitive::IntersectP}{()}且一旦
+找到任何相交处就返回{\ttfamily true}而不担心是否找到了最近的那个。
+\begin{lstlisting}
+`\initcode{KdTreeAccel Public Methods}{=}`
+bool `\initvar[KdTreeAccel::IntersectP]{IntersectP}{}`(const `\refvar{Ray}{}` &ray) const;
+\end{lstlisting}

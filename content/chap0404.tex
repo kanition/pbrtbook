@@ -707,3 +707,113 @@ int axis = node->`\refvar[KdAccelNode::SplitAxis]{SplitAxis}{}`();
 \end{lstlisting}
 
 现在需要确定光线遇到孩子节点的顺序使得是沿光线按从前往后的顺序遍历树的。
+\reffig{4.18}展示了该计算的几何结构。
+射线端点关于划分平面的位置足够区分两种情况，
+现在忽略光线实际上没有穿过两个节点之一的情况。
+射线端点位于划分平面上的罕见情况需要仔细处理，
+需要改用它的方向来区分两种情况。
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap04/Raybelowabove.tex}
+    \caption{射线端点关于划分平面的位置可用于确定该首先处理该节点的哪个孩子。
+    如果射线如$\bm r_1$的端点在划分平面的“下方”一侧，
+    则我们在处理上方孩子前应该先处理下方孩子，反之亦然。}
+    \label{fig:4.18}
+\end{figure}
+\begin{lstlisting}
+`\initcode{Get node children pointers for ray}{=}`
+const `\refvar{KdAccelNode}{}` *firstChild, *secondChild;
+int belowFirst = (ray.`\refvar[Ray::o]{o}{}`[axis] <  node->`\refvar{SplitPos}{}`()) ||
+                 (ray.`\refvar[Ray::o]{o}{}`[axis] == node->`\refvar{SplitPos}{}`() && ray.`\refvar[Ray::d]{d}{}`[axis] <= 0);
+if (belowFirst) {
+    firstChild = node + 1;
+    secondChild = &`\refvar[KdTreeAccel::nodes]{nodes}{}`[node->`\refvar{AboveChild}{}`()];
+} else {
+    firstChild = &`\refvar[KdTreeAccel::nodes]{nodes}{}`[node->`\refvar{AboveChild}{}`()];
+    secondChild = node + 1;
+}
+\end{lstlisting}
+
+该节点的两个孩子可能没有必要都处理。
+\reffig{4.19}展示了一些光线只穿过一个孩子的配置。
+光线绝不会同时错过两个孩子，因为否则当前内部节点就不该被访问到。
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap04/kdskipanode.tex}
+    \caption{节点的两个孩子不需要都处理的两种情况，因为光线没有与之重合。
+    (a)上方光线与划分平面的相交超出了光线的$t_{\max}$位置，
+    因此没有进入更远的孩子。下方光线背对划分平面，这由负的$t_{\text{split}}$值表示。
+    (b)光线在其$t_{\min}$值之前与平面相交，意味着不需要处理近处孩子。}
+    \label{fig:4.19}
+\end{figure}
+
+下面的代码中第一个{\ttfamily if}测试与\reffig{4.19}(a)对应：
+如果可以证明由于光线背对平面或因$t_{\text{split}}>t_{\max}$没与节点重合，
+即光线没有与远处节点重合，则只有近处节点需要处理。
+\reffig{4.19}(b)展示了第二个{\ttfamily if}测试中类似的情况：
+如果光线没与之重合，则可能不需要处理近处节点。
+否则，{\ttfamily else}语句负责两个孩子都需要处理的情况；
+接着会处理近处节点，而远处节点列入列表{\ttfamily todo}。
+\begin{lstlisting}
+`\initcode{Advance to next child node, possibly enqueue other child}{=}`
+if (tPlane > tMax || tPlane <= 0)
+    node = firstChild;
+else if (tPlane < tMin)
+    node = secondChild;
+else {
+    `\refcode{Enqueue secondChild in todo list}{}`
+    node = firstChild;
+    tMax = tPlane;
+}
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{Enqueue secondChild in todo list}{=}`
+todo[todoPos].`\refvar[KdToDo::node]{node}{}` = secondChild;
+todo[todoPos].`\refvar[KdToDo::tMin]{tMin}{}` = tPlane;
+todo[todoPos].`\refvar[KdToDo::tMax]{tMax}{}` = tMax;
+++todoPos;
+\end{lstlisting}
+
+如果当前节点是叶子，则对叶子里的图元执行相交测试。
+\begin{lstlisting}
+`\initcode{Check for intersections inside leaf node}{=}`
+int nPrimitives = node->`\refvar[KdAccelNode::nPrimitives]{nPrimitives}{}`();
+if (nPrimitives == 1) {
+    const std::shared_ptr<`\refvar{Primitive}{}`> &p = `\refvar[KdTreeAccel::primitives]{primitives}{}`[node->`\refvar{onePrimitive}{}`];
+    `\refcode{Check one primitive inside leaf node}{}`
+} else {
+    for (int i = 0; i < nPrimitives; ++i) {
+        int index = `\refvar{primitiveIndices}{}`[node->`\refvar{primitiveIndicesOffset}{}` + i];
+        const std::shared_ptr<`\refvar{Primitive}{}`> &p = `\refvar[KdTreeAccel::primitives]{primitives}{}`[index];
+        `\refcode{Check one primitive inside leaf node}{}`
+    }
+}
+\end{lstlisting}
+
+处理单个图元就是把相交请求传给图元的事。
+\begin{lstlisting}
+`\initcode{Check one primitive inside leaf node}{=}`
+if (p->`\refvar[Primitive::Intersect]{Intersect}{}`(ray, isect)) 
+    hit = true;
+\end{lstlisting}
+
+在叶子节点做完相交测试后，从数组{\ttfamily todo}加载下一个要处理的节点。
+如果没有剩下更多节点了，则光线穿过该树没有命中任何东西。
+\begin{lstlisting}
+`\initcode{Grab next node to process from todo list}{=}`
+if (todoPos > 0) {
+    --todoPos;
+    node = todo[todoPos].`\refvar[KdToDo::node]{node}{}`;
+    tMin = todo[todoPos].`\refvar[KdToDo::tMin]{tMin}{}`;
+    tMax = todo[todoPos].`\refvar[KdToDo::tMax]{tMax}{}`;
+}
+else
+    break;
+\end{lstlisting}
+
+像\refvar{BVHAccel}{}那样，此处没有展示\refvar{KdTreeAccel}{}对于
+阴影射线的特殊化相交方法。它和方法\refvar[KdTreeAccel::Intersect]{Intersect}{()}类似
+但调用的是方法\refvar{Primitive::IntersectP}{()}且一旦
+找到任何相交处就返回{\ttfamily true}而不担心是否找到了最近的那个。
+\begin{lstlisting}
+`\initcode{KdTreeAccel Public Methods}{=}`
+bool `\initvar[KdTreeAccel::IntersectP]{IntersectP}{}`(const `\refvar{Ray}{}` &ray) const;
+\end{lstlisting}

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="Layer_1"
+   data-name="Layer 1"
+   viewBox="0 0 209.97 125.19"
+   version="1.1"
+   sodipodi:docname="Raybelowabove.svg"
+   inkscape:version="1.0.1 (3bc2e813f5, 2020-09-07)">
+  <metadata
+     id="metadata1971">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     id="namedview1969"
+     showgrid="false"
+     inkscape:zoom="3.4147735"
+     inkscape:cx="104.985"
+     inkscape:cy="62.595"
+     inkscape:window-x="1912"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="Layer_1" />
+  <defs
+     id="defs1924">
+    <rect
+       x="43.048243"
+       y="46.562385"
+       width="68.525774"
+       height="31.334435"
+       id="rect1975" />
+    <style
+       id="style1922">.cls-1,.cls-4{fill:none;stroke:#000;stroke-miterlimit:10;}.cls-2{fill:#a6a6a6;}.cls-3{fill:#666;}.cls-4{stroke-dasharray:2;}</style>
+    <rect
+       x="43.048244"
+       y="46.562386"
+       width="68.525772"
+       height="31.334435"
+       id="rect1975-5" />
+    <rect
+       x="43.048244"
+       y="46.562386"
+       width="68.525772"
+       height="31.334435"
+       id="rect1988" />
+  </defs>
+  <title
+     id="title1926">Ray below above</title>
+  <rect
+     class="cls-1"
+     x="27.87"
+     y="0.5"
+     width="155.74"
+     height="123.99"
+     id="rect1928" />
+  <line
+     class="cls-1"
+     x1="4.73"
+     y1="38.51"
+     x2="201.9"
+     y2="20.01"
+     id="line1930" />
+  <polygon
+     points="197.52 25.95 201.25 20.07 196.5 14.99 209.97 19.25 197.52 25.95"
+     id="polygon1932" />
+  <polygon
+     class="cls-2"
+     points="198.96 24.6 208.66 19.37 201.88 20.01 198.96 24.6"
+     id="polygon1934" />
+  <polygon
+     class="cls-3"
+     points="198.16 16.04 208.66 19.37 201.88 20.01 198.16 16.04"
+     id="polygon1936" />
+  <line
+     class="cls-1"
+     x1="201.52"
+     y1="89.52"
+     x2="8.1"
+     y2="84.01"
+     id="line1938" />
+  <polygon
+     points="13.16 78.65 8.75 84.03 12.85 89.65 0 83.78 13.16 78.65"
+     id="polygon1940" />
+  <polygon
+     class="cls-2"
+     points="11.57 79.8 1.31 83.81 8.12 84.01 11.57 79.8"
+     id="polygon1942" />
+  <polygon
+     class="cls-3"
+     points="11.33 88.4 1.31 83.81 8.12 84.01 11.33 88.4"
+     id="polygon1944" />
+  <line
+     class="cls-4"
+     x1="121.11"
+     y1="0.33"
+     x2="121.11"
+     y2="124.66"
+     id="line1946" />
+  <text
+     xml:space="preserve"
+     id="text1973"
+     style="font-size:16px;line-height:1.25;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;shape-inside:url(#rect1975);"
+     transform="translate(9.9567364,61.204644)"><tspan
+       x="43.048828"
+       y="60.764433"><tspan
+         style="shape-inside:url(#rect1975)">Below</tspan></tspan></text>
+  <text
+     xml:space="preserve"
+     id="text1973-1"
+     style="font-size:16px;line-height:1.25;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;shape-inside:url(#rect1975-5);"
+     transform="translate(88.871048,60.647574)"><tspan
+       x="43.048828"
+       y="60.764433"><tspan
+         style="shape-inside:url(#rect1975-5)">Above</tspan></tspan></text>
+</svg>

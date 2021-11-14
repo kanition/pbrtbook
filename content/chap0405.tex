@@ -127,3 +127,44 @@ Garanzha等\parencite*{10.1145/2018323.2018333}对HLBVH引入更多改进，
 
 \subsection{kd树}\label{sub:kd树}
 \citet{6429331}为光线相交计算引入使用了八叉树。
+\citet{kaplan1985use}\sidenote{译者注：未能找到该文献信息。}首先提出了为光线追踪使用kd树。
+\citeauthor{kaplan1985use}的树构建算法总是从中间划分节点；
+MacDonald和Booth \parencite*{MacDonald1990}引入了SAH方法，
+用相对表面积估计光线-节点遍历概率。
+\citet{Naylor1993:27}也写过关于构建优良kd树的一般问题。
+Havran和Bittner \parencite*{HavranImproving2002}回顾了许多这些问题并介绍了有用的改进。
+Hurley等\parencite*{hurley2002fast}提出为完全为空的树节点
+添加补贴\sidenote{译者注：原文bonus。}因子到SAH中，就像我们的实现中做的那样。
+见\citet{Havran2000:PhD}的博士论文了解对于高性能kd树构建和遍历算法的出色综述。
+
+
+\citet{10.1007/978-3-642-71071-1_4}首次为kd树开发了高效的光线遍历算法。
+\citet{ArvoRay1988}也研究了该问题并在《{\itshape\citefield{ArvoRay1988}{journaltitle}}》中一篇笔记里中作了讨论。
+Sung和Shirley \parencite*{SUNG1992271}为BSP树加速器描述了一种光线遍历算法的实现；
+我们的\refvar{KdTreeAccel}{}遍历代码一定程度上是基于它们的。
+
+pbrt中kd树构建算法的渐进复杂度是$O(n\log^2n)$。
+Wald和Havran \parencite*{4061547}证明了用一些额外实现的复杂度可以在$O(n\log n)$时间内构建kd-树；
+它们为典型场景报告了$2$到$3\times$的构建时间加速。
+
+光线追踪最好的kd树是用“完美划分”\sidenote{译者注：原文perfect splits。}构建的，
+每一步中剪裁正插入到树中的图元以适应当前节点的边界。
+这避免了一个问题，例如一个物体的边界框可能与节点的边界框相交因而被存储于其中，
+然而该物体自己并没有与该节点的边界框相交。
+该方法由Havran和Bittner \parencite*{HavranImproving2002}提出并
+由Hurley等\parencite*{hurley2002fast}以及Wald和Havran \parencite*{4061547}进一步讨论。
+也见Soupikov等\parencite*{4634623}。
+即便用完美划分，大型图元仍可能存于许多个kd树叶子中；
+Choi等\parencite*{10.1111/cgf.12241}建议在内部节点中存储一些图元以解决该问题。
+
+kd树构建往往比BVH构建慢得多（尤其是如果使用了“完美划分”），
+所以并行构建算法特别有意义。该领域的最新工作包括
+Shevtsov等\parencite*{10.1111/j.1467-8659.2007.01062.x}和
+Choi等\parencite*{10.5555/1921479.1921492}，
+他们提出了对多处理器有良好扩展性的高效并行kd树构建算法。
+
+\subsection{表面积启发法}\label{sub:表面积启发法2}
+自MacDonald和Booth \parencite*{MacDonald1990}把SAH引入到
+光线追踪以来许多研究者已经钻研了对SAH的改进。
+Fabianowski等\parencite*{10.2312:egs.20091046}派生出的一个版本是把
+光线在空间中均匀分布的假设替换为光线的起点均匀分布于场景的边界框中。

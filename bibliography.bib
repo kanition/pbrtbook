@@ -1463,7 +1463,7 @@
 }
 
 @article{doi:10.1080/10867651.2004.10504896,
-  author    = { Shaun D.   Ramsey  and  Kristin   Potter  and  Charles   Hansen },
+  author    = {Shaun D. Ramsey and Kristin Potter and Charles Hansen},
   title     = {Ray Bilinear Patch Intersections},
   journal   = {Journal of Graphics Tools},
   volume    = {9},
@@ -3369,4 +3369,132 @@
   publisher = {The Eurographics Association},
   doi       = {10.2312/egs.20091046},
   pages     = {49-52}
+}
+
+@inproceedings{4634614,
+  author    = {Hunt, Warren and Mark, William R.},
+  booktitle = {2008 IEEE Symposium on Interactive Ray Tracing},
+  title     = {Adaptive acceleration structures in perspective space},
+  year      = {2008},
+  volume    = {},
+  number    = {},
+  pages     = {11-17},
+  doi       = {10.1109/RT.2008.4634614}
+}
+
+@inproceedings{4634625,
+  author    = {Hunt, Warren A.},
+  booktitle = {2008 IEEE Symposium on Interactive Ray Tracing},
+  title     = {Corrections to the surface area metric with respect to mail-boxing},
+  year      = {2008},
+  volume    = {},
+  number    = {},
+  pages     = {77-80},
+  doi       = {10.1109/RT.2008.4634625}
+}
+
+@article{VINKLER2012283,
+  title    = {Visibility driven BVH build up algorithm for ray tracing},
+  journal  = {Computers \& Graphics},
+  volume   = {36},
+  number   = {4},
+  pages    = {283-296},
+  year     = {2012},
+  note     = {Applications of Geometry Processing},
+  issn     = {0097-8493},
+  doi      = {https://doi.org/10.1016/j.cag.2012.02.013},
+  url      = {https://www.sciencedirect.com/science/article/pii/S0097849312000362},
+  author   = {Marek Vinkler and Vlastimil Havran and Ji$\check{\text{r}}$í Sochor},
+  keywords = {Ray tracing, Bounding volume hierarchies, BVH build algorithm, Surface area heuristic}
+}
+
+@article{10.1111/j.1467-8659.2011.01861.x,
+  author   = {Ize, Thiago and Hansen, Charles},
+  title    = {RTSAH Traversal Order for Occlusion Rays},
+  journal  = {Computer Graphics Forum},
+  volume   = {30},
+  number   = {2},
+  pages    = {297-305},
+  doi      = {https://doi.org/10.1111/j.1467-8659.2011.01861.x},
+  url      = {https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1467-8659.2011.01861.x},
+  eprint   = {https://onlinelibrary.wiley.com/doi/pdf/10.1111/j.1467-8659.2011.01861.x},
+  abstract = {Abstract We accelerate the finding of occluders in tree based acceleration structures, such as a packetized BVH and a single ray kd-tree, by deriving the ray termination surface area heuristic (RTSAH) cost model for traversing an occlusion ray through a tree and then using the RTSAH to determine which child node a ray should traverse first instead of the traditional choice of traversing the near node before the far node. We further extend RTSAH to handle materials that attenuate light instead of fully occluding it, so that we can avoid superfluous intersections with partially transparent objects. For scenes with high occlusion, we substantially lower the number of traversal steps and intersection tests and achieve up to 2 × speedups.},
+  year     = {2011}
+}
+
+@inproceedings{10.2312:sre.20151164,
+  booktitle = {Eurographics Symposium on Rendering - Experimental Ideas \& Implementations},
+  editor    = {Jaakko Lehtinen and Derek Nowrouzezahrai},
+  title     = {{Efficient Visibility Heuristics for kd-trees Using the RTSAH}},
+  author    = {Moulin, Matthias and Billen, Niels and Dutr\'{e}, Philip},
+  year      = {2015},
+  publisher = {The Eurographics Association},
+  doi       = {10.2312/sre.20151164}
+}
+
+@inproceedings{4061550,
+  author    = {Popov, Stefan and Gunther, Johannes and Seidel, Hans-peter and Slusallek, Philipp},
+  booktitle = {2006 IEEE Symposium on Interactive Ray Tracing},
+  title     = {Experiences with Streaming Construction of SAH KD-Trees},
+  year      = {2006},
+  volume    = {},
+  number    = {},
+  pages     = {89-94},
+  doi       = {10.1109/RT.2006.280219}
+}
+
+@inproceedings{4061549,
+  author    = {Hunt, Warren and Mark, William R. and Stoll, Gordon},
+  booktitle = {2006 IEEE Symposium on Interactive Ray Tracing},
+  title     = {Fast kd-tree Construction with an Adaptive Error-Bounded Heuristic},
+  year      = {2006},
+  volume    = {},
+  number    = {},
+  pages     = {81-88},
+  doi       = {10.1109/RT.2006.280218}
+}
+
+@inproceedings{10.1145/2492045.2492056,
+  author    = {Aila, Timo and Karras, Tero and Laine, Samuli},
+  title     = {On Quality Metrics of Bounding Volume Hierarchies},
+  year      = {2013},
+  isbn      = {9781450321358},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/2492045.2492056},
+  doi       = {10.1145/2492045.2492056},
+  abstract  = {The surface area heuristic (SAH) is widely used as a predictor for ray tracing performance,
+               and as a heuristic to guide the construction of spatial acceleration structures. We
+               investigate how well SAH actually predicts ray tracing performance of a bounding volume
+               hierarchy (BVH), observe that this relationship is far from perfect, and then propose
+               two new metrics that together with SAH almost completely explain the measured performance.
+               Our observations shed light on the increasingly common situation that a supposedly
+               good tree construction algorithm produces trees that are slower to trace than expected.
+               We also note that the trees constructed using greedy top-down algorithms are consistently
+               faster to trace than SAH indicates and are also more SIMD-friendly than competing
+               approaches.},
+  booktitle = {Proceedings of the 5th High-Performance Graphics Conference},
+  pages     = {101–107},
+  numpages  = {7},
+  keywords  = {quality metrics, acceleration structures, ray tracing},
+  location  = {Anaheim, California},
+  series    = {HPG '13}
+}
+
+@article{10.1145/357332.357335,
+  author     = {Weghorst, Hank and Hooper, Gary and Greenberg, Donald P.},
+  title      = {Improved Computational Methods for Ray Tracing},
+  year       = {1984},
+  issue_date = {Jan. 1984},
+  publisher  = {Association for Computing Machinery},
+  address    = {New York, NY, USA},
+  volume     = {3},
+  number     = {1},
+  issn       = {0730-0301},
+  url        = {https://doi.org/10.1145/357332.357335},
+  doi        = {10.1145/357332.357335},
+  journal    = {ACM Trans. Graph.},
+  month      = jan,
+  pages      = {52–69},
+  numpages   = {18}
 }

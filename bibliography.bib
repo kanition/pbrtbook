@@ -1449,7 +1449,7 @@
 }
 
 @article{doi:10.1080/2151237X.2006.10129218,
-  author    = { Carsten   Benthin  and  Ingo   Wald  and  Philipp   Slusallek },
+  author    = {Carsten   Benthin  and  Ingo   Wald  and  Philipp   Slusallek},
   title     = {Techniques for Interactive Ray Tracing of Bézier Surfaces},
   journal   = {Journal of Graphics Tools},
   volume    = {11},
@@ -1463,7 +1463,7 @@
 }
 
 @article{doi:10.1080/10867651.2004.10504896,
-  author    = { Shaun D.   Ramsey  and  Kristin   Potter  and  Charles   Hansen },
+  author    = {Shaun D. Ramsey and Kristin Potter and Charles Hansen},
   title     = {Ray Bilinear Patch Intersections},
   journal   = {Journal of Graphics Tools},
   volume    = {9},
@@ -2685,13 +2685,15 @@
   eprint    = {https://doi.org/10.1080/2151237X.2007.10129248}
 }
 
- @misc{bouloshaines2006,
+@article{bouloshaines2006,
+  author  = {Boulos, Solomon and Haines, Eric},
+  journal = {Ray Tracing News},
+  number  = {1},
   title   = {Ray-Box Sorting},
   url     = {http://www.realtimerendering.com/resources/RTNews/html/rtnv19n1.html#art4},
-  journal = {Ray Tracing News, volume 19, number 1},
-  author  = {Boulos, Solomon and Haines, Eric},
-  year    = {2006},
-  month   = {Sep}
+  volume  = {19},
+  month   = {Sep},
+  year    = {2006}
 }
 
 @inproceedings{10.1145/1071866.1071869,
@@ -3176,4 +3178,624 @@
   number  = {10},
   pages   = {15-24},
   doi     = {10.1109/MCG.1984.6429331}
+}
+
+@inproceedings{kaplan1985use,
+  title        = {The use of spatial coherence in ray tracing},
+  author       = {Kaplan, Michael R},
+  year         = {1985},
+  booksubtitle = {ACM SIGGRAPH Course Notes 11}
+}
+
+@article{MacDonald1990,
+  author   = {MacDonald, J. David and Booth, Kellogg S.},
+  journal  = {The Visual Computer},
+  number   = {3},
+  title    = {Heuristics for ray tracing using space subdivision},
+  volume   = {6},
+  year     = {1990},
+  pages    = {153-166},
+  date     = {1990-05-01},
+  abstract = {Ray tracing requires testing of many rays to determine intersections with objects. A way of reducing the computation is to organize objects into hierarchical data structures. We examine two heuristics for space subdivisions using bintrees, one based on the intuition that surface area is a good estimate of intersection probability, one based on the fact that the optimal splitting plane lies between the spatial median and the object median planes of a volume. Traversal algorithms using cross links between nodes are presented as generalizations of ropes in octrees. Simulations of the surface area heuristic and the cross link scheme are presented. These results generalize to other hierarchical data structures.},
+  issn     = {1432-2315},
+  doi      = {10.1007/BF01911006}
+}
+
+@inproceedings{Naylor1993:27,
+  author    = {Bruce Naylor},
+  title     = {Constructing good partitioning trees},
+  booktitle = {Proceedings of Graphics Interface '93},
+  series    = {GI '93},
+  year      = {1993},
+  isbn      = {0-9695338-2-9},
+  issn      = {0713-5424},
+  location  = {Toronto, Ontario, Canada},
+  pages     = {181--191},
+  numpages  = {11},
+  url       = {http://graphicsinterface.org/wp-content/uploads/gi1993-27.pdf},
+  publisher = {Canadian Human-Computer Communications Society},
+  address   = {Toronto, Ontario, Canada}
+}
+
+@inproceedings{HavranImproving2002,
+  author       = {Havran, Vlastimil and Bittner, Ji$\check{\text{r}}$í},
+  booktitle    = {10th International Conference on Computer Graphics, Visualization and Computer Vision 2002},
+  editor       = {Skala, V},
+  title        = {On improving kd-trees for ray shooting},
+  booksubtitle = {WSCG'2002, VOLS I AND II, CONFERENCE PROCEEDINGS},
+  year         = {2002},
+  pages        = {209-216}
+}
+
+@phdthesis{Havran2000:PhD,
+  author = {Vlastimil Havran},
+  title  = {Heuristic Ray Shooting Algorithms},
+  school = {Department of Computer Science and Engineering,
+            Faculty of Electrical Engineering,
+            Czech Technical University in Prague},
+  type   = {Ph.D. Thesis},
+  year   = {2000},
+  month  = {November},
+  url    = {http://www.cgg.cvut.cz/~havran/phdthesis.html}
+}
+
+@inproceedings{10.1007/978-3-642-71071-1_4,
+  author    = {Jansen, Frederik W.},
+  editor    = {Kessener, Laurens R. A.
+               and Peters, Frans J.
+               and van Lierop, Marloes L. P.},
+  title     = {Data structures for ray tracing},
+  booktitle = {Data Structures for Raster Graphics},
+  year      = {1986},
+  publisher = {Springer Berlin Heidelberg},
+  address   = {Berlin, Heidelberg},
+  pages     = {57--73},
+  abstract  = {Methods to improve the efficiency of the ray tracing process are reviewed. Special attention is given to algorithms for tracing a ray through box and cell structures of hierarchical box and spatial subdivision methods.},
+  isbn      = {978-3-642-71071-1}
+}
+
+@article{ArvoRay1988,
+  author  = {Arvo, Jim},
+  journal = {Ray Tracing News},
+  number  = {5},
+  title   = {Linear-time Voxel Walking for Octrees},
+  volume  = {1},
+  month   = {March},
+  year    = {1988},
+  url     = {http://www.realtimerendering.com/resources/RTNews/html/rtnews2d.html#art5}
+}
+
+@incollection{SUNG1992271,
+  title     = {VI.1 - RAY TRACING WITH THE BSP TREE},
+  editor    = {DAVID KIRK},
+  booktitle = {Graphics Gems III (IBM Version)},
+  publisher = {Morgan Kaufmann},
+  address   = {San Francisco},
+  pages     = {271-274},
+  year      = {1992},
+  isbn      = {978-0-12-409673-8},
+  doi       = {https://doi.org/10.1016/B978-0-08-050755-2.50061-0},
+  url       = {https://www.sciencedirect.com/science/article/pii/B9780080507552500610},
+  author    = {Kelvin Sung and Peter Shirley},
+  abstract  = {Publisher Summary
+               In order to speed up the intersection calculation in ray-tracing programs, people have implemented divide-and-conquer strategies such as hierarchical bounding volumes and octrees. Uniform subdivision has also been used to speed up that calculation. Uniform subdivision is undesirable for applications where the objects may be unevenly distributed in space. This is because the amount of memory needed for uniform subdivision is proportional to the highest density of objects, rather than the total number. Hierarchical-bounding volumes can be difficult to implement effectively but can be used to good effect. Hierarchical space subdivision techniques do not suffer the memory problems of uniform subdivision and are also relatively easy to implement. This chapter discusses the best overall hierarchical subdivision technique currently known. There are two basic modules in a BSP tree intersection code. The first module builds the tree by recursively cutting the bounding box of all objects along a median spatial plane. The second module tracks a ray through the leaf nodes of the BSP tree checking for intersections. The BSP tree is built by InitBinTree( ) and Subdivide( ). RayTreeIntersect( ) is the actual tree walking traversal of the BSP tree following a ray.}
+}
+
+@inproceedings{4061547,
+  author    = {Wald, Ingo and Havran, Vlastimil},
+  booktitle = {2006 IEEE Symposium on Interactive Ray Tracing},
+  title     = {On building fast kd-Trees for Ray Tracing, and on doing that in O(N log N)},
+  year      = {2006},
+  volume    = {},
+  number    = {},
+  pages     = {61-69},
+  doi       = {10.1109/RT.2006.280216}
+}
+
+@inproceedings{4634623,
+  author    = {Soupikov, Alexei and Shevtsov, Maxim and Kapustin, Alexander},
+  booktitle = {2008 IEEE Symposium on Interactive Ray Tracing},
+  title     = {Improving Kd-tree quality at a reasonable construction cost},
+  year      = {2008},
+  volume    = {},
+  number    = {},
+  pages     = {67-72},
+  doi       = {10.1109/RT.2008.4634623}
+}
+
+@article{10.1111/cgf.12241,
+  author   = {Choi, B. and Chang, B. and Ihm, I.},
+  title    = {Improving Memory Space Efficiency of Kd-tree for Real-time Ray Tracing},
+  journal  = {Computer Graphics Forum},
+  volume   = {32},
+  number   = {7},
+  pages    = {335-344},
+  keywords = {I.3.6 Computer Graphics: Methodology and Techniques—Graphics data structures and data types., I.3.7 Computer Graphics: Three-Dimensional Graphics and Realism—Raytracing},
+  doi      = {https://doi.org/10.1111/cgf.12241},
+  url      = {https://onlinelibrary.wiley.com/doi/abs/10.1111/cgf.12241},
+  eprint   = {https://onlinelibrary.wiley.com/doi/pdf/10.1111/cgf.12241},
+  abstract = {Abstract Compared with its competitors such as the bounding volume hierarchy, a drawback of the kd-tree structure is that a large number of triangles are repeatedly duplicated during its construction, which often leads to inefficient, large and tall binary trees with high triangle redundancy. In this paper, we propose a space-efficient kd-tree representation where, unlike commonly used methods, an inner node is allowed to optionally store a reference to a triangle, so highly redundant triangles in a kd-tree can be culled from the leaf nodes and moved to the inner nodes. To avoid the construction of ineffective kd-trees entailing computational inefficiencies due to early, possibly unnecessary, ray-triangle intersection calculations that now have to be performed in the inner nodes during the kd-tree traversal, we present heuristic measures for determining when and how to choose triangles for inner nodes during kd-tree construction. Based on these metrics, we describe how the new form of kd-tree is constructed and stored compactly using a carefully designed data layout. Our experiments with several example scenes showed that our kd-tree representation technique significantly reduced the memory requirements for storing the kd-tree structure, while effectively suppressing the unavoidable frame-rate degradation observed during ray tracing.},
+  year     = {2013}
+}
+
+@article{10.1111/j.1467-8659.2007.01062.x,
+  author   = {Shevtsov, Maxim and Soupikov, Alexei and Kapustin, Alexander},
+  title    = {Highly Parallel Fast KD-tree Construction for Interactive Ray Tracing of Dynamic Scenes},
+  journal  = {Computer Graphics Forum},
+  volume   = {26},
+  number   = {3},
+  pages    = {395-404},
+  keywords = {I.3.7 Computer Graphics: Three-Dimensional Graphics and Realism: Ray tracing; Color; Shading; Shadowing and texture, I.3.1 Hardware Architecture: Parallel processing},
+  doi      = {https://doi.org/10.1111/j.1467-8659.2007.01062.x},
+  url      = {https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1467-8659.2007.01062.x},
+  eprint   = {https://onlinelibrary.wiley.com/doi/pdf/10.1111/j.1467-8659.2007.01062.x},
+  abstract = {Abstract We present a highly parallel, linearly scalable technique of kd-tree construction for ray tracing of dynamic geometry. We use conventional kd-tree compatible with the high performing algorithms such as MLRTA or frustum tracing. Proposed technique offers exceptional construction speed maintaining reasonable kd-tree quality for rendering stage. The algorithm builds a kd-tree from scratch each frame, thus prior knowledge of motion /deformation or motion constraints are not required. We achieve nearly real-time performance of 7-12 FPS for models with 200K of dynamic triangles at 1024x1024 resolution with shadows and textures.},
+  year     = {2007}
+}
+
+@inproceedings{10.5555/1921479.1921492,
+  author    = {Choi, Byn and Komuravelli, Rakesh and Lu, Victor and Sung, Hyojin and Bocchino, Robert L. and Adve, Sarita V. and Hart, John C.},
+  title     = {Parallel SAH K-D Tree Construction},
+  year      = {2010},
+  publisher = {Eurographics Association},
+  address   = {Goslar, DEU},
+  abstract  = {The k-D tree is a well-studied acceleration data structure for ray tracing. It is
+               used to organize primitives in a scene to allow efficient execution of intersection
+               operations between rays and the primitives. The highest quality k-D tree can be obtained
+               using greedy cost optimization based on a surface area heuristc (SAH). While the high
+               quality enables very fast ray tracing times, a key drawback is that the k-D tree construction
+               time remains prohibitively expensive. This cost is unreasonable for rendering dynamic
+               scenes for future visual computing applications on emerging multicore systems. Much
+               work has therefore been focused on faster parallel k-D tree construction performance
+               at the expense of approximating or ignoring SAH computation, which produces k-D trees
+               that degrade rendering time. In this paper, we present two new parallel algorithms
+               for building precise SAH-optimized k-D trees, with different tradeoffs between the
+               total work done and parallel scalability. The algorithms achieve up to 8x speedup
+               on 32 cores, without degrading tree quality and rendering time, yielding the best
+               reported speedups so far for precise-SAH k-D tree construction.},
+  booktitle = {Proceedings of the Conference on High Performance Graphics},
+  pages     = {77–86},
+  numpages  = {10},
+  location  = {Saarbrucken, Germany},
+  series    = {HPG '10}
+}
+
+@inproceedings{10.2312:egs.20091046,
+  booktitle = {Eurographics 2009 - Short Papers},
+  editor    = {P. Alliez and M. Magnor},
+  title     = {{A Cost Metric for Scene-Interior Ray Origins}},
+  author    = {Fabianowski, Bartosz and Fowler, Colin and Dingliana, John},
+  year      = {2009},
+  publisher = {The Eurographics Association},
+  doi       = {10.2312/egs.20091046},
+  pages     = {49-52}
+}
+
+@inproceedings{4634614,
+  author    = {Hunt, Warren and Mark, William R.},
+  booktitle = {2008 IEEE Symposium on Interactive Ray Tracing},
+  title     = {Adaptive acceleration structures in perspective space},
+  year      = {2008},
+  volume    = {},
+  number    = {},
+  pages     = {11-17},
+  doi       = {10.1109/RT.2008.4634614}
+}
+
+@inproceedings{4634625,
+  author    = {Hunt, Warren A.},
+  booktitle = {2008 IEEE Symposium on Interactive Ray Tracing},
+  title     = {Corrections to the surface area metric with respect to mail-boxing},
+  year      = {2008},
+  volume    = {},
+  number    = {},
+  pages     = {77-80},
+  doi       = {10.1109/RT.2008.4634625}
+}
+
+@article{VINKLER2012283,
+  title    = {Visibility driven BVH build up algorithm for ray tracing},
+  journal  = {Computers \& Graphics},
+  volume   = {36},
+  number   = {4},
+  pages    = {283-296},
+  year     = {2012},
+  note     = {Applications of Geometry Processing},
+  issn     = {0097-8493},
+  doi      = {https://doi.org/10.1016/j.cag.2012.02.013},
+  url      = {https://www.sciencedirect.com/science/article/pii/S0097849312000362},
+  author   = {Marek Vinkler and Vlastimil Havran and Ji$\check{\text{r}}$í Sochor},
+  keywords = {Ray tracing, Bounding volume hierarchies, BVH build algorithm, Surface area heuristic}
+}
+
+@article{10.1111/j.1467-8659.2011.01861.x,
+  author   = {Ize, Thiago and Hansen, Charles},
+  title    = {RTSAH Traversal Order for Occlusion Rays},
+  journal  = {Computer Graphics Forum},
+  volume   = {30},
+  number   = {2},
+  pages    = {297-305},
+  doi      = {https://doi.org/10.1111/j.1467-8659.2011.01861.x},
+  url      = {https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1467-8659.2011.01861.x},
+  eprint   = {https://onlinelibrary.wiley.com/doi/pdf/10.1111/j.1467-8659.2011.01861.x},
+  abstract = {Abstract We accelerate the finding of occluders in tree based acceleration structures, such as a packetized BVH and a single ray kd-tree, by deriving the ray termination surface area heuristic (RTSAH) cost model for traversing an occlusion ray through a tree and then using the RTSAH to determine which child node a ray should traverse first instead of the traditional choice of traversing the near node before the far node. We further extend RTSAH to handle materials that attenuate light instead of fully occluding it, so that we can avoid superfluous intersections with partially transparent objects. For scenes with high occlusion, we substantially lower the number of traversal steps and intersection tests and achieve up to 2 × speedups.},
+  year     = {2011}
+}
+
+@inproceedings{10.2312:sre.20151164,
+  booktitle = {Eurographics Symposium on Rendering - Experimental Ideas \& Implementations},
+  editor    = {Jaakko Lehtinen and Derek Nowrouzezahrai},
+  title     = {{Efficient Visibility Heuristics for kd-trees Using the RTSAH}},
+  author    = {Moulin, Matthias and Billen, Niels and Dutr\'{e}, Philip},
+  year      = {2015},
+  publisher = {The Eurographics Association},
+  doi       = {10.2312/sre.20151164}
+}
+
+@inproceedings{4061550,
+  author    = {Popov, Stefan and Gunther, Johannes and Seidel, Hans-peter and Slusallek, Philipp},
+  booktitle = {2006 IEEE Symposium on Interactive Ray Tracing},
+  title     = {Experiences with Streaming Construction of SAH KD-Trees},
+  year      = {2006},
+  volume    = {},
+  number    = {},
+  pages     = {89-94},
+  doi       = {10.1109/RT.2006.280219}
+}
+
+@inproceedings{4061549,
+  author    = {Hunt, Warren and Mark, William R. and Stoll, Gordon},
+  booktitle = {2006 IEEE Symposium on Interactive Ray Tracing},
+  title     = {Fast kd-tree Construction with an Adaptive Error-Bounded Heuristic},
+  year      = {2006},
+  volume    = {},
+  number    = {},
+  pages     = {81-88},
+  doi       = {10.1109/RT.2006.280218}
+}
+
+@inproceedings{10.1145/2492045.2492056,
+  author    = {Aila, Timo and Karras, Tero and Laine, Samuli},
+  title     = {On Quality Metrics of Bounding Volume Hierarchies},
+  year      = {2013},
+  isbn      = {9781450321358},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/2492045.2492056},
+  doi       = {10.1145/2492045.2492056},
+  abstract  = {The surface area heuristic (SAH) is widely used as a predictor for ray tracing performance,
+               and as a heuristic to guide the construction of spatial acceleration structures. We
+               investigate how well SAH actually predicts ray tracing performance of a bounding volume
+               hierarchy (BVH), observe that this relationship is far from perfect, and then propose
+               two new metrics that together with SAH almost completely explain the measured performance.
+               Our observations shed light on the increasingly common situation that a supposedly
+               good tree construction algorithm produces trees that are slower to trace than expected.
+               We also note that the trees constructed using greedy top-down algorithms are consistently
+               faster to trace than SAH indicates and are also more SIMD-friendly than competing
+               approaches.},
+  booktitle = {Proceedings of the 5th High-Performance Graphics Conference},
+  pages     = {101–107},
+  numpages  = {7},
+  keywords  = {quality metrics, acceleration structures, ray tracing},
+  location  = {Anaheim, California},
+  series    = {HPG '13}
+}
+
+@article{10.1145/357332.357335,
+  author     = {Weghorst, Hank and Hooper, Gary and Greenberg, Donald P.},
+  title      = {Improved Computational Methods for Ray Tracing},
+  year       = {1984},
+  issue_date = {Jan. 1984},
+  publisher  = {Association for Computing Machinery},
+  address    = {New York, NY, USA},
+  volume     = {3},
+  number     = {1},
+  issn       = {0730-0301},
+  url        = {https://doi.org/10.1145/357332.357335},
+  doi        = {10.1145/357332.357335},
+  journal    = {ACM Trans. Graph.},
+  month      = jan,
+  pages      = {52–69},
+  numpages   = {18}
+}
+
+@inproceedings{4342591,
+  author    = {Kammaje, Ravi P. and Mora, Benjamin},
+  booktitle = {2007 IEEE Symposium on Interactive Ray Tracing},
+  title     = {A Study of Restricted BSP Trees for Ray Tracing},
+  year      = {2007},
+  volume    = {},
+  number    = {},
+  pages     = {55-62},
+  doi       = {10.1109/RT.2007.4342591}
+}
+
+@inproceedings{4634637,
+  author    = {Ize, Thiago and Wald, Ingo and Parker, Steven G.},
+  booktitle = {2008 IEEE Symposium on Interactive Ray Tracing},
+  title     = {Ray tracing with the BSP tree},
+  year      = {2008},
+  volume    = {},
+  number    = {},
+  pages     = {159-166},
+  doi       = {10.1109/RT.2008.4634637}
+}
+
+@inproceedings{10.2312:egst.20071056,
+  booktitle = {Eurographics 2007 - State of the Art Reports},
+  editor    = {Dieter Schmalstieg and Jiri Bittner},
+  title     = {{State of the Art in Ray Tracing Animated Scenes}},
+  author    = {Wald, Ingo and Mark, William R. and G\"{u}nther, Johannes and Boulos, Solomon and Ize, Thiago and Hunt, Warren and Parker, Steven G. and Shirley, Peter},
+  year      = {2007},
+  publisher = {The Eurographics Association},
+  doi       = {10.2312/egst.20071056}
+}
+
+@article{10.1111/j.1467-8659.2009.01497.x,
+  author   = {Garanzha, Kirill},
+  title    = {The Use of Precomputed Triangle Clusters for Accelerated Ray Tracing in Dynamic Scenes},
+  journal  = {Computer Graphics Forum},
+  volume   = {28},
+  number   = {4},
+  pages    = {1199-1206},
+  keywords = {I.3.7 Computer Graphics: Three-Dimensional Graphics and Realism–Raytracing},
+  doi      = {https://doi.org/10.1111/j.1467-8659.2009.01497.x},
+  url      = {https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1467-8659.2009.01497.x},
+  eprint   = {https://onlinelibrary.wiley.com/doi/pdf/10.1111/j.1467-8659.2009.01497.x},
+  abstract = {Abstract In this paper we present a hybrid algorithm for building the bounding volume hierarchy (BVH) that is used in accelerating ray tracing of animated models. This algorithm precomputes densely packed clusters of triangles on surfaces. Folowing that, a set of clusters is used to rebuild the BVH in every frame. Our approach utilizes the assumption that groups of connected triangles remain connected throughout the course of the animation. We introduce a novel heuristic to create triangle clusters that are designed for high performance ray tracing. This heuristic combines the density of connectivity, geometric size and the shape of the cluster. Our approach accelerates the BVH builder by an order of magnitude rebuilding only the set of clusters that is much smaller than the original set of triangles. The speed-up is achieved against a ‘brute-force’ BVH builder that repartitions all triangles in every frame of animation without using any pre-clustering. The rendering performance is not affected when a cluster contains a few dozen triangles. We demonstrate the real-time/interactive ray tracing performance for highly-dynamic complex models.},
+  year     = {2009}
+}
+
+@article{504,
+  author  = {Glassner, Andrew S.},
+  journal = {IEEE Computer Graphics and Applications},
+  title   = {Spacetime ray tracing for animation},
+  year    = {1988},
+  volume  = {8},
+  number  = {2},
+  pages   = {60-70},
+  doi     = {10.1109/38.504}
+}
+
+@inproceedings{10.1145/2018323.2018334,
+  author    = {Gr\"{u}nschlo\ss{}, Leonhard and Stich, Martin and Nawaz, Sehera and Keller, Alexander},
+  title     = {MSBVH: An Efficient Acceleration Data Structure for Ray Traced Motion Blur},
+  year      = {2011},
+  isbn      = {9781450308960},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/2018323.2018334},
+  doi       = {10.1145/2018323.2018334},
+  abstract  = {When a bounding volume hierarchy is used for accelerating the intersection of rays
+               and scene geometry, one common way to incorporate motion blur is to interpolate node
+               bounding volumes according to the time of the ray. However, such hierarchies typically
+               exhibit large overlap between bounding volumes, which results in an inefficient traversal.
+               This work builds upon the concept of spatially partitioning nodes during tree construction
+               in order to reduce overlap in the presence of moving objects. The resulting hierarchies
+               are often significantly cheaper to traverse than those generated by classic approaches.},
+  booktitle = {Proceedings of the ACM SIGGRAPH Symposium on High Performance Graphics},
+  pages     = {65–70},
+  numpages  = {6},
+  keywords  = {bounding volume hierarchies, ray tracing, motion blur},
+  location  = {Vancouver, British Columbia, Canada},
+  series    = {HPG '11}
+}
+
+@article{10.1145/37402.37409,
+  author     = {Arvo, James and Kirk, David},
+  title      = {Fast Ray Tracing by Ray Classification},
+  year       = {1987},
+  issue_date = {July 1987},
+  publisher  = {Association for Computing Machinery},
+  address    = {New York, NY, USA},
+  volume     = {21},
+  number     = {4},
+  issn       = {0097-8930},
+  url        = {https://doi.org/10.1145/37402.37409},
+  doi        = {10.1145/37402.37409},
+  abstract   = {We describe a new approach to ray tracing which drastically reduces the number of
+                ray-object and ray-bounds intersection calculations by means of 5-dimensional space
+                subdivision. Collections of rays originating from a common 3D rectangular volume and
+                directed through a 2D solid angle are represented as hypercubes in 5-space. A 5D volume
+                bounding the space of rays is dynamically subdivided into hypercubes, each linked
+                to a set of objects which are candidates for intersection. Rays are classified into
+                unique hypercubes and checked for intersection with the associated candidate object
+                set. We compare several techniques for object extent testing, including boxes, spheres,
+                plane-sets, and convex polyhedra. In addition, we examine optimizations made possible
+                by the directional nature of the algorithm, such as sorting, caching and backface
+                culling. Results indicate that this algorithm significantly outperforms previous ray
+                tracing techniques, especially for comples environments.},
+  journal    = {SIGGRAPH Comput. Graph.},
+  month      = aug,
+  pages      = {55–64},
+  numpages   = {10}
+}
+
+@inproceedings{10.1145/37401.37409,
+  author    = {Arvo, James and Kirk, David},
+  title     = {Fast Ray Tracing by Ray Classification},
+  year      = {1987},
+  isbn      = {0897912276},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/37401.37409},
+  doi       = {10.1145/37401.37409},
+  abstract  = {We describe a new approach to ray tracing which drastically reduces the number of
+               ray-object and ray-bounds intersection calculations by means of 5-dimensional space
+               subdivision. Collections of rays originating from a common 3D rectangular volume and
+               directed through a 2D solid angle are represented as hypercubes in 5-space. A 5D volume
+               bounding the space of rays is dynamically subdivided into hypercubes, each linked
+               to a set of objects which are candidates for intersection. Rays are classified into
+               unique hypercubes and checked for intersection with the associated candidate object
+               set. We compare several techniques for object extent testing, including boxes, spheres,
+               plane-sets, and convex polyhedra. In addition, we examine optimizations made possible
+               by the directional nature of the algorithm, such as sorting, caching and backface
+               culling. Results indicate that this algorithm significantly outperforms previous ray
+               tracing techniques, especially for comples environments.},
+  booktitle = {Proceedings of the 14th Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {55–64},
+  numpages  = {10},
+  series    = {SIGGRAPH '87}
+}
+
+@article{10.1111/j.1467-8659.2008.01269.x,
+  author   = {Lagae, Ares and Dutré, Philip},
+  title    = {Accelerating Ray Tracing using Constrained Tetrahedralizations},
+  journal  = {Computer Graphics Forum},
+  volume   = {27},
+  number   = {4},
+  pages    = {1303-1312},
+  keywords = {I.3.7 Computer Graphics: Three-Dimensional Graphics and Realism},
+  doi      = {https://doi.org/10.1111/j.1467-8659.2008.01269.x},
+  url      = {https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1467-8659.2008.01269.x},
+  eprint   = {https://onlinelibrary.wiley.com/doi/pdf/10.1111/j.1467-8659.2008.01269.x},
+  abstract = {Abstract In this paper we introduce the constrained tetrahedralization as a new acceleration structure for ray tracing. A constrained tetrahedralization of a scene is a tetrahedralization that respects the faces of the scene geometry. The closest intersection of a ray with a scene is found by traversing this tetrahedralization along the ray, one tetrahedron at a time. We show that constrained tetrahedralizations are a viable alternative to current acceleration structures, and that they have a number of unique properties that set them apart from other acceleration structures: constrained tetrahedralizations are not hierarchical yet adaptive; the complexity of traversing them is a function of local geometric complexity rather than global geometric complexity; constrained tetrahedralizations support deforming geometry without any effort; and they have the potential to unify several data structures currently used in global illumination.},
+  year     = {2008}
+}
+
+@inproceedings{10.1007/978-3-642-72617-0_17,
+  author    = {Ooi, Beng C.},
+  editor    = {Schek, H.-J. and Schlageter, G.},
+  title     = {Spatial kd-Tree: A Data Structure for Geographic Database},
+  booktitle = {Datenbanksysteme in B{\"u}ro, Technik und Wissenschaft},
+  year      = {1987},
+  publisher = {Springer Berlin Heidelberg},
+  address   = {Berlin, Heidelberg},
+  pages     = {247--258},
+  abstract  = {Geographic objects in two dimensional space are usually represented as points, lines, and regions. To retrieve these data objects from the database efficiently according to their spatial locations and spatial relationships, an efficient indexing mechanism is necessary. The kd-trees proposed in the literature are either unsuitable for indexing non-zero size objects such as line and region or require duplication of indexes. In this paper an alternative index structure called spatial kd-tree is proposed to facilitate the processing of queries concerning geographic information. The spatial kd-tree partitions a set of records on two dimensional space into small groups based on their spatial proximity. The structure not only provides efficient retrieval of objects but also maintains high storage efficiency.},
+  isbn      = {978-3-642-72617-0}
+}
+
+@inproceedings{10.1145/585740.585761,
+  author    = {Zachmann, Gabriel},
+  title     = {Minimal Hierarchical Collision Detection},
+  year      = {2002},
+  isbn      = {1581135300},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/585740.585761},
+  doi       = {10.1145/585740.585761},
+  abstract  = {We present a novel bounding volume hierarchy that allows for extremely small data
+               structure sizes while still performing collision detection as fast as other classical
+               hierarchical algorithms in most cases. The hierarchical data structure is a variation
+               of axis-aligned bounding box trees. In addition to being very memory efficient, it
+               can be constructed efficiently and very fast.We also propose a criterion to be used
+               during the construction of the BV hierarchies is more formally established than previous
+               heuristics. The idea of the argument is general and can be applied to other bounding
+               volume hierarchies as well. Furthermore, we describe a general optimization technique
+               that can be applied to most hierarchical collision detection algorithms.Finally, we
+               describe several box overlap tests that exploit the special features of our new BV
+               hierarchy. These are compared experimentally among each other and with the DOP tree
+               using a benchmark suite of real-world CAD data.},
+  booktitle = {Proceedings of the ACM Symposium on Virtual Reality Software and Technology},
+  pages     = {121–128},
+  numpages  = {8},
+  keywords  = {virtual prototyping, interference detection, R-trees, physically-based modeling, hierarchical data structures, hierarchical partitioning},
+  location  = {Hong Kong, China},
+  series    = {VRST '02}
+}
+
+@inproceedings{10.1145/1283900.1283912,
+  author    = {Woop, Sven and Marmitt, Gerd and Slusallek, Philipp},
+  title     = {B-KD Trees for Hardware Accelerated Ray Tracing of Dynamic Scenes},
+  year      = {2006},
+  isbn      = {3905673371},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/1283900.1283912},
+  doi       = {10.1145/1283900.1283912},
+  abstract  = {This paper introduces a new spatial index structure, called Bounded KD tree (B-KD
+               tree), for realtime ray tracing of dynamic scenes. By presenting hardware units of
+               all time critical B-KD tree algorithms in the context of a custom realtime ray tracing
+               chip we show that this spatial index structure is well suited for hardware implementation.
+               B-KD trees are a hybrid spatial index structure that combine the advantages of KD
+               trees and Bounding Volume Hierarchies into a single, simple to handle spatial index
+               structure. Similar to KD trees, B-KD trees are binary trees where each node considers
+               only a single spatial dimension. However, instead of a single splitting plane that
+               divides space into two disjoint sub-spaces, each node in B-KD trees contains two pairs
+               of axis aligned planes that bound the geometry of its two child nodes. As a bounding
+               volume approach B-KD trees allow for simple and efficient updates when changing geometry
+               while maintaining the fast traversal operations and simple hardware implementation
+               known from KD trees. This enables the support for dynamic scenes with constant mesh
+               topology and coherent dynamic changes, like typical skinned meshes.Our hardware architecture
+               contains several fixed-function units that completely handle skinning, updating, and
+               ray tracing of dynamic scenes using B-KD trees. An FPGA prototype of this architecture
+               already delivers realtime performance of up to 35 frames per second even when clocked
+               at only 66 MHz.},
+  booktitle = {Proceedings of the 21st ACM SIGGRAPH/EUROGRAPHICS Symposium on Graphics Hardware},
+  pages     = {67–77},
+  numpages  = {11},
+  location  = {Vienna, Austria},
+  series    = {GH '06}
+}
+
+@inproceedings{10.5555/2383894.2383912,
+  author    = {W\"{a}chter, Carsten and Keller, Alexander},
+  title     = {Instant Ray Tracing: The Bounding Interval Hierarchy},
+  year      = {2006},
+  isbn      = {3905673355},
+  publisher = {Eurographics Association},
+  address   = {Goslar, DEU},
+  abstract  = {We introduce a new ray tracing algorithm that exploits the best of previous methods:
+               Similar to bounding volume hierarchies the memory of the acceleration data structure
+               is linear in the number of objects to be ray traced and can be predicted prior to
+               construction, while the traversal of the hierarchy is as efficient as the one of kd-trees.
+               The construction algorithm can be considered a variant of quicksort and for the first
+               time is based on a global space partitioning heuristic, which is much cheaper to evaluate
+               than the classic surface area heuristic. Compared to spatial partitioning schemes
+               only a fraction of the memory is used and a higher numerical precision is intrinsic.
+               The new method is simple to implement and its high performance is demonstrated by
+               extensive measurements including massive as well as dynamic scenes, where we focus
+               on the total time to image including the construction cost rather than on only frames
+               per second.},
+  booktitle = {Proceedings of the 17th Eurographics Conference on Rendering Techniques},
+  pages     = {139–149},
+  numpages  = {11},
+  location  = {Nicosia, Cyprus},
+  series    = {EGSR '06}
+}
+
+@inproceedings{4061548,
+  author    = {Havran, Vlastimil and Herzog, Robert and Seidel, Hans-peter},
+  booktitle = {2006 IEEE Symposium on Interactive Ray Tracing},
+  title     = {On the Fast Construction of Spatial Hierarchies for Ray Tracing},
+  year      = {2006},
+  volume    = {},
+  number    = {},
+  pages     = {71-80},
+  doi       = {10.1109/RT.2006.280217}
+}
+
+@article{2151237X.2006.10129224,
+  author    = {Miguel R. Zuniga and Jeffrey K. Uhlmann},
+  title     = {Ray Queries with Wide Object Isolation and the DE-Tree},
+  journal   = {Journal of Graphics Tools},
+  volume    = {11},
+  number    = {3},
+  pages     = {27-45},
+  year      = {2006},
+  publisher = {Taylor & Francis},
+  doi       = {10.1080/2151237X.2006.10129224},
+  url       = {https://doi.org/10.1080/2151237X.2006.10129224},
+  eprint    = {https://doi.org/10.1080/2151237X.2006.10129224}
+}
+
+@article{Arnaldi1987,
+  author  = {Arnaldi, Bruno and Priol, Thierry and Bouatouch, Kadi},
+  journal = {The Visual Computer},
+  number  = {2},
+  title   = {A new space subdivision method for ray tracing CSG modelled scenes},
+  volume  = {3},
+  year    = {1987},
+  date    = {1987-08-01},
+  pages   = {98-108},
+  issn    = {1432-2315},
+  doi     = {10.1007/BF02153666}
+}
+@phdthesis{Benthin_2006,
+  title  = {Realtime ray tracing on current {CPU} architectures},
+  author = {Benthin, Carsten},
+  doi    = {http://dx.doi.org/10.22028/D291-25853},
+  year   = {2006},
+  school = {Computer Graphics Group, Saarland University}
 }

@@ -35,14 +35,33 @@
 \subsection{光谱类型}\label{sub:光谱类型}
 整个pbrt中，我们都根据\refvar{Spectrum}{}类型
 用一组特定内建运算符（加法、乘法等）仔细实现涉及SPD的全部计算。
+\refvar{Spectrum}{}类型隐藏了所用特定光谱表示的细节，
+这样改变系统的这些细节只需要改变\refvar{Spectrum}{}的实现；其他代码可保存不变。
+\refvar{Spectrum}{}类型的实现在文件\href{https://github.com/mmp/pbrt-v3/blob/master/src/core/spectrum.h}{\ttfamily core/spectrum.h}和
+\href{https://github.com/mmp/pbrt-v3/blob/master/src/core/spectrum.cpp}{\ttfamily core/spectrum.cpp}中。
 
+pbrt中为\refvar{Spectrum}{}类型选择使用哪种光谱表示
+在文件\href{https://github.com/mmp/pbrt-v3/blob/master/src/core/pbrt.h}{\ttfamily core/pbrt.h}中
+由{\ttfamily typedef}完成。
+pbrt默认使用更高效但不太精确的RGB表示。
 \begin{lstlisting}
 `\initcode{Global Forward Declarations}{=}\initnext{GlobalForwardDeclarations}`
 typedef `\refvar{RGBSpectrum}{}` `\initvar{Spectrum}{}`;
 // typedef \refvar{SampledSpectrum}{} Spectrum;
 \end{lstlisting}
 
+我们还没有把系统编写成在运行时解析选用哪个\refvar{Spectrum}{}表示；
+为了切换到不同的表示，整个系统必须重新编译。
+这一设计的一个优点是许多各种\refvar{Spectrum}{}方法可以实现为
+能被编译器内联\sidenote{译者注：原文inlined。}的短函数，而不是弄成
+需要通过相对较慢的虚拟方法调用机制唤起的独立运行函数。
+内联像这样的常用短函数能给出性能上的巨大提升。
+第二个优点是系统中持有\refvar{Spectrum}{}类型实例的结构可以直接保有它们
+而不需要在运行时基于所选的光谱表示动态地分配它们。
+
 \subsection{系数光谱实现}\label{sub:系数光谱实现}
+本章实现的两种表示都基于排序固定数目的SPD样本。
+因此，
 \begin{lstlisting}
 `\initcode{Spectrum Declarations}{=}\initnext{SpectrumDeclarations}`
 template <int `\initvar{nSpectrumSamples}{}`> class `\initvar{CoefficientSpectrum}{}` {

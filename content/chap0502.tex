@@ -95,8 +95,8 @@ r.`\refvar[CoefficientSpectrum::c]{c}{}`[i] = `\refvar{AverageSpectrumSamples}{}
 \begin{figure}[htbp]
     \centering\includegraphics[width=0.4\linewidth]{chap05/IrregularSPDresample.eps}
     \caption{当重采样不规则定义的SPD时，我们需要计算由SPD样本定义的
-    分段线性函数的均值。这里，我们想求从500nm到600nm的均值——图像下的阴影区。
-    函数\refvar{AverageSpectrumSamples}{()}通过计算该图中虚线表示的每个区域的面积来完成。}
+        分段线性函数的均值。这里，我们想求从500nm到600nm的均值——图像下的阴影区。
+        函数\refvar{AverageSpectrumSamples}{()}通过计算该图中虚线表示的每个区域的面积来完成。}
     \label{fig:5.2}
 \end{figure}
 
@@ -123,3 +123,59 @@ if (lambdaEnd   <= lambda[0])     return vals[0];
 if (lambdaStart >= lambda[n - 1]) return vals[n - 1];
 if (n == 1) return vals[0];
 \end{lstlisting}
+
+处理了这些情况后，下一步是检查看求均值的范围是否有部分超出第一个和/或最后一个样本值。
+如果是，则我们累积常数段的贡献，用超出边界的波长范围缩放它。
+\begin{lstlisting}
+`\initcode{Add contributions of constant segments before/after samples}{=}`
+if (lambdaStart < lambda[0])
+    sum += vals[0] * (lambda[0] - lambdaStart);
+if (lambdaEnd > lambda[n-1])
+    sum += vals[n - 1] * (lambdaEnd - lambda[n - 1]);
+\end{lstlisting}
+
+现在我们推进到首个索引{\ttfamily i}，
+插值范围的起始波长重合于从$\lambda_i$到$\lambda_{i+1}$的一段。
+这里更高效的实现是用二叉搜索而不是线性搜索
+\footnote{甚至更高效的实现是利用一个事实即调用代码一般会需要
+    在一段相邻波长范围上插值后的值，并可能在单次调用中接收了全部范围。
+    然后可以为下一次插值从上一结尾处开始逐步寻找起始索引。}。
+然而，该代码目前只在场景初始化时调用，所以目前不优化它不会影响渲染性能。
+\begin{lstlisting}
+`\initcode{Advance to first relevant wavelength segment}{=}`
+int i = 0;
+while (lambdaStart > lambda[i + 1]) ++i;
+\end{lstlisting}
+
+下面的循环在与求均值的范围重合的每个线性段上迭代。
+对于每一段，它都通过求函数在这两点上取值的均值来
+计算在波长范围{\ttfamily segLambdaStart}到{\ttfamily segLambdaEnd}上的均值。
+该值依次用{\ttfamily interp()}计算，它是在给定波长的两个端点间线性插值的匿名函数。
+
+下面的{\ttfamily std::min()}和{\ttfamily std::max()}调用计算波长范围以在该段内做平均；
+注意它们自然地处理了{\ttfamily lambdaStart}、{\ttfamily lambdaEnd}或两者都在当前段内的情况。
+\begin{lstlisting}
+`\initcode{Loop over wavelength sample segments and add contributions}{=}`
+auto interp = [lambda, vals](`\refvar{Float}{}` w, int i) {
+    return `\refvar{Lerp}{}`((w - lambda[i]) / (lambda[i + 1] - lambda[i]),
+                vals[i], vals[i + 1]);
+};
+for (; i+1 < n && lambdaEnd >= lambda[i]; ++i) {
+    `\refvar{Float}{}` segLambdaStart = std::max(lambdaStart, lambda[i]);
+    `\refvar{Float}{}` segLambdaEnd =   std::min(lambdaEnd,   lambda[i + 1]);
+    sum += 0.5 * (interp(segLambdaStart, i) + interp(segLambdaEnd, i)) *
+        (segLambdaEnd - segLambdaStart);
+}
+\end{lstlisting}
+
+\subsection{XYZ颜色}\label{sub:XYZ颜色}
+人类视觉系统的一个非凡性质是可只用三个浮点数为人类感知表示颜色。
+颜色感知的\keyindex{三色刺激理论}{tristimulus theory}{}说
+用三个值$x_{\lambda},y_{\lambda}$和$z_{\lambda}$就能为人类观察者准确表示所有可见SPD。
+给定发射SPD即$S(\lambda)$，通过积分它们与\keyindex{光谱匹配曲线}{spectral matching curve}{}
+$X(\lambda),Y(\lambda)$和$Z(\lambda)$的积可算得这些值：
+\begin{align}
+    x_{\lambda} & =\int\limits_{\lambda}{S(\lambda)X(\lambda)\mathrm{d}\lambda}\, ,\nonumber \\
+    y_{\lambda} & =\int\limits_{\lambda}{S(\lambda)Y(\lambda)\mathrm{d}\lambda}\, ,          \\
+    z_{\lambda} & =\int\limits_{\lambda}{S(\lambda)Z(\lambda)\mathrm{d}\lambda}\, .\nonumber
+\end{align}

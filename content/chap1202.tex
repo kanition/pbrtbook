@@ -15,7 +15,7 @@ protected:
 `\initcode{Light Interface}{=}\initnext{LightInterface}`
 `\refvar{Light}{}`(int flags, const `\refvar{Transform}{}` &LightToWorld,
       const `\refvar{MediumInterface}{}` &mediumInterface, int nSamples = 1)
-    : `\refvar[Light::flags]{flags}{}`(flags), `\refvar{nSamples}{}`(std::max(1, nSamples)),
+    : `\refvar[Light::flags]{flags}{}`(flags), `\refvar[Light::nSamples]{nSamples}{}`(std::max(1, nSamples)),
     `\refvar[Light::mediumInterface]{mediumInterface}{}`(mediumInterface), `\refvar{LightToWorld}{}`(LightToWorld),
     `\refvar{WorldToLight}{}`(`\refvar[Transform::Inverse]{Inverse}{}`(LightToWorld))  { 
     `\refcode{Warn if light has transformation with non-uniform scale}{}`
@@ -34,7 +34,7 @@ if (WorldToLight.`\refvar{HasScale}{}`())
 \begin{lstlisting}
 `\initcode{Light Public Data}{=}`
 const int `\initvar[Light::flags]{flags}{}`;
-const int `\initvar{nSamples}{}`;
+const int `\initvar[Light::nSamples]{nSamples}{}`;
 const `\refvar{MediumInterface}{}` `\initvar[Light::mediumInterface]{mediumInterface}{}`;
 \end{lstlisting}
 

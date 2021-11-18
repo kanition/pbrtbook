@@ -174,8 +174,30 @@ for (; i+1 < n && lambdaEnd >= lambda[i]; ++i) {
 用三个值$x_{\lambda},y_{\lambda}$和$z_{\lambda}$就能为人类观察者准确表示所有可见SPD。
 给定发射SPD即$S(\lambda)$，通过积分它们与\keyindex{光谱匹配曲线}{spectral matching curve}{}
 $X(\lambda),Y(\lambda)$和$Z(\lambda)$的积可算得这些值：
-\begin{align}
+\begin{align}\label{eq:5.1}
     x_{\lambda} & =\int\limits_{\lambda}{S(\lambda)X(\lambda)\mathrm{d}\lambda}\, ,\nonumber \\
     y_{\lambda} & =\int\limits_{\lambda}{S(\lambda)Y(\lambda)\mathrm{d}\lambda}\, ,          \\
     z_{\lambda} & =\int\limits_{\lambda}{S(\lambda)Z(\lambda)\mathrm{d}\lambda}\, .\nonumber
 \end{align}
+
+这些曲线是由国际照明委员会\sidenote{译者注：法文Commission Internationale de l'Éclairage，
+    英文International Commission on Illumination，是有关光学、照明、颜色和色度空间科学领域的国际组织，成立于1913年。}（CIE）
+规范化机构在一系列以人类为测试对象的实验后决定的并画于\reffig{5.3}中。
+一般认为这些匹配曲线通常类似于人类视网膜中三种色敏视锥细胞\sidenote{译者注：原文 color-sensitive cone。}的响应。
+惊人的是，有截然不同分布的SPD可能有非常接近的$x_{\lambda},y_{\lambda}$和$z_{\lambda}$值。
+对于人类观察者，这样的SPD实际上有一样的视觉呈现。
+这样的光谱对称为\keyindex{条件等色}{metamer}{}。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.5\linewidth]{chap05/matching-xyz.eps}
+    \caption{对任意SPD计算XYZ值。用\refeq{5.1}让SPD与三个匹配曲线的每一个
+    相乘并在其非零范围上积分以计算$x_{\lambda},y_{\lambda}$和$z_{\lambda}$值。}
+    \label{fig:5.3}
+\end{figure}
+
+这给我们带来了关于光谱功率分布表示的一个微妙之处。
+大部分颜色空间都希望模型颜色是对人类可见的，进而根据颜色感知的三色刺激理论只需用三个系数。
+尽管XYZ能很好地表示要对人类观察者显示的给定SPD，
+但它对于光谱计算而言{\itshape 不是}特别好的基函数集。
+例如，尽管XYZ值能很好地分别描述柠檬皮或荧光灯的感知颜色（回想\reffig{5.1}），
+但它们各自的XYZ值之积给出的XYZ颜色可能明显不同于用其SPD更精确的表示相乘再计算出的XYZ值。
+

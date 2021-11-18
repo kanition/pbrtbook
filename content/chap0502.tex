@@ -201,3 +201,139 @@ $X(\lambda),Y(\lambda)$和$Z(\lambda)$的积可算得这些值：
 例如，尽管XYZ值能很好地分别描述柠檬皮或荧光灯的感知颜色（回想\reffig{5.1}），
 但它们各自的XYZ值之积给出的XYZ颜色可能明显不同于用其SPD更精确的表示相乘再计算出的XYZ值。
 
+pbrt提供了标准$X(\lambda),Y(\lambda)$和$Z(\lambda)$相应曲线从360nm到830nm间隔1nm采样的值。
+下面的数组中第$i$个样本的波长由\refvar{CIE\_lambda}{}的第$i$个元素给定；
+用这种方式显式表示样本波长能更容易将XYZ样本传入到像\refvar{AverageSpectrumSamples}{()}
+那样接收波长数组作为参数的函数。
+\begin{lstlisting}
+`\initcode{Spectral Data Declarations}{=}\initnext{SpectralDataDeclarations}`
+static const int `\initvar{nCIESamples}{}` = 471;
+extern const `\refvar{Float}{}` `\initvar{CIE\_X}{}`[`\refvar{nCIESamples}{}`];
+extern const `\refvar{Float}{}` `\initvar{CIE\_Y}{}`[`\refvar{nCIESamples}{}`];
+extern const `\refvar{Float}{}` `\initvar{CIE\_Z}{}`[`\refvar{nCIESamples}{}`];
+extern const `\refvar{Float}{}` `\initvar{CIE\_lambda}{}`[`\refvar{nCIESamples}{}`];
+\end{lstlisting}
+
+\refvar{SampledSpectrum}{}用这些样本计算其光谱表示里的XYZ匹配曲线（即它们自己是\refvar{SampledSpectrum}{}）。
+\begin{lstlisting}
+`\initcode{SampledSpectrum Private Data}{=}\initnext{SampledSpectrumPrivateData}`
+static `\refvar{SampledSpectrum}{}` `\initvar[SampledSpectrum::X]{X}{}`, `\initvar[SampledSpectrum::Y]{Y}{}`, `\initvar[SampledSpectrum::Z]{Z}{}`;
+\end{lstlisting}
+
+\refvar{SampledSpectrum}{}的XYZ曲线在方法\refvar{SampledSpectrum::Init}{()}中算得，
+它在系统启动时被定义于\refsec{初始化和渲染选项}\sidenote{译者注：原文标错了章节，已修正。}
+的函数\refvar{pbrtInit}{()}调用。
+\begin{lstlisting}
+`\refcode{SampledSpectrum Public Methods}{+=}\lastnext{SampledSpectrumPublicMethods}`
+static void `\initvar[SampledSpectrum::Init]{Init}{}`() {
+    `\refcode{Compute XYZ matching functions for SampledSpectrum}{}`
+    `\refcode{Compute RGB to spectrum functions for SampledSpectrum}{}`
+}
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{General pbrt Initialization}{=}`
+`\refvar{SampledSpectrum}{}`::`\refvar[SampledSpectrum::Init]{Init}{}`();
+\end{lstlisting}
+
+为\refvar{SampledSpectrum}{}给定波长范围和样本数量，
+为每个样本计算匹配函数的值只需计算样本的波长范围并利用\refvar{AverageSpectrumSamples}{()}例程。
+\begin{lstlisting}
+`\initcode{Compute XYZ matching functions for SampledSpectrum}{=}`
+for (int i = 0; i < `\refvar{nSpectralSamples}{}`; ++i) {
+    `\refvar{Float}{}` wl0 = `\refvar{Lerp}{}`(`\refvar{Float}{}`(i) / `\refvar{Float}{}`(`\refvar{nSpectralSamples}{}`), 
+                     `\refvar{sampledLambdaStart}{}`, `\refvar{nSpectralSamples}{}`);
+    `\refvar{Float}{}` wl1 = `\refvar{Lerp}{}`(`\refvar{Float}{}`(i + 1) / `\refvar{Float}{}`(`\refvar{nSpectralSamples}{}`), 
+                     `\refvar{sampledLambdaStart}{}`, `\refvar{sampledLambdaEnd}{}`);
+    `\refvar[SampledSpectrum::X]{X}{}`.`\refvar[CoefficientSpectrum::c]{c}{}`[i] = `\refvar{AverageSpectrumSamples}{}`(`\refvar{CIE\_lambda}{}`, `\refvar{CIE\_X}{}`, `\refvar{nCIESamples}{}`,
+                                    wl0, wl1);
+    `\refvar[SampledSpectrum::Y]{Y}{}`.`\refvar[CoefficientSpectrum::c]{c}{}`[i] = `\refvar{AverageSpectrumSamples}{}`(`\refvar{CIE\_lambda}{}`, `\refvar{CIE\_Y}{}`, `\refvar{nCIESamples}{}`,
+                                    wl0, wl1);
+    `\refvar[SampledSpectrum::Z]{Z}{}`.`\refvar[CoefficientSpectrum::c]{c}{}`[i] = `\refvar{AverageSpectrumSamples}{}`(`\refvar{CIE\_lambda}{}`, `\refvar{CIE\_Z}{}`, `\refvar{nCIESamples}{}`,
+                                    wl0, wl1);
+}
+\end{lstlisting}
+
+pbrt中所有\refvar{Spectrum}{}实现都必须提供将其SPD转换为$(x_{\lambda},y_{\lambda},z_{\lambda})$系数的方法。
+例如，在更新图像像素的过程中就会调用该方法。
+当\refvar{Spectrum}{}表示的沿相机射出的光线上的光提供给\refvar{Film}{}时，
+\refvar{Film}{}最终将它们转换为用于存储和/或显示的RGB值时处理的第一步就是将SPD转换为XYZ系数。
+
+为了计算XYZ系数，\refvar{SampledSpectrum}{}用黎曼和计算\refeq{5.1}的积分：
+\begin{align*}
+    x_{\lambda}\approx\frac{\lambda_{\text{end}}-\lambda_{\text{start}}}{N}\sum\limits_{i=0}^{N-1}{X_ic_i}\, ,
+\end{align*}
+并以此类推。
+\begin{lstlisting}
+`\refcode{SampledSpectrum Public Methods}{+=}\lastnext{SampledSpectrumPublicMethods}`
+void `\initvar{ToXYZ}{}`(`\refvar{Float}{}` xyz[3]) const {
+    xyz[0] = xyz[1] = xyz[2] = 0.f;
+    for (int i = 0; i < `\refvar{nSpectralSamples}{}`; ++i) {
+        xyz[0] += `\refvar[SampledSpectrum::X]{X}{}`.`\refvar[CoefficientSpectrum::c]{c}{}`[i] * `\refvar[CoefficientSpectrum::c]{c}{}`[i];
+        xyz[1] += `\refvar[SampledSpectrum::Y]{Y}{}`.`\refvar[CoefficientSpectrum::c]{c}{}`[i] * `\refvar[CoefficientSpectrum::c]{c}{}`[i];
+        xyz[2] += `\refvar[SampledSpectrum::Z]{Z}{}`.`\refvar[CoefficientSpectrum::c]{c}{}`[i] * `\refvar[CoefficientSpectrum::c]{c}{}`[i];
+    }
+    `\refvar{Float}{}` scale = `\refvar{Float}{}`(`\refvar{sampledLambdaEnd}{}` - `\refvar{sampledLambdaStart}{}`) /
+                  `\refvar{Float}{}`(CIE_Y_integral * `\refvar{nSpectralSamples}{}`);
+    xyz[0] *= scale;
+    xyz[1] *= scale;
+    xyz[2] *= scale;
+}
+\end{lstlisting}
+
+XYZ颜色的$y$系数与\keyindex{亮度}{luminance}{}密切相关，
+它度量颜色的感知亮度\sidenote{译者注：原文brightness。}。
+亮度将在\refsub{亮度和光度学}详细介绍。
+我们提供了分开的方法单独计算$y$，因为经常只需要光谱的亮度
+（例如第\refchap{光传输I：表面反射}、\refchap{光传输II：体积渲染}和\refchap{光传输III：双向方法}中的
+一些光传输算法用亮度作为穿过场景的光路的相对重要性度量）。
+\begin{lstlisting}
+`\refcode{SampledSpectrum Public Methods}{+=}\lastnext{SampledSpectrumPublicMethods}`
+`\refvar{Float}{}` `\initvar[SampledSpectrum::y]{y}{}`() const { 
+    `\refvar{Float}{}` yy = 0.f;
+    for (int i = 0; i < `\refvar{nSpectralSamples}{}`; ++i)
+        yy += `\refvar[SampledSpectrum::Y]{Y}{}`.`\refvar[CoefficientSpectrum::c]{c}{}`[i] * `\refvar[CoefficientSpectrum::c]{c}{}`[i];
+    return yy * `\refvar{Float}{}`(`\refvar{sampledLambdaEnd}{}` - `\refvar{sampledLambdaStart}{}`) /
+        `\refvar{Float}{}`(`\refvar{nSpectralSamples}{}`);
+}
+\end{lstlisting}
+
+\subsection{RGB颜色}\label{sub:RGB颜色}
+
+\begin{lstlisting}
+`\initcode{Compute RGB to spectrum functions for SampledSpectrum}{=}`
+for (int i = 0; i < `\refvar{nSpectralSamples}{}`; ++i) {
+    `\refvar{Float}{}` wl0 = `\refvar{Lerp}{}`(`\refvar{Float}{}`(i) / `\refvar{Float}{}`(`\refvar{nSpectralSamples}{}`), 
+                     `\refvar{sampledLambdaStart}{}`, `\refvar{sampledLambdaEnd}{}`);
+    `\refvar{Float}{}` wl1 = `\refvar{Lerp}{}`(`\refvar{Float}{}`(i+1) / `\refvar{Float}{}`(`\refvar{nSpectralSamples}{}`), 
+                     `\refvar{sampledLambdaStart}{}`, `\refvar{sampledLambdaEnd}{}`);
+    `\refvar{rgbRefl2SpectWhite}{}`.`\refvar[CoefficientSpectrum::c]{c}{}`[i] = `\refvar{AverageSpectrumSamples}{}`(`\refvar{RGB2SpectLambda}{}`, `\refvar{rgbRefl2SpectWhite}{}`, 
+        `\refvar{nRGB2SpectSamples}{}`, wl0, wl1);
+    `\refvar{rgbRefl2SpectCyan}{}`.`\refvar[CoefficientSpectrum::c]{c}{}`[i] = `\refvar{AverageSpectrumSamples}{}`(`\refvar{RGB2SpectLambda}{}`, `\refvar{rgbRefl2SpectCyan}{}`, 
+        `\refvar{nRGB2SpectSamples}{}`, wl0, wl1);
+    `\refvar{rgbRefl2SpectMagenta}{}`.`\refvar[CoefficientSpectrum::c]{c}{}`[i] = `\refvar{AverageSpectrumSamples}{}`(`\refvar{RGB2SpectLambda}{}`, `\refvar{rgbRefl2SpectMagenta}{}`, 
+        `\refvar{nRGB2SpectSamples}{}`, wl0, wl1);
+    `\refvar{rgbRefl2SpectYellow}{}`.`\refvar[CoefficientSpectrum::c]{c}{}`[i] = `\refvar{AverageSpectrumSamples}{}`(`\refvar{RGB2SpectLambda}{}`, `\refvar{rgbRefl2SpectYellow}{}`, 
+        `\refvar{nRGB2SpectSamples}{}`, wl0, wl1);
+    `\refvar{rgbRefl2SpectRed}{}`.`\refvar[CoefficientSpectrum::c]{c}{}`[i] = `\refvar{AverageSpectrumSamples}{}`(`\refvar{RGB2SpectLambda}{}`, `\refvar{rgbRefl2SpectRed}{}`, 
+        `\refvar{nRGB2SpectSamples}{}`, wl0, wl1);
+    `\refvar{rgbRefl2SpectGreen}{}`.`\refvar[CoefficientSpectrum::c]{c}{}`[i] = `\refvar{AverageSpectrumSamples}{}`(`\refvar{RGB2SpectLambda}{}`, `\refvar{rgbRefl2SpectGreen}{}`, 
+        `\refvar{nRGB2SpectSamples}{}`, wl0, wl1);
+    `\refvar{rgbRefl2SpectBlue}{}`.`\refvar[CoefficientSpectrum::c]{c}{}`[i] = `\refvar{AverageSpectrumSamples}{}`(`\refvar{RGB2SpectLambda}{}`, `\refvar{rgbRefl2SpectBlue}{}`, 
+        `\refvar{nRGB2SpectSamples}{}`, wl0, wl1);
+
+    `\refvar{rgbIllum2SpectWhite}{}`.`\refvar[CoefficientSpectrum::c]{c}{}`[i] = `\refvar{AverageSpectrumSamples}{}`(`\refvar{RGB2SpectLambda}{}`, `\refvar{rgbIllum2SpectWhite}{}`, 
+        `\refvar{nRGB2SpectSamples}{}`, wl0, wl1);
+    `\refvar{rgbIllum2SpectCyan}{}`.`\refvar[CoefficientSpectrum::c]{c}{}`[i] = `\refvar{AverageSpectrumSamples}{}`(`\refvar{RGB2SpectLambda}{}`, `\refvar{rgbIllum2SpectCyan}{}`, 
+        `\refvar{nRGB2SpectSamples}{}`, wl0, wl1);
+    `\refvar{rgbIllum2SpectMagenta}{}`.`\refvar[CoefficientSpectrum::c]{c}{}`[i] = `\refvar{AverageSpectrumSamples}{}`(`\refvar{RGB2SpectLambda}{}`, `\refvar{rgbIllum2SpectMagenta}{}`, 
+        `\refvar{nRGB2SpectSamples}{}`, wl0, wl1);
+    `\refvar{rgbIllum2SpectYellow}{}`.`\refvar[CoefficientSpectrum::c]{c}{}`[i] = `\refvar{AverageSpectrumSamples}{}`(`\refvar{RGB2SpectLambda}{}`, `\refvar{rgbIllum2SpectYellow}{}`, 
+        `\refvar{nRGB2SpectSamples}{}`, wl0, wl1);
+    `\refvar{rgbIllum2SpectRed}{}`.`\refvar[CoefficientSpectrum::c]{c}{}`[i] = `\refvar{AverageSpectrumSamples}{}`(`\refvar{RGB2SpectLambda}{}`, `\refvar{rgbIllum2SpectRed}{}`, 
+        `\refvar{nRGB2SpectSamples}{}`, wl0, wl1);
+    `\refvar{rgbIllum2SpectGreen}{}`.`\refvar[CoefficientSpectrum::c]{c}{}`[i] = `\refvar{AverageSpectrumSamples}{}`(`\refvar{RGB2SpectLambda}{}`, `\refvar{rgbIllum2SpectGreen}{}`, 
+        `\refvar{nRGB2SpectSamples}{}`, wl0, wl1);
+    `\refvar{rgbIllum2SpectBlue}{}`.`\refvar[CoefficientSpectrum::c]{c}{}`[i] = `\refvar{AverageSpectrumSamples}{}`(`\refvar{RGB2SpectLambda}{}`, `\refvar{rgbIllum2SpectBlue}{}`, 
+        `\refvar{nRGB2SpectSamples}{}`, wl0, wl1);
+}
+\end{lstlisting}

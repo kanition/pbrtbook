@@ -300,12 +300,12 @@ XYZ颜色的$y$系数与\keyindex{亮度}{luminance}{}密切相关，
 \subsection{RGB颜色}\label{sub:RGB颜色}
 
 当我们在显示器上显示RGB颜色时，实际展示的光谱基本上决定于三种光谱响应曲线的加权和，
-红、绿、蓝各一种，由显示器的磷光体\sidenote{译者注：原文phosphor。}发出，例如
-LED\sidenote{译者注：即light-emitting diode，发光二极管。}
+红、绿、蓝各一种，由显示器的磷光体\sidenote{译者注：原文phosphor。}发出，例如LED
+\sidenote{译者注：即light-emitting diode，发光二极管。}
 或LCD\sidenote{译者注：即liquid-crystal display，液晶显示器。}元素，
 或者等离子体胞\sidenote{译者注：原文plasma cell。}
 \footnote{该模型确实作了简化，它忽略了显示器所作的任何额外处理；
-尤其是许多显示器对显示的值执行了非线性重映射。}。
+    尤其是许多显示器对显示的值执行了非线性重映射。}。
 \reffig{5.4}画出了LED显示器和LCD显示器发出的红、绿和蓝分布；
 注意它们截然不同。
 \begin{figure}[htbp]
@@ -323,11 +323,82 @@ LED\sidenote{译者注：即light-emitting diode，发光二极管。}
 \begin{figure}[htbp]
     \centering\includegraphics[width=0.5\linewidth]{chap05/same-rgb-different-display.eps}
     \caption{在LED和LCD显示器上显示RGB颜色$(0.6,0.3,0.2)$的SPD。
-    甚至给定相同RGB值时得到的发射SPD也明显不同，因为\reffig{5.4}中所示的发射曲线不同。}
+        甚至给定相同RGB值时得到的发射SPD也明显不同，因为\reffig{5.4}中的发射曲线不同。}
     \label{fig:5.5}
 \end{figure}
 
-给定SPD的表示$(x_{\lambda},y_{\lambda},z_{\lambda})$，我们可以将其转换为相应的RGB系数，
+给定SPD的表示$(x_{\lambda},y_{\lambda},z_{\lambda})$，
+为感兴趣的显示器选定好定义红、绿和蓝的特定SPD集后，
+我们可以将其转换为相应的RGB系数。
+对于特定显示器，有了光谱响应曲线$R(\lambda),G(\lambda)$和$B(\lambda)$后，
+可以通过积分响应曲线和SPD即$S(\lambda)$以及利用颜色感知的三色刺激理论算得RGB系数：
+\begin{align*}
+    r & =\int R(\lambda)S(\lambda)\mathrm{d}\lambda=\int R(\lambda)(x_{\lambda}X(\lambda)+y_{\lambda}Y(\lambda)+z_{\lambda}Z(\lambda))\mathrm{d}\lambda                        \\
+      & =x_{\lambda}\int R(\lambda)X(\lambda)\mathrm{d}\lambda+y_{\lambda}\int R(\lambda)Y(\lambda)\mathrm{d}\lambda+z_{\lambda}\int R(\lambda)Z(\lambda)\mathrm{d}\lambda\, .
+\end{align*}
+
+对于给定的响应曲线可以预先计算积$R(\lambda)X(\lambda)$的积分等，
+使得能够把整个转换表达为矩阵：
+\begin{align*}
+    \left[\begin{array}{c}
+            r \\ g\\ b
+        \end{array}\right]=\left[
+        \begin{array}{ccc}
+            \int R(\lambda)X(\lambda)\mathrm{d}\lambda & \int R(\lambda)Y(\lambda)\mathrm{d}\lambda & \int R(\lambda)Z(\lambda)\mathrm{d}\lambda \\
+            \int G(\lambda)X(\lambda)\mathrm{d}\lambda & \int G(\lambda)Y(\lambda)\mathrm{d}\lambda & \int G(\lambda)Z(\lambda)\mathrm{d}\lambda \\
+            \int B(\lambda)X(\lambda)\mathrm{d}\lambda & \int B(\lambda)Y(\lambda)\mathrm{d}\lambda & \int B(\lambda)Z(\lambda)\mathrm{d}\lambda
+        \end{array}
+        \right]\left[\begin{array}{c}
+            x_{\lambda} \\ y_{\lambda} \\ z_{\lambda}
+        \end{array}\right]\, .
+\end{align*}
+
+pbrt中实现的转换例程是基于为高清电视定义的RGB光谱标准集的。
+\begin{lstlisting}
+`\refcode{Spectrum Utility Declarations}{+=}\lastnext{SpectrumUtilityDeclarations}`
+inline void `\initvar{XYZToRGB}{}`(const `\refvar{Float}{}` xyz[3], `\refvar{Float}{}` rgb[3]) {
+    rgb[0] =  3.240479f*xyz[0] - 1.537150f*xyz[1] - 0.498535f*xyz[2];
+    rgb[1] = -0.969256f*xyz[0] + 1.875991f*xyz[1] + 0.041556f*xyz[2];
+    rgb[2] =  0.055648f*xyz[0] - 0.204043f*xyz[1] + 1.057311f*xyz[2];
+}
+\end{lstlisting}
+
+该矩阵的逆给出了把以特定RGB响应曲线表达的给定RGB值转换为$(x_{\lambda},y_{\lambda},z_{\lambda})$系数的系数。
+\begin{lstlisting}
+`\refcode{Spectrum Utility Declarations}{+=}\lastnext{SpectrumUtilityDeclarations}`
+inline void `\initvar{RGBToXYZ}{}`(const `\refvar{Float}{}` rgb[3], `\refvar{Float}{}` xyz[3]) {
+    xyz[0] = 0.412453f*rgb[0] + 0.357580f*rgb[1] + 0.180423f*rgb[2];
+    xyz[1] = 0.212671f*rgb[0] + 0.715160f*rgb[1] + 0.072169f*rgb[2];
+    xyz[2] = 0.019334f*rgb[0] + 0.119193f*rgb[1] + 0.950227f*rgb[2];
+}
+\end{lstlisting}
+
+有了这些函数，\refvar{SampledSpectrum}{}可以通过首先转换到XYZ
+再用实用函数\refvar{XYZToRGB}{()}转换为RGB系数。
+\begin{lstlisting}
+`\refcode{SampledSpectrum Public Methods}{+=}\lastnext{SampledSpectrumPublicMethods}`
+void `\initvar{ToRGB}{}`(`\refvar{Float}{}` rgb[3]) const { 
+    `\refvar{Float}{}` xyz[3];
+    `\refvar{ToXYZ}{}`(xyz);
+    `\refvar{XYZToRGB}{}`(xyz, rgb);
+}
+\end{lstlisting}
+
+用方法\refvar{ToRGBSpectrum}{()}也能很容易地创建\refvar{RGBSpectrum}{}。
+\begin{lstlisting}
+`\refcode{SampledSpectrum Public Methods}{+=}\lastnext{SampledSpectrumPublicMethods}`
+`\refvar{RGBSpectrum}{}` `\initvar{ToRGBSpectrum}{}`() const;
+\end{lstlisting}
+
+反过来从RGB或XYZ值转换为SPD并不简单：问题是高度欠约束的。
+回想无数个不同的SPD有相同的$(x_{\lambda},y_{\lambda},z_{\lambda})$（进而以及RGB）系数。
+因此，给定RGB或$(x_{\lambda},y_{\lambda},z_{\lambda})$值，可为其选择无数种可能的SPD。
+有许多我们希望转换函数具有的准则：
+\begin{itemize}
+    \item 如果所有RGB系数有相同的值，则结果SPD应该为常数。
+    \item 一般而言，希望算出的SPD是光滑的。大多数真实世界物体都有相对光滑的光谱。
+    （尖锐光谱的主要源头是光源，特别是荧光灯。幸运的是，对于光源实际的光谱数据比反射率更常见。）
+\end{itemize}
 
 \begin{lstlisting}
 `\initcode{Compute RGB to spectrum functions for SampledSpectrum}{=}`

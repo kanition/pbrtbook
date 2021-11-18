@@ -299,6 +299,36 @@ XYZ颜色的$y$系数与\keyindex{亮度}{luminance}{}密切相关，
 
 \subsection{RGB颜色}\label{sub:RGB颜色}
 
+当我们在显示器上显示RGB颜色时，实际展示的光谱基本上决定于三种光谱响应曲线的加权和，
+红、绿、蓝各一种，由显示器的磷光体\sidenote{译者注：原文phosphor。}发出，例如
+LED\sidenote{译者注：即light-emitting diode，发光二极管。}
+或LCD\sidenote{译者注：即liquid-crystal display，液晶显示器。}元素，
+或者等离子体胞\sidenote{译者注：原文plasma cell。}
+\footnote{该模型确实作了简化，它忽略了显示器所作的任何额外处理；
+尤其是许多显示器对显示的值执行了非线性重映射。}。
+\reffig{5.4}画出了LED显示器和LCD显示器发出的红、绿和蓝分布；
+注意它们截然不同。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.45\linewidth]{chap05/lcd-display-spd.eps}\,
+    \includegraphics[width=0.45\linewidth]{chap05/led-display-spd.eps}
+    \caption{LCD显示器和LED显示器的红、绿和蓝发射曲线。
+    第一幅图展示了LCD显示器的曲线，第二幅图展示了LED的。
+    这两种显示器有完全不同的发射配置（{\itshape 感谢X-Rite公司提供数据}）。}
+    \label{fig:5.4}
+\end{figure}
+
+\reffig{5.5}依次展示了在这些显示器上显示RGB颜色$(0.6,0.3,0.2)$的SPD结果。
+不出意料，结果中SPD也截然不同。这个例子说明了当用户选择RGB值时，
+用他们提供的RGB值来描述特定颜色实际上只有在给定他们所用的显示器特性知识时才有意义。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.5\linewidth]{chap05/same-rgb-different-display.eps}
+    \caption{在LED和LCD显示器上显示RGB颜色$(0.6,0.3,0.2)$的SPD。
+    甚至给定相同RGB值时得到的发射SPD也明显不同，因为\reffig{5.4}中所示的发射曲线不同。}
+    \label{fig:5.5}
+\end{figure}
+
+给定SPD的表示$(x_{\lambda},y_{\lambda},z_{\lambda})$，我们可以将其转换为相应的RGB系数，
+
 \begin{lstlisting}
 `\initcode{Compute RGB to spectrum functions for SampledSpectrum}{=}`
 for (int i = 0; i < `\refvar{nSpectralSamples}{}`; ++i) {

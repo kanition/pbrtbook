@@ -37,7 +37,7 @@ private:
 （见pbrt发行中路径{\ttfamily scenes/spds}下\sidenote{译者注：笔者没有找到该路径。}
 pbrt所用的各种SPD，它们许多都有不规则间隔）。
 
-方法\refvar{FromSampled}{()}取用在
+方法\refvar[SampledSpectrum::FromSampled]{FromSampled}{()}取用在
 给定波长{\ttfamily lambda}处的SPD样本值{\ttfamily v}数组
 并用它们定义分段线性函数来表示SPD。
 对于\refvar{SampledSpectrum}{}的每个SPD样本，
@@ -45,7 +45,7 @@ pbrt所用的各种SPD，它们许多都有不规则间隔）。
 来计算分段线性函数在每个SPD样本对应的波长范围上的均值。
 \begin{lstlisting}
 `\refcode{SampledSpectrum Public Methods}{+=}\lastnext{SampledSpectrumPublicMethods}`
-static `\refvar{SampledSpectrum}{}` `\initvar{FromSampled}{}`(const `\refvar{Float}{}` *lambda,
+static `\refvar{SampledSpectrum}{}` `\initvar[SampledSpectrum::FromSampled]{FromSampled}{}`(const `\refvar{Float}{}` *lambda,
                                    const `\refvar{Float}{}` *v, int n) {
     `\refcode{Sort samples if unordered, use sorted for returned spectrum}{}`
     `\refvar{SampledSpectrum}{}` r;
@@ -69,7 +69,7 @@ if (!`\refvar{SpectrumSamplesSorted}{}`(lambda, v, n)) {
     std::vector<`\refvar{Float}{}`> slambda(&lambda[0], &lambda[n]);
     std::vector<`\refvar{Float}{}`> sv(&v[0], &v[n]);
     `\refvar{SortSpectrumSamples}{}`(&slambda[0], &sv[0], n);
-    return `\refvar{FromSampled}{}`(&slambda[0], &sv[0], n);
+    return `\refvar[SampledSpectrum::FromSampled]{FromSampled}{}`(&slambda[0], &sv[0], n);
 }
 \end{lstlisting}
 
@@ -377,17 +377,17 @@ inline void `\initvar{RGBToXYZ}{}`(const `\refvar{Float}{}` rgb[3], `\refvar{Flo
 再用实用函数\refvar{XYZToRGB}{()}转换为RGB系数。
 \begin{lstlisting}
 `\refcode{SampledSpectrum Public Methods}{+=}\lastnext{SampledSpectrumPublicMethods}`
-void `\initvar{ToRGB}{}`(`\refvar{Float}{}` rgb[3]) const { 
+void `\initvar[SampledSpectrum::ToRGB]{ToRGB}{}`(`\refvar{Float}{}` rgb[3]) const { 
     `\refvar{Float}{}` xyz[3];
     `\refvar{ToXYZ}{}`(xyz);
     `\refvar{XYZToRGB}{}`(xyz, rgb);
 }
 \end{lstlisting}
 
-用方法\refvar{ToRGBSpectrum}{()}也能很容易地创建\refvar{RGBSpectrum}{}。
+用方法\refvar[SampledSpectrum::ToRGBSpectrum]{ToRGBSpectrum}{()}也能很容易地创建\refvar{RGBSpectrum}{}。
 \begin{lstlisting}
 `\refcode{SampledSpectrum Public Methods}{+=}\lastnext{SampledSpectrumPublicMethods}`
-`\refvar{RGBSpectrum}{}` `\initvar{ToRGBSpectrum}{}`() const;
+`\refvar{RGBSpectrum}{}` `\initvar[SampledSpectrum::ToRGBSpectrum]{ToRGBSpectrum}{}`() const;
 \end{lstlisting}
 
 反过来从RGB或XYZ值转换为SPD并不简单：问题是高度欠约束的。
@@ -415,8 +415,8 @@ void `\initvar{ToRGB}{}`(`\refvar{Float}{}` rgb[3]) const {
 可以对该方法做额外两点提升。
 第一，比起用算得的恰好不是常数的红、绿和蓝SPD之和来表示常数光谱，
 用常数SPD表示常数光谱更好。
-第二，像黄色（红绿混合）那样由两种基色混合的颜色，
-用它们预先计算的光滑SPD表示比用两种相应基色的SPD之和表示更好。
+第二，像黄色（红绿混合）那样由两种原色混合的颜色，
+用它们预先计算的光滑SPD表示比用两种相应原色的SPD之和表示更好。
 
 下面的数组保存的符合这些准则的SPD，
 其样本的波长在\refvar{RGB2SpectLambda}{[]}
@@ -507,7 +507,7 @@ for (int i = 0; i < `\refvar{nSpectralSamples}{}`; ++i) {
 }
 \end{lstlisting}
 
-方法\refvar[FromRGB]{SampledSpectrum::FromRGB}{()}将给定RGB值转换为完整的SPD。
+方法\refvar{SampledSpectrum::FromRGB}{()}将给定RGB值转换为完整的SPD。
 除了RGB值，它还接收一个指明RGB值是表示曲面反射率还是光源的枚举值；
 相应的{\ttfamily rgbIllum2Spect}或{\ttfamily rgbRefl2Spect}值用于该转换。
 \begin{lstlisting}
@@ -516,7 +516,7 @@ enum class `\initvar{SpectrumType}{}` { `\initvar{Reflectance}{}`, `\initvar{Ill
 \end{lstlisting}
 \begin{lstlisting}
 `\refcode{Spectrum Method Definitions}{+=}\lastnext{SpectrumMethodDefinitions}`
-`\refvar{SampledSpectrum}{}` `\refvar{SampledSpectrum}{}`::`\initvar{FromRGB}{}`(const `\refvar{Float}{}` rgb[3],
+`\refvar{SampledSpectrum}{}` `\initvar{SampledSpectrum::FromRGB}{}`(const `\refvar{Float}{}` rgb[3],
                                          `\refvar{SpectrumType}{}` type) {
     `\refvar{SampledSpectrum}{}` r;
     if (type == `\refvar{SpectrumType}{}`::`\refvar{Reflectance}{}`) {
@@ -586,14 +586,14 @@ if (rgb[0] <= rgb[1]) {
 \end{lstlisting}
 
 有了从RGB转换的方法，从XYZ颜色转换也很容易。
-我们首先从XYZ转换到RGB然后再用方法\refvar{FromRGB}{()}。
+我们首先从XYZ转换到RGB然后再用方法\refvar[SampledSpectrum::FromRGB]{FromRGB}{()}。
 \begin{lstlisting}
 `\refcode{SampledSpectrum Public Methods}{+=}\lastcode{SampledSpectrumPublicMethods}`
-static `\refvar{SampledSpectrum}{}` `\initvar{FromXYZ}{}`(const `\refvar{Float}{}` xyz[3],
+static `\refvar{SampledSpectrum}{}` `\initvar[SampledSpectrum::FromXYZ]{FromXYZ}{}`(const `\refvar{Float}{}` xyz[3],
         `\refvar{SpectrumType}{}` type = `\refvar{SpectrumType}{}`::`\refvar{Reflectance}{}`) {
     `\refvar{Float}{}` rgb[3];
     `\refvar{XYZToRGB}{}`(xyz, rgb);
-    return `\refvar{FromRGB}{}`(rgb, type);
+    return `\refvar[SampledSpectrum::FromRGB]{FromRGB}{}`(rgb, type);
 }
 \end{lstlisting}
 
@@ -602,7 +602,7 @@ static `\refvar{SampledSpectrum}{}` `\initvar{FromXYZ}{}`(const `\refvar{Float}{
 `\refcode{Spectrum Method Definitions}{+=}\lastnext{SpectrumMethodDefinitions}`
 `\refvar{SampledSpectrum}{}`::`\refvar{SampledSpectrum}{}`(const `\refvar{RGBSpectrum}{}` &r, `\refvar{SpectrumType}{}` t) {
     `\refvar{Float}{}` rgb[3];
-    r.`\refvar{ToRGB}{}`(rgb);
-    *this = `\refvar{SampledSpectrum}{}`::`\refvar{FromRGB}{}`(rgb, t);
+    r.`\refvar[SampledSpectrum::ToRGB]{ToRGB}{}`(rgb);
+    *this = `\refvar{SampledSpectrum}{}`::`\refvar[SampledSpectrum::FromRGB]{FromRGB}{}`(rgb, t);
 }
 \end{lstlisting}

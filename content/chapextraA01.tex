@@ -63,6 +63,20 @@ inline int `\initvar{Log2Int}{}`(uint32_t v) {
 }
 \end{lstlisting}
 
+\subsubsection*{区间搜索}
+\begin{lstlisting}
+`\refcode{Global Inline Functions}{+=}\lastnext{GlobalInlineFunctions}`
+template <typename Predicate> int `\initvar{FindInterval}{}`(int size,
+        const Predicate &pred) {
+    int first = 0, len = size;
+    while (len > 0) {
+        int half = len >> 1, middle = first + half;
+        `\refcode{Bisect range based on value of pred at middle}{}`
+    }
+    return `\refvar{Clamp}{}`(first - 1, 0, size - 2);
+}
+\end{lstlisting}
+
 \subsection{伪随机数}\label{sub:伪随机数}
 {\initvar{RNG}{}}
 \begin{lstlisting}

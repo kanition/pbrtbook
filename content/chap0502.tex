@@ -397,9 +397,77 @@ void `\initvar{ToRGB}{}`(`\refvar{Float}{}` rgb[3]) const {
 \begin{itemize}
     \item 如果所有RGB系数有相同的值，则结果SPD应该为常数。
     \item 一般而言，希望算出的SPD是光滑的。大多数真实世界物体都有相对光滑的光谱。
-    （尖锐光谱的主要源头是光源，特别是荧光灯。幸运的是，对于光源实际的光谱数据比反射率更常见。）
+          （尖锐光谱的主要源头是光源，特别是荧光灯。幸运的是，对于光源实际的光谱数据比反射率更常见。）
 \end{itemize}
 
+光滑目标是为什么把SPD构建为显示器的$R(\lambda),G(\lambda)$和$B(\lambda)$SPD的加权和不是好办法的原因：
+如\reffig{5.4}所示，这些函数一般都是不规则且尖锐的，
+因此它们的加权和不会是非常光滑的SPD。
+尽管该结果是给定RGB值的条件等色，但它不太可能是实际物体SPD的准确表示。
+
+这里我们实现了\citet{doi:10.1080/10867651.1999.10487511}提出的将RGB转换为SPD
+并尝试实现以上目标的的方法。
+该方法基于一点观察即好的开始是为红、绿和蓝计算单独的光滑SPD，
+这样用给定RGB系数计算它们的加权和然后转换回RGB给出的结果会接近于原来的RGB系数。
+他通过数值优化过程发现了这样的光谱。
+
+\citeauthor{doi:10.1080/10867651.1999.10487511}观察到
+可以对该方法做额外两点提升。
+第一，比起用算得的恰好不是常数的红、绿和蓝SPD之和来表示常数光谱，
+用常数SPD表示常数光谱更好。
+第二，像黄色（红绿混合）那样由两种基色混合的颜色，
+用它们预先计算的光滑SPD表示比用两种相应基色的SPD之和表示更好。
+
+下面的数组保存的符合这些准则的SPD，
+其样本的波长在\refvar{RGB2SpectLambda}{[]}
+中（这些数据由Karl vom Berge生成）。
+\begin{lstlisting}
+`\refcode{Spectral Data Declarations}{+=}\lastnext{SpectralDataDeclarations}`
+static const int `\initvar{nRGB2SpectSamples}{}` = 32;
+extern const `\refvar{Float}{}` `\initvar{RGB2SpectLambda}{}`[`\refvar{nRGB2SpectSamples}{}`];
+extern const `\refvar{Float}{}` `\initvar{RGBRefl2SpectWhite}{}`[`\refvar{nRGB2SpectSamples}{}`];
+extern const `\refvar{Float}{}` `\initvar{RGBRefl2SpectCyan}{}`[`\refvar{nRGB2SpectSamples}{}`];
+extern const `\refvar{Float}{}` `\initvar{RGBRefl2SpectMagenta}{}`[`\refvar{nRGB2SpectSamples}{}`];
+extern const `\refvar{Float}{}` `\initvar{RGBRefl2SpectYellow}{}`[`\refvar{nRGB2SpectSamples}{}`];
+extern const `\refvar{Float}{}` `\initvar{RGBRefl2SpectRed}{}`[`\refvar{nRGB2SpectSamples}{}`];
+extern const `\refvar{Float}{}` `\initvar{RGBRefl2SpectGreen}{}`[`\refvar{nRGB2SpectSamples}{}`];
+extern const `\refvar{Float}{}` `\initvar{RGBRefl2SpectBlue}{}`[`\refvar{nRGB2SpectSamples}{}`];
+\end{lstlisting}
+
+如果给定的RGB颜色为光源描述了光照，则用代表的光源的光谱功率分布
+计算用于反射率的转换表以定义“白色”会比用常数光谱得到更好结果。
+数组\refvar{RGBIllum2Spect}{}使用了D65光谱功率分布，
+它被CIE标准化为表示正午日光（\refsub{标准光源}将更多讨论D65光源）。
+\begin{lstlisting}
+`\refcode{Spectral Data Declarations}{+=}\lastcode{SpectralDataDeclarations}`
+extern const `\refvar{Float}{}` `\initvar{RGBIllum2SpectWhite}{}`[`\refvar{nRGB2SpectSamples}{}`];
+extern const `\refvar{Float}{}` `\initvar{RGBIllum2SpectCyan}{}`[`\refvar{nRGB2SpectSamples}{}`];
+extern const `\refvar{Float}{}` `\initvar{RGBIllum2SpectMagenta}{}`[`\refvar{nRGB2SpectSamples}{}`];
+extern const `\refvar{Float}{}` `\initvar{RGBIllum2SpectYellow}{}`[`\refvar{nRGB2SpectSamples}{}`];
+extern const `\refvar{Float}{}` `\initvar{RGBIllum2SpectRed}{}`[`\refvar{nRGB2SpectSamples}{}`];
+extern const `\refvar{Float}{}` `\initvar{RGBIllum2SpectGreen}{}`[`\refvar{nRGB2SpectSamples}{}`];
+extern const `\refvar{Float}{}` `\initvar{RGBIllum2SpectBlue}{}`[`\refvar{nRGB2SpectSamples}{}`];
+\end{lstlisting}
+
+代码片\refcode{Compute RGB to spectrum functions for SampledSpectrum}{}由\linebreak
+\refvar{SampledSpectrum::Init}{()}调用，此处不再介绍\sidenote{译者注：我补充回来了。}；
+它通过用函数\linebreak\refvar{AverageSpectrumSamples}{()}重采样
+分布{\ttfamily RGBRefl2Spect}和{\ttfamily RGBIllum2Spect}来
+初始化下列的\refvar{SampledSpectrum}{}值。
+\begin{lstlisting}
+`\refcode{SampledSpectrum Private Data}{+=}\lastnext{SampledSpectrumPrivateData}`
+static `\refvar{SampledSpectrum}{}` `\initvar{rgbRefl2SpectWhite}{}`, `\initvar{rgbRefl2SpectCyan}{}`;
+static `\refvar{SampledSpectrum}{}` `\initvar{rgbRefl2SpectMagenta}{}`, `\initvar{rgbRefl2SpectYellow}{}`;
+static `\refvar{SampledSpectrum}{}` `\initvar{rgbRefl2SpectRed}{}`, `\initvar{rgbRefl2SpectGreen}{}`;
+static `\refvar{SampledSpectrum}{}` `\initvar{rgbRefl2SpectBlue}{}`;
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{SampledSpectrum Private Data}{+=}\lastcode{SampledSpectrumPrivateData}`
+static `\refvar{SampledSpectrum}{}` `\initvar{rgbIllum2SpectWhite}{}`, `\initvar{rgbIllum2SpectCyan}{}`;
+static `\refvar{SampledSpectrum}{}` `\initvar{rgbIllum2SpectMagenta}{}`, `\initvar{rgbIllum2SpectYellow}{}`;
+static `\refvar{SampledSpectrum}{}` `\initvar{rgbIllum2SpectRed}{}`, `\initvar{rgbIllum2SpectGreen}{}`;
+static `\refvar{SampledSpectrum}{}` `\initvar{rgbIllum2SpectBlue}{}`;
+\end{lstlisting}
 \begin{lstlisting}
 `\initcode{Compute RGB to spectrum functions for SampledSpectrum}{=}`
 for (int i = 0; i < `\refvar{nSpectralSamples}{}`; ++i) {
@@ -436,5 +504,105 @@ for (int i = 0; i < `\refvar{nSpectralSamples}{}`; ++i) {
         `\refvar{nRGB2SpectSamples}{}`, wl0, wl1);
     `\refvar{rgbIllum2SpectBlue}{}`.`\refvar[CoefficientSpectrum::c]{c}{}`[i] = `\refvar{AverageSpectrumSamples}{}`(`\refvar{RGB2SpectLambda}{}`, `\refvar{rgbIllum2SpectBlue}{}`, 
         `\refvar{nRGB2SpectSamples}{}`, wl0, wl1);
+}
+\end{lstlisting}
+
+方法\refvar[FromRGB]{SampledSpectrum::FromRGB}{()}将给定RGB值转换为完整的SPD。
+除了RGB值，它还接收一个指明RGB值是表示曲面反射率还是光源的枚举值；
+相应的{\ttfamily rgbIllum2Spect}或{\ttfamily rgbRefl2Spect}值用于该转换。
+\begin{lstlisting}
+`\refcode{Spectrum Utility Declarations}{+=}\lastcode{SpectrumUtilityDeclarations}`
+enum class `\initvar{SpectrumType}{}` { `\initvar{Reflectance}{}`, `\initvar{Illuminant}{}` };
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{Spectrum Method Definitions}{+=}\lastnext{SpectrumMethodDefinitions}`
+`\refvar{SampledSpectrum}{}` `\refvar{SampledSpectrum}{}`::`\initvar{FromRGB}{}`(const `\refvar{Float}{}` rgb[3],
+                                         `\refvar{SpectrumType}{}` type) {
+    `\refvar{SampledSpectrum}{}` r;
+    if (type == `\refvar{SpectrumType}{}`::`\refvar{Reflectance}{}`) {
+        `\refcode{Convert reflectance spectrum to RGB}{}`
+    } else {
+        `\refcode{Convert illuminant spectrum to RGB}{}`
+    }
+    return r.`\refvar[CoefficientSpectrum::Clamp]{Clamp}{}`();
+}
+\end{lstlisting}
+
+这里我们将展示反射率的转换过程。光源的计算也类似，只是用的不同的转换系数。
+首先，实现确定红、绿、蓝哪个通道最小。
+\begin{lstlisting}
+`\initcode{Convert reflectance spectrum to RGB}{=}`
+if (rgb[0] <= rgb[1] && rgb[0] <= rgb[2]) {
+    `\refcode{Compute reflectance SampledSpectrum with rgb[0] as minimum}{}`
+} else if (rgb[1] <= rgb[0] && rgb[1] <= rgb[2]) {
+    `\refcode{Compute reflectance SampledSpectrum with rgb[1] as minimum}{}`
+} else {
+    `\refcode{Compute reflectance SampledSpectrum with rgb[2] as minimum}{}`
+}
+\end{lstlisting}
+
+这里是红色分量最小情况下的代码（绿色和蓝色类似这里书中就不介绍了）
+\sidenote{译者注我补充回来了。}。
+如果红色最小，则我们知道绿色和蓝色有比红色更大的值。
+这样我们可以通过给其赋予红色分量值乘以\refvar{rgbRefl2SpectWhite}{}中的
+白色光谱来开始转换最终要返回的SPD。
+完成后，RGB值中剩下要处理的是$(0,g-r,b-r)$。
+代码依次确定剩下两个分量谁最小。
+该值乘以青色\sidenote{译者注：原文cyan。}（绿蓝）光谱并加到结果中，
+我们还剩下$(0,g-b,0)$或$(0,0,b-g)$。
+基于绿色或蓝色通道哪一个非零，绿色或蓝色通道SPD被剩余部分缩放完成转换。
+\begin{lstlisting}
+`\initcode{Compute reflectance SampledSpectrum with rgb[0] as minimum}{=}`
+r += rgb[0] * `\refvar{rgbRefl2SpectWhite}{}`;
+if (rgb[1] <= rgb[2]) {
+    r += (rgb[1] - rgb[0]) * `\refvar{rgbRefl2SpectCyan}{}`;
+    r += (rgb[2] - rgb[1]) * `\refvar{rgbRefl2SpectBlue}{}`;
+} else {
+    r += (rgb[2] - rgb[0]) * `\refvar{rgbRefl2SpectCyan}{}`;
+    r += (rgb[1] - rgb[2]) * `\refvar{rgbRefl2SpectGreen}{}`;
+}
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{Compute reflectance SampledSpectrum with rgb[1] as minimum}{=}`
+r += rgb[1] * `\refvar{rgbRefl2SpectWhite}{}`;
+if (rgb[0] <= rgb[2]) {
+    r += (rgb[0] - rgb[1]) * `\refvar{rgbRefl2SpectMagenta}{}`;
+    r += (rgb[2] - rgb[0]) * `\refvar{rgbRefl2SpectBlue}{}`;
+} else {
+    r += (rgb[2] - rgb[1]) * `\refvar{rgbRefl2SpectMagenta}{}`;
+    r += (rgb[0] - rgb[2]) * `\refvar{rgbRefl2SpectRed}{}`;
+}
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{Compute reflectance SampledSpectrum with rgb[2] as minimum}{=}`
+r += rgb[2] * `\refvar{rgbRefl2SpectWhite}{}`;
+if (rgb[0] <= rgb[1]) {
+    r += (rgb[0] - rgb[2]) * `\refvar{rgbRefl2SpectYellow}{}`;
+    r += (rgb[1] - rgb[0]) * `\refvar{rgbRefl2SpectGreen}{}`;
+} else {
+    r += (rgb[1] - rgb[2]) * `\refvar{rgbRefl2SpectYellow}{}`;
+    r += (rgb[0] - rgb[1]) * `\refvar{rgbRefl2SpectRed}{}`;
+}
+\end{lstlisting}
+
+有了从RGB转换的方法，从XYZ颜色转换也很容易。
+我们首先从XYZ转换到RGB然后再用方法\refvar{FromRGB}{()}。
+\begin{lstlisting}
+`\refcode{SampledSpectrum Public Methods}{+=}\lastcode{SampledSpectrumPublicMethods}`
+static `\refvar{SampledSpectrum}{}` `\initvar{FromXYZ}{}`(const `\refvar{Float}{}` xyz[3],
+        `\refvar{SpectrumType}{}` type = `\refvar{SpectrumType}{}`::`\refvar{Reflectance}{}`) {
+    `\refvar{Float}{}` rgb[3];
+    `\refvar{XYZToRGB}{}`(xyz, rgb);
+    return `\refvar{FromRGB}{}`(rgb, type);
+}
+\end{lstlisting}
+
+最后，我们再次用上述基础提供了转换类\refvar{RGBSpectrum}{}的实例的构造函数。
+\begin{lstlisting}
+`\refcode{Spectrum Method Definitions}{+=}\lastnext{SpectrumMethodDefinitions}`
+`\refvar{SampledSpectrum}{}`::`\refvar{SampledSpectrum}{}`(const `\refvar{RGBSpectrum}{}` &r, `\refvar{SpectrumType}{}` t) {
+    `\refvar{Float}{}` rgb[3];
+    r.`\refvar{ToRGB}{}`(rgb);
+    *this = `\refvar{SampledSpectrum}{}`::`\refvar{FromRGB}{}`(rgb, t);
 }
 \end{lstlisting}

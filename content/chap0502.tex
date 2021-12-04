@@ -170,7 +170,7 @@ for (; i+1 < n && lambdaEnd >= lambda[i]; ++i) {
 
 \subsection{XYZ颜色}\label{sub:XYZ颜色}
 人类视觉系统的一个非凡性质是可只用三个浮点数为人类感知表示颜色。
-颜色感知的\keyindex{三色刺激理论}{tristimulus theory}{}说
+颜色感知的\keyindex{三刺激理论}{tristimulus theory}{}说
 用三个值$x_{\lambda},y_{\lambda}$和$z_{\lambda}$就能为人类观察者准确表示所有可见SPD。
 给定发射SPD即$S(\lambda)$，通过积分它们与\keyindex{光谱匹配曲线}{spectral matching curve}{}
 $X(\lambda),Y(\lambda)$和$Z(\lambda)$的积可算得这些值：
@@ -186,7 +186,7 @@ $X(\lambda),Y(\lambda)$和$Z(\lambda)$的积可算得这些值：
 一般认为这些匹配曲线通常类似于人类视网膜中三种色敏视锥细胞\sidenote{译者注：原文 color-sensitive cone。}的响应。
 惊人的是，有截然不同分布的SPD可能有非常接近的$x_{\lambda},y_{\lambda}$和$z_{\lambda}$值。
 对于人类观察者，这样的SPD实际上有一样的视觉呈现。
-这样的光谱对称为\keyindex{条件等色}{metamer}{}。
+这样的光谱对称为\keyindex{同色异谱}{metamer}{}。
 \begin{figure}[htbp]
     \centering\includegraphics[width=0.5\linewidth]{chap05/matching-xyz.eps}
     \caption{对任意SPD计算XYZ值。用\refeq{5.1}让SPD与三个匹配曲线的每一个
@@ -195,7 +195,7 @@ $X(\lambda),Y(\lambda)$和$Z(\lambda)$的积可算得这些值：
 \end{figure}
 
 这给我们带来了关于光谱功率分布表示的一个微妙之处。
-大部分颜色空间都希望模型颜色是对人类可见的，进而根据颜色感知的三色刺激理论只需用三个系数。
+大部分颜色空间都希望模型颜色是对人类可见的，进而根据颜色感知的三刺激理论只需用三个系数。
 尽管XYZ能很好地表示要对人类观察者显示的给定SPD，
 但它对于光谱计算而言{\itshape 不是}特别好的基函数集。
 例如，尽管XYZ值能很好地分别描述柠檬皮或荧光灯的感知颜色（回想\reffig{5.1}），
@@ -241,7 +241,7 @@ static void `\initvar[SampledSpectrum::Init]{Init}{}`() {
 `\initcode{Compute XYZ matching functions for SampledSpectrum}{=}`
 for (int i = 0; i < `\refvar{nSpectralSamples}{}`; ++i) {
     `\refvar{Float}{}` wl0 = `\refvar{Lerp}{}`(`\refvar{Float}{}`(i) / `\refvar{Float}{}`(`\refvar{nSpectralSamples}{}`), 
-                     `\refvar{sampledLambdaStart}{}`, `\refvar{nSpectralSamples}{}`);
+                     `\refvar{sampledLambdaStart}{}`, `\refvar{sampledLambdaEnd}{}`);
     `\refvar{Float}{}` wl1 = `\refvar{Lerp}{}`(`\refvar{Float}{}`(i + 1) / `\refvar{Float}{}`(`\refvar{nSpectralSamples}{}`), 
                      `\refvar{sampledLambdaStart}{}`, `\refvar{sampledLambdaEnd}{}`);
     `\refvar[SampledSpectrum::X]{X}{}`.`\refvar[CoefficientSpectrum::c]{c}{}`[i] = `\refvar{AverageSpectrumSamples}{}`(`\refvar{CIE\_lambda}{}`, `\refvar{CIE\_X}{}`, `\refvar{nCIESamples}{}`,
@@ -262,7 +262,7 @@ pbrt中所有\refvar{Spectrum}{}实现都必须提供将其SPD转换为$(x_{\lam
 \begin{align*}
     x_{\lambda}\approx\frac{\lambda_{\text{end}}-\lambda_{\text{start}}}{N}\sum\limits_{i=0}^{N-1}{X_ic_i}\, ,
 \end{align*}
-并以此类推。
+并以此类推\sidenote{译者注：但是下面的代码中实际上还多除以了{\ttfamily CIE\_Y\_integral}。}。
 \begin{lstlisting}
 `\refcode{SampledSpectrum Public Methods}{+=}\lastnext{SampledSpectrumPublicMethods}`
 void `\initvar{ToXYZ}{}`(`\refvar{Float}{}` xyz[3]) const {
@@ -331,7 +331,7 @@ XYZ颜色的$y$系数与\keyindex{亮度}{luminance}{}密切相关，
 为感兴趣的显示器选定好定义红、绿和蓝的特定SPD集后，
 我们可以将其转换为相应的RGB系数。
 对于特定显示器，有了光谱响应曲线$R(\lambda),G(\lambda)$和$B(\lambda)$后，
-可以通过积分响应曲线和SPD即$S(\lambda)$以及利用颜色感知的三色刺激理论算得RGB系数：
+可以通过积分响应曲线和SPD即$S(\lambda)$以及利用颜色感知的三刺激理论算得RGB系数：
 \begin{align*}
     r & =\int R(\lambda)S(\lambda)\mathrm{d}\lambda=\int R(\lambda)(x_{\lambda}X(\lambda)+y_{\lambda}Y(\lambda)+z_{\lambda}Z(\lambda))\mathrm{d}\lambda                        \\
       & =x_{\lambda}\int R(\lambda)X(\lambda)\mathrm{d}\lambda+y_{\lambda}\int R(\lambda)Y(\lambda)\mathrm{d}\lambda+z_{\lambda}\int R(\lambda)Z(\lambda)\mathrm{d}\lambda\, .
@@ -403,7 +403,7 @@ void `\initvar[SampledSpectrum::ToRGB]{ToRGB}{}`(`\refvar{Float}{}` rgb[3]) cons
 光滑目标是为什么把SPD构建为显示器的$R(\lambda),G(\lambda)$和$B(\lambda)$SPD的加权和不是好办法的原因：
 如\reffig{5.4}所示，这些函数一般都是不规则且尖锐的，
 因此它们的加权和不会是非常光滑的SPD。
-尽管该结果是给定RGB值的条件等色，但它不太可能是实际物体SPD的准确表示。
+尽管该结果是给定RGB值的同色异谱，但它不太可能是实际物体SPD的准确表示。
 
 这里我们实现了\citet{doi:10.1080/10867651.1999.10487511}提出的将RGB转换为SPD
 并尝试实现以上目标的的方法。

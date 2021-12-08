@@ -152,8 +152,8 @@ while (lambdaStart > lambda[i + 1]) ++i;
 计算在波长范围{\ttfamily segLambdaStart}到{\ttfamily segLambdaEnd}上的均值。
 该值依次用{\ttfamily interp()}计算，它是在给定波长的两个端点间线性插值的匿名函数。
 
-下面的{\ttfamily std::min()}和{\ttfamily std::max()}调用计算波长范围以在该段内做平均；
-注意它们自然地处理了{\ttfamily lambdaStart}、{\ttfamily lambdaEnd}或两者都在当前段内的情况。
+下面调用{\ttfamily std::min()}和{\ttfamily std::max()}计算波长范围以在该段内做平均；
+注意它们自然处理了{\ttfamily lambdaStart}、{\ttfamily lambdaEnd}或两者都在当前段内的情况。
 \begin{lstlisting}
 `\initcode{Loop over wavelength sample segments and add contributions}{=}`
 auto interp = [lambda, vals](`\refvar{Float}{}` w, int i) {
@@ -403,11 +403,11 @@ void `\initvar[SampledSpectrum::ToRGB]{ToRGB}{}`(`\refvar{Float}{}` rgb[3]) cons
 光滑目标是为什么把SPD构建为显示器的$R(\lambda),G(\lambda)$和$B(\lambda)$SPD的加权和不是好办法的原因：
 如\reffig{5.4}所示，这些函数一般都是不规则且尖锐的，
 因此它们的加权和不会是非常光滑的SPD。
-尽管该结果是给定RGB值的同色异谱，但它不太可能是实际物体SPD的准确表示。
+该结果和给定RGB值是同色异谱的，它不太可能是实际物体SPD的准确表示。
 
 这里我们实现了\citet{doi:10.1080/10867651.1999.10487511}提出的将RGB转换为SPD
 并尝试实现以上目标的的方法。
-该方法基于一点观察即好的开始是为红、绿和蓝计算单独的光滑SPD，
+该方法基于一点观察即最好从为红、绿和蓝计算单独的光滑SPD开始，
 这样用给定RGB系数计算它们的加权和然后转换回RGB给出的结果会接近于原来的RGB系数。
 他通过数值优化过程发现了这样的光谱。
 
@@ -418,9 +418,10 @@ void `\initvar[SampledSpectrum::ToRGB]{ToRGB}{}`(`\refvar{Float}{}` rgb[3]) cons
 第二，像黄色（红绿混合）那样由两种原色混合的颜色，
 用它们预先计算的光滑SPD表示比用两种相应原色的SPD之和表示更好。
 
-下面的数组保存的符合这些准则的SPD，
+下面的数组保存了符合这些准则的SPD，
 其样本的波长在\refvar{RGB2SpectLambda}{[]}
-中（这些数据由Karl vom Berge生成）。
+中（这些数据由Karl vom Berge生成）
+\sidenote{译者注：cyan指蓝绿色，也称青色，magenta指紫红色，也称品红、洋红。}。
 \begin{lstlisting}
 `\refcode{Spectral Data Declarations}{+=}\lastnext{SpectralDataDeclarations}`
 static const int `\initvar{nRGB2SpectSamples}{}` = 32;
@@ -434,7 +435,7 @@ extern const `\refvar{Float}{}` `\initvar{RGBRefl2SpectGreen}{}`[`\refvar{nRGB2S
 extern const `\refvar{Float}{}` `\initvar{RGBRefl2SpectBlue}{}`[`\refvar{nRGB2SpectSamples}{}`];
 \end{lstlisting}
 
-如果给定的RGB颜色为光源描述了光照，则用代表的光源的光谱功率分布
+如果给定的RGB颜色为光源描述了光照，则用典型光源的光谱功率分布
 计算用于反射率的转换表以定义“白色”会比用常数光谱得到更好结果。
 数组\refvar{RGBIllum2Spect}{}使用了D65光谱功率分布，
 它被CIE标准化为表示正午日光（\refsub{标准光源}将更多讨论D65光源）。
@@ -528,7 +529,8 @@ enum class `\initvar{SpectrumType}{}` { `\initvar{Reflectance}{}`, `\initvar{Ill
 }
 \end{lstlisting}
 
-这里我们将展示反射率的转换过程。光源的计算也类似，只是用的不同的转换系数。
+这里我们将展示反射率的转换过程。光源的计算也类似，只是用的不同的转换系数
+\sidenote{译者注：这里我补充了光源的代码。}。
 首先，实现确定红、绿、蓝哪个通道最小。
 \begin{lstlisting}
 `\initcode{Convert reflectance spectrum to RGB}{=}`
@@ -540,9 +542,19 @@ if (rgb[0] <= rgb[1] && rgb[0] <= rgb[2]) {
     `\refcode{Compute reflectance SampledSpectrum with rgb[2] as minimum}{}`
 }
 \end{lstlisting}
+\begin{lstlisting}
+`\initcode{Convert illuminant spectrum to RGB}{=}` 
+if (rgb[0] <= rgb[1] && rgb[0] <= rgb[2]) {
+    `\refcode{Compute illuminant SampledSpectrum with rgb[0] as minimum}{}`
+} else if (rgb[1] <= rgb[0] && rgb[1] <= rgb[2]) {
+    `\refcode{Compute illuminant SampledSpectrum with rgb[1] as minimum}{}`
+} else {
+    `\refcode{Compute illuminant SampledSpectrum with rgb[2] as minimum}{}`
+}
+\end{lstlisting}
 
 这里是红色分量最小情况下的代码（绿色和蓝色类似这里书中就不介绍了）
-\sidenote{译者注我补充回来了。}。
+\sidenote{译者注：我补充回来了。}。
 如果红色最小，则我们知道绿色和蓝色有比红色更大的值。
 这样我们可以通过给其赋予红色分量值乘以\refvar{rgbRefl2SpectWhite}{}中的
 白色光谱来开始转换最终要返回的SPD。
@@ -582,6 +594,39 @@ if (rgb[0] <= rgb[1]) {
 } else {
     r += (rgb[1] - rgb[2]) * `\refvar{rgbRefl2SpectYellow}{}`;
     r += (rgb[0] - rgb[1]) * `\refvar{rgbRefl2SpectRed}{}`;
+}
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{Compute illuminant SampledSpectrum with rgb[0] as minimum}{=}`
+r += rgb[0] * `\refvar{rgbIllum2SpectWhite}{}`;
+if (rgb[1] <= rgb[2]) {
+    r += (rgb[1] - rgb[0]) * `\refvar{rgbIllum2SpectCyan}{}`;
+    r += (rgb[2] - rgb[1]) * `\refvar{rgbIllum2SpectBlue}{}`;
+} else {
+    r += (rgb[2] - rgb[0]) * `\refvar{rgbIllum2SpectCyan}{}`;
+    r += (rgb[1] - rgb[2]) * `\refvar{rgbIllum2SpectGreen}{}`;
+}
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{Compute illuminant SampledSpectrum with rgb[1] as minimum}{=}`
+r += rgb[1] * `\refvar{rgbIllum2SpectWhite}{}`;
+if (rgb[0] <= rgb[2]) {
+    r += (rgb[0] - rgb[1]) * `\refvar{rgbIllum2SpectMagenta}{}`;
+    r += (rgb[2] - rgb[0]) * `\refvar{rgbIllum2SpectBlue}{}`;
+} else {
+    r += (rgb[2] - rgb[1]) * `\refvar{rgbIllum2SpectMagenta}{}`;
+    r += (rgb[0] - rgb[2]) * `\refvar{rgbIllum2SpectRed}{}`;
+}
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{Compute illuminant SampledSpectrum with rgb[2] as minimum}{=}`
+r += rgb[2] * `\refvar{rgbIllum2SpectWhite}{}`;
+if (rgb[0] <= rgb[1]) {
+    r += (rgb[0] - rgb[2]) * `\refvar{rgbIllum2SpectYellow}{}`;
+    r += (rgb[1] - rgb[0]) * `\refvar{rgbIllum2SpectGreen}{}`;
+} else {
+    r += (rgb[1] - rgb[2]) * `\refvar{rgbIllum2SpectYellow}{}`;
+    r += (rgb[0] - rgb[1]) * `\refvar{rgbIllum2SpectRed}{}`;
 }
 \end{lstlisting}
 

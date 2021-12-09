@@ -174,12 +174,69 @@ $h\approx6.626\times10^{-34}\text{kg}\cdot\text{m}^2/\text{s}$。
 \end{align*}
 
 \begin{figure}[htbp]
-    \centering\includegraphics[width=0.5\linewidth]{chap05/LambertsLaw.eps}
+    \centering\includegraphics[width=0.4\linewidth]{chap05/LambertsLaw.eps}
     \caption{朗伯定律。到达表面的辐射照度随着入射角的余弦变化，
-    因为更大的入射角有更大的照射区域。}
+        因为更大的入射角有更大的照射区域。}
     \label{fig:5.7}
 \end{figure}
 
 \subsubsection*{立体角与强度}
+为了定义强度，我们首先需要定义\keyindex{立体角}{solid angle}{}的表示。
+立体角是平面上2D角拓展到球上的角。
+\keyindex{平面角}{planar angle}{}是关于某位置朝向某物体的总角度（\reffig{5.8}）。
+考虑绕点$\bm p$的单位圆；如果我们将阴影物体投影到该圆上，该投影将覆盖一定长度的圆$s$。
+$s$的弧长（等于角度$\theta$）即朝向物体的角度。
+平面角单位为\keyindex{弧度}{radian}{}
+\sidenote{译者注：一般简写为{\normalfont rad}。注意它是无量纲的导出单位。}。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.5\linewidth]{chap05/Planarangle.eps}
+    \caption{平面角。从点$\bm p$看物体的平面角等于从点$\bm p$朝它看所对的角度，
+        或者等价地，单位圆上弧$s$的长度。}
+    \label{fig:5.8}
+\end{figure}
+
+立体角把2D单位圆扩展到3D单位球（\reffig{5.9}）。
+总面积$s$即物体所对的立体角
+\sidenote{译者注：更确切地说是面积与半径平方的比值。}。
+立体角的单位为\keyindex{球面度}{steradian}{}(sr)
+\sidenote{译者注：注意球面度也是无量纲的导出单位。}。
+整个球体所对的立体角为$4\pi \text{sr}$，
+半球对应$2\pi \text{sr}$。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.5\linewidth]{chap05/Solidangle.eps}
+    \caption{三维内物体$c$所对的立体角$s$通过将$c$投影到
+        单位球上并度量其投影面积算得。}
+    \label{fig:5.9}
+\end{figure}
+
+以$\bm p$为球心的单位球上的点集可以用来描述从$\bm p$发出的向量。
+我们将经常使用符号$\bm \omega$来表示这些方向，
+并且我们将约定$\bm \omega$是标准化的向量。
+
+现在考虑无穷小光源发射光子。如果我们将该光源置于单位球球心处，
+则我们可以计算出射功率的角密度。
+表示为$I$的\keyindex{辐射强度}{radiant intensity}{}
+\sidenote{译者注：原文写作intensity。}
+就是这样的量；它的单位为$\text{W}/\text{sr}$。在整个球的方向上，我们有
+\begin{align*}
+    I=\frac{\varPhi}{4\pi}\, ,
+\end{align*}
+但更一般地我们感兴趣的是取微分方向锥的极限：
+\begin{align*}
+    I=\lim\limits_{\Delta{\bm\omega}\rightarrow 0}{\frac{\Delta\varPhi}{\Delta{\bm\omega}}}=\frac{\mathrm{d}\varPhi}{\mathrm{d}{\bm\omega}}\, .
+\end{align*}
+
+和平常一样，我们可以对强度积分回到功率：设强度是方向的函数$I({\bm\omega})$，
+我们可以在有限方向集$\Omega$上积分以反求功率：
+\begin{align*}
+    \varPhi=\int\limits_{\Omega}I({\bm\omega})\mathrm{d}{\bm\omega}\, .
+\end{align*}
+
+强度描述了光的方向分布，但它只对点光源有意义。
+
+\subsubsection*{辐射亮度}
+最后，最重要的辐射度量数量是\keyindex{辐射亮度}{radiance}
+\sidenote{译者注：也称辐亮度、辐射度。}$L$。
+
 
 \subsection{亮度和光度学}\label{sub:亮度和光度学}

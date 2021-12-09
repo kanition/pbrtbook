@@ -1,5 +1,5 @@
 \section{辐射度学}\label{sec:辐射度学}
- 
+
 \keyindex{辐射度学}{radiometry}{}提供了一系列描述光传播与反射的思想和数学工具。
 它为贯穿本书剩余部分的渲染算法构建了推导的基础。
 有趣的是，辐射度学不是用物理光学基本原理推导产生的，
@@ -40,15 +40,15 @@
 \begin{itemize}
     \item \keyindex{线性关系}{linearity}{}：光学系统两个输入的共同效应总是等于每个输入各自效应之和。
     \item \keyindex{能量守恒}{conservation of energy}{}\sidenote{译者注：原文写作energy conservation。}：
-    当光从表面或介质散射时，触发的散射不会比它开始时产生更多的能量。
+          当光从表面或介质散射时，触发的散射不会比它开始时产生更多的能量。
     \item {\sffamily 无偏振}：我们将忽略电磁场的偏振；
-    因此，光的唯一相关属性是它关于波长（或等价地，\keyindex{频率}{frequency}{}）的分布。
+          因此，光的唯一相关属性是它关于波长（或等价地，\keyindex{频率}{frequency}{}）的分布。
     \item {\sffamily 无}\keyindex{荧光}{fluorescence}{}或\keyindex{磷光}{phosphorescence}{}：
-    某一波长的光的行为完全独立于其他波长或时间的光的行为。
-    像偏振那样，要包含这些效应并不难，但它们为系统增加的实用价值相对较低。
+          某一波长的光的行为完全独立于其他波长或时间的光的行为。
+          像偏振那样，要包含这些效应并不难，但它们为系统增加的实用价值相对较低。
     \item \keyindex{稳态}{steady state}{}：假设环境中的光达到平衡，
-    所以其辐射分布不随时间变化。在现实场景中这对于光几乎是一瞬间发生的，
-    所以在实践中这没什么限制。注意磷光也违反了稳态假设。
+          所以其辐射分布不随时间变化。在现实场景中这对于光几乎是一瞬间发生的，
+          所以在实践中这没什么限制。注意磷光也违反了稳态假设。
 \end{itemize}
 
 采用几何光学模型最明显的损失是很难考虑\keyindex{衍射}{diffraction}{}和干涉效应。
@@ -57,8 +57,8 @@
 
 \subsection{基本量}\label{sub:基本量}
 有四个辐射度量数量\sidenote{译者注：依据中国国家标准GB 3102.6-93，
-这些量的名称大都可以省略“射”字，例如“辐射出射度”也可以称作
-“辐射出度”“辐出射度”“辐出度”，以此类推。后续译文将视情况使用全称或简称。}
+    这些量的名称大都可以省略“射”字，例如“辐射出射度”也可以称作
+    “辐射出度”“辐出射度”“辐出度”，以此类推。后续译文将视情况使用全称或简称。}
 是渲染的核心：\keyindex{通量}{flux}{}、
 \keyindex{辐射照度}{irradiance}{}/\keyindex{辐射出射度}{radiant exitance}{}、
 \keyindex{强度}{intensity}{}和\keyindex{辐射亮度}{radiance}{}。
@@ -123,10 +123,63 @@ $h\approx6.626\times10^{-34}\text{kg}\cdot\text{m}^2/\text{s}$。
 \begin{figure}[htbp]
     \centering\input{Pictures/chap05/Fluxonspheres.tex}
     \caption{辐射通量$\varPhi$度量穿过表面或空间区域的能量。
-    这里来自一个点光源的通量由包围它的球来度量。}
+        这里来自一个点光源的通量由包围它的球来度量。}
     \label{fig:5.6}
 \end{figure}
 
 \subsubsection*{辐射照度与辐射出射度}
+任何通量的度量都需要一个区域以测量单位时间的光子。
+给定有限区域$A$，我们可以定义该区域上功率的平均密度$\displaystyle E=\frac{\varPhi}{A}$。
+该量要么是{\sffamily 辐射照度}（E），即到达表面的通量面密度，
+要么是{\sffamily 辐射出射度}（M），即离开表面的通量面密度。
+这些度量单位为$\text{W}/\text{m}^2$。
+（术语“辐射照度”有时也用于指代离开表面的通量，
+但为了清楚起见我们将为两种情况使用不同术语。）
+
+对于\reffig{5.6}中的点光源例子，外层球面上一点的辐射照度小于内层球面上一点的辐射照度，
+因为外层球的表面积更大。
+一般来说，如果点光源朝所有方向进行同样多的照射，
+则对于这样配置的半径为$r$的球体，
+\begin{align*}
+    E=\frac{\varPhi}{4\pi r^2}\, .
+\end{align*}
+该事实解释了为什么一点从光源接收的能量随着到光源距离的平方而下降。
+
+更一般地，我们可以通过取每块微分面上微分功率的极限来定义
+一点$\bm p$处的辐射照度和辐射出射度：
+\begin{align*}
+    E(\bm p)=\lim\limits_{\Delta A\rightarrow 0}{\frac{\Delta \varPhi(\bm p)}{\Delta A}}=\frac{\mathrm{d}\varPhi(\bm p)}{\mathrm{d}A}\, .
+\end{align*}
+
+我们也可以在一区域上积分辐射照度以求得功率：
+\begin{align*}
+    \varPhi=\int\limits_A E(\bm p)\mathrm{d}A\, .
+\end{align*}
+
+辐射照度方程也可以帮助我们理解{\sffamily 朗伯定律}
+\sidenote{译者注：全称\keyindex{朗伯余弦定律}{Lambert's cosine law}{}。}的由来，
+它指出到达表面光的能量数量正比于光方向与曲面法线夹角的余弦（\reffig{5.7}）。
+考虑面积为$A$且通量为$\varPhi$的光源照射表面。
+如果光源直接向下照射表面（左图），则接收光的表面积$A_1$等于$A$。
+于是在$A_1$内任意点的辐射照度为
+\begin{align*}
+    E_1=\frac{\varPhi}{A}\, .
+\end{align*}
+
+然而，如果光源和表面有倾角，则接收光照的表面积更大。
+如果$A$很小，则接收通量的区域$A_2$大致为$\displaystyle\frac{A}{\cos\theta}$。
+因此对于$A_2$内的点，其辐射照度为
+\begin{align*}
+    E_2=\frac{\varPhi\cos\theta}{A}\, .
+\end{align*}
+
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.5\linewidth]{chap05/LambertsLaw.eps}
+    \caption{朗伯定律。到达表面的辐射照度随着入射角的余弦变化，
+    因为更大的入射角有更大的照射区域。}
+    \label{fig:5.7}
+\end{figure}
+
+\subsubsection*{立体角与强度}
 
 \subsection{亮度和光度学}\label{sub:亮度和光度学}

@@ -36,7 +36,7 @@
 整个pbrt中，我们都根据\refvar{Spectrum}{}类型
 用一组特定内建运算符（加法、乘法等）仔细实现涉及SPD的全部计算。
 \refvar{Spectrum}{}类型隐藏了所用特定光谱表示的细节，
-这样改变系统的这些细节只需要改变\refvar{Spectrum}{}的实现；其他代码可保存不变。
+这样改变系统的这些细节只需要改变\refvar{Spectrum}{}的实现；其他代码可保持不变。
 \refvar{Spectrum}{}类型的实现在文件\href{https://github.com/mmp/pbrt-v3/blob/master/src/core/spectrum.h}{\ttfamily core/spectrum.h}和
 \href{https://github.com/mmp/pbrt-v3/blob/master/src/core/spectrum.cpp}{\ttfamily core/spectrum.cpp}中。
 
@@ -62,7 +62,7 @@ typedef `\refvar{RGBSpectrum}{}` `\initvar{Spectrum}{}`;
 \subsection{系数光谱实现}\label{sub:系数光谱实现}
 本章实现的两种表示都基于排序固定数目的SPD样本。
 因此，我们从定义模板类\refvar{CoefficientSpectrum}{}开始，
-它将光谱表示为作为模板\refvar{nSpectrumSamples}{}
+它将光谱表示为由模板\refvar{nSpectrumSamples}{}
 参数给出的特定数量的样本。
 \refvar{RGBSpectrum}{}和\refvar{SampledSpectrum}{}的部分实现都继承自\refvar{CoefficientSpectrum}{}。
 \begin{lstlisting}
@@ -179,7 +179,7 @@ pbrt中需要该功能的类包括用于次表面散射的\refvar{TabulatedBSSRD
 以及类\refvar{HomogeneousMedium}{}和\refvar{GridDensityMedium}{}。
 
 针对这些用途，\refvar{CoefficientSpectrum}{}提供了公有常数\refvar[CoefficientSpectrum::nSamples]{nSamples}{}，
-它给出用于表示SPD的样本数量，以及方法{\ttfamily operator[]}来获取单个样本值。
+它给出了用于表示SPD的样本数量，以及方法{\ttfamily operator[]}来获取单个样本值。
 \begin{lstlisting}
 `\initcode{CoefficientSpectrum Public Data}{=}`
 static const int `\initvar[CoefficientSpectrum::nSamples]{nSamples}{}` = `\refvar{nSpectrumSamples}{}`;

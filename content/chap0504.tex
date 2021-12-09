@@ -56,5 +56,77 @@
 例如，当存在这些效应时两区域的总通量不一定等于每个区域各自接收的功率之和。
 
 \subsection{基本量}\label{sub:基本量}
+有四个辐射度量数量\sidenote{译者注：依据中国国家标准GB 3102.6-93，
+这些量的名称大都可以省略“射”字，例如“辐射出射度”也可以称作
+“辐射出度”“辐出射度”“辐出度”，以此类推。后续译文将视情况使用全称或简称。}
+是渲染的核心：\keyindex{通量}{flux}{}、
+\keyindex{辐射照度}{irradiance}{}/\keyindex{辐射出射度}{radiant exitance}{}、
+\keyindex{强度}{intensity}{}和\keyindex{辐射亮度}{radiance}{}。
+它们每个都可以从能量（单位为焦耳）依次对时间、面积和方向取极限推导出来。
+所有这些辐射度量数量一般都依赖于波长。
+对于本章的剩余部分，我们不再明确这一依赖关系，但记住这一性质是很重要的。
+
+\subsubsection*{能量}
+我们的起点是\keyindex{能量}{energy}{}
+\sidenote{译者注：也称为\keyindex{辐射能}{radiant energy}{}。}，
+单位为\keyindex{焦耳}{joule}{}(焦，J)
+\sidenote{译者注：{\normalfont $1\text{J}=1\text{kg}\cdot\text{m}^2/\text{s}^2$。}}。
+照射源发射\keyindex{光子}{photon}{}，
+每个光子有特定波长并携带特定数量的能量。
+所有这些基本辐射度量数量实际都是对光子的不同度量。
+波长为$\lambda$的一个光子携带能量为
+\begin{align*}
+    Q=\frac{hc}{\lambda}\, ,
+\end{align*}
+其中$c$是光的速率
+\sidenote{译者注：指真空环境下的光速；
+原文写作{\normalfont $299,472,458\text{m}/\text{s}$}，此处更正为国际标准值。}
+即$299,792,458\text{m}/\text{s}$，$h$为\keyindex{普朗克常数}{Planck constant}{}
+\sidenote{译者注：其单位可化简为{\normalfont$\text{J}\cdot\text{s}$}。}，
+$h\approx6.626\times10^{-34}\text{kg}\cdot\text{m}^2/\text{s}$。
+
+\subsubsection*{通量}
+能量度量了一段时间上的\keyindex{功}{work}{}，
+尽管渲染一般使用稳态假设，但我们最感兴趣的是度量一瞬间的光。
+\keyindex{辐射能通量}{radiant energy flux}{}
+\sidenote{译者注：也称辐射通量、辐通量；原文写作radiant flux。}，
+也称为\keyindex{辐射功率}{radiant power}{}\sidenote{译者注：原文写作power。}，
+是单位时间内穿过表面或空间区域的能量总量。
+辐射通量可以通过求每个微分时间内微分能量的极限算出：
+\begin{align*}
+    \varPhi=\lim\limits_{\Delta t\rightarrow 0}{\frac{\Delta Q}{\Delta t}}=\frac{\mathrm{d}Q}{\mathrm{d}t}\, .
+\end{align*}
+它的单位是焦耳$/$秒，即更常见的\keyindex{瓦特}{watt}{}(瓦，W)。
+
+例如，设一光源在一小时内发射了$Q=200,000\text{J}$，
+如果这一小时内任何时候发射的能量都相同，
+我们可以求得该光源的通量为
+\begin{align*}
+    \varPhi=200,000\text{J}/3600\text{s}\approx 55.6\text{W}\, .
+\end{align*}
+
+反之，设通量是时间的函数，我们可以在一段时间上积分算出总能量：
+\begin{align*}
+    Q=\int_{t_0}^{t_1}\varPhi(t)\mathrm{d}t\, .
+\end{align*}
+
+注意这里我们的记号有些不正式：在其他问题中，因为光子实际上是离散量子，
+对趋近于零的微分时间取极限没有实际意义。
+但对于渲染目的，光子数量相比于我们感兴趣的度量是巨大的，在实践中这一细节不会有问题。
+
+来自光源的总辐射一般用通量描述。
+\reffig{5.6}展示了来自一个点光源的通量由
+穿过包围该光源的假想球面的能量总量度量。
+注意\reffig{5.6}中在两个球面的任意一个上度量的通量总量是一样的——
+尽管穿过大球任意局部的能量比小球少，
+但大球的面积更大，意味着总通量一样多。
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap05/Fluxonspheres.tex}
+    \caption{辐射通量$\varPhi$度量穿过表面或空间区域的能量。
+    这里来自一个点光源的通量由包围它的球来度量。}
+    \label{fig:5.6}
+\end{figure}
+
+\subsubsection*{辐射照度与辐射出射度}
 
 \subsection{亮度和光度学}\label{sub:亮度和光度学}

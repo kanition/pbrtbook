@@ -223,8 +223,8 @@ $s$的弧长（等于角度$\theta$）即朝向物体的角度。
 \end{align*}
 但更一般地我们感兴趣的是取微分方向锥的极限
 \sidenote{译者注：这里原作者借用了记号$\bm\omega$，
-在该式以及后续几个式子中，它表示立体角大小，本质是个标量。
-有时它又表示方向，是个向量。读者应结合语境区分。}：
+    在该式以及后续几个式子中，它表示立体角大小，本质是个标量。
+    有时它又表示方向，是个向量。读者应结合语境区分。}：
 \begin{align*}
     I=\lim\limits_{\Delta{\bm\omega}\rightarrow 0}{\frac{\Delta\varPhi}{\Delta{\bm\omega}}}=\frac{\mathrm{d}\varPhi}{\mathrm{d}{\bm\omega}}\, .
 \end{align*}
@@ -252,9 +252,9 @@ $s$的弧长（等于角度$\theta$）即朝向物体的角度。
 实际上，面积计算的这一变化利于抵消辐射亮度定义中来自朗伯定律的项$\cos\theta$。
 
 辐射亮度是单位面积单位立体角上的通量密度。用通量表示时，它定义为
-\begin{align*}
+\begin{align}\label{eq:5.2}
     L=\frac{\mathrm{d}\varPhi}{\mathrm{d}{\bm\omega}\mathrm{d}A^{\perp}}\, ,
-\end{align*}
+\end{align}
 其中$\mathrm{d}A^{\perp}$是$\mathrm{d}A$在
 垂直于$\bm\omega$的假想面上的投影面积（\reffig{5.10}）。
 因此，它是当所关心的入射方向锥$\mathrm{d}{\bm\omega}$变得非常小且
@@ -274,5 +274,63 @@ $s$的弧长（等于角度$\theta$）即朝向物体的角度。
 因此它自然是光线追踪要计算的量。
 
 \subsection{入射与出射辐亮度函数}\label{sub:入射与出射辐亮度函数}
+当光线与场景中的曲面相交时，辐亮度函数$L$一般在曲面边界处不连续。
+在完全不透明曲面（例如镜子）的极端情况下，辐亮度函数
+在稍微高于和稍微低于曲面处的值可能完全无关。
 
-\subsection{亮度和光度学}\label{sub:亮度和光度学}
+因此在不连续处取单侧极限来区分上下方的辐亮度函数是有意义的
+\sidenote{译者注：这里的$\bm\omega$是辐射传播方向，注意与下文区分。}：
+\begin{align}\label{eq:5.3}
+    L^+({\bm p},{\bm\omega}) & =\lim\limits_{t\rightarrow 0^+}{L({\bm p}+t{\bm n}_{\bm p},{\bm\omega})}\, ,\nonumber \\
+    L^-({\bm p},{\bm\omega}) & =\lim\limits_{t\rightarrow 0^-}{L({\bm p}+t{\bm n}_{\bm p},{\bm\omega})}\, ,
+\end{align}
+其中${\bm n}_{\bm p}$是在$\bm p$处的曲面法线。
+然而，全文保持跟踪单侧极限是自找麻烦。
+
+我们更喜欢通过区分到达一点的辐亮度（例如取决于来自光源的照射）和
+离开该点的辐亮度（例如取决于来自表面的反射）来解决歧义性。
+
+考虑物体表面上的一点$\bm p$。
+到达该点的辐亮度分布函数可由关于位置和方向的函数进行数学描述。
+该函数记为$L_{\mathrm{i}}({\bm p},{\bm\omega})$（\reffig{5.11}）。
+描述该点从表面射出的反射辐亮度的函数记为$L_{\mathrm{o}}({\bm p},{\bm\omega})$。
+注意两种情况下方向向量$\bm\omega$都指向远离$\bm p$的方向，
+但要意识到一些作者为$L_{\mathrm{i}}$用的记号$\bm\omega$是翻转了的所以指向了$\bm p$。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.6\linewidth]{chap05/Incidentoutgoingradiance.eps}
+    \caption{(a)入射辐亮度函数$L_{\mathrm{i}}({\bm p},{\bm\omega})$把
+    到达一点的辐亮度分布描述为位置和方向的函数。
+    (b)出射辐亮度函数$L_{\mathrm{o}}({\bm p},{\bm\omega})$给出了离开该点的辐亮度分布。
+    注意两个函数中$\bm\omega$都指向远离曲面的方向，
+    进而例如$L_{\mathrm{i}}({\bm p},-{\bm\omega})$给出了
+    到达$\bm\omega$所不在的曲面另一侧的辐亮度。}
+    \label{fig:5.11}
+\end{figure}
+
+这些更直观的入射和出射辐亮度函数
+与来自\refeq{5.3}的单侧极限之间有简单的联系：
+\begin{align*}
+    L_{\mathrm{i}}({\bm p},{\bm\omega}) & =\left\{
+    \begin{array}{lr}
+        L^+({\bm p},-{\bm\omega}), & {\bm\omega}\cdot{\bm n}_{\bm p}>0 \\
+        L^-({\bm p},-{\bm\omega}), & {\bm\omega}\cdot{\bm n}_{\bm p}<0
+    \end{array}
+    \right.                                        \\
+    L_{\mathrm{o}}({\bm p},{\bm\omega}) & =\left\{
+    \begin{array}{lr}
+        L^+({\bm p},{\bm\omega}), & {\bm\omega}\cdot{\bm n}_{\bm p}>0 \\
+        L^-({\bm p},{\bm\omega}), & {\bm\omega}\cdot{\bm n}_{\bm p}<0
+    \end{array}
+    \right.
+\end{align*}
+
+全书中，我们将用入射和出射辐亮度函数的思想来解决边界处辐亮度函数的歧义性。
+
+另一需要记住的性质是空间中没有曲面处的一点（即在自由空间中），
+$L$是连续的，所以$L^+=L^-$，即意味着：
+\begin{align*}
+    L_{\mathrm{o}}({\bm p},{\bm\omega})=L_{\mathrm{i}}({\bm p},-{\bm\omega})=L({\bm p},{\bm\omega})\, .
+\end{align*}
+换句话说，$L_{\mathrm{i}}$和$L_{\mathrm{o}}$只有翻转的方向不同。
+
+\subsection{光亮度与光度学}\label{sub:光亮度与光度学}

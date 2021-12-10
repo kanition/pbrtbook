@@ -229,7 +229,7 @@ $\varPhi$并向所有方向均匀辐射光
 从曲面指向光源的向量倾斜了角度$\theta$，
 则$\mathrm{d}A$上积累的功率正比于$\cos{\theta}$。
 综上所述，单位面积上的微分功率
-（\keyindex{辐照度}{irradiance}{}\sidenote{译者注：
+（\keyindex{辐射照度}{irradiance}{}\sidenote{译者注：
       原文differential irradiance，鉴于其本身就是定义为功率对面积的微分，此处翻译略去了“微分”。}）
 $\mathrm{d}E$为
 \begin{align*}
@@ -239,7 +239,7 @@ $\mathrm{d}E$为
 熟悉计算机图形学中基本光照的读者会注意到
 该方程包含了两个熟悉的定律：
 上述面的光照随倾斜按余弦衰减\sidenote{译者注：
-      Lambert余弦定律。}，
+      \keyindex{朗伯余弦定律}{Lambert's cosine law}{}。}，
 随距离按$\displaystyle\frac{1}{r^2}$衰减。
 
 \subsection{可见性}\label{sub:可见性}
@@ -294,8 +294,7 @@ for each light:
 \end{lstlisting}
 这里我们用符号$L$代表光照强弱；
 在光度量中它用的单位和前面的$\mathrm{d}E$有一点不同。
-$L$即\keyindex{辐射亮度}{radiance}{}\sidenote{译者注：
-      可简称辐亮度，有时也称辐射、亮度。}，是后文经常见到的光度量指标。
+$L$即\keyindex{辐射亮度}{radiance}{}，是后文经常见到的光度量指标。
 
 很容易从BRDF的表示推广到\keyindex{透射光}{transmitted light}{light光}
 （得到BTDF），或者得到到达表面任意一侧的光的一般散射。
@@ -332,7 +331,7 @@ Turner Whitted在关于光线追踪
 \end{figure}
 
 通常，从物体上一点到达相机的光量
-\sidenote{译者注：此处指辐射亮度。}
+\sidenote{译者注：此处指辐亮度。}
 由物体的发光量（如果它自己就是光源）与反射光量之和决定。
 它被形式化为\keyindex{光传输方程}{light transport equation}{light transport光传输}
 （也称作\keyindex{渲染方程}{rendering equation}{render渲染}），

@@ -210,8 +210,8 @@ $s$的弧长（等于角度$\theta$）即朝向物体的角度。
 \end{figure}
 
 以$\bm p$为球心的单位球上的点集可以用来描述从$\bm p$发出的向量。
-我们将经常使用符号$\bm \omega$来表示这些方向，
-并且我们将约定$\bm \omega$是标准化的向量。
+我们将经常使用符号$\bm\omega$来表示这些方向，
+并且我们将约定$\bm\omega$是标准化的向量。
 
 现在考虑无穷小光源发射光子。如果我们将该光源置于单位球球心处，
 则我们可以计算出射功率的角密度。
@@ -221,7 +221,10 @@ $s$的弧长（等于角度$\theta$）即朝向物体的角度。
 \begin{align*}
     I=\frac{\varPhi}{4\pi}\, ,
 \end{align*}
-但更一般地我们感兴趣的是取微分方向锥的极限：
+但更一般地我们感兴趣的是取微分方向锥的极限
+\sidenote{译者注：这里原作者借用了记号$\bm\omega$，
+在该式以及后续几个式子中，它表示立体角大小，本质是个标量。
+有时它又表示方向，是个向量。读者应结合语境区分。}：
 \begin{align*}
     I=\lim\limits_{\Delta{\bm\omega}\rightarrow 0}{\frac{\Delta\varPhi}{\Delta{\bm\omega}}}=\frac{\mathrm{d}\varPhi}{\mathrm{d}{\bm\omega}}\, .
 \end{align*}
@@ -235,8 +238,41 @@ $s$的弧长（等于角度$\theta$）即朝向物体的角度。
 强度描述了光的方向分布，但它只对点光源有意义。
 
 \subsubsection*{辐射亮度}
-最后，最重要的辐射度量数量是\keyindex{辐射亮度}{radiance}
+最后，最重要的辐射度量数量是\keyindex{辐射亮度}{radiance}{}
 \sidenote{译者注：也称辐亮度、辐射度。}$L$。
+辐射照度和辐射出射度为我们给出了在点$\bm p$处
+每块微分面积上的微分功率，但它们不区分功率的方向分布。
+辐射亮度执行最后一步并度量关于立体角的辐射照度或辐射出射度。
+它定义为
+\begin{align*}
+    L({\bm p},{\bm\omega})=\lim\limits_{\Delta{\bm\omega}\rightarrow 0}{\frac{\Delta E_{\bm\omega}({\bm p})}{\Delta{\bm\omega}}}=\frac{\mathrm{d}E_{\bm\omega}({\bm p})}{\mathrm{d}{\bm\omega}}\, ,
+\end{align*}
+其中我们已经用$ E_{\bm\omega}$表示垂直于方向$\bm\omega$的曲面上的辐射照度。
+换句话说，辐射亮度并不是根据入射到$\bm p$所在表面上的辐射照度来度量的。
+实际上，面积计算的这一变化利于抵消辐射亮度定义中来自朗伯定律的项$\cos\theta$。
 
+辐射亮度是单位面积单位立体角上的通量密度。用通量表示时，它定义为
+\begin{align*}
+    L=\frac{\mathrm{d}\varPhi}{\mathrm{d}{\bm\omega}\mathrm{d}A^{\perp}}\, ,
+\end{align*}
+其中$\mathrm{d}A^{\perp}$是$\mathrm{d}A$在
+垂直于$\bm\omega$的假想面上的投影面积（\reffig{5.10}）。
+因此，它是当所关心的入射方向锥$\mathrm{d}{\bm\omega}$变得非常小且
+曲面上关心的局部面积$\mathrm{d}A$也变得非常小时对入射光度量的极限
+\sidenote{译者注：该式分子的写法并不规范，幸好不影响理解。}。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.4\linewidth]{chap05/Radiance.eps}
+    \caption{辐射亮度$L$定义为单位立体角$\mathrm{d}{\bm\omega}$
+    单位投影面积$\mathrm{d}A^{\perp}$上的通量。}
+    \label{fig:5.10}
+\end{figure}
+
+所有这些辐射度量数量中，辐射亮度是贯穿本书剩余部分最频繁使用的量。
+一个直观原因是在一些场景中它是所有辐射度量数量中最为基本的；
+如果给定辐射亮度，则所有其他值都能通过在面积和方向上对辐射亮度积分而计算出来。
+辐射亮度另一很好的性质是它在沿穿过空的空间的光线时保持不变。
+因此它自然是光线追踪要计算的量。
+
+\subsection{入射与出射辐亮度函数}\label{sub:入射与出射辐亮度函数}
 
 \subsection{亮度和光度学}\label{sub:亮度和光度学}

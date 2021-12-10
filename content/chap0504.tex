@@ -334,3 +334,70 @@ $L$是连续的，所以$L^+=L^-$，即意味着：
 换句话说，$L_{\mathrm{i}}$和$L_{\mathrm{o}}$只有翻转的方向不同。
 
 \subsection{光亮度与光度学}\label{sub:光亮度与光度学}
+像辐通量、辐亮度等所有辐射度量都有对应的光度学度量。
+\keyindex{光度学}{photometry}{}是依据人类视觉系统的感知针对可见电磁辐射的研究。
+每个频谱辐射度量数量都能通过与描述人眼对不同波长相对敏感度的光谱响应曲线
+$V(\lambda)$的积分转化为相应的光度学数量
+\footnote{光谱响应曲线模型基于室内规范化照明环境下完成的实验。
+    因为在暗环境下对颜色的敏感度会下降，所以它不能很好地对人类视觉系统在所有光照条件下的响应进行建模。
+    然而，它构建了光亮度定义以及其他相关光度学性质的基础。}。
+
+\keyindex{光亮度}{luminance}{}\sidenote{译者注：可简称亮度。}度量了
+光谱功率分布对于人类观察者看起来有多亮。
+例如，光亮度考虑了对于人类而言在绿色波段具有特定能量值的SPD会比
+在蓝色区具有相同能量值的SPD看起来更量这一事实。
+
+我们将用$Y$表示光亮度；它与频谱辐亮度$L(\lambda)$的关系为
+\begin{align*}
+    Y=\int\limits_{\lambda}{L(\lambda)V(\lambda)\mathrm{d}\lambda}\, .
+\end{align*}
+
+光亮度和光谱响应曲线$V(\lambda)$与颜色的XYZ表示（\refsub{XYZ颜色}）紧密相关。
+CIE的$Y(\lambda)$三刺激曲线选为与$Y(\lambda)$成正比使得
+\begin{align*}
+    Y=683\int\limits_{\lambda}{L(\lambda)V(\lambda)\mathrm{d}\lambda}\, .
+\end{align*}
+光亮度的单位是坎德拉$/$米$^2$($\text{cd}/\text{m}^2$)，
+其中\keyindex{坎德拉}{candela}{}(cd)是辐射强度的光度学等价。
+\reftab{5.1}给出了一些代表性的光亮度值。
+\begin{table}[htbp]
+    \centering
+    \begin{tabular}{l c}
+        \toprule
+        \textbf{条件}    & \textbf{光亮度（$\text{cd}/\text{m}^2$，旧称\keyindex{尼特}{nit}{}）} \\
+        \midrule
+        地平线的太阳     & 600,000                                                               \\
+        60瓦的灯泡       & 120,000                                                               \\
+        晴朗的天空       & 8,000                                                                 \\
+        典型办公室       & 100-1,000                                                             \\
+        典型计算机显示器 & 1-100                                                                 \\
+        街道照明         & 1-10                                                                  \\
+        阴天月光         & 0.25                                                                  \\
+        \bottomrule
+    \end{tabular}
+    \caption{多种光照条件下的代表性光亮度值。}
+    \label{tab:5.1}
+\end{table}
+
+本章介绍的其他所有辐射度量数量均有光度学等价；
+它们总结于\reftab{5.2}中
+\footnote{各种光度学量有很不寻常的名字；Jim Kajiya很好地
+    总结了这些令人有点容易搞晕的情况：“一尼特是每球面度上的一勒克斯，
+    是每平方米上的一坎德拉，是每平方米每球面度上的一流明。明白了吗？”}
+\sidenote{译者注：原书表中将焦耳的缩写误写为Q，已修正。}。
+\begin{table}[htbp]
+    \centering
+    \begin{tabular}{llll}
+        \toprule
+        \textbf{辐射度量} & \textbf{单位}        & \textbf{光度学}                           & \textbf{单位}                           \\
+        \midrule
+        辐射能            & 焦耳(J)              & \keyindex{光能}{luminous energy}{}        & \keyindex{塔尔波特}{talbot}{}(塔，T)    \\
+        辐射通量          & 瓦特(W)              & \keyindex{光通量}{luminous flux}{}        & \keyindex{流明}{lumen}{}(lm)            \\
+        辐射强度          & W$/$sr               & \keyindex{发光强度}{luminous intensity}{} & lm$/$sr=坎德拉(cd)                      \\
+        辐射照度          & W$/$m$^2$            & \keyindex{光照度}{illuminance}{}          & lm$/$m$^2$=\keyindex{勒克斯}{lux}{}(lx) \\
+        辐射亮度          & W$/$(sr$\cdot$m$^2$) & 光亮度                                    & lm$/$(sr$\cdot$m$^2$)=cd$/$m$^2$=nit    \\
+        \bottomrule
+    \end{tabular}
+    \caption{辐射度量及其光度学同型。}
+    \label{tab:5.2}
+\end{table}

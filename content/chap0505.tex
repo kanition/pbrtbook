@@ -19,3 +19,40 @@ $\theta$度量$\bm\omega$和曲面法线$\bm n$之间的夹角。
 \end{figure}
 
 \subsection{投影立体角上的积分}\label{sub:投影立体角上的积分}
+辐射度量数量积分中的各种余弦常常和积分学中的解释搞混。
+这个问题可通过用\keyindex{投影立体角}{projected solid angle}{solid angle立体角}而不是
+立体角度量积分所需的物体所对面积来避免。
+物体所对的投影立体角通过将该物体投影到单位球上决定，
+这和立体角的做法一样，但接着要将所得形状再向下投影到
+垂直于曲面法线的单位圆盘上（\reffig{5.13}）。
+半球方向上关于余弦加权的立体角积分可重写为在投影立体角上的积分。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.6\linewidth]{chap05/Projectedsolidangle.eps}
+    \caption{物体所对的投影立体角是其所对的余弦加权立体角。
+        通过求物体的立体角、将其向下投影到垂直于曲面法线的平面上并
+        度量该区域的面积可以将其算出。因此投影立体角取决于
+        计算处的曲面法线，因为法线朝着平面投影方向。}
+    \label{fig:5.13}
+\end{figure}
+
+投影立体角度量与立体角度量的关系为
+\begin{align*}
+    \mathrm{d}{\bm\omega}^{\perp}=|\cos\theta|\mathrm{d}{\bm\omega}\, ,
+\end{align*}
+所以在半球上由辐射亮度计算辐射照度的积分可更简单地重写为
+\begin{align*}
+    E({\bm p},{\bm\omega})=\int\limits_{H^2({\bm n})}{L_{\mathrm{i}}({\bm p},{\bm\omega})\mathrm{d}{\bm\omega}^{\perp}}\, .
+\end{align*}
+
+对于本书剩余部分，我们会以立体角而不是投影立体角的形式书写方向上的积分。
+然而在其他资源中，可能会用投影立体角，所以弄清被积分式实际的度量总是很重要的。
+
+正如我们用入射辐亮度求辐射照度那样，我们也可以通过在物体表面积$A$上积分
+来计算从某物体向法线周围半球发出的总通量：
+\begin{align*}
+    \varPhi & =\int\limits_A{\int\limits_{H^2({\bm n})}L_{\mathrm{o}}({\bm p},{\bm\omega})\cos\theta\mathrm{d}{\bm\omega}\mathrm{d}A}   \\
+            & =\int\limits_A{\int\limits_{H^2({\bm n})}L_{\mathrm{o}}({\bm p},{\bm\omega})\mathrm{d}{\bm\omega}^{\perp}\mathrm{d}A}\, .
+\end{align*}
+
+\subsection{球坐标上的积分}
+将立体角上的积分转化到球面坐标$(\theta,\phi)$上常常很方便，

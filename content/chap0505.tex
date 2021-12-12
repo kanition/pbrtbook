@@ -55,4 +55,45 @@ $\theta$度量$\bm\omega$和曲面法线$\bm n$之间的夹角。
 \end{align*}
 
 \subsection{球坐标上的积分}
-将立体角上的积分转化到球面坐标$(\theta,\phi)$上常常很方便，
+将立体角上的积分转化到球面坐标$(\theta,\varphi)$上常常很方便。
+回想一个$(x,y,z)$方向坐标也可写成球面角形式（\reffig{5.14}）
+\sidenote{译者注：原书此图和后续图中标注为$\varphi$，该公式和后续公式则使用$\phi$。
+    笔者修改为统一使用$\varphi$，与前面的章节照应。}：
+\begin{align*}
+    x & =\sin\theta\cos\varphi\, , \\
+    y & =\sin\theta\sin\varphi\, , \\
+    z & =\cos\theta\, .
+\end{align*}
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.5\linewidth]{chap05/Sphericalcoordinates.eps}
+    \caption{如果也给出了基向量$x,y$和$z$，则方向向量也可写作球面坐标$(\theta,\varphi)$的形式。
+        球面角公式让两者之间的转化很容易。}
+    \label{fig:5.14}
+\end{figure}
+
+为了将立体角上的积分转化为$(\theta,\varphi)$上的积分，
+我们需要能表达方向集的微分面积$\mathrm{d}\bm\omega$
+与$(\theta,\varphi)$的微分面积之间的关系（\reffig{5.15}）。
+微分面积$\mathrm{d}\bm\omega$是其边的
+微分长度$\sin\theta\mathrm{d}\varphi$和$\mathrm{d}\theta$之积。因此，
+\begin{align}\label{eq:5.5}
+    \mathrm{d}{\bm\omega}=\sin\theta\mathrm{d}\theta\mathrm{d}\varphi\, .
+\end{align}
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.5\linewidth]{chap05/Sindthetadphi.eps}
+    \caption{一个微分立体角所对的微分面积$\mathrm{d}\bm\omega$是
+        两边微分长度$\sin\theta\mathrm{d}\varphi$和$\mathrm{d}\theta$的积。
+        得到的关系$\mathrm{d}{\bm\omega}=\sin\theta\mathrm{d}\theta\mathrm{d}\varphi$是
+        在立体角上的积分和球面角上的积分之间转化的关键。}
+    \label{fig:5.15}
+\end{figure}
+
+因此我们可以看到在半球上的辐射照度积分，即$\Omega=H^2({\bm n})$的\refeq{5.4}，
+可以等价地写为
+\begin{align*}
+    E({\bm p},{\bm\omega})=\int_0^{2\pi}\int_0^{\frac{\pi}{2}}L_{\mathrm{i}}({\bm p},\theta,\varphi)\cos\theta\sin\theta\mathrm{d}\theta\mathrm{d}\varphi\, .
+\end{align*}
+如果来自所有方向的辐射亮度都相同，则等式简化为$E=\pi L_{\mathrm{i}}$。
+
+为了方便，我们将定义两个把$\theta$和$\varphi$转化为$(x,y,z)$方向向量的函数。
+

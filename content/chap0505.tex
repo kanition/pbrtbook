@@ -1,1 +1,187 @@
 \section{处理辐射积分}\label{sec:处理辐射积分}
+
+渲染中最频繁的任务之一就是求辐射度量数量的积分。
+本节中，我们将介绍可以使该任务更简单的一些技巧。
+为了说明这些技术的运用，我们将以计算在一点处的辐射照度为例。
+在曲面法线为$\bm n$的点$\bm p$处的辐射照度取决于
+方向集$\Omega$上的辐射亮度即
+\begin{align}\label{eq:5.4}
+    E({\bm p},{\bm n})=\int\limits_{\Omega}{L_{\mathrm{i}}({\bm p},{\bm\omega})|\cos\theta|\mathrm{d}\bm\omega}\, ,
+\end{align}
+其中$L_{\mathrm{i}}({\bm p},{\bm\omega})$是入射辐亮度函数（\reffig{5.12}）
+而该积分中项$\cos\theta$取决于辐射亮度定义中的项$\mathrm{d}A^{\perp}$。
+$\theta$度量$\bm\omega$和曲面法线$\bm n$之间的夹角。
+辐射照度通常在关于给定曲面法线$\bm n$的半球方向$H^2(\bm n)$上算出。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.5\linewidth]{chap05/Irradiancefromradiance.eps}
+    \caption{点$\bm p$处的辐射照度由辐射亮度乘以在该点上整个上半球入射方向余弦的积分得到。}
+    \label{fig:5.12}
+\end{figure}
+
+\subsection{投影立体角上的积分}\label{sub:投影立体角上的积分}
+辐射度量数量积分中的各种余弦常常和积分学中的解释搞混。
+这个问题可通过用\keyindex{投影立体角}{projected solid angle}{solid angle立体角}而不是
+立体角度量积分所需的物体所对面积来避免。
+物体所对的投影立体角通过将该物体投影到单位球上决定，
+这和立体角的做法一样，但接着要将所得形状再向下投影到
+垂直于曲面法线的单位圆盘上（\reffig{5.13}）。
+半球方向上关于余弦加权的立体角积分可重写为在投影立体角上的积分。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.6\linewidth]{chap05/Projectedsolidangle.eps}
+    \caption{物体所对的投影立体角是其所对的余弦加权立体角。
+        通过求物体的立体角、将其向下投影到垂直于曲面法线的平面上并
+        度量该区域的面积可以将其算出。因此投影立体角取决于
+        计算处的曲面法线，因为法线朝着平面投影方向。}
+    \label{fig:5.13}
+\end{figure}
+
+投影立体角度量与立体角度量的关系为
+\begin{align*}
+    \mathrm{d}{\bm\omega}^{\perp}=|\cos\theta|\mathrm{d}{\bm\omega}\, ,
+\end{align*}
+所以在半球上由辐射亮度计算辐射照度的积分可更简单地重写为
+\begin{align*}
+    E({\bm p},{\bm n})=\int\limits_{H^2({\bm n})}{L_{\mathrm{i}}({\bm p},{\bm\omega})\mathrm{d}{\bm\omega}^{\perp}}\, .
+\end{align*}
+
+对于本书剩余部分，我们会以立体角而不是投影立体角的形式书写方向上的积分。
+然而在其他资源中，可能会用投影立体角，所以弄清被积分式实际的度量总是很重要的。
+
+正如我们用入射辐亮度求辐射照度那样，我们也可以通过在物体表面积$A$上积分
+来计算从某物体向法线周围半球发出的总通量：
+\begin{align*}
+    \varPhi & =\int\limits_A{\int\limits_{H^2({\bm n})}L_{\mathrm{o}}({\bm p},{\bm\omega})\cos\theta\mathrm{d}{\bm\omega}\mathrm{d}A}   \\
+            & =\int\limits_A{\int\limits_{H^2({\bm n})}L_{\mathrm{o}}({\bm p},{\bm\omega})\mathrm{d}{\bm\omega}^{\perp}\mathrm{d}A}\, .
+\end{align*}
+
+\subsection{球坐标上的积分}
+将立体角上的积分转化到球面坐标$(\theta,\varphi)$上常常很方便。
+回想一个$(x,y,z)$方向坐标也可写成球面角形式（\reffig{5.14}）
+\sidenote{译者注：原书此图和后续图中标注为$\varphi$，该公式和后续公式则使用$\phi$。
+    笔者修改为统一使用$\varphi$，与前面的章节照应。}：
+\begin{align*}
+    x & =\sin\theta\cos\varphi\, , \\
+    y & =\sin\theta\sin\varphi\, , \\
+    z & =\cos\theta\, .
+\end{align*}
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.5\linewidth]{chap05/Sphericalcoordinates.eps}
+    \caption{如果也给出了基向量$x,y$和$z$，则方向向量也可写作球面坐标$(\theta,\varphi)$的形式。
+        球面角公式让两者之间的转化很容易。}
+    \label{fig:5.14}
+\end{figure}
+
+为了将立体角上的积分转化为$(\theta,\varphi)$上的积分，
+我们需要能表达方向集的微分面积$\mathrm{d}\bm\omega$
+与$(\theta,\varphi)$的微分面积之间的关系（\reffig{5.15}）。
+微分面积$\mathrm{d}\bm\omega$是其边的
+微分长度$\sin\theta\mathrm{d}\varphi$和$\mathrm{d}\theta$之积。因此，
+\begin{align}\label{eq:5.5}
+    \mathrm{d}{\bm\omega}=\sin\theta\mathrm{d}\theta\mathrm{d}\varphi\, .
+\end{align}
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.5\linewidth]{chap05/Sindthetadphi.eps}
+    \caption{一个微分立体角所对的微分面积$\mathrm{d}\bm\omega$是
+        两边微分长度$\sin\theta\mathrm{d}\varphi$和$\mathrm{d}\theta$的积。
+        得到的关系$\mathrm{d}{\bm\omega}=\sin\theta\mathrm{d}\theta\mathrm{d}\varphi$是
+        在立体角上的积分和球面角上的积分之间转化的关键。}
+    \label{fig:5.15}
+\end{figure}
+
+因此我们可以看到在半球上的辐射照度积分，即$\Omega=H^2({\bm n})$的\refeq{5.4}，
+可以等价地写为
+\begin{align*}
+    E({\bm p},{\bm n})=\int_0^{2\pi}\int_0^{\frac{\pi}{2}}L_{\mathrm{i}}({\bm p},\theta,\varphi)\cos\theta\sin\theta\mathrm{d}\theta\mathrm{d}\varphi\, .
+\end{align*}
+如果来自所有方向的辐射亮度都相同，则等式简化为$E=\pi L_{\mathrm{i}}$。
+
+为了方便，我们将定义两个把$\theta$和$\varphi$转化为$(x,y,z)$方向向量的函数。
+第一个函数直接应用之前的等式。注意这些函数传入的是$\theta$的正弦和余弦，而不是$\theta$本身。
+这是因为调用者常常已经有$\theta$的正弦和余弦了。
+然而这对于$\varphi$则不是常见情况，所以传入的是$\varphi$。
+\begin{lstlisting}
+`\refcode{Geometry Inline Functions}{+=}\lastnext{GeometryInlineFunctions}`
+inline `\refvar{Vector3f}{}` `\initvar[SphericalDirection1]{SphericalDirection}{}`(`\refvar{Float}{}` sinTheta, 
+        `\refvar{Float}{}` cosTheta, `\refvar{Float}{}` phi) {
+    return `\refvar{Vector3f}{}`(sinTheta * std::cos(phi), 
+                    sinTheta * std::sin(phi),
+                    cosTheta);
+}
+\end{lstlisting}
+
+第二个函数接收表示$x,y$和$z$轴的三个基向量并返回
+在由它们定义的坐标系下相应的方向向量：
+\begin{lstlisting}
+`\refcode{Geometry Inline Functions}{+=}\lastnext{GeometryInlineFunctions}`
+inline `\refvar{Vector3f}{}` `\initvar[SphericalDirection2]{SphericalDirection}{}`(`\refvar{Float}{}` sinTheta, `\refvar{Float}{}` cosTheta, 
+        `\refvar{Float}{}` phi, const `\refvar{Vector3f}{}` &x, const `\refvar{Vector3f}{}` &y,
+        const `\refvar{Vector3f}{}` &z) {
+    return sinTheta * std::cos(phi) * x +
+           sinTheta * std::sin(phi) * y + cosTheta * z;
+}
+\end{lstlisting}
+
+方向$(x,y,z)$转化为球面坐标可求解为
+\begin{align*}
+    \theta  & =\arccos z\, ,          \\
+    \varphi & =\arctan\frac{y}{x}\, .
+\end{align*}
+下面是对应函数。注意\refvar{SphericalTheta}{()}假设
+向量{\ttfamily v}在传入前已经规范化了；
+钳位足以避免浮点舍入误差使{\ttfamily |v.z|}稍大于1而引发{\ttfamily std::acos()}错误。
+\begin{lstlisting}
+`\refcode{Geometry Inline Functions}{+=}\lastnext{GeometryInlineFunctions}`
+inline `\refvar{Float}{}` `\initvar{SphericalTheta}{}`(const `\refvar{Vector3f}{}` &v) {
+    return std::acos(`\refvar{Clamp}{}`(v.z, -1, 1));
+}
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{Geometry Inline Functions}{+=}\lastcode{GeometryInlineFunctions}`
+inline `\refvar{Float}{}` `\initvar{SphericalPhi}{}`(const `\refvar{Vector3f}{}` &v) {
+    `\refvar{Float}{}` p = std::atan2(v.y, v.x);
+    return (p < 0) ? (p + 2 * Pi) : p;
+}
+\end{lstlisting}
+
+\subsection{面积上的积分}\label{sub:面积上的积分}
+可以简化计算的最后一个积分变换是将方向上的积分变为面积上的积分。
+再次考虑\refeq{5.4}中的辐射照度积分，
+并想象有一个具有恒定出射辐亮度的假想四边形，
+我们想计算在点$\bm p$所得的辐射照度。
+将该值计算为方向上的积分并不简单，
+因为给定特定方向后确定四边形在那个方向是否可见很重要。
+将辐射照度计算为四边形面积上的积分则简单得多。
+
+微分面积与（从点$\bm p$看向的）微分立体角的关系为
+\begin{align}\label{eq:5.6}
+    \mathrm{d}{\bm\omega}=\frac{\mathrm{d}A\cos\theta}{r^2}\, ,
+\end{align}
+其中$\theta$是$\mathrm{d}A$的曲面法线与到$\bm p$的向量之间的夹角，
+而$r$是从$\bm p$到$\mathrm{d}A$的距离（\reffig{5.16}）。
+我们这里不会推导该结果，但它可以被直观理解：
+如果$\mathrm{d}A$离$\bm p$的距离为1且恰好对齐垂直于$\mathrm{d}\bm\omega$，
+则$\mathrm{d}{\bm\omega}=\mathrm{d}A$，$\theta=0$，进而\refeq{5.6}成立。
+当$\mathrm{d}A$朝着远离$\bm p$运动，或者它旋转而不再对齐$\mathrm{d}\bm\omega$的方向，
+则项$r^2$和$\cos\theta$做相应补偿以减小$\mathrm{d}\bm\omega$。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.5\linewidth]{chap05/DifferentialsolidangleofdA.eps}
+    \caption{微分面积$\mathrm{d}A$所对的微分立体角等于$\displaystyle\frac{\mathrm{d}A\cos\theta}{r^2}$，
+        其中$\theta$是$\mathrm{d}A$的曲面法线与到$\bm p$的向量之间的夹角而$r$是从$\bm p$到$\mathrm{d}A$的距离。}
+    \label{fig:5.16}
+\end{figure}
+
+因此，我们可以为四边形光源写出辐射照度积分
+\begin{align*}
+    E({\bm p},{\bm n})=\int\limits_A L\cos\theta_{\mathrm{i}}\frac{\cos\theta_{\mathrm{o}}\mathrm{d}A}{r^2}\, ,
+\end{align*}
+其中$L$是发射自四边形表面的辐射亮度，$\theta_{\mathrm{i}}$是$\bm p$的
+曲面法线与光路上\sidenote{译者注：原文on the light。}从$\bm p$到
+点$\bm p'$方向间的夹角，而$\theta_{\mathrm{o}}$是光路上$\bm p'$的
+曲面法线与从$\bm p'$到$\bm p$方向间的夹角（\reffig{5.17}）。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.5\linewidth]{chap05/Irradiancefromquadrilateral.eps}
+    \caption{为了计算点$\bm p$处来自四边形光源的辐射照度，
+        在光源曲面面积上积分比在其对应的不规则方向集上积分更简单。
+        \refeq{5.6}给出的立体角与面积间的关系让我们在两种方法间来回切换。}
+    \label{fig:5.17}
+\end{figure}

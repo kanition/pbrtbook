@@ -41,7 +41,7 @@ $\theta$度量$\bm\omega$和曲面法线$\bm n$之间的夹角。
 \end{align*}
 所以在半球上由辐射亮度计算辐射照度的积分可更简单地重写为
 \begin{align*}
-    E({\bm p},{\bm\omega})=\int\limits_{H^2({\bm n})}{L_{\mathrm{i}}({\bm p},{\bm\omega})\mathrm{d}{\bm\omega}^{\perp}}\, .
+    E({\bm p},{\bm n})=\int\limits_{H^2({\bm n})}{L_{\mathrm{i}}({\bm p},{\bm\omega})\mathrm{d}{\bm\omega}^{\perp}}\, .
 \end{align*}
 
 对于本书剩余部分，我们会以立体角而不是投影立体角的形式书写方向上的积分。
@@ -91,7 +91,7 @@ $\theta$度量$\bm\omega$和曲面法线$\bm n$之间的夹角。
 因此我们可以看到在半球上的辐射照度积分，即$\Omega=H^2({\bm n})$的\refeq{5.4}，
 可以等价地写为
 \begin{align*}
-    E({\bm p},{\bm\omega})=\int_0^{2\pi}\int_0^{\frac{\pi}{2}}L_{\mathrm{i}}({\bm p},\theta,\varphi)\cos\theta\sin\theta\mathrm{d}\theta\mathrm{d}\varphi\, .
+    E({\bm p},{\bm n})=\int_0^{2\pi}\int_0^{\frac{\pi}{2}}L_{\mathrm{i}}({\bm p},\theta,\varphi)\cos\theta\sin\theta\mathrm{d}\theta\mathrm{d}\varphi\, .
 \end{align*}
 如果来自所有方向的辐射亮度都相同，则等式简化为$E=\pi L_{\mathrm{i}}$。
 
@@ -144,3 +144,44 @@ inline `\refvar{Float}{}` `\initvar{SphericalPhi}{}`(const `\refvar{Vector3f}{}`
 \end{lstlisting}
 
 \subsection{面积上的积分}\label{sub:面积上的积分}
+可以简化计算的最后一个积分变换是将方向上的积分变为面积上的积分。
+再次考虑\refeq{5.4}中的辐射照度积分，
+并想象有一个具有恒定出射辐亮度的假想四边形，
+我们想计算在点$\bm p$所得的辐射照度。
+将该值计算为方向上的积分并不简单，
+因为给定特定方向后确定四边形在那个方向是否可见很重要。
+将辐射照度计算为四边形面积上的积分则简单得多。
+
+微分面积与（从点$\bm p$看向的）微分立体角的关系为
+\begin{align}\label{eq:5.6}
+    \mathrm{d}{\bm\omega}=\frac{\mathrm{d}A\cos\theta}{r^2}\, ,
+\end{align}
+其中$\theta$是$\mathrm{d}A$的曲面法线与到$\bm p$的向量之间的夹角，
+而$r$是从$\bm p$到$\mathrm{d}A$的距离（\reffig{5.16}）。
+我们这里不会推导该结果，但它可以被直观理解：
+如果$\mathrm{d}A$离$\bm p$的距离为1且恰好对齐垂直于$\mathrm{d}\bm\omega$，
+则$\mathrm{d}{\bm\omega}=\mathrm{d}A$，$\theta=0$，进而\refeq{5.6}成立。
+当$\mathrm{d}A$朝着远离$\bm p$运动，或者它旋转而不再对齐$\mathrm{d}\bm\omega$的方向，
+则项$r^2$和$\cos\theta$做相应补偿以减小$\mathrm{d}\bm\omega$。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.5\linewidth]{chap05/DifferentialsolidangleofdA.eps}
+    \caption{微分面积$\mathrm{d}A$所对的微分立体角等于$\displaystyle\frac{\mathrm{d}A\cos\theta}{r^2}$，
+        其中$\theta$是$\mathrm{d}A$的曲面法线与到$\bm p$的向量之间的夹角而$r$是从$\bm p$到$\mathrm{d}A$的距离。}
+    \label{fig:5.16}
+\end{figure}
+
+因此，我们可以为四边形光源写出辐射照度积分
+\begin{align*}
+    E({\bm p},{\bm n})=\int\limits_A L\cos\theta_{\mathrm{i}}\frac{\cos\theta_{\mathrm{o}}\mathrm{d}A}{r^2}\, ,
+\end{align*}
+其中$L$是发射自四边形表面的辐射亮度，$\theta_{\mathrm{i}}$是$\bm p$的
+曲面法线与光路上\sidenote{译者注：原文on the light。}从$\bm p$到
+点$\bm p'$方向间的夹角，而$\theta_{\mathrm{o}}$是光路上$\bm p'$的
+曲面法线与从$\bm p'$到$\bm p$方向间的夹角（\reffig{5.17}）。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.5\linewidth]{chap05/Irradiancefromquadrilateral.eps}
+    \caption{为了计算点$\bm p$处来自四边形光源的辐射照度，
+        在光源曲面面积上积分比在其对应的不规则方向集上积分更简单。
+        \refeq{5.6}给出的立体角与面积间的关系让我们在两种方法间来回切换。}
+    \label{fig:5.17}
+\end{figure}

@@ -96,4 +96,51 @@ $\theta$度量$\bm\omega$和曲面法线$\bm n$之间的夹角。
 如果来自所有方向的辐射亮度都相同，则等式简化为$E=\pi L_{\mathrm{i}}$。
 
 为了方便，我们将定义两个把$\theta$和$\varphi$转化为$(x,y,z)$方向向量的函数。
+第一个函数直接应用之前的等式。注意这些函数传入的是$\theta$的正弦和余弦，而不是$\theta$本身。
+这是因为调用者常常已经有$\theta$的正弦和余弦了。
+然而这对于$\varphi$则不是常见情况，所以传入的是$\varphi$。
+\begin{lstlisting}
+`\refcode{Geometry Inline Functions}{+=}\lastnext{GeometryInlineFunctions}`
+inline `\refvar{Vector3f}{}` `\initvar[SphericalDirection1]{SphericalDirection}{}`(`\refvar{Float}{}` sinTheta, 
+        `\refvar{Float}{}` cosTheta, `\refvar{Float}{}` phi) {
+    return `\refvar{Vector3f}{}`(sinTheta * std::cos(phi), 
+                    sinTheta * std::sin(phi),
+                    cosTheta);
+}
+\end{lstlisting}
 
+第二个函数接收表示$x,y$和$z$轴的三个基向量并返回
+在由它们定义的坐标系下相应的方向向量：
+\begin{lstlisting}
+`\refcode{Geometry Inline Functions}{+=}\lastnext{GeometryInlineFunctions}`
+inline `\refvar{Vector3f}{}` `\initvar[SphericalDirection2]{SphericalDirection}{}`(`\refvar{Float}{}` sinTheta, `\refvar{Float}{}` cosTheta, 
+        `\refvar{Float}{}` phi, const `\refvar{Vector3f}{}` &x, const `\refvar{Vector3f}{}` &y,
+        const `\refvar{Vector3f}{}` &z) {
+    return sinTheta * std::cos(phi) * x +
+           sinTheta * std::sin(phi) * y + cosTheta * z;
+}
+\end{lstlisting}
+
+方向$(x,y,z)$转化为球面坐标可求解为
+\begin{align*}
+    \theta  & =\arccos z\, ,          \\
+    \varphi & =\arctan\frac{y}{x}\, .
+\end{align*}
+下面是对应函数。注意\refvar{SphericalTheta}{()}假设
+向量{\ttfamily v}在传入前已经规范化了；
+钳位足以避免浮点舍入误差使{\ttfamily |v.z|}稍大于1而引发{\ttfamily std::acos()}错误。
+\begin{lstlisting}
+`\refcode{Geometry Inline Functions}{+=}\lastnext{GeometryInlineFunctions}`
+inline `\refvar{Float}{}` `\initvar{SphericalTheta}{}`(const `\refvar{Vector3f}{}` &v) {
+    return std::acos(`\refvar{Clamp}{}`(v.z, -1, 1));
+}
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{Geometry Inline Functions}{+=}\lastcode{GeometryInlineFunctions}`
+inline `\refvar{Float}{}` `\initvar{SphericalPhi}{}`(const `\refvar{Vector3f}{}` &v) {
+    `\refvar{Float}{}` p = std::atan2(v.y, v.x);
+    return (p < 0) ? (p + 2 * Pi) : p;
+}
+\end{lstlisting}
+
+\subsection{面积上的积分}\label{sub:面积上的积分}

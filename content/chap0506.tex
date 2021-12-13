@@ -103,3 +103,32 @@ BTDF一般表示为$f_{\mathrm{t}}({\bm p},{\bm \omega}_\mathrm{o},{\bm \omega}_
 关键任务之一就是计算场景中曲面上的点的该积分值。
 
 \subsection{BSSRDF}\label{sub:BSSRDF}
+\keyindex{双向散射表面反射分布函数}{bidirectional scattering surface reflectance distribution function}{}(BSSRDF)
+是描述展现出明显程度次表面光传输的材料之散射的形式。
+它是一个描述点${\bm p}_{\mathrm{o}}$在方向${\bm\omega}_{\mathrm{o}}$的出射微分辐亮度
+与点${\bm p}_{\mathrm{i}}$来自方向${\bm\omega}_{\mathrm{i}}$的入射微分通量之比
+的分布函数$S({\bm p}_{\mathrm{o}},{\bm\omega}_{\mathrm{o}},{\bm p}_{\mathrm{i}},{\bm\omega}_{\mathrm{i}})$
+（\reffig{5.19}）:
+\begin{align}\label{eq:5.10}
+    S({\bm p}_{\mathrm{o}},{\bm\omega}_{\mathrm{o}},{\bm p}_{\mathrm{i}},{\bm\omega}_{\mathrm{i}})=\frac{\mathrm{d}L_{\mathrm{o}}({\bm p}_{\mathrm{o}},{\bm\omega}_{\mathrm{o}})}{\mathrm{d}\varPhi({\bm p}_{\mathrm{i}},{\bm\omega}_{\mathrm{i}})}\, .
+\end{align}
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.5\linewidth]{chap05/BSSRDF.eps}
+    \caption{双向散射表面反射分布函数推广了BSDF以考虑光在不同于其入射处的一点离开表面。
+        尽管次表面光传输对许多真实世界物体的外观做出了巨大贡献，但它常常比BSDF更难算。}
+    \label{fig:5.19}
+\end{figure}
+
+BSSRDF散射方程的推广需要在曲面面积\emph{以及}入射方向上积分，
+将2D散射方程\refeq{5.9}转化为4D积分。
+伴随着新增的两个积分维度，在渲染算法中使用它要复杂得多。
+\begin{align}\label{eq:5.11}
+    L_{\mathrm{o}}({\bm p}_{\mathrm{o}},{\bm\omega}_{\mathrm{o}})=\int\limits_A\int\limits_{H^2({\bm n})}S({\bm p}_{\mathrm{o}},{\bm\omega}_{\mathrm{o}},{\bm p}_{\mathrm{i}},{\bm\omega}_{\mathrm{i}})L_{\mathrm{i}}({\bm p}_{\mathrm{i}},{\bm\omega}_{\mathrm{i}})|\cos\theta_{\mathrm{i}}|\mathrm{d}{\bm\omega}_{\mathrm{i}}\mathrm{d}A\, .
+\end{align}
+
+随着点${\bm p}_{\mathrm{i}}$和${\bm p}_{\mathrm{o}}$的距离增加，$S$的值一般会减小。
+这一事实对次表面散射算法的实现可以有很大帮助。
+
+描述表面之下光传输的原则和介质中体积光传输方程一样，
+由\refsec{转移方程}介绍的转移方程描述。
+因此次表面散射基于和烟雾中光散射一样的效应，只是尺度更小。

@@ -70,7 +70,36 @@ BSSRDF推广了BRDF并描述来自半透明材料光反射的更一般设置。
           \end{align*}
 \end{enumerate}
 
-曲面的\keyindex{双向透射分布函数}{bidirectional transmittance distribution function}{}(BTDF)
-描述透射光的分布，可以用和BRDF一样的方法定义。
+曲面的\keyindex{双向透射分布函数}{bidirectional transmittance distribution function}{}
+(BTDF)描述透射光的分布，可以用和BRDF一样的方法定义。
+BTDF一般表示为$f_{\mathrm{t}}({\bm p},{\bm \omega}_\mathrm{o},{\bm \omega}_\mathrm{i})$，
+其中${\bm\omega}_{\mathrm{i}}$和${\bm\omega}_{\mathrm{o}}$在绕$\bm p$的相对半球内。
+要注意的是，BTDF不遵循上面定义的互异性；
+我们将在\refsec{镜面反射与透射}和\refsub{非对称散射}详细讨论该问题。
+
+为了等式的方便，我们把统一考虑时的BRDF和BTDF表示为$f({\bm p},{\bm \omega}_\mathrm{o},{\bm \omega}_\mathrm{i})$；
+我们称之为\keyindex{双向散射分布函数}{bidirectional scattering distribution function}{}(BSFD)。
+第\refchap{反射模型}将完全专注于描述对渲染有用的各种BSDF。
+
+利用BSDF的定义，我们有
+\begin{align*}
+    \mathrm{d}L_{\mathrm{o}}({\bm p},{\bm\omega}_{\mathrm{o}})=f({\bm p},{\bm \omega}_\mathrm{o},{\bm \omega}_\mathrm{i})L_{\mathrm{i}}({\bm p},{\bm\omega}_{\mathrm{i}})|\cos\theta_{\mathrm{i}}|\mathrm{d}{\bm\omega}_{\mathrm{i}}\, .
+\end{align*}
+这里给项$\cos\theta_{\mathrm{i}}$加上了绝对值。
+这样做是因为pbrt中曲面法线并没有调整为和${\bm\omega}_{\mathrm{i}}$位于曲面同侧
+（许多其他渲染系统都这样做，但我们发现让它们留在原来\refvar{Shape}{}给出的自然朝向会更有用）。
+这样做更容易一致地在系统别处运用如“假设曲面法线指向曲面外侧”那样的约定。
+因此，像这样给项$\cos\theta_{\mathrm{i}}$加上绝对值保证了实际计算出所需的数量。
+我们可以在绕$\bm p$的入射方向球内对该等式积分以计算由于各个方向对$\bm p$的照射
+而得到的沿方向${\bm\omega}_{\mathrm{o}}$的出射辐亮度：
+\begin{align}\label{eq:5.9}
+    L_{\mathrm{o}}({\bm p},{\bm\omega}_{\mathrm{o}})=\int\limits_{S^2}f({\bm p},{\bm \omega}_\mathrm{o},{\bm \omega}_\mathrm{i})L_{\mathrm{i}}({\bm p},{\bm\omega}_{\mathrm{i}})|\cos\theta_{\mathrm{i}}|\mathrm{d}{\bm\omega}_{\mathrm{i}}\, .
+\end{align}
+这是渲染中的基本方程；它描述了一点的入射光分布
+是怎样基于表面的散射性质转化为出射分布的。
+当（像这里）球$S^2$作为积分域时它常常称为\keyindex{散射方程}{scattering equation}{}，
+当只在上半球$H^2({\bm n})$积分时则称\keyindex{反射方程}{reflection equation}{}。
+\refchap{光传输I：表面反射}和\refchap{光传输III：双向方法}中积分例程的
+关键任务之一就是计算场景中曲面上的点的该积分值。
 
 \subsection{BSSRDF}\label{sub:BSSRDF}

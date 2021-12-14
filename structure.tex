@@ -97,10 +97,12 @@
 %	BIBLIOGRAPHY AND INDEX
 %----------------------------------------------------------------------------------------
 
-\usepackage[style=authoryear,citestyle=authoryear,maxbibnames=99,uniquename=init,sorting=nyt,sortcites=true,autopunct=true,babel=hyphen,hyperref=true,abbreviate=false,backref=true,backend=biber,natbib=true]{biblatex}
+\usepackage[style=authoryear,citestyle=authoryear-comp,maxbibnames=99,maxcitenames=3,mincitenames=1,uniquename=false,sorting=nyt,sortcites=true,autopunct=true,babel=hyphen,hyperref=true,abbreviate=false,backref=true,backend=biber,natbib=true]{biblatex}
 \addbibresource{bibliography.bib} % BibTeX bibliography file
 \defbibheading{bibempty}{}
-
+\renewcommand*{\finalnamedelim}{{\ifcitation{和}{, and }}}
+\renewcommand*{\andothersdelim}{\ifcitation{}{, }}
+\DefineBibliographyStrings{english}{andothers={\ifcitation{等}{ et al.}}}
 \usepackage{calc} % For simpler calculation - used for spacing the index letter headings correctly
 \usepackage{makeidx} % Required to make an index
 \makeindex % Tells LaTeX to create the files required for indexing

@@ -129,7 +129,7 @@ pbrt通常把绝大部分运行时间都花在这个阶段，
 \begin{figure}[htbp]
     \centering\includegraphics[width=\linewidth]{chap01/furrydog.png}
     \caption{Jared Jacobs和Michael Turitzin为pbrt增加了
-        Kajiya和Kay基于纹素的毛发渲染算法\parencite*{10.1145/74333.74361}并渲染了该图像，
+        \citet{10.1145/74333.74361}基于纹素的毛发渲染算法并渲染了该图像，
         狗毛和粗毛地毯都是用纹素毛发算法渲染的。}
     \label{fig:1.14}
 \end{figure}
@@ -229,7 +229,7 @@ if (filenames.size() == 0) {
 解析器的实现可在文件\href{https://github.com/mmp/pbrt-v3/blob/master/src/core/parser.h}{\ttfamily core/parser.h}和
 \href{https://github.com/mmp/pbrt-v3/blob/master/src/core/parser.cpp}{\ttfamily core/parser.cpp}中找到
 \sidenote{译者注：此处已更正文件名，因为原书给出的文件名已经失效了。}。
-想要了解解析子系统但不熟悉这些工具的读者可以参阅Levine、Mason和Brown的著作\citep{10.5555/136311}。
+想要了解解析子系统但不熟悉这些工具的读者可以参阅\citet{10.5555/136311}的著作。
 
 我们遵循的UNIX习惯用法，以名为“{\ttfamily -}”的文件表示标准输入：
 \begin{lstlisting}

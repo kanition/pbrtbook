@@ -2,7 +2,7 @@
 
 \begin{remark}
       本节内容不是原书内容，而是译者根据有关
-      资料\citep{978-7-5640-0658-7,wiki:solidangle,GB3102.6-93}补充的，请酌情参考和斧正。
+      资料\citep{978-7-5640-0658-7,wiki:solidangle,GB3102.6-93,enwiki:1052681830}补充的，请酌情参考和斧正。
 \end{remark}
 
 \subsection{辐射度量}\label{sub:辐射度量}
@@ -24,13 +24,13 @@
 
 立体角常用字母$\varOmega$表示。\reffig{5.ex01}展示了一种简单的情形。
 以$\bm p$为顶点的微分锥体${\bm p}-BCDF$在同样以$\bm p$为球心且半径为$r$的球面上截取下面元$BCDF$。
-建立以$\bm p$为原点的球坐标系，则弧线$\wideparen{BC}$的方位角
+建立以$\bm p$为原点的球坐标系，则弧线$\wideparen{BC}$的\keyindex{方位角}{azimuth angle}{}
 （在$xy$平面上的投影与原点连线和$x$正半轴所成角）为$\varphi$，
 $\wideparen{DF}$方位角为$\varphi+\mathrm{d}\varphi$；
-弧线$\wideparen{BF}$的天顶角（与原点连线和$z$正半轴所成角）为$\theta$，
+弧线$\wideparen{BF}$的\keyindex{天顶角}{zenith angle}{}（与原点连线和$z$正半轴所成角）为$\theta$，
 $\wideparen{CD}$的天顶角为$\theta+\mathrm{d}\theta$。
-于是易知点$B$到其在$z$轴投影点$G$的距离为$r\sin\theta$，
-因此$\wideparen{BF}$的弧长为$r\sin\theta\mathrm{d}\varphi$；
+因此点$B$到其在$z$轴投影点$G$的距离为$r\sin\theta$，
+$\wideparen{BF}$的弧长为$r\sin\theta\mathrm{d}\varphi$；
 同时$\wideparen{BC}$的弧长为$r\mathrm{d}\theta$。
 将面元$BCDF$视作矩形，可求得其微分面积为
 \begin{align}
@@ -52,14 +52,14 @@ $\wideparen{CD}$的天顶角为$\theta+\mathrm{d}\theta$。
 在连续意义下，我们定义以下辐射度量。
 
 \begin{definition}
-      \keyindex{辐射能}{radiant energy}{}指以辐射形式发射、传播或接收的能量。
+      \keyindex{辐射能}{radiant energy}{}指以电磁波形式发射、传播或接收的能量。
 \end{definition}
 辐射能常用$Q$表示，单位为\keyindex{焦耳}{joule}{}(焦，J)。
 
 \begin{definition}
       \keyindex{辐射能通量}{radiant energy flux}{}，
       也称\keyindex{辐射功率}{radiant power}{}，
-      指以辐射的形式发射、传播或接收的功率。
+      指电磁辐射通过某一面积发射、传播或接收的功率。
 \end{definition}
 辐通量常用$\varPhi$表示，单位为\keyindex{瓦特}{watt}{}(瓦，W)。
 它描述单位时间内的辐射能：
@@ -96,14 +96,14 @@ $\wideparen{CD}$的天顶角为$\theta+\mathrm{d}\theta$。
 
 \begin{definition}
       \keyindex{辐射亮度}{radiance}{}指
-      表面一点在垂直于辐射传输方向的单位面元上于该方向的辐射强度。
+      表面一点在垂直于给定方向的单位面元上于该方向的辐射强度。
 \end{definition}
 辐射亮度常用$L$表示，单位为W$/$(sr$\cdot$m$^2$)。
-它与辐射强度和辐射通量的关系为
-\begin{align}
-      L=\frac{\mathrm{d}I}{\cos\theta\mathrm{d}A}=\frac{\mathrm{d}^2\varPhi}{\cos\theta\mathrm{d}A\mathrm{d}\varOmega}\, ,
+它与其他辐射度量的关系为
+\begin{align}\label{eq:5.ex-radiance}
+      L=\frac{\mathrm{d}I}{\cos\theta\mathrm{d}A}=\frac{\mathrm{d}^2\varPhi}{\cos\theta\mathrm{d}A\mathrm{d}\varOmega}=\frac{\mathrm{d}E}{\cos\theta\mathrm{d}\varOmega}\, ,
 \end{align}
-其中$\theta$是曲面法线与辐射方向的夹角。
+其中$\theta$是曲面法线与给定方向的夹角。
 
 \reffig{5.ex02}展示了辐射度量之间的微分关系。
 \begin{figure}[htbp]
@@ -119,9 +119,13 @@ $\wideparen{CD}$的天顶角为$\theta+\mathrm{d}\theta$。
             \put(260,3){\vector(1,0){50}}
             \put(262,6){投影面积}
             \put(315,0){辐射亮度$L$}
-            \put(120,12){\vector(0,1){20}}
-            \put(125,18){面积$A$}
-            \put(90,35){辐射照度$E$}
+            \put(120,12){\line(0,1){25}}
+            \put(120,37){\vector(1,0){80}}
+            \put(152,40){面积$A$}
+            \put(205,35){辐射照度$E$}
+            \put(260,37){\line(1,0){80}}
+            \put(340,37){\vector(0,-1){25}}
+            \put(262,40){余弦加权立体角}
       \end{picture}
       \caption{辐射度量的微分关系。}
       \label{fig:5.ex02}

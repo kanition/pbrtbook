@@ -62,7 +62,8 @@
 是渲染的核心：\keyindex{通量}{flux}{}、
 \keyindex{辐射照度}{irradiance}{}/\keyindex{辐射出射度}{radiant exitance}{}、
 \keyindex{强度}{intensity}{}和\keyindex{辐射亮度}{radiance}{}。
-它们每个都可以从能量（单位为焦耳）依次对时间、面积和方向取极限推导出来。
+它们每个都可以从能量（单位为焦耳）依次对时间、面积和方向取极限推导出来
+\sidenote{译者注：可参考译者补充的\refsub{辐射度量}。}。
 所有这些辐射度量数量一般都依赖于波长。
 对于本章的剩余部分，我们不再明确这一依赖关系，但记住这一性质是很重要的。
 
@@ -181,7 +182,8 @@ $h\approx6.626\times10^{-34}\text{kg}\cdot\text{m}^2/\text{s}$。
 \end{figure}
 
 \subsubsection*{立体角与强度}
-为了定义强度，我们首先需要定义\keyindex{立体角}{solid angle}{}的表示。
+为了定义强度，我们首先需要定义\keyindex{立体角}{solid angle}{}的表示
+\sidenote{译者注：可参考译者补充的\refsub{辐射度量}。}。
 立体角是平面上2D角拓展到球上的角。
 \keyindex{平面角}{planar angle}{}是关于某位置朝向某物体的总角度（\reffig{5.8}）。
 考虑绕点$\bm p$的单位圆；如果我们将阴影物体投影到该圆上，该投影将覆盖一定长度的圆$s$。
@@ -259,7 +261,7 @@ $s$的弧长（等于角度$\theta$）即朝向物体的角度。
 垂直于$\bm\omega$的假想面上的投影面积（\reffig{5.10}）。
 因此，它是当所关心的入射方向锥$\mathrm{d}{\bm\omega}$变得非常小且
 曲面上关心的局部面积$\mathrm{d}A$也变得非常小时对入射光度量的极限
-\sidenote{译者注：该式分子的写法并不规范，幸好不影响理解。}。
+\sidenote{译者注：该式分子的写法并不规范，但不影响理解，见\refeq{5.ex-radiance}。}。
 \begin{figure}[htbp]
     \centering\includegraphics[width=0.4\linewidth]{chap05/Radiance.eps}
     \caption{辐射亮度$L$定义为单位立体角$\mathrm{d}{\bm\omega}$
@@ -345,7 +347,7 @@ $V(\lambda)$的积分转化为相应的光度学数量
 \keyindex{光亮度}{luminance}{}\sidenote{译者注：可简称亮度。}度量了
 光谱功率分布对于人类观察者看起来有多亮。
 例如，光亮度考虑了对于人类而言在绿色波段具有特定能量值的SPD会比
-在蓝色区具有相同能量值的SPD看起来更量这一事实。
+在蓝色区具有相同能量值的SPD看起来更亮这一事实。
 
 我们将用$Y$表示光亮度；它与频谱辐亮度$L(\lambda)$的关系为
 \begin{align*}

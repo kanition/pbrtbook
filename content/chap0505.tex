@@ -20,8 +20,8 @@ $\theta$度量$\bm\omega$和曲面法线$\bm n$之间的夹角。
 
 \subsection{投影立体角上的积分}\label{sub:投影立体角上的积分}
 辐射度量数量积分中的各种余弦常常和积分学中的解释搞混。
-这个问题可通过用\keyindex{投影立体角}{projected solid angle}{solid angle立体角}而不是
-立体角度量积分所需的物体所对面积来避免。
+度量积分所需的物体所对面积时这个问题可通过
+用\keyindex{投影立体角}{projected solid angle}{solid angle立体角}而不用立体角来避免。
 物体所对的投影立体角通过将该物体投影到单位球上决定，
 这和立体角的做法一样，但接着要将所得形状再向下投影到
 垂直于曲面法线的单位圆盘上（\reffig{5.13}）。
@@ -175,8 +175,9 @@ inline `\refvar{Float}{}` `\initvar{SphericalPhi}{}`(const `\refvar{Vector3f}{}`
     E({\bm p},{\bm n})=\int\limits_A L\cos\theta_{\mathrm{i}}\frac{\cos\theta_{\mathrm{o}}\mathrm{d}A}{r^2}\, ,
 \end{align*}
 其中$L$是发射自四边形表面的辐射亮度，$\theta_{\mathrm{i}}$是$\bm p$的
-曲面法线与光路上\sidenote{译者注：原文on the light。}从$\bm p$到
-点$\bm p'$方向间的夹角，而$\theta_{\mathrm{o}}$是光路上$\bm p'$的
+曲面法线与光路上\sidenote{译者注：原文on the light。}从$\bm p$到点$\bm p'$方向间的夹角
+\sidenote{译者注：$\bm p'$是四边形上一点，原图未标出。}，
+而$\theta_{\mathrm{o}}$是光路上$\bm p'$的
 曲面法线与从$\bm p'$到$\bm p$方向间的夹角（\reffig{5.17}）。
 \begin{figure}[htbp]
     \centering\includegraphics[width=0.5\linewidth]{chap05/Irradiancefromquadrilateral.eps}

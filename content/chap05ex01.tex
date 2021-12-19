@@ -3,7 +3,7 @@
 \begin{remark}
       本节内容不是原书内容，而是译者根据有关资料\citep{978-7-5640-0658-7,
             wiki:solidangle,GB3102.6-93,enwiki:1052681830,
-            wiki:candela,Hoffmann2015}补充的，请酌情参考和斧正。
+            wiki:candela,Hoffmann2015,wiki:eye}补充的，请酌情参考和斧正。
 \end{remark}
 
 \subsection{辐射度量}\label{sub:辐射度量}
@@ -229,7 +229,7 @@ $\wideparen{BF}$的弧长为$r\sin\theta\mathrm{d}\varphi$；
       \centering\includegraphics[width=0.75\linewidth]{chap05/spectralluminousefficiency.eps}
       \put(0,0){$\lambda/$nm}
       \put(-315,110){$V(\lambda)$}
-      \caption{光谱光视效率曲线。其中红色实线对应明视觉（$2^{\circ}$视场角），蓝色虚线对应暗视觉。
+      \caption{光谱光视效率曲线。其中橙色实线对应明视觉（$2^{\circ}$视场角），蓝色虚线对应暗视觉。
             数据来源于\protect\url{http://www.cvrl.org}。}
       \label{fig:5.ex03}
 \end{figure}
@@ -248,3 +248,48 @@ $\wideparen{BF}$的弧长为$r\sin\theta\mathrm{d}\varphi$；
 \keyindex{光亮度}{luminance}{}与辐射亮度对应，单位为cd$/$m$^2$。
 
 \subsection{色度学}\label{sub:色度学}
+\keyindex{色度学}{colorimetry}{}在物理上量化描述人类颜色知觉的科学技术。
+\subsubsection*{人眼视觉特性与颜色视觉理论}
+人眼（\reffig{5.ex04}）中负责感光的部分是\keyindex{视网膜}{retina}{}，
+其中具有两种\keyindex{感光细胞}{photoreceptor cell}{}，
+即\keyindex{视杆细胞}{rod cell}{}和\keyindex{视锥细胞}{cone cell}{}。
+视杆细胞主要分布在视网膜中心周围，几乎全部用于夜视力，数量达到一亿量级。
+1个光子就足以激发视杆细胞的活动，其对单个光子的敏感程度是视锥细胞的一百多倍，
+因此视杆细胞建立人类在夜晚最基本的视觉，即暗视觉。
+暗视觉只有视杆细胞起作用，由其仅含的视紫红色素吸收光子，所以不能分辨颜色，只有明暗感觉。
+视锥细胞大多分布在视网膜黄斑处，因树突呈锥形得名，约有六百万个。
+它主要负责颜色识别，在相对较亮的光照条件下发挥作用（一般需要数十到上百个光子激发），
+按所含有的视色素分为三种，分别对黄绿色、绿色和蓝紫色的光最为敏感（\reffig{5.ex05}），
+其形成的视觉信号复合后呈现出色彩缤纷的世界。
+\begin{figure}[htbp]
+      \centering\includegraphics[width=0.5\linewidth]{chap05/Schematic_diagram_of_the_human_eye_zh-hans.eps}
+      \caption{人眼结构。}
+      \label{fig:5.ex04}
+\end{figure}
+\begin{figure}[htbp]
+      \centering\includegraphics[width=0.75\linewidth]{chap05/NormalizedResponsivitySpectra.eps}
+      \put(0,0){$\lambda/$nm}
+      \put(-300,35){\rotatebox{90}{规范化视锥响应度（线性能量）}}
+      \caption{三种视锥细胞的规范化响应光谱（$2^{\circ}$）。
+            蓝、绿、红曲线分别对应S、M、L型视锥细胞。
+            注意它们的响应绝对峰值并不相同，图中是规范化到0-1后的结果。
+            数据来源于\protect\url{http://www.cvrl.org}。}
+      \label{fig:5.ex05}
+\end{figure}
+
+现代颜色视觉理论主要有两大类，分别从是Yang-Helmholtz的三色学说和Hering的“对立”颜色学说发展起来的。
+两者学说都能解释大量事实，但也都有不足之处。
+三色学说能很好地说明各种颜色的混合现象，但不能很好地解释色盲现象；“对立”颜色学说则相反。
+也有学者试图调和两者的观点。
+
+\subsubsection*{颜色匹配}
+\keyindex{颜色混合}{color mixing}{}可以是颜色光的混合，也可以是染料的混合，两种混合方法的结果是不同的，
+前者称为\keyindex{加色混合}{additive mixing}{color mixing颜色混合}，
+后者称为\keyindex{减色混合}{subtractive mixing}{color mixing颜色混合}（\reffig{5.ex06}）。
+\begin{figure}[htbp]
+      \centering
+      \includegraphics[width=0.4\linewidth]{chap05/additivemixing.eps}
+      \includegraphics[width=0.4\linewidth]{chap05/subtractivemixing.eps}
+      \caption{颜色混合：加色混合（左）与减色混合（右）。}
+      \label{fig:5.ex06}
+\end{figure}

@@ -266,11 +266,12 @@ $\wideparen{BF}$的弧长为$r\sin\theta\mathrm{d}\varphi$；
       \caption{人眼结构。}
       \label{fig:5.ex04}
 \end{figure}
+
 \begin{figure}[htbp]
       \centering\includegraphics[width=0.75\linewidth]{chap05/NormalizedResponsivitySpectra.eps}
       \put(0,0){$\lambda/$nm}
       \put(-300,35){\rotatebox{90}{规范化视锥响应度（线性能量）}}
-      \caption{三种视锥细胞的规范化响应光谱（$2^{\circ}$）。
+      \caption{人眼三种视锥细胞的规范化响应光谱（$2^{\circ}$）。
             蓝、绿、红曲线分别对应S、M、L型视锥细胞。
             注意它们的响应绝对峰值并不相同，图中是规范化到0-1后的结果。
             数据来源于\protect\url{http://www.cvrl.org}。}
@@ -286,10 +287,67 @@ $\wideparen{BF}$的弧长为$r\sin\theta\mathrm{d}\varphi$；
 \keyindex{颜色混合}{color mixing}{}可以是颜色光的混合，也可以是染料的混合，两种混合方法的结果是不同的，
 前者称为\keyindex{加色混合}{additive mixing}{color mixing颜色混合}，
 后者称为\keyindex{减色混合}{subtractive mixing}{color mixing颜色混合}（\reffig{5.ex06}）。
-\begin{figure}[htbp]
+\begin{figure}[htb]
       \centering
       \includegraphics[width=0.4\linewidth]{chap05/additivemixing.eps}
       \includegraphics[width=0.4\linewidth]{chap05/subtractivemixing.eps}
       \caption{颜色混合：加色混合（左）与减色混合（右）。}
       \label{fig:5.ex06}
 \end{figure}
+
+1853年，德国学者格拉斯曼(Hermann Günther Gra{\ss}mann)利用加色混合
+进行了\keyindex{颜色匹配}{color matching}{}实验（\reffig{5.ex07}），
+并总结出加色混合的定性性质，即\keyindex{格拉斯曼定律}{Grassmann's laws}{}，
+为现代色度学的建立奠定了基础。
+
+\begin{proposition}
+      格拉斯曼定律的现代解释有四点内容：
+      \begin{enumerate}
+            \item 人的视觉只能分辨颜色的三种变化（例如明度、色调、饱和度）。
+            \item 在由两种成分组成的混合色光中，若一种成分连续变化，则混合色光外观也连续变化。
+            \item 存在光谱功率分布不同但外观相同的色光。
+            \item 混合色光的总亮度是各成分亮度之和。
+      \end{enumerate}
+\end{proposition}
+\begin{corollary}
+      每种色光都存在\keyindex{互补色}{complementary color}{}，
+      使得两者混合后要么产生无色（白或灰）光，要么产生近似比重大的颜色成分的非饱和色。
+\end{corollary}
+\begin{corollary}
+      任意两种非互补色混合会产生中间色，其色调和饱和度决定于两种成分的色调与相对数量。
+\end{corollary}
+\begin{corollary}
+      若两种色光的外观相同，则它们在加色或减色混合中作成分时的效应是等价的。
+\end{corollary}
+
+例如若有两对颜色外观相同，即$A\equiv B$，$C\equiv D$，
+则有$A+C\equiv B+D$，$A-C\equiv B-D$，$nA\equiv nB$，
+即加色、减色混合外观相同，同时扩大或缩小相同倍数外观相同，
+这里符号“$\equiv$”表示颜色互相匹配。
+
+\begin{figure}[htbp]
+      \centering\includegraphics[width=0.75\linewidth]{chap05/colormatching.eps}
+      \put(-120,195){\color[RGB]{6,139,190}蓝}
+      \put(-105,178){\color[RGB]{31,129,49}绿}
+      \put(-105,153){\color[RGB]{187,42,33}红}
+      \put(-180,30){\color[RGB]{222,206,186}待匹配颜色光}
+      \put(-155,95){\color{white}黑挡片}
+      \put(-40,95){\color{white}眼}
+      \put(-50,170){\color{white}背景光}
+      \caption{颜色匹配实验。}
+      \label{fig:5.ex07}
+\end{figure}
+
+结合来自1928年莱特(W. David Wright)、1931年吉尔德(John Guild)
+以及1931年国际照明委员会(CIE)的颜色匹配实验数据，
+CIE提出了“CIE 1931标准色度系统”。它们的实验方法都如\reffig{5.ex07}所示。
+左边是一块白色屏幕，上方为红、绿、蓝三原色光，下方为待测色光。
+三原色光照射白色屏幕的上半部分，待测色光照射下半部分，中间用黑挡片隔开。
+从白色屏幕反射出来的光通过小孔抵达观察者人眼，视场为$2^{\circ}$并被分为两部分。
+此外右上方还有一束颜色和强度可调的光照射在小孔周围的背景白板上。
+在实验中，调节红、绿、蓝三原色光，直到观察者认为与待测色光的外观相同，
+即视场中分界线感觉消失，两部分合为整体，此时即三原混合色光与待测色光达到颜色匹配。
+达到匹配后，改变背景光，此时视场中的颜色会变化，但仍能匹配。
+颜色匹配时所需三原色的数量称为\keyindex{三刺激值}{tristimulus values}{}。
+实验还证明了颜色匹配恒常律，即相互匹配的颜色在观察环境变化后依然保持匹配。
+

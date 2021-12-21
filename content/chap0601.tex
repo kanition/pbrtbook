@@ -1,13 +1,38 @@
 \section{相机模型}\label{sec:相机模型}
-
+抽象的Camera基类持有通用的相机选项并定义了所有相机实现必须提供的接口。它被定义在core/camera.h和core/camera.cpp文件中。
 \begin{lstlisting}
 `\initcode{Camera Declarations}{=}\initnext{CameraDeclarations}`
 class `\initvar{Camera}{}` {
 public:
     `\refcode{Camera Interface}{}`
+        Camera(const AnimatedTransform &CameraToWorld, Float shutterOpen, Float shutterClose, Film *film, const Medium *medium);
+        virtual ~Camera();
+        virtual Float GenerateRay(const CameraSample &sample, Ray *ray) const = 0;
+        virtual Float GenerateRayDifferential(const CameraSample &sample, RayDifferential *rd) const;
+        virtual Spectrum We(const Ray &ray, Point2f *pRaster2 = nullptr) const;
+        virtual void Pdf_We(const Ray &ray, Float *pdfPos, Float *pdfDir) const;
+        virtual Spectrum Sample_Wi(const Interaction &ref, const Point2f &u, Vector3f *wi, Float *pdf, Point2f *pRaster, VisibilityTester *vis) const;
     `\refcode{Camera Public Data}{}`
+        AnimatedTransform CameraToWorld;
+        const Float shutterOpen, shutterClose;
+        Film *film;
+        const Medium *medium;
 };
+
 \end{lstlisting}
+基类\refvar{Camera}{}的构造函数需要传入几个适合所有相机类型的参数。
+其中最重要的是将摄像机置于场景中的Transform，它被存储在CameraToWorld成员变量中。
+需要注意的是其类型为AnimatedTransform（而不仅仅是一个普通的Transform），这样相机本身就可以随着时间的推移而移动。
+
+现实生活中的物理相机有一个快门，当我们按动快门按钮的时候相机内部的快门将在短时间内打开，使胶片曝光。
+这个非零曝光时间的一个结果是\keyindex{动态模糊}{motion blur}{}：在曝光期间相对于相机处于运动状态的物体会被模糊化。
+因此，所有Camera的子类都要求储存一个快门打开和快门关闭的时间，并负责生成具有相关时间的光线，以便对场景进行采样。
+这样\refvar{Camera}{}就可以基于快门打开时间和快门关闭时间之间光线时间的适当分布，计算出表现出动态模糊的图像。
+
+\refvar{Camera}{}还包含一个指向\refvar{Film}{}类实例的指针，以表示最终图像（\refvar{Film}{}在第7.9节中描述）。
+同时其也储存了一个指向\refvar{Medium}{}实例的指针，以表示摄像机所在的散射介质（\refvar{Medium}{}在第11.3节中描述）。
+
+相机的实现必须将设置这些值的参数传递给相机构造函数。我们在这里只展示构造函数的原型，因为它的实现只是将参数复制到相应的成员变量。
 \begin{lstlisting}
 `\initcode{Camera Interface}{=}\initnext{CameraInterface}`
 `\refvar{Camera}{}`(const `\refvar{AnimatedTransform}{}` &CameraToWorld, `\refvar{Float}{}` shutterOpen,
@@ -20,14 +45,25 @@ const `\refvar{Float}{}` `\initvar{shutterOpen}{}`, `\initvar{shutterClose}{}`;
 `\refvar{Film}{}` *`\initvar{film}{}`;
 const `\refvar{Medium}{}` *`\initvar[Camera::medium]{medium}{}`;
 \end{lstlisting}
+
 相机子类首先要实现的方法是\refvar[GenerateRay]{Camera::GenerateRay}{()}，
 它计算给定样本相应的光线。
 规范化返回光线的方向分量很重要——系统许多其他部分会依赖此行为。
+
 \begin{lstlisting}
 `\refcode{Camera Interface}{+=}\lastnext{CameraInterface}`
 virtual `\refvar{Float}{}` `\initvar{GenerateRay}{}`(const `\refvar{CameraSample}{}` &sample,
     `\refvar{Ray}{}` *ray) const = 0;
 \end{lstlisting}
+
+\refvar{CameraSample}{}结构持有指定相机光线所需的所有样本值。
+它的\refvar{pFilm}{}成员给出了生成的光线携带辐射的胶片上的点。
+射线经过的镜头上的点在pLens中（对于包含镜头概念的相机），\refvar[time]{CameraSample::time}{}给出了射线应该对场景进行采样的时间；实现应该使用这个值在shutterOpen-shutterClose时间范围内进行线性插值。
+(仔细选择这些不同的采样值可以极大地提高最终图像的质量；这就是第7章的大部分内容）。
+
+\refvar[GenerateRay]{GenerateRay}{}()也会返回一个浮点值，这个值会影响沿生成的射线到达胶片平面的辐射对最终图像的贡献程度。
+简单的相机模型可以只返回1，但是模拟真实物理镜头系统的相机，比如第6.4节中的相机，会根据镜头的光学特性来设置这个值，以表示光线在镜头中的携带量。
+(参见第6.4.7节和第13.6.6节，以了解更多关于这个权重到底是如何计算和使用的信息）。
 \begin{lstlisting}
 `\refcode{Camera Declarations}{+=}\lastnext{CameraDeclarations}`
 struct `\initvar{CameraSample}{}` {
@@ -36,6 +72,8 @@ struct `\initvar{CameraSample}{}` {
     `\refvar{Float}{}` `\initvar[CameraSample::time]{time}{}`;
 };
 \end{lstlisting}
+\refvar{GenerateRayDifferential}()方法像\refvar{GenerateRay}{}()一样计算一条主射线，但同时也计算了在胶片平面上向和方向移动一个像素的相应射线。
+这些关于摄像机光线如何随胶片上的位置变化的信息，有助于给系统的其他部分提供一个概念，即某条摄像机光线的样本代表了多少胶片区域，这对与一些抗锯齿的计算特别有用。
 \begin{lstlisting}
 `\initcode{Camera Method Definitions}{=}`
 `\refvar{Float}{}` `\refvar{Camera}{}`::`\initvar{GenerateRayDifferential}{}`(const `\refvar{CameraSample}{}` &sample,
@@ -48,4 +86,27 @@ struct `\initvar{CameraSample}{}` {
 }
 \end{lstlisting}
 
+找到一个像素以上的射线只是初始化一个新的\refvar{CameraSample}并将调用\refvar{GenerateRay}()返回的适当值复制到RayDifferential结构中。片段<<Find ray after shifting one pixel in the  direction>>的实现与此类似，这里不再赘述。
+\begin{lstlisting}
+`\initcode{Find camera ray after shifting one pixel in the x direction}{=}`
+    `\refvar{CameraSample} sshift = sample;
+    sshift.\refvar{`\refvar{pFilm}}.x++;
+    `\refvar{Ray}` rx;
+    `\refvar{Float}` wtx = `\refvar{GenerateRay}`(sshift, &rx);
+    if (wtx == 0) return 0;
+    rd->rxOrigin = rx.o;
+    rd->rxDirection = rx.d;
+\end{lstlisting}
+
+
 \subsection{相机坐标空间}\label{sub:相机坐标空间}
+我们已经利用了两个重要的建模坐标空间，物体空间和世界空间。我们现在将引入一个额外的坐标空间，即相机空间，它的原点是相机。我们有：
+
+物体空间。这是定义几何基元的坐标系统。例如，pbrt中的球体被定义为以其对象空间的原点为中心。
+
+世界空间。虽然每个图元都可能有自己的对象空间，但场景中的所有物体都是相对于一个单一的世界空间放置的。
+每个图元都有一个对象到世界的转换，决定了它在世界空间中的位置。世界空间是标准框架，所有其它空间都是据此定义的。
+
+相机空间。在场景中的某个世界空间点上放置一个摄像机，并有一个特定的观察方向和方向。这个摄像机定义了一个新的坐标系，其原点在摄像机的位置。
+这个坐标系的z轴被映射到观察方向，而轴被映射到上升方向。这是一个方便的空间，用于推理哪些物体有可能被摄像机看到。
+例如，如果一个物体的摄像机空间边界框完全在 z=0 平面后面（而且摄像机的视野不超过180度），那么这个物体对摄像机来说就不可见。

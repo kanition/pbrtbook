@@ -5,7 +5,18 @@
 class `\initvar{Camera}{}` {
 public:
     `\refcode{Camera Interface}{}`
+        Camera(const AnimatedTransform &CameraToWorld, Float shutterOpen, Float shutterClose, Film *film, const Medium *medium);
+        virtual ~Camera();
+        virtual Float GenerateRay(const CameraSample &sample, Ray *ray) const = 0;
+        virtual Float GenerateRayDifferential(const CameraSample &sample, RayDifferential *rd) const;
+        virtual Spectrum We(const Ray &ray, Point2f *pRaster2 = nullptr) const;
+        virtual void Pdf_We(const Ray &ray, Float *pdfPos, Float *pdfDir) const;
+        virtual Spectrum Sample_Wi(const Interaction &ref, const Point2f &u, Vector3f *wi, Float *pdf, Point2f *pRaster, VisibilityTester *vis) const;
     `\refcode{Camera Public Data}{}`
+        AnimatedTransform CameraToWorld;
+        const Float shutterOpen, shutterClose;
+        Film *film;
+        const Medium *medium;
 };
 
 \end{lstlisting}
@@ -34,14 +45,17 @@ const `\refvar{Float}{}` `\initvar{shutterOpen}{}`, `\initvar{shutterClose}{}`;
 `\refvar{Film}{}` *`\initvar{film}{}`;
 const `\refvar{Medium}{}` *`\initvar[Camera::medium]{medium}{}`;
 \end{lstlisting}
+
 相机子类首先要实现的方法是\refvar[GenerateRay]{Camera::GenerateRay}{()}，
 它计算给定样本相应的光线。
 规范化返回光线的方向分量很重要——系统许多其他部分会依赖此行为。
+
 \begin{lstlisting}
 `\refcode{Camera Interface}{+=}\lastnext{CameraInterface}`
 virtual `\refvar{Float}{}` `\initvar{GenerateRay}{}`(const `\refvar{CameraSample}{}` &sample,
     `\refvar{Ray}{}` *ray) const = 0;
 \end{lstlisting}
+
 \refvar{CameraSample}{}结构持有指定相机光线所需的所有样本值。
 它的\refvar{pFilm}{}成员给出了生成的光线携带辐射的胶片上的点。
 射线经过的镜头上的点在pLens中（对于包含镜头概念的相机），\refvar[time]{CameraSample::time}{}给出了射线应该对场景进行采样的时间；实现应该使用这个值在shutterOpen-shutterClose时间范围内进行线性插值。
@@ -59,7 +73,7 @@ struct `\initvar{CameraSample}{}` {
 };
 \end{lstlisting}
 \refvar{GenerateRayDifferential}()方法像\refvar{GenerateRay}{}()一样计算一条主射线，但同时也计算了在胶片平面上向和方向移动一个像素的相应射线。
-这些关于摄像机光线如何随胶片上的位置变化的信息，有助于给系统的其他部分提供一个概念，即某条摄像机光线的样本代表了多少胶片区域，这对抗锯齿纹理图的查找特别有用。
+这些关于摄像机光线如何随胶片上的位置变化的信息，有助于给系统的其他部分提供一个概念，即某条摄像机光线的样本代表了多少胶片区域，这对与一些抗锯齿的计算特别有用。
 \begin{lstlisting}
 `\initcode{Camera Method Definitions}{=}`
 `\refvar{Float}{}` `\refvar{Camera}{}`::`\initvar{GenerateRayDifferential}{}`(const `\refvar{CameraSample}{}` &sample,
@@ -71,6 +85,7 @@ struct `\initvar{CameraSample}{}` {
     return wt;
 }
 \end{lstlisting}
+
 找到一个像素以上的射线只是初始化一个新的\refvar{CameraSample}并将调用\refvar{GenerateRay}()返回的适当值复制到RayDifferential结构中。片段<<Find ray after shifting one pixel in the  direction>>的实现与此类似，这里不再赘述。
 \begin{lstlisting}
 `\initcode{Find camera ray after shifting one pixel in the x direction}{=}`
@@ -82,6 +97,7 @@ struct `\initvar{CameraSample}{}` {
     rd->rxOrigin = rx.o;
     rd->rxDirection = rx.d;
 \end{lstlisting}
+
 
 \subsection{相机坐标空间}\label{sub:相机坐标空间}
 我们已经利用了两个重要的建模坐标空间，物体空间和世界空间。我们现在将引入一个额外的坐标空间，即相机空间，它的原点是相机。我们有：

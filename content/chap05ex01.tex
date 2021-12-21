@@ -321,8 +321,8 @@ $\wideparen{BF}$的弧长为$r\sin\theta\mathrm{d}\varphi$；
 \end{corollary}
 
 例如若有两对颜色外观相同，即$A\equiv B$，$C\equiv D$，
-则有$A+C\equiv B+D$，$A-C\equiv B-D$，$nA\equiv nB$，
-即加色、减色混合外观相同，同时扩大或缩小相同倍数外观相同，
+则有$A+C\equiv B+D$，$A-C\equiv B-D$，$\alpha A\equiv \alpha B$，
+即加色、减色混合的外观相同，同时扩大或缩小相同倍数$\alpha>0$的外观相同，
 这里符号“$\equiv$”表示颜色互相匹配。
 
 \begin{figure}[htbp]
@@ -349,5 +349,59 @@ CIE提出了“CIE 1931标准色度系统”。它们的实验方法都如\reffi
 即视场中分界线感觉消失，两部分合为整体，此时即三原混合色光与待测色光达到颜色匹配。
 达到匹配后，改变背景光，此时视场中的颜色会变化，但仍能匹配。
 颜色匹配时所需三原色的数量称为\keyindex{三刺激值}{tristimulus values}{}。
-实验还证明了颜色匹配恒常律，即相互匹配的颜色在观察环境变化后依然保持匹配。
+若分别以$\compcolor{C},\compcolor{R},\compcolor{G},\compcolor{B}$表示
+被匹配的颜色以及红、绿、蓝三原色光的单位，以实数$C,R,G,B$表示相应颜色的数量，
+则颜色匹配方程可写作
+\begin{align}
+      C\compcolor{C}\equiv R\compcolor{R}+G\compcolor{G}+B\compcolor{B}\, ,
+\end{align}
+其中符号“$\equiv$”表示颜色外观相同，$R,G,B$可以为负。
 
+实验还证明了颜色匹配恒常律，即互相匹配的颜色在观察环境变化后依然保持匹配。
+实验中在相应规定条件下视场为$2^{\circ}$的观察者
+称为\keyindex{CIE 1931标准观察者}{CIE 1931 standard observer}{}。
+
+颜色匹配实验中有个重要问题是：以什么样的颜色作为三原色光？
+三刺激值的单位$\compcolor{R},\compcolor{G},\compcolor{B}$如何确定？
+原则上，三原色可以任意选定，但其中任何一种颜色不能由其他两种加色混合得到，最常用的是红、绿、蓝。
+CIE在实验中使用波长分别为700nm、546.1nm、435.8nm的单色光作为三原色，
+其中700nm是可见光谱的红色末端，546.1nm和435.8nm是明显的汞谱线，三者在实验中都能比较精确地产生。
+为了确定单位，CIE规定能匹配\keyindex{等能白光}{equal-energy white}{}（
+也称\keyindex{E光源}{illuminant E}{}，即整个光谱功率分布为常数的混合光，
+因颜色接近白色得名，是一种理论光源，现实中暂无法模拟出来）且使得三刺激值全等
+（即$R=G=B$）的三原色比例作为相应的色度学单位。
+实验与测算结果是，红绿蓝按光亮度之比为$1:4.5907:0.0601$
+（对应于辐亮度之比$72.0962:1.3791:1$）作为三刺激值的单位。、
+\begin{example}
+      按$0.1\compcolor{R}+0.2\compcolor{G}+0.3\compcolor{B}$所得的色光
+      指按$(0.1\times1):(0.2\times4.5907):(0.3\times0.0601)=0.1:0.91814:0.01803$的
+      光亮度比例混合波长分别700nm、546.1nm、435.8nm的单色光所得的结果。
+\end{example}
+
+实验中还发现，有一些颜色无论如何也无法被三原色匹配出来。
+此时将某些三原色挪到与待测色光的同一侧进行实验则能实现匹配。
+例如将红光与待测色光放在一侧，绿和蓝色光放在另一侧，当达到匹配时有
+\begin{align}
+      C\compcolor{C}+R'\compcolor{R}\equiv G\compcolor{G}+B\compcolor{B}\, .
+\end{align}
+于是可视作
+\begin{align}
+      C\compcolor{C}\equiv -R'\compcolor{R}+G\compcolor{G}+B\compcolor{B}\, ,
+\end{align}
+即三刺激值的红色分量为负值$-R'$。
+
+单个波长的可见光称为\keyindex{光谱色}{spectral color}{}。
+CIE依据历史与实验测定了匹配等能光谱色的RGB三刺激值，规范化后
+得到RGB的\keyindex{颜色匹配函数}{color matching functions}{color matching颜色匹配}，
+记作$\bar{r}(\lambda),\bar{g}(\lambda),\bar{b}(\lambda)$，
+并对应构建了\keyindex{CIE 1931 RGB 颜色空间}{CIE 1931 RGB color space}{}。
+\reffig{5.ex08}显示$\bar{r}(\lambda)$在一定波长范围内取负值。
+\begin{figure}[htbp]
+      \centering\includegraphics[width=0.75\linewidth]{chap05/CIERGBcolormatchingfunctions.eps}
+      \put(10,0){$\lambda/$nm}
+      \put(-110,125){$\bar{r}(\lambda)$}
+      \put(-170,125){$\bar{g}(\lambda)$}
+      \put(-235,125){$\bar{b}(\lambda)$}
+      \caption{CIE RGB颜色匹配函数（$2^{\circ}$视场），图示来自\citet{SETCHELL2012219}。}
+      \label{fig:5.ex08}
+\end{figure}

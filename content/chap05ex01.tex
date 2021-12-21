@@ -3,7 +3,7 @@
 \begin{remark}
       本节内容不是原书内容，而是译者根据有关资料\citep{978-7-5640-0658-7,
             wiki:solidangle,GB3102.6-93,enwiki:1052681830,
-            wiki:candela,Hoffmann2015,wiki:eye}补充的，请酌情参考和斧正。
+            wiki:candela,Hoffmann2015,wiki:eye,BERTALMIO2020131}补充的，请酌情参考和斧正。
 \end{remark}
 
 \subsection{辐射度量}\label{sub:辐射度量}
@@ -295,10 +295,8 @@ $\wideparen{BF}$的弧长为$r\sin\theta\mathrm{d}\varphi$；
       \label{fig:5.ex06}
 \end{figure}
 
-1853年，德国学者格拉斯曼(Hermann Günther Gra{\ss}mann)利用加色混合
-进行了\keyindex{颜色匹配}{color matching}{}实验（\reffig{5.ex07}），
-并总结出加色混合的定性性质，即\keyindex{格拉斯曼定律}{Grassmann's laws}{}，
-为现代色度学的建立奠定了基础。
+1853年，德国学者格拉斯曼(Hermann Günther Gra{\ss}mann)总结出加色混合的性质，
+即\keyindex{格拉斯曼定律}{Grassmann's laws}{}，为现代色度学的奠定了基础。
 
 \begin{proposition}
       格拉斯曼定律的现代解释有四点内容：
@@ -351,7 +349,8 @@ CIE提出了“CIE 1931标准色度系统”。它们的实验方法都如\reffi
 从白色屏幕反射出来的光通过小孔抵达观察者人眼，视场为$2^{\circ}$并被分为两部分。
 此外右上方还有一束颜色和强度可调的光照射在小孔周围的背景白板上。
 在实验中，调节红、绿、蓝三原色光，直到观察者认为与待测色光的外观相同，
-即视场中分界线感觉消失，两部分合为整体，此时即三原混合色光与待测色光达到颜色匹配。
+即视场中分界线感觉消失，两部分合为整体，
+此时即三原混合色光与待测色光达到\keyindex{颜色匹配}{color matching}{}。
 达到匹配后，改变背景光，此时视场中的颜色会变化，但仍能匹配。
 颜色匹配时所需三原色的数量称为\keyindex{三刺激值}{tristimulus values}{}。
 若分别以$\compcolor{C},\compcolor{R},\compcolor{G},\compcolor{B}$表示
@@ -360,7 +359,7 @@ CIE提出了“CIE 1931标准色度系统”。它们的实验方法都如\reffi
 \begin{align}
       C\compcolor{C}\equiv R\compcolor{R}+G\compcolor{G}+B\compcolor{B}\, ,
 \end{align}
-其中符号“$\equiv$”表示颜色外观相同，$R,G,B$可以为负。
+其中符号“$\equiv$”表示颜色外观相同，$R,G,B$可以为负，$C=R+G+B$。
 
 实验还证明了颜色匹配恒常律，即互相匹配的颜色在观察环境变化后依然保持匹配。
 实验中在相应规定条件下视场为$2^{\circ}$的观察者
@@ -375,7 +374,7 @@ CIE在实验中使用波长分别为700nm、546.1nm、435.8nm的\keyindex{单色
 也称\keyindex{E光源}{illuminant E}{}，即整个光谱功率分布为常数的混合光，
 因颜色接近白色得名，是一种理论光源，现实中暂无法模拟出来）且使得三刺激值全等
 （即$R=G=B$）的三原色比例作为相应的色度学单位。
-实验与测算结果是，红绿蓝按光亮度之比为$1:4.5907:0.0601$
+结果是，红绿蓝按光亮度之比为$1:4.5907:0.0601$
 （对应于辐亮度之比$72.0962:1.3791:1$）作为三刺激值的单位。
 \begin{example}
       按$0.1\compcolor{R}+0.2\compcolor{G}+0.3\compcolor{B}$所得的色光
@@ -396,7 +395,7 @@ CIE在实验中使用波长分别为700nm、546.1nm、435.8nm的\keyindex{单色
 即三刺激值的红色分量为负值$-R'$。
 
 单个波长的可见光称为\keyindex{光谱色}{spectral color}{}。
-CIE依据历史与实验测定了匹配等能光谱色的RGB三刺激值，规范化后
+CIE依据历史与实验测定了匹配等能光谱色的RGB三刺激值，规范化后%规范化的具体做法未查到资料
 得到RGB的\keyindex{颜色匹配函数}{color matching functions}{color matching颜色匹配}，
 记作$\bar{r}(\lambda),\bar{g}(\lambda),\bar{b}(\lambda)$，
 并对应构建了\keyindex{CIE 1931 RGB 颜色空间}{CIE 1931 RGB color space}{}。
@@ -445,6 +444,8 @@ CIE依据历史与实验测定了匹配等能光谱色的RGB三刺激值，规�
 注意与\reffig{5.ex08}结合起来思考波长较短的轨迹为何进入$r<0$的半平面。
 \begin{figure}[htbp]
       \centering\includegraphics[width=0.75\linewidth]{chap05/CIE1931rgxy.png}
+      \put(-205,9){\small -}
+      \put(-270,9){\small -}
       \caption{CIE $rg$色品空间。其中E为等能白光；
       $\text{C}_{\mathrm{r}},\text{C}_{\mathrm{g}},\text{C}_{\mathrm{b}}$分别为
       $\compcolor{X},\compcolor{Y},\compcolor{Z}$三原色的色品点。
@@ -506,10 +507,33 @@ CIE依据历史与实验测定了匹配等能光谱色的RGB三刺激值，规�
 \end{align}
 它同样满足推论\ref{corollary:chromaticity}，即$x+y+z=1$。
 
-构建了XYZ颜色空间后面临的首要问题是，如何在该空间内表示颜色？
-因为其所用的三原色$\compcolor{X},\compcolor{Y},\compcolor{Z}$在现实中不存在，
-所以无法通过实验直接测定XYZ三刺激值，只能通过数学计算进行转化。
+与RGB类似，我们可以得到对应于光谱色的
+CIE XYZ 颜色匹配函数$\bar{x}(\lambda),\bar{y}(\lambda),\bar{z}(\lambda)$（\reffig{5.ex10}）
+以及马蹄形的光谱轨迹与$xy$色品图（\reffig{5.ex11}）。
+可以看到$\bar{x}(\lambda),\bar{y}(\lambda),\bar{z}(\lambda)$不再含有负数，
+光谱轨迹完全在$xy$第一象限。其中光谱轨迹的首尾连线称为\keyindex{紫线}{line of purples}{}。
+\begin{figure}[htbp]
+      \centering\includegraphics[width=0.75\linewidth]{chap05/cie31xyz.eps}
+      \put(0,0){$\lambda/$nm}
+      \put(-110,100){$\bar{x}(\lambda)$}
+      \put(-170,125){$\bar{y}(\lambda)$}
+      \put(-250,125){$\bar{z}(\lambda)$}
+      \caption{CIE XYZ颜色匹配函数（$2^{\circ}$视场），数据来源于\protect\url{http://www.cvrl.org}。}
+      \label{fig:5.ex10}
+\end{figure}
+\begin{figure}[htbp]
+      \centering\includegraphics[width=0.75\linewidth]{chap05/CIE1931xyCIERGB.pdf}
+      \caption{CIE 1931 XYZ颜色空间色品图。图中的三角形标出了CIE RGB三原色的位置。}
+      \label{fig:5.ex11}
+\end{figure}
 
-我这里介绍RGB到XYZ颜色空间的转化推导过程。
-首先，从XYZ的构建过程中，我们可以获取到三原色$\compcolor{R},\compcolor{G},\compcolor{B}$在
-XYZ空间中的坐标：
+注意到当$X+Y+Z=1$时，有$x=X,y=Y,z=Z$。
+这说明$xy$色品图是在$XYZ$坐标系中
+截取平面$X+Y+Z=1$再向$XY$平面投影的结果（\reffig{5.ex12}）。
+\begin{figure}[htbp]
+      \centering\includegraphics[width=0.5\linewidth]{chap05/Projectionandchromaticityplane.pdf}
+      \caption{XYZ体与$xy$色品图。左图是XYZ体，右上是截平面$X+Y+Z=1$，
+            右下是将截平面投影到$XY$平面得到的$xy$色品图。图示来自\protect\citet{BERTALMIO2020131}。}
+      \label{fig:5.ex12}
+\end{figure}
+

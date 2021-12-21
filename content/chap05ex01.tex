@@ -320,10 +320,15 @@ $\wideparen{BF}$的弧长为$r\sin\theta\mathrm{d}\varphi$；
       若两种色光的外观相同，则它们在加色或减色混合中作成分时的效应是等价的。
 \end{corollary}
 
-例如若有两对颜色外观相同，即$A\equiv B$，$C\equiv D$，
-则有$A+C\equiv B+D$，$A-C\equiv B-D$，$\alpha A\equiv \alpha B$，
-即加色、减色混合的外观相同，同时扩大或缩小相同倍数$\alpha>0$的外观相同，
-这里符号“$\equiv$”表示颜色互相匹配。
+例如若有两对颜色外观相同，即$A\equiv B$，$C\equiv D$，则有
+\begin{align}
+      A+C      & \equiv B+D\, ,      \\
+      A-C      & \equiv B-D\, ,      \\
+      \alpha A & \equiv \alpha B\, ,
+\end{align}
+其中符号“$\equiv$”表示颜色互相匹配。
+即加色、减色混合的外观相同，颜色同时扩大或缩小相同倍数$\alpha>0$的外观相同。
+这揭示了颜色混合的线性性质。
 
 \begin{figure}[htbp]
       \centering\includegraphics[width=0.75\linewidth]{chap05/colormatching.eps}
@@ -364,14 +369,14 @@ CIE提出了“CIE 1931标准色度系统”。它们的实验方法都如\reffi
 颜色匹配实验中有个重要问题是：以什么样的颜色作为三原色光？
 三刺激值的单位$\compcolor{R},\compcolor{G},\compcolor{B}$如何确定？
 原则上，三原色可以任意选定，但其中任何一种颜色不能由其他两种加色混合得到，最常用的是红、绿、蓝。
-CIE在实验中使用波长分别为700nm、546.1nm、435.8nm的单色光作为三原色，
+CIE在实验中使用波长分别为700nm、546.1nm、435.8nm的\keyindex{单色光}{monochromatic light}{}作为三原色，
 其中700nm是可见光谱的红色末端，546.1nm和435.8nm是明显的汞谱线，三者在实验中都能比较精确地产生。
 为了确定单位，CIE规定能匹配\keyindex{等能白光}{equal-energy white}{}（
 也称\keyindex{E光源}{illuminant E}{}，即整个光谱功率分布为常数的混合光，
 因颜色接近白色得名，是一种理论光源，现实中暂无法模拟出来）且使得三刺激值全等
 （即$R=G=B$）的三原色比例作为相应的色度学单位。
 实验与测算结果是，红绿蓝按光亮度之比为$1:4.5907:0.0601$
-（对应于辐亮度之比$72.0962:1.3791:1$）作为三刺激值的单位。、
+（对应于辐亮度之比$72.0962:1.3791:1$）作为三刺激值的单位。
 \begin{example}
       按$0.1\compcolor{R}+0.2\compcolor{G}+0.3\compcolor{B}$所得的色光
       指按$(0.1\times1):(0.2\times4.5907):(0.3\times0.0601)=0.1:0.91814:0.01803$的
@@ -405,3 +410,47 @@ CIE依据历史与实验测定了匹配等能光谱色的RGB三刺激值，规�
       \caption{CIE RGB颜色匹配函数（$2^{\circ}$视场），图示来自\citet{SETCHELL2012219}。}
       \label{fig:5.ex08}
 \end{figure}
+
+对于光谱分布为$S(\lambda)$的光刺激，相应的RGB值通过在颜色匹配函数上积分算得：
+\begin{align}
+      R & =k\int \bar{r}(\lambda)S(\lambda)\mathrm{d}\lambda\, , \\
+      G & =k\int \bar{g}(\lambda)S(\lambda)\mathrm{d}\lambda\, , \\
+      B & =k\int \bar{b}(\lambda)S(\lambda)\mathrm{d}\lambda\, ,
+\end{align}
+其中$k$为适当的规范化系数。
+
+\subsubsection*{CIE 1931颜色空间}
+\begin{definition}
+      对于RGB三刺激值为$R,G,B$的颜色，定义其RGB\keyindex{色品}{chromaticity}{}坐标为：
+      \begin{align}
+            r & =\frac{R}{R+G+B}\, , \\
+            g & =\frac{G}{R+G+B}\, , \\
+            b & =\frac{B}{R+G+B}\, .
+      \end{align}
+\end{definition}
+\begin{corollary}
+      色品坐标之和恒为1，即$r+g+b=1$。
+\end{corollary}
+这意味着色品坐标中只有两个独立分量。
+
+依据RGB颜色匹配函数$\bar{r}(\lambda),\bar{g}(\lambda),\bar{b}(\lambda)$计算
+出光谱色的色品坐标$r,g,b$，并以其中的$r$为横坐标，$g$为纵坐标，
+按波长顺序将光谱色的色品点连接起来，可以得到舌形的轨迹（\reffig{5.ex09}），
+称为\keyindex{光谱轨迹}{spectral locus}{}。
+该轨迹在CIE RGB三原色波长处与坐标轴相交\sidenote{请读者思考一下为什么。}，
+即在435.8nm处有$r=0,g=0$，在546.1nm处有$r=0,g=1$，在700nm处有$r=1,g=0$。
+光谱轨迹及其起点与终点的连线围成封闭区域，
+即构成\keyindex{CIE 1931 RGB 颜色空间}{CIE 1931 RGB color space}{}。
+注意与\reffig{5.ex08}结合起来思考波长较短的轨迹为何进入$r<0$的半平面。
+\begin{figure}[htbp]
+      \centering\includegraphics[width=0.75\linewidth]{chap05/CIE1931rgxy.png}
+      \caption{CIE $rg$色品空间。其中E为等能白光。}
+      \label{fig:5.ex09}
+\end{figure}
+
+依据颜色混合的线性性质，我们有：
+\begin{corollary}
+      对于由任意两种颜色$A,B$加色混合所得的颜色$C$，
+      其色品点一定在$A$与$B$色品点所连的线段上。
+\end{corollary}
+

@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="Layer_1"
+   data-name="Layer 1"
+   viewBox="0 0 396.19 254.9"
+   version="1.1"
+   sodipodi:docname="Planarangle.svg"
+   inkscape:version="1.0.1 (3bc2e813f5, 2020-09-07)">
+  <metadata
+     id="metadata1281">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     id="namedview1279"
+     showgrid="false"
+     inkscape:zoom="1.8097378"
+     inkscape:cx="198.095"
+     inkscape:cy="127.45"
+     inkscape:window-x="1912"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="Layer_1"
+     inkscape:document-rotation="0" />
+  <defs
+     id="defs1246">
+    <style
+       id="style1244">.cls-1,.cls-2{fill:none;}.cls-1,.cls-2,.cls-5,.cls-6,.cls-7{stroke:#000;}.cls-1,.cls-2,.cls-5,.cls-7{stroke-miterlimit:10;}.cls-2{stroke-width:3px;}.cls-3{fill:#a6a6a6;}.cls-4{fill:#666;}.cls-7{fill:#b3b3b3;}</style>
+    <g
+       id="g2449">
+      <symbol
+         overflow="visible"
+         id="symbol86">
+        <path
+           style="stroke:none;"
+           d=""
+           id="path3408" />
+      </symbol>
+      <symbol
+         overflow="visible"
+         id="symbol9143">
+        <path
+           style="stroke:none;"
+           d="M 0.515625 1.28125 C 0.484375 1.421875 0.46875 1.4375 0.453125 1.453125 C 0.40625 1.46875 0.296875 1.46875 0.203125 1.46875 C 0.03125 1.46875 -0.15625 1.46875 -0.15625 1.75 C -0.15625 1.859375 -0.0625 1.9375 0.046875 1.9375 C 0.328125 1.9375 0.65625 1.90625 0.953125 1.90625 C 1.3125 1.90625 1.6875 1.9375 2.03125 1.9375 C 2.09375 1.9375 2.28125 1.9375 2.28125 1.640625 C 2.28125 1.46875 2.125 1.46875 2.03125 1.46875 C 1.890625 1.46875 1.71875 1.46875 1.59375 1.453125 L 2.03125 -0.28125 C 2.171875 -0.140625 2.5 0.078125 3.03125 0.078125 C 4.765625 0.078125 5.84375 -1.5 5.84375 -2.859375 C 5.84375 -4.09375 4.921875 -4.5 4.09375 -4.5 C 3.390625 -4.5 2.875 -4.109375 2.71875 -3.96875 C 2.328125 -4.5 1.671875 -4.5 1.5625 -4.5 C 1.203125 -4.5 0.90625 -4.296875 0.703125 -3.9375 C 0.453125 -3.53125 0.3125 -3 0.3125 -2.953125 C 0.3125 -2.8125 0.46875 -2.8125 0.5625 -2.8125 C 0.671875 -2.8125 0.703125 -2.8125 0.75 -2.859375 C 0.78125 -2.875 0.78125 -2.90625 0.84375 -3.15625 C 1.03125 -3.953125 1.265625 -4.140625 1.515625 -4.140625 C 1.625 -4.140625 1.75 -4.109375 1.75 -3.78125 C 1.75 -3.625 1.71875 -3.484375 1.6875 -3.34375 Z M 2.8125 -3.5 C 3.09375 -3.84375 3.5625 -4.140625 4.046875 -4.140625 C 4.671875 -4.140625 4.71875 -3.609375 4.71875 -3.390625 C 4.71875 -2.875 4.375 -1.640625 4.21875 -1.25 C 3.90625 -0.53125 3.421875 -0.28125 3.015625 -0.28125 C 2.421875 -0.28125 2.1875 -0.75 2.1875 -0.859375 L 2.203125 -1 Z M 2.8125 -3.5 "
+           id="path9061" />
+      </symbol>
+    </g>
+    <g
+       id="g9828">
+      <symbol
+         overflow="visible"
+         id="symbol9649">
+        <path
+           style="stroke:none;"
+           d=""
+           id="path8232" />
+      </symbol>
+      <symbol
+         overflow="visible"
+         id="symbol6243">
+        <path
+           style="stroke:none;"
+           d="M 3.890625 -3.734375 C 3.625 -3.71875 3.421875 -3.5 3.421875 -3.28125 C 3.421875 -3.140625 3.515625 -2.984375 3.734375 -2.984375 C 3.953125 -2.984375 4.1875 -3.15625 4.1875 -3.546875 C 4.1875 -4 3.765625 -4.40625 3 -4.40625 C 1.6875 -4.40625 1.3125 -3.390625 1.3125 -2.953125 C 1.3125 -2.171875 2.046875 -2.03125 2.34375 -1.96875 C 2.859375 -1.859375 3.375 -1.75 3.375 -1.203125 C 3.375 -0.953125 3.15625 -0.109375 1.953125 -0.109375 C 1.8125 -0.109375 1.046875 -0.109375 0.8125 -0.640625 C 1.203125 -0.59375 1.453125 -0.890625 1.453125 -1.171875 C 1.453125 -1.390625 1.28125 -1.515625 1.078125 -1.515625 C 0.8125 -1.515625 0.515625 -1.3125 0.515625 -0.859375 C 0.515625 -0.296875 1.09375 0.109375 1.9375 0.109375 C 3.5625 0.109375 3.953125 -1.09375 3.953125 -1.546875 C 3.953125 -1.90625 3.765625 -2.15625 3.640625 -2.265625 C 3.375 -2.546875 3.078125 -2.609375 2.640625 -2.6875 C 2.28125 -2.765625 1.890625 -2.84375 1.890625 -3.296875 C 1.890625 -3.578125 2.125 -4.1875 3 -4.1875 C 3.25 -4.1875 3.75 -4.109375 3.890625 -3.734375 Z M 3.890625 -3.734375 "
+           id="path8299" />
+      </symbol>
+    </g>
+  </defs>
+  <title
+     id="title1248">Planar angle</title>
+  <path
+     class="cls-1"
+     d="M232.72,198.43a126.94,126.94,0,1,1,8.11-128.15"
+     id="path1250" />
+  <path
+     class="cls-2"
+     d="M240.83,70.28a127.11,127.11,0,0,1-8.11,128.15"
+     id="path1252" />
+  <line
+     class="cls-1"
+     x1="126.74"
+     y1="127.31"
+     x2="305.59"
+     y2="38.58"
+     id="line1254" />
+  <polygon
+     points="303.63 45.69 305 38.87 298.74 35.83 312.85 34.98 303.63 45.69"
+     id="polygon1256" />
+  <polygon
+     class="cls-3"
+     points="304.5 43.92 311.67 35.56 305.57 38.59 304.5 43.92"
+     id="polygon1258" />
+  <polygon
+     class="cls-4"
+     points="300.68 36.22 311.67 35.56 305.57 38.59 300.68 36.22"
+     id="polygon1260" />
+  <line
+     class="cls-1"
+     x1="126.87"
+     y1="127.07"
+     x2="292.74"
+     y2="238.18"
+     id="line1262" />
+  <polygon
+     points="285.6 240.02 292.2 237.82 291.73 230.87 299.48 242.69 285.6 240.02"
+     id="polygon1264" />
+  <polygon
+     class="cls-3"
+     points="287.56 239.89 298.38 241.96 292.73 238.17 287.56 239.89"
+     id="polygon1266" />
+  <polygon
+     class="cls-4"
+     points="292.35 232.74 298.38 241.96 292.73 238.17 292.35 232.74"
+     id="polygon1268" />
+  <circle
+     class="cls-5"
+     cx="127.05"
+     cy="127.26"
+     r="5.17"
+     id="circle1270" />
+  <path
+     class="cls-7"
+     d="M287,48C314.2,50.9,326,65.82,326,65.82c.45,25.36-17,16.07-5,19.75,42.71,13.1,22.69,45.25,44.62,51s48.16,5.74,14.35,24.8-67.22-22.75-69.48,12.91,19.88,48.16,16.6,54.51-53.1-4.45-56.56-6.55l33.64-63.3s7.65-19.33-8.54-44.54-22.23-34-22.84-42.38Z"
+     id="path1276" />
+  <g
+     inkscape:label=""
+     transform="matrix(2,0,0,2,-82.651407,-31.792802)"
+     id="g1310">
+    <g
+       id="g3174">
+      <g
+         style="fill:#000000;fill-opacity:1"
+         id="g4287">
+        <use
+           xlink:href="#symbol9143"
+           x="91.925003"
+           y="81.962997"
+           id="use7894"
+           width="100%"
+           height="100%" />
+      </g>
+    </g>
+  </g>
+  <g
+     inkscape:label=""
+     transform="matrix(2,0,0,2,51.622192,-25.714573)"
+     id="g1358">
+    <g
+       id="g3216">
+      <g
+         style="fill:#000000;fill-opacity:1"
+         id="g7221">
+        <use
+           xlink:href="#symbol6243"
+           x="91.925003"
+           y="81.962997"
+           id="use1494"
+           width="100%"
+           height="100%" />
+      </g>
+    </g>
+  </g>
+</svg>

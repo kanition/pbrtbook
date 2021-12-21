@@ -1,0 +1,114 @@
+\section{RGBSpectrum的实现}\label{sec:RGBSpectrum的实现}
+
+这里\refvar{RGBSpectrum}{}的实现用红绿蓝分量的加权和表示SPD。
+回想该表示是定义病态的：给定两个不同的计算机显示器，
+让它们显示相同RGB值并不会让它们发射相同的SPD。
+因此，为了给一组RGB值指定实际的SPD，我们必须知道定义时所依据的显示器原色；
+这些信息一般不会随RGB值提供。
+
+然而RGB表示很方便：几乎所有3D建模和设计工具都使用RGB颜色，
+大多数3D内容都用RGB指定。
+此外，它的计算和存储很高效，只需要三个浮点值表示。
+我们的\refvar{RGBSpectrum}{}实现继承自\refvar{CoefficientSpectrum}{}，
+指定三个分量存储。
+因此，之前定义的所有算术运算符都自动地适用于\refvar{RGBSpectrum}{}。
+\begin{lstlisting}
+`\refcode{Spectrum Declarations}{+=}\lastcode{SpectrumDeclarations}`
+class `\initvar{RGBSpectrum}{}` : public `\refvar{CoefficientSpectrum}{}`<3> {
+public:
+    `\refcode{RGBSpectrum Public Methods}{}`
+};
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{RGBSpectrum Public Methods}{=}\initnext{RGBSpectrumPublicMethods}`
+`\refvar{RGBSpectrum}{}`(`\refvar{Float}{}` v = 0.f) : `\refvar{CoefficientSpectrum}{}`<3>(v) { }
+`\refvar{RGBSpectrum}{}`(const `\refvar{CoefficientSpectrum}{}`<3> &v) 
+    : `\refvar{CoefficientSpectrum}{}`<3>(v) { }
+\end{lstlisting}
+
+除了基本算术运算，\refvar{RGBSpectrum}{}还需要提供方法来与XYZ和RGB表示互相转换。
+这些对于\refvar{RGBSpectrum}{}是容易的。
+注意\refvar[RGBSpectrum::FromRGB]{FromRGB}{()}接收像该方法的
+\refvar{SampledSpectrum}{}实例那样的\refvar{SpectrumType}{}参数。
+尽管这里没有使用，但这两个类的{\ttfamily FromRGB()}方法
+必须有匹配的特征，这样系统剩下的部分可以一致地调用它们而不用管用的是哪种光谱表示。
+\begin{lstlisting}
+`\refcode{RGBSpectrum Public Methods}{+=}\lastnext{RGBSpectrumPublicMethods}`
+static `\refvar{RGBSpectrum}{}` `\initvar[RGBSpectrum::FromRGB]{FromRGB}{}`(const `\refvar{Float}{}` rgb[3],
+        `\refvar{SpectrumType}{}` type = `\refvar{SpectrumType}{}`::`\refvar{Reflectance}{}`) {
+    `\refvar{RGBSpectrum}{}` s;
+    s.`\refvar[CoefficientSpectrum::c]{c}{}`[0] = rgb[0];
+    s.`\refvar[CoefficientSpectrum::c]{c}{}`[1] = rgb[1];
+    s.`\refvar[CoefficientSpectrum::c]{c}{}`[2] = rgb[2];
+    return s;
+}
+\end{lstlisting}
+
+同样，光谱表示必须能将其自己转换为RGB值。
+对于\refvar{RGBSpectrum}{}，该实现可以回避用什么特定RGB原色
+来表示光谱分布的问题而只用假设原色与表示该色所正在用的相同并直接返回RGB系数。
+\begin{lstlisting}
+`\refcode{RGBSpectrum Public Methods}{+=}\lastnext{RGBSpectrumPublicMethods}`
+void `\initvar[RGBSpectrum::ToRGB]{ToRGB}{}`(`\refvar{Float}{}` *rgb) const {
+    rgb[0] = `\refvar[CoefficientSpectrum::c]{c}{}`[0];
+    rgb[1] = `\refvar[CoefficientSpectrum::c]{c}{}`[1];
+    rgb[2] = `\refvar[CoefficientSpectrum::c]{c}{}`[2];
+}
+\end{lstlisting}
+
+所有光谱表示必须也能将其转换为\refvar{RGBSpectrum}{}对象。这在此处也很简单。
+\begin{lstlisting}
+`\refcode{RGBSpectrum Public Methods}{+=}\lastnext{RGBSpectrumPublicMethods}`
+const `\refvar{RGBSpectrum}{}` &`\initvar[RGBSpectrum::ToRGBSpectrum]{ToRGBSpectrum}{}`() const {
+    return *this;
+}
+\end{lstlisting}
+
+{\initvar{RGBSpectrum::ToXYZ}{()}}、{\initvar{RGBSpectrum::FromXYZ}{()}}
+和{\initvar{RGBSpectrum::y}{()}}的实现都基于上面定义的函数\refvar{RGBToXYZ}{()}
+和\refvar{XYZToRGB}{()}，此处不再介绍。
+
+为了从任意采样的SPD创建RGB光谱，\refvar[RGBSpectrum::FromSampled]{FromSampled}{()}将
+光谱转换为XYZ然后转为RGB。
+它用实用函数\refvar{InterpolateSpectrumSamples}{()}按1nm步长
+在存在CIE匹配函数对应值的每个波长处代入该分段线性采样的光谱。
+然后它用该值计算黎曼和以逼近XYZ积分。
+\begin{lstlisting}
+`\refcode{RGBSpectrum Public Methods}{+=}\lastcode{RGBSpectrumPublicMethods}`
+static `\refvar{RGBSpectrum}{}` `\initvar[RGBSpectrum::FromSampled]{FromSampled}`(const `\refvar{Float}{}` *lambda, const `\refvar{Float}{}` *v,
+                               int n) {
+    `\refcode{Sort samples if unordered, use sorted for returned spectrum}{=}`
+    `\refvar{Float}{}` xyz[3] = { 0, 0, 0 };
+    for (int i = 0; i < `\refvar{nCIESamples}{}`; ++i) {
+        `\refvar{Float}{}` val = `\refvar{InterpolateSpectrumSamples}{}`(lambda, v, n,
+                                               `\refvar{CIE\_lambda}{}`[i]);
+        xyz[0] += val * `\refvar{CIE\_X}{}`[i];
+        xyz[1] += val * `\refvar{CIE\_Y}{}`[i];
+        xyz[2] += val * `\refvar{CIE\_Z}{}`[i];
+    }
+    `\refvar{Float}{}` scale = `\refvar{Float}{}`(`\refvar{CIE\_lambda}{}`[`\refvar{nCIESamples}{}`-1] - `\refvar{CIE\_lambda}{}`[0]) /
+        `\refvar{Float}{}`(CIE_Y_integral * `\refvar{nCIESamples}{}`);
+    xyz[0] *= scale;
+    xyz[1] *= scale;
+    xyz[2] *= scale;
+    return `\refvar[RGBSpectrum::FromXYZ]{FromXYZ}{}`(xyz);    
+}
+\end{lstlisting}
+
+\refvar{InterpolateSpectrumSamples}{()}接收可能是不规则采样的波长
+和SPD值集$(\lambda_i,v_i)$并在框住$\lambda$的两个样本值之间线性插值以
+返回在给定波长$\lambda$处的SPD值。
+定义于\refchap{实用工具}的函数\refvar{FindInterval}{()}在
+排了序的波长数组{\ttfamily lambda}中执行二分搜索寻找包含{\ttfamily l}的区间。
+\begin{lstlisting}
+`\refcode{Spectrum Method Definitions}{+=}\lastnext{SpectrumMethodDefinitions}`
+`\refvar{Float}{}` `\initvar{InterpolateSpectrumSamples}{}`(const `\refvar{Float}{}` *lambda, const `\refvar{Float}{}` *vals,
+                                 int n, `\refvar{Float}{}` l) {
+    if (l <= lambda[0])     return vals[0];
+    if (l >= lambda[n - 1]) return vals[n - 1];
+    int offset = `\refvar{FindInterval}{}`(n,
+        [&](int index) { return lambda[index] <= l; });
+    `\refvar{Float}{}` t = (l - lambda[offset]) / (lambda[offset+1] - lambda[offset]);
+    return `\refvar{Lerp}{}`(t, vals[offset], vals[offset + 1]);
+}
+\end{lstlisting}

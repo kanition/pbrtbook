@@ -364,7 +364,7 @@ CIE提出了“CIE 1931标准色度系统”。它们的实验方法都如\reffi
 
 实验还证明了颜色匹配恒常律，即互相匹配的颜色在观察环境变化后依然保持匹配。
 实验中在相应规定条件下视场为$2^{\circ}$的观察者
-称为\keyindex{CIE 1931标准观察者}{CIE 1931 standard observer}{}。
+称为\keyindex{CIE 1931标准色度观察者}{CIE 1931 standard colorimetric observer}{}。
 
 颜色匹配实验中有个重要问题是：以什么样的颜色作为三原色光？
 三刺激值的单位$\compcolor{R},\compcolor{G},\compcolor{B}$如何确定？
@@ -428,7 +428,7 @@ CIE依据历史与实验测定了匹配等能光谱色的RGB三刺激值，规�
             b & =\frac{B}{R+G+B}\, .
       \end{align}
 \end{definition}
-\begin{corollary}
+\begin{corollary}\label{corollary:chromaticity}
       色品坐标之和恒为1，即$r+g+b=1$。
 \end{corollary}
 这意味着色品坐标中只有两个独立分量。
@@ -439,12 +439,16 @@ CIE依据历史与实验测定了匹配等能光谱色的RGB三刺激值，规�
 称为\keyindex{光谱轨迹}{spectral locus}{}。
 该轨迹在CIE RGB三原色波长处与坐标轴相交\sidenote{请读者思考一下为什么。}，
 即在435.8nm处有$r=0,g=0$，在546.1nm处有$r=0,g=1$，在700nm处有$r=1,g=0$。
-光谱轨迹及其起点与终点的连线围成封闭区域，
-即构成\keyindex{CIE 1931 RGB 颜色空间}{CIE 1931 RGB color space}{}。
+光谱轨迹及其首尾连线围成封闭区域，
+即构成\keyindex{CIE 1931 RGB 颜色空间}{CIE 1931 RGB color space}{}
+\sidenote{它包含了人眼可见的全部颜色。}。
 注意与\reffig{5.ex08}结合起来思考波长较短的轨迹为何进入$r<0$的半平面。
 \begin{figure}[htbp]
       \centering\includegraphics[width=0.75\linewidth]{chap05/CIE1931rgxy.png}
-      \caption{CIE $rg$色品空间。其中E为等能白光。}
+      \caption{CIE $rg$色品空间。其中E为等能白光；
+      $\text{C}_{\mathrm{r}},\text{C}_{\mathrm{g}},\text{C}_{\mathrm{b}}$分别为
+      $\compcolor{X},\compcolor{Y},\compcolor{Z}$三原色的色品点。
+      $\text{C}_{\mathrm{r}}$与$\text{C}_{\mathrm{b}}$的连线为零亮度线。}
       \label{fig:5.ex09}
 \end{figure}
 
@@ -454,3 +458,58 @@ CIE依据历史与实验测定了匹配等能光谱色的RGB三刺激值，规�
       其色品点一定在$A$与$B$色品点所连的线段上。
 \end{corollary}
 
+虽然RGB颜色空间的$\bar{r}(\lambda),\bar{g}(\lambda),\bar{b}(\lambda)$
+可用于色度计算，但其出现的负值不易理解且使用不便。
+因此CIE定义了三种假想的三原色$\compcolor{X},\compcolor{Y},\compcolor{Z}$，
+构建新的颜色空间以消除负值。其在构建过程中还考虑了以下问题：
+\begin{enumerate}
+      \item 规定$\compcolor{X}$和$\compcolor{Z}$只代表色度，与亮度无关。
+            光亮度只与$\compcolor{Y}$的刺激值$Y$成正比。
+            称$\compcolor{X}$和$\compcolor{Z}$在色品图中的连线为\keyindex{零亮度线}{alychne}{}。
+            因为$\compcolor{R},\compcolor{G},\compcolor{B}$的光亮度之比为$1:4.5907:0.0601$，
+            故零亮度线上的色品坐标应满足
+            \begin{align}
+                  r+4.5907g+0.0601b=0\, ,
+            \end{align}
+            代入$b=1-r-g$得
+            \begin{align}
+                  0.9399r+4.5306g+0.0601=0\, .
+            \end{align}
+      \item 所有光谱三刺激值均为非负数。因此$\compcolor{X},\compcolor{Y},\compcolor{Z}$所
+            围成的三角形必须能包围整个光谱轨迹。
+      \item $rg$色品图中光谱轨迹从540nm附近到700nm几乎是一条直线，
+            这段线段上的任意两种颜色加色混合可匹配两色之间的各种光谱色。
+            因此希望$\compcolor{X}$和$\compcolor{Y}$的连线与该线段重合，
+            使其只与$\compcolor{X}$和$\compcolor{Y}$的变化有关，与$\compcolor{Z}$无关。
+\end{enumerate}
+
+此外$\compcolor{YZ}$边取光谱轨迹在波长503nm处的切线。
+于是直线$\compcolor{XY}$、$\compcolor{YZ}$和$\compcolor{XZ}$均得以确定。
+它们的交点即$\compcolor{X},\compcolor{Y},\compcolor{Z}$在$rg$色品图中的位置。
+以$\compcolor{X},\compcolor{Y},\compcolor{Z}$为三原色的颜色空间
+即\keyindex{CIE 1931 XYZ 颜色空间}{CIE 1931 XYZ color space}{}。
+注意$\compcolor{X},\compcolor{Y},\compcolor{Z}$是现实中观察不到的理论假想色。
+在该颜色空间中，颜色匹配方程为
+\begin{align}
+      \compcolor{C}\equiv X\compcolor{X}+Y\compcolor{Y}+Z\compcolor{Z}\, .
+\end{align}
+其中$X,Y,Z$为相应的三刺激值。
+依据构建过程中考虑的第1点问题，$Y$的光谱分布就是光谱光视效率函数，即
+\begin{align}
+      Y(\lambda)=V(\lambda)\, .
+\end{align}
+与$X,Y,Z$对应的XYZ色品坐标为
+\begin{align}
+      x & =\frac{X}{X+Y+Z}\, , \\
+      y & =\frac{Y}{X+Y+Z}\, , \\
+      z & =\frac{Z}{X+Y+Z}\, .
+\end{align}
+它同样满足推论\ref{corollary:chromaticity}，即$x+y+z=1$。
+
+构建了XYZ颜色空间后面临的首要问题是，如何在该空间内表示颜色？
+因为其所用的三原色$\compcolor{X},\compcolor{Y},\compcolor{Z}$在现实中不存在，
+所以无法通过实验直接测定XYZ三刺激值，只能通过数学计算进行转化。
+
+我这里介绍RGB到XYZ颜色空间的转化推导过程。
+首先，从XYZ的构建过程中，我们可以获取到三原色$\compcolor{R},\compcolor{G},\compcolor{B}$在
+XYZ空间中的坐标：

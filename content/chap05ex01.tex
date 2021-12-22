@@ -2,7 +2,7 @@
 
 \begin{remark}
       本节内容不是原书内容，而是译者根据有关资料\citep{978-7-5640-0658-7,
-            wiki:solidangle,GB3102.6-93,enwiki:1052681830,
+            wiki:solidangle,GB3102.6-93,enwiki:1052681830,enwiki:SRGB,
             wiki:candela,Hoffmann2015,wiki:eye,BERTALMIO2020131}补充的，请酌情参考和斧正。
 \end{remark}
 
@@ -248,7 +248,7 @@ $\wideparen{BF}$的弧长为$r\sin\theta\mathrm{d}\varphi$；
 \keyindex{光亮度}{luminance}{}与辐射亮度对应，单位为cd$/$m$^2$。
 
 \subsection{色度学}\label{sub:色度学}
-\keyindex{色度学}{colorimetry}{}在物理上量化描述人类颜色知觉的科学技术。
+\keyindex{色度学}{colorimetry}{}是在物理上量化描述人类颜色知觉的科学技术。
 \subsubsection*{人眼视觉特性与颜色视觉理论}
 人眼（\reffig{5.ex04}）中负责感光的部分是\keyindex{视网膜}{retina}{}，
 其中具有两种\keyindex{感光细胞}{photoreceptor cell}{}，
@@ -296,10 +296,10 @@ $\wideparen{BF}$的弧长为$r\sin\theta\mathrm{d}\varphi$；
 \end{figure}
 
 1853年，德国学者格拉斯曼(Hermann Günther Gra{\ss}mann)总结出加色混合的性质，
-即\keyindex{格拉斯曼定律}{Grassmann's laws}{}，为现代色度学的奠定了基础。
+即格拉斯曼定律，为现代色度学奠定了基础。
 
 \begin{proposition}
-      格拉斯曼定律的现代解释有四点内容：
+      \keyindex{格拉斯曼定律}{Grassmann's laws}{}的现代解释有四点内容：
       \begin{enumerate}
             \item 人的视觉只能分辨颜色的三种变化（例如明度、色调、饱和度）。
             \item 在由两种成分组成的混合色光中，若一种成分连续变化，则混合色光外观也连续变化。
@@ -356,7 +356,7 @@ CIE提出了“CIE 1931标准色度系统”。它们的实验方法都如\reffi
 若分别以$\compcolor{C},\compcolor{R},\compcolor{G},\compcolor{B}$表示
 被匹配的颜色以及红、绿、蓝三原色光的单位，以实数$C,R,G,B$表示相应颜色的数量，
 则颜色匹配方程可写作
-\begin{align}
+\begin{align}\label{eq:colormatchrgb}
       C\compcolor{C}\equiv R\compcolor{R}+G\compcolor{G}+B\compcolor{B}\, ,
 \end{align}
 其中符号“$\equiv$”表示颜色外观相同，$R,G,B$可以为负，$C=R+G+B$。
@@ -491,8 +491,8 @@ CIE依据历史与实验测定了匹配等能光谱色的RGB三刺激值，规�
 即\keyindex{CIE 1931 XYZ 颜色空间}{CIE 1931 XYZ color space}{}。
 注意$\compcolor{X},\compcolor{Y},\compcolor{Z}$是现实中观察不到的理论假想色。
 在该颜色空间中，颜色匹配方程为
-\begin{align}
-      \compcolor{C}\equiv X\compcolor{X}+Y\compcolor{Y}+Z\compcolor{Z}\, .
+\begin{align}\label{eq:colormatchxyz}
+      C\compcolor{C}\equiv X\compcolor{X}+Y\compcolor{Y}+Z\compcolor{Z}\, .
 \end{align}
 其中$X,Y,Z$为相应的三刺激值。
 依据构建过程中考虑的第1点问题，$Y$的光谱分布就是光谱光视效率函数，即
@@ -521,9 +521,20 @@ CIE XYZ 颜色匹配函数$\bar{x}(\lambda),\bar{y}(\lambda),\bar{z}(\lambda)$�
       \caption{CIE XYZ颜色匹配函数（$2^{\circ}$视场），数据来源于\protect\url{http://www.cvrl.org}。}
       \label{fig:5.ex10}
 \end{figure}
+
+类似于RGB，对于光谱分布为$S(\lambda)$的光刺激，相应的XYZ值通过在颜色匹配函数上积分算得：
+\begin{align}
+      X & =k\int \bar{x}(\lambda)S(\lambda)\mathrm{d}\lambda\, , \\
+      Y & =k\int \bar{y}(\lambda)S(\lambda)\mathrm{d}\lambda\, , \\
+      Z & =k\int \bar{z}(\lambda)S(\lambda)\mathrm{d}\lambda\, ,
+\end{align}
+其中$k$为适当的规范化系数。
+
 \begin{figure}[htbp]
-      \centering\includegraphics[width=0.75\linewidth]{chap05/CIE1931xyCIERGB.pdf}
-      \caption{CIE 1931 XYZ颜色空间色品图。图中的三角形标出了CIE RGB三原色的位置。}
+      \centering\includegraphics[width=0.6\linewidth]{chap05/CIE1931xyCIERGB.pdf}
+      \caption{CIE 1931 XYZ颜色空间色品图。图中的三角形标出了CIE RGB三原色的位置。
+            注意因为当下显示和打印设备的色域均不能覆盖整个颜色空间，加之图片格式的限制，
+            所以该图中的一部分颜色一定会显示得不准确。}
       \label{fig:5.ex11}
 \end{figure}
 
@@ -532,8 +543,165 @@ CIE XYZ 颜色匹配函数$\bar{x}(\lambda),\bar{y}(\lambda),\bar{z}(\lambda)$�
 截取平面$X+Y+Z=1$再向$XY$平面投影的结果（\reffig{5.ex12}）。
 \begin{figure}[htbp]
       \centering\includegraphics[width=0.5\linewidth]{chap05/Projectionandchromaticityplane.pdf}
+      \put(-80,38){\color{white}$X$}
+      \put(-165,130){\color{white}$Y$}
+      \put(-160,4){\color{white}$Z$}
       \caption{XYZ体与$xy$色品图。左图是XYZ体，右上是截平面$X+Y+Z=1$，
             右下是将截平面投影到$XY$平面得到的$xy$色品图。图示来自\protect\citet{BERTALMIO2020131}。}
       \label{fig:5.ex12}
 \end{figure}
 
+\subsubsection*{颜色空间的转化}
+由于选择的三原色以及三刺激值单位不同，出现了多种颜色空间。
+这里我们介绍RGB与XYZ颜色空间相互转化的推导过程。
+
+以XYZ转化到RGB空间为例。XYZ为旧空间，RGB为新空间。
+设新空间的三原色$\compcolor{R},\compcolor{G},\compcolor{B}$在
+旧空间中的三刺激值为$X_i,Y_i,Z_i,(i=\mathrm{r},\mathrm{g},\mathrm{b})$，即
+\begin{align}\label{eq:colorbasis}
+      \compcolor{R} & =X_\mathrm{r}\compcolor{X}+Y_\mathrm{r}\compcolor{Y}+Z_\mathrm{r}\compcolor{Z}\, , \\
+      \compcolor{G} & =X_\mathrm{g}\compcolor{X}+Y_\mathrm{g}\compcolor{Y}+Z_\mathrm{g}\compcolor{Z}\, , \\
+      \compcolor{B} & =X_\mathrm{b}\compcolor{X}+Y_\mathrm{b}\compcolor{Y}+Z_\mathrm{b}\compcolor{Z}\, .
+\end{align}
+对照颜色匹配方程\refeq{colormatchrgb}与\refeq{colormatchxyz}，可得
+\begin{align}
+      X\compcolor{X}+Y\compcolor{Y}+Z\compcolor{Z}=R\compcolor{R}+G\compcolor{G}+B\compcolor{B}\, .
+\end{align}
+联立以上式子，由对应系数相等整理可得
+\begin{align}
+      \left[\begin{array}{c}
+                  X \\Y\\Z
+            \end{array}\right]=
+      \left[\begin{array}{ccc}
+                  X_\mathrm{r} & X_\mathrm{g} & X_\mathrm{b} \\
+                  Y_\mathrm{r} & Y_\mathrm{g} & Y_\mathrm{b} \\
+                  Z_\mathrm{r} & Z_\mathrm{g} & Z_\mathrm{b}
+            \end{array}\right]
+      \left[\begin{array}{c}
+                  R \\G\\B
+            \end{array}\right]\, .
+\end{align}
+上式表明两种颜色空间是线性转换关系，只要知道九个系数$X_i,Y_i,Z_i,(i=\mathrm{r},\mathrm{g},\mathrm{b})$即可。
+实际中更常见的是这些系数待定，但知道对应的色品坐标$x_i,y_i,z_i,(i=\mathrm{r},\mathrm{g},\mathrm{b})$。设
+\begin{align}
+      C_i=X_i+Y_i+Z_i\, ,\quad (i=\mathrm{r},\mathrm{g},\mathrm{b})\, ,
+\end{align}
+则有
+\begin{align}\quad
+      X_i=C_ix_i\, ,\quad Y_i=C_iy_i\, ,\quad Z_i=C_iz_i\, ,\quad (i=\mathrm{r},\mathrm{g},\mathrm{b})\, .
+\end{align}
+记
+\begin{align}
+      P & =\left[\begin{array}{ccc}
+                  x_\mathrm{r} & x_\mathrm{g} & x_\mathrm{b} \\
+                  y_\mathrm{r} & y_\mathrm{g} & y_\mathrm{b} \\
+                  z_\mathrm{r} & z_\mathrm{g} & z_\mathrm{b}
+            \end{array}\right]\, , \\
+      D & =\left[\begin{array}{ccc}
+                  C_\mathrm{r} &              &              \\
+                               & C_\mathrm{g} &              \\
+                               &              & C_\mathrm{b}
+            \end{array}\right]\, ,
+\end{align}
+于是
+\begin{align}
+      [X\quad Y\quad Z]^{\mathrm{T}}=PD[R\quad G\quad B]^{\mathrm{T}}\, .
+\end{align}
+其中矩阵$P$是已知的，还需确定$D$中的三个系数$C_i$，
+一般我们通过选择一种颜色（例如参照白）
+在旧空间的三刺激值$X_0,Y_0,Z_0$以及规定它在新空间的三刺激值$R_0,G_0,B_0$来求解，即
+\begin{align}
+      [X_0\quad Y_0\quad Z_0]^{\mathrm{T}}=PD[R_0\quad G_0\quad B_0]^{\mathrm{T}}\, .
+\end{align}
+可解得
+\begin{align}
+      \left[\begin{array}{c}
+                  C_\mathrm{r} \\C_\mathrm{g}\\C_\mathrm{b}
+            \end{array}\right]=\left(P
+      \left[\begin{array}{ccc}
+                  R_0 &     &     \\
+                      & G_0 &     \\
+                      &     & B_0
+            \end{array}\right]\right)^{-1}
+      \left[\begin{array}{c}
+                  X_0 \\Y_0\\Z_0
+            \end{array}\right]\, .
+\end{align}
+此时转化关系得以完全确定。还可得逆转化关系相应为
+\begin{align}
+      [R\quad G\quad B]^{\mathrm{T}}=(PD)^{-1}[X\quad Y\quad Z]^{\mathrm{T}}\, .
+\end{align}
+
+对于CIE 1931 RGB颜色空间与XYZ空间的转化，以等能白光为参照取
+\begin{align}
+      \begin{array}{lll}
+            x_\mathrm{r}=0.73467\, , & x_\mathrm{g}=0.27376\, , & x_\mathrm{b}=0.16658\, , \\
+            y_\mathrm{r}=0.26533\, , & y_\mathrm{g}=0.71741\, , & y_\mathrm{b}=0.00886\, , \\
+            X_0=Y_0=Z_0=1\, ,        & R_0=G_0=B_0=1\, .        &
+      \end{array}
+\end{align}
+算得
+\begin{align}
+      PD        & =\left[\begin{array}{rrr}
+                  0.4900  & 0.3100 & 0.2000 \\
+                  0.1770  & 0.8124 & 0.0106 \\
+                  -0.0000 & 0.0100 & 0.9900
+            \end{array}\right]\, , \\
+      (PD)^{-1} & =\left[\begin{array}{rrr}
+                  2.3647  & -0.8966 & -0.4681 \\
+                  -0.5152 & 1.4264  & 0.0887  \\
+                  0.0052  & -0.0144 & 1.0092
+            \end{array}\right]\, .
+\end{align}
+
+\keyindex{sRGB颜色空间}{standard RGB color space}{}是惠普与微软等企业
+于1996年共同开发的用于显示器、打印机以及互联网的一种色域标准。
+对于sRGB的线性值与XYZ空间的转化，以D65为参照白\sidenote{D65是CIE规定的标准日光光源，色温约6500{\normalfont K}。}取
+\begin{align}
+      \begin{array}{lll}
+            x_\mathrm{r}=0.6400\, , & x_\mathrm{g}=0.3000\, , & x_\mathrm{b}=0.1500\, , \\
+            y_\mathrm{r}=0.3300\, , & y_\mathrm{g}=0.6000\, , & y_\mathrm{b}=0.0600\, , \\
+            x_0=0.3127\, ,          & y_0=0.3290\, ,          & Y_0=1.0000\, ,          \\
+            R_0=G_0=B_0=1\, .       &                         &
+      \end{array}
+\end{align}
+算得
+\begin{align}
+      PD        & =\left[\begin{array}{rrr}
+                  0.4124 & 0.3576 & 0.1805 \\
+                  0.2126 & 0.7152 & 0.0722 \\
+                  0.0193 & 0.1192 & 0.9505
+            \end{array}\right]\, , \\
+      (PD)^{-1} & =\left[\begin{array}{rrr}
+                  3.2410  & -1.5374 & -0.4986 \\
+                  -0.9692 & 1.8760  & 0.0416  \\
+                  0.0556  & -0.2040 & 1.0570
+            \end{array}\right]\, .
+\end{align}
+
+sRGB在完成RGB线性值（在0到1之间）的计算后，还要进行非线性的伽马校正才得到最终结果。
+对于线性值$C(=R,G,B)$，相应最终值为
+\begin{align}
+      C_{\text{sRGB}}=\left\{
+      \begin{array}{ll}
+            \displaystyle12.92C\, ,                       & \text{若}C\le0.0031308\, , \\
+            \displaystyle1.055C^{\frac{1}{2.4}}-0.055\, , & \text{其他}\, .
+      \end{array}
+      \right.
+\end{align}
+由最终值到线性值的逆变换为
+\begin{align}
+      C=\left\{
+      \begin{array}{ll}
+            \displaystyle\frac{C_{\text{sRGB}}}{12.92}\, ,                          & \text{若}C_{\text{sRGB}}\le0.04045\, , \\
+            \displaystyle\left(\frac{C_{\text{sRGB}}+0.055}{1.055}\right)^{2.4}\, , & \text{其他}\, .
+      \end{array}
+      \right.
+\end{align}
+
+\reffig{5.ex13}展示了多种\keyindex{色域}{color gamut}{}标准。
+\begin{figure}[htbp]
+      \centering\includegraphics[width=0.6\linewidth]{chap05/CIE1931xygamutcomparison.pdf}
+      \caption{一些RGB与CMYK色域在CIE 1931 $xy$色品图中的范围。}
+      \label{fig:5.ex13}
+\end{figure}

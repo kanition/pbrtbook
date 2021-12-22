@@ -353,7 +353,8 @@ XYZ颜色的$y$系数与\keyindex{光亮度}{luminance}{}密切相关，
         \end{array}\right]\, .
 \end{align*}
 
-pbrt中实现的转换例程是基于为高清电视定义的RGB光谱标准集的。
+pbrt中实现的转换例程是基于为高清电视定义的RGB光谱标准集的
+\sidenote{译者注：这些系数的来由可见译者补充的\refsub{色度学}。}。
 \begin{lstlisting}
 `\refcode{Spectrum Utility Declarations}{+=}\lastnext{SpectrumUtilityDeclarations}`
 inline void `\initvar{XYZToRGB}{}`(const `\refvar{Float}{}` xyz[3], `\refvar{Float}{}` rgb[3]) {

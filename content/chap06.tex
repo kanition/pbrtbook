@@ -1,5 +1,36 @@
+\chapterimage{Pictures/chap06/landscape-dof-960x1920.png}
 \chapter{相机模型}\label{chap:相机模型}
+\setcounter{sidenote}{1}
+
+在第\refchap{绪论}中，我们介绍了计算机图形学中常用的针孔相机模型。
+该模型很容易描述和模拟，但它忽略了真实相机中透镜对于穿过的光线具有的重要效应。
+例如，针孔相机渲染的所有东西都是清晰对焦的——真实透镜系统不可能达到这种状态。
+这样的图像常常看得出来是计算机生成的。
+更一般地，离开透镜系统的辐射分布和进入它的分布有很大区别；
+对透镜的这种效应建模对于准确模拟成像的辐射度量非常重要。
+
+相机透镜系统也会引入各种影响其所构建图像的\keyindex{像差}{aberration}{}；
+例如，因为能到达胶片或传感器边缘的光比中心处更少，
+\keyindex{暗角}{vignetting}{}\sidenote{译者注：也称晕影。}导致图像边缘变暗。
+透镜也可以造成\keyindex{枕状畸变}{pincushion distortion}{distortion畸变}或\keyindex{桶状畸变}{barrel distortion}{distortion畸变}，
+即让直线成像为曲线。
+尽管透镜设计者尽力在其设计中最小化像差，但它们仍可对图像有明显作用。
+
+像第\refchap{形状}的\refvar{Shape}{}那样，pbrt中的相机也表示为抽象基类。
+本章介绍类\refvar{Camera}{}及其两个关键方法\refvar[GenerateRay]{Camera::GenerateRay}{()}
+和\refvar[GenerateRayDifferential]{Camera::GenerateRayDifferential}{()}。
+第一个方法计算对应于胶片平面上样本位置的世界空间光线。
+通过基于不同成像模型的不同方法生成这些光线，pbrt中的相机可以创建同一3D场景的多种图像。
+第二种方法不仅生成该光线还计算采样该光线的图像区域的信息；
+例如该信息用于第\refchap{纹理}的抗锯齿计算。
+在\refsub{采样相机2}将介绍一些额外的\refvar{Camera}{}方法以支持双向光传输算法。
+
+本章中，我们将展示\refvar{Camera}{}接口的一些实现，
+从实现具有一定普遍性的理想针孔模型开始，
+到和真实世界相机一样能模拟光穿过一组玻璃透镜元件成像的逼真模型结束。
 
 \input{content/chap0601.tex}
 
 \input{content/chap0604.tex}
+
+{\noindent\hfil$=========$\hfil{\color{red}{施工分割线}}\hfil$=========$\

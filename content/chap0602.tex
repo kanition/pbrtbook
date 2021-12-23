@@ -1,12 +1,15 @@
-\section{投影相机模型}\label{sec:相机模型}
+\section{投影相机模型}\label{sec:投影相机模型}
 
-三维计算机图形学中的一个基本问题是我们以什么样的视角去观察物体：如何将三维场景投射到二维图像上进行显示。
-大多数的经典方法都可以用$4 \time 4$的投影变换矩阵来表达。
-因此，我们将引入一个可投影的相机类，即ProjectiveCamera，然后在此基础上定义两个相机模型。
-第一个模型实现了正交投影，另一个模型实现了透视投影--两种经典且广泛使用的投影。
-
+三维计算机图形学中的一个基本问题是{\itshape 3D视见问题}：
+如何将三维场景投影到二维图像上进行显示。
+大多数经典方法都可以用$4\times4$的\keyindex{投影变换}{projective transformation}{transformation变换}矩阵来表达。
+因此，我们将引入一个投影矩阵相机类\refvar{ProjectiveCamera}{}，
+然后在此基础上定义两个相机模型。
+第一个实现了\keyindex{正交投影}{orthographic projection}{projection投影}，
+另一个实现了\keyindex{透视投影}{perspective projection}{projection投影}——
+两种经典且广泛使用的\keyindex{投影}{projection}{}。
 \begin{lstlisting}
-`\initcode{Camera Declarations}{=}\initnext{CameraDeclarations}`
+`\initcode{Camera Declarations}{+=}\lastcode{CameraDeclarations}`
 class `\initvar{ProjectiveCamera}{}` : public `\refvar{Camera}{}` {
 public:
     `\refcode{ProjectiveCamera Public Methods}{}`
@@ -15,85 +18,91 @@ protected:
 };
 \end{lstlisting}
 
-还有三个坐标系（包含在图6.1中）对定义和讨论投影相机很有用。
+还有三个坐标系（总结于\reffig{6.1}中）对定义和讨论投影相机很有用。
+\begin{itemize}
+    \item \keyindex{屏幕空间}{screen space}{}：
+          屏幕空间定义在胶片平面上。相机将相机空间中的物体投影到胶片平面上；
+          \keyindex{屏幕窗口}{screen window}{}内的部分在生成的图像中是可见的。
+          屏幕空间的深度$z$值从0变到1，分别对应近处和远处截平面的点。
+          注意，虽然这称为“屏幕”空间，但它仍然是一个三维坐标系，因为$z$值是有意义的。
+    \item \keyindex{规范化设备坐标}{normalized device coordinate}{}(NDC){\sffamily 空间}：
+          这是被渲染的实际图像的坐标系。对于$x$和$y$，该空间范围从$(0,0)$变到$(1,1)$，
+          其中$(0,0)$是图像的左上角。深度值与屏幕空间中的相同，线性变换将屏幕空间转换为NDC空间。
+    \item \keyindex{栅格空间}{raster space}{}\sidenote{译者注：也称光栅空间。}：
+          这与NDC空间几乎相同，除了$x$和$y$坐标从$(0,0)$变到(resolution.x, resolution.y)
+          \sidenote{译者注：resolution指分辨率。}。
+\end{itemize}
 
-屏幕空间。屏幕空间被定义在胶片平面上。
-摄影机将摄影空间中的物体投射到胶片平面上；屏幕窗口内的部分在生成的图像中是可见的。
-屏幕空间的深度值从0到1，分别对应于近处和远处剪裁平面的点。
-注意，虽然这被称为 "屏幕"空间，但它仍然是一个三维坐标系，因为数值是有意义的。
+投影相机用$4\times4$矩阵在所有这些空间之间进行转换，
+但具有特殊成像特性的相机不必用矩阵表示所有这些转换。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.75\linewidth]{chap06/Cameracoordinatespaces.eps}
+    \put(-280,0){\small 相机空间：$(0,0,0)$}
+    \put(-270,60){\small NDC：$(0,0,0)$}
+    \put(-220,110){\small NDC：$(0,0,1)$}
+    \put(-160,20){\small $z=\text{near}$}
+    \put(-160,10){\small NDC：$(1,1,0)$}
+    \put(-160,0){\small 栅格：$(\text{res}.x,\text{res}.y,0)$}
+    \put(-70,35){\small $z=\text{far}$}
+    \put(-70,25){\small NDC：$(1,1,1)$}
+    \put(-70,15){\small 栅格：$(\text{res}.x,\text{res}.y,1)$}
+    \caption{几个与相机相关的坐标空间常用于简化\protect\refvar{Camera}{}的实现。
+        相机类持有它们之间的变换。世界空间中的场景物体由相机查看，它位于相机空间原点，并指向$+z$轴。
+        近处和远处平面之间的物体被投影到相机空间中的胶片平面$z=\text{near}$上。
+        胶片平面在栅格空间中$z=0$处，其中$x$和$y$范围从$(0,0)$变到(resolution.x, resolution.y)。
+        规范化设备坐标（NDC）空间将栅格空间归一化，因此$x$和$y$范围从$(0,0)$变到$(1,1)$。}
+    \label{fig:6.1}
+\end{figure}
 
-规范化设备坐标（Normalized device coordinate NDC）空间。
-这是被渲染的实际图像的坐标系统。在和，这个空间的范围从(0, 0)到 (1, 1)，其中(0, 0)是图像的左上角。
-深度值与屏幕空间中的相同，通过线性变换将屏幕空间转换为NDC空间。
-
-光栅空间。这与NDC空间几乎相同，只是和坐标的范围从(0, 0)到屏幕分辨率的范围 。
-投影相机使用矩阵在所有这些空间之间进行转换，但具有不寻常成像特性的相机不一定能用矩阵表示所有这些转换。
-
-投影相机使用矩阵在所有这些空间之间进行转换，但具有不寻常成像特征的相机不一定能用矩阵表示所有这些转换。
-
-图6.1: 几个与相机相关的坐标空间通常被用来简化相机的实现。摄像机类持有它们之间的变换。
-世界空间中的场景对象由摄像机查看，它位于摄像机空间的原点，并沿轴线指向+Z。
-近平面和远平面之间的物体被投射到摄像机空间中的胶片平面上。
-胶片平面在栅格空间中，其中和的范围从(0, 0)到(分辨率X，分辨率Y)。
-归一化设备坐标（NDC）空间将栅格空间归一化，因此和的范围从(0, 0)到(0, 1) 。
-
-除了相机基类要求的参数外，投影相机还需要投影变换矩阵、图像的屏幕空间范围以及与景深有关的额外参数。景深将在本节末尾描述和实现，它模拟了真实镜头系统中出现的失焦物体的模糊性。
+除了基类\refvar{Camera}{}要求的参数外，\refvar{ProjectiveCamera}{}还接收投影变换矩阵、
+图像的屏幕空间范围以及与景深有关的额外参数。
+\keyindex{景深}{depth of field}{}将在本节末尾介绍和实现，
+它模拟了真实透镜系统中出现的失焦物体的模糊性。
 \begin{lstlisting}
-`\initcode{ProjectiveCamera Public Methods}{=}\initnext{ProjectiveCamera Public Methods}`
-ProjectiveCamera(const AnimatedTransform &CameraToWorld, 
-        const Transform &CameraToScreen, const Bounds2f &screenWindow,
-        Float shutterOpen, Float shutterClose, Float lensr, Float focald,
-        Film *film, const Medium *medium)
-    : Camera(CameraToWorld, shutterOpen, shutterClose, film, medium),
-      CameraToScreen(CameraToScreen) {
-    <<Initialize depth of field parameters>> 
-       lensRadius = lensr;
-       focalDistance = focald;
-
-    <<Compute projective camera transformations>> 
-        <<Compute projective camera screen transformations>> 
-            ScreenToRaster = Scale(film->fullResolution.x, 
-                                   film->fullResolution.y, 1) *
-                Scale(1 / (screenWindow.pMax.x - screenWindow.pMin.x),
-                      1 / (screenWindow.pMin.y - screenWindow.pMax.y), 1) *
-                Translate(Vector3f(-screenWindow.pMin.x, -screenWindow.pMax.y, 0));
-        RasterToScreen = Inverse(ScreenToRaster);
-
-       RasterToCamera = Inverse(CameraToScreen) * RasterToScreen;
+`\initcode{ProjectiveCamera Public Methods}{=}`
+`\refvar{ProjectiveCamera}{}`(const `\refvar{AnimatedTransform}{}` &CameraToWorld, 
+        const `\refvar{Transform}{}` &CameraToScreen, const `\refvar{Bounds2f}{}` &screenWindow,
+        `\refvar{Float}{}` shutterOpen, `\refvar{Float}{}` shutterClose, `\refvar{Float}{}` lensr, `\refvar{Float}{}` focald,
+        `\refvar{Film}{}` *film, const `\refvar{Medium}{}` *medium)
+    : `\refvar{Camera}{}`(CameraToWorld, shutterOpen, shutterClose, film, medium),
+      `\refvar{CameraToScreen}{}`(CameraToScreen) {
+    `\refcode{Initialize depth of field parameters}{}`
+    `\refcode{Compute projective camera transformations}{}`
 }
 \end{lstlisting}
 
-ProjectiveCamera的实现将投影变换传递给这里显示的基类构造函数。这个变换给出了相机到屏幕的投影；由此，构造函数可以很容易地计算出其他需要的变换矩阵，以从光栅空间变换到相机空间。
-
+\refvar{ProjectiveCamera}{}的实现将投影变换传递给这里展示的基类构造函数。
+该变换给出了相机到屏幕的投影；
+由此，构造函数能轻松算出从栅格空间到相机空间一路所需的其他变换。
 \begin{lstlisting}
-<<Compute projective camera transformations>>= 
-<<Compute projective camera screen transformations>> 
-   ScreenToRaster = Scale(film->fullResolution.x, 
-                          film->fullResolution.y, 1) *
-       Scale(1 / (screenWindow.pMax.x - screenWindow.pMin.x),
-             1 / (screenWindow.pMin.y - screenWindow.pMax.y), 1) *
-       Translate(Vector3f(-screenWindow.pMin.x, -screenWindow.pMax.y, 0));
-   RasterToScreen = Inverse(ScreenToRaster);
-
-RasterToCamera = Inverse(CameraToScreen) * RasterToScreen;
-<<ProjectiveCamera Protected Data>>= 
-Transform CameraToScreen, RasterToCamera;
+`\initcode{Compute projective camera transformations}{=}`
+`\refcode{Compute projective camera screen transformations}{}`
+`\refvar{RasterToCamera}{}` = `\refvar[Transform::Inverse]{Inverse}{}`(CameraToScreen) * `\refvar{RasterToScreen}{}`;
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{ProjectiveCamera Protected Data}{=}\initnext{ProjectiveCameraProtectedData}`
+`\refvar{Transform}{}` `\initvar{CameraToScreen}{}`, `\initvar{RasterToCamera}{}`;
 \end{lstlisting}
 
-在构造函数中唯一需要计算的非平凡的变换是屏幕到光栅的投影。
-在下面的代码中，请注意变换的组成（从下往上看），我们从屏幕空间的一个点开始，进行平移，使屏幕的左上角位于原点，然后通过屏幕宽度和高度的倒数进行缩放，给我们一个坐标在0到1之间的点（这些是NDC坐标）。
-最后，我们用栅格化空间的分辨率进行缩放，这样我们最终就能覆盖整个栅格范围，直至整个栅格分辨率。
-这里有一个重要的细节，那就是坐标在这个转换中是倒置的；这是必要的，因为增加的数值在屏幕坐标中是向正方向移动的，但在栅格坐标中是向负方向移动的。
-
-% TODO: add reference
+在构造函数中唯一要计算的重要变换是屏幕到栅格的投影。
+在下面的代码中，请注意变换的组成（从下往上看），
+我们从屏幕空间的一个点开始，先平移使得屏幕左上角位于原点，
+然后用屏幕宽度和高度的倒数进行缩放，
+得到一个$x$和$y$坐标在0到1之间的点（这些是NDC坐标）。
+最后，我们用栅格化分辨率进行缩放，这样我们最终就能完全覆盖
+从$(0,0)$直到整个栅格分辨率的栅格范围。
+这里一个重要细节是$y$坐标被该变换倒置了；
+这是必要的，因为增加的$y$值在屏幕坐标中是向上移动但在栅格坐标中是向下的。
 \begin{lstlisting}
-<<Compute projective camera screen transformations>>= 
-ScreenToRaster = Scale(film->fullResolution.x, 
-                       film->fullResolution.y, 1) *
-    Scale(1 / (screenWindow.pMax.x - screenWindow.pMin.x),
-          1 / (screenWindow.pMin.y - screenWindow.pMax.y), 1) *
-    Translate(Vector3f(-screenWindow.pMin.x, -screenWindow.pMax.y, 0));
-RasterToScreen = Inverse(ScreenToRaster);
-<<ProjectiveCamera Protected Data>>+=  
-Transform ScreenToRaster, RasterToScreen;
+`\initcode{Compute projective camera screen transformations}{=}`
+`\refvar{ScreenToRaster}{}` = `\refvar{Scale}{}`(film->`\refvar{fullResolution}{}`.x, 
+                       film->`\refvar{fullResolution}{}`.y, 1) *
+    `\refvar{Scale}{}`(1 / (screenWindow.`\refvar{pMax}{}`.x - screenWindow.`\refvar{pMin}{}`.x),
+          1 / (screenWindow.`\refvar{pMin}{}`.y - screenWindow.`\refvar{pMax}{}`.y), 1) *
+    `\refvar{Translate}{}`(`\refvar{Vector3f}{}`(-screenWindow.`\refvar{pMin}{}`.x, -screenWindow.`\refvar{pMax}{}`.y, 0));
+`\refvar{RasterToScreen}{}` = `\refvar[Transform::Inverse]{Inverse}{}`(`\refvar{ScreenToRaster}{}`);
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{ProjectiveCamera Protected Data}{+=}\lastnext{ProjectiveCameraProtectedData}`
+`\refvar{Transform}{}` `\initvar{ScreenToRaster}{}`, `\initvar{RasterToScreen}{}`;
 \end{lstlisting}

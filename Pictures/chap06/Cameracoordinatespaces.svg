@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="Layer_1"
+   data-name="Layer 1"
+   viewBox="0 0 704.93 336.88"
+   version="1.1"
+   sodipodi:docname="Cameracoordinatespaces.svg"
+   inkscape:version="1.0.1 (3bc2e813f5, 2020-09-07)">
+  <metadata
+     id="metadata1104">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     id="namedview1102"
+     showgrid="false"
+     inkscape:zoom="1.4384281"
+     inkscape:cx="272.9983"
+     inkscape:cy="240.03023"
+     inkscape:window-x="1912"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="Layer_1" />
+  <defs
+     id="defs835">
+    <rect
+       x="-79.948382"
+       y="233.58832"
+       width="95.938059"
+       height="54.225859"
+       id="rect1108" />
+    <style
+       id="style833">.cls-1,.cls-2,.cls-3{stroke:#000;stroke-miterlimit:10;}.cls-2{fill:#999;opacity:0.5;}.cls-3{fill:none;}</style>
+  </defs>
+  <title
+     id="title837">Camera coordinate spaces</title>
+  <circle
+     class="cls-1"
+     cx="65.8"
+     cy="302.63"
+     r="2.25"
+     id="circle839" />
+  <rect
+     class="cls-2"
+     x="186.32"
+     y="188.16"
+     width="106"
+     height="75"
+     id="rect841" />
+  <line
+     class="cls-3"
+     x1="65.8"
+     y1="302.2"
+     x2="382.21"
+     y2="0.36"
+     id="line843" />
+  <line
+     class="cls-3"
+     x1="64.76"
+     y1="302.76"
+     x2="595.18"
+     y2="211.41"
+     id="line845" />
+  <line
+     class="cls-3"
+     x1="64.77"
+     y1="302.37"
+     x2="579.53"
+     y2="135.55"
+     id="line847" />
+  <line
+     class="cls-3"
+     x1="65.15"
+     y1="301.61"
+     x2="582.33"
+     y2="41.68"
+     id="line849" />
+  <rect
+     class="cls-3"
+     x="314.33"
+     y="65.6"
+     width="220.16"
+     height="155.77"
+     id="rect851" />
+  <circle
+     class="cls-1"
+     cx="291.7"
+     cy="188.55"
+     r="2.25"
+     id="circle853" />
+  <circle
+     class="cls-1"
+     cx="186.5"
+     cy="188.26"
+     r="2.25"
+     id="circle855" />
+  <circle
+     class="cls-1"
+     cx="185.93"
+     cy="262.68"
+     r="2.25"
+     id="circle857" />
+  <circle
+     class="cls-1"
+     cx="292.13"
+     cy="263.81"
+     r="2.25"
+     id="circle859" />
+  <circle
+     class="cls-1"
+     cx="314.19"
+     cy="221.28"
+     r="2.25"
+     id="circle861" />
+  <circle
+     class="cls-1"
+     cx="534.31"
+     cy="221.59"
+     r="2.25"
+     id="circle863" />
+  <circle
+     class="cls-1"
+     cx="534.38"
+     cy="65.66"
+     r="2.25"
+     id="circle865" />
+  <circle
+     class="cls-1"
+     cx="314.02"
+     cy="65.55"
+     r="2.25"
+     id="circle867" />
+  <text
+     xml:space="preserve"
+     id="text1106"
+     style="line-height:1.25;font-family:'Times New Roman';font-size:13.33333333px;-inkscape-font-specification:'Times New Roman, ';white-space:pre;shape-inside:url(#rect1108);" />
+</svg>

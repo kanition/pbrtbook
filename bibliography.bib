@@ -4355,3 +4355,75 @@
   pages   = {2496-2505},
   doi     = {10.1109/TED.2009.2030995}
 }
+
+@article{761554,
+  author  = {Glassner, Andrew S.},
+  journal = {IEEE Computer Graphics and Applications},
+  title   = {An open and shut case},
+  year    = {1999},
+  volume  = {19},
+  number  = {3},
+  pages   = {82-92},
+  doi     = {10.1109/38.761554}
+}
+
+@article{10.1080/2151237X.2007.10129235,
+  author    = {Ian Stephenson},
+  title     = {Improving Motion Blur: Shutter Efficiency and Temporal Sampling},
+  journal   = {Journal of Graphics Tools},
+  volume    = {12},
+  number    = {1},
+  pages     = {9-15},
+  year      = {2007},
+  publisher = {Taylor & Francis},
+  doi       = {10.1080/2151237X.2007.10129235}
+}
+
+@inproceedings{10.1145/1242073.1242155,
+  author    = {Buhler, Juan and Wexler, Dan},
+  title     = {A Phenomenological Model for Bokeh Rendering},
+  year      = {2002},
+  isbn      = {1581135254},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  doi       = {10.1145/1242073.1242155},
+  abstract  = {"Bokeh" is a Japanese word used to describe the quality of the out-of-focus areas as rendered on film by a physical lens. In areas that are out of focus, the circle of confusion (i.e., the distribution of light absorbed onto film from a single point of light in the scene) is bigger than in areas that are focused. Different lenses distribute light within the circle of confusion differently, depending on a number of factors, like the shape and number of diaphragm blades and the optical design of the lens itself. For example, lenses that are designed to correct for optical aberrations tend to render a circle of confusion that is more intense on the edges and slightly less so in the center. Other lenses, like the so called "mirror" lenses, which include reflective elements besides refractive ones, typically produce donut-shaped circles of confusion since some of the light paths are cut from the center by the reflective element.Moreover, in a real lens the circle of confusion sometimes becomes elliptical on the areas outside of the center of the image, with the shorter axis of the ellipsis oriented radially from it.Standard rendering techniques model depth of field using point sampling techniques which converge towards a bokeh model with uniform density across the circle of confusion. This represents an idealized lens that does not exist in reality. Real lenses have non-uniform bokeh distributions. For example, a smooth, or "creamy" lens will have a Gaussian distribution across the circle of confusion. Real lenses may have different distributions at different points on the film plane.Our technique allows the animator to specify an arbitrary probability density function to represent the distribution of intensity within the circle of confusion. The probability curve is used by the renderer to jitter the location of the sample point on the lens. For example, if the density function is a Gaussian, more samples will be taken towards the center of the lens than at the edges. Conversely, for a density function that simulates a mirror lens, fewer samples are taken near the center of the lens because the mirror blocks light as it moves through the lens. By generating enough sample points, the model converges on the true bokeh density function.We will also show the effect of specifying two shapes for the light distribution, one for close and the other for far focused areas, and the deformation of the circle of confusion so it becomes elliptical on the edges of the image.Future work includes the specification of the diaphragm shape, and the possible implementation of this technique as a particle renderer, which would provide efficient sampling at a much lower cost.Additional work to add support for stratified sampling is also possible.},
+  booktitle = {ACM SIGGRAPH 2002 Conference Abstracts and Applications},
+  pages     = {142},
+  numpages  = {1},
+  location  = {San Antonio, Texas},
+  series    = {SIGGRAPH '02}
+}
+
+@article{5740919,
+  author  = {Hasinoff, Samuel W. and Kutulakos, Kiriakos N.},
+  journal = {IEEE Transactions on Pattern Analysis and Machine Intelligence},
+  title   = {Light-Efficient Photography},
+  year    = {2011},
+  volume  = {33},
+  number  = {11},
+  pages   = {2203-2214},
+  doi     = {10.1109/TPAMI.2011.62}
+}
+
+@techreport{Jacobs2012,
+  author      = {Jacobs, David E. and	Baek, Jongmin and Levoy, Marc },
+  title       = {Focal Stack Compositing for Depth of Field Control},
+  institution = {Stanford University},
+  year        = {2012},
+  month       = {10},
+  series      = {Stanford Computer Graphics Laboratory Technical Report 2012-1}
+}
+
+@techreport{ng:hal-02551481,
+  title       = {Light Field Photography with a Hand-held Plenoptic Camera},
+  author      = {Ng, Ren and Levoy, Marc and Br{\'e}dif, Mathieu and Duval, Gene and Horowitz, Mark and Hanrahan, Pat},
+  type        = {Research Report},
+  number      = {CSTR 2005-02},
+  pages       = {Stanford University Computer Science Tech Report},
+  institution = {Stanford University},
+  year        = {2005},
+  month       = Apr,
+  keywords    = {Digital photography; light field; microlens array; synthetic photography; refocusing},
+  pdf         = {https://hal.archives-ouvertes.fr/hal-02551481/file/lfcamera-150dpi.pdf}
+}

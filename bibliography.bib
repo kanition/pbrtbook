@@ -86,7 +86,7 @@
   doi        = {10.1007/BF02684409},
   journal    = {Computing},
   month      = oct,
-  pages      = {103–131},
+  pages      = {103-131},
   numpages   = {29},
   keywords   = {complexity, ray-shooting, computational geometry, stochastic analysis}
 }
@@ -105,7 +105,7 @@
   abstract   = {To accurately render a two-dimensional image of a three-dimensional scene, global illumination information that affects the intensity of each pixel of the image must be known at the time the intensity is calculated. In a simplified form, this information is stored in a tree of “rays” extending from the viewer to the first surface encountered and from there to other surfaces and to the light sources. A visible surface algorithm creates this tree for each pixel of the display and passes it to the shader. The shader then traverses the tree to determine the intensity of the light received by the viewer. Consideration of all of these factors allows the shader to accurately simulate true reflection, shadows, and refraction, as well as the effects simulated by conventional shaders. Anti-aliasing is included as an integral part of the visibility calculations. Surfaces displayed include curved as well as polygonal surfaces.},
   journal    = {Commun. ACM},
   month      = jun,
-  pages      = {343–349},
+  pages      = {343-349},
   numpages   = {7},
   keywords   = {computer animation, visible surface algorithms, computer graphics, shading, raster displays}
 }
@@ -120,7 +120,7 @@
   doi       = {10.1145/74333.74361},
   abstract  = {We present a method for rendering scenes with fine detail via an object called a texel, a rendering primitive inspired by volume densities mixed with anisotropic lighting models. This technique solves a long outstanding problem in image synthesis: the rendering of furry surfaces.},
   booktitle = {Proceedings of the 16th Annual Conference on Computer Graphics and Interactive Techniques},
-  pages     = {271–280},
+  pages     = {271-280},
   numpages  = {10},
   series    = {SIGGRAPH '89}
 }
@@ -144,7 +144,7 @@
   publisher = {Academic Press Professional, Inc.},
   address   = {USA},
   booktitle = {Graphics Gems},
-  pages     = {498–515},
+  pages     = {498-515},
   numpages  = {18}
 }
 
@@ -167,13 +167,12 @@
   doi       = {10.1145/800224.806819},
   abstract  = {This paper presents a new reflectance model for rendering computer synthesized images. The model accounts for the relative brightness of different materials and light sources in the same scene. It describes the directional distribution of the reflected light and a color shift that occurs as the reflectance changes with incidence angle. The paper presents a method for obtaining the spectral energy distribution of the light reflected from an object made of a specific real material and discusses a procedure for accurately reproducing the color associated with the spectral energy distribution. The model is applied to the simulation of a metal and a plastic.},
   booktitle = {Proceedings of the 8th Annual Conference on Computer Graphics and Interactive Techniques},
-  pages     = {307–316},
+  pages     = {307-316},
   numpages  = {10},
   keywords  = {Reflectance, Computer graphics, Shading, Image synthesis},
   location  = {Dallas, Texas, USA},
   series    = {SIGGRAPH '81}
 }
-
 
 @article{10.1145/357290.357293,
   author     = {Cook, Robert L. and Torrance, Kenneth E.},
@@ -188,7 +187,7 @@
   doi        = {10.1145/357290.357293},
   journal    = {ACM Trans. Graph.},
   month      = jan,
-  pages      = {7–24},
+  pages      = {7-24},
   numpages   = {18},
   keywords   = {image synthesis, reflectance}
 }
@@ -203,7 +202,7 @@
   doi       = {10.1145/800031.808601},
   abstract  = {A method is described which models the interaction of light between diffusely reflecting surfaces. Current light reflection models used in computer graphics do not account for the object-to-object reflection between diffuse surfaces, and thus incorrectly compute the global illumination effects. The new procedure, based on methods used in thermal engineering, includes the effects of diffuse light sources of finite area, as well as the “color-bleeding” effects which are caused by the diffuse reflections. A simple environment is used to illustrate these simulated effects and is presented with photographs of a physical model. The procedure is applicable to environments composed of ideal diffuse reflectors and can account for direct illumination from a variety of light sources. The resultant surface intensities are independent of observer position, and thus environments can be preprocessed for dynamic sequences.},
   booktitle = {Proceedings of the 11th Annual Conference on Computer Graphics and Interactive Techniques},
-  pages     = {213–222},
+  pages     = {213-222},
   numpages  = {10},
   keywords  = {Diffuse reflections, Shading, Radiosity, Light reflection models, Form factors},
   series    = {SIGGRAPH '84}
@@ -219,7 +218,7 @@
   doi       = {10.1145/325334.325171},
   abstract  = {This paper presents a comprehensive method to calculate object to object diffuse reflections within complex environments containing hidden surfaces and shadows. In essence, each object in the environment is treated as a secondary light source. The method provides an accurate representation of the "diffuse" and "ambient" terms found in typical image synthesis algorithms. The phenomena of "color bleeding" from one surface to another, shading within shadow envelopes, and penumbras along shadow boundaries are accurately reproduced. Additional advantages result because computations are indepedent of viewer position. This allows the efficient rendering of multiple views of the same scene for dynamic sequences. Light sources can be modulated and object reflectivities can be changed, with minimal extra computation. The procedures extend the radiosity method beyond the bounds previously imposed.},
   booktitle = {Proceedings of the 12th Annual Conference on Computer Graphics and Interactive Techniques},
-  pages     = {31–40},
+  pages     = {31-40},
   numpages  = {10},
   keywords  = {hidden surface, form-factors, depth buffer, radiosity, diffuse reflections},
   series    = {SIGGRAPH '85}
@@ -235,7 +234,7 @@
   doi       = {10.1145/325334.325169},
   abstract  = {The effect of shadows and interreflection created by room obstructions is an important factor in the continuous tone representation of interiors. For indirect illumination, in most cases a uniform ambient light has been considered, even though the interreflection gives very complex effects with the shaded images.The proposed method for indirect lighting with shadows results in the following advanced points:1) The indirect illuminance caused by the surfaces of objects such as ceilings, floors, walls, desks, bookcases etc. gives added realism to images.2) The proposed method is suitable for every type of light source such as point sources, linear sources, and area sources.},
   booktitle = {Proceedings of the 12th Annual Conference on Computer Graphics and Interactive Techniques},
-  pages     = {23–30},
+  pages     = {23-30},
   numpages  = {8},
   keywords  = {diffuse reflections, penumbrae, interreflection of light, shading, area light source, shadows},
   series    = {SIGGRAPH '85}
@@ -251,7 +250,7 @@
   doi       = {10.1145/800031.808590},
   abstract  = { Ray tracing is one of the most elegant techniques in computer graphics. Many phenomena that are difficult or impossible with other techniques are simple with ray tracing, including shadows, reflections, and refracted light. Ray directions, however, have been determined precisely, and this has limited the capabilities of ray tracing. By distributing the directions of the rays according to the analytic function they sample, ray tracing can incorporate fuzzy phenomena. This provides correct and easy solutions to some previously unsolved or partially solved problems, including motion blur, depth of field, penumbras, translucency, and fuzzy reflections. Motion blur and depth of field calculations can be integrated with the visible surface calculations, avoiding the problems found in previous methods. },
   booktitle = {Proceedings of the 11th Annual Conference on Computer Graphics and Interactive Techniques},
-  pages     = {137–145},
+  pages     = {137-145},
   numpages  = {9},
   keywords  = {Transparency, Depth of field, Gloss, Shadows, Camera, Motion blur, Translucency, Penumbras, Constructive solid geometry, Focus, Ray tracing},
   series    = {SIGGRAPH '84}
@@ -267,7 +266,7 @@
   doi       = {10.1145/15922.15902},
   abstract  = {We present an integral equation which generalizes a variety of known rendering algorithms. In the course of discussing a monte carlo solution we also present a new form of variance reduction, called Hierarchical sampling and give a number of elaborations shows that it may be an efficient new technique for a wide variety of monte carlo procedures. The resulting rendering algorithm extends the range of optical phenomena which can be effectively simulated.},
   booktitle = {Proceedings of the 13th Annual Conference on Computer Graphics and Interactive Techniques},
-  pages     = {143–150},
+  pages     = {143-150},
   numpages  = {8},
   series    = {SIGGRAPH '86}
 }
@@ -291,7 +290,7 @@
   doi       = {10.1145/800031.808594},
   abstract  = {This paper presents new algorithms to trace objects represented by densities within a volume grid, e.g. clouds, fog, flames, dust, particle systems. We develop the light scattering equations, discuss previous methods of solution, and present a new approximate solution to the full three-dimensional radiative scattering problem suitable for use in computer graphics. Additionally we review dynamical models for clouds used to make an animated movie.},
   booktitle = {Proceedings of the 11th Annual Conference on Computer Graphics and Interactive Techniques},
-  pages     = {165–174},
+  pages     = {165-174},
   numpages  = {10},
   keywords  = {Light scattering, Stochastic modeling, Clouds, Radiative transport, Particle systems, Simulation of natural phenomena, Computer graphics, Ray tracing, Raster graphics},
   series    = {SIGGRAPH '84}
@@ -307,7 +306,7 @@
   doi       = {10.1145/97879.97886},
   abstract  = {The rendering equation is similar to the linear Boltzmann equation which has been widely studied in physics and nuclear engineering. Consequently, many of the powerful techniques which have been developed in these fields can be applied to problems in image synthesis. In this paper we adapt several statistical techniques commonly used in neutron transport to stochastic ray tracing and, more generally, to Monte Carlo solution of the rendering equation. First, we describe a technique known as Russian roulette which can be used to terminate the recursive tracing of rays without introducing statistical bias. We also examine the practice of creating ray trees in classical ray tracing in the light of a well-known technique in particle transport known as splitting. We show that neither ray trees nor paths as described in [10] constitute an optimal sampling plan in themselves and that a hybrid may be more efficient.},
   booktitle = {Proceedings of the 17th Annual Conference on Computer Graphics and Interactive Techniques},
-  pages     = {63–66},
+  pages     = {63-66},
   numpages  = {4},
   location  = {Dallas, TX, USA},
   series    = {SIGGRAPH '90}
@@ -323,7 +322,7 @@
   doi       = {10.1145/122718.122735},
   abstract  = {We examine a class of adaptive sampling techniques employed in image synthesis and show that those commonly used for efficient anti-aliasing are statistically biased. This bias is dependent upon the image function being sampled as well as the strategy for determining the number of samples to use. It is most prominent in areas of high contrast and is attributable to early stages of sampling systematically favoring one extreme or the other. If the expected outcome of the entire adaptive sampling algorithm is considered, we find that the bias of the early decisions is still present in the final estimator. We propose an alternative strategy for performing adaptive sampling that is unbiased but potentially more costly. We conclude that it may not always be practical to mitigate this source of bias, but as a source of error it should be considered when high accuracy and image fidelity are a central concern.},
   booktitle = {Proceedings of the 18th Annual Conference on Computer Graphics and Interactive Techniques},
-  pages     = {153–156},
+  pages     = {153-156},
   numpages  = {4},
   keywords  = {statistical bias, adaptive sampling, Monte Carlo, antialiasing},
   series    = {SIGGRAPH '91}
@@ -353,7 +352,7 @@
   abstract   = {In a distributed ray tracer, the sampling strategy is the crucial part of the direct lighting calculation. Monte Carlo integration with importance sampling is used to carry out this calculation. Importance sampling involves the design of integrand-specific probability density functions that are used to generate sample points for the numerical quadrature. Probability density functions are presented that aid in the direct lighting calculation from luminaires of various simple shapes. A method for defining a probability density function over a set of luminaires is presented that allows the direct lighting calculation to be carried out with a number of sample points that is independent of the number of luminaires.},
   journal    = {ACM Trans. Graph.},
   month      = jan,
-  pages      = {1–36},
+  pages      = {1-36},
   numpages   = {36},
   keywords   = {Monte Carlo integration, ray tracing, direct lighting, realistic image synthesis, importance sampling, luminaires}
 }
@@ -392,7 +391,7 @@
   doi       = {10.1145/192161.192286},
   abstract  = {This paper describes a physically-based rendering system tailored to the demands of lighting design and architecture. The simulation uses a light-backwards ray-tracing method with extensions to efficiently solve the rendering equation under most conditions. This includes specular, diffuse and directional-diffuse reflection and transmission in any combination to any level in any environment, including complicated, curved geometries. The simulation blends deterministic and stochastic ray-tracing techniques to achieve the best balance between speed and accuracy in its local and global illumination methods. Some of the more interesting techniques are outlined, with references to more detailed descriptions elsewhere. Finally, examples are given of successful applications of this free software by others.},
   booktitle = {Proceedings of the 21st Annual Conference on Computer Graphics and Interactive Techniques},
-  pages     = {459–472},
+  pages     = {459-472},
   numpages  = {14},
   keywords  = {Monte Carlo, physically-based rendering, lighting simulation, ray-tracing, radiosity},
   series    = {SIGGRAPH '94}
@@ -415,7 +414,7 @@
   address   = {USA},
   doi       = {10.1145/258734.258914},
   booktitle = {Proceedings of the 24th Annual Conference on Computer Graphics and Interactive Techniques},
-  pages     = {477–494},
+  pages     = {477-494},
   numpages  = {18},
   keywords  = {light reflection, perception, realistic image synthesis},
   series    = {SIGGRAPH '97}
@@ -453,7 +452,7 @@
   doi       = {10.1145/37401.37414},
   abstract  = {An architecture is presented for fast high-quality rendering of complex images. All objects are reduced to common world-space geometric entities called micropolygons, and all of the shading and visibility calculations operate on these micropolygons. Each type of calculation is performed in a coordinate system that is natural for that type of calculation. Micropolygons are created and textured in the local coordinate sysem of the object, with the result that texture filtering is simplified and improved. Visibility is calculated in screen space using stochastic point sampling with a z buffer. There are no clipping or inverse perspective calculations. Geometric and texture locality are exploited to minimize paging and to support models that contain arbitrarily many primitives.},
   booktitle = {Proceedings of the 14th Annual Conference on Computer Graphics and Interactive Techniques},
-  pages     = {95–102},
+  pages     = {95-102},
   numpages  = {8},
   series    = {SIGGRAPH '87}
 }
@@ -500,7 +499,7 @@
   doi       = {10.1145/1468075.1468082},
   abstract  = {Some applications of computer graphics require a vivid illusion of reality. These include the spatial organization of machine parts, conceptual architectural design, simulation of mechanisms, and industrial design. There has been moderate success in the automatic generation of wire frame, cardboard model, polyhedra, and quadric surface line drawings. The capability of the machine to generate vivid sterographic pictures has been demonstrated. There are, however considerable reasons for developing techniques by which line drawings of solids can be shaded, especially the enhancement of the sense of solidity and depth. Figures 1 and 2 illustrate the value of shading and shadow casting in spatial description. In the line drawing there is no clue as to the relative position of the flat plane and the sheet metal console. When shadows are rendered, it is clear that the plane is below and to the rear of the console, and the hollow nature of the sheet metal assembly is emphasized. Shading can specify the tone or color of a surface and the amount of light falling upon that surface from one or more light sources. Shadows when sharply defined tend to suggest another viewpoint and improves surface definition. When controlled, shading can also emphasize particular parts of the drawing. If techniques for the automatic determination of chiaroscuro with good resolution should prove to be competitive with line drawings, and this is a possibility, machine generated photographs might replace line drawings as the principal mode of graphical communication in engineering and architecture.},
   booktitle = {Proceedings of the April 30--May 2, 1968, Spring Joint Computer Conference},
-  pages     = {37–45},
+  pages     = {37-45},
   numpages  = {9},
   location  = {Atlantic City, New Jersey},
   series    = {AFIPS '68 (Spring)}
@@ -528,7 +527,7 @@
   doi       = {10.1145/800249.807438},
   abstract  = {Simple transparency algorithms which assume a linear transparency over an entire surface are the type most often employed to produce computer synthesized images of transparent objects with curved surfaces. Although most of the images created with these algorithms do give the impression of transparency, they usually do not look realistic. One of the most serious problems is that the intensity of the light that is transmitted through the objects is generally not proportional to the amount of material through which it must pass. Another problem is that the image seen behind the objects is not distorted as would naturally occur when the light is refracted as it passes through a material of different density.Use of a non-linear transparency algorithm can provide a great improvement in the realism of an image at a small additional cost. Making the transparency proportional to the normal to the surface causes it to decrease towards the edges of the surface where the path of the light through the object is longer. The exact simulation of refraction, however, requires that each sight ray be individually traced from the observer, through the picture plane and through each transparent object until an opaque surface is intersected. Since the direction of the ray would change as each material of differing optical density was entered, the hidden surface calculations required would be very time consuming. However, if a few assumptions are made about the geometry of each object and about the conditions under which they are viewed, a much simplier algorithm can be used to approximate the refractive effect. This method proceeds in a back to front order, mapping the current background image onto the next surface, until all surfaces have been considered.},
   booktitle = {Proceedings of the 6th Annual Conference on Computer Graphics and Interactive Techniques},
-  pages     = {158–164},
+  pages     = {158-164},
   numpages  = {7},
   keywords  = {Computer graphics, Refraction, Image synthesis, Shading, Transparency},
   location  = {Chicago, Illinois, USA},
@@ -545,7 +544,7 @@
   doi       = {10.1145/37401.37411},
   abstract  = {Ray tracing has established itself in recent years as the most general image synthesis algorithm. Researchers have investigated ray-surface intersection calculations for a number of surface primitives, including checkerboards, glass balls, green fractal hills, mandrills, abstract blue surfaces, more glass balls, robot arms, pool balls, low-resolution clouds, morphine molecules, aquatic blobby things making strange noises, fantastic cities, and running skeletons. Unfortunately, nobody has ray traced any food. The Dessert Realism Project here at Pixar is addressing this problem. This paper presents new technology for ray tracing Jell-O® brand gelatin. We believe the method may have application to other brands of gelatin and perhaps pudding as well.},
   booktitle = {Proceedings of the 14th Annual Conference on Computer Graphics and Interactive Techniques},
-  pages     = {73–74},
+  pages     = {73-74},
   numpages  = {2},
   series    = {SIGGRAPH '87}
 }
@@ -564,7 +563,7 @@
   abstract   = {Ray tracing has established itself in recent years as the most general image synthesis algorithm. Researchers have investigated ray-surface intersection calculations for a number of surface primitives, including checkerboards, glass balls, green fractal hills, mandrills, abstract blue surfaces, more glass balls, robot arms, pool balls, low-resolution clouds, morphine molecules, aquatic blobby things making strange noises, fantastic cities, and running skeletons. Unfortunately, nobody has ray traced any food. The Dessert Realism Project here at Pixar is addressing this problem. This paper presents new technology for ray tracing Jell-O® brand gelatin. We believe the method may have application to other brands of gelatin and perhaps pudding as well.},
   journal    = {SIGGRAPH Comput. Graph.},
   month      = aug,
-  pages      = {73–74},
+  pages      = {73-74},
   numpages   = {2}
 }
 
@@ -679,7 +678,7 @@
   doi       = {10.1145/325334.325174},
   abstract  = {The complexity of anti-aliased 3-D rendering systems can be controlled by using a tool-building approach like that of the UNIX™ text-processing tools. Such an approach requires a simple picture representation amenable to anti-aliasing that all rendering programs can produce, a compositing algorithm for that representation and a command language to piece together scenes. This paper advocates a representation that combines Porter and Duff's compositing algebra with a Z-buffer to provide simple anti-aliased 3-D compositing.},
   booktitle = {Proceedings of the 12th Annual Conference on Computer Graphics and Interactive Techniques},
-  pages     = {41–44},
+  pages     = {41-44},
   numpages  = {4},
   keywords  = {anti-aliasing, Z-buffer, image synthesis, compositing, 3-D rendering, hidden-surface elimination},
   series    = {SIGGRAPH '85}
@@ -690,7 +689,7 @@
   author  = {Glassner, Andrew S.},
   editor  = {Strauss, Paul S.},
   journal = {Developing Large-scale Graphics Software Toolkits,(SIGGRAPH'93 Course Notes 3)},
-  pages   = {1.1–1.44},
+  pages   = {1.1-1.44},
   year    = {1993},
   month   = {08}
 }
@@ -810,7 +809,7 @@
   doi       = {10.1145/325334.325242},
   abstract  = {Solid bodies roll and tumble through space. In computer animation, so do cameras. The rotations of these objects are best described using a four coordinate system, quaternions, as is shown in this paper. Of all quaternions, those on the unit sphere are most suitable for animation, but the question of how to construct curves on spheres has not been much explored. This paper gives one answer by presenting a new kind of spline curve, created on a sphere, suitable for smoothly in-betweening (i.e. interpolating) sequences of arbitrary rotations. Both theory and experiment show that the motion generated is smooth and natural, without quirks found in earlier methods.},
   booktitle = {Proceedings of the 12th Annual Conference on Computer Graphics and Interactive Techniques},
-  pages     = {245–254},
+  pages     = {245-254},
   numpages  = {10},
   keywords  = {spherical geometry, B\'{e}zier curve, in-betweening, spline, rotation, B-spline, interpolation, animation, quaternion, approximation},
   series    = {SIGGRAPH '85}
@@ -833,7 +832,7 @@
   publisher = {Morgan Kaufmann Publishers Inc.},
   address   = {San Francisco, CA, USA},
   booktitle = {Proceedings of the Conference on Graphics Interface '92},
-  pages     = {258–264},
+  pages     = {258-264},
   numpages  = {7},
   keywords  = {Polar decomposition, matrix animation, greedy algorithm, homogeneous matrix, spectral decomposition, QR decomposition, matrix decomposition, singular value decomposition, interpolation, rotation},
   location  = {Vancouver, British Columbia, Canada}
@@ -865,7 +864,7 @@
   abstract   = {In vector geometry there are 2 distinct types of entities: points P, Q, R … and vectors u, v, w … Generally, the operattions of vector algebra —addition, subtraction, scalar multiplication, dot product, and cross product—are intrinsically defined only for vectors, not for points. Yet illicit expressions containing terms like P + Q, cP, P X Q, etc. often appear in graphics textbooks, papers, and programs. In this paper we justify the use of such illicit expressions, and we we give criteria for recognizing when such an expression is truly legitimate. In particular we show that an algebraic expression E (P1, …, Pn) is legitimate if and only if E(v1 +  w, …vn + w) = E(v1, …, vn) + kw, k + 0, 1. We also derive many useful examples of such an expression.},
   journal    = {ACM Trans. Graph.},
   month      = jul,
-  pages      = {223–243},
+  pages      = {223-243},
   numpages   = {21},
   keywords   = {vector geometry, vector algebra}
 }
@@ -902,7 +901,8 @@
 
 @book{10.5555/63448,
   author    = {Rogers, D. F. and Adams, J. A.},
-  title     = {Mathematical Elements for Computer Graphics (2nd Ed.)},
+  title     = {Mathematical Elements for Computer Graphics},
+  edition   = {2},
   year      = {1990},
   isbn      = {0070535299},
   publisher = {McGraw-Hill, Inc.},
@@ -936,15 +936,16 @@
   publisher = {McGraw-Hill}
 }
 
-@book{10.5555/2829183,
-  author    = {Akenine-Möller, Tomas and Haines, Eric and Hoffman, Naty},
+@book{10.1201/9781315365459,
+  author    = {Tomas Akenine-Möller, Eric Haines, Naty Hoffman},
+  publisher = {A. K. Peters/CRC Press},
   title     = {Real-Time Rendering},
   year      = {2008},
-  isbn      = {1568814240},
-  publisher = {A. K. Peters, Ltd.},
-  address   = {Natick, MA, USA},
-  edition   = {3rd},
-  abstract  = {Thoroughly revised, this third edition focuses on modern techniques used to generate synthetic three-dimensional images in a fraction of a second. With the advent of programmable shaders, a wide variety of new algorithms have arisen and evolved over the past few years. This edition discusses current, practical rendering methods used in games and other applications. It also presents a solid theoretical framework and relevant mathematics for the field of interactive computer graphics, all in an approachable style. The authors have made the figures used in the book available for download for fair use.:Download Figures.}
+  edition   = {3},
+  pages     = {1045},
+  address   = {New York, USA},
+  isbn      = {978-1-56881-424-7},
+  doi       = {10.1201/9781315365459}
 }
 
 @inproceedings{inproceedings,
@@ -991,7 +992,7 @@
   publisher = {Academic Press Professional, Inc.},
   address   = {USA},
   booktitle = {Graphics Gems IV},
-  pages     = {222–229},
+  pages     = {222-229},
   numpages  = {8}
 }
 
@@ -1023,7 +1024,7 @@
   address   = {USA},
   doi       = {10.1145/258734.258870},
   booktitle = {Proceedings of the 24th Annual Conference on Computer Graphics and Interactive Techniques},
-  pages     = {287–292},
+  pages     = {287-292},
   numpages  = {6},
   keywords  = {splines, quaternions, Euler-Lagrange error functional, optimization},
   series    = {SIGGRAPH '97}
@@ -1043,7 +1044,7 @@
   abstract   = {This article introduces a method for computing weighted averages on spheres based on least squares minimization that respects spherical distance. We prove existence and uniqueness properties of the weighted averages, and give fast iterative algorithms with linear and quadratic convergence rates. Our methods are appropriate to problems involving averages of spherical data in meteorological, geophysical, and astronomical applications. One simple application is a method for smooth averaging of quaternions, which generalizes Shoemake's spherical linear interpolation.The weighted averages methods allow a novel method of defining B\'{e}zier and spline curves on spheres, which provides direct generalization of B\'{e}zier and B-spline curves to spherical spline curves. We present a fast algorithm for spline interpolation on spheres. Our spherical splines allow the use of arbitrary knot positions; potential applications of spherical splines include smooth quaternion curves for applications in graphics, animation, robotics, and motion planning.},
   journal    = {ACM Trans. Graph.},
   month      = apr,
-  pages      = {95–126},
+  pages      = {95-126},
   numpages   = {32},
   keywords   = {spherical interpolation, quaternion interpolation, B-spline, quaternions, barycentric coordinates, spherical mean, spline curve, spherical average, least squares minimization, spline interpolation, B\'{e}zier curve}
 }
@@ -1079,7 +1080,7 @@
   publisher = {Academic Press Professional, Inc.},
   address   = {USA},
   booktitle = {Graphics Gems},
-  pages     = {548–550},
+  pages     = {548-550},
   numpages  = {3}
 }
 
@@ -1106,7 +1107,7 @@
   doi       = {10.1145/192161.192233},
   abstract  = {We present a general method for automatic reconstruction of accurate, concise, piecewise smooth surface models from scattered range data. The method can be used in a variety of applications such as reverse engineering—the automatic generation of CAD models from physical objects. Novel aspects of the method are its ability to model surfaces of arbitrary topological type and to recover sharp features such as creases and corners. The method has proven to be effective, as demonstrated by a number of examples using both simulated and real data.A key ingredient in the method, and a principal contribution of this paper, is the introduction of a new class of piecewise smooth surface representations based on subdivision. These surfaces have a number of properties that make  them ideal for use in surface reconstruction: they are simple to implement, they can model sharp features concisely, and they can be fit to scattered range data using an unconstrained optimization procedure.},
   booktitle = {Proceedings of the 21st Annual Conference on Computer Graphics and Interactive Techniques},
-  pages     = {295–302},
+  pages     = {295-302},
   numpages  = {8},
   keywords  = {range data analysis, geometric modeling, subdivision surfaces, shape recovery, surface fitting},
   series    = {SIGGRAPH '94}
@@ -1201,7 +1202,7 @@
                root finding algorithm.Included are illustrations of the cusp catastrophe surface,
                and two unusually shaped quartic surfaces, Kummer's quadruple and Steiner's surface.},
   booktitle = {Proceedings of the 10th Annual Conference on Computer Graphics and Interactive Techniques},
-  pages     = {83–90},
+  pages     = {83-90},
   numpages  = {8},
   keywords  = {Polynomial roots, Ray tracing, Algebraic surfaces, Curved surface display, Symbolic algebra},
   location  = {Detroit, Michigan, USA},
@@ -1228,7 +1229,7 @@
                 and two unusually shaped quartic surfaces, Kummer's quadruple and Steiner's surface.},
   journal    = {SIGGRAPH Comput. Graph.},
   month      = jul,
-  pages      = {83–90},
+  pages      = {83-90},
   numpages   = {8},
   keywords   = {Symbolic algebra, Polynomial roots, Curved surface display, Ray tracing, Algebraic surfaces}
 }
@@ -1240,7 +1241,7 @@
   publisher = {Canadian Information Processing Society},
   address   = {CAN},
   booktitle = {Proceedings on Graphics Interface '90},
-  pages     = {68–74},
+  pages     = {68-74},
   numpages  = {7},
   location  = {Halifax, Nova Scotia}
 }
@@ -1276,7 +1277,7 @@
                into a two dimensional curve-curve intersection problem, which again is solved by
                strip trees.},
   booktitle = {Proceedings of the 10th Annual Conference on Computer Graphics and Interactive Techniques},
-  pages     = {91–102},
+  pages     = {91-102},
   numpages  = {12},
   keywords  = {Stochastic models, Procedural modelling, Fractal surfaces, Computer graphics, Ray tracing, Surfaces of revolution, Strip trees, Raster graphics},
   location  = {Detroit, Michigan, USA},
@@ -1311,7 +1312,7 @@
                 parameters. A similar change allows complex motion to be created inexpensively.},
   journal    = {Commun. ACM},
   month      = jun,
-  pages      = {371–384},
+  pages      = {371-384},
   numpages   = {14},
   keywords   = {stochastic models, terrain models, fractals}
 }
@@ -1333,7 +1334,7 @@
                applied to these objects. A comparison with the boundary-tracking method and applications
                to other 3-D deterministic fractals are also included.},
   booktitle = {Proceedings of the 16th Annual Conference on Computer Graphics and Interactive Techniques},
-  pages     = {289–296},
+  pages     = {289-296},
   numpages  = {8},
   series    = {SIGGRAPH '89}
 }
@@ -1356,7 +1357,7 @@
                quite naturally. The uniformity of these techniques may be suitable for implementation
                on either a general purpose pipelined machine, or on special purpose hardware.},
   booktitle = {Proceedings of the 9th Annual Conference on Computer Graphics and Interactive Techniques},
-  pages     = {245–254},
+  pages     = {245-254},
   numpages  = {10},
   keywords  = {Parametric patches, Ray tracing, Raster graphics, Computer graphics},
   location  = {Boston, Massachusetts, USA},
@@ -1523,7 +1524,7 @@
                rendering, collision detection, and isocontour extraction without any modification
                of the algorithms or runtime applications.},
   booktitle = {ACM SIGGRAPH 2005 Papers},
-  pages     = {886–893},
+  pages     = {886-893},
   numpages  = {8},
   location  = {Los Angeles, California},
   series    = {SIGGRAPH '05}
@@ -1580,7 +1581,7 @@
                 of objects.},
   journal    = {ACM Trans. Graph.},
   month      = oct,
-  pages      = {291–303},
+  pages      = {291-303},
   numpages   = {13}
 }
 
@@ -1732,7 +1733,7 @@
   address   = {New York, NY, USA},
   doi       = {10.1145/280814.280945},
   booktitle = {Proceedings of the 25th Annual Conference on Computer Graphics and Interactive Techniques},
-  pages     = {395–404},
+  pages     = {395-404},
   numpages  = {10},
   keywords  = {parametrizations, linear algebra, eigenanalysis, surface evaluation, Catmull-Clark surfaces, subdivison surfaces},
   series    = {SIGGRAPH '98}
@@ -1760,7 +1761,7 @@
                tradeoffs between cache size and memory bus usage which we examine. A library which
                implements this engine is freely available from the authors.},
   booktitle = {Proceedings of the Seventh International Conference on 3D Web Technology},
-  pages     = {11–17},
+  pages     = {11-17},
   numpages  = {7},
   location  = {Tempe, Arizona, USA},
   series    = {Web3D '02}
@@ -1789,7 +1790,7 @@
                as well as animated models. Rendering performance is scalable for increasingly complex
                models.},
   booktitle = {Proceedings of the Conference on High Performance Graphics 2009},
-  pages     = {99–108},
+  pages     = {99-108},
   numpages  = {10},
   keywords  = {adaptive surface subdivision, subdivision surfaces, Catmull-Clark, GPGPU},
   location  = {New Orleans, Louisiana},
@@ -1819,7 +1820,7 @@
                 of how computer system builders can better support floating point.},
   journal    = {ACM Comput. Surv.},
   month      = mar,
-  pages      = {5–48},
+  pages      = {5-48},
   numpages   = {44},
   keywords   = {underflow, exception, guard digit, rounding error, NaN, gradual underflow, floating-point standard, denormalized number, relative error, ulp, floating-point, overflow, rounding mode}
 }
@@ -1867,7 +1868,7 @@
   publisher = {Academic Press Ltd.},
   address   = {GBR},
   booktitle = {An Introduction to Ray Tracing},
-  pages     = {33–77},
+  pages     = {33-77},
   numpages  = {45}
 }
 
@@ -1907,7 +1908,7 @@
                significantly extends the ability to intersect rays with implicit surfaces in a guaranteed
                fashion.},
   booktitle = {Proceedings of the 16th Annual Conference on Computer Graphics and Interactive Techniques},
-  pages     = {297–306},
+  pages     = {297-306},
   numpages  = {10},
   series    = {SIGGRAPH '89}
 }
@@ -1932,7 +1933,7 @@
   address   = {New York, NY, USA},
   doi       = {10.1145/73833.73857},
   booktitle = {Proceedings of the Fifth Annual Symposium on Computational Geometry},
-  pages     = {208–217},
+  pages     = {208-217},
   numpages  = {10},
   location  = {Saarbruchen, West Germany},
   series    = {SCG '89}
@@ -2051,7 +2052,7 @@
                offer complex shape, low rendering cost and high image quality, which makes them specifically
                suited for low-cost, real-time graphics, such as games.},
   booktitle = {Proceedings of the 27th Annual Conference on Computer Graphics and Interactive Techniques},
-  pages     = {335–342},
+  pages     = {335-342},
   numpages  = {8},
   keywords  = {texture mapping, rendering systems},
   series    = {SIGGRAPH '00}
@@ -2079,7 +2080,7 @@
                to a high final image quality. We have demonstrated the system on scanned models containing
                hundreds of millions of samples.},
   booktitle = {Proceedings of the 27th Annual Conference on Computer Graphics and Interactive Techniques},
-  pages     = {343–352},
+  pages     = {343-352},
   numpages  = {10},
   keywords  = {level of detail algorithms, spatial data structures, compression algorithms, rendering systems},
   series    = {SIGGRAPH '00}
@@ -2111,7 +2112,7 @@
   doi        = {10.1145/357306.357310},
   journal    = {ACM Trans. Graph.},
   month      = jul,
-  pages      = {235–256},
+  pages      = {235-256},
   numpages   = {22}
 }
 
@@ -2165,7 +2166,7 @@
                family of trees by Bill Reeves is introduced to emphasize some of the paper's nongrammatical
                themes.},
   booktitle = {Proceedings of the 11th Annual Conference on Computer Graphics and Interactive Techniques},
-  pages     = {1–10},
+  pages     = {1-10},
   numpages  = {10},
   keywords  = {Graftal, Tree, Plant, L-system, Database amplification, Parallel graph grammar, Fractal, Particle system, Computer imagery},
   series    = {SIGGRAPH '84}
@@ -2199,7 +2200,7 @@
                the response of trees to pruning, which yields synthetic images of sculptured plants
                found in topiary gardens.},
   booktitle = {Proceedings of the 21st Annual Conference on Computer Graphics and Interactive Techniques},
-  pages     = {351–358},
+  pages     = {351-358},
   numpages  = {8},
   keywords  = {modeling of plants, topiary, L-system, image synthesis},
   series    = {SIGGRAPH '94}
@@ -2214,7 +2215,7 @@
   address   = {New York, NY, USA},
   doi       = {10.1145/280814.280898},
   booktitle = {Proceedings of the 25th Annual Conference on Computer Graphics and Interactive Techniques},
-  pages     = {275–286},
+  pages     = {275-286},
   numpages  = {12},
   keywords  = {self-thinning, ecosystem simulation, plant model, vector quantization, modeling of natural phenomena, realistic image synthesis, approximate instancing},
   series    = {SIGGRAPH '98}
@@ -2236,7 +2237,7 @@
                process. The algorithms are united by the concept of expressing local attributes of
                plant architecture as functions of their location along the stems.},
   booktitle = {Proceedings of the 28th Annual Conference on Computer Graphics and Interactive Techniques},
-  pages     = {289–300},
+  pages     = {289-300},
   numpages  = {12},
   keywords  = {phyllotaxis, differential turtle geometry, realistic image synthesis, plant, generalized cylinder, interactive procedural modeling, Chomsky grammar, L-system, positional information},
   series    = {SIGGRAPH '01}
@@ -2304,7 +2305,7 @@
                developed is also independently useful for efficiently ray tracing any complex model,
                whether or not it contains surface tessellations.},
   booktitle = {Proceedings of the 14th Annual Conference on Computer Graphics and Interactive Techniques},
-  pages     = {119–128},
+  pages     = {119-128},
   numpages  = {10},
   series    = {SIGGRAPH '87}
 }
@@ -2420,7 +2421,7 @@
                 time potentially grows linearly with the visible complexity of the scene.},
   journal    = {Commun. ACM},
   month      = oct,
-  pages      = {547–554},
+  pages      = {547-554},
   numpages   = {8},
   keywords   = {hidden surface algorithms, hierarchical data structures, visible surface algorithms, geometric models}
 }
@@ -2451,7 +2452,7 @@
                software or hardware chosen to implement the search can be highly optimized for very
                fast execution.},
   booktitle = {Proceedings of the 7th Annual Conference on Computer Graphics and Interactive Techniques},
-  pages     = {110–116},
+  pages     = {110-116},
   numpages  = {7},
   keywords  = {Object descriptions, Hierarchical data structures, Visible surface algorithms, Computer graphics},
   location  = {Seattle, Washington, USA},
@@ -2475,7 +2476,7 @@
                demonstrate that it is currently possible to ray trace scenes containing hundreds
                of thousands of objects.},
   booktitle = {Proceedings of the 13th Annual Conference on Computer Graphics and Interactive Techniques},
-  pages     = {269–278},
+  pages     = {269-278},
   numpages  = {10},
   series    = {SIGGRAPH '86}
 }
@@ -2573,7 +2574,7 @@
                and input data recirculation as two fundamental sources of inefficiency when raytracing
                on current graphics hardware.},
   booktitle = {Proceedings of the ACM SIGGRAPH/EUROGRAPHICS Conference on Graphics Hardware},
-  pages     = {15–22},
+  pages     = {15-22},
   numpages  = {8},
   location  = {Los Angeles, California},
   series    = {HWWS '05}
@@ -2599,7 +2600,7 @@
                This enables stackless and short stack traversal for BVH ray casts, where using a
                full stack or constraining the traversal order have so far been the only options.},
   booktitle = {Proceedings of the Conference on High Performance Graphics},
-  pages     = {107–111},
+  pages     = {107-111},
   numpages  = {5},
   location  = {Saarbrucken, Germany},
   series    = {HPG '10}
@@ -2653,7 +2654,7 @@
                show that our method approaches or exceeds the frame rates of other techniques and
                is consistently among the best options regardless of the animated scene.},
   booktitle = {Proceedings of the ACM SIGGRAPH Symposium on Interactive 3D Graphics and Games},
-  pages     = {197–204},
+  pages     = {197-204},
   numpages  = {8},
   keywords  = {acceleration structures, tree rotations, ray tracing, parallel update, dynamic scenes, bounding volume hierarchies},
   location  = {Costa Mesa, California},
@@ -2682,7 +2683,7 @@
   address   = {New York, NY, USA},
   doi       = {10.1145/2492045.2492055},
   booktitle = {Proceedings of the 5th High-Performance Graphics Conference},
-  pages     = {89–99},
+  pages     = {89-99},
   numpages  = {11},
   keywords  = {bounding volume hierarchies, ray tracing},
   location  = {Anaheim, California},
@@ -2730,7 +2731,7 @@
                than a full sweep SAH build yet executes in less time than the widely used top-down,
                approximate SAH build algorithm based on binning.},
   booktitle = {Proceedings of the 5th High-Performance Graphics Conference},
-  pages     = {81–88},
+  pages     = {81-88},
   numpages  = {8},
   keywords  = {ray tracing, agglomerative clustering, bounding-volume hierarchy},
   location  = {Anaheim, California},
@@ -2778,7 +2779,7 @@
                parameters that directly influence splitting are eliminated, making the algorithm
                easily controllable.},
   booktitle = {Proceedings of the Conference on High Performance Graphics 2009},
-  pages     = {7–13},
+  pages     = {7-13},
   numpages  = {7},
   keywords  = {ray tracing, bounding volume hierarchy},
   location  = {New Orleans, Louisiana},
@@ -2808,7 +2809,7 @@
                helps to improve BVH performance. Finally, we develop a simple space partitioning
                algorithm for building efficient BVHs.},
   booktitle = {Proceedings of the Conference on High Performance Graphics 2009},
-  pages     = {15–22},
+  pages     = {15-22},
   numpages  = {8},
   keywords  = {construction, ray tracing, bounding volume hierarchies, surface area heuristic, acceleration structures},
   location  = {New Orleans, Louisiana},
@@ -2834,7 +2835,7 @@
                about 2x the performance of ray tracing pre-tessellated hair models, while requiring
                significantly less memory.},
   booktitle = {Proceedings of High Performance Graphics},
-  pages     = {41–49},
+  pages     = {41-49},
   numpages  = {9},
   location  = {Lyon, France},
   series    = {HPG '14}
@@ -2859,7 +2860,7 @@
                which allocates varying numbers of samples to different image pixels to reduce shadow
                artifacts.},
   booktitle = {Proceedings of the 17th Eurographics Conference on Rendering Techniques},
-  pages     = {103–113},
+  pages     = {103-113},
   numpages  = {11},
   location  = {Nicosia, Cyprus},
   series    = {EGSR '06}
@@ -2896,7 +2897,7 @@
                a BVH and an indexed face set. The performance impact is only 11 percent for packet
                tracing and 17 percent for single ray path tracing on average.},
   booktitle = {Proceedings of Graphics Interface 2010},
-  pages     = {153–160},
+  pages     = {153-160},
   numpages  = {8},
   location  = {Ottawa, Ontario, Canada},
   series    = {GI '10}
@@ -2969,7 +2970,7 @@
                based on refitting. As a result they remain efficient even during chaotic and discontinuous
                transformations, such as fracture or explosion.},
   booktitle = {Proceedings of the Conference on High Performance Graphics},
-  pages     = {87–95},
+  pages     = {87-95},
   numpages  = {9},
   location  = {Saarbrucken, Germany},
   series    = {HPG '10}
@@ -2995,7 +2996,7 @@
                of the top-level SAH optimized tree on the GPU, eliminating round-trips to the CPU,
                accelerating the overall construction speed by a factor of 5 to 10x.},
   booktitle = {Proceedings of the ACM SIGGRAPH Symposium on High Performance Graphics},
-  pages     = {59–64},
+  pages     = {59-64},
   numpages  = {6},
   keywords  = {real-time, ray tracing, spatial index},
   location  = {Vancouver, British Columbia, Canada},
@@ -3193,7 +3194,7 @@
                on 32 cores, without degrading tree quality and rendering time, yielding the best
                reported speedups so far for precise-SAH k-D tree construction.},
   booktitle = {Proceedings of the Conference on High Performance Graphics},
-  pages     = {77–86},
+  pages     = {77-86},
   numpages  = {10},
   location  = {Saarbrucken, Germany},
   series    = {HPG '10}
@@ -3309,7 +3310,7 @@
                faster to trace than SAH indicates and are also more SIMD-friendly than competing
                approaches.},
   booktitle = {Proceedings of the 5th High-Performance Graphics Conference},
-  pages     = {101–107},
+  pages     = {101-107},
   numpages  = {7},
   keywords  = {quality metrics, acceleration structures, ray tracing},
   location  = {Anaheim, California},
@@ -3329,7 +3330,7 @@
   doi        = {10.1145/357332.357335},
   journal    = {ACM Trans. Graph.},
   month      = jan,
-  pages      = {52–69},
+  pages      = {52-69},
   numpages   = {18}
 }
 
@@ -3405,7 +3406,7 @@
                in order to reduce overlap in the presence of moving objects. The resulting hierarchies
                are often significantly cheaper to traverse than those generated by classic approaches.},
   booktitle = {Proceedings of the ACM SIGGRAPH Symposium on High Performance Graphics},
-  pages     = {65–70},
+  pages     = {65-70},
   numpages  = {6},
   keywords  = {bounding volume hierarchies, ray tracing, motion blur},
   location  = {Vancouver, British Columbia, Canada},
@@ -3437,7 +3438,7 @@
                 tracing techniques, especially for comples environments.},
   journal    = {SIGGRAPH Comput. Graph.},
   month      = aug,
-  pages      = {55–64},
+  pages      = {55-64},
   numpages   = {10}
 }
 
@@ -3462,7 +3463,7 @@
                culling. Results indicate that this algorithm significantly outperforms previous ray
                tracing techniques, especially for comples environments.},
   booktitle = {Proceedings of the 14th Annual Conference on Computer Graphics and Interactive Techniques},
-  pages     = {55–64},
+  pages     = {55-64},
   numpages  = {10},
   series    = {SIGGRAPH '87}
 }
@@ -3514,7 +3515,7 @@
                hierarchy. These are compared experimentally among each other and with the DOP tree
                using a benchmark suite of real-world CAD data.},
   booktitle = {Proceedings of the ACM Symposium on Virtual Reality Software and Technology},
-  pages     = {121–128},
+  pages     = {121-128},
   numpages  = {8},
   keywords  = {virtual prototyping, interference detection, R-trees, physically-based modeling, hierarchical data structures, hierarchical partitioning},
   location  = {Hong Kong, China},
@@ -3548,7 +3549,7 @@
                already delivers realtime performance of up to 35 frames per second even when clocked
                at only 66 MHz.},
   booktitle = {Proceedings of the 21st ACM SIGGRAPH/EUROGRAPHICS Symposium on Graphics Hardware},
-  pages     = {67–77},
+  pages     = {67-77},
   numpages  = {11},
   location  = {Vienna, Austria},
   series    = {GH '06}
@@ -3574,7 +3575,7 @@
                on the total time to image including the construction cost rather than on only frames
                per second.},
   booktitle = {Proceedings of the 17th Eurographics Conference on Rendering Techniques},
-  pages     = {139–149},
+  pages     = {139-149},
   numpages  = {11},
   location  = {Nicosia, Cyprus},
   series    = {EGSR '06}
@@ -3696,7 +3697,7 @@
   doi       = {10.1145/800250.807502},
   abstract  = {Perceptually uniform color spaces can be a useful tool for solving computer graphics color selection problems. However, before they can be used effectively some basic principles of tristimulus colorimetry must be understood and the color reproduction device on which they are to be used must be properly adjusted. The Munsell Book of Color and the Optical Society of America (OSA) Uniform Color Scale are two uniform color spaces which provide a useful way of organizing the colors of a digitally controlled color television monitor. The perceptual uniformity of these color spaces can be used to select color scales to encode the variations of parameters such as temperature or stress.},
   booktitle = {Proceedings of the 7th Annual Conference on Computer Graphics and Interactive Techniques},
-  pages     = {254–261},
+  pages     = {254-261},
   numpages  = {8},
   keywords  = {Color television, Computer graphics, Uniform color spaces, Color, Pseudo color, False color, Color science, Colorimetry},
   location  = {Seattle, Washington, USA},
@@ -3717,7 +3718,7 @@
   abstract   = {Accurate simulation of light propagation within an environment and perceptually based imaging techniques are necessary for the creation of realistic images. A physical experiment that verifies the simulation of reflected light intensities for diffuse environments was conducted. Measurements of radiant energy flux densities are compared with predictions using the radiosity method for those physical environments. By using color science procedures the results of the light model simulation are then transformed to produce a color television image. The final image compares favorably with the original physical model. The experiment indicates that, when the physical model and the simulation were viewed through a view camera, subjects could not distinguish between them. The results and comparison of both test procedures are presented within this paper.},
   journal    = {ACM Trans. Graph.},
   month      = {jan},
-  pages      = {30–50},
+  pages      = {30-50},
   numpages   = {21}
 }
 
@@ -3763,7 +3764,7 @@
   doi       = {10.1145/122718.122729},
   abstract  = {The complexity of computer graphics illumination models and the associated need to find ways of reducing evaluation time has led to the use of two methods for simplifying the spectral data needed for an exact solution. The first method, where spectral data is sampled at a number of discrete points, has been extensively investigated and bounds for the error are known. Unfortunately, the second method, where spectral data is replaced with tristimulus values (such as RGB values), is very little understood even though it is widely used. In this paper we examine the error incurred by the use of this method by investigating the problem of approximating the tristimulus coordinates of light reflected from a surface from those of the source and the surface. A variation on a well known and widely used approximation is presented. This variation used the XYZ primaries which have unique properties that yield straightforward analytic bounds for the approximation error. This analysis is important because it gives a sound mathematical footing to the widely used method of trichromatic approximation. The error bounds will give some insights into the factors that affect accuracy and will indicate why this method often works quite well in practice.},
   booktitle = {Proceedings of the 18th Annual Conference on Computer Graphics and Interactive Techniques},
-  pages     = {101–104},
+  pages     = {101-104},
   numpages  = {4},
   keywords  = {spectral power density (SPD), illumination models, trichromatic approximation, spectral reflectance, Seminorm, tristimulus coordinates},
   series    = {SIGGRAPH '91}
@@ -3778,7 +3779,7 @@
   address   = {New York, NY, USA},
   doi       = {10.1145/166117.166142},
   booktitle = {Proceedings of the 20th Annual Conference on Computer Graphics and Interactive Techniques},
-  pages     = {191–198},
+  pages     = {191-198},
   numpages  = {8},
   keywords  = {linear models, linear color representations, tristimulus values, full spectral rendering},
   location  = {Anaheim, CA},
@@ -3883,7 +3884,7 @@
   abstract   = {This article presents the density estimation framework for generating view-independent global illumination solutions. It works by probabilistically simulating the light flow in an environment with light particles that trace random walks origination at luminaires and then using statistical density estimation techniques to reconstruct the lighting on each surface. By splitting the computation into separate transport and reconstruction stages, we gain many advantages including reduced memory usage, the ability to simulate nondiffuse transport, and natural parallelism. Solutions to several theoretical and practical difficulties in implementing this framework are also described. Light sources that vary spectrally and directionally are integrated into a spectral particle tracer using  nonuniform rejection. A new local linear density estimation technique eliminates boundary bias and extends to arbitrary polygons. A mesh decimation algorithm with perceptual calibration is introduced to simplify the Gouraud-shaded representation of the solution for interactive display.},
   journal    = {ACM Trans. Graph.},
   month      = {jul},
-  pages      = {217–259},
+  pages      = {217-259},
   numpages   = {43},
   keywords   = {density estimation, realistic image synthesis, decimation, particle tracing, regression}
 }
@@ -4120,4 +4121,309 @@
   year   = {2021},
   url    = {https://en.wikipedia.org/w/index.php?title=SRGB&oldid=1059659271},
   note   = {[Online; accessed 22-December-2021]}
+}
+
+% 06
+@inproceedings{10.1145/1461551.1461591,
+  author    = {Sutherland, Ivan E.},
+  title     = {Sketchpad: A Man-Machine Graphical Communication System},
+  year      = {1963},
+  isbn      = {9781450378802},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  doi       = {10.1145/1461551.1461591},
+  abstract  = {The Sketchpad system makes it possible for a man and a computer to converse rapidly through the medium of line drawings. Heretofore, most interaction between man and computers has been slowed down by the need to reduce all communication to written statements that can be typed; in the past, we have been writing letters to rather than conferring with our computers. For many types of communication, such as describing the shape of a mechanical part or the connections of an electrical circuit, typed statements can prove cumbersome. The Sketchpad system, by eliminating typed statements (except for legends) in favor of line drawings, opens up a new area of man-machine communication.},
+  booktitle = {Proceedings of the May 21-23, 1963, Spring Joint Computer Conference},
+  pages     = {329-346},
+  numpages  = {18},
+  location  = {Detroit, Michigan},
+  series    = {AFIPS '63 (Spring)}
+}
+
+@book{10.1201/b22086,
+  author    = {Tomas Akenine-Möller, Eric Haines, Naty Hoffman},
+  publisher = {A. K. Peters/CRC Press},
+  title     = {Real-Time Rendering},
+  year      = {2018},
+  edition   = {4},
+  address   = {New York, USA},
+  doi       = {10.1201/b22086},
+  pages     = {1198},
+  isbn      = {978-1-1386-2700-0}
+}
+
+@book{EBERLY2007,
+  author    = {David H. Eberly},
+  editor    = {David H. Eberly},
+  title     = {3D Game Engine Design},
+  edition   = {2},
+  publisher = {Morgan Kaufmann},
+  address   = {San Francisco},
+  year      = {2007},
+  series    = {The Morgan Kaufmann Series in Interactive 3D Technology},
+  isbn      = {978-0-12-229063-3}
+}
+
+@article{4056910,
+  author  = {Greene, Ned and Heckbert, Paul S.},
+  journal = {IEEE Computer Graphics and Applications},
+  title   = {Creating Raster Omnimax Images from Multiple Perspective Views Using the Elliptical Weighted Average Filter},
+  year    = {1986},
+  volume  = {6},
+  number  = {6},
+  pages   = {21-27},
+  doi     = {10.1109/MCG.1986.276738}
+}
+
+@incollection{KENTON1992288,
+  title     = {VI.4 - A Panoramic Virtual Screen for Ray Tracing},
+  editor    = {David Kirk},
+  booktitle = {Graphics Gems III (IBM Version)},
+  publisher = {Morgan Kaufmann},
+  address   = {San Francisco},
+  pages     = {288-294},
+  year      = {1992},
+  isbn      = {978-0-12-409673-8},
+  doi       = {10.1016/B978-0-08-050755-2.50064-6},
+  author    = {Musgrave F. Kenton},
+  abstract  = {Publisher Summary 
+               The standard imaging model used in ray tracing is that of a pinhole camera with a flat virtual screen. That model can be supplemented with a cylindrical virtual screen to obtain a 360°, or greater, lateral field of view. By using appropriate angular distribution of samples on the vertical axis, a 180° vertical field of view can be obtained as well. This chapter describes a scheme for sampling a virtual screen in such a way that the entire celestial sphere can be mapped onto a rectilinear image plane, with acceptable distortion. It discusses the construction of a panoramic virtual screen for ray tracing. That projection maps the entire view-dependent celestial sphere to a rectilinear screen. Introduction of distortion is unavoidable in that sphere-to-plane mapping; the distortion in that construction of the viewing projection is of a different character than that of a standard virtual screen, taking the form of horizontal stretching of the image as one approaches the poles of the sphere. The resulting panoramic images may be useful for interactive viewing of static imagery in a virtual reality system.}
+}
+
+@inproceedings{10.1145/800224.806818,
+  author    = {Potmesil, Michael and Chakravarty, Indranil},
+  title     = {A Lens and Aperture Camera Model for Synthetic Image Generation},
+  year      = {1981},
+  isbn      = {0897910451},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  doi       = {10.1145/800224.806818},
+  abstract  = {This paper extends the traditional pin-hole camera projection geometry, used in computer graphics, to a more realistic camera model which approximates the effects of a lens and an aperture function of an actual camera. This model allows the generation of synthetic images which have a depth of field, can be focused on an arbitrary plane, and also permits selective modeling of certain optical characteristics of a lens. The model can be expanded to include motion blur and special effect filters. These capabilities provide additional tools for highlighting important areas of a scene and for portraying certain physical characteristics of an object in an image.},
+  booktitle = {Proceedings of the 8th Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {297-305},
+  numpages  = {9},
+  keywords  = {Raster displays, Camera model, Computer graphics, Lens and aperture, Visible surface algorithms},
+  location  = {Dallas, Texas, USA},
+  series    = {SIGGRAPH '81}
+}
+
+@article{10.1145/357299.357300,
+  author     = {Potmesil, Michael and Chakravarty, Indranil},
+  title      = {Synthetic Image Generation with a Lens and Aperture Camera Model},
+  year       = {1982},
+  issue_date = {April 1982},
+  publisher  = {Association for Computing Machinery},
+  address    = {New York, NY, USA},
+  volume     = {1},
+  number     = {2},
+  issn       = {0730-0301},
+  doi        = {10.1145/357299.357300},
+  journal    = {ACM Trans. Graph.},
+  month      = {apr},
+  pages      = {85-108},
+  numpages   = {24},
+  keywords   = {lens and aperture, defocused optical system, camera model, point-spread function}
+}
+
+@inproceedings{10.1145/800059.801169,
+  author    = {Potmesil, Michael and Chakravarty, Indranil},
+  title     = {Modeling Motion Blur in Computer-Generated Images},
+  year      = {1983},
+  isbn      = {0897911091},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  doi       = {10.1145/800059.801169},
+  abstract  = {This paper describes a procedure for modeling motion blur in computer-generated images. Motion blur in photography or cinematography is caused by the motion of objects during the finite exposure time the camera shutter remains open to record the image on film. In computer graphics, the simulation of motion blur is useful both in animated sequences where the blurring tends to remove temporal aliasing effects and in static images where it portrays the illusion of speed or movement among the objects in the scene.The camera model developed for simulating motion blur is described in terms of a generalized image-formation equation. This equation describes the relationship between the object and corresponding image points in terms of the optical system-transfer function. The use of the optical system-transfer function simplifies the description of time-dependent variations of object motion that may occur during the exposure time of a camera. This approach allows us to characterize the motion of objects by a set of system-transfer functions which are derived from the path and velocity of objects in the scene and the exposure time of a camera.},
+  booktitle = {Proceedings of the 10th Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {389-399},
+  numpages  = {11},
+  keywords  = {Image restoration, Camera model, Digital optics, Motion blur, Point-spread function},
+  location  = {Detroit, Michigan, USA},
+  series    = {SIGGRAPH '83}
+}
+
+@article{10.1145/7529.8927,
+  author     = {Cook, Robert L.},
+  title      = {Stochastic Sampling in Computer Graphics},
+  year       = {1986},
+  issue_date = {Jan. 1986},
+  publisher  = {Association for Computing Machinery},
+  address    = {New York, NY, USA},
+  volume     = {5},
+  number     = {1},
+  issn       = {0730-0301},
+  doi        = {10.1145/7529.8927},
+  abstract   = {Ray tracing, ray casting, and other forms of point sampling are important techniques in computer graphics, but their usefulness has been undermined by aliasing artifacts. In this paper it is shown that these artifacts are not an inherent part of point sampling, but a consequence of using regularly spaced samples. If the samples occur at appropriate nonuniformly spaced locations, frequencies above the Nyquist limit do not alias, but instead appear as noise of the correct average intensity. This noise is much less objectionable to our visual system than aliasing. In ray tracing, the rays can be stochastically distributed to perform a Monte Carlo evaluation of integrals in the rendering equation. This is called distributed ray tracing and can be used to simulate motion blur, depth of field, penumbrae, gloss, and translucency.},
+  journal    = {ACM Trans. Graph.},
+  month      = {jan},
+  pages      = {51-72},
+  numpages   = {22}
+}
+
+@inproceedings{10.2312:EGWR:EGSR07:121-126,
+  booktitle = {Rendering Techniques},
+  editor    = {Jan Kautz and Sumanta Pattanaik},
+  title     = {{General Linear Cameras with Finite Aperture}},
+  author    = {Adams, Andrew and Levoy, Marc},
+  year      = {2007},
+  publisher = {The Eurographics Association},
+  issn      = {1727-3463},
+  isbn      = {978-3-905673-52-4},
+  doi       = {10.2312/EGWR/EGSR07/121-126}
+}
+
+@inproceedings{10.1145/218380.218463,
+  author    = {Kolb, Craig and Mitchell, Don and Hanrahan, Pat},
+  title     = {A Realistic Camera Model for Computer Graphics},
+  year      = {1995},
+  isbn      = {0897917014},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  doi       = {10.1145/218380.218463},
+  booktitle = {Proceedings of the 22nd Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {317-324},
+  numpages  = {8},
+  keywords  = {ray tracing, sampling, camera modeling, lens simulation},
+  series    = {SIGGRAPH '95}
+}
+
+@article{10.1111/j.1467-8659.2011.01851.x,
+  author   = {Steinert, B. and Dammertz, H. and Hanika, J. and Lensch, H. P. A.},
+  title    = {General Spectral Camera Lens Simulation},
+  journal  = {Computer Graphics Forum},
+  volume   = {30},
+  number   = {6},
+  pages    = {1643-1654},
+  keywords = {spectral light transport, diffraction, lens aberrations, I.3.7 Computer Graphics: Three-Dimensional Graphics and Realism—Color, shading, shadowing, and texture},
+  doi      = {10.1111/j.1467-8659.2011.01851.x},
+  abstract = {Abstract We present a camera lens simulation model capable of producing advanced photographic phenomena in a general spectral Monte Carlo image rendering system. Our approach incorporates insights from geometrical diffraction theory, from optical engineering and from glass science. We show how to efficiently simulate all five monochromatic aberrations, spherical and coma aberration, astigmatism, field curvature and distortion. We also consider chromatic aberration, lateral colour and aperture diffraction. The inclusion of Fresnel reflection generates correct lens flares and we present an optimized sampling method for path generation.},
+  year     = {2011}
+}
+
+@book{0321188780,
+  author    = {Hecht, Eugene},
+  publisher = {Addison-Wesley},
+  title     = {Optics},
+  year      = {2002},
+  edition   = {4},
+  isbn      = {0321188780}
+}
+
+@book{9780071476874,
+  author    = {Smith, Warren J.},
+  publisher = {McGraw-Hill Education},
+  address   = {New York},
+  title     = {Modern Optical Engineering: The Design of Optical Systems},
+  year      = {2007},
+  edition   = {4},
+  isbn      = {9780071476874}
+}
+
+@article{10.1111/j.1467-8659.2012.03132.x,
+  author   = {Hullin, Matthias B. and Hanika, Johannes and Heidrich, Wolfgang},
+  title    = {Polynomial Optics: A Construction Kit for Efficient Ray-Tracing of Lens Systems},
+  journal  = {Computer Graphics Forum},
+  volume   = {31},
+  number   = {4},
+  pages    = {1375-1383},
+  keywords = {I.3.7 Computer Graphics: Three-Dimensional Graphics and Realism—Raytracing},
+  doi      = {10.1111/j.1467-8659.2012.03132.x},
+  abstract = {Abstract Simulation of light transport through lens systems plays an important role in graphics. While basic imaging properties can be conveniently derived from linear models (like ABCD matrices), these approximations fail to describe nonlinear effects and aberrations that arise in real optics. Such effects can be computed by proper ray tracing, for which, however, finding suitable sampling and filtering strategies is often not a trivial task. Inspired by aberration theory, which describes the deviation from the linear ray transfer in terms of wavefront distortions, we propose a ray-space formulation for nonlinear effects. In particular, we approximate the analytical solution to the ray tracing problem by means of a Taylor expansion in the ray parameters. This representation enables a construction-kit approach to complex optical systems in the spirit of matrix optics. It is also very simple to evaluate, which allows for efficient execution on CPU and GPU alike, including the computation of mixed derivatives of any order. We evaluate fidelity and performance of our polynomial model, and show applications in high-quality offline rendering and at interactive frame rates.},
+  year     = {2012}
+}
+
+@article{10.1111/cgf.12301,
+  author   = {Hanika, Johannes and Dachsbacher, Carsten},
+  title    = {Efficient Monte Carlo rendering with realistic lenses},
+  journal  = {Computer Graphics Forum},
+  volume   = {33},
+  number   = {2},
+  pages    = {323-332},
+  keywords = {Categories and Subject Descriptors (according to ACM CCS):, I.3.7 Computer Graphics: Three-Dimensional Graphics and Realism—Raytracing},
+  doi      = {10.1111/cgf.12301},
+  abstract = {Abstract In this paper we present a novel approach to simulate image formation for a wide range of real world lenses in the Monte Carlo ray tracing framework. Our approach sidesteps the overhead of tracing rays through a system of lenses and requires no tabulation. To this end we first improve the precision of polynomial optics to closely match ground-truth ray tracing. Second, we show how the Jacobian of the optical system enables efficient importance sampling, which is crucial for difficult paths such as sampling the aperture which is hidden behind lenses on both sides. Our results show that this yields converged images significantly faster than previous methods and accurately renders complex lens systems with negligible overhead compared to simple models, e.g. the thin lens model. We demonstrate the practicality of our method by incorporating it into a bidirectional path tracing framework and show how it can provide information needed for sophisticated light transport algorithms.},
+  year     = {2014}
+}
+
+@article{5280315,
+  author  = {Chen, Junqing and Venkataraman, Kartik and Bakin, Dmitry and Rodricks, Brian and Gravelle, Robert and Rao, Pravin and Ni, Yongshen},
+  journal = {IEEE Transactions on Electron Devices},
+  title   = {Digital Camera Imaging System Simulation},
+  year    = {2009},
+  volume  = {56},
+  number  = {11},
+  pages   = {2496-2505},
+  doi     = {10.1109/TED.2009.2030995}
+}
+
+@article{761554,
+  author  = {Glassner, Andrew S.},
+  journal = {IEEE Computer Graphics and Applications},
+  title   = {An open and shut case},
+  year    = {1999},
+  volume  = {19},
+  number  = {3},
+  pages   = {82-92},
+  doi     = {10.1109/38.761554}
+}
+
+@article{10.1080/2151237X.2007.10129235,
+  author    = {Ian Stephenson},
+  title     = {Improving Motion Blur: Shutter Efficiency and Temporal Sampling},
+  journal   = {Journal of Graphics Tools},
+  volume    = {12},
+  number    = {1},
+  pages     = {9-15},
+  year      = {2007},
+  publisher = {Taylor & Francis},
+  doi       = {10.1080/2151237X.2007.10129235}
+}
+
+@inproceedings{10.1145/1242073.1242155,
+  author    = {Buhler, Juan and Wexler, Dan},
+  title     = {A Phenomenological Model for Bokeh Rendering},
+  year      = {2002},
+  isbn      = {1581135254},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  doi       = {10.1145/1242073.1242155},
+  abstract  = {"Bokeh" is a Japanese word used to describe the quality of the out-of-focus areas as rendered on film by a physical lens. In areas that are out of focus, the circle of confusion (i.e., the distribution of light absorbed onto film from a single point of light in the scene) is bigger than in areas that are focused. Different lenses distribute light within the circle of confusion differently, depending on a number of factors, like the shape and number of diaphragm blades and the optical design of the lens itself. For example, lenses that are designed to correct for optical aberrations tend to render a circle of confusion that is more intense on the edges and slightly less so in the center. Other lenses, like the so called "mirror" lenses, which include reflective elements besides refractive ones, typically produce donut-shaped circles of confusion since some of the light paths are cut from the center by the reflective element.Moreover, in a real lens the circle of confusion sometimes becomes elliptical on the areas outside of the center of the image, with the shorter axis of the ellipsis oriented radially from it.Standard rendering techniques model depth of field using point sampling techniques which converge towards a bokeh model with uniform density across the circle of confusion. This represents an idealized lens that does not exist in reality. Real lenses have non-uniform bokeh distributions. For example, a smooth, or "creamy" lens will have a Gaussian distribution across the circle of confusion. Real lenses may have different distributions at different points on the film plane.Our technique allows the animator to specify an arbitrary probability density function to represent the distribution of intensity within the circle of confusion. The probability curve is used by the renderer to jitter the location of the sample point on the lens. For example, if the density function is a Gaussian, more samples will be taken towards the center of the lens than at the edges. Conversely, for a density function that simulates a mirror lens, fewer samples are taken near the center of the lens because the mirror blocks light as it moves through the lens. By generating enough sample points, the model converges on the true bokeh density function.We will also show the effect of specifying two shapes for the light distribution, one for close and the other for far focused areas, and the deformation of the circle of confusion so it becomes elliptical on the edges of the image.Future work includes the specification of the diaphragm shape, and the possible implementation of this technique as a particle renderer, which would provide efficient sampling at a much lower cost.Additional work to add support for stratified sampling is also possible.},
+  booktitle = {ACM SIGGRAPH 2002 Conference Abstracts and Applications},
+  pages     = {142},
+  numpages  = {1},
+  location  = {San Antonio, Texas},
+  series    = {SIGGRAPH '02}
+}
+
+@article{5740919,
+  author  = {Hasinoff, Samuel W. and Kutulakos, Kiriakos N.},
+  journal = {IEEE Transactions on Pattern Analysis and Machine Intelligence},
+  title   = {Light-Efficient Photography},
+  year    = {2011},
+  volume  = {33},
+  number  = {11},
+  pages   = {2203-2214},
+  doi     = {10.1109/TPAMI.2011.62}
+}
+
+@techreport{Jacobs2012,
+  author      = {Jacobs, David E. and	Baek, Jongmin and Levoy, Marc },
+  title       = {Focal Stack Compositing for Depth of Field Control},
+  institution = {Stanford University},
+  year        = {2012},
+  month       = {10},
+  series      = {Stanford Computer Graphics Laboratory Technical Report 2012-1}
+}
+
+@techreport{ng:hal-02551481,
+  title       = {Light Field Photography with a Hand-held Plenoptic Camera},
+  author      = {Ng, Ren and Levoy, Marc and Br{\'e}dif, Mathieu and Duval, Gene and Horowitz, Mark and Hanrahan, Pat},
+  type        = {Research Report},
+  number      = {CSTR 2005-02},
+  pages       = {Stanford University Computer Science Tech Report},
+  institution = {Stanford University},
+  year        = {2005},
+  month       = Apr,
+  keywords    = {Digital photography; light field; microlens array; synthetic photography; refocusing},
+  pdf         = {https://hal.archives-ouvertes.fr/hal-02551481/file/lfcamera-150dpi.pdf}
 }

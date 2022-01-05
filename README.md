@@ -3,6 +3,8 @@
 [![](https://img.shields.io/badge/Made%20with-TeX-brightgreen?style=flat-square)](.)
 [![](https://img.shields.io/github/downloads/kanition/pbrtbook/total?color=blue&style=flat-square)](https://github.com/kanition/pbrtbook/releases)
 [![](https://img.shields.io/github/v/release/kanition/pbrtbook?include_prereleases&style=flat-square&color=orange)](https://github.com/kanition/pbrtbook/releases/latest)
+[![](https://img.shields.io/github/release-date-pre/kanition/pbrtbook?color=yellow&label=date&style=flat-square)](https://github.com/kanition/pbrtbook/releases/latest)
+# [**下载本书**](https://github.com/kanition/pbrtbook/releases) | [翻译进度](https://github.com/kanition/pbrtbook/projects/1) | [你问我答](https://github.com/kanition/pbrtbook/discussions) | [我要报错](https://github.com/kanition/pbrtbook/issues/new/choose) | [编译指南](https://github.com/kanition/pbrtbook/blob/main/CONTRIBUTING.md) | [长期求助文献传递](https://github.com/kanition/pbrtbook/discussions/41)
 
 ![Landscape view-3 @pbrt-v3-scenes/landscape](Pictures/title.png)
 
@@ -10,15 +12,6 @@
 - 原著 [Matt Pharr](https://pharr.org/matt), [Wenzel Jakob](https://rgl.epfl.ch/people/wjakob) & Greg Humphreys
 - 翻译 [Kanition](https://github.com/kanition)
 
-## 下载地址：[https://github.com/kanition/pbrtbook/releases](https://github.com/kanition/pbrtbook/releases)
-
-## 翻译进度：[https://github.com/kanition/pbrtbook/projects](https://github.com/kanition/pbrtbook/projects)
-
-## 你问我答：[https://github.com/kanition/pbrtbook/discussions](https://github.com/kanition/pbrtbook/discussions)
-
-## 我要报错：[https://github.com/kanition/pbrtbook/issues/new/choose](https://github.com/kanition/pbrtbook/issues/new/choose)
-
-## 长期求助文献传递：[https://github.com/kanition/pbrtbook/discussions/41](https://github.com/kanition/pbrtbook/discussions/41)
 ## 友情链接
 ### 第三版
 * 原书官网：[https://www.pbr-book.org/](https://www.pbr-book.org/)
@@ -27,11 +20,7 @@
 ### 第四版
 * 原书源码：[https://github.com/mmp/pbrt-v4](https://github.com/mmp/pbrt-v4)
 
-
 **欢迎提出宝贵意见和建议。如果你发现本书存在错误，请一定要告诉我们！**
-
-### 编译指南
-[https://github.com/kanition/pbrtbook/blob/main/CONTRIBUTING.md](https://github.com/kanition/pbrtbook/blob/main/CONTRIBUTING.md)
 
 ## 简介
 本中译版（以下简称“本书”）系译者（笔名[Kanition](https://github.com/kanition)）自学英文经典书籍《Physically Based Rendering: From Theory To Implementation》第三版时自行翻译而成。使用本书及其源码须遵循相关许可证协议。

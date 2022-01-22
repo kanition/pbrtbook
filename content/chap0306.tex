@@ -242,7 +242,7 @@ const `\refvar{Point3f}{}` &p2 = `\refvar{mesh}{}`->`\refvar[TriangleMesh::p]{p}
 bool `\initvar{Triangle::Intersect}{}`(const `\refvar{Ray}{}` &ray, `\refvar{Float}{}` *tHit,
         `\refvar{SurfaceInteraction}{}` *isect, bool testAlphaTexture) const {
     `\refcode{Get triangle vertices in p0, p1, and p2}{}`
-    `\refcode{Perform ray–triangle intersection test}{}`
+    `\refcode{Perform ray-triangle intersection test}{}`
     `\refcode{Compute triangle partial derivatives}{}`
     `\refcode{Compute error bounds for triangle intersection}{}`
     `\refcode{Interpolate (u,v) parametric coordinates and hit point}{}`
@@ -262,7 +262,7 @@ pbrt的光线-三角形相交测试基于首先计算仿射变换
 拥有\keyindex{水密的}{watertight}{}光线-三角形相交算法成为可能，
 这样刚好命中三角形边缘的棘手光线等的相交就永远不会被错误地报告为未命中了。
 \begin{lstlisting}
-`\initcode{Perform ray–triangle intersection test}{=}`
+`\initcode{Perform ray-triangle intersection test}{=}`
 `\refcode{Transform triangle vertices to ray coordinate space}{}`
 `\refcode{Compute edge function coefficients e0, e1, and e2}{}`
 `\refcode{Fall back to double-precision test at triangle edges}{}`

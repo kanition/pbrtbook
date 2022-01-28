@@ -107,4 +107,41 @@ protected:
 `\refvar{Transform}{}` `\initvar{ScreenToRaster}{}`, `\initvar{RasterToScreen}{}`;
 \end{lstlisting}
 
+\subsection{正交相机}\label{sub:正交相机}
+\begin{lstlisting}
+`\initcode{OrthographicCamera Declarations}{=}`
+class `\initvar{OrthographicCamera}{}` : public `\refvar{ProjectiveCamera}{}` {
+public:
+    `\refcode{OrthographicCamera Public Methods}{}`
+private:
+    `\refcode{OrthographicCamera Private Data}{}`
+};
+\end{lstlisting}
+
+定义在文件\href{https://github.com/mmp/pbrt-v3/blob/master/src/cameras/orthographic.h}{\ttfamily cameras/orthographic.h}和
+\href{https://github.com/mmp/pbrt-v3/tree/master/src/cameras/orthographic.cpp}{\ttfamily cameras/orthographic.cpp}中的\keyindex{正交相机}{orthographic camera}{camera相机}，
+是基于正交投影变换的。
+正交变换取场景中的一块矩形区域并将其投影到定义该区域之框的前方一面。
+它不具有\keyindex{前缩}{foreshortening}{}效应——当物体远离时它们在成像平面上变小——
+但它让平行线依然平行，并保留物体间的相对距离。
+\reffig{6.2}{}展示了该立方体是如何定义场景可见区域的。
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap06/Orthoviewingvolume.tex}
+    \caption{正交视见体是相机空间中的轴对齐框，
+        其定义使该区域内的物体投影到该框$z=\text{near}$的一面上。}
+    \label{fig:6.2}
+\end{figure}
+
+\reffig{6.3}比较了用正交投影和下节定义的透视投影来渲染的结果
+\sidenote{译者注：原图为exr格式，此处转换为png格式以便制作插图，
+    图像细节和色域可能发生细微变化。后续均作此处理，读者可到原书官网查看原图。}。
+\begin{figure}[htbp]
+    \centering
+    \subfloat[正交]{\includegraphics[width=\linewidth]{chap06/car-ortho.png}\label{fig:6.3.1}}\\
+    \subfloat[透视]{\includegraphics[width=\linewidth]{chap06/car-perspective.png}\label{fig:6.3.2}}
+    \caption{用不同相机模型渲染的汽车模型。用(a)正交和(b)透视相机从同一视点渲染汽车。
+        缺少前缩使得正交视角看起来深度更少，但它保留了平行线这一很有用的特性。}
+    \label{fig:6.3}
+\end{figure}
+
 \subsection{薄透镜模型与景深}\label{sub:薄透镜模型与景深}

@@ -107,4 +107,156 @@ protected:
 `\refvar{Transform}{}` `\initvar{ScreenToRaster}{}`, `\initvar{RasterToScreen}{}`;
 \end{lstlisting}
 
+\subsection{正交相机}\label{sub:正交相机}
+\begin{lstlisting}
+`\initcode{OrthographicCamera Declarations}{=}`
+class `\initvar{OrthographicCamera}{}` : public `\refvar{ProjectiveCamera}{}` {
+public:
+    `\refcode{OrthographicCamera Public Methods}{}`
+private:
+    `\refcode{OrthographicCamera Private Data}{}`
+};
+\end{lstlisting}
+
+定义在文件\href{https://github.com/mmp/pbrt-v3/blob/master/src/cameras/orthographic.h}{\ttfamily cameras/orthographic.h}和
+\href{https://github.com/mmp/pbrt-v3/tree/master/src/cameras/orthographic.cpp}{\ttfamily cameras/orthographic.cpp}中的\keyindex{正交相机}{orthographic camera}{camera相机}，
+是基于正交投影变换的。
+正交变换取场景中的一块矩形区域并将其投影到定义该区域之框的前方一面。
+它不具有\keyindex{前缩}{foreshortening}{}效应——当物体远离时它们在成像平面上变小——
+但它让平行线依然平行，并保留物体间的相对距离。
+\reffig{6.2}{}展示了该立方体是如何定义场景可见区域的。
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap06/Orthoviewingvolume.tex}
+    \caption{正交视见体是相机空间中的轴对齐框，
+        其定义使该区域内的物体投影到该框$z=\text{near}$的一面上。}
+    \label{fig:6.2}
+\end{figure}
+
+\reffig{6.3}比较了用正交投影和下节定义的透视投影来渲染的结果
+\sidenote{译者注：原图为exr格式，此处转换为png格式以便制作插图，
+    图像细节和色域可能发生细微变化。后续均作此处理，读者可到原书官网查看原图。}。
+\begin{figure}[htbp]
+    \centering
+    \subfloat[正交]{\includegraphics[width=\linewidth]{chap06/car-ortho.png}\label{fig:6.3.1}}\\
+    \subfloat[透视]{\includegraphics[width=\linewidth]{chap06/car-perspective.png}\label{fig:6.3.2}}
+    \caption{用不同相机模型渲染的汽车模型。用(a)正交和(b)透视相机从同一视点渲染汽车。
+        缺少前缩使得正交视角看起来深度更少，但它保留了平行线，是很有用的特性。}
+    \label{fig:6.3}
+\end{figure}
+
+正交相机构造函数用稍后定义的函数\refvar{Orthographic}{()}生成正交变换矩阵。
+\begin{lstlisting}
+`\initcode{OrthographicCamera Public Methods}{=}`
+`\refvar{OrthographicCamera}{}`(const `\refvar{AnimatedTransform}{}` &CameraToWorld,
+        const `\refvar{Bounds2f}{}` &screenWindow, `\refvar{Float}{}` shutterOpen,
+        `\refvar{Float}{}` shutterClose, `\refvar{Float}{}` lensRadius, `\refvar{Float}{}` focalDistance,
+        `\refvar{Film}{}` *film, const `\refvar{Medium}{}` *medium)
+    : `\refvar{ProjectiveCamera}{}`(CameraToWorld, `\refvar{Orthographic}{}`(0, 1),
+                       screenWindow, shutterOpen, shutterClose,
+                       lensRadius, focalDistance, film, medium) {
+    `\refcode{Compute differential changes in origin for orthographic camera rays}{}`
+}
+\end{lstlisting}
+
+正交视角变换保持$x$和$y$坐标不变但将近处平面的$z$值映射为0而远处平面的$z$值映射为1。
+为此，场景先沿$z$轴平移使得近处平面对齐到$z=0$。
+然后，场景按$z$缩放使得远处平面映射为$z=1$。
+这两个变换合成得到整个变换。（对于像pbrt那样的光线追踪器，
+我们想让近处平面位于0处，这样光线就会从穿过相机位置的平面上发出；
+远处平面偏移量不是很重要。）
+\begin{lstlisting}
+`\refcode{Transform Method Definitions}{+=}\lastnext{TransformMethodDefinitions}`
+`\refvar{Transform}{}` `\initvar{Orthographic}{}`(`\refvar{Float}{}` zNear, `\refvar{Float}{}` zFar) {
+    return `\refvar{Scale}{}`(1, 1, 1 / (zFar - zNear)) *
+           `\refvar{Translate}{}`(`\refvar{Vector3f}{}`(0, 0, -zNear));
+}
+\end{lstlisting}
+
+幸亏正交投影很简单，在方法\refvar[OrthographicCamera::GenerateRayDifferential]{GenerateRayDifferential}{()}中
+很容易直接计算$x$和$y$方向的差分射线。
+差分射线的方向将和主射线一样（它们对于一个正交相机生成的所有光线都是这样），
+且端点差异对于所有射线也会一样。
+因此，这里的构造函数预先计算射线端点因胶片平面上在$x$和$y$方向移动单个像素而
+在相机空间坐标中移动了多少。
+\begin{lstlisting}
+`\initcode{Compute differential changes in origin for orthographic camera rays}{=}`
+`\refvar{dxCamera}{}` = `\refvar{RasterToCamera}{}`(`\refvar{Vector3f}{}`(1, 0, 0));
+`\refvar{dyCamera}{}` = `\refvar{RasterToCamera}{}`(`\refvar{Vector3f}{}`(0, 1, 0));
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{OrthographicCamera Private Data}{=}`
+`\refvar{Vector3f}{}` `\initvar{dxCamera}{}`, `\initvar{dyCamera}{}`;
+\end{lstlisting}
+
+我们现在可以执行代码取栅格空间中的一个样本点并将其变为相机光线。
+\reffig{6.4}总结了该过程。首先，栅格空间样本位置变换为相机空间的一点，
+即给出近处平面上一点作为相机光线的端点。
+因为相机空间观察方向沿$z$轴指出，相机空间光线方向为$(0,0,1)$。
+
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap06/Orthogenerateray.tex}
+    \caption{为了用正交相机创建光线，胶片平面上的栅格空间位置被变换到相机空间，
+    给出近处平面上的射线端点。相机空间中光线的方向为$(0,0,1)$，沿$z$轴。}
+    \label{fig:6.4}
+\end{figure}
+
+若为该场景启用景深，则修改射线端点和方向来模拟景深。本节将稍后解释景深。
+光线的时间值通过按偏移量\refvar{CameraSample::time}{}（在范围$[0,1)$内）
+在快门开启和关闭间线性插值来设置。最后，光线在被返回前变换到世界空间。
+\begin{lstlisting}
+`\initcode{OrthographicCamera Definitions}{=}\initnext{OrthographicCameraDefinitions}`
+`\refvar{Float}{}` `\refvar{OrthographicCamera}{}`::`\initvar[OrthographicCamera::GenerateRay]{GenerateRay}{}`(const `\refvar{CameraSample}{}` &sample,
+        `\refvar{Ray}{}` *ray) const {
+    `\refcode{Compute raster and camera sample positions}{}`
+    *ray = `\refvar{Ray}{}`(pCamera, `\refvar{Vector3f}{}`(0, 0, 1));
+    `\refcode{Modify ray for depth of field}{}`
+    ray->`\refvar[Ray::time]{time}{}` = `\refvar{Lerp}{}`(sample.`\refvar[CameraSample::time]{time}{}`, `\refvar{shutterOpen}{}`, `\refvar{shutterClose}{}`);
+    ray->`\refvar[Ray::medium]{medium}{}` = `\refvar[Camera::medium]{medium}{}`;
+    *ray = `\refvar{CameraToWorld}{}`(*ray);
+    return 1;
+}
+\end{lstlisting}
+
+一旦设置好所有变换矩阵，就很容易将栅格空间样本变换到相机空间。
+\begin{lstlisting}
+`\initcode{Compute raster and camera sample positions}{=}`
+`\refvar{Point3f}{}` pFilm = `\refvar{Point3f}{}`(sample.`\refvar{pFilm}{}`.x, sample.`\refvar{pFilm}{}`.y, 0);
+`\refvar{Point3f}{}` pCamera = `\refvar{RasterToCamera}{}`(pFilm);
+\end{lstlisting}
+
+\refvar[OrthographicCamera::GenerateRayDifferential]{GenerateRayDifferential}{()}的实现执行一样的计算来生成相机主光线。
+差分射线端点用在\refvar{OrthographicCamera}{}构造函数中算得的偏移量求出，
+然后将整个射线差分变换到世界空间。
+\begin{lstlisting}
+`\refcode{OrthographicCamera Definitions}{+=}\lastcode{OrthographicCameraDefinitions}`
+`\refvar{Float}{}` `\refvar{OrthographicCamera}{}`::`\initvar[OrthographicCamera::GenerateRayDifferential]{GenerateRayDifferential}{}`(
+        const `\refvar{CameraSample}{}` &sample, `\refvar{RayDifferential}{}` *ray) const {
+    `\refcode{Compute main orthographic viewing ray}{}`
+    `\refcode{Compute ray differentials for OrthographicCamera}{}`
+    ray->`\refvar[Ray::time]{time}{}` = `\refvar{Lerp}{}`(sample.`\refvar[CameraSample::time]{time}{}`, `\refvar{shutterOpen}{}`, `\refvar{shutterClose}{}`);
+    ray->`\refvar{hasDifferentials}{}` = true;
+    ray->`\refvar[Ray::medium]{medium}{}` = `\refvar[Camera::medium]{medium}{}`;
+    *ray = `\refvar{CameraToWorld}{}`(*ray);
+    return 1;
+}
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{Compute main orthographic viewing ray}{=}`
+`\refcode{Compute raster and camera sample positions}{}`
+*ray = `\refvar{RayDifferential}{}`(pCamera, `\refvar{Vector3f}{}`(0, 0, 1));
+`\refcode{Modify ray for depth of field}{}`
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{Compute ray differentials for OrthographicCamera}{=}`
+if (`\refvar{lensRadius}{}` > 0) {
+    `\refcode{Compute OrthographicCamera ray differentials accounting for lens}{}`
+} else {
+    ray->`\refvar{rxOrigin}{}` = ray->`\refvar[Ray::o]{o}{}` + `\refvar{dxCamera}{}`;
+    ray->`\refvar{ryOrigin}{}` = ray->`\refvar[Ray::o]{o}{}` + `\refvar{dyCamera}{}`;
+    ray->`\refvar{rxDirection}{}` = ray->`\refvar{ryDirection}{}` = ray->`\refvar[Ray::d]{d}{}`;
+}
+\end{lstlisting}
+
+\subsection{透视相机}\label{sub:透视相机}
+
 \subsection{薄透镜模型与景深}\label{sub:薄透镜模型与景深}

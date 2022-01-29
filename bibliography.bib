@@ -1396,7 +1396,7 @@
   pages    = {422-432},
   keywords = {Isosurface, Reconstruction filter, Octree, Quantization.},
   doi      = {10.1111/1467-8659.00535},
-  abstract = {We present a new approach to finding ray–patch intersections with triangular Bernstein–Bézier patches of arbitrary degree. This paper extends and complements on the short presentation17 . Unlike a previous approach which was based on a combination of hierarchical subdivision and a Newton–like iteration scheme21 , this work adapts the concept of Bézier clipping to the triangular domain. The problem of reporting wrong intersections, inherent to the original Bézier clipping algorithm14 , is inves-tigated and opposed to the triangular case. It turns out that reporting wrong hits is very improbable, even close to impossible, in the triangular set–up. A combination of Bézier clipping and a simple hierarchy of nested bounding volumes offers a reliable and accurate solution to the problem of ray tracing triangular Bézier patches.},
+  abstract = {We present a new approach to finding ray-patch intersections with triangular Bernstein-Bézier patches of arbitrary degree. This paper extends and complements on the short presentation17 . Unlike a previous approach which was based on a combination of hierarchical subdivision and a Newton-like iteration scheme21 , this work adapts the concept of Bézier clipping to the triangular domain. The problem of reporting wrong intersections, inherent to the original Bézier clipping algorithm14 , is inves-tigated and opposed to the triangular case. It turns out that reporting wrong hits is very improbable, even close to impossible, in the triangular set-up. A combination of Bézier clipping and a simple hierarchy of nested bounding volumes offers a reliable and accurate solution to the problem of ray tracing triangular Bézier patches.},
   year     = {2001}
 }
 
@@ -1633,7 +1633,7 @@
   address   = {New York, NY, USA},
   doi       = {10.1145/1179849.1179904},
   booktitle = {ACM SIGGRAPH 2006 Sketches},
-  pages     = {44–es},
+  pages     = {44-es},
   location  = {Boston, Massachusetts},
   series    = {SIGGRAPH '06}
 }
@@ -2527,7 +2527,7 @@
                version of this routine that uses IEEE numerical properties to ensure that those tests
                are both robust and efficient. Sample source code is available online.},
   booktitle = {ACM SIGGRAPH 2005 Courses},
-  pages     = {9–es},
+  pages     = {9-es},
   location  = {Los Angeles, California},
   series    = {SIGGRAPH '05}
 }
@@ -2911,7 +2911,7 @@
   number   = {3},
   pages    = {507-516},
   doi      = {10.1111/j.1467-8659.2006.00970.x},
-  abstract = {Abstract We present a novel algorithm to compute cache-efficient layouts of bounding volume hierarchies (BVHs) of polygonal models. Our approach does not make any assumptions about the cache parameters or block sizes of the memory hierarchy. We introduce a new probabilistic model to predict the runtime access patterns of a BVH. Our layout computation algorithm utilizes parent-child and spatial localities between the accessed nodes to reduce both the number of cache misses and the size of the working set. Our algorithm also works well for spatial partitioning hierarchies including kd-trees. We use our algorithm to compute layouts of BVHs and spatial partitioning hierarchies of large models composed of millions of triangles. We compare our cache-efficient layouts with other layouts in the context of collision detection and ray tracing. In our benchmarks, our layouts consistently show better performance over other layouts and improve the performance of these applications by 26\%–300\%without any modification of the underlying algorithms or runtime applications. Categories and Subject Descriptors (according to ACM CCS): I.3.3 [Computer Graphics]: Hierarchy and Geometric Transformations},
+  abstract = {Abstract We present a novel algorithm to compute cache-efficient layouts of bounding volume hierarchies (BVHs) of polygonal models. Our approach does not make any assumptions about the cache parameters or block sizes of the memory hierarchy. We introduce a new probabilistic model to predict the runtime access patterns of a BVH. Our layout computation algorithm utilizes parent-child and spatial localities between the accessed nodes to reduce both the number of cache misses and the size of the working set. Our algorithm also works well for spatial partitioning hierarchies including kd-trees. We use our algorithm to compute layouts of BVHs and spatial partitioning hierarchies of large models composed of millions of triangles. We compare our cache-efficient layouts with other layouts in the context of collision detection and ray tracing. In our benchmarks, our layouts consistently show better performance over other layouts and improve the performance of these applications by 26\%-300\%without any modification of the underlying algorithms or runtime applications. Categories and Subject Descriptors (according to ACM CCS): I.3.3 [Computer Graphics]: Hierarchy and Geometric Transformations},
   year     = {2006}
 }
 
@@ -3373,7 +3373,7 @@
   volume   = {28},
   number   = {4},
   pages    = {1199-1206},
-  keywords = {I.3.7 Computer Graphics: Three-Dimensional Graphics and Realism–Raytracing},
+  keywords = {I.3.7 Computer Graphics: Three-Dimensional Graphics and Realism-Raytracing},
   doi      = {10.1111/j.1467-8659.2009.01497.x},
   abstract = {Abstract In this paper we present a hybrid algorithm for building the bounding volume hierarchy (BVH) that is used in accelerating ray tracing of animated models. This algorithm precomputes densely packed clusters of triangles on surfaces. Folowing that, a set of clusters is used to rebuild the BVH in every frame. Our approach utilizes the assumption that groups of connected triangles remain connected throughout the course of the animation. We introduce a novel heuristic to create triangle clusters that are designed for high performance ray tracing. This heuristic combines the density of connectivity, geometric size and the shape of the cluster. Our approach accelerates the BVH builder by an order of magnitude rebuilding only the set of clusters that is much smaller than the original set of triangles. The speed-up is achieved against a ‘brute-force’ BVH builder that repartitions all triangles in every frame of animation without using any pre-clustering. The rendering performance is not affected when a cluster contains a few dozen triangles. We demonstrate the real-time/interactive ray tracing performance for highly-dynamic complex models.},
   year     = {2009}

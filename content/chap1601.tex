@@ -1,6 +1,19 @@
 \section{路径-空间测量方程}\label{sec:路径-空间测量方程}
 
 \subsection{采样相机}\label{sub:采样相机2}
+\begin{lstlisting}
+`\initcode{Compute image plane bounds at z=1 for PerspectiveCamera}{=}`
+`\refvar{Point2i}{}` res = film->`\refvar{fullResolution}{}`;
+`\refvar{Point3f}{}` pMin = `\refvar{RasterToCamera}{}`(`\refvar{Point3f}{}`(0, 0, 0));
+`\refvar{Point3f}{}` pMax = `\refvar{RasterToCamera}{}`(`\refvar{Point3f}{}`(res.x, res.y, 0));
+pMin /= pMin.z;
+pMax /= pMax.z;
+`\refvar[PerspectiveCamera::A]{A}{}` = std::abs((pMax.x - pMin.x) * (pMax.y - pMin.y));
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{PerspectiveCamera Private Data}{+=}\lastcode{PerspectiveCameraPrivateData}`
+`\refvar{Float}{}` `\initvar[PerspectiveCamera::A]{A}{}`;
+\end{lstlisting}
 \subsection{非对称散射}\label{sub:非对称散射}
 \begin{lstlisting}
 `\initcode{TransportMode Declarations}{=}`

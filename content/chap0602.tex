@@ -126,7 +126,7 @@ private:
 但它让平行线依然平行，并保留物体间的相对距离。
 \reffig{6.2}{}展示了该立方体是如何定义场景可见区域的。
 \begin{figure}[htbp]
-    \centering\input{Pictures/chap06/Orthoviewingvolume.tex}
+    \centering\includegraphics[width=0.33\linewidth]{chap06/Orthoviewingvolume.eps}
     \caption{正交视见体是相机空间中的轴对齐框，
         其定义使该区域内的物体投影到该框$z=\text{near}$的一面上。}
     \label{fig:6.2}
@@ -180,12 +180,12 @@ private:
 在相机空间坐标中移动了多少。
 \begin{lstlisting}
 `\initcode{Compute differential changes in origin for orthographic camera rays}{=}`
-`\refvar{dxCamera}{}` = `\refvar{RasterToCamera}{}`(`\refvar{Vector3f}{}`(1, 0, 0));
-`\refvar{dyCamera}{}` = `\refvar{RasterToCamera}{}`(`\refvar{Vector3f}{}`(0, 1, 0));
+`\refvar[OrthographicCamera::dxCamera]{dxCamera}{}` = `\refvar{RasterToCamera}{}`(`\refvar{Vector3f}{}`(1, 0, 0));
+`\refvar[OrthographicCamera::dyCamera]{dyCamera}{}` = `\refvar{RasterToCamera}{}`(`\refvar{Vector3f}{}`(0, 1, 0));
 \end{lstlisting}
 \begin{lstlisting}
 `\initcode{OrthographicCamera Private Data}{=}`
-`\refvar{Vector3f}{}` `\initvar{dxCamera}{}`, `\initvar{dyCamera}{}`;
+`\refvar{Vector3f}{}` `\initvar[OrthographicCamera::dxCamera]{dxCamera}{}`, `\initvar[OrthographicCamera::dyCamera]{dyCamera}{}`;
 \end{lstlisting}
 
 我们现在可以执行代码取栅格空间中的一个样本点并将其变为相机光线。
@@ -194,9 +194,9 @@ private:
 因为相机空间观察方向沿$z$轴指出，相机空间光线方向为$(0,0,1)$。
 
 \begin{figure}[htbp]
-    \centering\input{Pictures/chap06/Orthogenerateray.tex}
+    \centering\includegraphics[width=0.8\linewidth]{chap06/Orthogenerateray.eps}
     \caption{为了用正交相机创建光线，胶片平面上的栅格空间位置被变换到相机空间，
-    给出近处平面上的射线端点。相机空间中光线的方向为$(0,0,1)$，沿$z$轴。}
+        给出近处平面上的射线端点。相机空间中光线的方向为$(0,0,1)$，沿$z$轴。}
     \label{fig:6.4}
 \end{figure}
 
@@ -205,7 +205,7 @@ private:
 在快门开启和关闭间线性插值来设置。最后，光线在被返回前变换到世界空间。
 \begin{lstlisting}
 `\initcode{OrthographicCamera Definitions}{=}\initnext{OrthographicCameraDefinitions}`
-`\refvar{Float}{}` `\refvar{OrthographicCamera}{}`::`\initvar[OrthographicCamera::GenerateRay]{GenerateRay}{}`(const `\refvar{CameraSample}{}` &sample,
+`\refvar{Float}{}` `\refvar{OrthographicCamera}{}`::`\initvar[OrthographicCamera::GenerateRay]{\refvar{GenerateRay}{}}{}`(const `\refvar{CameraSample}{}` &sample,
         `\refvar{Ray}{}` *ray) const {
     `\refcode{Compute raster and camera sample positions}{}`
     *ray = `\refvar{Ray}{}`(pCamera, `\refvar{Vector3f}{}`(0, 0, 1));
@@ -229,7 +229,7 @@ private:
 然后将整个射线差分变换到世界空间。
 \begin{lstlisting}
 `\refcode{OrthographicCamera Definitions}{+=}\lastcode{OrthographicCameraDefinitions}`
-`\refvar{Float}{}` `\refvar{OrthographicCamera}{}`::`\initvar[OrthographicCamera::GenerateRayDifferential]{GenerateRayDifferential}{}`(
+`\refvar{Float}{}` `\refvar{OrthographicCamera}{}`::`\initvar[OrthographicCamera::GenerateRayDifferential]{\refvar{GenerateRayDifferential}{}}{}`(
         const `\refvar{CameraSample}{}` &sample, `\refvar{RayDifferential}{}` *ray) const {
     `\refcode{Compute main orthographic viewing ray}{}`
     `\refcode{Compute ray differentials for OrthographicCamera}{}`
@@ -251,12 +251,187 @@ private:
 if (`\refvar{lensRadius}{}` > 0) {
     `\refcode{Compute OrthographicCamera ray differentials accounting for lens}{}`
 } else {
-    ray->`\refvar{rxOrigin}{}` = ray->`\refvar[Ray::o]{o}{}` + `\refvar{dxCamera}{}`;
-    ray->`\refvar{ryOrigin}{}` = ray->`\refvar[Ray::o]{o}{}` + `\refvar{dyCamera}{}`;
+    ray->`\refvar{rxOrigin}{}` = ray->`\refvar[Ray::o]{o}{}` + `\refvar[OrthographicCamera::dxCamera]{dxCamera}{}`;
+    ray->`\refvar{ryOrigin}{}` = ray->`\refvar[Ray::o]{o}{}` + `\refvar[OrthographicCamera::dyCamera]{dyCamera}{}`;
     ray->`\refvar{rxDirection}{}` = ray->`\refvar{ryDirection}{}` = ray->`\refvar[Ray::d]{d}{}`;
 }
 \end{lstlisting}
+\begin{lstlisting}
+`\initcode{Compute OrthographicCamera ray differentials accounting for lens}{=}`
+`\refcode{Sample point on lens}{}`
+`\refvar{Float}{}` ft = focalDistance / ray->`\refvar[Ray::d]{d}{}`.z;
+
+`\refvar{Point3f}{}` pFocus = pCamera + `\refvar[OrthographicCamera::dxCamera]{dxCamera}{}` + (ft * `\refvar{Vector3f}{}`(0, 0, 1));
+ray->`\refvar{rxOrigin}{}` = `\refvar{Point3f}{}`(pLens.x, pLens.y, 0);
+ray->`\refvar{rxDirection}{}` = `\refvar{Normalize}{}`(pFocus - ray->`\refvar{rxOrigin}{}`);
+
+pFocus = pCamera + `\refvar[OrthographicCamera::dyCamera]{dyCamera}{}` + (ft * `\refvar{Vector3f}{}`(0, 0, 1));
+ray->`\refvar{ryOrigin}{}` = `\refvar{Point3f}{}`(pLens.x, pLens.y, 0);
+ray->`\refvar{ryDirection}{}` = `\refvar{Normalize}{}`(pFocus - ray->`\refvar{ryOrigin}{}`);
+\end{lstlisting}
 
 \subsection{透视相机}\label{sub:透视相机}
+透视投影和正交投影相似，也把一个空间体投影到2D胶片平面上。
+然而，它包含前缩效应：远处物体比近处相同尺寸的物体投影得更小。
+不像正交投影那样，透视投影不保持距离和角度，平行线也不再保持平行。
+透视投影非常符合眼睛或相机透镜生成3D世界图像的方式。
+投影相机实现于文件\href{https://github.com/mmp/pbrt-v3/blob/master/src/cameras/perspective.h}{\ttfamily cameras/perspective.h}
+和\href{https://github.com/mmp/pbrt-v3/blob/master/src/cameras/perspective.cpp}{\ttfamily cameras/perspective.cpp}中。
+\begin{lstlisting}
+`\initcode{PerspectiveCamera Declarations}{=}`
+class `\initvar{PerspectiveCamera}{}` : public `\refvar{ProjectiveCamera}{}` {
+public:
+    `\refcode{PerspectiveCamera Public Methods}{}`
+private:
+    `\refcode{PerspectiveCamera Private Data}{}`
+};
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{PerspectiveCamera Method Definitions}{=}\initnext{PerspectiveCameraMethodDefinitions}`
+`\refvar{PerspectiveCamera}{}`::`\refvar{PerspectiveCamera}{}`(
+        const `\refvar{AnimatedTransform}{}` &CameraToWorld,
+        const `\refvar{Bounds2f}{}` &screenWindow, `\refvar{Float}{}` shutterOpen,
+        `\refvar{Float}{}` shutterClose, `\refvar{Float}{}` lensRadius, `\refvar{Float}{}` focalDistance,
+        `\refvar{Float}{}` fov, `\refvar{Film}{}` *film, const `\refvar{Medium}{}` *medium)
+    : `\refvar{ProjectiveCamera}{}`(CameraToWorld, `\refvar{Perspective}{}`(fov, 1e-2f, 1000.f),
+                       screenWindow, shutterOpen, shutterClose,
+                       lensRadius, focalDistance, film, medium) {
+    `\refcode{Compute differential changes in origin for perspective camera rays}{}`
+    `\refcode{Compute image plane bounds at z=1 for PerspectiveCamera}{}`
+}
+\end{lstlisting}
+
+透视投影描述了场景的透视图。
+场景中的点投影到垂直于$z$轴的视平面上。
+函数\refvar{Perspective}{()}计算该变换；
+它接收视场角度{\ttfamily fov}以及到近处$z$平面和远处$z$平面的距离。
+在透视投影后，近处$z$平面上的点映射为$z=0$，远处平面上的点则有$z=1$（\reffig{6.5}）。
+对于基于栅格化的渲染系统，仔细设置这些平面的位置很重要；
+它们决定了要渲染的场景的$z$范围，但将它们取值的量级设置得相差过大可能导致数值精度误差。
+对于像pbrt的光线追踪器，可以按其位置任意设置它们。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.5\linewidth]{chap06/Perspectivetransformationmatrix.eps}
+    \caption{投影变换矩阵将相机空间里的点投影到胶片平面。
+        被投影点的$x'$和$y'$坐标等于投影前$x$和$y$坐标除以$z$坐标。
+        投影后的$z'$坐标的计算使得近处平面的点映射为$z'=0$而
+        远处平面的点映射为$z'=1$。}
+    \label{fig:6.5}
+\end{figure}
+
+\begin{lstlisting}
+`\refcode{Transform Method Definitions}{+=}\lastcode{TransformMethodDefinitions}`
+`\refvar{Transform}{}` `\initvar{Perspective}{}`(`\refvar{Float}{}` fov, `\refvar{Float}{}` n, `\refvar{Float}{}` f) {
+    `\refcode{Perform projective divide for perspective projection}{}`
+    `\refcode{Scale canonical perspective view to specified field of view}{}`
+}
+\end{lstlisting}
+该变换最容易理解，分两个步骤：
+\begin{enumerate}
+    \item 相机空间的点$\bm p$被投影到视平面上。
+          一点代数计算证明视平面上投影后的$x'$和$y'$坐标可计算为$x$和$y$除以点的$z$坐标值。
+          投影后的深度$z$被重新映射使近处平面的$z$值为0而远处平面的$z$值为1。
+          我们要做的计算为
+          \begin{align*}
+              x' & =\frac{x}{z}\, ,           \\
+              y' & =\frac{y}{z}\, ,           \\
+              z' & =\frac{f(z-n)}{z(f-n)}\, .
+          \end{align*}
+          整个该计算可用齐次坐标编码为$4\times4$矩阵：
+          \begin{align*}
+              \left[\begin{array}{cccc}
+                      1 & 0 & 0             & 0               \\
+                      0 & 1 & 0             & 0               \\
+                      0 & 0 & \frac{f}{f-n} & -\frac{fn}{f-n} \\
+                      0 & 0 & 1             & 0
+                  \end{array}\right]
+          \end{align*}
+          \begin{lstlisting}
+`\initcode{Perform projective divide for perspective projection}{=}`
+`\refvar{Matrix4x4}{}` persp(1, 0,           0,              0,
+                0, 1,           0,              0,
+                0, 0, f / (f - n), -f*n / (f - n),
+                0, 0,           1,              0);
+\end{lstlisting}
+    \item 用户指定的视场角（{\ttfamily fov}）通过缩放投影平面上的$(x,y)$值
+          使得视场内的点投影到视平面上坐标$[-1,1]$内来实现。
+          对于正方形图像，屏幕空间内$x$和$y$都在$[-1,1]$内。
+          否则，图像更窄的那个方向映射到$[-1,1]$，
+          更宽的方向映射到成比例的更大屏幕空间值范围。
+          回想正切等于直角三角形对边与邻边之比。
+          这里邻边长为1，所以对边长为$\tan\frac{\text{\ttfamily fov}}{2}$。
+          用该长度倒数缩放将视场映射到$[-1,1]$内的范围。
+\end{enumerate}
+\begin{lstlisting}
+`\initcode{Scale canonical perspective view to specified field of view}{=}`
+`\refvar{Float}{}` invTanAng = 1 / std::tan(`\refvar{Radians}{}`(fov) / 2);
+return `\refvar{Scale}{}`(invTanAng, invTanAng, 1) * `\refvar{Transform}{}`(persp);
+\end{lstlisting}
+
+类似于\refvar{OrthographicCamera}{}，关于\refvar{PerspectiveCamera}{}生成的
+相机光线如何随着我们移动胶片平面上的像素而改变的信息可在构造函数中预先算出。
+这里我们计算相机空间近处投影平面上的位置随像素位置移动而发生的变化。
+\begin{lstlisting}
+`\initcode{Compute differential changes in origin for perspective camera rays}{=}`
+`\refvar[PerspectiveCamera::dxCamera]{dxCamera}{}` = (`\refvar{RasterToCamera}{}`(`\refvar{Point3f}{}`(1, 0, 0)) -
+            `\refvar{RasterToCamera}{}`(`\refvar{Point3f}{}`(0, 0, 0)));
+`\refvar[PerspectiveCamera::dyCamera]{dyCamera}{}` = (`\refvar{RasterToCamera}{}`(`\refvar{Point3f}{}`(0, 1, 0)) -
+            `\refvar{RasterToCamera}{}`(`\refvar{Point3f}{}`(0, 0, 0)));
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{PerspectiveCamera Private Data}{=}\initnext{PerspectiveCameraPrivateData}`
+`\refvar{Vector3f}{}` `\initvar[PerspectiveCamera::dxCamera]{dxCamera}{}`, `\initvar[PerspectiveCamera::dyCamera]{dyCamera}{}`;
+\end{lstlisting}
+
+用透视投影时，所有光线都从相机空间原点$(0,0,0)$发出。
+光线的方向由从原点指向近处平面上的点{\ttfamily pCamera}的向量给出，
+该点对应提供的\refvar{CameraSample}{}的{\ttfamily pFilm}位置。
+换句话说，该光线方向向量的每个分量等于该点的位置，
+所以不需做无用减法来计算该方向，我们只需直接用点{\ttfamily pCamera}来初始化该方向。
+\begin{lstlisting}
+`\refcode{PerspectiveCamera Method Definitions}{+=}\lastnext{PerspectiveCameraMethodDefinitions}`
+`\refvar{Float}{}` `\refvar{PerspectiveCamera}{}`::`\initvar[PerspectiveCamera::GenerateRay]{\refvar{GenerateRay}{}}{}`(const `\refvar{CameraSample}{}` &sample,
+        `\refvar{Ray}{}` *ray) const {
+    `\refcode{Compute raster and camera sample positions}{}`
+    *ray = `\refvar{Ray}{}`(`\refvar{Point3f}{}`(0, 0, 0), `\refvar{Normalize}{}`(`\refvar{Vector3f}{}`(pCamera)));
+    `\refcode{Modify ray for depth of field}{}`
+    ray->`\refvar[Ray::time]{time}{}` = `\refvar{Lerp}{}`(sample.`\refvar[CameraSample::time]{time}{}`, `\refvar{shutterOpen}{}`, `\refvar{shutterClose}{}`);
+    ray->`\refvar[Ray::medium]{medium}{}` = `\refvar[Camera::medium]{medium}{}`;
+    *ray = `\refvar{CameraToWorld}{}`(*ray);
+    return 1;
+}
+\end{lstlisting}
+
+方法\refvar[PerspectiveCamera::GenerateRayDifferential]{GenerateRayDifferential}{()}遵
+循\refvar[PerspectiveCamera::GenerateRay]{GenerateRay}{()}的实现，只是多了计算差分射线的代码片。
+\begin{lstlisting}
+`\initcode{PerspectiveCamera Public Methods}{=}`
+`\refvar{Float}{}` `\initvar[PerspectiveCamera::GenerateRayDifferential]{\refvar{GenerateRayDifferential}{}}{}`(const `\refvar{CameraSample}{}` &sample,
+                              `\refvar{RayDifferential}{}` *ray) const;
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{Compute offset rays for PerspectiveCamera ray differentials}{=}`
+if (lensRadius > 0) {
+    `\refcode{Compute PerspectiveCamera ray differentials accounting for lens}{}`
+} else {
+    ray->`\refvar{rxOrigin}{}` = ray->`\refvar{ryOrigin}{}` = ray->`\refvar[Ray::o]{o}{}`;
+    ray->`\refvar{rxDirection}{}` = `\refvar{Normalize}{}`(`\refvar{Vector3f}{}`(pCamera) + `\refvar[PerspectiveCamera::dxCamera]{dxCamera}{}`);
+    ray->`\refvar{ryDirection}{}` = `\refvar{Normalize}{}`(`\refvar{Vector3f}{}`(pCamera) + `\refvar[PerspectiveCamera::dyCamera]{dyCamera}{}`);
+}
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{Compute PerspectiveCamera ray differentials accounting for lens}{=}`
+`\refcode{Sample point on lens}{}`
+`\refvar{Vector3f}{}` dx = `\refvar{Normalize}{}`(`\refvar{Vector3f}{}`(pCamera + `\refvar[PerspectiveCamera::dxCamera]{dxCamera}{}`));
+`\refvar{Float}{}` ft = focalDistance / dx.z;
+`\refvar{Point3f}{}` pFocus = `\refvar{Point3f}{}`(0, 0, 0) + (ft * dx);
+ray->`\refvar{rxOrigin}{}` = `\refvar{Point3f}{}`(pLens.x, pLens.y, 0);
+ray->`\refvar{rxDirection}{}` = `\refvar{Normalize}{}`(pFocus - ray->`\refvar{rxOrigin}{}`);
+
+`\refvar{Vector3f}{}` dy = `\refvar{Normalize}{}`(`\refvar{Vector3f}{}`(pCamera + `\refvar[PerspectiveCamera::dyCamera]{dyCamera}{}`));
+ft = focalDistance / dy.z;
+pFocus = `\refvar{Point3f}{}`(0, 0, 0) + (ft * dy);
+ray->`\refvar{ryOrigin}{}` = `\refvar{Point3f}{}`(pLens.x, pLens.y, 0);
+ray->`\refvar{ryDirection}{}` = `\refvar{Normalize}{}`(pFocus - ray->`\refvar{ryOrigin}{}`);
+\end{lstlisting}
 
 \subsection{薄透镜模型与景深}\label{sub:薄透镜模型与景深}

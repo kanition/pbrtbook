@@ -435,3 +435,63 @@ ray->`\refvar{ryDirection}{}` = `\refvar{Normalize}{}`(pFocus - ray->`\refvar{ry
 \end{lstlisting}
 
 \subsection{薄透镜模型与景深}\label{sub:薄透镜模型与景深}
+只允许光线穿过单个点后到达胶片的理想针孔相机是不可物理实现的；
+尽管可以用具有极小\keyindex{光圈}{aperture}{}的相机近似该情况，但小光圈只允许相对很少的光到达胶片传感器。
+用小光圈时需要较长曝光时间来捕获足够的光子以准确获取图像，
+这反过来会导致场景中在相机快门开启时正运动的物体变模糊。
+
+真实相机具有透镜系统，它将光聚焦穿过大小有限的光圈后打到胶片平面上。
+相机设计者（以及使用可调光圈相机的摄影师）面临权衡：
+光圈越大，到达胶片的光越多，需要的曝光越短。
+然而，透镜只能聚焦于单个平面（\keyindex{焦平面}{focal plane}{}），
+场景中的物体离该平面越远就越模糊。
+光圈越大，该效应就越显著：处在与透镜系统聚焦深度不同处的物体变得越发模糊。
+
+\refsec{逼真相机}的相机模型对真实相机中透镜系统实现了相当准确的模拟。
+对于目前介绍的简单相机模型，我们可以运用光学中的经典近似，\keyindex{薄透镜近似}{thin lens approximation}{}，
+借助传统计算机图形学投影模型来对有限光圈的效应建模。
+薄透镜近似将光学系统建模为球形剖面的单个透镜，
+该透镜的厚度相比于透镜的\keyindex{曲率半径}{radius of curvature}{}很小
+（\refsub{厚透镜近似}介绍更一般的厚透镜近似，它假设透镜的厚度是不可忽略的）。
+
+在薄透镜近似下，平行于\keyindex{光轴}{optical axis}{}的入射光线穿过透镜后
+聚在透镜后方称为\keyindex{焦点}{focal point}{}的点上。
+若胶片平面置于透镜后方距离等于\keyindex{焦距}{focal length}{}的地方，
+则无限远的物体将对好焦，它们成像为胶片上的单个点。
+
+\reffig{6.6}展示了基本设置。这里我们遵循典型透镜坐标系统的惯例
+让透镜垂直于$z$轴并位于$z=0$，场景在$-z$
+（注意这个坐标系统和我们给相机空间用的看向$+z$的不同）。
+透镜场景一侧的距离记为无撇的变量$z$，透镜胶片一侧的距离（正的$z$）记为有撇的$z'$。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.6\linewidth]{chap06/Thinlens.eps}
+    \caption{沿$z$轴置于$z=0$处的薄透镜。平行于光轴的入射光线穿过薄透镜后（虚线）
+        均通过点$\bm p$，即焦点。透镜与焦点的距离$f$为透镜的焦距。}
+    \label{fig:6.6}
+\end{figure}
+
+对于场景中与焦距为$f$的薄透镜距离为$z$的点，
+\keyindex{高斯透镜方程}{Gaussian lens equation}{}将
+物体与透镜的距离和透镜与像点的距离联系起来：
+\begin{align}\label{eq:6.1}
+    \frac{1}{z'}-\frac{1}{z}=\frac{1}{f}\, .
+\end{align}
+注意对于$z=-\infty$，正如预期那样我们有$z'=f$。
+
+我们可以用高斯透镜方程求解透镜与胶片的距离即\keyindex{对焦距离}{focal distance}{}
+\sidenote{译者注：此处“focal distance”译为“对焦距离”是折中做法，笔者目前还不确定该词组的正确翻译，下同。}
+来为某个$z$设置对焦平面（\reffig{6.7}）：
+\begin{align}\label{eq:6.2}
+    z'=\frac{fz}{f+z}\, .
+\end{align}
+
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.6\linewidth]{chap06/Focusthinlens.eps}
+    \caption{为了让薄透镜聚焦场景中的深度$z$处，
+        \refeq{6.2}可用于计算$z$处的点聚焦到的透镜胶片一侧的距离$z'$。
+        通过调整透镜和胶片平面的距离执行对焦。}
+    \label{fig:6.7}
+\end{figure}
+
+不在焦平面上的点在胶片平面上成像为圆斑，而不是单个点。
+该斑的边界称为\keyindex{弥散圆}{circle of confusion}{}。

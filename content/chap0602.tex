@@ -447,7 +447,7 @@ ray->`\refvar{ryDirection}{}` = `\refvar{Normalize}{}`(pFocus - ray->`\refvar{ry
 场景中的物体离该平面越远就越模糊。
 光圈越大，该效应就越显著：处在与透镜系统聚焦深度不同处的物体变得越发模糊。
 
-\refsec{逼真相机}的相机模型对真实相机中透镜系统实现了相当准确的模拟。
+\refsec{逼真相机}的相机模型对真实相机中的透镜系统实现了相当准确的模拟。
 对于目前介绍的简单相机模型，我们可以运用光学中的经典近似，\keyindex{薄透镜近似}{thin lens approximation}{}，
 借助传统计算机图形学投影模型来对有限光圈的效应建模。
 薄透镜近似将光学系统建模为球形剖面的单个透镜，
@@ -479,8 +479,10 @@ ray->`\refvar{ryDirection}{}` = `\refvar{Normalize}{}`(pFocus - ray->`\refvar{ry
 注意对于$z=-\infty$，正如预期那样我们有$z'=f$。
 
 我们可以用高斯透镜方程求解透镜与胶片的距离即\keyindex{对焦距离}{focal distance}{}
-\sidenote{译者注：此处“focal distance”译为“对焦距离”是折中做法，笔者目前还不确定该词组的正确翻译，下同。}
-来为某个$z$设置对焦平面（\reffig{6.7}）：
+\sidenote{译者注：此处“focal distance”译为“对焦距离”是折中做法，
+    笔者查阅到的一些资料中“对焦距离”的含义与这里书中的有所不同，
+    故目前还不确定该词组的正确翻译。欢迎读者提供帮助。}
+来为某个$z$设置焦平面（\reffig{6.7}）：
 \begin{align}\label{eq:6.2}
     z'=\frac{fz}{f+z}\, .
 \end{align}
@@ -495,3 +497,29 @@ ray->`\refvar{ryDirection}{}` = `\refvar{Normalize}{}`(pFocus - ray->`\refvar{ry
 
 不在焦平面上的点在胶片平面上成像为圆斑，而不是单个点。
 该斑的边界称为\keyindex{弥散圆}{circle of confusion}{}。
+弥散圆的大小受到光线穿过的光圈\keyindex{直径}{diameter}{}、
+对焦距离以及物体与透镜间距离的影响。
+\reffig{6.8}展示了具有一系列龙模型副本的场景中的这种效应，即景深。
+随着透镜光圈尺寸增大，离焦平面越远的点模糊度越大。
+注意在所有图像中从右边数第二个龙都保持对准焦，
+因为焦平面就放置在其深度处。
+\begin{figure}[htbp]
+    \centering
+    \subfloat[无景深]{\includegraphics[width=0.85\linewidth]{chap06/dragons-nodof.png}\label{fig:6.8.1}}\\
+    \subfloat[小光圈]{\includegraphics[width=0.85\linewidth]{chap06/dragons-small-dof.png}\label{fig:6.8.2}}\\
+    \subfloat[中光圈]{\includegraphics[width=0.85\linewidth]{chap06/dragons-med-dof.png}\label{fig:6.8.3}}\\
+    \subfloat[大光圈]{\includegraphics[width=0.85\linewidth]{chap06/dragons-large-dof.png}\label{fig:6.8.4}}
+    \caption{(1)无景深渲染场景，(2)相对较小透镜光圈导致的景深，让失焦区域只有少量模糊，
+    (3)和(4)中随着透镜光圈尺寸增大，失焦区域弥散圆的尺寸也增大，使胶片平面上的模糊程度更大。}
+    \label{fig:6.8}
+\end{figure}
+
+\reffig{6.9}展示了用于渲染景观场景的景深。
+注意该效应是如何把观察者的视线吸引到图像中间对焦的小草上的。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=\linewidth]{chap06/landscape-dof.png}
+    \caption{景深赋予这部分景观场景很强的纵深感（{\itshape 感谢Laubwerk提供场景}）。}
+    \label{fig:6.9}
+\end{figure}
+
+实践中，

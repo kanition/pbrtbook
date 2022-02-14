@@ -509,8 +509,8 @@ ray->`\refvar{ryDirection}{}` = `\refvar{Normalize}{}`(pFocus - ray->`\refvar{ry
     \subfloat[小光圈]{\includegraphics[width=0.85\linewidth]{chap06/dragons-small-dof.png}\label{fig:6.8.2}}\\
     \subfloat[中光圈]{\includegraphics[width=0.85\linewidth]{chap06/dragons-med-dof.png}\label{fig:6.8.3}}\\
     \subfloat[大光圈]{\includegraphics[width=0.85\linewidth]{chap06/dragons-large-dof.png}\label{fig:6.8.4}}
-    \caption{(1)无景深渲染场景，(2)相对较小透镜光圈导致的景深，让失焦区域只有少量模糊，
-    (3)和(4)中随着透镜光圈尺寸增大，失焦区域弥散圆的尺寸也增大，使胶片平面上的模糊程度更大。}
+    \caption{(a)无景深渲染场景，(b)相对较小透镜光圈导致的景深，让失焦区域只有少量模糊，
+        (c)和(d)中随着透镜光圈尺寸增大，失焦区域弥散圆的尺寸也增大，使胶片平面上的模糊程度更大。}
     \label{fig:6.8}
 \end{figure}
 
@@ -522,4 +522,23 @@ ray->`\refvar{ryDirection}{}` = `\refvar{Normalize}{}`(pFocus - ray->`\refvar{ry
     \label{fig:6.9}
 \end{figure}
 
-实践中，
+实践中，物体不必刚好在焦平面上才能清晰对焦显示；
+只要弥散圆大致小于胶片传感器上的一个像素，物体就会清晰显示。
+能让物体清晰显示的到透镜的距离范围称为透镜的\keyindex{景深}{depth of field}{}。
+
+高斯透镜方程也让我们能计算弥散圆大小；
+令焦距为$f$的透镜聚焦距离$z_{\mathrm{f}}$处，胶片平面位于$z'_{\mathrm{f}}$处。
+给定另一个在深度$z$处的点，高斯透镜方程给出到透镜对焦的点的距离$z'$。
+该点要么在胶片平面前方，要么在后方；\reffig{6.10}(a)展示了在后方的情况。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.7\linewidth]{chap06/Circleofconfusiondiameter.eps}
+    \caption{(a)如果焦距为$f$的薄透镜对焦某个深度$z_{\mathrm{f}}$，
+    则高斯透镜方程给出从透镜到胶片平面的距离为$z'_{\mathrm{f}}$。
+    场景中在深度$z\neq z_{\mathrm{f}}$处的点将被投影为胶片平面上的圆；
+    这里$z$对焦到$z'$，在胶片平面之后。(b)为了计算弥散圆的直径，
+    我们可以应用相似三角形：透镜直径$d_{\mathrm{l}}$与$z'$之比一定和
+    弥散圆直径$d_{\mathrm{c}}$与$z'-z'_{\mathrm{f}}$之比相同。}
+    \label{fig:6.10}
+\end{figure}
+
+弥散圆直径

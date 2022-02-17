@@ -1,5 +1,14 @@
 \section{采样接口}\label{sec:采样接口}
 
+\begin{lstlisting}
+`\initcode{Random Number Declarations}{=}`
+#ifdef PBRT_FLOAT_IS_DOUBLE
+static const `\refvar{Float}{}` `\initvar{OneMinusEpsilon}{}` = 0x1.fffffffffffffp-1;
+#else
+static const `\refvar{Float}{}` OneMinusEpsilon = 0x1.fffffep-1;
+#endif
+\end{lstlisting}
+
 \subsection{基本采样器接口}\label{sub:基本采样器接口}
 
 \begin{lstlisting}

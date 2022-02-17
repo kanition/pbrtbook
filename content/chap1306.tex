@@ -2,4 +2,16 @@
 
 \subsection{采样单位圆盘}\label{sub:采样单位圆盘}
 
+\begin{lstlisting}
+`\refcode{Sampling Function Definitions}{+=}\lastnext{SamplingFunctionDefinitions}`
+`\refvar{Point2f}{}` `\initvar{ConcentricSampleDisk}{}`(const `\refvar{Point2f}{}` &u) {
+    `\refcode{Map uniform random numbers to $[-1,1]^2$}{}`
+    `\refcode{Handle degeneracy at the origin}{}`
+    `\refcode{Apply concentric mapping to point}{}`
+}
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{Map uniform random numbers to $[-1,1]^2$}{=}`
+`\refvar{Point2f}{}` uOffset = 2.f * u - `\refvar{Vector2f}{}`(1, 1);
+\end{lstlisting}
 \subsection{采样相机}\label{sub:采样相机1}

@@ -1,0 +1,12 @@
+\section{分层采样}\label{sec:分层采样}
+\begin{lstlisting}
+`\initcode{Sampling Function Definitions}{=}\initnext{SamplingFunctionDefinitions}`
+void `\initvar{StratifiedSample1D}{}`(`\refvar{Float}{}` *samp, int nSamples, `\refvar{RNG}{}` &rng,
+        bool jitter) {
+    `\refvar{Float}{}` invNSamples = (`\refvar{Float}{}`)1 / nSamples;
+    for (int i = 0; i < nSamples; ++i) {
+        `\refvar{Float}{}` delta = jitter ? rng.`\refvar{UniformFloat}{}`() : 0.5f;
+        samp[i] = std::min((i + delta) * invNSamples, `\refvar{OneMinusEpsilon}{}`);
+    }
+}
+\end{lstlisting}

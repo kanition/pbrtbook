@@ -259,7 +259,7 @@ if (`\refvar{lensRadius}{}` > 0) {
 \begin{lstlisting}
 `\initcode{Compute OrthographicCamera ray differentials accounting for lens}{=}`
 `\refcode{Sample point on lens}{}`
-`\refvar{Float}{}` ft = focalDistance / ray->`\refvar[Ray::d]{d}{}`.z;
+`\refvar{Float}{}` ft = `\refvar{focalDistance}{}` / ray->`\refvar[Ray::d]{d}{}`.z;
 
 `\refvar{Point3f}{}` pFocus = pCamera + `\refvar[OrthographicCamera::dxCamera]{dxCamera}{}` + (ft * `\refvar{Vector3f}{}`(0, 0, 1));
 ray->`\refvar{rxOrigin}{}` = `\refvar{Point3f}{}`(pLens.x, pLens.y, 0);
@@ -410,7 +410,7 @@ return `\refvar{Scale}{}`(invTanAng, invTanAng, 1) * `\refvar{Transform}{}`(pers
 \end{lstlisting}
 \begin{lstlisting}
 `\initcode{Compute offset rays for PerspectiveCamera ray differentials}{=}`
-if (lensRadius > 0) {
+if (`\refvar{lensRadius}{}` > 0) {
     `\refcode{Compute PerspectiveCamera ray differentials accounting for lens}{}`
 } else {
     ray->`\refvar{rxOrigin}{}` = ray->`\refvar{ryOrigin}{}` = ray->`\refvar[Ray::o]{o}{}`;
@@ -422,16 +422,232 @@ if (lensRadius > 0) {
 `\initcode{Compute PerspectiveCamera ray differentials accounting for lens}{=}`
 `\refcode{Sample point on lens}{}`
 `\refvar{Vector3f}{}` dx = `\refvar{Normalize}{}`(`\refvar{Vector3f}{}`(pCamera + `\refvar[PerspectiveCamera::dxCamera]{dxCamera}{}`));
-`\refvar{Float}{}` ft = focalDistance / dx.z;
+`\refvar{Float}{}` ft = `\refvar{focalDistance}{}` / dx.z;
 `\refvar{Point3f}{}` pFocus = `\refvar{Point3f}{}`(0, 0, 0) + (ft * dx);
 ray->`\refvar{rxOrigin}{}` = `\refvar{Point3f}{}`(pLens.x, pLens.y, 0);
 ray->`\refvar{rxDirection}{}` = `\refvar{Normalize}{}`(pFocus - ray->`\refvar{rxOrigin}{}`);
 
 `\refvar{Vector3f}{}` dy = `\refvar{Normalize}{}`(`\refvar{Vector3f}{}`(pCamera + `\refvar[PerspectiveCamera::dyCamera]{dyCamera}{}`));
-ft = focalDistance / dy.z;
+ft = `\refvar{focalDistance}{}` / dy.z;
 pFocus = `\refvar{Point3f}{}`(0, 0, 0) + (ft * dy);
 ray->`\refvar{ryOrigin}{}` = `\refvar{Point3f}{}`(pLens.x, pLens.y, 0);
 ray->`\refvar{ryDirection}{}` = `\refvar{Normalize}{}`(pFocus - ray->`\refvar{ryOrigin}{}`);
 \end{lstlisting}
 
 \subsection{薄透镜模型与景深}\label{sub:薄透镜模型与景深}
+只允许光线穿过单个点后到达胶片的理想针孔相机是不可物理实现的；
+尽管可以用具有极小\keyindex{光圈}{aperture}{}的相机近似该情况，但小光圈只允许相对很少的光到达胶片传感器。
+用小光圈时需要较长曝光时间来捕获足够的光子以准确获取图像，
+这反过来会导致场景中在相机快门开启时正运动的物体变模糊。
+
+真实相机具有透镜系统，它将光聚焦穿过大小有限的光圈后打到胶片平面上。
+相机设计者（以及使用可调光圈相机的摄影师）面临权衡：
+光圈越大，到达胶片的光越多，需要的曝光越短。
+然而，透镜只能聚焦于单个平面（\keyindex{焦平面}{focal plane}{}），
+场景中的物体离该平面越远就越模糊。
+光圈越大，该效应就越显著：处在与透镜系统聚焦深度不同处的物体变得越发模糊。
+
+\refsec{逼真相机}的相机模型对真实相机中的透镜系统实现了相当准确的模拟。
+对于目前介绍的简单相机模型，我们可以运用光学中的经典近似，\keyindex{薄透镜近似}{thin lens approximation}{}，
+借助传统计算机图形学投影模型来对有限光圈的效应建模。
+薄透镜近似将光学系统建模为球形剖面的单个透镜，
+该透镜的厚度相比于透镜的\keyindex{曲率半径}{radius of curvature}{}很小
+（\refsub{厚透镜近似}介绍更一般的厚透镜近似，它假设透镜的厚度是不可忽略的）。
+
+在薄透镜近似下，平行于\keyindex{光轴}{optical axis}{}的入射光线穿过透镜后
+聚在透镜后方称为\keyindex{焦点}{focal point}{}的点上。
+若胶片平面置于透镜后方距离等于\keyindex{焦距}{focal length}{}的地方，
+则无限远的物体将对好焦，它们成像为胶片上的单个点。
+
+\reffig{6.6}展示了基本设置。这里我们遵循典型透镜坐标系统的惯例
+让透镜垂直于$z$轴并位于$z=0$，场景在$-z$
+（注意这个坐标系统和我们给相机空间用的看向$+z$的不同）。
+透镜场景一侧的距离记为无撇的变量$z$，透镜胶片一侧的距离（正的$z$）记为有撇的$z'$。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.6\linewidth]{chap06/Thinlens.eps}
+    \caption{沿$z$轴置于$z=0$处的薄透镜。平行于光轴的入射光线穿过薄透镜后（虚线）
+        均通过点$\bm p$，即焦点。透镜与焦点的距离$f$为透镜的焦距。}
+    \label{fig:6.6}
+\end{figure}
+
+对于场景中与焦距为$f$的薄透镜距离为$z$的点，
+\keyindex{高斯透镜方程}{Gaussian lens equation}{}将
+物体与透镜的距离和透镜与像点的距离联系起来：
+\begin{align}\label{eq:6.1}
+    \frac{1}{z'}-\frac{1}{z}=\frac{1}{f}\, .
+\end{align}
+注意对于$z=-\infty$，正如预期那样我们有$z'=f$。
+
+我们可以用高斯透镜方程求解透镜与胶片的距离即\keyindex{对焦距离}{focal distance}{}
+\sidenote{译者注：此处“focal distance”译为“对焦距离”是折中做法，
+    笔者查阅到的一些资料中“对焦距离”的含义与这里书中的有所不同，
+    故目前还不确定该词组的正确翻译。欢迎读者提供帮助。}
+来为某个$z$设置焦平面（\reffig{6.7}）：
+\begin{align}\label{eq:6.2}
+    z'=\frac{fz}{f+z}\, .
+\end{align}
+
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.6\linewidth]{chap06/Focusthinlens.eps}
+    \caption{为了让薄透镜聚焦场景中的深度$z$处，
+        \refeq{6.2}可用于计算$z$处的点聚焦到的透镜胶片一侧的距离$z'$。
+        通过调整透镜和胶片平面的距离执行对焦。}
+    \label{fig:6.7}
+\end{figure}
+
+不在焦平面上的点在胶片平面上成像为圆斑，而不是单个点。
+该斑的边界称为\keyindex{弥散圆}{circle of confusion}{}。
+弥散圆的大小受到光线穿过的光圈\keyindex{直径}{diameter}{}、
+对焦距离以及物体与透镜间距离的影响。
+\reffig{6.8}展示了具有一系列龙模型副本的场景中的这种效应，即景深。
+随着透镜光圈尺寸增大，离焦平面越远的点模糊度越大。
+注意在所有图像中从右边数第二个龙都保持对准焦，
+因为焦平面就放置在其深度处。
+\begin{figure}[htbp]
+    \centering
+    \subfloat[无景深]{\includegraphics[width=0.85\linewidth]{chap06/dragons-nodof.png}\label{fig:6.8.1}}\\
+    \subfloat[小光圈]{\includegraphics[width=0.85\linewidth]{chap06/dragons-small-dof.png}\label{fig:6.8.2}}\\
+    \subfloat[中光圈]{\includegraphics[width=0.85\linewidth]{chap06/dragons-med-dof.png}\label{fig:6.8.3}}\\
+    \subfloat[大光圈]{\includegraphics[width=0.85\linewidth]{chap06/dragons-large-dof.png}\label{fig:6.8.4}}
+    \caption{(a)无景深渲染场景，(b)相对较小透镜光圈导致的景深，让失焦区域只有少量模糊，
+        (c)和(d)中随着透镜光圈尺寸增大，失焦区域弥散圆的尺寸也增大，使胶片平面上的模糊程度更大。}
+    \label{fig:6.8}
+\end{figure}
+
+\reffig{6.9}展示了用于渲染景观场景的景深。
+注意该效应是如何把观察者的视线吸引到图像中间对焦的小草上的。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=\linewidth]{chap06/landscape-dof.png}
+    \caption{景深赋予这部分景观场景很强的纵深感（{\itshape 感谢Laubwerk提供场景}）。}
+    \label{fig:6.9}
+\end{figure}
+
+实践中，物体不必刚好在焦平面上才能清晰对焦显示；
+只要弥散圆大致小于胶片传感器上的一个像素，物体就会清晰显示。
+能让物体清晰显示的到透镜的距离范围称为透镜的\keyindex{景深}{depth of field}{}。
+
+高斯透镜方程也让我们能计算弥散圆大小；
+令焦距为$f$的透镜聚焦距离$z_{\mathrm{f}}$处，胶片平面位于$z'_{\mathrm{f}}$处。
+给定另一个在深度$z$处的点，高斯透镜方程给出到透镜对焦的点的距离$z'$。
+该点要么在胶片平面前方，要么在后方；\reffig{6.10}(a)展示了在后方的情况。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.7\linewidth]{chap06/Circleofconfusiondiameter.eps}
+    \caption{(a)若焦距为$f$的薄透镜对焦某个深度$z_{\mathrm{f}}$，
+    则高斯透镜方程给出从透镜到胶片平面的距离为$z'_{\mathrm{f}}$。
+    场景中在深度$z\neq z_{\mathrm{f}}$处的点将被投影为胶片平面上的圆；
+    这里$z$对焦到胶片平面之后的$z'$。(b)为了计算弥散圆的直径，
+    我们可应用相似三角形：透镜直径$d_{\mathrm{l}}$与$z'$之比一定和
+    弥散圆直径$d_{\mathrm{c}}$与$z'-z'_{\mathrm{f}}$之比相同。}
+    \label{fig:6.10}
+\end{figure}
+
+弥散圆直径由$z'$与透镜间的锥体和胶片平面相交给出。
+如果我们知道透镜直径$d_{\mathrm{l}}$，则我们可用
+相似三角形来求解弥散圆的直径$d_{\mathrm{c}}$（\reffig{6.10}(b)）：
+\begin{align*}
+    \frac{d_{\mathrm{l}}}{z'}=\frac{d_{\mathrm{c}}}{|z'-z'_{\mathrm{f}}|}\, .
+\end{align*}
+求解$d_{\mathrm{c}}$，我们有
+\begin{align*}
+    d_{\mathrm{c}}=\left|\frac{d_{\mathrm{l}}(z'-z'_{\mathrm{f}})}{z'}\right|\, .
+\end{align*}
+运用高斯透镜方程以场景深度来表示结果，我们可得
+\begin{align*}
+    d_{\mathrm{c}}=\left|\frac{d_{\mathrm{l}}f(z-z_{\mathrm{f}})}{z(f+z_{\mathrm{f}})}\right|\, .
+\end{align*}
+注意弥散圆直径正比于透镜直径。
+透镜直径常表示为透镜的\keyindex{F值}{f-number}{}
+\sidenote{译者注：也称焦比、光圈系数。}$n$，
+它将直径表示为焦距的分数，$\displaystyle d_{\mathrm{l}}=\frac{f}{n}$。
+
+\reffig{6.11}展示了50mm焦距和25mm光圈的透镜对焦$z_{\mathrm{f}}=1$m时该函数的图像。
+注意模糊度关于焦平面两边的深度是不对称的，
+且焦平面前方物体比后方增长得快得多。
+\begin{figure}[htbp]
+    \centering\input{Pictures/chap06/circle-confusion-diameter.tex}
+    \caption{50mm焦距25mm光圈的透镜对焦1米处时弥散圆直径关于深度的函数。}
+    \label{fig:6.11}
+\end{figure}
+
+在光线追踪器中建模薄透镜非常简单：只需要选择透镜上一点
+并找到起始于透镜上该点的合适光线使得焦平面上的物体能在胶片上对焦（\reffig{6.12}）。
+因此，投影相机为景深接收两个额外参数：一个设置透镜光圈大小，另一个设置对焦距离。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.4\linewidth]{chap06/Thinlenschooseray.eps}
+    \caption{(a)对于针孔相机模型，胶片平面上每个点（实心圆）
+    都关联单条相机光线，该点由穿过针孔透镜单个点（空心圆）的光线给出。
+    (b)对于具有有限光圈的相机模型，我们在圆盘形透镜上为每条光线采样一点（实心圆）。
+    然后我们计算穿过透镜中心（对应于针孔模型）的光线以及它与焦平面（实线）相交的点。
+    我们知道无论透镜样本位置在哪里，所有在焦平面上的物体都一定对准焦。
+    因此，对应于透镜位置样本的光线（虚线）由起始于透镜样本点并穿过算出的焦平面上交点的光线给出。}
+    \label{fig:6.12}
+\end{figure}
+
+\begin{lstlisting}
+`\refcode{ProjectiveCamera Protected Data}{+=}\lastcode{ProjectiveCameraProtectedData}`
+`\refvar{Float}{}` `\initvar{lensRadius}{}`, `\initvar{focalDistance}{}`;
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{Initialize depth of field parameters}{=}`
+`\refvar{lensRadius}{}` = lensr;
+`\refvar{focalDistance}{}` = focald;
+\end{lstlisting}
+
+通常每个图像像素都需要追踪许多光线以充分采样透镜得到平滑景深。
+\reffig{6.13}展示了来自\reffig{6.9}的每个像素只有四个样本的景观场景
+（\reffig{6.9}每个像素有2048个）。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=\linewidth]{chap06/landscape-dof-4spp.png}
+    \caption{每个像素只有样本的景深景观场景：景深是欠采样的且图像呈颗粒状（{\itshape 感谢Laubwerk提供场景}）。}
+    \label{fig:6.13}
+\end{figure}
+
+\begin{lstlisting}
+`\initcode{Modify ray for depth of field}{=}`
+if (`\refvar{lensRadius}{}` > 0) {
+    `\refcode{Sample point on lens}{}`
+    `\refcode{Compute point on plane of focus}{}`
+    `\refcode{Update ray for effect of lens}{}`
+}
+\end{lstlisting}
+
+第\refchap{蒙特卡洛积分}定义的函数\refvar{ConcentricSampleDisk}{()}接收
+$[0,1)^2$中的样本位置$(u,v)$并将其映射到中心位于原点$(0,0)$处的2D单位圆盘。
+为了将其转化为透镜上的一点，用透镜半径缩放这些坐标。
+类\refvar{CameraSample}{}在成员变量\refvar{pLens}{}中提供透镜采样参数$(u,v)$。
+\begin{lstlisting}
+`\initcode{Sample point on lens}{=}`
+`\refvar{Point2f}{}` pLens = `\refvar{lensRadius}{}` * `\refvar{ConcentricSampleDisk}{}`(sample.`\refvar{pLens}{}`);
+\end{lstlisting}
+
+光线的起点即透镜上的该点。现在需要为新光线确定合适的方向。
+我们知道来自该给定图像样本并穿过透镜的\emph{所有}光线一定都
+汇聚于焦平面上的同一点。 而且我们知道穿过透镜中心的光线不改变方向，
+所以寻找合适的汇聚点就是将针孔模型中未受扰动的光线与焦平面相交
+然后将新光线的方向设为从透镜上的点指向该交点的向量。
+
+对于该简单模型，焦平面垂直于$z$轴且光线起始于原点，
+所以让穿过透镜中心的光线与焦平面相交很简单。
+相交处$t$值为
+\begin{align*}
+    t=\frac{\text{\ttfamily focalDistance}}{{\bm d}_z}\, .
+\end{align*}
+\begin{lstlisting}
+`\initcode{Compute point on plane of focus}{=}`
+`\refvar{Float}{}` ft = `\refvar{focalDistance}{}` / ray->`\refvar[Ray::d]{d}{}`.z;
+`\refvar{Point3f}{}` pFocus = (*ray)(ft);
+\end{lstlisting}
+
+现在可以初始化光线了。端点设为透镜上的采样点，
+而方向设置使得光线穿过焦平面上的点{\ttfamily pFocus}。
+\begin{lstlisting}
+`\initcode{Update ray for effect of lens}{=}`
+ray->`\refvar[Ray::o]{o}{}` = `\refvar{Point3f}{}`(pLens.x, pLens.y, 0);
+ray->`\refvar[Ray::d]{d}{}` = `\refvar{Normalize}{}`(pFocus - ray->`\refvar[Ray::o]{o}{}`);
+\end{lstlisting}
+
+为了计算薄透镜的光线差分，代码片\refcode{Update ray for effect of lens}{}中
+用的方法也用到在胶片平面上于$x$和$y$方向偏移一像素的光线上。
+这里不再介绍此处实现的代码片\refcode{Compute OrthographicCamera ray differentials accounting for lens}{}和
+\refcode{Compute PerspectiveCamera ray differentials accounting for lens}{}了
+\sidenote{译者注：我补充回来了。}。

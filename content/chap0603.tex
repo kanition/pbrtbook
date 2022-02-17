@@ -1,1 +1,26 @@
 \section{环境相机}\label{sec:环境相机}
+光线追踪相比扫描线或基于栅格化的渲染方法的一个优点是
+它容易利用特殊的图像投影。
+在图像样本位置如何映射到光线方向方面我们有很大自由，
+因为渲染算法不依赖诸如场景中的直线总是投影为图像中的直线那样的性质。
+
+本节中，我们将介绍绕场景中一点追踪所有方向光线的相机模型，
+它给出自该点可见的一切内容的2D视图。
+考虑场景中绕相机位置的球；选择该球上的点给定追踪光线的方向。
+如果我们用球坐标将该球参数化，则球上的每个点与一对$(\theta,\phi)$关联，
+其中$\theta\in[0,\pi]$且$\phi\in[0,2\pi]$
+（见\refsub{球坐标上的积分}关于球坐标的更多细节）。
+这类图像尤其有用，因为它表示场景中一点的所有入射光
+（这类图像表示的一个重要用处是环境照明——场景中使用光的基于图像的表示的渲染技术）。
+\reffig{6.14}展示了San Miguel模型中的该相机。
+$\theta$值范围从图像顶端的0变到图像底端的$\pi$，
+$\phi$值范围由图像左侧到右侧从0变到$2\pi$
+\footnote{熟悉制图学的读者会认出这是个\keyindex{等距柱状投影}{equirectangular projection}{projection投影}}。
+\begin{lstlisting}
+`\initcode{EnvironmentCamera Declarations}{=}`
+class `\initvar{EnvironmentCamera}{}` : public `\refvar{Camera}{}` {
+public:
+    `\refcode{EnvironmentCamera Public Methods}{}`
+};
+\end{lstlisting}
+

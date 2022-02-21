@@ -18,14 +18,14 @@
 虽然编写光线追踪器的方法有很多，
 但所有这些系统都必须模拟至少一项以下对象和现象：
 \begin{itemize}
-      \item \keyindex{相机}{cameras}{camera相机}： 相机模型决定了从哪里、怎样观察场景，
+      \item \keyindex{相机}{camera}{}： 相机模型决定了从哪里、怎样观察场景，
             包括场景的图像是怎样记录到传感器上的。
             许多渲染系统从相机处开始生成视线并追踪到场景中。
-      \item \keyindex{光线-物体相交}{ray-object intersections}{}： 此外，我们需要确定
+      \item \keyindex{光线-物体相交}{ray-object intersection}{}： 此外，我们需要确定
             交点处物体的特定属性，例如曲面法线或材质。
             多数光线追踪器都有测试光线与多个物体相交的功能，
             典型的例如沿光线返回最近交点。
-      \item \keyindex{光源}{light sources}{}： 没有光，渲染场景就没有意义。
+      \item \keyindex{光源}{light source}{}： 没有光，渲染场景就没有意义。
             光线追踪器必须对整个场景的光分布建模，
             不仅包括灯光自身的位置，还包括它们向整个场景发散能量的方式。
       \item \keyindex{可见性}{visibility}{}：为了知道给定光是否在表面上一点积累能量，

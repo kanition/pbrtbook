@@ -14,15 +14,106 @@
 比更简单的透镜系统创建更高质量的图像。
 \begin{figure}[htbp]
     \centering\input{Pictures/chap06/wide22-cross-section.tex}
-    \caption{广角透镜系统的横截面（在pbrt发行版的{\ttfamily scenes/lenses/wide.22mm.dat}中）。
-    透镜坐标系统让胶片平面垂直于$z$轴且位于$z=0$处。
-    透镜在左边负z轴上，然后场景在透镜左侧。
-    透镜系统中部表示为粗黑线的光圈阻挡命中它的光线。
+    \caption{广角透镜系统的横截面（在pbrt发行版的{\ttfamily scenes/lenses/wide.22mm.dat}
+    中）。透镜坐标系统让胶片平面垂直于$z$轴且位于$z=0$处。
+    透镜在左边负z轴上，然后场景在透镜左侧。透镜系统中部表示为粗黑线的光圈阻挡命中它的光线。
     在许多透镜系统中，可以调整光圈大小以在更短曝光时间（大光圈）和更大景深（小光圈）间权衡。}
     \label{fig:6.15}
 \end{figure}
 
 本节讨论\refvar{RealisticCamera}{}的实现，
+它模拟光穿过像\reffig{6.15}那样的透镜系统后聚焦并渲染像\reffig{6.16}那样的图像。
+其实现基于光线追踪，即相机追随光路穿过透镜元件，
+并考虑具有不同折射率的介质（空气，各类玻璃）间界面的折射，
+直到光路要么退出光学系统要么被光圈或镜头罩吸收。
+离开前端镜头元件的光线代表相机响应曲线，可用于估计
+沿任意光线入射辐亮度的积分器，例如\refvar{SamplerIntegrator}{}。
+\refvar{RealisticCamera}{}的实现在文件\href{https://github.com/mmp/pbrt-v3/tree/master/src/cameras/realistic.h}{\ttfamily cameras/realistic.h}
+和\href{https://github.com/mmp/pbrt-v3/tree/master/src/cameras/realistic.cpp}{\ttfamily cameras/realistic.cpp}中。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.6\linewidth]{chap06/sanmiguel-fisheye.png}
+    \caption{用鱼眼透镜和很宽视场渲染的图像。注意边缘暗处是
+    准确模拟成像辐射度量（\refsub{相机测量方程}）所致，
+    而直线扭曲为曲线则是许多广角镜头的特点，但在用投影矩阵表示透镜投影模型时没有考虑。}
+    \label{fig:6.16}
+\end{figure}
+\begin{lstlisting}
+`\initcode{RealisticCamera Declarations}{=}`
+class `\initvar{RealisticCamera}{}` : public `\refvar{Camera}{}` {
+public:
+    `\refcode{RealisticCamera Public Methods}{}`
+private:
+    `\refcode{RealisticCamera Private Declarations}{}`
+    `\refcode{RealisticCamera Private Data}{}`
+    `\refcode{RealisticCamera Private Methods}{}`
+};
+\end{lstlisting}
+
+除了把相机放置于场景中的常见变换、\refvar{Film}{}以及快门打开和关闭的时间外，
+\refvar{RealisticCamera}{}构造函数还接收透镜系统描述文件的文件名、
+到期望的焦平面的距离以及光圈直径。之后有了第\refchap{蒙特卡洛积分}蒙特卡洛积分与
+\refsub{相机测量方程}成像辐射度量的预备知识后，
+将在\refsub{采样相机1}介绍参数{\ttfamily simpleWeighting}的作用。
+\begin{lstlisting}
+`\initcode{RealisticCamera Method Definitions}{=}\initnext{RealisticCameraMethodDefinitions}`
+`\refvar{RealisticCamera}{}`::`\refvar{RealisticCamera}{}`(const `\refvar{AnimatedTransform}{}` &CameraToWorld,
+        `\refvar{Float}{}` shutterOpen, `\refvar{Float}{}` shutterClose, `\refvar{Float}{}` apertureDiameter,
+        `\refvar{Float}{}` focusDistance, bool simpleWeighting, const char *lensFile,
+        `\refvar{Film}{}` *film, const `\refvar{Medium}{}` *medium)
+    : `\refvar{Camera}{}`(CameraToWorld, shutterOpen, shutterClose, film, medium),
+      simpleWeighting(simpleWeighting) {
+    `\refcode{Load element data from lens description file}{}`
+    `\refcode{Compute lens–film distance for given focus distance}{}`
+    `\refcode{Compute exit pupil bounds at sampled points on the film}{}`
+}
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{Load element data from lens description file}{=}`
+std::vector<`\refvar{Float}{}`> lensData;
+if (ReadFloatFile(lensFile, &lensData) == false) {
+    `\refvar{Error}{}`("Error reading lens specification file \"%s\".", lensFile);
+    return;
+}
+if ((lensData.size() % 4) != 0) {
+    `\refvar{Error}{}`("Excess values in lens specification file \"%s\"; "
+          "must be multiple-of-four values, read %d.",
+          lensFile, (int)lensData.size());
+    return;
+}
+for (int i = 0; i < (int)lensData.size(); i += 4) {
+    if (lensData[i] == 0) {
+        if (apertureDiameter > lensData[i+3]) {
+            `\refvar{Warning}{}`("Specified aperture diameter %f is greater than maximum "
+                    "possible %f.  Clamping it.", apertureDiameter, lensData[i+3]);
+        } else {
+            lensData[i+3] = apertureDiameter;
+        }
+    }
+    elementInterfaces.push_back((LensElementInterface)
+        {lensData[i] * (`\refvar{Float}{}`).001, lensData[i+1] * (`\refvar{Float}{}`).001, lensData[i+2],
+         lensData[i+3] * `\refvar{Float}{}`(.001) / `\refvar{Float}{}`(2.)});
+}
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{RealisticCamera Private Data}{=}\initnext{RealisticCameraPrivateData}`
+const bool `\initvar{simpleWeighting}{}`;
+\end{lstlisting}
+
+在从磁盘加载透镜描述文件之后，构造函数调整透镜与
+胶片间的距离使得焦平面位于期望的深度即{\ttfamily focusDistance}，
+然后预先计算一些关于离胶片最近透镜元件的哪部分面积让光从场景射到胶片的信息，
+就像在胶片平面上各点看到的那样。在介绍完背景材料之后，
+\refsub{对焦}和\refsub{出射瞳}将分别定义代码片
+\refcode{Compute lens-film distance for given focus distance}{}
+和\refcode{Compute exit pupil bounds at sampled points on the film}{}。
+
+\subsection{透镜系统表示}\label{sub:透镜系统表示}
+透镜系统由一系列透镜元件组成，每个元件通常是某种形制的玻璃。
+透镜系统设计者的挑战是在空间、成本和生产难度受限的情况下
+设计一组能在胶片或传感器上高质量成像的元件
+（例如，为了让保持手机变薄，其相机的厚度非常有限）。
+
 \subsection{厚透镜近似}\label{sub:厚透镜近似}
+\subsection{对焦}\label{sub:对焦}
 \subsection{出射瞳}\label{sub:出射瞳}
 \subsection{相机测量方程}\label{sub:相机测量方程}

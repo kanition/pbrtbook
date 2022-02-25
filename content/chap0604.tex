@@ -33,8 +33,8 @@
 \begin{figure}[htbp]
     \centering\includegraphics[width=0.6\linewidth]{chap06/sanmiguel-fisheye.png}
     \caption{用鱼眼透镜和很宽视场渲染的图像。注意边缘暗处是
-    准确模拟成像辐射度量（\refsub{相机测量方程}）所致，
-    而直线扭曲为曲线则是许多广角镜头的特点，但在用投影矩阵表示透镜投影模型时没有考虑。}
+        准确模拟成像辐射度量（\refsub{相机测量方程}）所致，
+        而直线扭曲为曲线则是许多广角镜头的特点，但在用投影矩阵表示透镜投影模型时没有考虑。}
     \label{fig:6.16}
 \end{figure}
 \begin{lstlisting}
@@ -89,7 +89,7 @@ for (int i = 0; i < (int)lensData.size(); i += 4) {
             lensData[i+3] = apertureDiameter;
         }
     }
-    elementInterfaces.push_back((LensElementInterface)
+    `\refvar{elementInterfaces}{}`.push_back((`\refvar{LensElementInterface}{}`)
         {lensData[i] * (`\refvar{Float}{}`).001, lensData[i+1] * (`\refvar{Float}{}`).001, lensData[i+2],
          lensData[i+3] * `\refvar{Float}{}`(.001) / `\refvar{Float}{}`(2.)});
 }
@@ -109,9 +109,83 @@ const bool `\initvar{simpleWeighting}{}`;
 
 \subsection{透镜系统表示}\label{sub:透镜系统表示}
 透镜系统由一系列透镜元件组成，每个元件通常是某种形制的玻璃。
-透镜系统设计者的挑战是在空间、成本和生产难度受限的情况下
+透镜系统设计者的挑战是在有限空间、成本和生产难度下
 设计一组能在胶片或传感器上高质量成像的元件
-（例如，为了让保持手机变薄，其相机的厚度非常有限）。
+（例如为了让保持手机变薄，其相机厚度非常有限）。
+
+最容易生产的是横截面为球形的透镜，
+透镜系统通常是绕\keyindex{光轴}{optical axis}{}对称的，习惯记为$z$。
+我们将假设这两个性质在本节下文中成立。
+用胶片对齐到平面$z=0$且透镜在胶片左侧沿$-z$轴放置的坐标系统定义透镜系统。
+
+透镜系统常表示为独立透镜元件（或空气）间的一系列界面，
+而不是每个元件的显式表示。\reftab{6.1}展示了定义每个界面的量。
+表中最后一项定义了最右边的界面，如\reffig{6.17}所示：
+它是个半径等于曲率半径的球体块。元件的厚度是沿$z$到右边下一个
+元件（或胶片平面）的距离，\keyindex{折射率}{index of refraction}{}是
+对界面右边的介质而言的。元件在$z$轴上下的范围由光圈直径设置。
+\begin{table}[htbp]
+    \centering
+    \begin{tabular}{SSSS}
+        \toprule
+        \ \ \textbf{曲率半径} & \ \ \ \textbf{厚度} & \textbf{折射率} & \textbf{光圈直径} \\
+        \midrule
+        35.98738          & 1.21638             & 1.54            & 23.716            \\
+        11.69718          & 9.9957              & 1               & 17.996            \\
+        13.08714          & 5.12622             & 1.772           & 12.364            \\
+        -22.63294         & 1.76924             & 1.617           & 9.812             \\
+        71.05802          & 0.8184              & 1               & 9.152             \\
+        0                 & 2.27766             & 0               & 8.756             \\
+        -9.58584          & 2.43254             & 1.617           & 8.184             \\
+        -11.28864         & 0.11506             & 1               & 9.152             \\
+        -166.7765         & 3.09606             & 1.713           & 10.648            \\
+        -7.5911           & 1.32682             & 1.805           & 11.44             \\
+        -16.7662          & 3.98068             & 1               & 12.276            \\
+        -7.70286          & 1.21638             & 1.617           & 13.42             \\
+        -11.97328         & （取决于焦点）      & 1               & 17.996            \\
+        \bottomrule
+    \end{tabular}
+    \caption{\reffig{6.15}中透镜系统的表格化描述。每行描述了两个透镜元件间的界面、
+        元件与空气间的界面或者光圈。第一行描述了最左边的界面。半径为0的元件对应光圈。
+        距离单位为mm。}
+    \label{tab:6.1}
+\end{table}
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.6\linewidth]{chap06/Lenselement.eps}
+    \caption{透镜界面（实曲线）与光轴相交于位置$z$。界面几何形状由
+        表示其在光轴上下方范围的光圈半径以及元件的曲率半径$r$描述。
+        如果元件有球形横截面，则它的轮廓由球心在光轴上距离$r$的球体给定，
+        该球体也穿过$z$。如果$r$是负的，则元件界面就如从场景中看到那样是凹的
+        （如图所示）；否则就是\protect\keyindex{凸}{convex}{}的。透镜厚度给出了到
+        右边下一个界面的距离，或者对于最右边的界面是到胶片平面的距离。}
+    \label{fig:6.17}
+\end{figure}
+
+结构体\refvar{LensElementInterface}{}表示单个透镜元件界面。
+\begin{lstlisting}
+`\initcode{RealisticCamera Private Declarations}{=}`
+struct `\initvar{LensElementInterface}{}` {
+    `\refvar{Float}{}` `\initvar{curvatureRadius}{}`;
+    `\refvar{Float}{}` `\initvar{thickness}{}`;
+    `\refvar{Float}{}` `\initvar[LensElementInterface::eta]{eta}{}`;
+    `\refvar{Float}{}` `\initvar{apertureRadius}{}`;
+};
+\end{lstlisting}
+
+这里没有介绍的代码片\refcode{Load element data from lens description file}{}
+\sidenote{译者注：我补充回来了。}读取透镜元件
+并初始化数组\refvar[elementInterfaces]{RealisticCamera::elementInterfaces}{}。
+见源代码中的注释了解该文件格式的细节，它并行化\reftab{6.1}中的结构，
+并见pbrt发行版中的目录{\ttfamily scenes/lenses}了解大量透镜描述示例。
+
+对从文件读取的值做了两个调整：第一，透镜系统传统上用毫米单位描述，
+但pbrt假设场景单位用米。因此，除了折射率外的域都按1/1000缩小。
+第二，元件直径被除以二；在下面的代码中半径是用起来更方便的量。
+\begin{lstlisting}
+`\refcode{RealisticCamera Private Data}{+=}\lastnext{RealisticCameraPrivateData}`
+std::vector<`\refvar{LensElementInterface}{}`> `\initvar{elementInterfaces}{}`;
+\end{lstlisting}
+
 
 \subsection{厚透镜近似}\label{sub:厚透镜近似}
 \subsection{对焦}\label{sub:对焦}

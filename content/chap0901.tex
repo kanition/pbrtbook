@@ -15,13 +15,13 @@ private:
 \begin{lstlisting}
 `\initcode{BSDF Public Methods}{=}\initnext{BSDFPublicMethods}`
 `\refvar{BSDF}{}`(const `\refvar{SurfaceInteraction}{}` &si, Float eta = 1)
-: `\refvar{eta}{}`(eta), `\refvar{ns}{}`(si.shading.n), `\refvar{ng}{}`(si.n),
+: `\refvar[BSDF::eta]{eta}{}`(eta), `\refvar{ns}{}`(si.shading.n), `\refvar{ng}{}`(si.n),
 `\refvar{ss}{}`(`\refvar{Normalize}{}`(si.shading.dpdu)), `\refvar{ts}{}`(`\refvar{Cross}{}`(ns, ss)) { }
 \end{lstlisting}
 
 \begin{lstlisting}
 `\initcode{BSDF Public Data}{=}`
-const `\refvar{Float}{}` `\initvar{eta}{}`;
+const `\refvar{Float}{}` `\initvar[BSDF::eta]{eta}{}`;
 \end{lstlisting}
 
 \begin{lstlisting}

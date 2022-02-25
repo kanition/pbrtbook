@@ -128,21 +128,21 @@ const bool `\initvar{simpleWeighting}{}`;
     \centering
     \begin{tabular}{SSSS}
         \toprule
-        \ \ \textbf{曲率半径} & \ \ \ \textbf{厚度} & \textbf{折射率} & \textbf{光圈直径} \\
+        \ \ \ \textbf{曲率半径} & \ \ \ \ \textbf{厚度} & \ \textbf{折射率} & \textbf{光圈直径} \\
         \midrule
-        35.98738          & 1.21638             & 1.54            & 23.716            \\
-        11.69718          & 9.9957              & 1               & 17.996            \\
-        13.08714          & 5.12622             & 1.772           & 12.364            \\
-        -22.63294         & 1.76924             & 1.617           & 9.812             \\
-        71.05802          & 0.8184              & 1               & 9.152             \\
-        0                 & 2.27766             & 0               & 8.756             \\
-        -9.58584          & 2.43254             & 1.617           & 8.184             \\
-        -11.28864         & 0.11506             & 1               & 9.152             \\
-        -166.7765         & 3.09606             & 1.713           & 10.648            \\
-        -7.5911           & 1.32682             & 1.805           & 11.44             \\
-        -16.7662          & 3.98068             & 1               & 12.276            \\
-        -7.70286          & 1.21638             & 1.617           & 13.42             \\
-        -11.97328         & （取决于焦点）      & 1               & 17.996            \\
+        35.98738                & 1.21638               & 1.54              & 23.716            \\
+        11.69718                & 9.9957                & 1                 & 17.996            \\
+        13.08714                & 5.12622               & 1.772             & 12.364            \\
+        -22.63294               & 1.76924               & 1.617             & 9.812             \\
+        71.05802                & 0.8184                & 1                 & 9.152             \\
+        0                       & 2.27766               & 0                 & 8.756             \\
+        -9.58584                & 2.43254               & 1.617             & 8.184             \\
+        -11.28864               & 0.11506               & 1                 & 9.152             \\
+        -166.7765               & 3.09606               & 1.713             & 10.648            \\
+        -7.5911                 & 1.32682               & 1.805             & 11.44             \\
+        -16.7662                & 3.98068               & 1                 & 12.276            \\
+        -7.70286                & 1.21638               & 1.617             & 13.42             \\
+        -11.97328               & （取决于焦点）        & 1                 & 17.996            \\
         \bottomrule
     \end{tabular}
     \caption{\reffig{6.15}中透镜系统的表格化描述。每行描述了两个透镜元件间的界面、
@@ -186,6 +186,46 @@ struct `\initvar{LensElementInterface}{}` {
 std::vector<`\refvar{LensElementInterface}{}`> `\initvar{elementInterfaces}{}`;
 \end{lstlisting}
 
+一旦加载完透镜界面描述，让一些关于透镜系统的值随时可得是很有用的。
+\refvar{LensRearZ}{()}和\refvar{LensFrontZ}{()}分别返回
+透镜系统尾部和头部元件的$z$深度。注意返回的$z$深度在相机空间中，
+而不是透镜空间中，所以为正值。
+\begin{lstlisting}
+`\initcode{RealisticCamera Private Methods}{=}\initnext{RealisticCameraPrivateMethods}`
+`\refvar{Float}{}` `\initvar{LensRearZ}{}`() const {
+    return `\refvar{elementInterfaces}{}`.back().`\refvar{thickness}{}`;
+}
+\end{lstlisting}
+
+求头部元件$z$位置需要求所有元件厚度之和（见\reffig{6.18}）。
+任何位于系统性能敏感部分的代码都不需要该值，
+所以在需要时重算它就行。如果该方法对性能有影响，
+最好还是在\refvar{RealisticCamera}{}中缓存该值。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.4\linewidth]{chap06/Elementthicknessandposition.eps}
+    \caption{元件厚度与光轴上位置的关系。胶片平面位于$z=0$，尾部元件的厚度$t_3$给出
+        了从胶片到其界面的距离；这里尾部界面与轴交于$z=-t_3$。下一个元件厚度为$t_2$且
+        位于$z=-t_3-t_2$，以此类推。头部元件交$z$轴于$\sum_i-t_i$。}
+    \label{fig:6.18}
+\end{figure}
+\begin{lstlisting}
+`\refcode{RealisticCamera Private Methods}{+=}\lastnext{RealisticCameraPrivateMethods}`
+`\refvar{Float}{}` `\initvar{LensFrontZ}{}`() const {
+    `\refvar{Float}{}` zSum = 0;
+    for (const `\refvar{LensElementInterface}{}` &element : `\refvar{elementInterfaces}{}`)
+        zSum += element.`\refvar{thickness}{}`;
+    return zSum;
+}
+\end{lstlisting}
+
+\refvar{RearElementRadius}{()}按单位米返回尾部元件光圈半径。
+\begin{lstlisting}
+`\refcode{RealisticCamera Private Methods}{+=}\lastnext{RealisticCameraPrivateMethods}`
+`\refvar{Float}{}` `\initvar{RearElementRadius}{}`() const {
+    return `\refvar{elementInterfaces}{}`.back().`\refvar{apertureRadius}{}`;
+}
+\end{lstlisting}
+\subsection{追踪穿过透镜的光线}\label{sub:追踪穿过透镜的光线}
 
 \subsection{厚透镜近似}\label{sub:厚透镜近似}
 \subsection{对焦}\label{sub:对焦}

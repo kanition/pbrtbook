@@ -226,6 +226,131 @@ std::vector<`\refvar{LensElementInterface}{}`> `\initvar{elementInterfaces}{}`;
 }
 \end{lstlisting}
 \subsection{追踪穿过透镜的光线}\label{sub:追踪穿过透镜的光线}
+给定起始于透镜系统胶片一侧的光线，\refvar{TraceLensesFromFilm}{()}依次
+计算与每个元件的相交处，如果其路径在穿过透镜系统途中被挡住了就终结该光线并返回{\ttfamily false}。
+否则它就返回{\ttfamily true}并用相机空间中退出的光线来初始化{\ttfamily *rOut}。
+在遍历时，{\ttfamily elementZ}追踪当前透镜元件的$z$截距。
+因为光线起始于胶片，所以按照和\refvar{elementInterfaces}{}存储的相反顺序遍历透镜。
+\begin{lstlisting}
+`\refcode{RealisticCamera Method Definitions}{+=}\lastnext{RealisticCameraMethodDefinitions}`
+bool `\refvar{RealisticCamera}{}`::`\initvar{TraceLensesFromFilm}{}`(const `\refvar{Ray}{}` &rCamera,
+        `\refvar{Ray}{}` *rOut) const {
+    `\refvar{Float}{}` elementZ = 0;
+    `\refcode{Transform rCamera from camera to lens system space}{}`
+    for (int i = `\refvar{elementInterfaces}{}`.size() - 1; i >= 0; --i) {
+        const `\refvar{LensElementInterface}{}` &element = `\refvar{elementInterfaces}{}`[i];
+        `\refcode{Update ray from film accounting for interaction with element}{}`
+    }
+    `\refcode{Transform rLens from lens system space back to camera space}{}`
+    return true;
+}
+\end{lstlisting}
+
+因为在pbrt的相机空间中相机指向$+z$轴但透镜在$-z$轴，
+所以射线端点和方向的$z$分量需要取反。
+尽管这是个简单到可以直接施加的变换，
+我们还是偏好用显式的\refvar{Transform}{}使目的更明确。
+\begin{lstlisting}
+`\initcode{Transform rCamera from camera to lens system space}{=}`
+static const `\refvar{Transform}{}` CameraToLens = `\refvar{Scale}{}`(1, 1, -1);
+`\refvar{Ray}{}` rLens = CameraToLens(rCamera);
+\end{lstlisting}
+
+回想\reffig{6.18}中怎样计算元件的$z$截距：
+因为我们从后往前访问元件，所以在考虑该元件的作用前
+必须从{\ttfamily elementZ}中减去元件的厚度来计算其$z$截距。
+\begin{lstlisting}
+`\initcode{Update ray from film accounting for interaction with element}{=}`
+elementZ -= element.`\refvar{thickness}{}`;
+`\refcode{Compute intersection of ray with lens element}{}`
+`\refcode{Test intersection point against element aperture}{}`
+`\refcode{Update ray path for element interface interaction}{}`
+\end{lstlisting}
+
+有了元件的$z$轴截距，下一步是计算沿光线与元件界面（或光圈平面）相交处的参数值$t$。
+对于光圈，采用光线-平面测试（见\refsub{光线-边界相交}）。
+对于球形界面，\refvar{IntersectSphericalElement}{()}执行该测试
+并且如果找到相交处则还返回曲面法线；计算折射光方向时将需要该法线。
+\begin{lstlisting}
+`\initcode{Compute intersection of ray with lens element}{=}`
+`\refvar{Float}{}` t;
+`\refvar{Normal3f}{}` n;
+bool isStop = (element.`\refvar{curvatureRadius}{}` == 0);
+if (isStop)
+    t = (elementZ - rLens.`\refvar[Ray::o]{o}{}`.z) / rLens.`\refvar[Ray::d]{d}{}`.z;
+else {
+    `\refvar{Float}{}` radius = element.`\refvar{curvatureRadius}{}`;
+    `\refvar{Float}{}` zCenter = elementZ + element.`\refvar{curvatureRadius}{}`;
+    if (!`\refvar{IntersectSphericalElement}{}`(radius, zCenter, rLens, &t, &n))
+        return false;
+}
+\end{lstlisting}
+
+方法\refvar{IntersectSphericalElement}{()}大致
+和\refvar{Sphere::Intersect}{()}一样，不过它专门针对
+元件中心在$z$轴上（且因此中心的$x$和$y$分量为零）这一情况。
+这里文中没有包含代码片\refcode{Compute t0 and t1 for ray-element intersection}{}
+和\refcode{Compute surface normal of element at ray intersection point}{}，因为它们和
+\refvar{Sphere::Intersect}{()}的实现一样\sidenote{译者注：我补充回来了。}。
+\begin{lstlisting}
+`\refcode{RealisticCamera Method Definitions}{+=}\lastnext{RealisticCameraMethodDefinitions}`
+bool `\refvar{RealisticCamera}{}`::`\initvar{IntersectSphericalElement}{}`(`\refvar{Float}{}` radius,
+        `\refvar{Float}{}` zCenter, const `\refvar{Ray}{}` &ray, `\refvar{Float}{}` *t, `\refvar{Normal3f}{}` *n) {
+    `\refcode{Compute t0 and t1 for ray-element intersection}{}`
+    `\refcode{Select intersection  based on ray direction and element curvature}{}`
+    `\refcode{Compute surface normal of element at ray intersection point}{}`
+    return true;
+}
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{Compute t0 and t1 for ray-element intersection}{=}`
+`\refvar{Point3f}{}` o = ray.`\refvar[Ray::o]{o}{}` - `\refvar{Vector3f}{}`(0, 0, zCenter);
+`\refvar{Float}{}` A = ray.`\refvar[Ray::d]{d}{}`.x*ray.`\refvar[Ray::d]{d}{}`.x + ray.`\refvar[Ray::d]{d}{}`.y*ray.`\refvar[Ray::d]{d}{}`.y + ray.`\refvar[Ray::d]{d}{}`.z*ray.`\refvar[Ray::d]{d}{}`.z;
+`\refvar{Float}{}` B = 2 * (ray.`\refvar[Ray::d]{d}{}`.x*o.x + ray.`\refvar[Ray::d]{d}{}`.y*o.y + ray.`\refvar[Ray::d]{d}{}`.z*o.z);
+`\refvar{Float}{}` C = o.x*o.x + o.y*o.y + o.z*o.z - radius*radius;
+`\refvar{Float}{}` t0, t1;
+if (!`\refvar{Quadratic}{}`(A, B, C, &t0, &t1))
+    return false;
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{Compute surface normal of element at ray intersection point}{=}`
+*n = `\refvar{Normal3f}{}`(`\refvar{Vector3f}{}`(o + *t * ray.`\refvar[Ray::d]{d}{}`));
+*n = `\refvar{Faceforward}{}`(`\refvar{Normalize}{}`(*n), -ray.`\refvar[Ray::d]{d}{}`);
+\end{lstlisting}
+
+然而这里在选择返回哪个交点时有个微妙之处\sidenote{译者注：原文subtlety。}：
+$t>0$的最近相交处不一定在元件界面上；
+见\reffig{6.19}\footnote{“微妙之处”(subtlety)一般意味着作者花费好几个小时来调试它。}。
+例如，对于自场景中接近并与（具有负曲率半径的）凹透镜相交的光线，
+两个相交处中不管近处那个是否有$t>0$都该返回远处那个。
+幸运的是，基于光线方向和曲率半径的简单逻辑可指明用哪个$t$值。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.5\linewidth]{chap06/Lenscorrectintersection.eps}
+    \caption{当计算光线与球形透镜元件的相交处时，光线与整球的首个相交处不一定是我们想要的。
+    这里，第二个相交处才在真正的元件界面（粗线）上，而第一个应该被忽略。}
+    \label{fig:6.19}
+\end{figure}
+\begin{lstlisting}
+`\initcode{Select intersection  based on ray direction and element curvature}{=}`
+bool useCloserT = (ray.`\refvar[Ray::d]{d}{}`.z > 0) ^ (radius < 0);
+*t = useCloserT ? std::min(t0, t1) : std::max(t0, t1);
+if (*t < 0)
+    return false;
+\end{lstlisting}
+
+每个透镜元件都按某半径绕光轴扩展；如果与该元件的交点在该半径之外，
+则该光线实际上将与镜头罩相交并终止。
+类似地，如果光线与光圈相交，它也会终止。
+因此，这里我们用当前元件的适用限制来测试交点，
+要么终止该光线，要么它幸存下来并将其端点更新为当前交点。
+\begin{lstlisting}
+`\initcode{Test intersection point against element aperture}{=}`
+`\refvar{Point3f}{}` pHit = rLens(t);
+`\refvar{Float}{}` r2 = pHit.x * pHit.x + pHit.y * pHit.y;
+if (r2 > element.`\refvar{apertureRadius}{}` * element.`\refvar{apertureRadius}{}`)
+    return false;
+rLens.`\refvar[Ray::o]{o}{}` = pHit;
+\end{lstlisting}
 
 \subsection{厚透镜近似}\label{sub:厚透镜近似}
 \subsection{对焦}\label{sub:对焦}

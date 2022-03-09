@@ -10,3 +10,16 @@ public:
 \end{lstlisting}
 
 \subsubsection*{菲涅尔导体}
+
+\subsection{镜面反射}\label{sub:镜面反射}
+
+\subsection{镜面透射}\label{sub:镜面透射}
+\begin{lstlisting}
+`\refcode{BSDF Inline Functions}{+=}\lastnext{BSDFInlineFunctions}`
+inline bool `\initvar{Refract}{}`(const `\refvar{Vector3f}{}` &wi, const `\refvar{Normal3f}{}` &n, `\refvar{Float}{}` eta,
+        `\refvar{Vector3f}{}` *wt) {
+    `\refcode{Compute cos $\theta_t$ using Snell's law}{}`
+    *wt = eta * -wi + (eta * cosThetaI - cosThetaT) * `\refvar{Vector3f}{}`(n);
+    return true;
+}
+\end{lstlisting}

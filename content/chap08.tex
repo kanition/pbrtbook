@@ -1,5 +1,11 @@
 \chapter{反射模型}\label{chap:反射模型}
 
+\begin{lstlisting}
+`\initcode{BSDF Inline Functions}{=}\initnext{BSDFInlineFunctions}`
+inline `\refvar{Float}{}` `\initvar{CosTheta}{}`(const `\refvar{Vector3f}{}` &w) { return w.z; }
+inline `\refvar{Float}{}` `\initvar{Cos2Theta}{}`(const `\refvar{Vector3f}{}` &w) { return w.z * w.z; }
+inline `\refvar{Float}{}` `\initvar{AbsCosTheta}{}`(const `\refvar{Vector3f}{}` &w) { return std::abs(w.z); }
+\end{lstlisting}
 \input{content/chap0801.tex}
 
 \input{content/chap0802.tex}

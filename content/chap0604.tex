@@ -352,7 +352,61 @@ if (r2 > element.`\refvar{apertureRadius}{}` * element.`\refvar{apertureRadius}{
 rLens.`\refvar[Ray::o]{o}{}` = pHit;
 \end{lstlisting}
 
+如果当前元件是光圈，则光路在穿过元件界面时不受影响。
+对于玻璃（或塑料）透镜元件，光线在从具有某个折射率的介质进入
+到具有另一折射率的介质时在交界面会改变方向
+（光线可能从空气进入玻璃、从玻璃进入空气，或者从
+具有某个折射率的玻璃进入具有不同折射率的另一种玻璃）。
+
+\refsec{镜面反射与透射}讨论了两种介质边界间折射率的变化
+将怎样改变光线的方向及其携带的辐射量（这里的情况下
+我们可以忽略辐射量的变化，因为如果光线在进入和退出透镜系统时
+处于同一种介质中则这种效应会抵消掉——这里都是空气）。
+函数\refvar{Refract}{()}定义在\refsub{镜面透射}；
+注意它预设入射方向指向远离曲面的方向，所以传入前要对光线方向取反。
+该函数在出现\keyindex{全内反射}{total internal reflection}{reflection反射}时
+返回{\ttfamily false}，该情况下光路终止。
+否则在{\ttfamily w}中返回折射方向。
+
+通常，穿过这类界面时一些光被透射而另一些被反射。
+这里我们忽略反射并假设完美传输。尽管这是种近似，但它是合理的：
+制造透镜时一般用了设计的涂料把反射降低到光线所带辐射的0.25\%左右
+（然而，对这少量的反射建模对于实现\keyindex{镜头光晕}{lens flare}{}会很重要）。
+\begin{lstlisting}
+`\initcode{Update ray path for element interface interaction}{=}`
+if (!isStop) {
+    `\refvar{Vector3f}{}` w;
+    `\refvar{Float}{}` etaI = element.`\refvar[LensElementInterface::eta]{eta}{}`;
+    `\refvar{Float}{}` etaT = (i > 0 && `\refvar{elementInterfaces}{}`[i - 1].`\refvar[LensElementInterface::eta]{eta}{}` != 0) ?
+        `\refvar{elementInterfaces}{}`[i - 1].`\refvar[LensElementInterface::eta]{eta}{}` : 1;
+    if (!`\refvar{Refract}{}`(`\refvar{Normalize}{}`(-rLens.`\refvar[Ray::d]{d}{}`), n, etaI / etaT, &w))
+        return false;
+    rLens.`\refvar[Ray::d]{d}{}` = w;
+}
+\end{lstlisting}
+
+若光线成功从前端透镜元件射出，它只需要从透镜空间变换到相机空间。
+\begin{lstlisting}
+`\initcode{Transform rLens from lens system space back to camera space}{=}`
+if (rOut != nullptr) {
+    static const `\refvar{Transform}{}` LensToCamera = `\refvar{Scale}{}`(1, 1, -1);
+    *rOut = LensToCamera(rLens);
+}
+\end{lstlisting}
+
+方法\refvar{TraceLensesFromScene}{()}和\refvar{TraceLensesFromFilm}{()}非常相似，这里不再介绍。
+主要差别在于它是从前往后而不是从后往前遍历元件。
+注意它假设传入的光线已经在相机空间了；
+如果光线始于世界空间则调用者应负责执行该变换。
+返回的光线位于尾部透镜元件朝向胶片的相机空间中。
+\begin{lstlisting}
+`\refcode{RealisticCamera Private Methods}{+=}\lastcode{RealisticCameraPrivateMethods}`
+bool `\initvar{TraceLensesFromScene}{}`(const `\refvar{Ray}{}` &rCamera, `\refvar{Ray}{}` *rOut) const;
+\end{lstlisting}
+
 \subsection{厚透镜近似}\label{sub:厚透镜近似}
+\refsub{薄透镜模型与景深}中用的薄透镜近似是基于透镜系统沿光轴厚度为0的简化假设。
+
 \subsection{对焦}\label{sub:对焦}
 \subsection{出射瞳}\label{sub:出射瞳}
 \subsection{相机测量方程}\label{sub:相机测量方程}

@@ -20,9 +20,9 @@
      inkscape:pageopacity="0.0"
      inkscape:pagecheckerboard="0"
      showgrid="false"
-     inkscape:zoom="3.0944246"
-     inkscape:cx="168.85207"
-     inkscape:cy="109.87503"
+     inkscape:zoom="2.1880886"
+     inkscape:cx="153.78719"
+     inkscape:cy="121.56729"
      inkscape:window-width="2560"
      inkscape:window-height="1494"
      inkscape:window-x="-11"
@@ -207,17 +207,19 @@
   <text
      xml:space="preserve"
      id="text4186"
-     style="font-style:normal;font-weight:normal;font-size:12px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect4188);fill:#000000;fill-opacity:1;stroke:none"
-     transform="translate(16.965997,35.709385)"><tspan
+     style="font-style:normal;font-weight:normal;font-size:16px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect4188);fill:#000000;fill-opacity:1;stroke:none"
+     transform="translate(13.309838,31.367696)"><tspan
        x="289.87695"
-       y="67.340542"
-       id="tspan11067">厚度</tspan></text>
+       y="72.472578"
+       id="tspan16475"><tspan
+         style="font-family:'Source Han Serif';-inkscape-font-specification:'Source Han Serif'"
+         id="tspan16473">厚度</tspan></tspan></text>
   <text
      xml:space="preserve"
      id="text4186-8"
-     style="font-style:normal;font-weight:normal;font-size:12px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect4188-9);fill:#000000;fill-opacity:1;stroke:none"
-     transform="translate(15.509006,-37.736008)"><tspan
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16px;line-height:1.25;font-family:'Source Han Serif';-inkscape-font-specification:'Source Han Serif';white-space:pre;shape-inside:url(#rect4188-9);fill:#000000;fill-opacity:1;stroke:none"
+     transform="translate(15.280496,-41.163657)"><tspan
        x="289.87695"
-       y="67.340542"
-       id="tspan11069">光圈半径</tspan></text>
+       y="72.472578"
+       id="tspan16477">光圈半径</tspan></text>
 </svg>

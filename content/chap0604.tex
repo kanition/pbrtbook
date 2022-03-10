@@ -515,5 +515,55 @@ rFilm = `\refvar{Ray}{}`(`\refvar{Point3f}{}`(x, 0, `\refvar{LensRearZ}{}`() - 1
 \end{align}
 对于薄透镜，$p_z=p'_z=0$，即推出\refeq{6.1}。
 
+如果我们知道主平面的位置$p_z$和$p'_z$以及透镜的焦距$f$
+并想要对焦沿光轴的某个深度$z$，则我们需确定应将系统平移多远$\delta$使得
+\begin{align*}
+    \frac{1}{z'-p'_z+\delta}-\frac{1}{z-p_z+\delta}=\frac{1}{f}\, .
+\end{align*}
+
+胶片一侧的焦点应在胶片上，所以$z'=0$，且$z=z_{\mathrm{f}}$即给定的对焦深度。
+唯一未知的是$\delta$，一些代数处理为我们给出
+\begin{align}\label{eq:6.4}
+    \delta=\frac{1}{2}\left(p_z-z_{\mathrm{f}}+p'_z-\sqrt{(p_z-z_{\mathrm{f}}-p'_z)(p_z-z_{\mathrm{f}}-4f-p'_z)}\right)\, .
+\end{align}
+（实际上有两个解，但两个中更近的这个解给出了对透镜位置较小的调整，因此是合适的那个。）
+
+\refvar{FocusThickLens}{()}用该近似对焦透镜系统。
+计算$\delta$后，它返回应放置透镜系统处沿$z$轴离胶片的偏移量。
+\begin{lstlisting}
+`\refcode{RealisticCamera Method Definitions}{+=}\lastnext{RealisticCameraMethodDefinitions}`
+`\refvar{Float}{}` `\refvar{RealisticCamera}{}`::`\initvar{FocusThickLens}{}`(`\refvar{Float}{}` focusDistance) {
+    `\refvar{Float}{}` pz[2], fz[2];
+    `\refvar{ComputeThickLensApproximation}{}`(pz, fz);
+    `\refcode{Compute translation of lens, delta, to focus at focusDistance}{}`
+    return `\refvar{elementInterfaces}{}`.back().`\refvar{thickness}{}` + delta;
+}
+\end{lstlisting}
+
+\refeq{6.4}给出了偏移量$\delta$。透镜的焦距$f$是主点$f'_z$和$p'_z$间的距离。
+还要注意对于$z$用的是对焦距离的相反数，因为光轴指向负的$z$。
+\begin{lstlisting}
+`\initcode{Compute translation of lens, delta, to focus at focusDistance}{=}`
+`\refvar{Float}{}` f = fz[0] - pz[0];
+`\refvar{Float}{}` z = -focusDistance;
+`\refvar{Float}{}` delta = 0.5f * (pz[1] - z + pz[0] -
+    std::sqrt((pz[1] - z - pz[0]) * (pz[1] - z - 4 * f - pz[0])));
+\end{lstlisting}
+
+我们现在终于可以实现\refvar{RealisticCamera}{}构造函数中
+对焦透镜系统的代码片了（回想最尾部元件界面的厚度是该界面到胶片的距离）。
+\begin{lstlisting}
+`\initcode{Compute lens-film distance for given focus distance}{=}`
+`\refvar{elementInterfaces}{}`.back().`\refvar{thickness}{}` = `\refvar{FocusThickLens}{}`(focusDistance);
+\end{lstlisting}
+
 \subsection{出射瞳}\label{sub:出射瞳}
+不是所有从胶片平面上给定点起始朝向尾部透镜元件的光线都能成功射出透镜系统；
+一些会被光圈阻挡或者与透镜系统外壳相交。
+反过来，尾部透镜元件上不是所有点都能把辐射传输到胶片上的点。
+尾部元件上确实能带着光通过透镜系统的点集称为\keyindex{出射瞳}{exit pupil}{}；
+它的尺寸和位置随着胶片平面上的视点变化
+（类似地，\keyindex{入射瞳}{entrance pupil}{}是场景中给定点起始
+且能到达胶片的光线所穿过的前端透镜元件区域）。
+
 \subsection{相机测量方程}\label{sub:相机测量方程}

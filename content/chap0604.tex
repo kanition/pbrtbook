@@ -327,7 +327,7 @@ $t>0$的最近相交处不一定在元件界面上；
 \begin{figure}[htbp]
     \centering\includegraphics[width=0.5\linewidth]{chap06/Lenscorrectintersection.eps}
     \caption{当计算光线与球形透镜元件的相交处时，光线与整球的首个相交处不一定是我们想要的。
-    这里，第二个相交处才在真正的元件界面（粗线）上，而第一个应该被忽略。}
+        这里，第二个相交处才在真正的元件界面（粗线）上，而第一个应该被忽略。}
     \label{fig:6.19}
 \end{figure}
 \begin{lstlisting}
@@ -406,7 +406,164 @@ bool `\initvar{TraceLensesFromScene}{}`(const `\refvar{Ray}{}` &rCamera, `\refva
 
 \subsection{厚透镜近似}\label{sub:厚透镜近似}
 \refsub{薄透镜模型与景深}中用的薄透镜近似是基于透镜系统沿光轴厚度为0的简化假设。
+透镜系统的厚透镜近似因为考虑了透镜系统的$z$范围而更精确些。
+这里在介绍厚透镜的基本概念之后，我们将用厚透镜近似来确定
+要把透镜系统放在离胶片多远处来对焦\refsub{对焦}中想要的对焦深度。
+
+厚透镜近似将透镜系统表示为两对沿光轴的距离——
+\keyindex{焦点}{focal point}{}以及\keyindex{主平面}{principal plane}{}；
+一个透镜系统有两个\keyindex{主点}{cardinal point}{}。
+如果经由一个理想透镜系统追踪平行于光轴的光线，
+则所有这些光线将会交于光轴上同一点——这就是焦点
+（实际中，真实透镜系统并不绝对理想，不同高度的入射光线
+与光轴将相交于一个$z$值小范围——这就是\keyindex{球面像差}{spherical aberration}{}）。
+有了特定的透镜系统，我们就能从每一侧追踪穿过它且与光轴平行的光线，
+并计算它们与$z$轴的相交处以找到焦点（见\reffig{6.20}）。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=\linewidth]{chap06/Lenssystemcardinalpoints.eps}
+    \caption{计算透镜系统的主点。文件{\ttfamily lenses/dgauss.dat}中
+    描述的透镜系统，来自场景的入射光线平行于光轴（轴上方），
+    来自胶片的光线平行于光轴（下方）。这些入射光线对应的
+    离开透镜系统的光线与光轴的相交处给出了两个焦点$f'_z$（胶片一侧）
+    和$f_z$（场景一侧）。每对入射和出射光线的延长线以及原始光线的相交处给定了
+    主平面$z=p_z$和$z=p'_z$，这里表示为垂直于光轴的蓝线。}
+    \label{fig:6.20}
+\end{figure}
+
+每个主平面通过延长平行于光轴的入射光线以及离开透镜的光线直至相交来求得；
+相交处的$z$深度给出了对应主平面的深度。\reffig{6.20}展示了
+一个透镜系统及其焦点$f_z$和$f'_z$以及位于$z$值$p_z$和$p'_z$的主平面
+（正如\refsub{薄透镜模型与景深}，有撇的变量表示透镜系统胶片一侧的点，
+无撇的变量表示场景中要成像的点）。
+
+给定离开透镜的光线，求焦点要先计算光线的$x$和$y$分量为零时的值$t_{\mathrm{f}}$。
+若进入的光线只沿$x$偏移了光轴，则我们要求出
+使$o_x+t_{\mathrm{f}}d_x=0$的$t_{\mathrm{f}}$。因此
+\begin{align*}
+    t_{\mathrm{f}}=\frac{-o_x}{d_x}\, .
+\end{align*}
+同样的方法，为了求得离开透镜的光线与原始光线有相同高度处
+的主平面的$t_{\mathrm{p}}$，我们有$o_x+t_{\mathrm{p}}d_x=x$，因此
+\begin{align*}
+    t_{\mathrm{p}}=\frac{x-o_x}{d_x}\, .
+\end{align*}
+一旦算出这两个$t$值，射线方程就可用于求得对应点的$z$坐标。
+
+方法\refvar{ComputeCardinalPoints}{()}为给定光线计算焦点和主平面的$z$深度。
+注意它假设光线在相机空间中但返回透镜空间中沿光轴的$z$值。
+\begin{lstlisting}
+`\refcode{RealisticCamera Method Definitions}{+=}\lastnext{RealisticCameraMethodDefinitions}`
+void `\refvar{RealisticCamera}{}`::`\initvar{ComputeCardinalPoints}{}`(const `\refvar{Ray}{}` &rIn,
+        const `\refvar{Ray}{}` &rOut, `\refvar{Float}{}` *pz, `\refvar{Float}{}` *fz) {
+    `\refvar{Float}{}` tf = -rOut.`\refvar[Ray::o]{o}{}`.x / rOut.`\refvar[Ray::d]{d}{}`.x;
+    *fz = -rOut(tf).z;
+    `\refvar{Float}{}` tp = (rIn.`\refvar[Ray::o]{o}{}`.x - rOut.`\refvar[Ray::o]{o}{}`.x) / rOut.`\refvar[Ray::d]{d}{}`.x;
+    *pz = -rOut(tp).z;
+}
+\end{lstlisting}
+
+方法\refvar{ComputeThickLensApproximation}{()}为透镜系统
+计算两对主点。
+\begin{lstlisting}
+`\refcode{RealisticCamera Method Definitions}{+=}\lastnext{RealisticCameraMethodDefinitions}`
+void `\refvar{RealisticCamera}{}`::`\initvar{ComputeThickLensApproximation}{}`(`\refvar{Float}{}` pz[2],
+        `\refvar{Float}{}` fz[2]) const {
+    `\refcode{Find height x from optical axis for parallel rays}{}`
+    `\refcode{Compute cardinal points for film side of lens system}{}`
+    `\refcode{Compute cardinal points for scene side of lens system}{}`
+}
+\end{lstlisting}
+
+首先，我们必须为追踪的光线选择沿$x$轴的高度。
+它应该离$x=0$足够远使得有足够数值精度来准确计算
+离开透镜系统的光线与$z$轴相交于哪里，
+但$x$轴上也不能太高以免在光线穿过透镜系统时命中光圈。
+这里，我们采用胶片对角范围的很小比例；其效果一般很好，除非光圈非常小。
+\begin{lstlisting}
+`\initcode{Find height x from optical axis for parallel rays}{=}`
+`\refvar{Float}{}` x = .001 * `\refvar{film}{}`->`\refvar{diagonal}{}`;
+\end{lstlisting}
+
+为了构建从场景进入透镜系统的光线{\ttfamily rScene}，
+我们从透镜前端偏移一点（回想传入\refvar{TraceLensesFromScene}{()}的
+光线应该在相机空间）。
+\begin{lstlisting}
+`\initcode{Compute cardinal points for film side of lens system}{=}`
+`\refvar{Ray}{}` rScene(`\refvar{Point3f}{}`(x, 0, `\refvar{LensFrontZ}{}`() + 1), `\refvar{Vector3f}{}`(0, 0, -1));
+`\refvar{Ray}{}` rFilm;
+`\refvar{TraceLensesFromScene}{}`(rScene, &rFilm);
+`\refvar{ComputeCardinalPoints}{}`(rScene, rFilm, &pz[0], &fz[0]);
+\end{lstlisting}
+
+从透镜系统胶片一侧起始的等价过程为我们给出了另外两个主点。
+\begin{lstlisting}
+`\initcode{Compute cardinal points for scene side of lens system}{=}`
+rFilm = `\refvar{Ray}{}`(`\refvar{Point3f}{}`(x, 0, `\refvar{LensRearZ}{}`() - 1), `\refvar{Vector3f}{}`(0, 0, 1));
+`\refvar{TraceLensesFromFilm}{}`(rFilm, &rScene);
+`\refvar{ComputeCardinalPoints}{}`(rFilm, rScene, &pz[1], &fz[1]);
+\end{lstlisting}
 
 \subsection{对焦}\label{sub:对焦}
+透镜系统可以通过相对于胶片移动来对焦场景中的指定深度，
+这样在想要的对焦深度处的点成像为胶片平面上的一点。
+高斯透镜方程\refeq{6.3}给了我们一个可解的关系来对焦厚透镜。
+
+对于厚透镜，高斯透镜方程把到场景中位于$z$处的点的距离
+和它对焦到$z'$的点用下式联系起来：
+\begin{align}\label{eq:6.3}
+    \frac{1}{z'-p'_z}-\frac{1}{z-p_z}=\frac{1}{f}\, .
+\end{align}
+对于薄透镜，$p_z=p'_z=0$，即推出\refeq{6.1}。
+
+如果我们知道主平面的位置$p_z$和$p'_z$以及透镜的焦距$f$
+并想要对焦沿光轴的某个深度$z$，则我们需确定应将系统平移多远$\delta$使得
+\begin{align*}
+    \frac{1}{z'-p'_z+\delta}-\frac{1}{z-p_z+\delta}=\frac{1}{f}\, .
+\end{align*}
+
+胶片一侧的焦点应在胶片上，所以$z'=0$，且$z=z_{\mathrm{f}}$即给定的对焦深度。
+唯一未知的是$\delta$，一些代数处理为我们给出
+\begin{align}\label{eq:6.4}
+    \delta=\frac{1}{2}\left(p_z-z_{\mathrm{f}}+p'_z-\sqrt{(p_z-z_{\mathrm{f}}-p'_z)(p_z-z_{\mathrm{f}}-4f-p'_z)}\right)\, .
+\end{align}
+（实际上有两个解，但两个中更近的这个解给出了对透镜位置较小的调整，因此是合适的那个。）
+
+\refvar{FocusThickLens}{()}用该近似对焦透镜系统。
+计算$\delta$后，它返回应放置透镜系统处沿$z$轴离胶片的偏移量。
+\begin{lstlisting}
+`\refcode{RealisticCamera Method Definitions}{+=}\lastnext{RealisticCameraMethodDefinitions}`
+`\refvar{Float}{}` `\refvar{RealisticCamera}{}`::`\initvar{FocusThickLens}{}`(`\refvar{Float}{}` focusDistance) {
+    `\refvar{Float}{}` pz[2], fz[2];
+    `\refvar{ComputeThickLensApproximation}{}`(pz, fz);
+    `\refcode{Compute translation of lens, delta, to focus at focusDistance}{}`
+    return `\refvar{elementInterfaces}{}`.back().`\refvar{thickness}{}` + delta;
+}
+\end{lstlisting}
+
+\refeq{6.4}给出了偏移量$\delta$。透镜的焦距$f$是主点$f'_z$和$p'_z$间的距离。
+还要注意对于$z$用的是对焦距离的相反数，因为光轴指向负的$z$。
+\begin{lstlisting}
+`\initcode{Compute translation of lens, delta, to focus at focusDistance}{=}`
+`\refvar{Float}{}` f = fz[0] - pz[0];
+`\refvar{Float}{}` z = -focusDistance;
+`\refvar{Float}{}` delta = 0.5f * (pz[1] - z + pz[0] -
+    std::sqrt((pz[1] - z - pz[0]) * (pz[1] - z - 4 * f - pz[0])));
+\end{lstlisting}
+
+我们现在终于可以实现\refvar{RealisticCamera}{}构造函数中
+对焦透镜系统的代码片了（回想最尾部元件界面的厚度是该界面到胶片的距离）。
+\begin{lstlisting}
+`\initcode{Compute lens-film distance for given focus distance}{=}`
+`\refvar{elementInterfaces}{}`.back().`\refvar{thickness}{}` = `\refvar{FocusThickLens}{}`(focusDistance);
+\end{lstlisting}
+
 \subsection{出射瞳}\label{sub:出射瞳}
+不是所有从胶片平面上给定点起始朝向尾部透镜元件的光线都能成功射出透镜系统；
+一些会被光圈阻挡或者与透镜系统外壳相交。
+反过来，尾部透镜元件上不是所有点都能把辐射传输到胶片上的点。
+尾部元件上确实能带着光通过透镜系统的点集称为\keyindex{出射瞳}{exit pupil}{}；
+它的尺寸和位置随着胶片平面上的视点变化
+（类似地，\keyindex{入射瞳}{entrance pupil}{}是场景中给定点起始
+且能到达胶片的光线所穿过的前端透镜元件区域）。
+
 \subsection{相机测量方程}\label{sub:相机测量方程}

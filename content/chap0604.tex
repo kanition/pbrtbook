@@ -63,7 +63,7 @@ private:
     : `\refvar{Camera}{}`(CameraToWorld, shutterOpen, shutterClose, film, medium),
       simpleWeighting(simpleWeighting) {
     `\refcode{Load element data from lens description file}{}`
-    `\refcode{Compute lens–film distance for given focus distance}{}`
+    `\refcode{Compute lens-film distance for given focus distance}{}`
     `\refcode{Compute exit pupil bounds at sampled points on the film}{}`
 }
 \end{lstlisting}
@@ -575,17 +575,76 @@ rFilm = `\refvar{Ray}{}`(`\refvar{Point3f}{}`(x, 0, `\refvar{LensRearZ}{}`() - 1
     \subfloat[]{\includegraphics[width=0.5\linewidth]{chap06/wide22-rays-middle.eps}\label{fig:6.21.3}}\qquad
     \subfloat[]{\includegraphics[width=0.2\linewidth]{chap06/wide22-exit-middle.eps}\label{fig:6.21.4}}
     \caption{22mm广角镜头在5.5mm光圈（f/4）下的出射瞳。
-    (a)起始于胶片平面边缘一点的光线进入尾部透镜元件的多个点。
-    虚线表示被阻挡而没有射出透镜系统的光线。
-    (b)从(a)中的有利位置看到的出射瞳的像。尾部透镜元件是黑色的，而出射瞳表示为灰色。
-    (c)在胶片中心，不同的出射瞳区域允许光线射出到场景中。
-    (d)从胶片中心看到的出射瞳的像。}
+        (a)起始于胶片平面边缘一点的光线进入尾部透镜元件的多个点。
+        虚线表示被阻挡而没有射出透镜系统的光线。
+        (b)从(a)中的有利位置看到的出射瞳的像。尾部透镜元件是黑色的，而出射瞳表示为灰色。
+        (c)在胶片中心，不同的出射瞳区域允许光线射出到场景中。
+        (d)从胶片中心看到的出射瞳的像。}
     \label{fig:6.21}
 \end{figure}
 
 当追踪起始于胶片的光线时，我们想避免追踪太多没能穿过透镜系统的光线；
 因此值得把采样限制在出射瞳本身及其周围很小区域内，
 而不是浪费地在尾部透镜元件整个区域上采样。
+
+在追踪光线前计算胶片上每点的出射瞳会开销极大；相反\refvar{RealisticCamera}{}
+的实现预先计算沿胶片平面上的直线段对应的出射瞳边界。
+因为我们假设透镜系统是绕光轴径向对称的，所以出射瞳边界也会是径向对称的，
+且胶片平面上任意点的边界都可以通过适当旋转这些线段边界来求得（\reffig{6.22}）
+\sidenote{译者注：\protect\reffig{6.22}题注最后一句翻译不确定是否正确。}。
+然后这些边界用于为特定胶片采样位置高效求取出射瞳边界。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.7\linewidth]{chap06/Exitpupilboundsfilm.eps}
+    \caption{预先计算出射瞳边界。(a)\refvar{RealisticCamera}{}为胶片平面上
+        沿$x$轴的一系列线段计算出射瞳的边界，直到胶片中心到角点的距离$r$。
+        (b)鉴于径向对称的假设，我们可以通过计算点与$x$轴间的夹角$\theta$来
+        为胶片上的任意点（实心点）求取出射瞳边界。如果原始出射瞳边界内的一点被采样
+        再旋转$\theta$，则我们就有了原始点处出射瞳内的一点。}
+    \label{fig:6.22}
+\end{figure}
+
+需要意识到的一个重要细节是，由于透镜系统通过沿光轴平移来对焦，
+所以当调整透镜系统的对焦时出射瞳的形状和位置会变化。
+因此在对焦后才计算这些边界十分重要
+\footnote{作者也是调试几个小时后才痛苦地吸取这一教训。}。
+\begin{lstlisting}
+`\initcode{Compute exit pupil bounds at sampled points on the film}{=}`
+int nSamples = 64;
+`\refvar{exitPupilBounds}{}`.resize(nSamples);
+`\refvar{ParallelFor}{}`(
+    [&](int i) {
+        `\refvar{Float}{}` r0 = (`\refvar{Float}{}`)i / nSamples * `\refvar{film}{}`->`\refvar{diagonal}{}` / 2;
+        `\refvar{Float}{}` r1 = (`\refvar{Float}{}`)(i + 1) / nSamples * `\refvar{film}{}`->`\refvar{diagonal}{}` / 2;
+        `\refvar{exitPupilBounds}{}`[i] = `\refvar{BoundExitPupil}{}`(r0, r1);
+    }, nSamples);
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{RealisticCamera Private Data}{+=}\lastcode{RealisticCameraPrivateData}`
+std::vector<`\refvar{Bounds2f}{}`> `\initvar{exitPupilBounds}{}`;
+\end{lstlisting}
+
+方法\refvar{BoundExitPupil}{()}计算从胶片平面上一段点看到的出射瞳2D边界框。
+通过尝试追踪在尾部透镜元件切平面的一组点上穿过透镜系统的光线来求取该边界框。
+成功穿过透镜系统的光线的边界框便给出了出射瞳的大致边界——见\reffig{6.23}。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.5\linewidth]{chap06/Sampleexitpupil.eps}
+    \caption{怎样计算出射瞳边界的2D图示。\refvar{BoundExitPupil}{()}接收
+        胶片上沿$x$轴的区间。它沿区间采样一系列点（图中下方）。
+        对于每个点，它还采样尾部透镜元件在与其尾部相切的平面上对应范围的边框内的一点。
+        它计算所有起始于区间的点且成功穿过透镜系统的光线在切平面上的边界框。}
+    \label{fig:6.23}
+\end{figure}
+\begin{lstlisting}
+`\refcode{RealisticCamera Method Definitions}{+=}\lastnext{RealisticCameraMethodDefinitions}`
+`\refvar{Bounds2f}{}` `\refvar{RealisticCamera}{}`::`\initvar{BoundExitPupil}{}`(`\refvar{Float}{}` pFilmX0,
+        `\refvar{Float}{}` pFilmX1) const {
+    `\refvar{Bounds2f}{}` pupilBounds;
+    `\refcode{Sample a collection of points on the rear lens to find exit pupil}{}`
+    `\refcode{Return entire element bounds if no rays made it through the lens system}{}`
+    `\refcode{Expand bounds to account for sample spacing}{}`
+    return pupilBounds;
+}
+\end{lstlisting}
 
 
 \subsection{相机测量方程}\label{sub:相机测量方程}

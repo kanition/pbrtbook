@@ -566,4 +566,26 @@ rFilm = `\refvar{Ray}{}`(`\refvar{Point3f}{}`(x, 0, `\refvar{LensRearZ}{}`() - 1
 （类似地，\keyindex{入射瞳}{entrance pupil}{}是场景中给定点起始
 且能到达胶片的光线所穿过的前端透镜元件区域）。
 
+\reffig{6.21}展示了广角镜头从胶片平面上两点看到的出射瞳。
+当点靠近胶片边缘时出射瞳更小。这类收缩的一个结果是暗角。
+\begin{figure}[htbp]
+    \centering
+    \subfloat[]{\includegraphics[width=0.5\linewidth]{chap06/wide22-rays-edge.eps}\label{fig:6.21.1}}\qquad
+    \subfloat[]{\includegraphics[width=0.2\linewidth]{chap06/wide22-exit-edge.eps}\label{fig:6.21.2}}\\
+    \subfloat[]{\includegraphics[width=0.5\linewidth]{chap06/wide22-rays-middle.eps}\label{fig:6.21.3}}\qquad
+    \subfloat[]{\includegraphics[width=0.2\linewidth]{chap06/wide22-exit-middle.eps}\label{fig:6.21.4}}
+    \caption{22mm广角镜头在5.5mm光圈（f/4）下的出射瞳。
+    (a)起始于胶片平面边缘一点的光线进入尾部透镜元件的多个点。
+    虚线表示被阻挡而没有射出透镜系统的光线。
+    (b)从(a)中的有利位置看到的出射瞳的像。尾部透镜元件是黑色的，而出射瞳表示为灰色。
+    (c)在胶片中心，不同的出射瞳区域允许光线射出到场景中。
+    (d)从胶片中心看到的出射瞳的像。}
+    \label{fig:6.21}
+\end{figure}
+
+当追踪起始于胶片的光线时，我们想避免追踪太多没能穿过透镜系统的光线；
+因此值得把采样限制在出射瞳本身及其周围很小区域内，
+而不是浪费地在尾部透镜元件整个区域上采样。
+
+
 \subsection{相机测量方程}\label{sub:相机测量方程}

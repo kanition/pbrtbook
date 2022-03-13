@@ -646,5 +646,42 @@ std::vector<`\refvar{Bounds2f}{}`> `\initvar{exitPupilBounds}{}`;
 }
 \end{lstlisting}
 
+该实现非常密集地采样出射瞳——每段共有$1024^2$个点。
+我们发现实践中该采样率能提供很好的出射瞳边界。
+\begin{lstlisting}
+`\initcode{Sample a collection of points on the rear lens to find exit pupil}{=}`
+const int nSamples = 1024 * 1024;
+int nExitingRays = 0;
+`\refcode{Compute bounding box of projection of rear element on sampling plane}{}`
+for (int i = 0; i < nSamples; ++i) {
+    `\refcode{Find location of sample points on  segment and rear lens element}{}`
+    `\refcode{Expand pupil bounds if ray makes it through the lens system}{}`
+}
+\end{lstlisting}
+
+尾部元件在与之垂直的平面上的边界框不足以成为出射瞳在该平面上的投影的保守边界框；
+因为元件一般是曲形的，穿过该平面边界之外的光线可能自己与尾部透镜元件有效范围相交。
+比起计算精确边界，我们则是大幅增大边框。结果是用来计算出射瞳边界而采样的许多点会被浪费；
+实践中，这是很小的代价，因为通常这些样本在透镜的光线追踪阶段会很快被终止。
+\begin{lstlisting}
+`\initcode{Compute bounding box of projection of rear element on sampling plane}{=}`
+`\refvar{Float}{}` rearRadius = `\refvar{RearElementRadius}{}`();
+`\refvar{Bounds2f}{}` projRearBounds(`\refvar{Point2f}{}`(-1.5f * rearRadius, -1.5f * rearRadius),
+                        `\refvar{Point2f}{}`( 1.5f * rearRadius,  1.5f * rearRadius));
+\end{lstlisting}
+
+通过在$x$区间端点间线性插值来求得胶片上的$x$样本点。
+稍后\refsub{Hammersley和Halton序列}{}定义的函数\refvar{RadicalInverse}{()}用于
+为出射瞳边界框内的采样点计算插值偏移量。我们将看到
+这里实现的采样策略对应于在3D中使用Hammersley点；
+得到的点集会最小化整个3D域覆盖情况的差异，反过来保证了准确估计出射瞳边界。
+\begin{lstlisting}
+`\initcode{Find location of sample points on x segment and rear lens element}{=}`
+`\refvar{Point3f}{}` pFilm(`\refvar{Lerp}{}`((i + 0.5f) / nSamples, pFilmX0, pFilmX1), 0, 0);
+`\refvar{Float}{}` u[2] = { `\refvar{RadicalInverse}{}`(0, i), `\refvar{RadicalInverse}{}`(1, i) };
+`\refvar{Point3f}{}` pRear(`\refvar{Lerp}{}`(u[0], projRearBounds.pMin.x, projRearBounds.pMax.x),
+              `\refvar{Lerp}{}`(u[1], projRearBounds.pMin.y, projRearBounds.pMax.y),
+              `\refvar{LensRearZ}{}`());
+\end{lstlisting}
 
 \subsection{相机测量方程}\label{sub:相机测量方程}

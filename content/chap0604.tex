@@ -785,9 +785,9 @@ return `\refvar{Point3f}{}`(cosTheta * pLens.x - sinTheta * pLens.y,
 \end{lstlisting}
 
 然后\refvar{SampleExitPupil}{()}给我们尾部透镜元件切平面上的一点，
-反过来让我们确定了光线的方向。我们可以追踪该光线穿过透镜系统。
-如果光线被光圈阻挡或没能成功穿过透镜系统，\refvar[RealisticCamera::GenerateRay]{GenerateRay}{()}返回权重0
-（调用者应保证检查这一情况）。
+让我们确定了光线的方向。我们可追踪该光线穿过透镜系统。
+若光线被光圈阻挡或没能成功穿过透镜系统，\refvar[RealisticCamera::GenerateRay]{GenerateRay}{()}返回权重0
+（调用者应保证检查该情况）。
 \begin{lstlisting}
 `\initcode{Trace ray from pFilm through lens system}{=}`
 `\refvar{Float}{}` exitPupilBoundsArea;
@@ -811,3 +811,80 @@ ray->`\refvar[Ray::medium]{medium}{}` = `\refvar[Camera::medium]{medium}{}`;
 代码片\refcode{Return weighting for RealisticCamera ray}{}将在\refsub{采样相机1}介绍。
 
 \subsection{相机测量方程}\label{sub:相机测量方程}
+有了上述对真实成像过程更精确的模拟，
+更仔细地定义胶片或相机传感器的辐射度量是值得的。
+从出射瞳到胶片的光线携带着来自场景的辐射；
+因此从胶片平面上一点来考虑，有一组对应的辐射入射方向。
+离开出射瞳的辐射分布会被胶片上该点所见的失焦模糊程度影响——
+\reffig{6.24}展示了从胶片上两点看到的出射瞳辐射的渲染图。
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.4\linewidth]{chap06/exitpupil-a.png}\quad
+    \includegraphics[width=0.4\linewidth]{chap06/exitpupil-b.png}
+    \caption{从\reffig{6.16}中胶片平面上两点看到的出射瞳。
+        (一)清晰对焦点处看到的出射瞳；入射辐射在其区域上实际上是常量。
+        (二)失焦区域中一个像素处所看到的，出射瞳是部分场景的一小幅图像，
+        可能有急剧变化的辐射。}
+    \label{fig:6.24}
+\end{figure}
+
+给定入射辐射函数，我们可以定义胶片平面上一点的辐射照度。
+如果我们从利用辐射亮度定义辐射照度的\refeq{5.4}开始，
+则我们可以用\refeq{5.6}把在立体角上的积分转化为面积
+（这种情况下即定界出射瞳的尾部透镜元件的切平面面积$A_{\mathrm{e}}$）上的积分。
+这给出了胶片平面上一点$\bm p$的辐射照度：
+\begin{align*}
+    E({\bm p})=\int_{A_{\mathrm{e}}}{L_{\mathrm{i}}({\bm p},{\bm p}')
+    \frac{|\cos\theta\cos\theta'|}{\|{\bm p}'-{\bm p}\|^2}\mathrm{d}A_{\mathrm{e}}}\, .
+\end{align*}
+
+\reffig{6.25}展示了该情况的几何结构。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.5\linewidth]{chap06/Camerameasurementequation.eps}
+    \caption{\refeq{6.5}辐射照度度量方程的几何设置。当辐射从
+        尾部透镜元件切平面上的点$\bm p'$穿过到胶片平面上的点$\bm p$时可以被度量。
+        $z$是从胶片平面到尾部元件切平面的轴向距离\refvar[LensRearZ]{RealisticCamera::LensRearZ}{()}，
+        而$\theta$是从$\bm p'$到$\bm p$的向量与光轴的夹角。}
+    \label{fig:6.25}
+\end{figure}
+
+因为胶片平面平行\sidenote{译者注：原文误写为垂直，已修改。}于出射瞳平面，所以$\theta=\theta'$。
+我们可进一步利用$\bm p$和$\bm p'$间的距离等于从胶片平面到出射瞳轴向距离
+（这里我们表示为$z$）除以$\cos\theta$的事实。
+将这些全部结合起来，我们有
+\begin{align}\label{eq:6.5}
+    E({\bm p})=\frac{1}{z^2}\int_{A_{\mathrm{e}}}{L_{\mathrm{i}}({\bm p},{\bm p}')|\cos^4\theta|\mathrm{d}A_{\mathrm{e}}}\, .
+\end{align}
+
+对于胶片范围相对于距离$z$较大的相机，项$\cos^4\theta$会
+明显降低入射辐射照度——该因素也促成了暗角。
+大多数现代数字相机都按照会增加传感器边缘像素值的预设校正因子来校正该效应。
+
+胶片上一点的辐射照度对快门开启时间的积分
+给出了\keyindex{注量}{fluence}{}
+\sidenote{译者注：即\keyindex{辐射曝光量}{radiant exposure}{}。}，
+即单位面积上的辐射能量，单位$\text{J/m}^2$。
+\begin{align}\label{eq:6.6}
+    H({\bm p})=\frac{1}{z^2}\int_{t_0}^{t_1}\int_{A_{\mathrm{e}}}
+    L_{\mathrm{i}}({\bm p},{\bm p}',t')|\cos^4\theta|\mathrm{d}A_{\mathrm{e}}\mathrm{d}t'\, .
+\end{align}
+
+度量一点的注量刻画了胶片平面接收的能量大小与相机快门开启的时长部分相关的效应。
+
+摄影胶片（或者数字相机内的CCD\sidenote{译者注：即\keyindex{电荷耦合器件}{charge-coupled device}{}。}
+或CMOS\sidenote{译者注：即\keyindex{互补式金属氧化物半导体}{complementary metal-oxide-semiconductor}{}。}）
+实际上是度量一小片面积上的辐射能量
+\footnote{2015年代手机数字相机中像素的典型尺寸是每边1.5微米。}。
+取\refeq{6.6}并在传感器像素面积$A_{\mathrm{p}}$上积分，我们有
+\begin{align}\label{eq:6.7}
+    J=\frac{1}{z^2}\int_{A_{\mathrm{p}}}\int_{t_0}^{t_1}\int_{A_{\mathrm{e}}}
+    L_{\mathrm{i}}({\bm p},{\bm p}',t')|\cos^4\theta|\mathrm{d}A_{\mathrm{e}}\mathrm{d}t'\mathrm{d}A_{\mathrm{p}}\, ,
+\end{align}
+焦耳到达一个像素。
+
+\refsec{蒙特卡洛估计器}中，我们将看到蒙特卡洛可以怎样运用于估计这些各种积分的值。
+然后\refsub{采样相机1}中我们将定义\refvar{RealisticCamera::GenerateRay}{()}中的
+代码片\refcode{Return weighting for RealisticCamera ray}{}；
+各种计算权重的方法允许我们计算这些量中的每一个。
+\refsub{采样相机2}定义了相机模型的\keyindex{重要性函数}{importance function}{}，
+它表征了其对沿不同光线到达的入射光照的敏感性。

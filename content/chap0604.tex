@@ -654,7 +654,7 @@ const int nSamples = 1024 * 1024;
 int nExitingRays = 0;
 `\refcode{Compute bounding box of projection of rear element on sampling plane}{}`
 for (int i = 0; i < nSamples; ++i) {
-    `\refcode{Find location of sample points on  segment and rear lens element}{}`
+    `\refcode{Find location of sample points on x segment and rear lens element}{}`
     `\refcode{Expand pupil bounds if ray makes it through the lens system}{}`
 }
 \end{lstlisting}
@@ -683,5 +683,95 @@ for (int i = 0; i < nSamples; ++i) {
               `\refvar{Lerp}{}`(u[1], projRearBounds.pMin.y, projRearBounds.pMax.y),
               `\refvar{LensRearZ}{}`());
 \end{lstlisting}
+
+现在我们可构造从{\ttfamily pFilm}到{\ttfamily pRear}的光线并
+通过看它是否成功射出透镜系统前端来确定它是否在出射瞳内。
+如果是，则拓展出射瞳边界以包含该点。如果采样点已经在
+目前算出的出射瞳边界框内，则我们可以跳过光线追踪步骤以节约些无用功。
+\begin{lstlisting}
+`\initcode{Expand pupil bounds if ray makes it through the lens system}{=}`
+if (`\refvar{Inside}{}`(`\refvar{Point2f}{}`(pRear.x, pRear.y), pupilBounds) ||
+    `\refvar{TraceLensesFromFilm}{}`(`\refvar{Ray}{}`(pFilm, pRear - pFilm), nullptr)) {
+    pupilBounds = `\refvar[Union1]{Union}{}`(pupilBounds, `\refvar{Point2f}{}`(pRear.x, pRear.y));
+    ++nExitingRays;
+}
+\end{lstlisting}
+
+可能没有样本光线能成功穿过透镜系统；例如一些在胶片范围边缘处出射瞳会消失的
+超大广角镜头完全可能发生这种情况。这种情况下边界并不重要，
+\refvar{BoundExitPupil}{()}返回包括了整个尾部透镜元件的边界。
+\begin{lstlisting}
+`\initcode{Return entire element bounds if no rays made it through the lens system}{=}`
+if (nExitingRays == 0) 
+    return projRearBounds;
+\end{lstlisting}
+
+当一个样本成功穿过透镜系统而它的一个相邻样本没有时，
+有可能与该邻居很相近的另一个样本实际上能成功穿过。
+因此，最终边界在每个方向上再大致按样本间距拓展以考虑这一不确定性。
+\begin{lstlisting}
+`\initcode{Expand bounds to account for sample spacing}{=}`
+pupilBounds = `\refvar{Expand}{}`(pupilBounds,
+                     2 * projRearBounds.`\refvar{Diagonal}{}`().`\refvar{Length}{}`() /
+                     std::sqrt(nSamples));
+\end{lstlisting}
+
+有了预先计算并存储在\refvar[exitPupilBounds]{RealisticCamera::exitPupilBounds}{}中的边界，
+方法\refvar{SampleExitPupil}{()}就能很高效地为胶片平面上的给定点求得出射瞳边界。
+为了准确地对成像辐射度量学建模，下列代码需要知道该边界框的面积，
+所以它通过{\ttfamily sampleBoundsArea}返回。
+\begin{lstlisting}
+`\refcode{RealisticCamera Method Definitions}{+=}\lastnext{RealisticCameraMethodDefinitions}` 
+`\refvar{Point3f}{}` `\refvar{RealisticCamera}{}`::`\initvar{SampleExitPupil}{}`(const `\refvar{Point2f}{}` &pFilm,
+        const `\refvar{Point2f}{}` &lensSample, `\refvar{Float}{}` *sampleBoundsArea) const {
+    `\refcode{Find exit pupil bound for sample distance from film center}{}`
+    `\refcode{Generate sample point inside exit pupil bound}{}`
+    `\refcode{Return sample point rotated by angle of pFilm with +x axis}{}`
+}
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{Find exit pupil bound for sample distance from film center}{=}`
+`\refvar{Float}{}` rFilm = std::sqrt(pFilm.x * pFilm.x + pFilm.y * pFilm.y);
+int rIndex = rFilm / (`\refvar{film}{}`->`\refvar{diagonal}{}` / 2) * `\refvar{exitPupilBounds}{}`.size();
+rIndex = std::min((int)`\refvar{exitPupilBounds}{}`.size() - 1, rIndex);
+`\refvar{Bounds2f}{}` pupilBounds = `\refvar{exitPupilBounds}{}`[rIndex];
+if (sampleBoundsArea) *sampleBoundsArea = pupilBounds.Area();
+\end{lstlisting}
+
+给定瞳的边界框后，通过对提供的位于$[0,1)^2$的值{\ttfamily lensSample}线性插值
+来采样边界框中的一点。
+\begin{lstlisting}
+`\initcode{Generate sample point inside exit pupil bound}{=}`
+`\refvar{Point2f}{}` pLens = pupilBounds.`\refvar[Bounds3::Lerp]{Lerp}{}`(lensSample);
+\end{lstlisting}
+
+因为出射瞳边界是从胶片上一点沿$+x$轴算得的，
+但点{\ttfamily pFilm}是胶片上的任意点，
+故出射瞳边框内的样本点必须像{\ttfamily pFilm}对$+x$轴那样旋转相同角度。
+\begin{lstlisting}
+`\initcode{Return sample point rotated by angle of pFilm with +x axis}{=}`
+`\refvar{Float}{}` sinTheta = (rFilm != 0) ? pFilm.y / rFilm : 0;
+`\refvar{Float}{}` cosTheta = (rFilm != 0) ? pFilm.x / rFilm : 1;
+return `\refvar{Point3f}{}`(cosTheta * pLens.x - sinTheta * pLens.y,
+               sinTheta * pLens.x + cosTheta * pLens.y,
+               `\refvar{LensRearZ}{}`());
+\end{lstlisting}
+
+\subsection{生成光线}\label{sub:生成光线}
+现在我们有了机制去追踪穿过透镜系统的光线并采样由胶片平面上的点得来的出射瞳边界内的点，
+将\refvar{CameraSample}{}转化为离开相机的光线非常简单：
+我们需要计算样本在胶片平面上的位置并生成起始于该点射向尾部透镜元件的光线，
+然后通过透镜系统追踪它。
+\begin{lstlisting}
+`\refcode{RealisticCamera Method Definitions}{+=}\lastcode{RealisticCameraMethodDefinitions}`
+`\refvar{Float}{}` `\refvar{RealisticCamera}{}`::`\initvar[RealisticCamera::GenerateRay]{\refvar{GenerateRay}{}}{}`(const `\refvar{CameraSample}{}` &sample,
+        `\refvar{Ray}{}` *ray) const {
+    `\refcode{Find point on film, pFilm, corresponding to sample.pFilm}{}`
+    `\refcode{Trace ray from pFilm through lens system}{}`
+    `\refcode{Finish initialization of RealisticCamera ray}{}`
+    `\refcode{Return weighting for RealisticCamera ray}{}`
+}
+\end{lstlisting}
+
 
 \subsection{相机测量方程}\label{sub:相机测量方程}

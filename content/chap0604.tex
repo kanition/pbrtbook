@@ -773,5 +773,41 @@ return `\refvar{Point3f}{}`(cosTheta * pLens.x - sinTheta * pLens.y,
 }
 \end{lstlisting}
 
+值\refvar[pFilm]{CameraSample::pFilm}{}与图像的整个像素分辨率有关。
+这里我们用传感器的物理模型来操作，所以我们开始先将样本转化回$[0,1)^2$中。
+接着，通过用该样本值在其区域上线性插值来求得胶片上的对应点。
+\begin{lstlisting}
+`\initcode{Find point on film, pFilm, corresponding to sample.pFilm}{=}`
+`\refvar{Point2f}{}` s(sample.`\refvar{pFilm}{}`.x / `\refvar{film}{}`->`\refvar{fullResolution}{}`.x,
+          sample.`\refvar{pFilm}{}`.y / `\refvar{film}{}`->`\refvar{fullResolution}{}`.y);
+`\refvar{Point2f}{}` pFilm2 = `\refvar{film}{}`->`\refvar{GetPhysicalExtent}{}`().`\refvar[Bounds3::Lerp]{Lerp}{}`(s);
+`\refvar{Point2f}{}` pFilm(-pFilm2.x, pFilm2.y, 0);
+\end{lstlisting}
+
+然后\refvar{SampleExitPupil}{()}给我们尾部透镜元件切平面上的一点，
+反过来让我们确定了光线的方向。我们可以追踪该光线穿过透镜系统。
+如果光线被光圈阻挡或没能成功穿过透镜系统，\refvar[RealisticCamera::GenerateRay]{GenerateRay}{()}返回权重0
+（调用者应保证检查这一情况）。
+\begin{lstlisting}
+`\initcode{Trace ray from pFilm through lens system}{=}`
+`\refvar{Float}{}` exitPupilBoundsArea;
+`\refvar{Point3f}{}` pRear = `\refvar{SampleExitPupil}{}`(`\refvar{Point2f}{}`(pFilm.x, pFilm.y), sample.`\refvar{pLens}{}`,
+                                &exitPupilBoundsArea);
+`\refvar{Ray}{}` rFilm(pFilm, pRear - pFilm, `\refvar{Infinity}{}`,
+          `\refvar{Lerp}{}`(sample.`\refvar[CameraSample::time]{time}{}`, `\refvar{shutterOpen}{}`, `\refvar{shutterClose}{}`));
+if (!`\refvar{TraceLensesFromFilm}{}`(rFilm, ray))
+    return 0;
+\end{lstlisting}
+
+如果光线成功射出透镜系统，则需要处理常规细节以完成其初始化。
+\begin{lstlisting}
+`\initcode{Finish initialization of RealisticCamera ray}{=}`
+*ray = `\refvar{CameraToWorld}{}`(*ray);
+ray->`\refvar[Ray::d]{d}{}` = `\refvar{Normalize}{}`(ray->`\refvar[Ray::d]{d}{}`);
+ray->`\refvar[Ray::medium]{medium}{}` = `\refvar[Camera::medium]{medium}{}`;
+\end{lstlisting}
+
+在介绍了蒙特卡洛积分一些必要的背景后，
+代码片\refcode{Return weighting for RealisticCamera ray}{}将在\refsub{采样相机1}介绍。
 
 \subsection{相机测量方程}\label{sub:相机测量方程}

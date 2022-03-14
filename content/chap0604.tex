@@ -63,7 +63,7 @@ private:
     : `\refvar{Camera}{}`(CameraToWorld, shutterOpen, shutterClose, film, medium),
       simpleWeighting(simpleWeighting) {
     `\refcode{Load element data from lens description file}{}`
-    `\refcode{Compute lens–film distance for given focus distance}{}`
+    `\refcode{Compute lens-film distance for given focus distance}{}`
     `\refcode{Compute exit pupil bounds at sampled points on the film}{}`
 }
 \end{lstlisting}
@@ -566,4 +566,325 @@ rFilm = `\refvar{Ray}{}`(`\refvar{Point3f}{}`(x, 0, `\refvar{LensRearZ}{}`() - 1
 （类似地，\keyindex{入射瞳}{entrance pupil}{}是场景中给定点起始
 且能到达胶片的光线所穿过的前端透镜元件区域）。
 
+\reffig{6.21}展示了广角镜头从胶片平面上两点看到的出射瞳。
+当点靠近胶片边缘时出射瞳更小。这类收缩的一个结果是暗角。
+\begin{figure}[htbp]
+    \centering
+    \subfloat[]{\includegraphics[width=0.5\linewidth]{chap06/wide22-rays-edge.eps}\label{fig:6.21.1}}\qquad
+    \subfloat[]{\includegraphics[width=0.2\linewidth]{chap06/wide22-exit-edge.eps}\label{fig:6.21.2}}\\
+    \subfloat[]{\includegraphics[width=0.5\linewidth]{chap06/wide22-rays-middle.eps}\label{fig:6.21.3}}\qquad
+    \subfloat[]{\includegraphics[width=0.2\linewidth]{chap06/wide22-exit-middle.eps}\label{fig:6.21.4}}
+    \caption{22mm广角镜头在5.5mm光圈（f/4）下的出射瞳。
+        (a)起始于胶片平面边缘一点的光线进入尾部透镜元件的多个点。
+        虚线表示被阻挡而没有射出透镜系统的光线。
+        (b)从(a)中的有利位置看到的出射瞳的像。尾部透镜元件是黑色的，而出射瞳表示为灰色。
+        (c)在胶片中心，不同的出射瞳区域允许光线射出到场景中。
+        (d)从胶片中心看到的出射瞳的像。}
+    \label{fig:6.21}
+\end{figure}
+
+当追踪起始于胶片的光线时，我们想避免追踪太多没能穿过透镜系统的光线；
+因此值得把采样限制在出射瞳本身及其周围很小区域内，
+而不是浪费地在尾部透镜元件整个区域上采样。
+
+在追踪光线前计算胶片上每点的出射瞳会开销极大；相反\refvar{RealisticCamera}{}
+的实现预先计算沿胶片平面上的直线段对应的出射瞳边界。
+因为我们假设透镜系统是绕光轴径向对称的，所以出射瞳边界也会是径向对称的，
+且胶片平面上任意点的边界都可以通过适当旋转这些线段边界来求得（\reffig{6.22}）
+\sidenote{译者注：\protect\reffig{6.22}题注最后一句翻译不确定是否正确。}。
+然后这些边界用于为特定胶片采样位置高效求取出射瞳边界。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.7\linewidth]{chap06/Exitpupilboundsfilm.eps}
+    \caption{预先计算出射瞳边界。(a)\refvar{RealisticCamera}{}为胶片平面上
+        沿$x$轴的一系列线段计算出射瞳的边界，直到胶片中心到角点的距离$r$。
+        (b)鉴于径向对称的假设，我们可以通过计算点与$x$轴间的夹角$\theta$来
+        为胶片上的任意点（实心点）求取出射瞳边界。如果原始出射瞳边界内的一点被采样
+        再旋转$\theta$，则我们就有了原始点处出射瞳内的一点。}
+    \label{fig:6.22}
+\end{figure}
+
+需要意识到的一个重要细节是，由于透镜系统通过沿光轴平移来对焦，
+所以当调整透镜系统的对焦时出射瞳的形状和位置会变化。
+因此在对焦后才计算这些边界十分重要
+\footnote{作者也是调试几个小时后才痛苦地吸取这一教训。}。
+\begin{lstlisting}
+`\initcode{Compute exit pupil bounds at sampled points on the film}{=}`
+int nSamples = 64;
+`\refvar{exitPupilBounds}{}`.resize(nSamples);
+`\refvar{ParallelFor}{}`(
+    [&](int i) {
+        `\refvar{Float}{}` r0 = (`\refvar{Float}{}`)i / nSamples * `\refvar{film}{}`->`\refvar{diagonal}{}` / 2;
+        `\refvar{Float}{}` r1 = (`\refvar{Float}{}`)(i + 1) / nSamples * `\refvar{film}{}`->`\refvar{diagonal}{}` / 2;
+        `\refvar{exitPupilBounds}{}`[i] = `\refvar{BoundExitPupil}{}`(r0, r1);
+    }, nSamples);
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{RealisticCamera Private Data}{+=}\lastcode{RealisticCameraPrivateData}`
+std::vector<`\refvar{Bounds2f}{}`> `\initvar{exitPupilBounds}{}`;
+\end{lstlisting}
+
+方法\refvar{BoundExitPupil}{()}计算从胶片平面上一段点看到的出射瞳2D边界框。
+通过尝试追踪在尾部透镜元件切平面的一组点上穿过透镜系统的光线来求取该边界框。
+成功穿过透镜系统的光线的边界框便给出了出射瞳的大致边界——见\reffig{6.23}。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.5\linewidth]{chap06/Sampleexitpupil.eps}
+    \caption{怎样计算出射瞳边界的2D图示。\refvar{BoundExitPupil}{()}接收
+        胶片上沿$x$轴的区间。它沿区间采样一系列点（图中下方）。
+        对于每个点，它还采样尾部透镜元件在与其尾部相切的平面上对应范围的边框内的一点。
+        它计算所有起始于区间的点且成功穿过透镜系统的光线在切平面上的边界框。}
+    \label{fig:6.23}
+\end{figure}
+\begin{lstlisting}
+`\refcode{RealisticCamera Method Definitions}{+=}\lastnext{RealisticCameraMethodDefinitions}`
+`\refvar{Bounds2f}{}` `\refvar{RealisticCamera}{}`::`\initvar{BoundExitPupil}{}`(`\refvar{Float}{}` pFilmX0,
+        `\refvar{Float}{}` pFilmX1) const {
+    `\refvar{Bounds2f}{}` pupilBounds;
+    `\refcode{Sample a collection of points on the rear lens to find exit pupil}{}`
+    `\refcode{Return entire element bounds if no rays made it through the lens system}{}`
+    `\refcode{Expand bounds to account for sample spacing}{}`
+    return pupilBounds;
+}
+\end{lstlisting}
+
+该实现非常密集地采样出射瞳——每段共有$1024^2$个点。
+我们发现实践中该采样率能提供很好的出射瞳边界。
+\begin{lstlisting}
+`\initcode{Sample a collection of points on the rear lens to find exit pupil}{=}`
+const int nSamples = 1024 * 1024;
+int nExitingRays = 0;
+`\refcode{Compute bounding box of projection of rear element on sampling plane}{}`
+for (int i = 0; i < nSamples; ++i) {
+    `\refcode{Find location of sample points on x segment and rear lens element}{}`
+    `\refcode{Expand pupil bounds if ray makes it through the lens system}{}`
+}
+\end{lstlisting}
+
+尾部元件在与之垂直的平面上的边界框不足以成为出射瞳在该平面上的投影的保守边界框；
+因为元件一般是曲形的，穿过该平面边界之外的光线可能自己与尾部透镜元件有效范围相交。
+比起计算精确边界，我们则是大幅增大边框。结果是用来计算出射瞳边界而采样的许多点会被浪费；
+实践中，这是很小的代价，因为通常这些样本在透镜的光线追踪阶段会很快被终止。
+\begin{lstlisting}
+`\initcode{Compute bounding box of projection of rear element on sampling plane}{=}`
+`\refvar{Float}{}` rearRadius = `\refvar{RearElementRadius}{}`();
+`\refvar{Bounds2f}{}` projRearBounds(`\refvar{Point2f}{}`(-1.5f * rearRadius, -1.5f * rearRadius),
+                        `\refvar{Point2f}{}`( 1.5f * rearRadius,  1.5f * rearRadius));
+\end{lstlisting}
+
+通过在$x$区间端点间线性插值来求得胶片上的$x$样本点。
+稍后\refsub{Hammersley和Halton序列}{}定义的函数\refvar{RadicalInverse}{()}用于
+为出射瞳边界框内的采样点计算插值偏移量。我们将看到
+这里实现的采样策略对应于在3D中使用Hammersley点；
+得到的点集会最小化整个3D域覆盖情况的差异，反过来保证了准确估计出射瞳边界。
+\begin{lstlisting}
+`\initcode{Find location of sample points on x segment and rear lens element}{=}`
+`\refvar{Point3f}{}` pFilm(`\refvar{Lerp}{}`((i + 0.5f) / nSamples, pFilmX0, pFilmX1), 0, 0);
+`\refvar{Float}{}` u[2] = { `\refvar{RadicalInverse}{}`(0, i), `\refvar{RadicalInverse}{}`(1, i) };
+`\refvar{Point3f}{}` pRear(`\refvar{Lerp}{}`(u[0], projRearBounds.pMin.x, projRearBounds.pMax.x),
+              `\refvar{Lerp}{}`(u[1], projRearBounds.pMin.y, projRearBounds.pMax.y),
+              `\refvar{LensRearZ}{}`());
+\end{lstlisting}
+
+现在我们可构造从{\ttfamily pFilm}到{\ttfamily pRear}的光线并
+通过看它是否成功射出透镜系统前端来确定它是否在出射瞳内。
+如果是，则拓展出射瞳边界以包含该点。如果采样点已经在
+目前算出的出射瞳边界框内，则我们可以跳过光线追踪步骤以节约些无用功。
+\begin{lstlisting}
+`\initcode{Expand pupil bounds if ray makes it through the lens system}{=}`
+if (`\refvar{Inside}{}`(`\refvar{Point2f}{}`(pRear.x, pRear.y), pupilBounds) ||
+    `\refvar{TraceLensesFromFilm}{}`(`\refvar{Ray}{}`(pFilm, pRear - pFilm), nullptr)) {
+    pupilBounds = `\refvar[Union1]{Union}{}`(pupilBounds, `\refvar{Point2f}{}`(pRear.x, pRear.y));
+    ++nExitingRays;
+}
+\end{lstlisting}
+
+可能没有样本光线能成功穿过透镜系统；例如一些在胶片范围边缘处出射瞳会消失的
+超大广角镜头完全可能发生这种情况。这种情况下边界并不重要，
+\refvar{BoundExitPupil}{()}返回包括了整个尾部透镜元件的边界。
+\begin{lstlisting}
+`\initcode{Return entire element bounds if no rays made it through the lens system}{=}`
+if (nExitingRays == 0) 
+    return projRearBounds;
+\end{lstlisting}
+
+当一个样本成功穿过透镜系统而它的一个相邻样本没有时，
+有可能与该邻居很相近的另一个样本实际上能成功穿过。
+因此，最终边界在每个方向上再大致按样本间距拓展以考虑这一不确定性。
+\begin{lstlisting}
+`\initcode{Expand bounds to account for sample spacing}{=}`
+pupilBounds = `\refvar{Expand}{}`(pupilBounds,
+                     2 * projRearBounds.`\refvar{Diagonal}{}`().`\refvar{Length}{}`() /
+                     std::sqrt(nSamples));
+\end{lstlisting}
+
+有了预先计算并存储在\refvar[exitPupilBounds]{RealisticCamera::exitPupilBounds}{}中的边界，
+方法\refvar{SampleExitPupil}{()}就能很高效地为胶片平面上的给定点求得出射瞳边界。
+为了准确地对成像辐射度量学建模，下列代码需要知道该边界框的面积，
+所以它通过{\ttfamily sampleBoundsArea}返回。
+\begin{lstlisting}
+`\refcode{RealisticCamera Method Definitions}{+=}\lastnext{RealisticCameraMethodDefinitions}` 
+`\refvar{Point3f}{}` `\refvar{RealisticCamera}{}`::`\initvar{SampleExitPupil}{}`(const `\refvar{Point2f}{}` &pFilm,
+        const `\refvar{Point2f}{}` &lensSample, `\refvar{Float}{}` *sampleBoundsArea) const {
+    `\refcode{Find exit pupil bound for sample distance from film center}{}`
+    `\refcode{Generate sample point inside exit pupil bound}{}`
+    `\refcode{Return sample point rotated by angle of pFilm with +x axis}{}`
+}
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{Find exit pupil bound for sample distance from film center}{=}`
+`\refvar{Float}{}` rFilm = std::sqrt(pFilm.x * pFilm.x + pFilm.y * pFilm.y);
+int rIndex = rFilm / (`\refvar{film}{}`->`\refvar{diagonal}{}` / 2) * `\refvar{exitPupilBounds}{}`.size();
+rIndex = std::min((int)`\refvar{exitPupilBounds}{}`.size() - 1, rIndex);
+`\refvar{Bounds2f}{}` pupilBounds = `\refvar{exitPupilBounds}{}`[rIndex];
+if (sampleBoundsArea) *sampleBoundsArea = pupilBounds.Area();
+\end{lstlisting}
+
+给定瞳的边界框后，通过对提供的位于$[0,1)^2$的值{\ttfamily lensSample}线性插值
+来采样边界框中的一点。
+\begin{lstlisting}
+`\initcode{Generate sample point inside exit pupil bound}{=}`
+`\refvar{Point2f}{}` pLens = pupilBounds.`\refvar[Bounds3::Lerp]{Lerp}{}`(lensSample);
+\end{lstlisting}
+
+因为出射瞳边界是从胶片上一点沿$+x$轴算得的，
+但点{\ttfamily pFilm}是胶片上的任意点，
+故出射瞳边框内的样本点必须像{\ttfamily pFilm}对$+x$轴那样旋转相同角度。
+\begin{lstlisting}
+`\initcode{Return sample point rotated by angle of pFilm with +x axis}{=}`
+`\refvar{Float}{}` sinTheta = (rFilm != 0) ? pFilm.y / rFilm : 0;
+`\refvar{Float}{}` cosTheta = (rFilm != 0) ? pFilm.x / rFilm : 1;
+return `\refvar{Point3f}{}`(cosTheta * pLens.x - sinTheta * pLens.y,
+               sinTheta * pLens.x + cosTheta * pLens.y,
+               `\refvar{LensRearZ}{}`());
+\end{lstlisting}
+
+\subsection{生成光线}\label{sub:生成光线}
+现在我们有了机制去追踪穿过透镜系统的光线并采样由胶片平面上的点得来的出射瞳边界内的点，
+将\refvar{CameraSample}{}转化为离开相机的光线非常简单：
+我们需要计算样本在胶片平面上的位置并生成起始于该点射向尾部透镜元件的光线，
+然后通过透镜系统追踪它。
+\begin{lstlisting}
+`\refcode{RealisticCamera Method Definitions}{+=}\lastcode{RealisticCameraMethodDefinitions}`
+`\refvar{Float}{}` `\refvar{RealisticCamera}{}`::`\initvar[RealisticCamera::GenerateRay]{\refvar{GenerateRay}{}}{}`(const `\refvar{CameraSample}{}` &sample,
+        `\refvar{Ray}{}` *ray) const {
+    `\refcode{Find point on film, pFilm, corresponding to sample.pFilm}{}`
+    `\refcode{Trace ray from pFilm through lens system}{}`
+    `\refcode{Finish initialization of RealisticCamera ray}{}`
+    `\refcode{Return weighting for RealisticCamera ray}{}`
+}
+\end{lstlisting}
+
+值\refvar[pFilm]{CameraSample::pFilm}{}与图像的整个像素分辨率有关。
+这里我们用传感器的物理模型来操作，所以我们开始先将样本转化回$[0,1)^2$中。
+接着，通过用该样本值在其区域上线性插值来求得胶片上的对应点。
+\begin{lstlisting}
+`\initcode{Find point on film, pFilm, corresponding to sample.pFilm}{=}`
+`\refvar{Point2f}{}` s(sample.`\refvar{pFilm}{}`.x / `\refvar{film}{}`->`\refvar{fullResolution}{}`.x,
+          sample.`\refvar{pFilm}{}`.y / `\refvar{film}{}`->`\refvar{fullResolution}{}`.y);
+`\refvar{Point2f}{}` pFilm2 = `\refvar{film}{}`->`\refvar{GetPhysicalExtent}{}`().`\refvar[Bounds3::Lerp]{Lerp}{}`(s);
+`\refvar{Point2f}{}` pFilm(-pFilm2.x, pFilm2.y, 0);
+\end{lstlisting}
+
+然后\refvar{SampleExitPupil}{()}给我们尾部透镜元件切平面上的一点，
+让我们确定了光线的方向。我们可追踪该光线穿过透镜系统。
+若光线被光圈阻挡或没能成功穿过透镜系统，\refvar[RealisticCamera::GenerateRay]{GenerateRay}{()}返回权重0
+（调用者应保证检查该情况）。
+\begin{lstlisting}
+`\initcode{Trace ray from pFilm through lens system}{=}`
+`\refvar{Float}{}` exitPupilBoundsArea;
+`\refvar{Point3f}{}` pRear = `\refvar{SampleExitPupil}{}`(`\refvar{Point2f}{}`(pFilm.x, pFilm.y), sample.`\refvar{pLens}{}`,
+                                &exitPupilBoundsArea);
+`\refvar{Ray}{}` rFilm(pFilm, pRear - pFilm, `\refvar{Infinity}{}`,
+          `\refvar{Lerp}{}`(sample.`\refvar[CameraSample::time]{time}{}`, `\refvar{shutterOpen}{}`, `\refvar{shutterClose}{}`));
+if (!`\refvar{TraceLensesFromFilm}{}`(rFilm, ray))
+    return 0;
+\end{lstlisting}
+
+如果光线成功射出透镜系统，则需要处理常规细节以完成其初始化。
+\begin{lstlisting}
+`\initcode{Finish initialization of RealisticCamera ray}{=}`
+*ray = `\refvar{CameraToWorld}{}`(*ray);
+ray->`\refvar[Ray::d]{d}{}` = `\refvar{Normalize}{}`(ray->`\refvar[Ray::d]{d}{}`);
+ray->`\refvar[Ray::medium]{medium}{}` = `\refvar[Camera::medium]{medium}{}`;
+\end{lstlisting}
+
+在介绍了蒙特卡洛积分一些必要的背景后，
+代码片\refcode{Return weighting for RealisticCamera ray}{}将在\refsub{采样相机1}介绍。
+
 \subsection{相机测量方程}\label{sub:相机测量方程}
+有了上述对真实成像过程更精确的模拟，
+更仔细地定义胶片或相机传感器的辐射度量是值得的。
+从出射瞳到胶片的光线携带着来自场景的辐射；
+因此从胶片平面上一点来考虑，有一组对应的辐射入射方向。
+离开出射瞳的辐射分布会被胶片上该点所见的失焦模糊程度影响——
+\reffig{6.24}展示了从胶片上两点看到的出射瞳辐射的渲染图。
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.4\linewidth]{chap06/exitpupil-a.png}\quad
+    \includegraphics[width=0.4\linewidth]{chap06/exitpupil-b.png}
+    \caption{从\reffig{6.16}中胶片平面上两点看到的出射瞳。
+        (一)清晰对焦点处看到的出射瞳；入射辐射在其区域上实际上是常量。
+        (二)失焦区域中一个像素处所看到的，出射瞳是部分场景的一小幅图像，
+        可能有急剧变化的辐射。}
+    \label{fig:6.24}
+\end{figure}
+
+给定入射辐射函数，我们可以定义胶片平面上一点的辐射照度。
+如果我们从利用辐射亮度定义辐射照度的\refeq{5.4}开始，
+则我们可以用\refeq{5.6}把在立体角上的积分转化为面积
+（这种情况下即定界出射瞳的尾部透镜元件的切平面面积$A_{\mathrm{e}}$）上的积分。
+这给出了胶片平面上一点$\bm p$的辐射照度：
+\begin{align*}
+    E({\bm p})=\int_{A_{\mathrm{e}}}{L_{\mathrm{i}}({\bm p},{\bm p}')
+    \frac{|\cos\theta\cos\theta'|}{\|{\bm p}'-{\bm p}\|^2}\mathrm{d}A_{\mathrm{e}}}\, .
+\end{align*}
+
+\reffig{6.25}展示了该情况的几何结构。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.5\linewidth]{chap06/Camerameasurementequation.eps}
+    \caption{\refeq{6.5}辐射照度度量方程的几何设置。当辐射从
+        尾部透镜元件切平面上的点$\bm p'$穿过到胶片平面上的点$\bm p$时可以被度量。
+        $z$是从胶片平面到尾部元件切平面的轴向距离\refvar[LensRearZ]{RealisticCamera::LensRearZ}{()}，
+        而$\theta$是从$\bm p'$到$\bm p$的向量与光轴的夹角。}
+    \label{fig:6.25}
+\end{figure}
+
+因为胶片平面平行\sidenote{译者注：原文误写为垂直，已修改。}于出射瞳平面，所以$\theta=\theta'$。
+我们可进一步利用$\bm p$和$\bm p'$间的距离等于从胶片平面到出射瞳轴向距离
+（这里我们表示为$z$）除以$\cos\theta$的事实。
+将这些全部结合起来，我们有
+\begin{align}\label{eq:6.5}
+    E({\bm p})=\frac{1}{z^2}\int_{A_{\mathrm{e}}}{L_{\mathrm{i}}({\bm p},{\bm p}')|\cos^4\theta|\mathrm{d}A_{\mathrm{e}}}\, .
+\end{align}
+
+对于胶片范围相对于距离$z$较大的相机，项$\cos^4\theta$会
+明显降低入射辐射照度——该因素也促成了暗角。
+大多数现代数字相机都按照会增加传感器边缘像素值的预设校正因子来校正该效应。
+
+胶片上一点的辐射照度对快门开启时间的积分
+给出了\keyindex{注量}{fluence}{}
+\sidenote{译者注：即\keyindex{辐射曝光量}{radiant exposure}{}。}，
+即单位面积上的辐射能量，单位$\text{J/m}^2$。
+\begin{align}\label{eq:6.6}
+    H({\bm p})=\frac{1}{z^2}\int_{t_0}^{t_1}\int_{A_{\mathrm{e}}}
+    L_{\mathrm{i}}({\bm p},{\bm p}',t')|\cos^4\theta|\mathrm{d}A_{\mathrm{e}}\mathrm{d}t'\, .
+\end{align}
+
+度量一点的注量刻画了胶片平面接收的能量大小与相机快门开启的时长部分相关的效应。
+
+摄影胶片（或者数字相机内的CCD\sidenote{译者注：即\keyindex{电荷耦合器件}{charge-coupled device}{}。}
+或CMOS\sidenote{译者注：即\keyindex{互补式金属氧化物半导体}{complementary metal-oxide-semiconductor}{}。}）
+实际上是度量一小片面积上的辐射能量
+\footnote{2015年代手机数字相机中像素的典型尺寸是每边1.5微米。}。
+取\refeq{6.6}并在传感器像素面积$A_{\mathrm{p}}$上积分，我们有
+\begin{align}\label{eq:6.7}
+    J=\frac{1}{z^2}\int_{A_{\mathrm{p}}}\int_{t_0}^{t_1}\int_{A_{\mathrm{e}}}
+    L_{\mathrm{i}}({\bm p},{\bm p}',t')|\cos^4\theta|\mathrm{d}A_{\mathrm{e}}\mathrm{d}t'\mathrm{d}A_{\mathrm{p}}\, ,
+\end{align}
+焦耳到达一个像素。
+
+\refsec{蒙特卡洛估计器}中，我们将看到蒙特卡洛可以怎样运用于估计这些各种积分的值。
+然后\refsub{采样相机1}中我们将定义\refvar{RealisticCamera::GenerateRay}{()}中的
+代码片\refcode{Return weighting for RealisticCamera ray}{}；
+各种计算权重的方法允许我们计算这些量中的每一个。
+\refsub{采样相机2}定义了相机模型的\keyindex{重要性函数}{importance function}{}，
+它表征了其对沿不同光线到达的入射光照的敏感性。

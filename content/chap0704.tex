@@ -1,0 +1,16 @@
+\section{Halton采样器}\label{sec:Halton采样器}
+
+\subsection{Hammersley和Halton序列}\label{sub:Hammersley和Halton序列}
+\begin{lstlisting}
+`\initcode{Low Discrepancy Function Definitions}{=}\initnext{LowDiscrepancyFunctionDefinitions}`
+`\refvar{Float}{}` `\initvar{RadicalInverse}{}`(int baseIndex, uint64_t a) {
+    switch (baseIndex) {
+        case 0:
+            `\refcode{Compute base-2 radical inverse}{}`
+        case 1: return `\refvar{RadicalInverseSpecialized}{}`<3>(a);
+        case 2: return `\refvar{RadicalInverseSpecialized}{}`<5>(a);
+        case 3: return `\refvar{RadicalInverseSpecialized}{}`<7>(a);
+        `\refcode{Remainder of cases for RadicalInverse()}{}`
+    }
+}
+\end{lstlisting}

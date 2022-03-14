@@ -57,7 +57,15 @@ std::unique_ptr<`\refvar{Pixel}{}`[]> `\initvar[Pixel::pixels]{pixels}{}`;
     return (`\refvar{Bounds2i}{}`)floatBounds;
 }
 \end{lstlisting}
-
+\begin{lstlisting}
+`\refcode{Film Method Definitions}{+=}\lastnext{FilmMethodDefinitions}`
+`\refvar{Bounds2f}{}` `\refvar{Film}{}`::`\initvar{GetPhysicalExtent}{}`() const {
+    `\refvar{Float}{}` aspect = (`\refvar{Float}{}`)`\refvar{fullResolution}{}`.y / (`\refvar{Float}{}`)`\refvar{fullResolution}{}`.x;
+    `\refvar{Float}{}` x = std::sqrt(`\refvar{diagonal}{}` * `\refvar{diagonal}{}` / (1 + aspect * aspect));
+    `\refvar{Float}{}` y = aspect * x;
+    return `\refvar{Bounds2f}{}`(`\refvar{Point2f}{}`(-x / 2, -y / 2), `\refvar{Point2f}{}`(x / 2, y / 2));
+}
+\end{lstlisting}
 \subsection{为胶片提供像素值}\label{sub:为胶片提供像素值}
 \begin{lstlisting}
 `\refcode{Film Method Definitions}{+=}\lastnext{FilmMethodDefinitions}`

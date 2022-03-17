@@ -174,7 +174,7 @@ private:
 
 幸亏正交投影很简单，在方法\refvar[OrthographicCamera::GenerateRayDifferential]{GenerateRayDifferential}{()}中
 很容易直接计算$x$和$y$方向的差分射线。
-差分射线的方向将和主射线一样（它们对于一个正交相机生成的所有光线都是这样），
+差分射线的方向将和主射线一样（对于同一个正交相机生成的所有光线都是这样），
 且端点差异对于所有射线也会一样。
 因此，这里的构造函数预先计算射线端点因胶片平面上在$x$和$y$方向移动单个像素而
 在相机空间坐标中移动了多少。
@@ -226,7 +226,7 @@ private:
 
 \refvar[OrthographicCamera::GenerateRayDifferential]{GenerateRayDifferential}{()}的实现执行一样的计算来生成相机主光线。
 差分射线端点用在\refvar{OrthographicCamera}{}构造函数中算得的偏移量求出，
-然后将整个射线差分变换到世界空间。
+然后将整个差分射线变换到世界空间。
 \begin{lstlisting}
 `\refcode{OrthographicCamera Definitions}{+=}\lastcode{OrthographicCameraDefinitions}`
 `\refvar{Float}{}` `\refvar{OrthographicCamera}{}`::`\initvar[OrthographicCamera::GenerateRayDifferential]{\refvar{GenerateRayDifferential}{}}{}`(
@@ -368,7 +368,10 @@ return `\refvar{Scale}{}`(invTanAng, invTanAng, 1) * `\refvar{Transform}{}`(pers
 \end{lstlisting}
 
 类似于\refvar{OrthographicCamera}{}，关于\refvar{PerspectiveCamera}{}生成的
-相机光线如何随着我们移动胶片平面上的像素而改变的信息可在构造函数中预先算出。
+相机光线如何随我们移动胶片平面上的像素而改变的信息可在构造函数中预先算出
+\sidenote{译者注：注意栅格空间与相机空间之间的变换仍然是可以用齐次变换矩阵表示的
+线性变换，所以从栅格空间到相机空间的差分计算与起点和终点的位置无关，
+所以正文中取用$(0,0,0),(1,0,0),(0,1,0)$三点即可。}。
 这里我们计算相机空间近处投影平面上的位置随像素位置移动而发生的变化。
 \begin{lstlisting}
 `\initcode{Compute differential changes in origin for perspective camera rays}{=}`
@@ -470,7 +473,8 @@ ray->`\refvar{ryDirection}{}` = `\refvar{Normalize}{}`(pFocus - ray->`\refvar{ry
     \label{fig:6.6}
 \end{figure}
 
-对于场景中与焦距为$f$的薄透镜距离为$z$的点，
+对于场景中与焦距为$f$的薄透镜距离为$z$的点
+\sidenote{译者注：注意这里$z<0$。}，
 \keyindex{高斯透镜方程}{Gaussian lens equation}{}将
 物体与透镜的距离和透镜与像点的距离联系起来：
 \begin{align}\label{eq:6.1}

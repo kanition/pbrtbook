@@ -370,8 +370,8 @@ return `\refvar{Scale}{}`(invTanAng, invTanAng, 1) * `\refvar{Transform}{}`(pers
 类似于\refvar{OrthographicCamera}{}，关于\refvar{PerspectiveCamera}{}生成的
 相机光线如何随我们移动胶片平面上的像素而改变的信息可在构造函数中预先算出
 \sidenote{译者注：注意栅格空间与相机空间之间的变换仍然是可以用齐次变换矩阵表示的
-线性变换，所以从栅格空间到相机空间的差分计算与起点和终点的位置无关，
-所以正文中取用$(0,0,0),(1,0,0),(0,1,0)$三点即可。}。
+    线性变换，所以从栅格空间到相机空间的差分计算与起点和终点的位置无关，
+    所以正文中取用$(0,0,0),(1,0,0),(0,1,0)$三点即可。}。
 这里我们计算相机空间近处投影平面上的位置随像素位置移动而发生的变化。
 \begin{lstlisting}
 `\initcode{Compute differential changes in origin for perspective camera rays}{=}`
@@ -483,9 +483,11 @@ ray->`\refvar{ryDirection}{}` = `\refvar{Normalize}{}`(pFocus - ray->`\refvar{ry
 注意对于$z=-\infty$，正如预期那样我们有$z'=f$。
 
 我们可以用高斯透镜方程求解透镜与胶片的距离即\keyindex{对焦距离}{focal distance}{}
-\sidenote{译者注：此处“focal distance”译为“对焦距离”是折中做法，
-    笔者查阅到的一些资料中“对焦距离”的含义与这里书中的有所不同，
-    故目前还不确定该词组的正确翻译。欢迎读者提供帮助。}
+\sidenote{译者注：笔者查阅到的一些资料中“对焦距离”的含义与本书不同，
+    故此处“focal distance”译为“对焦距离”是折中做法。
+    有可能学界对这一概念的定义并不统一。
+    此外译者认为代码中的用法与此处的定义并不完全对应，
+    详见\url{https://github.com/mmp/pbrt-v4/issues/232}。欢迎读者提供帮助。}
 来为某个$z$设置焦平面（\reffig{6.7}）：
 \begin{align}\label{eq:6.2}
     z'=\frac{fz}{f+z}\, .
@@ -579,11 +581,11 @@ ray->`\refvar{ryDirection}{}` = `\refvar{Normalize}{}`(pFocus - ray->`\refvar{ry
 \begin{figure}[htbp]
     \centering\includegraphics[width=0.4\linewidth]{chap06/Thinlenschooseray.eps}
     \caption{(a)对于针孔相机模型，胶片平面上每个点（实心圆）
-    都关联单条相机光线，该点由穿过针孔透镜单个点（空心圆）的光线给出。
-    (b)对于具有有限光圈的相机模型，我们在圆盘形透镜上为每条光线采样一点（实心圆）。
-    然后我们计算穿过透镜中心（对应于针孔模型）的光线以及它与焦平面（实线）相交的点。
-    我们知道无论透镜样本位置在哪里，所有在焦平面上的物体都一定对准焦。
-    因此，对应于透镜位置样本的光线（虚线）由起始于透镜样本点并穿过算出的焦平面上交点的光线给出。}
+        都关联单条相机光线，该点由穿过针孔透镜单个点（空心圆）的光线给出。
+        (b)对于具有有限光圈的相机模型，我们在圆盘形透镜上为每条光线采样一点（实心圆）。
+        然后我们计算穿过透镜中心（对应于针孔模型）的光线以及它与焦平面（实线）相交的点。
+        我们知道无论透镜样本位置在哪里，所有在焦平面上的物体都一定对准焦。
+        因此，对应于透镜位置样本的光线（虚线）由起始于透镜样本点并穿过算出的焦平面上交点的光线给出。}
     \label{fig:6.12}
 \end{figure}
 

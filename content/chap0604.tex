@@ -598,9 +598,9 @@ rFilm = `\refvar{Ray}{}`(`\refvar{Point3f}{}`(x, 0, `\refvar{LensRearZ}{}`() - 1
 \begin{figure}[htbp]
     \centering\includegraphics[width=0.7\linewidth]{chap06/Exitpupilboundsfilm.eps}
     \caption{预先计算出射瞳边界。(a)\refvar{RealisticCamera}{}为胶片平面上
-        沿$x$轴的一系列线段计算出射瞳的边界，直到胶片中心到角点的距离$r$。
+        沿$x$轴的一系列线段计算出射瞳的边界，直到达到胶片中心到角点的距离$r$。
         (b)鉴于径向对称的假设，我们可以通过计算点与$x$轴间的夹角$\theta$来
-        为胶片上的任意点（实心点）求取出射瞳边界。如果原始出射瞳边界内的一点被采样
+        为胶片上的任意点（实心点）求取出射瞳边界。如果初始出射瞳边界内的一点被采样
         再旋转$\theta$，则我们就有了原始点处出射瞳内的一点。}
     \label{fig:6.22}
 \end{figure}
@@ -625,14 +625,18 @@ int nSamples = 64;
 std::vector<`\refvar{Bounds2f}{}`> `\initvar{exitPupilBounds}{}`;
 \end{lstlisting}
 
-方法\refvar{BoundExitPupil}{()}计算从胶片平面上一段点看到的出射瞳2D边界框。
+方法\refvar{BoundExitPupil}{()}计算从胶片平面上一段点所见出射瞳的2D边界框。
 通过尝试追踪在尾部透镜元件切平面的一组点上穿过透镜系统的光线来求取该边界框。
-成功穿过透镜系统的光线的边界框便给出了出射瞳的大致边界——见\reffig{6.23}。
+成功穿过透镜系统的光线的边界框便给出了出射瞳的大致边界——见\reffig{6.23}
+\sidenote{译者注：\reffig{6.23}题注最后两句的意思是：尾部透镜元件在其切平面
+    上的投影范围作为光线方向向量（归一化前）终点的采样范围，胶片上的区间作为光线起点的采样范围；
+    采样许多这样的光线，保留其中成功穿过透镜系统的光线，这些光线穿过尾部透镜切平面时
+    的位置即大致给出了出射瞳范围。}。
 \begin{figure}[htbp]
     \centering\includegraphics[width=0.5\linewidth]{chap06/Sampleexitpupil.eps}
     \caption{怎样计算出射瞳边界的2D图示。\refvar{BoundExitPupil}{()}接收
-        胶片上沿$x$轴的区间。它沿区间采样一系列点（图中下方）。
-        对于每个点，它还采样尾部透镜元件在与其尾部相切的平面上对应范围的边框内的一点。
+        胶片上沿$x$轴的区间。它沿区间采样一系列点（图的下方）。
+        对于每个点，它还采样尾部透镜元件在与其尾部相切的平面上相应范围边框内的一点。
         它计算所有起始于区间的点且成功穿过透镜系统的光线在切平面上的边界框。}
     \label{fig:6.23}
 \end{figure}
@@ -661,7 +665,8 @@ for (int i = 0; i < nSamples; ++i) {
 }
 \end{lstlisting}
 
-尾部元件在与之垂直的平面上的边界框不足以成为出射瞳在该平面上的投影的保守边界框；
+尾部元件在与之相切\sidenote{译者注：原文误写为垂直，已修正。}的平面上
+的边界框不足以成为出射瞳在该平面上的投影的保守边界框；
 因为元件一般是曲形的，穿过该平面边界之外的光线可能自己与尾部透镜元件有效范围相交。
 比起计算精确边界，我们则是大幅增大边框。结果是用来计算出射瞳边界而采样的许多点会被浪费；
 实践中，这是很小的代价，因为通常这些样本在透镜的光线追踪阶段会很快被终止。
@@ -777,13 +782,16 @@ return `\refvar{Point3f}{}`(cosTheta * pLens.x - sinTheta * pLens.y,
 
 值\refvar[pFilm]{CameraSample::pFilm}{}与图像的整个像素分辨率有关。
 这里我们用传感器的物理模型来操作，所以我们开始先将样本转化回$[0,1)^2$中。
-接着，通过用该样本值在其区域上线性插值来求得胶片上的对应点。
+接着，通过用该样本值在其区域上线性插值来求得胶片上的对应点
+\sidenote{译者注：我暂未理解为何下面第5行代码中$x$值会取相反数，欢迎读者提供帮助。
+    详见\url{https://github.com/mmp/pbrt-v4/issues/233}
+    和\url{https://github.com/mmp/pbrt-v3/issues/289}。}。
 \begin{lstlisting}
 `\initcode{Find point on film, pFilm, corresponding to sample.pFilm}{=}`
 `\refvar{Point2f}{}` s(sample.`\refvar{pFilm}{}`.x / `\refvar{film}{}`->`\refvar{fullResolution}{}`.x,
           sample.`\refvar{pFilm}{}`.y / `\refvar{film}{}`->`\refvar{fullResolution}{}`.y);
 `\refvar{Point2f}{}` pFilm2 = `\refvar{film}{}`->`\refvar{GetPhysicalExtent}{}`().`\refvar[Bounds3::Lerp]{Lerp}{}`(s);
-`\refvar{Point2f}{}` pFilm(-pFilm2.x, pFilm2.y, 0);
+`\refvar{Point3f}{}` pFilm(-pFilm2.x, pFilm2.y, 0);
 \end{lstlisting}
 
 然后\refvar{SampleExitPupil}{()}给我们尾部透镜元件切平面上的一点，
@@ -818,14 +826,15 @@ ray->`\refvar[Ray::medium]{medium}{}` = `\refvar[Camera::medium]{medium}{}`;
 从出射瞳到胶片的光线携带着来自场景的辐射；
 因此从胶片平面上一点来考虑，有一组对应的辐射入射方向。
 离开出射瞳的辐射分布会被胶片上该点所见的失焦模糊程度影响——
-\reffig{6.24}展示了从胶片上两点看到的出射瞳辐射的渲染图。
+\reffig{6.24}展示了从胶片上两点看到的出射瞳辐射的渲染图
+\sidenote{译者注：我认为原文\reffig{6.24}的题注将“清晰对焦”和“失焦”写反了，此处已修改。}。
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.4\linewidth]{chap06/exitpupil-a.png}\quad
     \includegraphics[width=0.4\linewidth]{chap06/exitpupil-b.png}
     \caption{从\reffig{6.16}中胶片平面上两点看到的出射瞳。
-        (一)清晰对焦点处看到的出射瞳；入射辐射在其区域上实际上是常量。
-        (二)失焦区域中一个像素处所看到的，出射瞳是部分场景的一小幅图像，
+        (一)失焦的点上看到的出射瞳；入射辐射在其区域上实际上是常量。
+        (二)清晰对焦区域中一像素处所见的出射瞳是部分场景的一小幅图像，
         可能有急剧变化的辐射。}
     \label{fig:6.24}
 \end{figure}
@@ -850,7 +859,9 @@ ray->`\refvar[Ray::medium]{medium}{}` = `\refvar[Camera::medium]{medium}{}`;
     \label{fig:6.25}
 \end{figure}
 
-因为胶片平面平行\sidenote{译者注：原文误写为垂直，已修改。}于出射瞳平面，所以$\theta=\theta'$。
+因为胶片平面平行
+\sidenote{译者注：原文误写为垂直，已修改。}
+于出射瞳平面，所以$\theta=\theta'$。
 我们可进一步利用$\bm p$和$\bm p'$间的距离等于从胶片平面到出射瞳轴向距离
 （这里我们表示为$z$）除以$\cos\theta$的事实。
 将这些全部结合起来，我们有

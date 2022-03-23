@@ -123,8 +123,30 @@
     即得到斯涅尔定律。
 \end{prove}
 
-自身发光或被照亮的物体可以视作是大量辐射点\keyindex{源}{source}{}构成的。
+\begin{figure}[htbp]
+    \centering
+    \subfloat[日常的反射光可视作由无数原子级散射复合而成，例如这张人脸。]
+    {\includegraphics[width=0.25\linewidth]{chap06/PersonFace.eps}\label{fig:6.29.1}}\,
+    \subfloat[光学系统的共轭点]{\includegraphics[width=0.7\linewidth]{chap06/ConjugateFoci.eps}\label{fig:6.29.2}}
+    \caption{光的发散与汇聚。}
+    \label{fig:6.29}
+\end{figure}
+
+如\reffig{6.29.1}，自身发光或被照亮的物体可以视作是大量辐射点\keyindex{源}{source}{}构成的。
 每个点源都在发出\keyindex{球面波}{spherical wave}{}。
 此时我们说光线从给定点源\keyindex{发散}{diverge}{}。
 反之，若球面波坍缩到一点，我们说光线\keyindex{汇聚}{converge}{}到该点。
 实际中我们往往只处理\keyindex{波前}{wavefront}{}的一部分。
+在\keyindex{几何光学}{geometrical optics}{}中，
+我们研究如何通过插入反射和折射体来控制改变波前（光线）并忽略所有衍射效应。
+如\reffig{6.29.2}所示，当点$S$发散的一部分波前经过\keyindex{光学系统}{optical system}{}后
+汇聚到点$P$时，依据光路可逆性原理，在点$P$处发散的波前可以反向经过该系统处理后汇聚到点$S$。
+我们称点$S$和点$P$互为\keyindex{共轭点}{ conjugate point}{}。
+对于理想光学系统，三维空间中的任意区域都会完美成像为另一区域，
+前者称为\keyindex{物空间}{object space}{}，后者称为\keyindex{像空间}{image space}{}。
+
+\subsection{透镜}\label{sub:透镜}
+\begin{definition}
+    \keyindex{透镜}{lens}{}是重新配置能量传播分布的折射器件
+    即意味着现有介质的不连续性。
+\end{definition}

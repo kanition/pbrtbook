@@ -137,7 +137,7 @@
 此时我们说光线从给定点源\keyindex{发散}{diverge}{}。
 反之，若球面波坍缩到一点，我们说光线\keyindex{汇聚}{converge}{}到该点。
 实际中我们往往只处理\keyindex{波前}{wavefront}{}的一部分。
-在\keyindex{几何光学}{geometrical optics}{}中，
+在\keyindex{几何光学}{geometrical optics}{optics光学}中，
 我们研究如何通过插入反射和折射体来控制改变波前（光线）并忽略所有衍射效应。
 如\reffig{6.29.2}所示，当点$S$发散的一部分波前经过\keyindex{光学系统}{optical system}{}后
 汇聚到点$P$时，依据光路可逆性原理，在点$P$处发散的波前可以反向经过该系统处理后汇聚到点$S$。
@@ -163,17 +163,103 @@
 且看起来好像是从点$F_2$发散。但在该位置的光屏上不会出现发亮的像，所以称该像是\keyindex{虚}{virtual}{}的。
 \begin{figure}[htbp]
     \centering\includegraphics[width=0.8\linewidth]{chap06/HyperbolicLenses.eps}
-    \caption{几种双曲面透镜横截面。其中(a)和(b)是凸透镜，(c)是凹透镜。$F_1$和$F_2$为相应透镜的焦点。}
+    \caption{几种双曲面透镜横截面。其中(a)和(b)是凸透镜，(c)是凹透镜。}
     \label{fig:6.30}
 \end{figure}
 
 现实生活中绝大多数透镜的表面是一片球面，因为它的制造难度比非球面透镜低得多。
 尽管这种透镜会有\keyindex{像差}{aberration}{}，但现代制造技术可以把它控制在极小范围内。
-一下我们将探讨球面透镜的成像规律。
+以下我们将探讨球面透镜的成像规律，并约定后文中的透镜都是关于光轴旋转对称的。
 \begin{figure}[htbp]
     \centering
     \subfloat[球形界面上的折射。]{\includegraphics[width=0.48\linewidth]{chap06/RefractionSphericalInterface.eps}\label{fig:6.31.1}}\,
     \subfloat[球形界面上相同入射角的光线。]{\includegraphics[width=0.5\linewidth]{chap06/IncidentSameAngle.eps}\label{fig:6.31.2}}
     \caption{球面透镜的折射。}
     \label{fig:6.31}
+\end{figure}
+
+\reffig{6.31}展示了位于点$S$处的点源发出的波遇到
+以点$C$为中心且半径为$R$的球面透镜界面后的折射情况。
+外部介质和透镜的折射率分别为$n_1$和$n_2 (n_1<n_2)$。
+点$V$称为界面的\keyindex{顶点}{vertex}{}。
+长度$s_o=\overline{SV}$称为\keyindex{物距}{object distance}{}。
+光线$\overline{SA}$在界面上点$A$发生折射后偏向局部法线，也偏向了光轴，
+设于光轴交于点$P$，入射角为$\theta_i$，折射角为$\theta_t$。
+注意最终过点$P$的折射光线都有相同的入射角（\reffig{6.31.2}）。
+长度$s_i=\overline{VP}$称为\keyindex{像距}{image distance}{}。
+连线$\overline{CA}$与光轴的夹角为$\varphi$，并记
+长度$\mathcal{l}_o=\overline{SA}, \mathcal{l}_i=\overline{AP}$。
+因此光线从点$S$经$A$到$P$的光程为
+\begin{align}
+    OPL=n_1\mathcal{l}_o+n_2\mathcal{l}_i\, ,
+\end{align}
+其中$\mathcal{l}_o$和$\mathcal{l}_i$可分别在$\triangle SAC$和$\triangle ACP$中应用余弦定理得到：
+\begin{align}
+    \mathcal{l}_o & =\sqrt{R^2+(s_o+R)^2-2R(s_o+R)\cos\varphi}\, ,       \\
+    \mathcal{l}_i & =\sqrt{R^2+(s_i-R)^2-2R(s_i-R)\cos(\pi-\varphi)}\, .
+\end{align}
+
+考虑到点$A$的位置由$\varphi$完全决定，而$n_1, n_2, s_o, s_i, R$等量是定值，
+所以光程是关于$\varphi$的函数。
+依据费马原理，令光程对$\varphi$的导数为零，得到
+\begin{align}
+    \frac{n_1R(s_o+R)\sin\varphi}{\mathcal{l}_o}-\frac{n_2R(s_i-R)\sin\varphi}{\mathcal{l}_i}=0\, ,
+\end{align}
+整理后为
+\begin{align}
+    \frac{n_1}{\mathcal{l}_o}+\frac{n_2}{\mathcal{l}_i}=\frac{1}{R}\left(\frac{n_2s_i}{\mathcal{l}_i}-\frac{n_1s_o}{\mathcal{l}_o}\right)\, .
+\end{align}
+
+也就是说，从点$S$到点$P$的折射光线必定遵循上述数量规律。
+事实上该规律不要求$s_o$等量必须为正数。具体来说：
+\begin{itemize}
+    \item 当点$S$在点$V$左边时，$s_o$取正，反之取负；
+    \item 当点$P$在点$V$右边时，$s_i$取正，反之取负；
+    \item 当点$C$在点$V$右边时，$R$取正，反之取负。
+\end{itemize}
+
+按照这样的约定确定符号时，该规律对球面凹透镜同样适用。
+然而它形式仍较复杂，我们考虑进一步化简它：当$\varphi$非常接近0时，点$A$十分接近点$V$，
+且此时运用一阶近似$\sin\varphi\approx\varphi$和$\cos\varphi\approx 1$易
+知$\mathcal{l}_o\approx s_o, \mathcal{l}_i\approx s_i$，此时近似有
+\begin{align}\label{eq:6.24}
+    \frac{n_1}{s_o}+\frac{n_2}{s_i}=\frac{n_2-n_1}{R}\, ,
+\end{align}
+
+我们称这样与光轴所成角度很小的光线为\keyindex{近轴光线}{paraxial ray}{ray光线}。
+注意\refeq{6.24}在关于光轴对称的很小一片区域上与点$A$的位置无关，
+我们称该区域为\keyindex{近轴区域}{paraxial region}{}。
+1841年，高斯在上述近似下系统阐述了成像规律，因此也称该结论为
+一阶、近轴或\keyindex{高斯光学}{Gaussian optics}{optics光学}。
+
+如\reffig{6.32.1}，当光轴上点$F_o$的像在无穷远时，$s_i=\infty$，此时的物距$s_o$称为
+\keyindex{第一焦距}{first focal length}{focal length焦距}或
+\keyindex{物焦距}{object focal length}{focal length焦距}$f_o$，即
+\begin{align}
+    f_o=\frac{n_1}{n_2-n_1}R\, .
+\end{align}
+点$F_o$称为\keyindex{第一焦点}{first focus}{focus焦点}或\keyindex{物焦点}{object focus}{focus焦点}。
+类似地如\reffig{6.32.2}，当$s_o=\infty$时，光轴上对应成像的点$F_i$
+称为\keyindex{第二焦点}{second focus}{focus焦点}或\keyindex{像焦点}{image focus}{focus焦点}。
+此时的像距$s_i$称为\keyindex{第二焦距}{second focal length}{focal length焦距}或\keyindex{像焦距}{image focal length}{focal length焦距}，即
+\begin{align}
+    f_i=\frac{n_2}{n_2-n_1}R\, .
+\end{align}
+\begin{figure}[htbp]
+    \centering
+    \subfloat[物焦点与物焦距]{\includegraphics[width=0.4\linewidth]{chap06/ObjectFocus.eps}\label{fig:6.32.1}}\,\,
+    \subfloat[像焦点与像焦距]{\includegraphics[width=0.45\linewidth]{chap06/ImageFocus.eps}\label{fig:6.32.2}}
+    \caption{球面透镜的焦距与焦点}
+    \label{fig:6.32}
+\end{figure}
+
+之前我们说过，当出射光线是发散时我们称该像是虚的（\reffig{6.33.1}），
+此时$s_i<0$，像点$F_i$在顶点的左边；类似地，当入射光线是汇聚时我们称物是虚的
+（\reffig{6.33.2}），此时$s_o<0$，物点$F_o$在顶点右边。
+\begin{figure}[htbp]
+    \centering
+    \subfloat[虚像点]{\includegraphics[width=0.5\linewidth]{chap06/VirtualImagePoint.eps}\label{fig:6.33.1}}\,\,\,
+    \subfloat[虚物点]{\includegraphics[width=0.4\linewidth]{chap06/VirtualObjectPoint.eps}\label{fig:6.33.2}}
+    \caption{虚像点和虚物点}
+    \label{fig:6.33}
 \end{figure}

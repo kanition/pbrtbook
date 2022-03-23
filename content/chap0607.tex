@@ -141,12 +141,39 @@
 我们研究如何通过插入反射和折射体来控制改变波前（光线）并忽略所有衍射效应。
 如\reffig{6.29.2}所示，当点$S$发散的一部分波前经过\keyindex{光学系统}{optical system}{}后
 汇聚到点$P$时，依据光路可逆性原理，在点$P$处发散的波前可以反向经过该系统处理后汇聚到点$S$。
-我们称点$S$和点$P$互为\keyindex{共轭点}{ conjugate point}{}。
+我们称点$S$和点$P$互为\keyindex{共轭点}{conjugate point}{}。
 对于理想光学系统，三维空间中的任意区域都会完美成像为另一区域，
 前者称为\keyindex{物空间}{object space}{}，后者称为\keyindex{像空间}{image space}{}。
 
 \subsection{透镜}\label{sub:透镜}
 \begin{definition}
-    \keyindex{透镜}{lens}{}是重新配置能量传播分布的折射器件
+    \keyindex{透镜}{lens}{}是重新配置能量传播分布的折射器件，
     即意味着现有介质的不连续性。
 \end{definition}
+
+如\reffig{6.30}，最常见的是中间厚边缘薄的\keyindex{凸透镜}{convex lens}{lens透镜}，
+也称\keyindex{汇聚透镜}{converging lens}{lens透镜}、\keyindex{正透镜}{positive lens}{lens透镜}，
+以及中间薄边缘厚的\keyindex{凹透镜}{concave lens}{lens透镜}，
+也称\keyindex{发散透镜}{diverging lens}{lens透镜}、\keyindex{负透镜}{negative lens}{lens透镜}。
+当一束平行光穿过凸透镜（或凹透镜）时，
+光线汇聚的点（或从之发散的点）称为透镜的一个\keyindex{焦点}{focal point}{}。
+对于\reffig{6.30}(b)，将点源置于透镜前方光轴上的$F_1$处，光线汇聚到共轭点$F_2$。
+此时若在$F_2$处放置一个光屏，则屏上会有相应发亮的像，称该像是\keyindex{实}{real}{}的。
+对于\reffig{6.30}(c)，将点源置于透镜前方无穷远处，从透镜射出的光是发散的，
+且看起来好像是从点$F_2$发散。但在该位置的光屏上不会出现发亮的像，所以称该像是\keyindex{虚}{virtual}{}的。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.8\linewidth]{chap06/HyperbolicLenses.eps}
+    \caption{几种双曲面透镜横截面。其中(a)和(b)是凸透镜，(c)是凹透镜。$F_1$和$F_2$为相应透镜的焦点。}
+    \label{fig:6.30}
+\end{figure}
+
+现实生活中绝大多数透镜的表面是一片球面，因为它的制造难度比非球面透镜低得多。
+尽管这种透镜会有\keyindex{像差}{aberration}{}，但现代制造技术可以把它控制在极小范围内。
+一下我们将探讨球面透镜的成像规律。
+\begin{figure}[htbp]
+    \centering
+    \subfloat[球形界面上的折射。]{\includegraphics[width=0.48\linewidth]{chap06/RefractionSphericalInterface.eps}\label{fig:6.31.1}}\,
+    \subfloat[球形界面上相同入射角的光线。]{\includegraphics[width=0.5\linewidth]{chap06/IncidentSameAngle.eps}\label{fig:6.31.2}}
+    \caption{球面透镜的折射。}
+    \label{fig:6.31}
+\end{figure}

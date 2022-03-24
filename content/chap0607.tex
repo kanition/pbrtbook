@@ -239,12 +239,14 @@
     f_o=\frac{n_1}{n_2-n_1}R\, .
 \end{align}
 点$F_o$称为\keyindex{第一焦点}{first focus}{focus焦点}或\keyindex{物焦点}{object focus}{focus焦点}。
+当$f_o>0$时，焦点$F_o$在顶点$V$左侧，反之在右侧。
 类似地如\reffig{6.32.2}，当$s_o=\infty$时，光轴上对应成像的点$F_i$
 称为\keyindex{第二焦点}{second focus}{focus焦点}或\keyindex{像焦点}{image focus}{focus焦点}。
 此时的像距$s_i$称为\keyindex{第二焦距}{second focal length}{focal length焦距}或\keyindex{像焦距}{image focal length}{focal length焦距}，即
 \begin{align}
     f_i=\frac{n_2}{n_2-n_1}R\, .
 \end{align}
+且当$f_i>0$时，焦点$F_i$在顶点$V$右侧，反之在左侧。
 \begin{figure}[htbp]
     \centering
     \subfloat[物焦点与物焦距]{\includegraphics[width=0.4\linewidth]{chap06/ObjectFocus.eps}\label{fig:6.32.1}}\,\,
@@ -254,12 +256,107 @@
 \end{figure}
 
 之前我们说过，当出射光线是发散时我们称该像是虚的（\reffig{6.33.1}），
-此时$s_i<0$，像点$F_i$在顶点的左边；类似地，当入射光线是汇聚时我们称物是虚的
-（\reffig{6.33.2}），此时$s_o<0$，物点$F_o$在顶点右边。
+此时$s_i<0$，像点$F_i$在顶点$V$的左边；类似地，当入射光线是汇聚时我们称物是虚的
+（\reffig{6.33.2}），此时$s_o<0$，物点$F_o$在顶点$V$右边。
 \begin{figure}[htbp]
     \centering
-    \subfloat[虚像点]{\includegraphics[width=0.5\linewidth]{chap06/VirtualImagePoint.eps}\label{fig:6.33.1}}\,\,\,
+    \subfloat[虚像点]{\vspace{-5cm}\includegraphics[width=0.5\linewidth]{chap06/VirtualImagePoint.eps}\label{fig:6.33.1}}\,\,\,
     \subfloat[虚物点]{\includegraphics[width=0.4\linewidth]{chap06/VirtualObjectPoint.eps}\label{fig:6.33.2}}
     \caption{虚像点和虚物点}
     \label{fig:6.33}
+\end{figure}
+
+只有一个元件（即两个折射界面）的称为\keyindex{简单透镜}{simple lens}{lens透镜}，
+多于一个元件的称为\keyindex{复合透镜}{compound lens}{lens透镜}。
+此外按照透镜厚度能否忽略还可以分为\keyindex{薄透镜}{thin lens}{lens透镜}和\keyindex{厚透镜}{thick lens}{lens透镜}。
+以下我们讨论简单薄透镜的成像规律。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.75\linewidth]{chap06/SphericalLens.eps}
+    \caption{球面透镜的成像规律}
+    \label{fig:6.34}
+\end{figure}
+
+\reffig{6.34}展示了两个界面都是球面的透镜是如何折射光线的。
+这里外部介质折射率为$n_m$，透镜折射率为$n_l, (n_l>n_m)$，
+左边（第一）界面的球心为$C_1$，半径为$R_1>0$，顶点为$V_1$；
+右边（第二）界面的球心为$C_2$，半径为$R_2<0$，顶点为$V_2$。
+两个顶点距离为$d$。在近轴近似下，光轴上的点源$S$发出的光线经过
+第一界面折射后的像点为$P'$，对应有物距$s_{o1}=\overline{SV_1}>0$，
+像距$s_{i1}=\overline{V_1P'}<0$；
+同时$P'$也是第二次折射的物点，折射后为光轴上的像点$P$，
+并有物距$s_{o2}=\overline{P'V_2}>0$，像距$s_{i2}=\overline{V_2P}>0$。
+根据\refeq{6.24}的结论，两次折射分别满足：
+\begin{align}
+    \frac{n_m}{s_{o1}}+\frac{n_l}{s_{i1}} & =\frac{n_l-n_m}{R_1}\, , \\
+    \frac{n_l}{s_{o2}}+\frac{n_m}{s_{i2}} & =\frac{n_m-n_l}{R_2}\, .
+\end{align}
+考虑到$|s_{o2}|=|s_{i1}|+d$，结合各量正负性带入上式整理得
+\begin{align}
+    \frac{n_m}{s_{o1}}+\frac{n_m}{s_{i2}}=(n_l-n_m)\left(\frac{1}{R_1}-\frac{1}{R_2}\right)+\frac{n_ld}{(s_{i1}-d)s_{i1}}\, .
+\end{align}
+注意到对于整个透镜而言，其物距为$s_o=s_{o1}$，像距为$s_i=s_{i2}$。
+当透镜很薄时，$d\approx 0$，点$V_1$和$V_2$十分靠近，所以上式右边最后一项可以舍去。
+同时假设外部介质是空气，即$n_m\approx 1$，
+于是我们得到：
+\begin{proposition}
+    \keyindex{薄透镜方程}{thin-lens equation}{}：
+    \begin{align}
+        \frac{1}{s_o}+\frac{1}{s_i}=(n_l-1)\left(\frac{1}{R_1}-\frac{1}{R_2}\right)\, .
+    \end{align}
+\end{proposition}
+
+事实上该结论对各量取正负的情况都成立。分别令物距和像距取无穷远，
+可以得到透镜对应的像焦距$f_i=\lim\limits_{s_o\to\infty}s_i$
+和物焦距$f_o=\lim\limits_{s_i\to\infty}s_o$。
+显然$f_i=f_o$，我们去掉下标把焦距记为$f$，则有
+\begin{align}
+    \frac{1}{f}=(n_l-1)\left(\frac{1}{R_1}-\frac{1}{R_2}\right)\, .
+\end{align}
+由此得到
+\begin{proposition}
+    \keyindex{高斯透镜公式}{Gaussian lens formula}{}：
+    \begin{align}
+        \frac{1}{s_o}+\frac{1}{s_i}=\frac{1}{f}\, .
+    \end{align}
+\end{proposition}
+
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.75\linewidth]{chap06/OpticalCenter.eps}
+    \caption{球面透镜的光心}
+    \label{fig:6.35}
+\end{figure}
+
+对于球面透镜而言，过光心的光线不改变传播方向。
+如\reffig{6.35}所示，我们取一对平行平面分别与两界面相切于点$A$和点$B$。
+分别过点$A$和点$B$作平面的垂线，由于这是球面透镜，它们必和光轴交于
+对应球心$C_1$和$C_2$，于是$AC_1$平行于$BC_2$，且易知$A, B, C_1, C_2$四点共面。
+设$AB$与$C_1C_2$交于点$O$，则有$\triangle AOC_1\sim\triangle BOC_2$，于是
+\begin{align}
+    \frac{|R_1|}{|R_2|}=\frac{\overline{OC_1}}{\overline{OC_2}}\, .
+\end{align}
+考虑到$R_1, R_2, \overline{C_1C_2}$均为定值，所以$O$是定点。
+又因为$\angle OAC_1=\angle OBC_2$，所以第一界面的折射角等于第二界面的入射角，
+两次折射介质相反，所以第一界面的入射角等于第二界面的折射角，即入射光线与最终出射光线同向。
+也就是说，当且仅当光线经过球面透镜的定点$O$时不改变方向，称定点$O$为透镜的\keyindex{光心}{optical center}{}。
+此时光线的横向偏移量正比于透镜厚度。对于薄透镜而言，我们可以近似地把整条过光心的光线视作直线。
+
+我们已经知道平行近轴光线会被球形界面聚焦到一点。
+因此如\reffig{6.36}所示，若干束与光轴倾角很小、范围很小、且垂直于界面入射的光线
+对应的焦点将分布在球面$\sigma$上，其球心即界面的球心$C$。
+在光线范围很小的情况下，我们可把$\sigma$视作与透镜光轴垂直的平面，
+称之为\keyindex{焦平面}{focal plane}{}。
+如\reffig{6.37}，在近轴假设下，所有平行光束都会被球面透镜聚焦
+到\keyindex{第二焦平面}{second focal plane}{focal plane焦平面}上，
+也称\keyindex{后焦平面}{back focal plane}{focal plane焦平面}。
+类似地还有与物焦点对应的\keyindex{第一焦平面}{first focal plane}{focal plane焦平面}，
+也称\keyindex{前焦平面}{front focal plane}{focal plane焦平面}。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.75\linewidth]{chap06/FocusingSeveralRayBundles.eps}
+    \caption{几束光的聚焦。}
+    \label{fig:6.36}
+\end{figure}
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.75\linewidth]{chap06/FocalPlane.eps}
+    \caption{透镜的焦平面。}
+    \label{fig:6.37}
 \end{figure}

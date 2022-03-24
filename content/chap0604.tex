@@ -4,7 +4,7 @@
 \end{remark}
 
 薄透镜模型使得能渲染因景深而模糊的图像，
-但它只是对多个\keyindex{透镜元件}{lens element}{}构成的
+但它只是对多个\keyindex{透镜元件}{lens element}{lens透镜}构成的
 真实相机透镜系统非常粗糙的近似，而每个透镜元件都会改变穿过它的辐射分布
 （\reffig{6.15}展示了具有8个元件的22mm焦距\keyindex{广角}{wide-angle}{}镜头横截面）。
 即使基本的手机相机也趋于有五个左右独立的透镜元件，
@@ -416,7 +416,7 @@ bool `\initvar{TraceLensesFromScene}{}`(const `\refvar{Ray}{}` &rCamera, `\refva
 如果经由一个理想透镜系统追踪平行于光轴的光线，
 则所有这些光线将会交于光轴上同一点——这就是焦点
 （实际中，真实透镜系统并不绝对理想，不同高度的入射光线
-与光轴将相交于一个$z$值小范围——这就是\keyindex{球面像差}{spherical aberration}{}）。
+与光轴将相交于一个$z$值小范围——这就是\keyindex{球面像差}{spherical aberration}{aberration像差}）。
 有了特定的透镜系统，我们就能从每一侧追踪穿过它且与光轴平行的光线，
 并计算它们与$z$轴的相交处以找到焦点（见\reffig{6.20}）。
 \begin{figure}[htbp]

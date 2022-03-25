@@ -167,6 +167,7 @@
     \label{fig:6.30}
 \end{figure}
 
+\subsubsection{球面透镜的折射}
 现实生活中绝大多数透镜的表面是一片球面，因为它的制造难度比非球面透镜低得多。
 尽管这种透镜会有\keyindex{像差}{aberration}{}，但现代制造技术可以把它控制在极小范围内。
 以下我们将探讨球面透镜的成像规律，并约定后文中的透镜都是关于光轴旋转对称的。
@@ -266,6 +267,7 @@
     \label{fig:6.33}
 \end{figure}
 
+\subsubsection{薄透镜}
 只有一个元件（即两个折射界面）的称为\keyindex{简单透镜}{simple lens}{lens透镜}，
 多于一个元件的称为\keyindex{复合透镜}{compound lens}{lens透镜}。
 此外按照透镜厚度能否忽略还可以分为\keyindex{薄透镜}{thin lens}{lens透镜}和\keyindex{厚透镜}{thick lens}{lens透镜}。
@@ -352,11 +354,105 @@
 也称\keyindex{前焦平面}{front focal plane}{focal plane焦平面}。
 \begin{figure}[htbp]
     \centering\includegraphics[width=0.75\linewidth]{chap06/FocusingSeveralRayBundles.eps}
-    \caption{几束光的聚焦。}
+    \caption{几束窄范围平行光的聚焦。}
     \label{fig:6.36}
 \end{figure}
 \begin{figure}[htbp]
     \centering\includegraphics[width=0.75\linewidth]{chap06/FocalPlane.eps}
     \caption{透镜的焦平面。}
     \label{fig:6.37}
+\end{figure}
+
+对于透镜有三种特殊光线（包括延长线）帮助我们确定成像情况。
+如\reffig{6.38}所示，它们分别是过光心而不改变方向的光线1、
+平行于光轴入射而过焦点的光线2、过焦点入射而平行于光轴出射的光线3。
+出射光线的交点即定出成像的位置、大小、倒立情况。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=\linewidth]{chap06/RealObjectAndPositiveLensAndNegativeLens.eps}
+    \caption{利用三种特殊光线确定凸透镜和凹透镜对实物的成像。}
+    \label{fig:6.38}
+\end{figure}
+
+我们接下来讨论薄透镜的具体成像规律。如\reffig{6.39}所示，
+以焦距为$f$的凸透镜为例。分别记物和像偏移光轴的横向
+\sidenote{横向指垂直于光轴的方向，下同。}距离为$y_o, y_i$，
+在轴上方取正，下方取负。所以这里图中有$y_o>0, y_i<0$。
+当$y_o$与$y_i$异号时，我们说像是\keyindex{倒}{inverted}{}的，
+反之则是\keyindex{正}{erect}{}的。
+记物到物焦点$F_o$的轴向距离为$x_o=\overline{S_1F_o}=s_o-f$，
+当$S_1$在$F_o$左边时$x_o$取正，反之取负；
+记像到像焦点$F_i$的轴向距离为$x_i=\overline{F_iP_1}=s_i-f$，
+当$P_1$在$F_i$右边时$x_i$取正，反之取负。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.75\linewidth]{chap06/ObjectAndImageLocation.eps}
+    \caption{薄透镜成像时物和像的位置。}
+    \label{fig:6.39}
+\end{figure}
+
+因为易知$\triangle AF_iO\sim\triangle P_2F_iP_1$，所以有
+\begin{align}
+    \frac{y_o}{|y_i|}=\frac{f}{x_i}\, .
+\end{align}
+类似地，因为$\triangle S_1F_oS_2\sim\triangle OF_oB$，所以有
+\begin{align}
+    \frac{y_o}{|y_i|}=\frac{x_o}{f}\, .
+\end{align}
+结合上面两式得到
+\begin{proposition}
+    薄透镜方程的\keyindex{牛顿形式}{Newtonian form}{}：
+    \begin{align}
+        x_ox_i=f^2\, .
+    \end{align}
+\end{proposition}
+1704年牛顿首次在他的《Opticks》一书中阐述了该规律。
+上式还说明，$x_o$与$x_i$一定同号，因此有
+\begin{corollary}
+    物和像一定在各自相应焦点的对侧。
+\end{corollary}
+
+\begin{definition}
+    光学系统最终成像的横向维度与物的对应维度之比
+    称为\keyindex{横向放大率}{transverse magnification}{}，记作
+    \begin{align}
+        M_T=\frac{y_i}{y_o}\, .
+    \end{align}
+\end{definition}
+不难发现，横向放大率还满足
+\begin{align}
+    M_T=-\frac{s_i}{s_o}=-\frac{x_i}{f}=-\frac{f}{x_o}\, .
+\end{align}
+
+\begin{corollary}
+    $M_T>0$对应正像，$M_T<0$对应倒像。
+\end{corollary}
+\begin{corollary}
+    单个薄透镜元件所成实像必是倒像。
+\end{corollary}
+
+\reftab{6.2}列出了薄透镜成像的规律，其中凸透镜部分与\reffig{6.40}对应。
+\begin{table}[htbp]
+    \centering
+    \begin{tabular}{c|c|cccc}
+        \toprule
+        \multirow{2}{*}{\textbf{透镜类型}} & \multirow{2}{*}{\textbf{实物位置}} & \multicolumn{4}{c}{\textbf{像}}                                                                \\
+        \cline{3-6}
+                                           &                                    & \textbf{类型}                   & \textbf{位置}            & \textbf{朝向} & \textbf{相对大小} \\
+        \midrule
+        \multirow{5}{*}{凸透镜}            & $\infty>s_o>2f$                    & 实                              & $f<s_i<2f$               & 倒            & 缩小              \\
+                                           & $s_o=2f$                           & 实                              & $s_i=2f$                 & 倒            & 相等              \\
+                                           & $f<s_o<2f$                         & 实                              & $\infty>s_i>2f$          & 倒            & 放大              \\
+                                           & $s_o=f$                            & -                               & $\pm\infty$              & -             & -                 \\
+                                           & $s_o<f$                            & 虚                              & $|s_i|>s_o$              & 正            & 放大              \\
+        \midrule
+        凹透镜                             & 任意                               & 虚                              & $|s_i|<|f|$且$|s_i|<s_o$ & 正            & 缩小              \\
+        \bottomrule
+    \end{tabular}
+    \caption{薄透镜对实物的成像。}
+    \label{tab:6.2}
+\end{table}
+
+\begin{figure}
+    \centering\includegraphics[width=0.75\linewidth]{chap06/ImageFormingBehavior.eps}
+    \caption{薄凸透镜成像规律。}
+    \label{fig:6.40}
 \end{figure}

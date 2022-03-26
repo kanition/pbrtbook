@@ -167,6 +167,7 @@
     \label{fig:6.30}
 \end{figure}
 
+\subsubsection{球面透镜的折射}
 现实生活中绝大多数透镜的表面是一片球面，因为它的制造难度比非球面透镜低得多。
 尽管这种透镜会有\keyindex{像差}{aberration}{}，但现代制造技术可以把它控制在极小范围内。
 以下我们将探讨球面透镜的成像规律，并约定后文中的透镜都是关于光轴旋转对称的。
@@ -249,8 +250,8 @@
 且当$f_i>0$时，焦点$F_i$在顶点$V$右侧，反之在左侧。
 \begin{figure}[htbp]
     \centering
-    \subfloat[物焦点与物焦距]{\includegraphics[width=0.4\linewidth]{chap06/ObjectFocus.eps}\label{fig:6.32.1}}\,\,
-    \subfloat[像焦点与像焦距]{\includegraphics[width=0.45\linewidth]{chap06/ImageFocus.eps}\label{fig:6.32.2}}
+    \subfloat[物焦点与物焦距]{\includegraphics[scale=1.25]{chap06/ObjectFocus.eps}\label{fig:6.32.1}}\,\,
+    \subfloat[像焦点与像焦距]{\includegraphics[scale=1.25]{chap06/ImageFocus.eps}\label{fig:6.32.2}}
     \caption{球面透镜的焦距与焦点}
     \label{fig:6.32}
 \end{figure}
@@ -260,12 +261,13 @@
 （\reffig{6.33.2}），此时$s_o<0$，物点$F_o$在顶点$V$右边。
 \begin{figure}[htbp]
     \centering
-    \subfloat[虚像点]{\vspace{-5cm}\includegraphics[width=0.5\linewidth]{chap06/VirtualImagePoint.eps}\label{fig:6.33.1}}\,\,\,
-    \subfloat[虚物点]{\includegraphics[width=0.4\linewidth]{chap06/VirtualObjectPoint.eps}\label{fig:6.33.2}}
+    \subfloat[虚像点]{\vspace{-5cm}\includegraphics[scale=1]{chap06/VirtualImagePoint.eps}\label{fig:6.33.1}}\,\,\,
+    \subfloat[虚物点]{\includegraphics[scale=1]{chap06/VirtualObjectPoint.eps}\label{fig:6.33.2}}
     \caption{虚像点和虚物点}
     \label{fig:6.33}
 \end{figure}
 
+\subsubsection{薄透镜}
 只有一个元件（即两个折射界面）的称为\keyindex{简单透镜}{simple lens}{lens透镜}，
 多于一个元件的称为\keyindex{复合透镜}{compound lens}{lens透镜}。
 此外按照透镜厚度能否忽略还可以分为\keyindex{薄透镜}{thin lens}{lens透镜}和\keyindex{厚透镜}{thick lens}{lens透镜}。
@@ -352,7 +354,7 @@
 也称\keyindex{前焦平面}{front focal plane}{focal plane焦平面}。
 \begin{figure}[htbp]
     \centering\includegraphics[width=0.75\linewidth]{chap06/FocusingSeveralRayBundles.eps}
-    \caption{几束光的聚焦。}
+    \caption{几束窄范围平行光的聚焦。}
     \label{fig:6.36}
 \end{figure}
 \begin{figure}[htbp]
@@ -360,3 +362,157 @@
     \caption{透镜的焦平面。}
     \label{fig:6.37}
 \end{figure}
+
+对于透镜有三种特殊光线（包括延长线）帮助我们确定成像情况。
+如\reffig{6.38}所示，它们分别是过光心而不改变方向的光线1、
+平行于光轴入射而过焦点的光线2、过焦点入射而平行于光轴出射的光线3。
+出射光线的交点即定出成像的位置、大小、倒立情况。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=\linewidth]{chap06/RealObjectAndPositiveLensAndNegativeLens.eps}
+    \caption{利用三种特殊光线确定凸透镜和凹透镜对实物的成像。}
+    \label{fig:6.38}
+\end{figure}
+
+我们接下来讨论薄透镜的具体成像规律。如\reffig{6.39}所示，
+以焦距为$f$的凸透镜为例。分别记物和像偏移光轴的横向
+\sidenote{横向指垂直于光轴的方向，下同。}距离为$y_o, y_i$，
+在轴上方取正，下方取负。所以这里图中有$y_o>0, y_i<0$。
+当$y_o$与$y_i$异号时，我们说像是\keyindex{倒}{inverted}{}的，
+反之则是\keyindex{正}{erect}{}的。
+记物到物焦点$F_o$的轴向距离为$x_o=\overline{S_1F_o}=s_o-f$，
+当$S_1$在$F_o$左边时$x_o$取正，反之取负；
+记像到像焦点$F_i$的轴向距离为$x_i=\overline{F_iP_1}=s_i-f$，
+当$P_1$在$F_i$右边时$x_i$取正，反之取负。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.75\linewidth]{chap06/ObjectAndImageLocation.eps}
+    \caption{薄透镜成像时物和像的位置。}
+    \label{fig:6.39}
+\end{figure}
+
+因为易知$\triangle AF_iO\sim\triangle P_2F_iP_1$，所以有
+\begin{align}
+    \frac{y_o}{|y_i|}=\frac{f}{x_i}\, .
+\end{align}
+类似地，因为$\triangle S_1F_oS_2\sim\triangle OF_oB$，所以有
+\begin{align}
+    \frac{y_o}{|y_i|}=\frac{x_o}{f}\, .
+\end{align}
+结合上面两式得到
+\begin{proposition}
+    薄透镜方程的\keyindex{牛顿形式}{Newtonian form}{}：
+    \begin{align}
+        x_ox_i=f^2\, .
+    \end{align}
+\end{proposition}
+1704年牛顿首次在他的《Opticks》一书中阐述了该规律。
+上式还说明，$x_o$与$x_i$一定同号，因此有
+\begin{corollary}
+    物和像一定在各自相应焦点的对侧。
+\end{corollary}
+
+\begin{definition}
+    光学系统最终成像的横向维度与物的对应维度之比
+    称为\keyindex{横向放大率}{transverse magnification}{}，记作
+    \begin{align}
+        M_T=\frac{y_i}{y_o}\, .
+    \end{align}
+\end{definition}
+不难发现，横向放大率还满足
+\begin{align}
+    M_T=-\frac{s_i}{s_o}=-\frac{x_i}{f}=-\frac{f}{x_o}\, .
+\end{align}
+
+\begin{corollary}
+    $M_T>0$对应正像，$M_T<0$对应倒像。
+\end{corollary}
+\begin{corollary}
+    单个薄透镜元件所成实像必是倒像。
+\end{corollary}
+
+\reftab{6.2}列出了薄透镜成像的规律，其中凸透镜部分与\reffig{6.40}对应。
+\begin{table}[htbp]
+    \centering
+    \begin{tabular}{c|c|cccc}
+        \toprule
+        \multirow{2}{*}{\textbf{透镜类型}} & \multirow{2}{*}{\textbf{实物位置}} & \multicolumn{4}{c}{\textbf{像}}                                                                \\
+        \cline{3-6}
+                                           &                                    & \textbf{类型}                   & \textbf{位置}            & \textbf{朝向} & \textbf{相对大小} \\
+        \midrule
+        \multirow{5}{*}{凸透镜}            & $\infty>s_o>2f$                    & 实                              & $f<s_i<2f$               & 倒            & 缩小              \\
+                                           & $s_o=2f$                           & 实                              & $s_i=2f$                 & 倒            & 相等              \\
+                                           & $f<s_o<2f$                         & 实                              & $\infty>s_i>2f$          & 倒            & 放大              \\
+                                           & $s_o=f$                            & -                               & $\pm\infty$              & -             & -                 \\
+                                           & $s_o<f$                            & 虚                              & $|s_i|>s_o$              & 正            & 放大              \\
+        \midrule
+        凹透镜                             & 任意                               & 虚                              & $|s_i|<|f|$且$|s_i|<s_o$ & 正            & 缩小              \\
+        \bottomrule
+    \end{tabular}
+    \caption{薄透镜对实物的成像。}
+    \label{tab:6.2}
+\end{table}
+
+\begin{figure}
+    \centering\includegraphics[width=0.75\linewidth]{chap06/ImageFormingBehavior.eps}
+    \caption{薄凸透镜成像规律。}
+    \label{fig:6.40}
+\end{figure}
+
+\begin{definition}
+    光学系统轴向上像的变化量与物的变化量之比称为\keyindex{纵向放大率}{longitudinal magnification}{}，即
+    \begin{align}
+        M_L=\frac{\mathrm{d}x_i}{\mathrm{d}x_o}\, .
+    \end{align}
+\end{definition}
+根据薄透镜方程的牛顿形式可得
+\begin{corollary}
+    对于单种介质中焦距为$f$的薄透镜，其纵向放大率$M_L$与横向放大率$M_T$满足：
+    \begin{align}
+        M_L=-\frac{f^2}{x_o^2}=-M_T^2\, .
+    \end{align}
+\end{corollary}
+显然恒有$M_L<0$，即指向透镜的方向会被成像为背对透镜的方向（\reffig{6.41}）。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.5\linewidth]{chap06/ImageOrientation.eps}
+    \caption{薄透镜成像朝向。}
+    \label{fig:6.41}
+\end{figure}
+
+还有一种特殊的成像情况：
+即入射光线（的延长线）汇聚在透镜右侧，即物是虚的，$s_o<0$。
+这种情况在复合透镜中十分常见。
+\reffig{6.42}依次展示了虚物所成的正实像、倒虚像、放大正实像。
+\begin{corollary}
+    当物和像在透镜同侧时，两者必然是一实一虚的。
+\end{corollary}
+\begin{figure}[htbp]
+    \centering
+    \subfloat[虚物和正实像。]{\includegraphics[scale=1]{chap06/VirtualObjectAndRealUprightImage.eps}\label{fig:6.42.1}}\,
+    \subfloat[虚物和倒虚像。]{\includegraphics[scale=1]{chap06/VirtualObjectAndVirtualInvertedImage.eps}\label{fig:6.42.2}}\\
+    \subfloat[虚物和放大的正实像。]{\includegraphics[scale=1]{chap06/VirtualObjectAndRealEnlargedUprightImage.eps}\label{fig:6.42.3}}
+    \caption{薄透镜的虚物成像。}
+    \label{fig:6.42}
+\end{figure}
+
+\reffig{6.43}给出了利用焦平面来追踪光线折射方向的方法。
+我们已经知道平行入射薄透镜的光线会交于焦平面上一点，反之亦然。
+对于与焦平面交于点$A$的入射光线$AB$，我们作过光心的光线$AO$，则出射光线应平行于$AO$。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=\linewidth]{chap06/FocalPlaneRayTracing.eps}
+    \caption{焦平面光线追踪。}
+    \label{fig:6.43}
+\end{figure}
+
+\reffig{6.44}展示了利用该方法在三个同轴薄透镜$L_1,L_2,L_3$中追踪光线的情况。
+其中标出了$L_1$和$L_3$的第一焦平面和$L_2$的第二焦平面。
+入射光线$A_1B_1$与$L_1$第一焦平面交于$A_1$，作过$L_1$光心$O_1$的光线$A_1O_1$，
+再过点$B_1$作其平行线得到出射光线$B_1B_2$，并与$L_2$的第二焦平面交于$A_2$。
+作过$L_2$光心$O_2$的光线$O_2A_2$，再过点$B_2$作其平行线得到出射光线$B_2B_3$，
+并与$L_3$的第一焦平面交于点$A_3$。作过$L_3$光心$O_3$的光线$A_3O_3$，
+再过点$B_3$作其平行线，得到最终出射光线。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.75\linewidth]{chap06/ThreeLensesFocalPlane.eps}
+    \caption{利用焦平面追踪穿过三个透镜的光线。}
+    \label{fig:6.44}
+\end{figure}
+
+\subsubsection{复合透镜}

@@ -250,8 +250,8 @@
 且当$f_i>0$时，焦点$F_i$在顶点$V$右侧，反之在左侧。
 \begin{figure}[htbp]
     \centering
-    \subfloat[物焦点与物焦距]{\includegraphics[width=0.4\linewidth]{chap06/ObjectFocus.eps}\label{fig:6.32.1}}\,\,
-    \subfloat[像焦点与像焦距]{\includegraphics[width=0.45\linewidth]{chap06/ImageFocus.eps}\label{fig:6.32.2}}
+    \subfloat[物焦点与物焦距]{\includegraphics[scale=1.25]{chap06/ObjectFocus.eps}\label{fig:6.32.1}}\,\,
+    \subfloat[像焦点与像焦距]{\includegraphics[scale=1.25]{chap06/ImageFocus.eps}\label{fig:6.32.2}}
     \caption{球面透镜的焦距与焦点}
     \label{fig:6.32}
 \end{figure}
@@ -261,8 +261,8 @@
 （\reffig{6.33.2}），此时$s_o<0$，物点$F_o$在顶点$V$右边。
 \begin{figure}[htbp]
     \centering
-    \subfloat[虚像点]{\vspace{-5cm}\includegraphics[width=0.5\linewidth]{chap06/VirtualImagePoint.eps}\label{fig:6.33.1}}\,\,\,
-    \subfloat[虚物点]{\includegraphics[width=0.4\linewidth]{chap06/VirtualObjectPoint.eps}\label{fig:6.33.2}}
+    \subfloat[虚像点]{\vspace{-5cm}\includegraphics[scale=1]{chap06/VirtualImagePoint.eps}\label{fig:6.33.1}}\,\,\,
+    \subfloat[虚物点]{\includegraphics[scale=1]{chap06/VirtualObjectPoint.eps}\label{fig:6.33.2}}
     \caption{虚像点和虚物点}
     \label{fig:6.33}
 \end{figure}
@@ -455,4 +455,40 @@
     \centering\includegraphics[width=0.75\linewidth]{chap06/ImageFormingBehavior.eps}
     \caption{薄凸透镜成像规律。}
     \label{fig:6.40}
+\end{figure}
+
+\begin{definition}
+    光学系统轴向上像的变化量与物的变化量之比称为\keyindex{纵向放大率}{longitudinal magnification}{}，即
+    \begin{align}
+        M_L=\frac{\mathrm{d}x_i}{\mathrm{d}x_o}\, .
+    \end{align}
+\end{definition}
+根据薄透镜方程的牛顿形式可得
+\begin{corollary}
+    对于单种介质中焦距为$f$的薄透镜，其纵向放大率$M_L$与横向放大率$M_T$满足：
+    \begin{align}
+        M_L=-\frac{f^2}{x_o^2}=-M_T^2\, .
+    \end{align}
+\end{corollary}
+显然恒有$M_L<0$，即指向透镜的方向会被成像为背对透镜的方向（\reffig{6.41}）。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.5\linewidth]{chap06/ImageOrientation.eps}
+    \caption{薄透镜成像朝向。}
+    \label{fig:6.41}
+\end{figure}
+
+我们还要了解一种特殊的成像情况：
+即入射光线（的延长线）汇聚在透镜右侧，即物是虚的，$s_o<0$。
+这种情况在复合透镜中十分常见。
+\reffig{6.42}依次展示了虚物所成的正实像、倒虚像、放大正实像。
+\begin{corollary}
+    当物和像在透镜同侧时，必然是一实一虚的。
+\end{corollary}
+\begin{figure}[htbp]
+    \centering
+    \subfloat[虚物和正实像。]{\includegraphics[scale=1]{chap06/VirtualObjectAndRealUprightImage.eps}\label{fig:6.42.1}}\,
+    \subfloat[虚物和倒虚像。]{\includegraphics[scale=1]{chap06/VirtualObjectAndVirtualInvertedImage.eps}\label{fig:6.42.2}}\\
+    \subfloat[虚物和放大的正实像。]{\includegraphics[scale=1]{chap06/VirtualObjectAndRealEnlargedUprightImage.eps}\label{fig:6.42.3}}
+    \caption{薄透镜的虚物成像。}
+    \label{fig:6.42}
 \end{figure}

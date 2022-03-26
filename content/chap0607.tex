@@ -477,12 +477,12 @@
     \label{fig:6.41}
 \end{figure}
 
-我们还要了解一种特殊的成像情况：
+还有一种特殊的成像情况：
 即入射光线（的延长线）汇聚在透镜右侧，即物是虚的，$s_o<0$。
 这种情况在复合透镜中十分常见。
 \reffig{6.42}依次展示了虚物所成的正实像、倒虚像、放大正实像。
 \begin{corollary}
-    当物和像在透镜同侧时，必然是一实一虚的。
+    当物和像在透镜同侧时，两者必然是一实一虚的。
 \end{corollary}
 \begin{figure}[htbp]
     \centering
@@ -492,3 +492,27 @@
     \caption{薄透镜的虚物成像。}
     \label{fig:6.42}
 \end{figure}
+
+\reffig{6.43}给出了利用焦平面来追踪光线折射方向的方法。
+我们已经知道平行入射薄透镜的光线会交于焦平面上一点，反之亦然。
+对于与焦平面交于点$A$的入射光线$AB$，我们作过光心的光线$AO$，则出射光线应平行于$AO$。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=\linewidth]{chap06/FocalPlaneRayTracing.eps}
+    \caption{焦平面光线追踪。}
+    \label{fig:6.43}
+\end{figure}
+
+\reffig{6.44}展示了利用该方法在三个同轴薄透镜$L_1,L_2,L_3$中追踪光线的情况。
+其中标出了$L_1$和$L_3$的第一焦平面和$L_2$的第二焦平面。
+入射光线$A_1B_1$与$L_1$第一焦平面交于$A_1$，作过$L_1$光心$O_1$的光线$A_1O_1$，
+再过点$B_1$作其平行线得到出射光线$B_1B_2$，并与$L_2$的第二焦平面交于$A_2$。
+作过$L_2$光心$O_2$的光线$O_2A_2$，再过点$B_2$作其平行线得到出射光线$B_2B_3$，
+并与$L_3$的第一焦平面交于点$A_3$。作过$L_3$光心$O_3$的光线$A_3O_3$，
+再过点$B_3$作其平行线，得到最终出射光线。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.75\linewidth]{chap06/ThreeLensesFocalPlane.eps}
+    \caption{利用焦平面追踪穿过三个透镜的光线。}
+    \label{fig:6.44}
+\end{figure}
+
+\subsubsection{复合透镜}

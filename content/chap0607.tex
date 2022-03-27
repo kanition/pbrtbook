@@ -516,3 +516,34 @@
 \end{figure}
 
 \subsubsection{复合透镜}
+我们在每个透镜元件均是薄透镜的前提下讨论复合透镜的性质。
+\reffig{6.45}展示了两个透镜元件间的距离小于其任意一个的焦距时组成的复合透镜，
+即$d<f_1$且$d<f_2$。其中$P_1'$是第一个透镜的实像，同时也是第二个透镜的虚物。
+$P_1$则是第二个透镜的实像，也是整个复合透镜的像。
+图中还标出了其他量。依据薄透镜公式，有
+\begin{align}
+    \frac{1}{s_{o1}}+\frac{1}{s_{i1}} & =\frac{1}{f_1}\, , \\
+    \frac{1}{s_{o2}}+\frac{1}{s_{i2}} & =\frac{1}{f_2}\, .
+\end{align}
+并注意到$s_{o2}=d-s_{i1}$，带入整理得像距为
+\begin{align}
+    s_{i2}=\frac{f_2d-\displaystyle\frac{f_2s_{o1}f_1}{s_{o1}-f_1}}{d-f_2-\displaystyle\frac{s_{o1}f_1}{s_{o1}-f_1}}\, .
+\end{align}
+
+复合透镜的横向放大率$M_T$是各元件横向放大率$M_{T1}$与$M_{T2}$之积，即
+\begin{align}
+    M_T=M_{T1}M_{T2}=\left(-\frac{s_{i1}}{s_{o1}}\right)\left(-\frac{s_{i2}}{s_{o2}}\right)=\frac{f_1s_{i2}}{d(s_{o1}-f_1)-s_{o1}f_1}\, .
+\end{align}
+\begin{figure}[htbp]
+    \centering\includegraphics[scale=1]{chap06/TwoThinLenses01.eps}
+    \caption{两个透镜元件间的距离小于任意一个的焦距。}
+    \label{fig:6.45}
+\end{figure}
+
+\reffig{6.46}展示了两个薄透镜距离大于两者焦距之和的情况，即$d>f_1+f_2$。
+其有关结论是类似的。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=\linewidth]{chap06/TwoThinLenses02.eps}
+    \caption{两个透镜元件间的距离大于两者焦距之和。}
+    \label{fig:6.46}
+\end{figure}

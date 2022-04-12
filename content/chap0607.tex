@@ -63,7 +63,7 @@
     \end{align}
     由此斯涅尔定律也可写作：
     \begin{align}
-        \frac{sin\theta_i}{\sin\theta_t}=n_{ti}\, .
+        \frac{\sin\theta_i}{\sin\theta_t}=n_{ti}\, .
     \end{align}
 \end{definition}
 
@@ -547,3 +547,42 @@ $P_1$则是第二个透镜的实像，也是整个复合透镜的像。
     \caption{两个透镜元件间的距离大于两者焦距之和。}
     \label{fig:6.46}
 \end{figure}
+
+
+\begin{definition}
+    光学系统最后一个界面与将其视作整体时的第二焦点间的距离称为\keyindex{后焦距}{back focal length}{focal length焦距}(b.f.l.)。
+    类似地，第一个界面的顶点到第一焦点的距离称为\keyindex{前焦距}{front focal length}{focal length焦距}(f.f.l.)。
+\end{definition}
+
+在前面介绍的两个薄透镜复合的情况下（\reffig{6.47}），容易得到
+\begin{align}
+    \text{f.f.l.} & =\lim\limits_{s_{i2}\rightarrow \infty}{s_{o1}}=\frac{f_1(d-f_2)}{d-(f_1+f_2)}\, , \\
+    \text{b.f.l.} & =\lim\limits_{s_{o1}\rightarrow \infty}{s_{i2}}=\frac{f_2(d-f_1)}{d-(f_1+f_2)}\, .
+\end{align}
+\begin{figure}[htbp]
+    \centering\includegraphics[scale=1]{chap06/backfocallength.eps}
+    \caption{一个薄凹透镜与一个薄凸透镜复合后的后焦距。}
+    \label{fig:6.47}
+\end{figure}
+
+当$d\rightarrow 0$时，意味着透镜\keyindex{紧密}{in contact}{}贴合在一起，
+例如一些\keyindex{消色差双合透镜}{achromatic doublets}{}。此时有
+\begin{align}
+    \text{f.f.l.}=\text{b.f.l.}=\frac{f_1f_2}{f_1+f_2}\, .
+\end{align}
+
+\begin{proposition}
+    两个焦距分别为$f_1$和$f_2$的薄透镜紧密贴合后（仍视作薄透镜）
+    的\keyindex{有效焦距}{effective focal length}{focal length焦距}$f$为
+    \begin{align}
+        \frac{1}{f}=\frac{1}{f_1}+\frac{1}{f_2}\, .
+    \end{align}
+\end{proposition}
+\begin{corollary}
+    $N$个紧密贴合的薄透镜（仍视作薄透镜）的有效焦距$f$与每个透镜的焦距$f_i (i=1,2,\ldots,N)$的关系为
+    \begin{align}
+        \frac{1}{f}=\sum\limits_{i=1}^{N}{\frac{1}{f_i}}\, .
+    \end{align}
+\end{corollary}
+
+\subsection{光圈}\label{sub:光圈}

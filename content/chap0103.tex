@@ -961,7 +961,7 @@ for (const auto &light : scene.`\refvar{lights}{}`) {
 
 该积分器也处理诸如镜子或玻璃等完美镜面散射的光。
 它非常简单地利用镜面性质寻找反射方向（\reffig{1.21}）
-并用\keyindex{斯涅尔定律}{Snell's law}{}\sidenote{译者注：即折射定律。}寻找
+并用\keyindex{斯涅尔定律}{Snell's law}{}\sidenote{译者注：即折射定律，可参考译者补充的\refsub{光学背景知识}。}寻找
 折射方向（\refsec{镜面反射与透射}）。
 然后积分器会递归地跟随新方向的适当光线
 并将其贡献加到最初从相机看到的该点处反射辐亮度中。

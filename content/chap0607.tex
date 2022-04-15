@@ -13,7 +13,7 @@
     三维中的\keyindex{波前}{wavefront}{}是某一时刻波\keyindex{相位}{phase}{}相同的点构成的面。
 \end{definition}
 \begin{definition}
-    电磁波在真空中的传播速度$c$与在介质中的传播速度$v$的比值
+    电磁波在真空中的传播速率$c$与在介质中的传播速率$v$的比值
     定义为\keyindex{绝对折射率}{absolute index of refraction}{index of refraction折射率}，
     可简称折射率：
     \begin{align}
@@ -106,7 +106,7 @@
 如\reffig{6.28}所示，我们利用费马原理来推导斯涅尔定律：
 \begin{prove}
     考虑从点$S$到点$P$的光线，它在界面上点$O$处发生折射，
-    相应量已标在途中图中。其光程为
+    相应量已标在图中。其光程为
     \begin{align}
         OPL=n_i\overline{SO}+n_t\overline{OP}=n_i\sqrt{x^2+h^2}+n_t\sqrt{b^2+(a-x)^2}\, .
     \end{align}
@@ -407,7 +407,7 @@
 1704年牛顿首次在他的《Opticks》一书中阐述了该规律。
 上式还说明，$x_o$与$x_i$一定同号，因此有
 \begin{corollary}
-    物和像一定在各自相应焦点的对侧。
+    薄透镜的物和像一定在各自相应焦点的对侧。
 \end{corollary}
 
 \begin{definition}
@@ -527,7 +527,7 @@ $P_1$则是第二个透镜的实像，也是整个复合透镜的像。
 \end{align}
 并注意到$s_{o2}=d-s_{i1}$，带入整理得像距为
 \begin{align}
-    s_{i2}=\frac{f_2d-\displaystyle\frac{f_2s_{o1}f_1}{s_{o1}-f_1}}{d-f_2-\displaystyle\frac{s_{o1}f_1}{s_{o1}-f_1}}\, .
+    s_{i2}=\frac{f_2\left(d-\displaystyle\frac{s_{o1}f_1}{s_{o1}-f_1}\right)}{d-f_2-\displaystyle\frac{s_{o1}f_1}{s_{o1}-f_1}}\, .
 \end{align}
 
 复合透镜的横向放大率$M_T$是各元件横向放大率$M_{T1}$与$M_{T2}$之积，即
@@ -586,3 +586,118 @@ $P_1$则是第二个透镜的实像，也是整个复合透镜的像。
 \end{corollary}
 
 \subsection{光圈}\label{sub:光圈}
+\subsubsection{孔径光阑与视场光阑}
+透镜的大小是有限的，这限制了能进入光学系统的光线范围。
+此时透镜的有效直径就充当了\keyindex{光圈}{aperture}{}\sidenote{也可称作光阑。}。
+如\reffig{6.48}，我们称像这样决定成像光量的透镜边缘或单独的快门等为\keyindex{孔径光阑}{aperture stop}{aperture光圈}(A.S.)。
+光学系统的孔径光阑是物理实体，它限制了从光轴上的物点发出且能进入系统的光束范围。
+复杂相机中位于一部分元件后的可调叶片式快门通常就是孔径光阑（\reffig{6.52}），它决定了整组透镜聚集光线的能力。
+限制系统所能成像的物体尺寸或角度范围的元件则称为\keyindex{视场光阑}{field stop}{aperture光圈}(F.S.)，
+它决定了视场范围（\reffig{6.48}）。相机中一般由胶片或CCD传感器充当视场光阑来限制成像平面。
+因此孔径光阑控制从物点到共轭像点的光量，而视场光阑则决定是否彻底阻挡光线。
+调大孔径光阑可以增加进光能量使得像的每一点都有更大辐照度，
+而调大视场光阑则使原来被挡住的物体也能成像了。
+\begin{figure}[htbp]
+    \centering\includegraphics{chap06/ApertureStopAndFieldStop.eps}
+    \caption{孔径光阑与视场光阑。}
+    \label{fig:6.48}
+\end{figure}
+
+\subsubsection{入射瞳与出射瞳}
+孔径光阑的像称为\keyindex{瞳}{pupil}{}，它决定给定光线能否通过整个光学系统。
+\begin{definition}
+    从光轴上的物点通过孔径光阑之前的元件看到的该光阑的像称为\keyindex{入射瞳}{entrance pupil}{pupil瞳}。
+\end{definition}
+\begin{definition}
+    从光轴上的像点通过孔径光阑之后的元件看到的该光阑的像称为\keyindex{出射瞳}{exit pupil}{pupil瞳}。
+\end{definition}
+
+\reffig{6.49}展示了孔径光阑分别在透镜前方和后方时的入射瞳与出射瞳，
+瞳的位置和大小均可以利用前文介绍的成像规律确定。
+如果物与孔径光阑之间没有其他透镜，则孔径光阑本身就是入射瞳（\reffig{6.49.1}）；
+如果孔径光阑与像之间没有其他透镜，则孔径光阑本身就是出射瞳（\reffig{6.49.2}）。
+入射瞳决定了能确实进入光学系统的光锥，出射瞳则决定离开系统的光锥。
+在这任意一种光锥范围之外的任何点源发出的光线都无法到达像平面。此外，瞳和孔径光阑是共轭的。
+当没有暗角时，任意进入入射瞳的发散光锥都能穿过孔径光阑并变为穿过出射瞳的汇聚光锥。
+
+要强调的是，光轴上不同位置的物点可能对应着不同的瞳和孔径光阑。
+例如\reffig{6.49.1}中，如果透镜更小一些，物体离透镜更近一些，
+则通过光圈的光线可能超出了透镜有效直径范围，此时透镜本身就充当孔径光阑，瞳也相应变化。
+反之，如果透镜更大一些，物体离透镜更远一些，则孔径光阑和瞳都没变。
+
+在设计光学系统时，瞳的位置和尺寸十分重要。
+例如使用一些观察设备时，人会把眼睛置于出射瞳中心。
+考虑到人眼瞳孔大小根据照明水平一般在2mm至8mm间，
+所以夜视望远镜的出射瞳通常至少为8mm，
+而昼视设备使用3mm至4mm的出射瞳就足够了。
+高能步枪的瞄准镜则会使用更大的出射瞳且在镜筒后端较远处，以避免后座力伤到眼睛。
+
+我们把离轴物点发出并穿过孔径光阑中心的光线称为\keyindex{主光线}{chief ray}{ray光线}。
+主光线进入光学系统时所沿直线会穿过入射瞳中心$E_{np}$，
+且离开系统时所沿直线会穿过出射瞳中心$E_{xp}$。
+它对于校正透镜设计的像差十分重要。
+\begin{figure}[htbp]
+    \centering
+    \subfloat[孔径光阑在前方。]{\includegraphics[scale=1]{chap06/FrontApertureStop.eps}\label{fig:6.49.1}}\\
+    \subfloat[孔径光阑在后方。]{\includegraphics[scale=1]{chap06/EntrancePupilAndExitPupil.eps}\label{fig:6.49.2}}
+    \caption{入射瞳与出射瞳。}
+    \label{fig:6.49}
+\end{figure}
+
+\reffig{6.50}则展示了三透镜系统的瞳和孔径光阑，
+其中标注出了两种光线，一种是主光线，另一种则称为\keyindex{边缘光线}{marginal ray}{ray光线}。
+边缘光线从光轴上的物点出发并射向入射瞳（或孔径光阑）的边缘。
+\begin{figure}[htbp]
+    \centering\includegraphics{chap06/PupilsAndStopsForAThree-LensSystem.eps}
+    \caption{三透镜系统的瞳和孔径光阑。}
+    \label{fig:6.50}
+\end{figure}
+
+当不清楚哪一个元件实际充当孔径光阑时，须让系统的每个元件被其左边的元件组合成像。
+光轴上某一物点对应的张角范围最小的像即为入射瞳。
+该像对应的元件即为该物点相应的孔径光阑。
+
+注意\reffig{6.51}中，当物点在光轴上时，透镜$L_1$的边缘充当孔径光阑；
+当物点远离光轴时，到达成像平面的对应光锥变窄，有效孔径光阑变小。
+像这样图像靠近边缘的点会变淡（暗）的现象称为\keyindex{暗角}{vignetting}{}。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=\linewidth]{chap06/Vignetting.eps}
+    \caption{暗角。}
+    \label{fig:6.51}
+\end{figure}
+
+\subsubsection{相对光圈与F值}
+当我们使用透镜对较远处的物体成像时，其上某一极小区域发出
+并能进入透镜的光能正比于透镜的面积，或说正比于入射瞳的面积。
+不过如果光源是极窄的激光束，则这一结论不成立。
+我们排除这类特殊情况，并忽略反射损耗、像差等，
+则入射光能会分布到相应的成像区域（\reffig{6.52}），其辐照度反比于成像面积。
+考虑到当入射瞳是圆形时，其面积正比于直径$D$。
+而成像面积则是横向维度的平方，故正比于焦距的平方。
+因此成像平面的辐照度正比于$\displaystyle\left(\frac{D}{f}\right)^2$。
+我们称$\displaystyle\frac{D}{f}$为\keyindex{相对光圈}{relative aperture}{aperture光圈}，
+称其倒数为\keyindex{F值}{$f$-number}{}或\keyindex{焦比}{focal ratio}{}，记作$f/\#$，即
+\begin{align}
+    f/\#=\frac{f}{D}\, .
+\end{align}
+例如光圈25mm、焦距50mm的透镜的F值为2，记作$f/2$。
+F值越小进光量越大。\reffig{6.53}(a)是一个透镜后接可调叶片式光圈
+时F值分别取2和4的情况。
+\begin{figure}[htbp]
+    \centering\includegraphics{chap06/ALarge-FormatCamera.eps}
+    \caption{相机光学系统构造示意图。}
+    \label{fig:6.52}
+\end{figure}
+\begin{figure}[htbp]
+    \centering\includegraphics{chap06/F-number.eps}
+    \caption{(a)遮挡透镜以改变F值。(b)镜头的可调光圈设置。}
+    \label{fig:6.53}
+\end{figure}
+
+通常我们用焦距和最大光圈来指定透镜，例如镜筒上写着“50mm，$f/1.4$”。
+因为摄影曝光时间正比于F值的平方，所以F值有时也称为透镜的\keyindex{速度}{speed}{}。
+例如$f/1.4$的透镜是$f/2$的两倍快。
+镜头光圈的F值常标为1、1.4、2、2.8、4、5.6、8、11、16和22等，此时它的最大相对光圈为$f/1$。
+这些相邻光圈设置的F值依次扩大为$\sqrt{2}$倍（再舍入），因此辐照度依次减半。
+所以相机用$f/1.4$曝光$\displaystyle\frac{1}{500}$秒、用$f/2$曝光$\displaystyle\frac{1}{250}$秒、
+用$f/2.8$曝光$\displaystyle\frac{1}{125}$秒的进光量是相同的。

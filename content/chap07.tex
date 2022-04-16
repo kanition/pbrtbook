@@ -1,4 +1,24 @@
+\chapterimage{Pictures/chap07/checkerboard-ref-465x930.png}
 \chapter{采样与重构}\label{chap:采样与重构}
+尽管像pbrt那样的渲染器最终输出的是彩色像素的2D网格，
+但实际上入射辐射是定义在胶片平面上的连续函数。
+从该连续函数计算出离散像素值的方法会显著影响渲染器生成的最终图像的质量；
+如果没有仔细执行该过程，则会出现伪影\sidenote{译者注：原文artifact。}。
+反之，如果执行得很好，则为此进行相对少量的额外计算就能极大提升渲染图像的质量。
+
+本章从介绍\emph{采样理论}开始——即从定义在连续域上的函数
+取出离散样本值并用它们重建与原本类似的新函数的理论。
+在采样理论和低差异点集（一种均匀分布的样本点类型）思想的基础上，
+本章定义的\refvar{Sampler}{}以不同方式生成$n$维样本向量
+\footnote{回想上一章中\refvar{Camera}{}用\refvar{CameraSample}{}
+在胶片平面、透镜上以及时间域中取点——通过取用这些样本向量前几维来设定\refvar{CameraSample}{}值。}。
+本章将介绍五种\refvar{Sampler}{}实现，涵盖了采样问题的各种方法。
+
+本章以类\refvar{Filter}{}和\refvar{Film}{}作结。
+\refvar{Filter}{}用于确定每个像素周围要融合多少倍样本量来计算最终像素值，
+类\refvar{Film}{}则积累图像样本对图中像素的贡献量。
+
+\input{content/chap0701.tex}
 
 {\noindent\hfil$=========$\hfil{\color{red}{施工分割线}}\hfil$=========$\
 

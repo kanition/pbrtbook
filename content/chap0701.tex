@@ -124,8 +124,8 @@ $\mathcal{F}$显然是线性运算——即对任意标量$a$都有$\mathcal{F}\
     \int f(x)\delta(x)\mathrm{d}x=f(0)\, .
 \end{align*}
 
-$\delta$分布不能表示为标准数学函数\sidenote{译者注：也就是说冲激函数是一种奇异函数。}，
-但通常可以视作以原点为中心且宽度逼近0的单位面积矩形函数\sidenote{译者注：原文box function。}的极限。
+$\delta$分布不能表示为标准数学函数，但通常可以视作以原点为中心且宽度逼近0的
+单位面积矩形函数\sidenote{译者注：原文box function。}的极限。
 \begin{table}[htbp]
     \centering\begin{tabular}{l p{170pt}}
         \toprule
@@ -172,7 +172,7 @@ shah函数$III_T(x)$定义为\sidenote{译者注：为了和虚数单位$\mathrm
     \subfloat[]{\includegraphics[width=0.32\linewidth]{chap07/shah-samples.eps}}\,
     \subfloat[]{\includegraphics[width=0.32\linewidth]{chap07/shah-sampled-function.eps}}
     \caption{形式化的采样过程。(a)函数$f(x)$乘以(b)shah函数$III_T(x)$，
-    得到(c)表示其在每个样本点处取值的缩放后的$\delta$函数的无限序列。}
+        得到(c)表示其在每个样本点处取值的缩放后的$\delta$函数的无限序列。}
     \label{fig:7.4}
 \end{figure}
 
@@ -221,5 +221,70 @@ shah函数$III_T(x)$定义为\sidenote{译者注：为了和虚数单位$\mathrm
     \mathcal{F}\{f(x)\otimes g(x)\}=F(\omega)G(\omega)\, .
 \end{align}
 
+这些性质是傅里叶分析的标准参考文献中得来的。
+利用这些思想可以发现，空域中原始的采样步骤，即shah函数与原始函数$f(x)$相乘，
+可等价描述为频域中$F(\omega)$与另一shah函数的卷积。
+
+从\reftab{7.1}中我们还知道shah函数$III_T(x)$的频谱；
+周期为$T$的shah函数的傅里叶变换是另一个周期为$\displaystyle\frac{1}{T}$的shah函数。
+牢记周期间的倒数关系很重要：它意味着如果样本在空域中隔得较远，
+则它们在频域中离得更近。
+
+因此采样信号的频域表示通过$F(\omega)$和新的shah函数的卷积给出。
+让$\delta$函数与一个函数卷积得到该函数副本，故用shah函数卷积
+得到原始函数副本的无限序列，间隔等于该shah的周期（\reffig{7.6}）。
+它是样本序列的频率空间表示。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.45\linewidth]{chap07/func-convolve-shah.eps}
+    \caption{$F(\omega)$与shah函数的卷积。结果是$F$的无数个副本。}
+    \label{fig:7.6}
+\end{figure}
+
+现在我们有了该函数频谱副本的无限集，我们该怎样重建原始函数呢？
+观察\reffig{7.6}，答案很明显：只需要抹除除了以原点为中心外的所有频谱副本，就能得到原始的$F(\omega)$.
+\begin{figure}[htbp]
+    \centering
+    \subfloat[]{\includegraphics[width=0.32\linewidth]{chap07/func-convolve-shah-a.eps}}\,
+    \subfloat[]{\includegraphics[width=0.32\linewidth]{chap07/unit-box-filter.eps}}\,
+    \subfloat[]{\includegraphics[width=0.32\linewidth]{chap07/single-func-after-box.eps}}
+    \caption{(a)$F(\omega)$的副本序列和(b)合适的矩形函数相乘得到(c)原始频谱。}
+    \label{fig:7.7}
+\end{figure}
+
+为了丢弃除了中间外的所有频谱副本，我们乘以具有合适宽度的矩形函数（\reffig{7.7}）。
+宽度为$T$的矩形函数$\textstyle\prod_T(x)$定义为
+\begin{align*}
+    {\textstyle\prod_T}(x)=\left\{\begin{array}{ll}
+        \displaystyle\frac{1}{T}, & \text{若}\displaystyle|x|<\frac{T}{2}, \\
+        0,                        & \text{其他}.
+    \end{array}\right.
+\end{align*}
+
+该相乘步骤对应了用重建滤波器在空域做卷积。这是理想采样与重建过程。总结为：
+\begin{align*}
+    \tilde{F}=(F(\omega)\otimes III_{\frac{1}{T}}(\omega))\textstyle\prod_{\frac{1}{T}}(\omega)\, .
+\end{align*}
+
+这是个重要结论：仅仅通过采样一组均匀间隔的点，我们就能确定$f(x)$的精准频率空间表示。
+除了知道该函数是带限的外，没有使用关于函数成分的额外信息。
+
+在空域运用等价过程同样能完全恢复$f(x)$。因为矩形函数的傅里叶逆变换是sinc函数，
+所以空域中的理想重建是
+\begin{align*}
+    \tilde{f}=(f(x)III_T(x))\otimes \mathrm{sinc}_T(x)\, ,
+\end{align*}
+其中$\mathrm{sinc}_T(x)=\mathrm{sinc}(Tx)$，因此
+\begin{align*}
+    \tilde{f}(x)=\sum\limits_{k=-\infty}^{\infty}\mathrm{sinc}(x-kT)f(kT)\, .
+\end{align*}
+
+不幸的是，因为sinc函数有无限范围，所以必须用所有采样值$f(kT)$来计算空域中$\tilde{f}(x)$的任一特定值。
+实际实现中更爱用空间范围有限的滤波器，即使它们不能完美重建原始函数。
+
+图形学常用的可选方法是用矩形函数做重建，即高效地对$x$附近区域内的全部样本值做平均。
+通过考虑矩形滤波器的频域表现可以看到这是非常糟糕的选择：
+该技术试图通过\emph{乘以sinc}来分离出函数频谱中间的副本，
+这不仅在选出函数频谱中央副本方面做得很差，
+还包含了无限序列中其他副本的高频贡献。
 
 \subsection{混叠}\label{sub:混叠}

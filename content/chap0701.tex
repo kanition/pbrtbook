@@ -113,7 +113,7 @@ $\mathcal{F}$显然是线性运算——即对任意标量$a$都有$\mathcal{F}\
 
 \reftab{7.1}展示了许多重要函数及其频率空间表示
 \sidenote{译者注：表中原文将频域函数写作$f(\omega)$，译者改为了$F(\omega)$。
-    此外，表中原文对余弦函数和Shah函数的频域表示混用了系数不同的傅里叶变换定义，
+    此外，表中原文对余弦函数和shah函数的频域表示混用了系数不同的傅里叶变换定义，
     导致与本书所采用的定义不符，译者已根据本书定义对其作了修正。
     具体推导过程可参考译者补充的\refsec{译者补充：信号处理}。}。
 这些函数中许多都基于狄拉克$\delta$分布
@@ -134,7 +134,7 @@ $\delta$分布不能表示为标准数学函数\sidenote{译者注：也就是�
         矩形函数：$f(x)=\left\{\begin{array}{ll}
                 1, & \text{若}|x|<\frac{1}{2}, \\
                 0, & \text{其他}.
-            \end{array}\right.$           & Sinc函数：$\displaystyle F(\omega)=\mathrm{sinc}(\omega)=\frac{\sin(\pi\omega)}{\pi\omega}$  \\
+            \end{array}\right.$           & sinc函数：$\displaystyle F(\omega)=\mathrm{sinc}(\omega)=\frac{\sin(\pi\omega)}{\pi\omega}$  \\
         \hline
         高斯函数：$f(x)=\mathrm{e}^{-\pi x^2}$                             & 高斯函数：$F(\omega)=\mathrm{e}^{-\pi \omega^2}$                                             \\
         \hline
@@ -143,7 +143,7 @@ $\delta$分布不能表示为标准数学函数\sidenote{译者注：也就是�
         余弦函数：$f(x)=\cos x$                                            & 平移的$\delta$函数：
         $F(\omega)=\frac{1}{2}(\delta(1-2\pi\omega)+\delta(1+2\pi\omega))$                                                                                                \\
         \hline
-        Shah函数：$\displaystyle f(x)=III_T(x)=T\sum\limits_k\delta(x-kT)$ & $\displaystyle F(\omega)=TIII_{\frac{1}{T}}(\omega)=\sum\limits_k\delta(\omega-\frac{k}{T})$ \\
+        shah函数：$\displaystyle f(x)=III_T(x)=T\sum\limits_k\delta(x-kT)$ & $\displaystyle F(\omega)=TIII_{\frac{1}{T}}(\omega)=\sum\limits_k\delta(\omega-\frac{k}{T})$ \\
         \bottomrule
     \end{tabular}
     \caption{傅里叶变换对。空域中的函数及其频率空间表示。
@@ -153,5 +153,73 @@ $\delta$分布不能表示为标准数学函数\sidenote{译者注：也就是�
 \end{table}
 
 \subsection{理想采样与重建}\label{sub:理想采样与重建}
+利用频率空间分析，我们现在能正式研究采样的性质了。
+回想采样过程要求我们选择一组等间隔样本位置并计算这些位置的函数值。
+形式上，这对应于让该函数乘以“shah”——或称“冲激串”函数，即无数等间隔的$\delta$函数之和。
+shah函数$III_T(x)$定义为\sidenote{译者注：为了和虚数单位$\mathrm{i}$更好区分，
+    译者将式子中的下标$i$改为$k$，下同。}
+\begin{align*}
+    III_T(x)=T\sum\limits_{k=-\infty}^{\infty}\delta(x-kT)\, ,
+\end{align*}
+其中$T$定义了\keyindex{周期}{period}{}，也称\keyindex{采样率}{sampling rate}{}。
+\reffig{7.4}展示了采样的正式定义。相乘后得到函数在等间隔点处取值的无限序列：
+\begin{align*}
+    III_T(x)f(x)=T\sum\limits_i\delta(x-kT)f(kT)\, .
+\end{align*}
+\begin{figure}[htbp]
+    \centering
+    \subfloat[]{\includegraphics[width=0.32\linewidth]{chap07/func-to-sample.eps}}\,
+    \subfloat[]{\includegraphics[width=0.32\linewidth]{chap07/shah-samples.eps}}\,
+    \subfloat[]{\includegraphics[width=0.32\linewidth]{chap07/shah-sampled-function.eps}}
+    \caption{形式化的采样过程。(a)函数$f(x)$乘以(b)shah函数$III_T(x)$，
+    得到(c)表示其在每个样本点处取值的缩放后的$\delta$函数的无限序列。}
+    \label{fig:7.4}
+\end{figure}
+
+通过选择重建滤波器函数$r(x)$并计算\keyindex{卷积}{convolution}{}，
+这些样本值可用于定义重建的函数$\tilde{f}$，即
+\begin{align*}
+    (III_T(x)f(x))\otimes r(x)\, ,
+\end{align*}
+其中卷积运算$\otimes$定义为
+\begin{align*}
+    f(x)\otimes g(x)=\int_{-\infty}^{\infty}f(x')g(x-x')\mathrm{d}x'\, .
+\end{align*}
+
+对于重建，卷积给出了以样本点为中心且被缩放后的重建滤波器实例的加权和：
+\begin{align*}
+    \tilde{f}(x)=T\sum\limits_{k=-\infty}^{\infty}f(kT)r(x-kT)\, .
+\end{align*}
+
+例如\reffig{7.1}中使用了三角形重建滤波器$r(x)=\max(0,1-|x|)$。
+\reffig{7.5}展示了为该例所用的缩放后的三角形函数。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.6\linewidth]{chap07/func-tri-reconstruction.eps}
+    \caption{虚线表示的三角形重建滤波器实例的和给出了实线表示的对原始函数的重建逼近。}
+    \label{fig:7.5}
+\end{figure}
+
+为了得到直观的结果，我们经历了看似不用这么复杂的过程：
+用一些方法在样本间插值也能得到重建函数$\tilde{f}(x)$。
+然而通过仔细构建这些背景，傅里叶分析现在能更简单地用于该过程。
+
+通过在频域分析采样函数，我们能更深入理解采样过程。
+特别地，我们将能确定原始函数能从其在样本位置的取值中完全恢复的条件——一个很强的结论。
+对于此处的讨论，我们现在假设函数$f(x)$是\keyindex{带限}{band limited}{}的——
+存在某个频率$\omega_0$使得$f(x)$在大于$\omega_0$处不再包含任何频率。
+根据定义，带限函数具有紧支撑\sidenote{译者注：compact support。}的频率空间表示，
+即对于所有$|\omega|>\omega_0$都有$F(\omega)=0$。\reffig{7.3}中的两个频谱都是带限的。
+
+傅里叶分析所用的一个重要思想是两个函数之积的傅里叶变换$\mathcal{F}\{f(x)g(x)\}$可
+表示为它们各自傅里叶变换$F(\omega)$和$G(\omega)$的卷积：
+\begin{align*}
+    \mathcal{F}\{f(x)g(x)\}=F(\omega)\otimes G(\omega)\, .
+\end{align*}
+
+类似地，空域卷积等价于频域乘积：
+\begin{align}\label{eq:7.3}
+    \mathcal{F}\{f(x)\otimes g(x)\}=F(\omega)G(\omega)\, .
+\end{align}
+
 
 \subsection{混叠}\label{sub:混叠}

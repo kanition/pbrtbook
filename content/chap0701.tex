@@ -155,7 +155,8 @@ $\delta$分布不能表示为标准数学函数，但通常可以视作以原点
 \subsection{理想采样与重建}\label{sub:理想采样与重建}
 利用频率空间分析，我们现在能正式研究采样的性质了。
 回想采样过程要求我们选择一组等间隔样本位置并计算这些位置的函数值。
-形式上，这对应于让该函数乘以“shah”——或称“冲激串”函数，即无数等间隔的$\delta$函数之和。
+形式上，这对应于让该函数乘以“shah”——或称“冲激串”函数
+\sidenote{译者注：也称狄拉克梳状函数。}，即无数等间隔的$\delta$函数之和。
 shah函数$III_T(x)$定义为\sidenote{译者注：为了和虚数单位$\mathrm{i}$更好区分，
     译者将式子中的下标$i$改为$k$，下同。}
 \begin{align*}
@@ -164,7 +165,7 @@ shah函数$III_T(x)$定义为\sidenote{译者注：为了和虚数单位$\mathrm
 其中$T$定义了\keyindex{周期}{period}{}，也称\keyindex{采样率}{sampling rate}{}。
 \reffig{7.4}展示了采样的正式定义。相乘后得到函数在等间隔点处取值的无限序列：
 \begin{align*}
-    III_T(x)f(x)=T\sum\limits_i\delta(x-kT)f(kT)\, .
+    III_T(x)f(x)=T\sum\limits_k\delta(x-kT)f(kT)\, .
 \end{align*}
 \begin{figure}[htbp]
     \centering
@@ -278,7 +279,7 @@ shah函数$III_T(x)$定义为\sidenote{译者注：为了和虚数单位$\mathrm
     \tilde{f}(x)=\sum\limits_{k=-\infty}^{\infty}\mathrm{sinc}(x-kT)f(kT)\, .
 \end{align*}
 
-不幸的是，因为sinc函数有无限范围，所以必须用所有采样值$f(kT)$来计算空域中$\tilde{f}(x)$的任一特定值。
+不幸的是，因为sinc函数有无限定义域，所以必须用所有采样值$f(kT)$来计算空域中$\tilde{f}(x)$的任一特定值。
 实际实现中更爱用空间范围有限的滤波器，即使它们不能完美重建原始函数。
 
 图形学常用的可选方法是用矩形函数做重建，即高效地对$x$附近区域内的全部样本值做平均。
@@ -288,3 +289,54 @@ shah函数$III_T(x)$定义为\sidenote{译者注：为了和虚数单位$\mathrm
 还包含了无限序列中其他副本的高频贡献。
 
 \subsection{混叠}\label{sub:混叠}
+除了sinc函数无限定义域的问题外，理想采样与重建方法一个最严重的实际问题是它假设信号是带限的。
+对于非带限信号，或者没能以足够高的采样率采样其频率成分的信号，
+之前描述的过程会重建出与原始信号不同的函数。
+
+成功重建的关键是用宽度合适的矩形函数相乘以完全恢复原始频谱$F(\omega)$的能力。
+注意在\reffig{7.6}中，信号频谱的副本被空白空间分隔，所以能够被完美重建。
+然而如果以更低的采样率采样原始函数，考虑一下会发生什么。
+回想周期为$T$的shah函数$III_T$的傅里叶变换是周期为$\displaystyle\frac{1}{T}$的新shah函数。
+这意味着如果空域中样本间的距离增大，频域的样本间隔会变小，
+将频谱$F(\omega)$的副本挤在一起。如果副本挨得太近，它们就开始重叠。
+
+因为副本被加在一起，所以得到的频谱看起来不再像许多原始的副本（\reffig{7.8}）。
+当该新频谱乘以矩形函数后，结果是相似但不等于原始$F(\omega)$的频谱：
+原始信号的高频细节渗入到重建信号频谱的低频区域。
+这些新的低频伪影称作\keyindex{混叠}{alias}{}（因为高频“伪装”成低频），
+得到的信号被称是\keyindex{混叠的}{aliased}{alias混叠}。
+\begin{figure}
+    \centering
+    \subfloat[]{\includegraphics[width=0.4\linewidth]{chap07/freq-space-overlap.eps}}\,
+    \subfloat[]{\includegraphics[width=0.4\linewidth]{chap07/freq-space-aliasing.eps}}
+    \caption{(a)当采样率过低时，函数的频谱副本会重叠，当执行重建时会导致(b)混叠。}
+    \label{fig:7.8}
+\end{figure}
+
+\reffig{7.9}\sidenote{译者注：原文该图题注函数表达式有笔误，已修正。}
+展示了欠采样并重建1D函数$f(x)=1+\cos(4\pi x^2)$时的混叠效应。
+\begin{figure}[htbp]
+    \centering
+    \subfloat[]{\includegraphics[width=0.4\linewidth]{chap07/freq-increasing-func.eps}}\,
+    \subfloat[]{\includegraphics[width=0.4\linewidth]{chap07/freq-increasing-aliased.eps}}
+    \caption{函数$f(x)=1+\cos(4\pi x^2)$采样点的混叠。(a)该函数。
+        (b)以0.125单位为样本间隔采样并用sinc滤波器执行完美重建后所重建出的函数。
+        混叠造成原始函数的高频信息被丢失了并作为低频误差重新出现。}
+    \label{fig:7.9}
+\end{figure}
+
+一种可能解决重叠频谱问题的办法是简单地增加采样率
+直到频谱的副本隔得足够远而不再重叠，进而完全消除混叠。
+事实上，\keyindex{采样定理}{sampling theorem}{}准确告诉我们所需的采样率。
+该定理说只要均匀样本点的频率$\omega_s$大于信号中出现的最大频率$\omega_0$的两倍，
+就能从样本中完美重建原始信号。该最小采样频率称为\keyindex{奈奎斯特频率}{Nyquist frequency}{frequency频率}
+\sidenote{译者注：哈里·奈奎斯特（Harry Nyquist），19至20世纪瑞典裔美国著名物理学家，通讯理论的奠基者之一。}。
+
+对于非带限信号（$\omega_0=\infty$），不可能以足够高的采样率执行完美重建。
+非带限信号有无限支撑的频谱，所以无论其频谱副本隔得多远（即无论我们用多高的采样率），
+都总会有重叠。不幸的是，计算机图形学中很少有要处理的函数是带限的。
+特别地，任何不连续的函数都不是带限的，因此我们不能完美采样和重建它。
+这是有道理的，因为两个样本间的函数连续性是不清楚的，样本没有提供不连续处的信息。
+因此除了提高采样率外还必须用不同方法来消除混叠可能引入到渲染器结果中的误差。
+
+\subsection{抗锯齿技术}\label{sub:抗锯齿技术}

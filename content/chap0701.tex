@@ -7,3 +7,151 @@
 显示器用图像像素值在显示器表面构造新的图像函数。
 该函数定义在显示器所有点位上，而不只是数字图像像素的无穷小点上。
 这样取一组样本值并将其转换回连续函数的过程称为\keyindex{重建}{reconstruction}{}。
+
+为了计算数字图像中的离散像素值，必须采样原始连续定义的图像函数。
+在pbrt中，像大多数其他光线追踪渲染器那样，
+获取图像函数有关信息的唯一方法就是通过追踪光线来对其采样。
+例如，能计算胶片平面上两点间的图像函数变化边界的通用方法是不存在的。
+尽管可以通过在像素位置上精确采样该函数来生成图像，
+但通过在不同位置上取用更多样本并将这些关于图像函数的
+额外信息融合到最终的像素值中能得到更好的结果。
+实际上，为了有最佳质量的结果，计算像素值时应使得
+在显示设备上重建的图像尽可能与虚拟相机胶片平面上的场景原始图像逼近。
+注意这和希望显示器像素在其位置上取用图像函数实际值的目标有些微妙区别。
+处理这一区别是本章实现的算法的主要目标
+\footnote{本书中我们将忽略物理显示器像素特性相关问题并
+    在显示器执行本节后面所述理想重建过程的假设下处理。
+    该假设显然与真实显示器的工作方式不符，但这里它避免了不必要的复杂分析。
+    \citet{GLASSNER1995}的第3章很好地处理了非理想显示设备
+    及其对图像采样和重建过程的影响。}。
+
+因为采样和重建过程涉及估值，所以它引入了称作\keyindex{混叠}{aliasing}{}的误差，
+并会以许多方式表现出来，包括锯齿状边缘或动画中的闪烁。
+产生这些误差的原因是采样过程不能捕获来自连续定义的图像函数的全部信息。
+
+作为这些思想的一个例子，考虑一个1D函数（我们也会称之为信号）即$f(x)$，
+我们可以求函数定义域中任意期望位置$x'$处的值$f(x')$。
+每个这样的$x'$称为\keyindex{样本位置}{sample position}{}，
+$f(x')$的值称为\keyindex{样本值}{sample value}{}。
+\reffig{7.1}展示了光滑1D函数的样本集，以及逼近原始函数$f$的重建信号$\tilde{f}$。
+本例中，$\tilde{f}$是分段线性函数，通过线性插值相邻样本值来逼近$f$
+（已经熟悉采样理论的读者会认出这是用帽函数\sidenote{译者注：原文hat function。}重建的）。
+因为关于$f$唯一可用的信息是来自在位置$x'$处的采样值，
+且没有关于$f$在样本间特性的信息，所以$\tilde{f}$不能完全匹配$f$。
+\begin{figure}[htbp]
+    \centering
+    \subfloat[]{\includegraphics[width=0.4\linewidth]{chap07/point-sampling.eps}}\,\,
+    \subfloat[]{\includegraphics[width=0.4\linewidth]{chap07/linear-reconstruction.eps}}
+    \caption{(a)通过取$f(x)$的\emph{样本点}集（标实心记），我们确定了函数在这些位置处的值。
+        (b)样本值可用于\emph{重建}逼近$f(x)$的函数$\tilde{f}(x)$。
+        \refsub{混叠}介绍的采样原理准确描述了关于$f(x)$的条件、
+        所需样本的数目，以及使得$\tilde{f}(x)$和$f(x)$一模一样的重建技术。
+        原始函数有时能只从样本点中完全重建的事实令人瞩目。}
+    \label{fig:7.1}
+\end{figure}
+
+\keyindex{傅里叶分析}{Fourier analysis}{}可用于评估重建函数与原始函数间的匹配质量。
+本节将用丰富细节来介绍一部分采样和重建过程中涉及的傅里叶分析主要思想，
+但略去了许多性质的证明并跳过了与pbrt所用的采样算法没有直接关系的细节。
+本章“扩展阅读”一节有关于这些话题详细信息的指引。
+
+\subsection{频域与傅里叶变换}\label{sub:频域与傅里叶变换}
+傅里叶分析的基础之一是\keyindex{傅里叶变换}{Fourier transform}{transform变换}，
+它在\keyindex{频域}{frequency domain}{}中来表示函数（我们称
+通常的函数是在\keyindex{空域}{spatial domain}{}中表示的）。
+考虑\reffig{7.2}中的两个函数。\reffig{7.2.1}中$x$的函数变化得相对较慢，
+而\reffig{7.2.2}中的函数变化得迅速得多。称变化越慢的函数有越低频的分量。
+\begin{figure}[htbp]
+    \centering
+    \subfloat[]{\includegraphics[width=0.32\linewidth]{chap07/func-lowfreq.eps}\label{fig:7.2.1}}\,\,\,\,
+    \subfloat[]{\includegraphics[width=0.32\linewidth]{chap07/func-highfreq.eps}\label{fig:7.2.2}}
+    \caption{(a)低频函数和(b)高频函数。粗略地说，函数频率越高，在给定区域内变化得越快。}
+    \label{fig:7.2}
+\end{figure}
+
+\reffig{7.3}展示了这两个函数在频率空间的表示；低频函数的表示比高频函数更快变为0。
+\begin{figure}[htbp]
+    \centering
+    \subfloat[]{\includegraphics[width=0.32\linewidth]{chap07/fourier-lowfreq.eps}}\,\,\,\,
+    \subfloat[]{\includegraphics[width=0.32\linewidth]{chap07/fourier-highfreq.eps}}
+    \caption{\reffig{7.2}中的函数的频率空间表示。本图展示了每个频率$\omega$对空域中每个函数的贡献。}
+    \label{fig:7.3}
+\end{figure}
+
+许多函数可以分解为平移过的正弦曲线的加权和。
+约瑟夫·傅里叶\sidenote{译者注：Jean-Baptiste Joseph Fourier，18至19世纪法国著名数学家和物理学家。}
+首先描述了这一奇特事实，傅里叶变换即将函数转换为该表示。
+函数的频率空间表示便于深入了解其一些特点——正弦函数的频率分布对应于原函数的频率分布。
+使用该形式后，就能用傅里叶分析深入了解采样和重建过程引入的误差以及如何降低该误差带来的感知影响。
+
+1D函数$f(x)$的傅里叶变换为\footnote{要告知读者的是，
+    在不同领域中该积分前的常数并不总是一样的。例如一些作者（包括许多物理界的）
+    更喜欢在两个积分前乘上$\frac{1}{\sqrt{2\pi}}$。}
+\begin{align}\label{eq:7.1}
+    F(\omega)=\int_{-\infty}^{\infty}f(x)\mathrm{e}^{-\mathrm{i}2\pi\omega x}\mathrm{d}x\, .
+\end{align}
+（回想$\mathrm{e}^{-\mathrm{i}x}=\cos x+\mathrm{i}\sin x$，其中$\mathrm{i}=\sqrt{-1}$。）
+为了简便，这里我们将只考虑\keyindex{偶函数}{even function}{}，
+即$f(-x)=f(x)$，这种情况下$f$的傅里叶变换没有虚数项。
+新函数$F$是\keyindex{频率}{frequency}{}$\omega$的函数
+\footnote{本章中，我们将用符号$\omega$表示频率。在本书剩下部分中，$\omega$表示规范化的方向向量。
+    这种记号的重复在使用它们的给定上下文中不应混淆。简单来说，当我们说函数的“频谱”（spectrum）时，
+    我们是在说它在其频率空间表示中的频率分布，而不是和颜色相关的东西。}。
+我们将用$\mathcal{F}$表示傅里叶变换运算
+\sidenote{译者注：原文使用的符号是$\mathrm{F}$，这里译者换用更常用的花体$\mathcal{F}$，
+    也更利于阅读时与其他符号区分。}，即$\mathcal{F}\{f(x)\}=F(\omega)$。
+$\mathcal{F}$显然是线性运算——即对任意标量$a$都有$\mathcal{F}\{af(x)\}=a\mathcal{F}\{f(x)\}$，
+且$\mathcal{F}\{f(x)+g(x)\}=\mathcal{F}\{f(x)\}+\mathcal{F}\{g(x)\}$。
+
+\refeq{7.1}称为\keyindex{傅里叶分析}{Fourier analysis}{}方程，有时简称\keyindex{傅里叶变换}{Fourier transform}{transform变换}。
+我们也可用\keyindex{傅里叶合成}{Fourier synthesis}{}方程从频域变换回空域，
+也称作\keyindex{傅里叶逆变换}{inverse Fourier transform}{transform变换}
+\sidenote{译者注：大多数文献采用的傅里叶变换或逆变换定义中$\omega$是角频率，但本书的定义中$\omega$是频率。}：
+\begin{align}\label{eq:7.2}
+    f(x)=\int_{-\infty}^{\infty}F(\omega)\mathrm{e}^{\mathrm{i}2\pi\omega x}\mathrm{d}\omega\, .
+\end{align}
+
+\reftab{7.1}展示了许多重要函数及其频率空间表示
+\sidenote{译者注：表中原文将频域函数写作$f(\omega)$，译者改为了$F(\omega)$。
+    此外，表中原文对余弦函数和Shah函数的频域表示混用了系数不同的傅里叶变换定义，
+    导致与本书所采用的定义不符，译者已根据本书定义对其作了修正。
+    具体推导过程可参考译者补充的\refsec{译者补充：信号处理}。}。
+这些函数中许多都基于狄拉克$\delta$分布
+\sidenote{译者注：也称作单位\keyindex{冲激函数}{impulse function}{}、脉冲函数。}，
+该空间函数的定义使得$\displaystyle\int\delta(x)\mathrm{d}x=1$，且对任意$x\neq0$，都有$\delta(x)=0$。
+这些性质的一个重要结论是
+\begin{align*}
+    \int f(x)\delta(x)\mathrm{d}x=f(0)\, .
+\end{align*}
+
+$\delta$分布不能表示为标准数学函数\sidenote{译者注：也就是说冲激函数是一种奇异函数。}，
+但通常可以视作以原点为中心且宽度逼近0的单位面积矩形函数\sidenote{译者注：原文box function。}的极限。
+\begin{table}[htbp]
+    \centering\begin{tabular}{l p{170pt}}
+        \toprule
+        {\bfseries 空域}                                                   & {\bfseries 频率空间表示}                                                                     \\
+        \midrule
+        矩形函数：$f(x)=\left\{\begin{array}{ll}
+                1, & \text{若}|x|<\frac{1}{2}, \\
+                0, & \text{其他}.
+            \end{array}\right.$           & Sinc函数：$\displaystyle F(\omega)=\mathrm{sinc}(\omega)=\frac{\sin(\pi\omega)}{\pi\omega}$  \\
+        \hline
+        高斯函数：$f(x)=\mathrm{e}^{-\pi x^2}$                             & 高斯函数：$F(\omega)=\mathrm{e}^{-\pi \omega^2}$                                             \\
+        \hline
+        常函数：$f(x)=1$                                                   & $\delta$函数：$F(\omega)=\delta(\omega)$                                                     \\
+        \hline
+        余弦函数：$f(x)=\cos x$                                            & 平移的$\delta$函数：
+        $F(\omega)=\frac{1}{2}(\delta(1-2\pi\omega)+\delta(1+2\pi\omega))$                                                                                                \\
+        \hline
+        Shah函数：$\displaystyle f(x)=III_T(x)=T\sum\limits_k\delta(x-kT)$ & $\displaystyle F(\omega)=TIII_{\frac{1}{T}}(\omega)=\sum\limits_k\delta(\omega-\frac{k}{T})$ \\
+        \bottomrule
+    \end{tabular}
+    \caption{傅里叶变换对。空域中的函数及其频率空间表示。
+        因为傅里叶变换的对称性，如果左边一列被当作频率空间，
+        则右边一列是这些函数的空间等价。}
+    \label{tab:7.1}
+\end{table}
+
+\subsection{理想采样与重建}\label{sub:理想采样与重建}
+
+\subsection{混叠}\label{sub:混叠}

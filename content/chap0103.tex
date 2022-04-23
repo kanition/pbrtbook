@@ -31,7 +31,7 @@ pbrt用10个关键抽象基类写成，列于\reftab{1.1}。
         \refvar{Aggregate}{}  & \ttfamily accelerators/ & \refsec{聚合}                   \\
         \refvar{Camera}{}     & \ttfamily cameras/      & \refsec{相机模型}               \\
         \refvar{Sampler}{}    & \ttfamily samplers/     & \refsec{采样接口}               \\
-        \refvar{Filter}{}     & \ttfamily filters/      & \refsec{图像重构}               \\
+        \refvar{Filter}{}     & \ttfamily filters/      & \refsec{图像重建}               \\
         \refvar{Material}{}   & \ttfamily materials/    & \refsec{材质接口与实现}         \\
         \refvar{Texture}{}    & \ttfamily textures/     & \refsec{纹理接口与基本纹理}     \\
         \refvar{Medium}{}     & \ttfamily media/        & \refsec{介质}                   \\
@@ -724,7 +724,7 @@ virtual `\refvar{Spectrum}{}` `\initvar{Li}{}`(const `\refvar{RayDifferential}{}
 知道到达光线原点的辐亮度后，就能更新图像了：
 方法\refvar[AddSample]{FilmTile::AddSample}{()}
 依据样本的结果更新图块里的像素。
-样本值如何记录到胶片的细节将在\refsec{图像重构}和\refsec{胶片与成像管道}解释。
+样本值如何记录到胶片的细节将在\refsec{图像重建}和\refsec{胶片与成像管道}解释。
 \begin{lstlisting}
 `\initcode{Add camera ray's contribution to image}{=}`
 filmTile->`\refvar{AddSample}{}`(cameraSample.`\refvar{pFilm}{}`, L, rayWeight);

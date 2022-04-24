@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   id="Layer_1"
+   data-name="Layer 1"
+   viewBox="0 0 451.49738 100.45889"
+   version="1.1"
+   sodipodi:docname="Pixelsdiscretecontinuous.svg"
+   width="451.49738"
+   height="100.45892"
+   inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <sodipodi:namedview
+     id="namedview1024"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     showgrid="false"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     fit-margin-left="0"
+     fit-margin-top="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:zoom="5.12"
+     inkscape:cx="64.84375"
+     inkscape:cy="62.890625"
+     inkscape:window-width="2560"
+     inkscape:window-height="1494"
+     inkscape:window-x="-11"
+     inkscape:window-y="-11"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="Layer_1">
+    <sodipodi:guide
+       position="38.28125,82.880771"
+       orientation="1,0"
+       id="guide948" />
+  </sodipodi:namedview>
+  <defs
+     id="defs927">
+    <rect
+       x="20.396021"
+       y="23.376978"
+       width="42.517857"
+       height="26.514828"
+       id="rect8844" />
+    <rect
+       x="16.944386"
+       y="22.9063"
+       width="93.664803"
+       height="53.029655"
+       id="rect4146" />
+    <style
+       id="style925">.cls-1,.cls-3{fill:none;}.cls-1,.cls-2,.cls-3{stroke:#000;stroke-miterlimit:10;}.cls-3{stroke-dasharray:2;}</style>
+    <rect
+       x="20.396021"
+       y="23.376978"
+       width="41.890285"
+       height="24.318333"
+       id="rect8844-2" />
+  </defs>
+  <title
+     id="title929">Pixels discrete continuous</title>
+  <line
+     class="cls-1"
+     x1="55.417412"
+     y1="59.077591"
+     x2="451.49738"
+     y2="59.077591"
+     id="line931" />
+  <line
+     class="cls-1"
+     x1="55.077408"
+     y1="40.797592"
+     x2="55.077408"
+     y2="77.357597"
+     id="line933" />
+  <line
+     class="cls-1"
+     x1="127.11742"
+     y1="40.797592"
+     x2="127.11742"
+     y2="77.357597"
+     id="line935" />
+  <line
+     class="cls-1"
+     x1="199.3674"
+     y1="40.797592"
+     x2="199.3674"
+     y2="77.357597"
+     id="line937" />
+  <line
+     class="cls-1"
+     x1="271.04739"
+     y1="40.797592"
+     x2="271.04739"
+     y2="77.357597"
+     id="line939" />
+  <line
+     class="cls-1"
+     x1="343.29739"
+     y1="40.797592"
+     x2="343.29739"
+     y2="77.357597"
+     id="line941" />
+  <line
+     class="cls-1"
+     x1="414.97739"
+     y1="40.797592"
+     x2="414.97739"
+     y2="77.357597"
+     id="line943" />
+  <circle
+     class="cls-2"
+     cx="91.057419"
+     cy="31.427595"
+     r="5.1700001"
+     id="circle945" />
+  <line
+     class="cls-3"
+     x1="91.057419"
+     y1="32.05759"
+     x2="91.057419"
+     y2="59.777592"
+     id="line947" />
+  <circle
+     class="cls-2"
+     cx="163.25742"
+     cy="31.427595"
+     r="5.1700001"
+     id="circle949" />
+  <line
+     class="cls-3"
+     x1="163.25742"
+     y1="32.05759"
+     x2="163.25742"
+     y2="59.777592"
+     id="line951" />
+  <circle
+     class="cls-2"
+     cx="379.86737"
+     cy="31.427595"
+     r="5.1700001"
+     id="circle953" />
+  <line
+     class="cls-3"
+     x1="379.86737"
+     y1="32.05759"
+     x2="379.86737"
+     y2="59.777592"
+     id="line955" />
+  <circle
+     class="cls-2"
+     cx="307.66739"
+     cy="31.427595"
+     r="5.1700001"
+     id="circle957" />
+  <line
+     class="cls-3"
+     x1="307.66739"
+     y1="32.05759"
+     x2="307.66739"
+     y2="59.777592"
+     id="line959" />
+  <circle
+     class="cls-2"
+     cx="235.45743"
+     cy="31.427595"
+     r="5.1700001"
+     id="circle961" />
+  <line
+     class="cls-3"
+     x1="235.45743"
+     y1="32.05759"
+     x2="235.45743"
+     y2="59.777592"
+     id="line963" />
+  <path
+     d="m 96.187411,7.4675938 c 0,4.4200002 -1.64,6.8600002 -4.53,6.8600002 -2.54,0 -4.26,-2.38 -4.3,-6.6800002 -0.04,-4.3 1.88,-6.76000006 4.53,-6.76000006 2.65,0 4.3,2.48000006 4.3,6.58000006 z m -7.07,0.2 c 0,3.3800002 1,5.3000002 2.64,5.3000002 1.81,0 2.67,-2.1 2.67,-5.4200002 0,-3.32 -0.82,-5.3 -2.65,-5.3 -1.54,0 -2.66,1.88 -2.66,5.42 z"
+     id="path965" />
+  <path
+     d="m 163.29741,2.7475938 v 0 l -2.29,1.22 -0.34,-1.34 2.84,-1.52 h 1.5 V 14.107594 h -1.7 z"
+     id="path967" />
+  <path
+     d="m 231.40741,14.107594 v -1.08 l 1.38,-1.34 c 3.32,-3.1600002 4.82,-4.8400002 4.84,-6.8000002 a 2.32,2.32 0 0 0 -2.62,-2.52 4.43,4.43 0 0 0 -2.76,1.1 l -0.56,-1.24 a 5.7,5.7 0 0 1 3.68,-1.32000006 3.66,3.66 0 0 1 4,3.78000006 c 0,2.4 -1.74,4.34 -4.48,7.0000002 l -1,1 v 0 h 5.84 v 1.46 z"
+     id="path969" />
+  <path
+     d="m 303.75741,12.087594 a 5.88,5.88 0 0 0 2.88,0.82 c 2.26,0 3,-1.44 2.94,-2.52 0,-1.8200002 -1.66,-2.6000002 -3.36,-2.6000002 h -1 v -1.32 h 1 c 1.28,0 2.9,-0.66 2.9,-2.2 0,-1 -0.66,-2 -2.28,-2 a 4.77,4.77 0 0 0 -2.6,0.86 l -0.46,-1.28 a 6.18,6.18 0 0 1 3.4,-1.00000006 c 2.56,0 3.72,1.52000006 3.72,3.10000006 a 3.23,3.23 0 0 1 -2.4,3.06 v 0 a 3.39,3.39 0 0 1 2.9,3.3400002 c 0,2.08 -1.62,3.9 -4.74,3.9 a 6.61,6.61 0 0 1 -3.38,-0.88 z"
+     id="path971" />
+  <path
+     d="m 380.70741,14.107594 v -3.54 h -6 V 9.3675938 l 5.8,-8.3 h 1.9 v 8.08 h 1.82 v 1.4200002 h -1.82 v 3.54 z m 0,-4.9200002 v -4.34 q 0,-1 0.06,-2 h -0.06 c -0.4,0.76 -0.72,1.32 -1.08,1.92 l -3.18,4.42 v 0 z"
+     id="path973" />
+  <path
+     d="m 59.787411,93.207594 c 0,4.42 -1.64,6.859996 -4.52,6.859996 -2.54,0 -4.26,-2.379996 -4.3,-6.679996 -0.04,-4.3 1.88,-6.76 4.52,-6.76 2.64,0 4.3,2.44 4.3,6.58 z m -7.06,0.2 c 0,3.38 1,5.3 2.64,5.3 1.8,0 2.66,-2.1 2.66,-5.42 0,-3.32 -0.82,-5.3 -2.64,-5.3 -1.54,0 -2.66,1.88 -2.66,5.38 z"
+     id="path975" />
+  <path
+     d="m 126.89741,88.487594 v 0 l -2.26,1.22 -0.38,-1.34 2.84,-1.52 h 1.5 V 99.84759 h -1.7 z"
+     id="path977" />
+  <path
+     d="m 195.00741,99.84759 v -1.079996 l 1.38,-1.34 c 3.32,-3.16 4.82,-4.84 4.84,-6.8 a 2.32,2.32 0 0 0 -2.58,-2.54 4.43,4.43 0 0 0 -2.76,1.1 l -0.56,-1.24 a 5.7,5.7 0 0 1 3.68,-1.32 3.66,3.66 0 0 1 4,3.74 c 0,2.4 -1.74,4.34 -4.48,7 l -1,1 v 0 h 5.85 v 1.459996 z"
+     id="path979" />
+  <path
+     d="m 267.35741,97.827594 a 5.93,5.93 0 0 0 2.89,0.82 c 2.26,0 3,-1.44 2.94,-2.52 0,-1.82 -1.66,-2.6 -3.36,-2.6 h -1 v -1.32 h 1 c 1.28,0 2.9,-0.66 2.9,-2.2 0,-1 -0.66,-2 -2.28,-2 a 4.84,4.84 0 0 0 -2.61,0.86 l -0.45,-1.28 a 6.18,6.18 0 0 1 3.4,-1 c 2.56,0 3.72,1.52 3.72,3.1 a 3.23,3.23 0 0 1 -2.4,3.06 v 0 a 3.39,3.39 0 0 1 2.9,3.42 c 0,2.08 -1.62,3.899996 -4.74,3.899996 a 6.61,6.61 0 0 1 -3.38,-0.879996 z"
+     id="path981" />
+  <path
+     d="m 344.31741,99.84759 v -3.539996 h -6 v -1.16 l 5.8,-8.3 h 1.89 v 8.08 h 1.82 v 1.38 h -1.82 v 3.539996 z m 0,-4.919996 v -4.34 q 0,-1 0.06,-2 h -0.06 c -0.4,0.76 -0.72,1.32 -1.08,1.92 l -3.18,4.42 v 0 z"
+     id="path983" />
+  <path
+     d="m 417.63741,88.367594 h -5 l -0.5,3.34 a 7,7 0 0 1 1.06,-0.08 5.49,5.49 0 0 1 2.8,0.7 3.71,3.71 0 0 1 1.86,3.34 4.51,4.51 0 0 1 -4.84,4.439996 6.36,6.36 0 0 1 -3.24,-0.799996 l 0.44,-1.34 a 5.82,5.82 0 0 0 2.78,0.72 2.87,2.87 0 0 0 3.08,-2.82 c 0,-1.68 -1.14,-2.88 -3.74,-2.88 a 13.45,13.45 0 0 0 -1.8,0.14 l 0.84,-6.24 h 6.22 z"
+     id="path985" />
+  <metadata
+     id="metadata1106">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:title>Pixels discrete continuous</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <text
+     xml:space="preserve"
+     id="text4144"
+     style="font-size:10.6667px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect4146)"
+     transform="translate(-64.992589,-2.6324062)" />
+  <text
+     xml:space="preserve"
+     id="text8842"
+     style="font-size:20px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect8844)"
+     transform="translate(-21.376484,-26.636953)"><tspan
+       x="20.396484"
+       y="43.476953"
+       id="tspan997"><tspan
+         style="font-family:'Source Han Serif SC';-inkscape-font-specification:'Source Han Serif SC'"
+         id="tspan995">离散</tspan></tspan></text>
+  <text
+     xml:space="preserve"
+     id="text8842-6"
+     style="font-size:20px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect8844-2)"
+     transform="translate(-21.138897,55.36196)"><tspan
+       x="20.396484"
+       y="43.476953"
+       id="tspan1001"><tspan
+         style="font-family:'Source Han Serif SC';-inkscape-font-specification:'Source Han Serif SC'"
+         id="tspan999">连续</tspan></tspan></text>
+</svg>

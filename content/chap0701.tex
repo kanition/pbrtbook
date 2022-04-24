@@ -25,7 +25,7 @@
     \citet{GLASSNER1995}的第3章很好地处理了非理想显示设备
     及其对图像采样和重建过程的影响。}。
 
-因为采样和重建过程涉及估值，所以它引入了称作\keyindex{混叠}{aliasing}{}的误差，
+因为采样和重建过程涉及估值，所以它引入了称作\keyindex{混叠}{aliasing}{alias混叠}的误差，
 并会以许多方式表现出来，包括锯齿状边缘或动画中的闪烁。
 产生这些误差的原因是采样过程不能捕获来自连续定义的图像函数的全部信息。
 
@@ -187,7 +187,7 @@ shah函数$III_T(x)$定义为\sidenote{译者注：为了和虚数单位$\mathrm
     f(x)\otimes g(x)=\int_{-\infty}^{\infty}f(x')g(x-x')\mathrm{d}x'\, .
 \end{align*}
 
-对于重建，卷积给出了以样本点为中心且被缩放后的重建滤波器实例的加权和：
+对于重建，卷积给出以样本点为中心并缩放后的重建滤波器实例加权和：
 \begin{align*}
     \tilde{f}(x)=T\sum\limits_{k=-\infty}^{\infty}f(kT)r(x-kT)\, .
 \end{align*}
@@ -309,7 +309,7 @@ shah函数$III_T(x)$定义为\sidenote{译者注：为了和虚数单位$\mathrm
     \centering
     \subfloat[]{\includegraphics[width=0.4\linewidth]{chap07/freq-space-overlap.eps}}\,
     \subfloat[]{\includegraphics[width=0.4\linewidth]{chap07/freq-space-aliasing.eps}}
-    \caption{(a)当采样率过低时，函数的频谱副本会重叠，当执行重建时会导致(b)混叠。}
+    \caption{(a)采样率过低时，函数频谱副本会重叠，当执行重建时会导致(b)混叠。}
     \label{fig:7.8}
 \end{figure}
 
@@ -341,8 +341,8 @@ shah函数$III_T(x)$定义为\sidenote{译者注：为了和虚数单位$\mathrm
 
 \subsection{抗锯齿技术}\label{sub:抗锯齿技术}
 如果不仔细对待采样和重建，则最终图像中可能出现大量伪影。
-有时区分采样伪影与重建伪影很有用；确切地说，我们会称采样伪影为\keyindex{预混叠}{prealiasing}{}，
-称重建伪影为\keyindex{后混叠}{postaliasing}{}。任意想要修正这些误差的尝试都
+有时区分采样伪影与重建伪影很有用；确切地说，我们会称采样伪影为\keyindex{预混叠}{prealiasing}{alias混叠}，
+称重建伪影为\keyindex{后混叠}{postaliasing}{alias混叠}。任意想要修正这些误差的尝试都
 大体划分为\keyindex{抗锯齿}{antialiasing}{}\sidenote{译者注：也称反混叠。}。
 本节将回顾除了只增加采样率外的大量抗锯齿技术。
 
@@ -433,3 +433,66 @@ shah函数$III_T(x)$定义为\sidenote{译者注：为了和虚数单位$\mathrm
 后面几节的类\refvar{Sampler}{}会解决高效采样所有这些维度的问题。
 
 \subsection{渲染中的混叠来源}\label{sub:渲染中的混叠来源}
+几何体是在渲染图像中造成混叠的最常见因素之一。
+当投影到图像平面时，物体的边界引入了\keyindex{阶跃函数}{step function}{}——
+图像函数的值突然从一个值跳到另一个值。
+不仅阶跃函数像前面所述那样有无穷的频率成分，
+而且更糟糕的是，完美重建滤波器在运用于混叠样本时也会造成伪影：
+重建函数中出现\keyindex{振铃}{ringing}{}伪影，
+即称作\keyindex{吉布斯现象}{Gibbs phenomenon}{}的效应。
+\reffig{7.11}为1D函数展示了该效应的例子。
+正如我们将在本章后续所看到的，选择有效的重建滤波器来面对混叠需要科学、艺术以及个人品味。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.5\linewidth]{chap07/gibbs-phenomenon.eps}
+    \caption{吉布斯现象的图示。当没有以奈奎斯特采样率采样函数却又用
+        sinc滤波器重建一组混叠的样本时，重建的函数会有“振铃”伪影，它在真实函数附近振荡。
+        这里用0.125的样本间隔采样1D阶跃函数（虚线）。当用sinc重建时，振铃出现了（实线）。}
+    \label{fig:7.11}
+\end{figure}
+
+场景中非常小的物体也会造成几何混叠。如果几何体小到落入图像平面样本之间，
+则它会在一个动画的若干帧中不可预测地消失和重现。
+
+混叠的另一个来源可能来自物体上的纹理和材质。没有被正确滤波的纹理贴图
+（解决该问题是第\refchap{纹理}的主要内容）或光泽表面的小高光
+可能造成\keyindex{着色混叠}{shading aliasing}{alias混叠}。
+如果采样率没有高到足以充分采样这些特征，则会导致混叠。
+此外，一个物体投射的尖锐阴影会在最终图像中引入另一个阶跃函数。
+尽管有可能从图像平面上的几何边来辨别阶跃函数的位置，
+但从阴影边界中检测阶跃函数则更加困难。
+
+对于渲染图像中混叠的关键认识是，我们永远不可能移除所有这些来源，
+所有我们必须开发技术来减轻其对最终图像质量的影响。
+
+\subsection{理解像素}\label{sub:理解像素}
+在本章剩余内容中牢记两个关于像素的观点很重要。
+第一，一定记住构成图像的像素是图像函数在图像平面上离散位置的样本点；这样的像素没有相应的“面积”。
+正如\citet{Smith95apixel}着重指出的，将像素视作具有有限面积的小方形是错误的认知模型，
+会导致一系列问题。通过用信号处理的方法介绍本章话题，我们尝试为更准确的认知模型奠定基础。
+
+第二个问题是最终图像中的像素是在像素网格上的离散整数坐标$(x,y)$处自然定义的，
+但本章的\refvar{Sampler}{}是在连续的浮点位置$(x,y)$处生成图像样本的。
+映射这两个域的自然方法是将连续坐标舍入到最近的离散坐标；
+既然它把刚好和离散坐标有相同值的连续坐标就映射为那个离散坐标，该方法看起来不错。
+然而结果是，给定覆盖范围$[x_0,x_1]$的离散坐标集，则连续坐标集覆盖范围为$\displaystyle[x_0-\frac{1}{2},x_1+\frac{1}{2})$。
+因此任何为给定离散像素范围生成连续样本位置的代码都被$\displaystyle\frac{1}{2}$的偏移量扰乱。
+它们很容易被忘记并导致隐晦的错误。
+
+如果我们改用
+\begin{align*}
+    d=\lfloor c\rfloor\, ,
+\end{align*}
+将连续坐标$c$截断为离散坐标$d$，并通过
+\begin{align*}
+    c=d+\frac{1}{2}\, ,
+\end{align*}
+将离散转换为连续，则离散范围$[x_0,x_1]$对应的连续坐标范围
+自然是$[x_0,x_1+1)$且所得代码会简单得多\citep{HECKBERT1990246}。
+\reffig{7.12}展示了我们将在pbrt中采用的这一转化。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.5\linewidth]{chap07/Pixelsdiscretecontinuous.eps}
+    \caption{图像中的像素可以解释为\emph{离散}或\emph{连续}坐标。
+    离散图像五个像素的宽度覆盖了连续像素范围$[0,5)$。
+    特定离散像素$d$的坐标在连续表示中为$\displaystyle d+\frac{1}{2}$。}
+    \label{fig:7.12}
+\end{figure}

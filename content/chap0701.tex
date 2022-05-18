@@ -79,7 +79,8 @@ $f(x')$的值称为\keyindex{样本值}{sample value}{}。
 \end{figure}
 
 许多函数可以分解为平移过的正弦曲线的加权和。
-约瑟夫·傅里叶\sidenote{译者注：Jean-Baptiste Joseph Fourier，18至19世纪法国著名数学家和物理学家。}
+约瑟夫·傅里叶\sidenote{译者注：Jean-Baptiste Joseph Fourier，
+    18至19世纪法国著名数学家和物理学家。其中文译名还常作“傅立叶”。}
 首先描述了这一奇特事实，傅里叶变换即将函数转换为该表示。
 函数的频率空间表示便于深入了解其一些特点——正弦函数的频率分布对应于原函数的频率分布。
 使用该形式后，就能用傅里叶分析深入了解采样和重建过程引入的误差以及如何降低该误差带来的感知影响。
@@ -106,7 +107,8 @@ $\mathcal{F}$显然是线性运算——即对任意标量$a$都有$\mathcal{F}\
 \refeq{7.1}称为\keyindex{傅里叶分析}{Fourier analysis}{}方程，有时简称\keyindex{傅里叶变换}{Fourier transform}{transform变换}。
 我们也可用\keyindex{傅里叶合成}{Fourier synthesis}{}方程从频域变换回空域，
 也称作\keyindex{傅里叶逆变换}{inverse Fourier transform}{transform变换}
-\sidenote{译者注：大多数文献采用的傅里叶变换或逆变换定义中$\omega$是角频率，但本书的定义中$\omega$是频率。}：
+\sidenote{译者注：大多数文献采用的傅里叶变换或逆变换定义中$\omega$是角频率，
+    但本书的定义中$\omega$是频率。数值上角频率等于频率乘以$2\pi$。}：
 \begin{align}\label{eq:7.2}
     f(x)=\int_{-\infty}^{\infty}F(\omega)\mathrm{e}^{\mathrm{i}2\pi\omega x}\mathrm{d}\omega\, .
 \end{align}
@@ -118,10 +120,10 @@ $\mathcal{F}$显然是线性运算——即对任意标量$a$都有$\mathcal{F}\
     具体推导过程可参考译者补充的\refsec{译者补充：信号处理}。}。
 这些函数中许多都基于狄拉克$\delta$分布
 \sidenote{译者注：也称作单位\keyindex{冲激函数}{impulse function}{}、脉冲函数。}，
-该空间函数的定义使得$\displaystyle\int\delta(x)\mathrm{d}x=1$，且对任意$x\neq0$，都有$\delta(x)=0$。
-这些性质的一个重要结论是
+该空间函数的定义使得$\displaystyle\int_{-\infty}^{\infty}\delta(x)\mathrm{d}x=1$，且对任意$x\neq0$，都有$\delta(x)=0$。
+这些性质的一个重要结论是\sidenote{译者注：我在原文基础上为该式加上了积分上下限以表明它是定积分。}
 \begin{align*}
-    \int f(x)\delta(x)\mathrm{d}x=f(0)\, .
+    \int_{-\infty}^{\infty} f(x)\delta(x)\mathrm{d}x=f(0)\, .
 \end{align*}
 
 $\delta$分布不能表示为标准数学函数，但通常可以视作以原点为中心且宽度逼近0的
@@ -270,13 +272,15 @@ shah函数$III_T(x)$定义为\sidenote{译者注：为了和虚数单位$\mathrm
 除了知道该函数是带限的外，没有使用关于函数成分的额外信息。
 
 在空域运用等价过程同样能完全恢复$f(x)$。因为矩形函数的傅里叶逆变换是sinc函数，
-所以空域中的理想重建是
+所以空域中的理想重建是\sidenote{译者注：原文该式继承了\reftab{7.1}的错误，
+这里笔者补回了第一项的系数$\frac{1}{T}$。}
 \begin{align*}
-    \tilde{f}=(f(x)III_T(x))\otimes \mathrm{sinc}_T(x)\, ,
+    \tilde{f}=\left(\frac{1}{T}f(x)III_T(x)\right)\otimes \mathrm{sinc}_T(x)\, ,
 \end{align*}
-其中$\mathrm{sinc}_T(x)=\mathrm{sinc}(Tx)$，因此
+其中$\mathrm{sinc}_T(x)=\mathrm{sinc}(Tx)$，因此\sidenote{译者注：原文该式
+将$\mathrm{sinc}_T(x-kT)$误写为$\mathrm{sinc}(x-kT)$，已修正。}
 \begin{align*}
-    \tilde{f}(x)=\sum\limits_{k=-\infty}^{\infty}\mathrm{sinc}(x-kT)f(kT)\, .
+    \tilde{f}(x)=\sum\limits_{k=-\infty}^{\infty}\mathrm{sinc}_T(x-kT)f(kT)\, .
 \end{align*}
 
 不幸的是，因为sinc函数有无限定义域，所以必须用所有采样值$f(kT)$来计算空域中$\tilde{f}(x)$的任一特定值。
@@ -334,7 +338,7 @@ shah函数$III_T(x)$定义为\sidenote{译者注：为了和虚数单位$\mathrm
 
 对于非带限信号（$\omega_0=\infty$），不可能以足够高的采样率执行完美重建。
 非带限信号有无限支撑的频谱，所以无论其频谱副本隔得多远（即无论我们用多高的采样率），
-都总会有重叠。不幸的是，计算机图形学中很少有要处理的函数是带限的。
+都总会有重叠。不幸的是，计算机图形学中要处理的函数很少是带限的。
 特别地，任何不连续的函数都不是带限的，因此我们不能完美采样和重建它。
 这是有道理的，因为两个样本间的函数连续性是不清楚的，样本没有提供不连续处的信息。
 因此除了提高采样率外还必须用不同方法来消除混叠可能引入到渲染器结果中的误差。
@@ -349,7 +353,7 @@ shah函数$III_T(x)$定义为\sidenote{译者注：为了和虚数单位$\mathrm
 \subsubsection*{非均匀采样}
 尽管知道我们要采样的图像函数有无穷的频率成分因而不能从样本点中完美重建，
 但以非均匀的方式改变样本间隔有可能降低混叠的视觉影响。
-如果$\xi$表示在0到1间的随机数，则基于冲激串的分均匀样本集为
+如果$\xi$表示在0到1间的随机数，则基于冲激串的非均匀样本集为
 \begin{align*}
     \sum\limits_{k=-\infty}^{\infty}\delta\left(x-(k+\frac{1}{2}-\xi)T\right)\, .
 \end{align*}
@@ -362,7 +366,7 @@ shah函数$III_T(x)$定义为\sidenote{译者注：为了和虚数单位$\mathrm
 \subsubsection*{自适应采样}
 另一个对抗混叠的建议方法是\keyindex{自适应超采样}{adaptive supersampling}{}：
 如果我们能辨别出频率高于奈奎斯特上限的信号区域，
-则我们可以在这些区域再取额外样本而不用带来在每处都增加采样频率所致的计算开销。
+则我们可以在这些区域再取额外样本而不用承担在每处都增加采样频率所致的计算开销。
 在实际中让该方法奏效是很困难的，因为寻找所有需要超采样的地方会很难。
 大多数这样做的技术都基于测试相邻样本值并找到两值间有明显变化的地方；
 然后假设该区域信号有较高频率。
@@ -474,7 +478,7 @@ shah函数$III_T(x)$定义为\sidenote{译者注：为了和虚数单位$\mathrm
 但本章的\refvar{Sampler}{}是在连续的浮点位置$(x,y)$处生成图像样本的。
 映射这两个域的自然方法是将连续坐标舍入到最近的离散坐标；
 既然它把刚好和离散坐标有相同值的连续坐标就映射为那个离散坐标，该方法看起来不错。
-然而结果是，给定覆盖范围$[x_0,x_1]$的离散坐标集，则连续坐标集覆盖范围为$\displaystyle[x_0-\frac{1}{2},x_1+\frac{1}{2})$。
+然而结果是，给定覆盖范围$[x_0,x_1]$的离散坐标集，则连续坐标集覆盖范围为$\displaystyle\left[x_0-\frac{1}{2},x_1+\frac{1}{2}\right)$。
 因此任何为给定离散像素范围生成连续样本位置的代码都被$\displaystyle\frac{1}{2}$的偏移量扰乱。
 它们很容易被忘记并导致隐晦的错误。
 

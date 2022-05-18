@@ -696,7 +696,7 @@ else if (std::isinf(L.y())) {
 \begin{itemize}
     \item {\ttfamily ray}：计算入射量所沿的光线。
     \item {\ttfamily scene}：要渲染的\refvar{Scene}{}。实现会向场景索取关于光照和几何等的信息。
-    \item {\ttfamily sampler}：通过蒙特卡洛积分求解光传输方程的样本生成器。
+    \item {\ttfamily sampler}：通过蒙特卡罗积分求解光传输方程的样本生成器。
     \item {\ttfamily arena}：为积分器高效临时分配内存的\refvar{MemoryArena}{}。
           积分器应假设它用{\ttfamily arena}分配的任何内存都会在方法\refvar{Li}{()}返回后不久就被释放，
           因此不应使用{\ttfamily arena}分配任何超出当前光线所需的驻留更久的内存。
@@ -922,11 +922,11 @@ pbrt的代码是按该方式组织的，
 
 方法\refvar[SampleLi]{Light::Sample\_Li}{()}也在变量{\ttfamily pdf}里
 为采样方向${\bm \omega}_\mathrm{i}$的光返回了概率密度。
-该值用于复杂面光源的蒙特卡洛积分，
+该值用于复杂面光源的蒙特卡罗积分，
 那时光是从多个方向到达一点的，尽管这里只采样一个方向；
 对于点光源那般的简单光源，{\ttfamily pdf}的值为1。
 如何在渲染中算出和使用这个概率密度的细节
-是第\refchap{蒙特卡洛积分}和\refchap{光传输I：表面反射}的主题；
+是第\refchap{蒙特卡罗积分}和\refchap{光传输I：表面反射}的主题；
 最后，光的作用必须除以{\ttfamily pdf}，这由此处的实现完成。
 
 如果达到的辐亮度非零且BSDF表明
@@ -990,7 +990,7 @@ const `\refvar{SurfaceInteraction}{}` &isect, const `\refvar{Scene}{}` &scene,
 方法\refvar{SpecularReflect}{()}和\refvar{SpecularTransmit}{()}中，方法
 \refvar[Samplef]{BSDF::Sample\_f}{()}
 对给定出射方向返回入射光线方向并给出光散射的方式。
-该方法是本书最后几章所述的蒙特卡洛光传输算法的基础之一。
+该方法是本书最后几章所述的蒙特卡罗光传输算法的基础之一。
 这里我们只用它寻找关于完美镜面反射或折射的出射方向，
 并用标志指示\refvar[Samplef]{BSDF::Sample\_f}{()}忽略其他类型的反射。
 尽管\refvar[Samplef]{BSDF::Sample\_f}{()}能

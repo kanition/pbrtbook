@@ -1,0 +1,63 @@
+\section{Metropolis光传输}\label{sec:Metropolis光传输}
+
+\subsection{基本样本空间采样器}\label{sub:基本样本空间采样器}
+\begin{lstlisting}
+`\initcode{MLTSampler Declarations}{=}`
+class `\initvar{MLTSampler}{}` : public `\refvar{Sampler}{}` {
+public:
+    `\refcode{MLTSampler Public Methods}{}`
+protected:
+    `\refcode{MLTSampler Private Declarations}{}`
+    `\refcode{MLTSampler Private Methods}{}`
+    `\refcode{MLTSampler Private Data}{}`
+};
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{MLTSampler Private Methods}{=}`
+void `\refvar{EnsureReady}{}`(int index);
+\end{lstlisting}
+
+\subsection{MLT积分器}\label{sub:MLT积分器}
+\begin{lstlisting}
+`\initcode{MLT Declarations}{=}`
+class `\initvar{MLTIntegrator}{}` : public `\refvar{Integrator}{}` {
+public:
+    `\refcode{MLTIntegrator Public Methods}{}`
+private:
+    `\refcode{MLTIntegrator Private Data}{}`
+};
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{MLTIntegrator Public Methods}{=}`
+`\refvar{MLTIntegrator}{}`(std::shared_ptr<const `\refvar{Camera}{}`> camera, int maxDepth,
+    int nBootstrap, int nChains, int mutationsPerPixel, 
+    `\refvar{Float}{}` sigma, `\refvar{Float}{}` largeStepProbability) : `\refvar[MLTIntegrator::camera]{camera}{}`(camera), `\refvar[MLTIntegrator::maxDepth]{maxDepth}{}`(maxDepth),
+    `\refvar{nBootstrap}{}`(nBootstrap), `\refvar{nChains}{}`(nChains), `\refvar{mutationsPerPixel}{}`(mutationsPerPixel), 
+    `\refvar[MLTIntegrator::sigma]{sigma}{}`(sigma), `\refvar{largeStepProbability}{}`(largeStepProbability) { }
+void `\refvar[MLTIntegrator::Render]{Render}{}`(const `\refvar{Scene}{}` &scene);
+`\refvar{Spectrum}{}` `\refvar[MLTIntegrator::L]{L}{}`(const `\refvar{Scene}{}` &scene, `\refvar{MemoryArena}{}` &arena,
+           const std::unique_ptr<`\refvar{Distribution1D}{}`> &lightDistr,
+           `\refvar{MLTSampler}{}` &sampler, int k, `\refvar{Point2f}{}` *pRaster);
+\end{lstlisting}
+
+\begin{lstlisting}
+`\initcode{MLTIntegrator Private Data}{=}\initnext{MLTIntegratorPrivateData}`
+std::shared_ptr<const `\refvar{Camera}{}`> `\initvar[MLTIntegrator::camera]{camera}{}`;
+\end{lstlisting}
+
+\begin{lstlisting}
+`\refcode{MLTIntegrator Private Data}{+=}\lastnext{MLTIntegratorPrivateData}`
+const int `\initvar[MLTIntegrator::maxDepth]{maxDepth}{}`;
+const int `\initvar{nBootstrap}{}`;
+\end{lstlisting}
+
+\begin{lstlisting}
+`\refcode{MLTIntegrator Private Data}{+=}\lastnext{MLTIntegratorPrivateData}`
+const int `\initvar{mutationsPerPixel}{}`;
+const `\refvar{Float}{}` `\initvar[MLTIntegrator::sigma]{sigma}{}`, `\initvar{largeStepProbability}{}`;
+\end{lstlisting}
+
+\begin{lstlisting}
+`\refcode{MLTIntegrator Private Data}{+=}\lastcode{MLTIntegratorPrivateData}`
+const int `\initvar{nChains}{}`;
+\end{lstlisting}

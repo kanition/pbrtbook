@@ -51,7 +51,7 @@ private:
 
 除了把相机放置于场景中的常见变换、\refvar{Film}{}以及快门打开和关闭的时间外，
 \refvar{RealisticCamera}{}构造函数还接收透镜系统描述文件的文件名、
-到期望的焦平面的距离以及光圈直径。之后有了第\refchap{蒙特卡洛积分}蒙特卡洛积分与
+到期望的焦平面的距离以及光圈直径。之后有了第\refchap{蒙特卡罗积分}蒙特卡罗积分与
 \refsub{相机测量方程}成像辐射度量的预备知识后，
 将在\refsub{采样相机1}介绍参数{\ttfamily simpleWeighting}的作用。
 \begin{lstlisting}
@@ -818,7 +818,7 @@ ray->`\refvar[Ray::d]{d}{}` = `\refvar{Normalize}{}`(ray->`\refvar[Ray::d]{d}{}`
 ray->`\refvar[Ray::medium]{medium}{}` = `\refvar[Camera::medium]{medium}{}`;
 \end{lstlisting}
 
-在介绍了蒙特卡洛积分一些必要的背景后，
+在介绍了蒙特卡罗积分一些必要的背景后，
 代码片\refcode{Return weighting for RealisticCamera ray}{}将在\refsub{采样相机1}介绍。
 
 \subsection{相机测量方程}\label{sub:相机测量方程}
@@ -896,7 +896,7 @@ ray->`\refvar[Ray::medium]{medium}{}` = `\refvar[Camera::medium]{medium}{}`;
 \end{align}
 焦耳到达一个像素。
 
-\refsec{蒙特卡洛估计器}中，我们将看到蒙特卡洛可以怎样运用于估计这些各种积分的值。
+\refsec{蒙特卡罗估计器}中，我们将看到蒙特卡罗可以怎样运用于估计这些各种积分的值。
 然后\refsub{采样相机1}中我们将定义\refvar{RealisticCamera::GenerateRay}{()}中的
 代码片\refcode{Return weighting for RealisticCamera ray}{}；
 各种计算权重的方法允许我们计算这些量中的每一个。

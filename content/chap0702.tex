@@ -141,6 +141,12 @@ $P$关于$B$的偏差为\footnote{算符$\sup$，也称作\emph{上确界}，给
     D^*_N(x_i)=\frac{1}{2N}\, .
 \end{align*}
 说明一维点序列的星偏差边界为
+\sidenote{译者注：这里我简单推导了该式：假设$P=\{x_i\}_{i=1}^{N}$已经按照
+升序排列。构造一个新序列$Q=\left\{\frac{j}{N}\right\}_{j=0}^{N}$，然后让$P$和$Q$的元素交错排列构造
+新序列$U=\{u_k\}_{k=1}^{2N+1}=\left\{0,x_1,\frac{1}{N},\ldots,x_i,\frac{i}{N},\ldots,x_N,1\right\}$。
+则依据偏差的定义可以证明，$D^*_N(x_i)=\max\limits_{1\le k\le 2N}{|u_{k+1}-u_k|}=\max\limits_{1\le i\le N}{d_i}$，
+其中$d_i=\max{\left\{\left|x_i-\frac{i-1}{N}\right|,\left|x_i-\frac{i}{N}\right|\right\}}$。
+又注意到$d_i=\frac{1}{2N}+\left|x_i-\frac{2i-1}{2N}\right|$，于是得到文中该式。}
 \begin{align*}
     D^*_N(x_i)=\frac{1}{2N}+\max\limits_{1\le i\le N}\left|x_i-\frac{2i-1}{2N}\right|\, .
 \end{align*}
@@ -172,7 +178,9 @@ $P$关于$B$的偏差为\footnote{算符$\sup$，也称作\emph{上确界}，给
 见“扩展阅读”一节了解更多信息。
 
 \subsection{基本采样器接口}\label{sub:基本采样器接口}
-
+基类\refvar{Sampler}{}不仅定义了采样器的接口，
+还提供了一些通用功能供\refvar{Sampler}{}
+的实现使用。
 \begin{lstlisting}
 `\initcode{Sampler Declarations}{=}\initnext{SamplerDeclarations}`
 class `\initvar{Sampler}{}` {
@@ -185,6 +193,11 @@ private:
     `\refcode{Sampler Private Data}{}`
 };
 \end{lstlisting}
+
+所有\refvar{Sampler}{}实现必须提供指定了要为最终图像中每个像素生成的样本数量的构造函数。
+在罕见情况下，将胶片建模为只有单个覆盖整个可视区域的“像素”可能对系统有用
+（这种过载的像素定义有点夸张，但我们允许它简化某些实现方面）。
+既然该“像素”可能有数十亿个样本，我们就用64位精度的变量来存储样本数量。
 \begin{lstlisting}
 `\initcode{Sampler Method Definitions}{=}\initnext{SamplerMethodDefinitions}`
 `\refvar{Sampler}{}`::`\refvar{Sampler}{}`(int64_t samplesPerPixel)
@@ -194,15 +207,50 @@ private:
 `\initcode{Sampler Public Data}{=}`
 const int64_t `\initvar{samplesPerPixel}{}`;
 \end{lstlisting}
+
+当渲染算法准备好在给定像素上工作时，它通过提供
+该像素在图像中的坐标并调用\refvar{StartPixel}{()}来开始。
+一些\refvar{Sampler}{}实现利用哪个像素正被采样的知识来提升
+其为该像素生成的样本整体分布，而其他的则忽略该信息。
 \begin{lstlisting}
 `\initcode{Sampler Interface}{=}\initnext{SamplerInterface}`
 virtual void `\initvar{StartPixel}{}`(const `\refvar{Point2i}{}` &p);
 \end{lstlisting}
+
+方法\refvar{Get1D}{()}为当前样本向量的下一维返回样本值，
+\refvar{Get2D}{()}则为下两维返回样本值。
+尽管能通过使用调取一对\refvar{Get1D}{()}返回的值来构造2D样本值，
+但一些采样器如果知道两维会一起用时能够生成更好的点分布。
 \begin{lstlisting}
 `\refcode{Sampler Interface}{+=}\lastnext{SamplerInterface}`
 virtual `\refvar{Float}{}` `\initvar{Get1D}{}`() = 0;
 virtual `\refvar{Point2f}{}` `\initvar{Get2D}{}`() = 0;
 \end{lstlisting}
+
+在pbrt中，我们不支持从采样器中获取3D或更高维度的样本值，
+因为它们一般对于这里实现的渲染算法类型而言是非必需的。
+如果需要，可用来自低维分量的多个值来构造高维样本点。
+
+这些接口的一个显著特点是必须仔细编写使用样本值的代码使其
+总是以同样的顺序获取样本维度。考虑下列代码：\\
+{\ttfamily
+sampler->StartPixel(p);\\
+do \{\\
+        \indent Float v = a(sampler->Get1D());\\
+        \indent if (v > 0)\\
+        \indent \indent v += b(sampler->Get1D());\\
+        \indent v += c(sampler->Get1D());\\
+\} while (sampler->StartNextSample());
+}
+
+情况下，样本向量的第一维总会传给函数{\ttfamily a()}；
+当执行调用{\ttfamily b()}的代码路径时，{\ttfamily b()}会收到第二维。
+然而，若{\ttfamily if}测试并不总是为真或假，则{\ttfamily c()}有时
+会从样本向量的第二维收到样本，否则从第三维收到样本。
+因此，采样器为了提供在每个维度评估都分布良好的样本点所作的努力就白费了。
+故需要仔细编写使用\refvar{Sampler}{}的代码使得它始终如一地用掉样本向量维度以避免该问题。
+
+为了方便，基类\refvar{Sampler}{}提供了为给定像素初始化\refvar{CameraSample}{}的方法。
 \begin{lstlisting}
 `\refcode{Sampler Method Definitions}{+=}\lastnext{SamplerMethodDefinitions}`
 `\refvar{CameraSample}{}` `\refvar{Sampler}{}`::`\initvar{GetCameraSample}{}`(const `\refvar{Point2i}{}` &pRaster) {
@@ -213,11 +261,83 @@ virtual `\refvar{Point2f}{}` `\initvar{Get2D}{}`() = 0;
     return cs;
 }
 \end{lstlisting}
+
+一些渲染算法为其采样的某些维度利用了样本值数组；
+比起生成一系列单独的样本，大多数样本生成算法通过考虑
+数组所有元素上以及一个像素内所有样本上的样本值分布可生成更高质量的样本数组。
+
+如果需要样本数组，则必须在渲染开始前请求之。
+在渲染开始前——例如在重写了方法\refvar{SamplerIntegrator::Preprocess}{()}的方法中，
+应该为每个这样维度的数组调用方法\refvar[Request1DArray]{Request[12]DArray}{()}。
+例如，在具有两个面光源的场景中，当积分器追踪了四条阴影射线到第一个光源，
+八条到第二个光源时，积分器会为每个图像样本请求两个2D样本数组，
+每个分别有四个和八个样本（需要2D数组是因为需要两个维度来参数化光源表面）。
+在\refsec{俄罗斯轮盘赌与划分}中，我们将看到使用样本数组会怎样对应于
+用“划分”\sidenote{译者注：原文splitting。}的蒙特卡罗技术更密集地采样光传输积分的某些维度。
+\begin{lstlisting}
+`\refcode{Sampler Interface}{+=}\lastnext{SamplerInterface}`
+void `\initvar{Request1DArray}{}`(int n);
+void `\initvar{Request2DArray}{}`(int n);
+\end{lstlisting}
+
+大多数\refvar{Sampler}{}能更好地生成某些特定大小的数组。
+例如，在数量为2的幂时，来自\refvar{ZeroTwoSequenceSampler}{}的样本则分布得好得多。
+方法\refvar[RoundCount]{Sampler::RoundCount}{()}
+帮助传达该信息。需要样本数组的代码应该用想要取用的样本数目调用该方法，
+以给\refvar{Sampler}{}机会把样本数目调整到更好的值。
+然后应该用返回的值作为从\refvar{Sampler}{}实际请求样本的数目。
+默认实现返回不变的给定数目。
+\begin{lstlisting}
+`\refcode{Sampler Interface}{+=}\lastnext{SamplerInterface}`
+virtual int `\initvar{RoundCount}{}`(int n) const {
+    return n;
+}
+\end{lstlisting}
+
+在渲染时，可调用方法\refvar[Get1DArray]{Get[12]DArray}{()}获取
+指向之前请求的当前维度下样本数组起点的指针。
+在\refvar{Get1D}{()}和\refvar{Get2D}{()}的代码行中，
+它们返回指向样本数组的指针，数组大小由参数{\ttfamily n}传给
+初始化时对\refvar[Request1DArray]{Request[12]DArray}{()}的相应调用。
+调用者还必须提供数组大小以“获取”方法用于验证返回的缓冲区具有期望大小。
+\begin{lstlisting}
+`\refcode{Sampler Interface}{+=}\lastnext{SamplerInterface}`  
+const `\refvar{Float}{}` *`\initvar{Get1DArray}{}`(int n);
+const `\refvar{Point2f}{}` *`\initvar{Get2DArray}{}`(int n);
+\end{lstlisting}
+
+为一个样本完成这些工作后，积分器调用\refvar{StartNextSample}{()}。
+该调用为当前像素通知\refvar{Sampler}{}针对
+样本分量的后续请求应该返回下一个样本从第一维起的值。
+该方法返回{\ttfamily true}，直到已经为每个像素生成了请求的原始数目样本
+（此时调用者应该要么在另一个像素上开始工作要么停止试图使用更多样本）。
 \begin{lstlisting}
 `\refcode{Sampler Interface}{+=}\lastnext{SamplerInterface}`
 virtual bool `\initvar{StartNextSample}{}`();
 \end{lstlisting}
+
+\refvar{Sampler}{}的实现存储了关于当前样本的各种状态：
+正在采样哪个像素，用了该样本的多少维度等等。
+因此对于多个线程同时使用的单个\refvar{Sampler}{}而言自然是不安全的。
+方法\refvar{Clone}{()}生成一个初始\refvar{Sampler}{}的新实例给渲染线程使用；
+它为采样器的随机数生成器（如果有）接收一个种子值，这样不同线程会有不同的随机数序列。
+在多个图块间复用相同伪随机数序列可能导致微妙的图像伪影，例如重复的噪声模式。
+
+方法\refvar{Clone}{()}的各种实现一般并不有趣，所以这里文中没有包含它们。
 \begin{lstlisting}
 `\refcode{Sampler Interface}{+=}\lastnext{SamplerInterface}`
 virtual std::unique_ptr<`\refvar{Sampler}{}`> `\initvar{Clone}{}`(int seed) = 0;
 \end{lstlisting}
+
+一些光传输算法（特别是\refsec{随机渐进光子映射}的随机渐进光子映射）
+在进行到下一像素前并不使用当前像素内的所有样本，
+而是跳跃到周围的像素，每个里面每次取一个样本。
+方法\refvar{SetSampleNumber}{()}允许积分器在当前像素内设置样本的索引以生成下一个。
+一旦{\ttfamily sampleNum}大于或等于每个像素请求的原始样本数目该方法就返回{\ttfamily false}。
+\begin{lstlisting}
+`\refcode{Sampler Interface}{+=}\lastcode{SamplerInterface}`
+virtual bool `\initvar{SetSampleNumber}{}`(int64_t sampleNum);
+\end{lstlisting}
+
+\subsection{采样器实现}\label{sub:采样器实现}
+基类\refvar{Sampler}{}在其接口内提供了一些方法的实现。

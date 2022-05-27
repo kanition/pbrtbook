@@ -341,3 +341,113 @@ virtual bool `\initvar{SetSampleNumber}{}`(int64_t sampleNum);
 
 \subsection{采样器实现}\label{sub:采样器实现}
 基类\refvar{Sampler}{}在其接口内提供了一些方法的实现。
+首先，方法\refvar[Sampler::StartPixel]{StartPixel}{()}的实现记录当前正被采样的像素坐标
+并置零\refvar{currentPixelSampleIndex}{}即像素中当前正被生成的样本数量。
+注意这是有一个实现的虚方法；重载该方法的子类需要显式调用\refvar{Sampler::StartPixel}{()}。
+\begin{lstlisting}
+`\refcode{Sampler Method Definitions}{+=}\lastnext{SamplerMethodDefinitions}`
+void `\initvar[Sampler::StartPixel]{\refvar{Sampler}{}::\refvar{StartPixel}{}}{}`(const `\refvar{Point2i}{}` &p) {
+    `\refvar{currentPixel}{}` = p;
+    `\refvar{currentPixelSampleIndex}{}` = 0;
+    `\refcode{Reset array offsets for next pixel sample}{}`
+}
+\end{lstlisting}
+
+\refvar{Sampler}{}子类可获取当前像素坐标和像素内的样本数量，
+但它们应当将其作为只读值对待。
+\begin{lstlisting}
+`\initcode{Sampler Protected Data}{=}\initnext{SamplerProtectedData}`
+`\refvar{Point2i}{}` `\initvar{currentPixel}{}`;
+int64_t `\initvar{currentPixelSampleIndex}{}`;
+\end{lstlisting}
+
+当像素样本被更新或显式设置时，\refvar{currentPixelSampleIndex}{}也随之更新。
+像\refvar[Sampler::StartPixel]{StartPixel}{()}那样，
+方法\refvar[Sampler::StartNextSample]{StartNextSample}{()}和\refvar[Sampler::SetSampleNumber]{SetSampleNumber}{()}也
+都是虚实现；这些实现也必须由\refvar{Sampler}{}子类中重载它们的实现显式调用。
+\begin{lstlisting}
+`\refcode{Sampler Method Definitions}{+=}\lastnext{SamplerMethodDefinitions}`
+bool `\initvar[Sampler::StartNextSample]{\refvar{Sampler}{}::\refvar{StartNextSample}{}}{}`() {
+    `\refcode{Reset array offsets for next pixel sample}{}`
+    return ++`\refvar{currentPixelSampleIndex}{}` < `\refvar{samplesPerPixel}{}`;
+}
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{Sampler Method Definitions}{+=}\lastnext{SamplerMethodDefinitions}`
+bool `\initvar[Sampler::SetSampleNumber]{\refvar{Sampler}{}::\refvar{SetSampleNumber}{}}{}`(int64_t sampleNum) {
+    `\refcode{Reset array offsets for next pixel sample}{}`
+    `\refvar{currentPixelSampleIndex}{}` = sampleNum;
+    return `\refvar{currentPixelSampleIndex}{}` < `\refvar{samplesPerPixel}{}`;
+}
+\end{lstlisting}
+
+基类\refvar{Sampler}{}的实现也仔细记录
+对样本分量数组的请求并为这些值分配存储空间。
+所需的样本数组大小存于\refvar{samples1DArraySizes}{}和\refvar{samples2DArraySizes}{}，
+整个像素的样本数组值的内存分配于\refvar{sampleArray1D}{}和\refvar{sampleArray2D}{}。
+每份分配中前{\ttfamily n}个值用于像素中首个样本的相应数组，以此类推。
+\begin{lstlisting}
+`\refcode{Sampler Method Definitions}{+=}\lastnext{SamplerMethodDefinitions}`
+void `\initvar[Sampler::Request1DArray]{\refvar{Sampler}{}::\refvar{Request1DArray}{}}{}`(int n) {
+    `\refvar{samples1DArraySizes}{}`.push_back(n);
+    `\refvar{sampleArray1D}{}`.push_back(std::vector<`\refvar{Float}{}`>(n * `\refvar{samplesPerPixel}{}`));
+}
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{Sampler Method Definitions}{+=}\lastnext{SamplerMethodDefinitions}`
+void `\initvar[Sampler::Request2DArray]{\refvar{Sampler}{}::\refvar{Request2DArray}{}}{}`(int n) {
+    `\refvar{samples2DArraySizes}{}`.push_back(n);
+    `\refvar{sampleArray2D}{}`.push_back(std::vector<`\refvar{Point2f}{}`>(n * `\refvar{samplesPerPixel}{}`));
+}
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{Sampler Protected Data}{+=}\lastcode{SamplerProtectedData}`
+std::vector<int> `\initvar{samples1DArraySizes}{}`, `\initvar{samples2DArraySizes}{}`;
+std::vector<std::vector<`\refvar{Float}{}`>> `\initvar{sampleArray1D}{}`;
+std::vector<std::vector<`\refvar{Point2f}{}`>> `\initvar{sampleArray2D}{}`;
+\end{lstlisting}
+
+像方法\refvar[Get1DArray]{Get[12]DArray}{()}获取当前样本内的数组那样，\refvar{array1DOffset}{}和
+\refvar{array2DOffset}{}被更新成将为样本向量返回的下一数组的索引。
+\begin{lstlisting}
+`\initcode{Sampler Private Data}{=}`
+size_t `\initvar{array1DOffset}{}`, `\initvar{array2DOffset}{}`;
+\end{lstlisting}
+当处理新像素或当前像素中样本数量改变时，这些数组偏移量必须重置为0。
+\begin{lstlisting}
+`\initcode{Reset array offsets for next pixel sample}{=}`
+`\refvar{array1DOffset}{}` = `\refvar{array2DOffset}{}` = 0;
+\end{lstlisting}
+
+要返回合适的数组指针，首先要基于当前样本向量内已经消耗了多少来选择合适的数组，
+然后基于当前像素样本索引返回其合适的实例。
+\begin{lstlisting}
+`\refcode{Sampler Method Definitions}{+=}\lastnext{SamplerMethodDefinitions}`
+const `\refvar{Float}{}` *`\initvar[Sampler::Get1DArray]{\refvar{Sampler}{}::\refvar{Get1DArray}{}}{}`(int n) {
+    if (`\refvar{array1DOffset}{}` == `\refvar{sampleArray1D}{}`.size())
+        return nullptr;
+    return &`\refvar{sampleArray1D}{}`[`\refvar{array1DOffset}{}`++][`\refvar{currentPixelSampleIndex}{}` * n];
+}
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{Sampler Method Definitions}{+=}\lastnext{SamplerMethodDefinitions}`
+const `\refvar{Point2f}{}` *`\initvar[Sampler::Get2DArray]{\refvar{Sampler}{}::\refvar{Get2DArray}{}}{}`(int n) {
+    if (`\refvar{array2DOffset}{}` == `\refvar{sampleArray2D}{}`.size())
+        return nullptr;
+    return &`\refvar{sampleArray2D}{}`[`\refvar{array2DOffset}{}`++][`\refvar{currentPixelSampleIndex}{}` * n];
+}
+\end{lstlisting}
+
+\subsection{像素采样器}\label{sub:像素采样器}
+尽管一些采样算法很容易递进生成每个样本向量的元素，但其他的更自然地为一个像素同时生成
+所有样本向量的所有维度上的样本值。类\refvar{PixelSampler}{}
+实现了一些对该类采样器的实现有用的功能。
+\begin{lstlisting}
+`\refcode{Sampler Declarations}{+=}\lastnext{SamplerDeclarations}`
+class `\initvar{PixelSampler}{}` : public `\refvar{Sampler}{}` {
+public:
+    `\refcode{PixelSampler Public Methods}{}`
+protected:
+    `\refcode{PixelSampler Protected Data}{}`
+};
+\end{lstlisting}

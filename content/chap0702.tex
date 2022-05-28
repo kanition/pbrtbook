@@ -236,10 +236,10 @@ virtual `\refvar{Point2f}{}` `\initvar{Get2D}{}`() = 0;
 {\ttfamily
 sampler->StartPixel(p);\\
 do \{\\
-        \indent Float v = a(sampler->Get1D());\\
-        \indent if (v > 0)\\
-        \indent \indent v += b(sampler->Get1D());\\
-        \indent v += c(sampler->Get1D());\\
+\indent Float v = a(sampler->Get1D());\\
+\indent if (v > 0)\\
+\indent \indent v += b(sampler->Get1D());\\
+\indent v += c(sampler->Get1D());\\
 \} while (sampler->StartNextSample());
 }
 
@@ -536,3 +536,203 @@ bool `\initvar[PixelSampler::SetSampleNumber]{\refvar{PixelSampler}{}::\refvar{S
 例如考虑一个为前两维生成如\reftab{7.2}中间一列所示的一系列样本值的采样器。
 这些样本值乘以图像每维分辨率得到图像平面中的样本位置
 （这里我们为了简化考虑一幅$2\times3$的图像）。
+注意对于这里的采样器（其实是\refvar{HaltonSampler}{}），
+每六个样本就访问每个像素。若我们正渲染的图像每个像素用三个样本，
+则为了给像素$(0,0)$生成所有的样本，我们需要生成索引为0、6和12的样本，以此类推。
+\begin{table}[htb]
+    \centering
+    \begin{tabular}{lll}
+        \toprule
+        样本索引 & $[0,1)^2$的样本坐标   & 像素样本坐标          \\
+        \midrule
+        0        & $(0.000000,0.000000)$ & $(0.000000,0.000000)$ \\
+        1        & $(0.500000,0.333333)$ & $(1.000000,1.000000)$ \\
+        2        & $(0.250000,0.666667)$ & $(0.500000,2.000000)$ \\
+        3        & $(0.750000,0.111111)$ & $(1.500000,0.333333)$ \\
+        4        & $(0.125000,0.444444)$ & $(0.250000,1.333333)$ \\
+        5        & $(0.625000,0.777778)$ & $(1.250000,2.333333)$ \\
+        6        & $(0.375000,0.222222)$ & $(0.750000,0.666667)$ \\
+        7        & $(0.875000,0.555556)$ & $(1.750000,1.666667)$ \\
+        8        & $(0.062500,0.888889)$ & $(0.125000,2.666667)$ \\
+        9        & $(0.562500,0.037037)$ & $(1.125000,0.111111)$ \\
+        10       & $(0.312500,0.370370)$ & $(0.625000,1.111111)$ \\
+        11       & $(0.812500,0.703704)$ & $(1.625000,2.111111)$ \\
+        12       & $(0.187500,0.148148)$ & $(0.375000,0.444444)$ \\
+        $\vdots$ &                       &                       \\
+        \bottomrule
+    \end{tabular}
+    \caption{\refvar{HaltonSampler}{}生成中间一列坐标的前两维。
+        因为它是个\refvar{GlobalSampler}{}，所以它必须定义从像素坐标到样本索引的逆映射；
+        这里，它通过将第一维坐标放大2倍、第二维坐标放大3倍
+        以在$2\times3$像素的图像上放置样本，得到右边一列的像素样本坐标。}
+    \label{tab:7.2}
+\end{table}
+
+若有了这样的采样器，我们就能定义\refvar{Sampler}{}接口使得
+它为每个样本指定正在渲染的像素而不是相反（即告诉\refvar{Sampler}{}要渲染哪个像素）。
+
+然而，采用目前的设计也有很好的理由：该方法更易把胶片分解为
+小的图块以供多线程渲染，每个线程计算一个可高效并入最终图像的局部区域内的像素。
+因此，我们必须要求这样的采样器能无序生成样本，使得每个像素的全部样本是连续生成的。
+
+\refvar{GlobalSampler}{}帮助沟通\refvar{Sampler}{}接口的要求
+与这类采样器的合理操作。它提供了\refvar{Sampler}{}所有纯虚方法的实现，
+即代之以其子类必须实现的两个新的纯虚方法。
+\begin{lstlisting}
+`\refcode{Sampler Declarations}{+=}\lastcode{SamplerDeclarations}`
+class `\initvar{GlobalSampler}{}` : public `\refvar{Sampler}{}` {
+public:
+    `\refcode{GlobalSampler Public Methods}{}`
+private:
+    `\refcode{GlobalSampler Private Data}{}`
+};
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{GlobalSampler Public Methods}{=}\initnext{GlobalSamplerPublicMethods}`
+`\refvar{GlobalSampler}{}`(int64_t samplesPerPixel) : `\refvar{Sampler}{}`(samplesPerPixel) { }
+\end{lstlisting}
+
+有两个方法是实现必须提供的。第一个是\refvar{GetIndexForSample}{()}，
+它执行从当前像素和给定样本索引到样本向量全集中全局索引的逆映射。
+例如，对于生成\reftab{7.2}中值的\refvar{Sampler}{}，
+如果\refvar{currentPixel}{}是$(0,2)$，则\refvar{GetIndexForSample}{(0)}会返回2，
+因为样本索引2相应的像素样本坐标$(0.5,2)$对应着该像素区域中的首个样本
+\sidenote{译者注：原文写的坐标值是$(0.25,0.666667)$，疑是笔误，已修改。}。
+\begin{lstlisting}
+`\refcode{GlobalSampler Public Methods}{+=}\lastnext{GlobalSamplerPublicMethods}`
+virtual int64_t `\initvar{GetIndexForSample}{}`(int64_t sampleNum) const = 0;
+\end{lstlisting}
+
+紧密相关的\refvar{SampleDimension}{()}为
+序列中第{\ttfamily index}个样本向量的给定维度返回样本值。
+因为前两维用于偏移到当前像素，所以它们要做特殊处理：
+该方法的实现返回的值应该是当前像素内的样本偏移量，
+而不是原始的$[0,1)^2$样本值。例如\reftab{7.2}中，
+\refvar{SampleDimension}{(4,1)}中会返回0.333333，
+因为索引为4的样本的第二维相对于像素$(0,1)$偏移了这么多。
+\begin{lstlisting}
+`\refcode{GlobalSampler Public Methods}{+=}\lastcode{GlobalSamplerPublicMethods}`
+virtual `\refvar{Float}{}` `\initvar{SampleDimension}{}`(int64_t index, int dimension) const = 0;
+\end{lstlisting}
+
+当开始为一个像素生成样本时，必须重置样本的维度并找到像素内首个样本的索引。
+像所有采样器那样，接下来生成样本数组的所有值。
+\begin{lstlisting}
+`\refcode{Sampler Method Definitions}{+=}\lastnext{SamplerMethodDefinitions}`
+void `\initvar[GlobalSampler::StartPixel]{\refvar{GlobalSampler}{}::\refvar{StartPixel}{}}{}`(const `\refvar{Point2i}{}` &p) {
+    `\refvar{Sampler}{}`::`\refvar[Sampler::StartPixel]{StartPixel}{}`(p);
+    `\refvar[GlobalSampler::dimension]{dimension}{}` = 0;
+    `\refvar{intervalSampleIndex}{}` = `\refvar{GetIndexForSample}{}`(0);
+    `\refcode{Compute arrayEndDim for dimensions used for array samples}{}`
+    `\refcode{Compute 1D array samples for GlobalSampler}{}`
+    `\refcode{Compute 2D array samples for GlobalSampler}{}`
+}
+\end{lstlisting}
+
+成员变量\refvar[GlobalSampler::dimension]{dimension}{}跟踪
+采样器实现将被要求生成的样本值的下一维；
+当调用\refvar[GlobalSampler::Get1D]{Get1D}{()}和
+\refvar[GlobalSampler::Get2D]{Get2D}{()}时它是递增的。
+\refvar{intervalSampleIndex}{}记录当前像素内当前样本$s_i$对应的样本索引。
+\begin{lstlisting}
+`\initcode{GlobalSampler Private Data}{=}\initnext{GlobalSamplerPrivateData}`
+int `\initvar[GlobalSampler::dimension]{dimension}{}`;
+int64_t `\initvar{intervalSampleIndex}{}`;
+\end{lstlisting}
+
+必须决定为数组样本使用样本向量的哪些维度。
+在靠前的维度比后面的维度质量更好的假设下，
+为\refvar{CameraSample}{}留出前几个维度很重要，
+因为这些样本值的质量经常对最终图像质量有很大影响。
+
+因此，\refvar{arrayStartDim}{}前的维度用于常规的1D和2D样本，
+而后续维度用于先1D再2D的数组样本。最后，起始于\refvar{arrayEndDim}{}的更高维
+进一步用于非数组的1D和2D样本。当\refvar{GlobalSampler}{}构造函数运行时
+不可能计算\refvar{arrayEndDim}{}，因为目前还没有积分器请求数组样本。
+因此，该值在方法\refvar[GlobalSampler::StartPixel]{StartPixel}{()}中
+（重复且冗余地）计算。
+\begin{lstlisting}
+`\refcode{GlobalSampler Private Data}{+=}\lastcode{GlobalSamplerPrivateData}`
+static const int `\initvar{arrayStartDim}{}` = 5;
+int `\initvar{arrayEndDim}{}`;
+\end{lstlisting}
+
+所有像素样本的数组样本总数由像素样本数量与请求的样本数组尺寸的乘积给出。
+\begin{lstlisting}
+`\initcode{Compute arrayEndDim for dimensions used for array samples}{=}`
+`\refvar{arrayEndDim}{}` = `\refvar{arrayStartDim}{}` +
+              `\refvar{sampleArray1D}{}`.size() + 2 * `\refvar{sampleArray2D}{}`.size();
+\end{lstlisting}
+
+实际生成数组样本只需计算当前样本维度内所需值的数量。
+\begin{lstlisting}
+`\initcode{Compute 1D array samples for GlobalSampler}{=}`
+for (size_t i = 0; i < `\refvar{samples1DArraySizes}{}`.size(); ++i) {
+    int nSamples = `\refvar{samples1DArraySizes}{}`[i] * `\refvar{samplesPerPixel}{}`;
+    for (int j = 0; j < nSamples; ++j) {
+        int64_t index = `\refvar{GetIndexForSample}{}`(j);
+        `\refvar{sampleArray1D}{}`[i][j] =
+            `\refvar{SampleDimension}{}`(index, `\refvar{arrayStartDim}{}` + i);
+    }
+}
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{Compute 2D array samples for GlobalSampler}{=}`
+int dim = `\refvar{arrayStartDim}{}` + `\refvar{samples1DArraySizes}{}`.size();
+for (size_t i = 0; i < `\refvar{samples2DArraySizes}{}`.size(); ++i) {
+    int nSamples = `\refvar{samples2DArraySizes}{}`[i] * `\refvar{samplesPerPixel}{}`;
+    for (int j = 0; j < nSamples; ++j) {
+        int64_t idx = `\refvar{GetIndexForSample}{}`(j);
+        `\refvar{sampleArray2D}{}`[i][j].x = `\refvar{SampleDimension}{}`(idx, dim);
+        `\refvar{sampleArray2D}{}`[i][j].y = `\refvar{SampleDimension}{}`(idx, dim+1);
+    }
+    dim += 2;
+}
+`\refvar{Assert}{}`(dim == `\refvar{arrayEndDim}{}`);
+\end{lstlisting}
+
+2D样本数组的生成类似；这里不再介绍
+代码片\refcode{Compute 2D array samples for GlobalSampler}{}
+\sidenote{译者注：我补充回来了。}。
+
+当像素样本变化时，必须重置当前样本维度计数器并计算像素内下一样本的样本索引。
+\begin{lstlisting}
+`\refcode{Sampler Method Definitions}{+=}\lastnext{SamplerMethodDefinitions}`
+bool `\initvar[GlobalSampler::StartNextSample]{\refvar{GlobalSampler}{}::\refvar{StartNextSample}{}}{}`() {
+    `\refvar[GlobalSampler::dimension]{dimension}{}` = 0;
+    `\refvar{intervalSampleIndex}{}` = `\refvar{GetIndexForSample}{}`(`\refvar{currentPixelSampleIndex}{}` + 1);
+    return `\refvar{Sampler}{}`::`\refvar[Sampler::StartNextSample]{StartNextSample}{}`();
+}
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{Sampler Method Definitions}{+=}\lastnext{SamplerMethodDefinitions}`
+bool `\initvar[GlobalSampler::SetSampleNumber]{\refvar{GlobalSampler}{}::\refvar{SetSampleNumber}{}}{}`(int64_t sampleNum) {
+    `\refvar[GlobalSampler::dimension]{dimension}{}` = 0;
+    `\refvar{intervalSampleIndex}{}` = `\refvar{GetIndexForSample}{}`(sampleNum);
+    return `\refvar{Sampler}{}`::`\refvar[Sampler::SetSampleNumber]{SetSampleNumber}{}`(sampleNum);
+}
+\end{lstlisting}
+
+有了该机制，获取常规1D样本值只需跳过分配给数组样本的维度
+并把当前样本索引和维度传给实现的方法\refvar{SampleDimension}{()}。
+\begin{lstlisting}
+`\refcode{Sampler Method Definitions}{+=}\lastnext{SamplerMethodDefinitions}`
+`\refvar{Float}{}` `\initvar[GlobalSampler::Get1D]{\refvar{GlobalSampler}{}::\refvar{Get1D}{}}{}`() {
+    if (`\refvar[GlobalSampler::dimension]{dimension}{}` >= `\refvar{arrayStartDim}{}` && `\refvar[GlobalSampler::dimension]{dimension}{}` < `\refvar{arrayEndDim}{}`)
+        `\refvar[GlobalSampler::dimension]{dimension}{}` = `\refvar{arrayEndDim}{}`;
+    return `\refvar{SampleDimension}{}`(`\refvar{intervalSampleIndex}{}`, `\refvar[GlobalSampler::dimension]{dimension}{}`++);
+}
+\end{lstlisting}
+
+2D样本样本同理。
+\begin{lstlisting}
+`\refcode{Sampler Method Definitions}{+=}\lastcode{SamplerMethodDefinitions}`
+`\refvar{Point2f}{}` `\initvar[GlobalSampler::Get2D]{\refvar{GlobalSampler}{}::\refvar{Get2D}{}}{}`() {
+    if (`\refvar[GlobalSampler::dimension]{dimension}{}` + 1 >= `\refvar{arrayStartDim}{}` && `\refvar[GlobalSampler::dimension]{dimension}{}` < `\refvar{arrayEndDim}{}`)
+        `\refvar[GlobalSampler::dimension]{dimension}{}` = `\refvar{arrayEndDim}{}`;
+    `\refvar{Point2f}{}` p(`\refvar{SampleDimension}{}`(`\refvar{intervalSampleIndex}{}`, `\refvar[GlobalSampler::dimension]{dimension}{}`),
+              `\refvar{SampleDimension}{}`(`\refvar{intervalSampleIndex}{}`, `\refvar[GlobalSampler::dimension]{dimension}{}` + 1));
+    `\refvar[GlobalSampler::dimension]{dimension}{}` += 2;
+    return p;
+}
+\end{lstlisting}

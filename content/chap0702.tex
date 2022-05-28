@@ -451,3 +451,88 @@ protected:
     `\refcode{PixelSampler Protected Data}{}`
 };
 \end{lstlisting}
+
+渲染算法要用的样本向量维数是不能提前知道的
+（确实，它只隐式取决于调用\refvar{Get1D}{()}和\refvar{Get2D}{()}的次数
+以及请求的数组）。因此，\refvar{PixelSampler}{}构造函数
+接收\refvar{Sampler}{}要计算的非数组样本值的最大维数。
+如果所有这些分量维度都用掉了，则\refvar{PixelSampler}{}直接为额外维度返回均匀随机值。
+
+对于每个预先计算的维度，构造函数都分配一个{\ttfamily vector}来存储样本值，
+像素内的每个样本对应一个值。这些向量按{\ttfamily\refvar{samples1D}{}[dim][pixelSample]}来索引
+\sidenote{译者注：原文将\refvar{samples1D}{}误写为{\ttfamily sample1D}，已修正。}；
+尽管交换这些索引的顺序可能看起来更合理，但现在这样的内存排布——
+对于给定维度，所有样本的所有样本分量值在内存中是连续的
+\sidenote{译者注：指这些值的内存地址是连续的。}——
+对于生成这些值的代码而言变得更方便了。
+\begin{lstlisting}
+`\refcode{Sampler Method Definitions}{+=}\lastnext{SamplerMethodDefinitions}`
+`\refvar{PixelSampler}{}`::`\refvar{PixelSampler}{}`(int64_t samplesPerPixel,
+        int nSampledDimensions)
+    : `\refvar{Sampler}{}`(samplesPerPixel) {
+    for (int i = 0; i < nSampledDimensions; ++i) {
+        `\refvar{samples1D}{}`.push_back(std::vector<`\refvar{Float}{}`>(samplesPerPixel));
+        `\refvar{samples2D}{}`.push_back(std::vector<`\refvar{Point2f}{}`>(samplesPerPixel));
+    }
+}
+\end{lstlisting}
+
+继承自\refvar{PixelSampler}{}的\refvar{Sampler}{}实现的
+关键责任接着是在其方法\refvar{StartPixel}{()}
+中填充数组\refvar{samples1D}{}和\refvar{samples2D}{}
+（以及\refvar{sampleArray1D}{}和\refvar{sampleArray2D}{}）。
+
+\refvar{current1DDimension}{}和\refvar{current2DDimension}{}保存了
+当前像素样本针对对应数组的偏移量。在开始处理每个新样本前必须将它们重置为0。
+\begin{lstlisting}
+`\initcode{PixelSampler Protected Data}{=}\initnext{PixelSamplerProtectedData}`
+std::vector<std::vector<`\refvar{Float}{}`>> `\initvar{samples1D}{}`;
+std::vector<std::vector<`\refvar{Point2f}{}`>> `\initvar{samples2D}{}`;
+int `\initvar{current1DDimension}{}` = 0, `\initvar{current2DDimension}{}` = 0;
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{Sampler Method Definitions}{+=}\lastnext{SamplerMethodDefinitions}`
+bool `\initvar[PixelSampler::StartNextSample]{\refvar{PixelSampler}{}::\refvar{StartNextSample}{}}`() {
+    `\refvar{current1DDimension}{}` = `\refvar{current2DDimension}{}` = 0;
+    return `\refvar{Sampler}{}::\refvar[Sampler::StartNextSample]{StartNextSample}{}`();
+}
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{Sampler Method Definitions}{+=}\lastnext{SamplerMethodDefinitions}`
+bool `\initvar[PixelSampler::SetSampleNumber]{\refvar{PixelSampler}{}::\refvar{SetSampleNumber}{}}{}`(int64_t sampleNum) {
+    `\refvar{current1DDimension}{}` = `\refvar{current2DDimension}{}` = 0;
+    return `\refvar{Sampler}{}::\refvar[Sampler::SetSampleNumber]{SetSampleNumber}{}`(sampleNum);
+}
+\end{lstlisting}
+
+有了子类\refvar{PixelSampler}{}计算的数组中的样本值，
+实现\refvar{Get1D}{()}只需依维度返回值直到算出的
+所有维度都已被用掉，此时返回均匀随机值。
+\begin{lstlisting}
+`\refcode{Sampler Method Definitions}{+=}\lastnext{SamplerMethodDefinitions}`
+`\refvar{Float}{}` `\initvar[PixelSampler::Get1D]{\refvar{PixelSampler}{}::\refvar{Get1D}{}}{}`() {
+    if (`\refvar{current1DDimension}{}` < `\refvar{samples1D}{}`.size())
+        return `\refvar{samples1D}{}`[`\refvar{current1DDimension}{}`++][`\refvar{currentPixelSampleIndex}{}`];
+    else
+        return `\refvar[PixelSampler::rng]{rng}{}`.`\refvar{UniformFloat}{}`();
+}
+\end{lstlisting}
+
+\refvar{PixelSampler::Get2D}{()}同理，所以这里不再介绍。
+
+\refvar{PixelSampler}{}用的随机数生成器是{\ttfamily protected}的
+而不是{\ttfamily private}的。这对于其一些也需要随机数
+来初始化\refvar{samples1D}{}和\refvar{samples2D}{}的子类会很方便。
+\begin{lstlisting}
+`\refcode{PixelSampler Protected Data}{+=}\lastcode{PixelSamplerProtectedData}`
+`\refvar{RNG}{}` `\initvar[PixelSampler::rng]{rng}{}`;
+\end{lstlisting}
+
+\subsection{全局采样器}\label{sub:全局采样器}
+其他生成样本的算法很少基于像素而是自然地生成分布于整幅图像的连续样本，
+连续访问完全不同的像素（许多这样的采样器会高效地放置每个追加的样本
+使其填充了$n$维样本空间中的最大空洞，这自然导致后续样本在不同像素内）。
+这些采样算法对于目前描述的\refvar{Sampler}{}接口有点问题：
+例如考虑一个为前两维生成如\reftab{7.2}中间一列所示的一系列样本值的采样器。
+这些样本值乘以图像每维分辨率得到图像平面中的样本位置
+（这里我们为了简化考虑一幅$2\times3$的图像）。

@@ -296,10 +296,11 @@ virtual int `\initvar{RoundCount}{}`(int n) const {
 
 在渲染时，可调用方法\refvar[Get1DArray]{Get[12]DArray}{()}获取
 指向之前请求的当前维度下样本数组起点的指针。
-在\refvar{Get1D}{()}和\refvar{Get2D}{()}的代码行中，
+在\refvar{Get1DArray}{()}和\refvar{Get2DArray}{()}的代码行中
+\sidenote{译者注：原文疑似笔误写成了\refvar{Get1D}{()}和\refvar{Get2D}{()}，已修正。}，
 它们返回指向样本数组的指针，数组大小由参数{\ttfamily n}传给
 初始化时对\refvar[Request1DArray]{Request[12]DArray}{()}的相应调用。
-调用者还必须提供数组大小以“获取”方法用于验证返回的缓冲区具有期望大小。
+调用者也必须提供数组大小以“获取”方法用于验证返回的缓冲区具有期望大小。
 \begin{lstlisting}
 `\refcode{Sampler Interface}{+=}\lastnext{SamplerInterface}`  
 const `\refvar{Float}{}` *`\initvar{Get1DArray}{}`(int n);
@@ -364,7 +365,7 @@ int64_t `\initvar{currentPixelSampleIndex}{}`;
 当像素样本被更新或显式设置时，\refvar{currentPixelSampleIndex}{}也随之更新。
 像\refvar[Sampler::StartPixel]{StartPixel}{()}那样，
 方法\refvar[Sampler::StartNextSample]{StartNextSample}{()}和\refvar[Sampler::SetSampleNumber]{SetSampleNumber}{()}也
-都是虚实现；这些实现也必须由\refvar{Sampler}{}子类中重载它们的实现显式调用。
+都是虚实现；这些实现也必须由\refvar{Sampler}{}子类中重载它们的实现来显式调用。
 \begin{lstlisting}
 `\refcode{Sampler Method Definitions}{+=}\lastnext{SamplerMethodDefinitions}`
 bool `\initvar[Sampler::StartNextSample]{\refvar{Sampler}{}::\refvar{StartNextSample}{}}{}`() {
@@ -439,8 +440,8 @@ const `\refvar{Point2f}{}` *`\initvar[Sampler::Get2DArray]{\refvar{Sampler}{}::\
 \end{lstlisting}
 
 \subsection{像素采样器}\label{sub:像素采样器}
-尽管一些采样算法很容易递进生成每个样本向量的元素，但其他的更自然地为一个像素同时生成
-所有样本向量的所有维度上的样本值。类\refvar{PixelSampler}{}
+尽管一些采样算法很容易递进生成每个样本向量的元素，但其他算法会更自然地为一个像素同时生成
+所有样本向量所有维度上的样本值。类\refvar{PixelSampler}{}
 实现了一些对该类采样器的实现有用的功能。
 \begin{lstlisting}
 `\refcode{Sampler Declarations}{+=}\lastnext{SamplerDeclarations}`
@@ -531,7 +532,7 @@ bool `\initvar[PixelSampler::SetSampleNumber]{\refvar{PixelSampler}{}::\refvar{S
 \subsection{全局采样器}\label{sub:全局采样器}
 其他生成样本的算法很少基于像素而是自然地生成分布于整幅图像的连续样本，
 连续访问完全不同的像素（许多这样的采样器会高效地放置每个追加的样本
-使其填充了$n$维样本空间中的最大空洞，这自然导致后续样本在不同像素内）。
+使其填充$n$维样本空间中的最大空洞，这自然导致后续样本在不同像素内）。
 这些采样算法对于目前描述的\refvar{Sampler}{}接口有点问题：
 例如考虑一个为前两维生成如\reftab{7.2}中间一列所示的一系列样本值的采样器。
 这些样本值乘以图像每维分辨率得到图像平面中的样本位置
@@ -676,6 +677,10 @@ for (size_t i = 0; i < `\refvar{samples1DArraySizes}{}`.size(); ++i) {
     }
 }
 \end{lstlisting}
+
+2D样本数组的生成类似；这里不再介绍
+代码片\refcode{Compute 2D array samples for GlobalSampler}{}
+\sidenote{译者注：我补充回来了。}。
 \begin{lstlisting}
 `\initcode{Compute 2D array samples for GlobalSampler}{=}`
 int dim = `\refvar{arrayStartDim}{}` + `\refvar{samples1DArraySizes}{}`.size();
@@ -690,10 +695,6 @@ for (size_t i = 0; i < `\refvar{samples2DArraySizes}{}`.size(); ++i) {
 }
 `\refvar{Assert}{}`(dim == `\refvar{arrayEndDim}{}`);
 \end{lstlisting}
-
-2D样本数组的生成类似；这里不再介绍
-代码片\refcode{Compute 2D array samples for GlobalSampler}{}
-\sidenote{译者注：我补充回来了。}。
 
 当像素样本变化时，必须重置当前样本维度计数器并计算像素内下一样本的样本索引。
 \begin{lstlisting}

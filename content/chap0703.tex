@@ -237,7 +237,7 @@ LHS的一个优点是当样本投影到样本维度的任意轴时它最小化�
 
 尽管解决了聚集问题，LHS对于分层采样并不是必要的改进；
 很容易构造样本位置基本共线且大面积采样域没有相邻样本的情形
-（例如，当原始样本的排列一致时，即让它们都保持原样）。
+（例如原始样本的排列一致的时候，即让它们都保持原样）。
 特别地，随着$n$增加，拉丁超立方模式比起分层模式越来越低效
 \footnote{后续章节我们将回顾该问题，讨论同时是分层的且按拉丁超立方模式分布的样本模式。}。
 
@@ -263,8 +263,8 @@ for (int i = 0; i < nSamples; ++i)
 
 为了进行重排，该函数在样本上循环，每次在一个维度上随机重排样本点。
 注意这和之前的\refvar{Shuffle}{()}例程是不一样的重排：
-后者例程做一次重排，让每个样本里的全部{\ttfamily nDim}个样本点在一起，
-而这里每次做单个维度的{\ttfamily nDim}次单独重排（\reffig{7.22}）
+后者例程做一次重排，每个样本里的全部{\ttfamily nDim}个样本点是保持在一起的，
+而这里是{\ttfamily nDim}次对单个维度的依次单独重排（\reffig{7.22}）
 \footnote{尽管不需要重排LHS模式的第一维，但这里的实现还是这样做了，
     因为让第一维的元素变为随机顺序意味着LHS模式可以与来自其他源的采样模式
     结合使用而没有其样本点间存在相关性的危险。}。
@@ -272,7 +272,7 @@ for (int i = 0; i < nSamples; ++i)
     \centering\includegraphics[width=0.8\linewidth]{chap07/Shufflepermutations.eps}
     \caption{(a)\refvar{Shuffle}{()}例程进行的重排移动附近的整块元素。
         (b)拉丁超立方采样的重排独立地排列每个维度的样本。
-        这里展示了打乱三维四元素模式的第二维样本。}
+        这里展示了打乱四个三维元素模式的第二维样本。}
     \label{fig:7.22}
 \end{figure}
 
@@ -287,7 +287,7 @@ for (int i = 0; i < nDim; ++i) {
 \end{lstlisting}
 
 有了函数\refvar{LatinHypercube}{()}，
-我们选择可以编写代码为当前像素计算样本数组了。
+我们现在可以编写代码为当前像素计算样本数组了。
 1D样本被分层然后随机打乱，而2D样本用拉丁超立方采样生成。
 \begin{lstlisting}
 `\initcode{Generate arrays of stratified samples for the pixel}{=}`
@@ -312,7 +312,7 @@ for (size_t i = 0; i < `\refvar{samples2DArraySizes}{}`.size(); ++i)
     \label{fig:7.23}
 \end{figure}
 
-\reffig{7.24}展示了对于\refvar{DirectLightingIntegrator}{}来自好样本的提升。
+\reffig{7.24}展示了对于\refvar{DirectLightingIntegrator}{}而言来自好样本的提升。
 第一幅图像每个像素用1个图像样本算得，每个有16个阴影样本。
 第二幅每个像素用16个图像样本，每个有1个阴影样本。
 因为\refvar{StratifiedSampler}{}能为第一种情况生成良好的LHS模式，

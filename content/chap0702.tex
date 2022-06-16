@@ -281,8 +281,9 @@ void `\initvar{Request2DArray}{}`(int n);
 \end{lstlisting}
 
 大多数\refvar{Sampler}{}能更好地生成某些特定大小的数组。
-例如，在数量为2的幂时，来自\refvar{ZeroTwoSequenceSampler}{}的样本则分布得好得多。
-方法\refvar[RoundCount]{Sampler::RoundCount}{()}
+例如，在数量为2的幂时，来自\refvar{ZeroTwoSequenceSampler}{}的样本
+则分布得好得多。方法\linebreak
+\refvar[RoundCount]{Sampler::RoundCount}{()}
 帮助传达该信息。需要样本数组的代码应该用想要取用的样本数目调用该方法，
 以给\refvar{Sampler}{}机会把样本数目调整到更好的值。
 然后应该用返回的值作为从\refvar{Sampler}{}实际请求样本的数目。
@@ -299,8 +300,8 @@ virtual int `\initvar{RoundCount}{}`(int n) const {
 在\refvar{Get1DArray}{()}和\refvar{Get2DArray}{()}的代码行中
 \sidenote{译者注：原文疑似笔误写成了\refvar{Get1D}{()}和\refvar{Get2D}{()}，已修正。}，
 它们返回指向样本数组的指针，数组大小由参数{\ttfamily n}传给
-初始化时对\refvar[Request1DArray]{Request[12]DArray}{()}的相应调用。
-调用者也必须提供数组大小以“获取”方法用于验证返回的缓冲区具有期望大小。
+初始化时对\refvar[Request1DArray]{Request[12]DArray}{()}
+的相应调用。调用者也必须提供数组大小以“获取”方法用于验证返回的缓冲区具有期望大小。
 \begin{lstlisting}
 `\refcode{Sampler Interface}{+=}\lastnext{SamplerInterface}`  
 const `\refvar{Float}{}` *`\initvar{Get1DArray}{}`(int n);
@@ -452,6 +453,14 @@ protected:
     `\refcode{PixelSampler Protected Data}{}`
 };
 \end{lstlisting}
+\begin{lstlisting}
+`\initcode{PixelSampler Public Methods}{=}`
+`\refvar{PixelSampler}{}`(int64_t samplesPerPixel, int nSampledDimensions);
+bool `\refvar[PixelSampler::StartNextSample]{StartNextSample}{}`();
+bool `\refvar[PixelSampler::SetSampleNumber]{SetSampleNumber}{}`(int64_t);
+`\refvar{Float}{}` `\refvar[PixelSampler::Get1D]{Get1D}{}`();
+`\refvar{Point2f}{}` `\refvar[PixelSampler::Get2D]{Get2D}{}`();
+\end{lstlisting}
 
 渲染算法要用的样本向量维数是不能提前知道的
 （确实，它只隐式取决于调用\refvar{Get1D}{()}和\refvar{Get2D}{()}的次数
@@ -519,7 +528,7 @@ bool `\initvar[PixelSampler::SetSampleNumber]{\refvar{PixelSampler}{}::\refvar{S
 }
 \end{lstlisting}
 
-\refvar{PixelSampler::Get2D}{()}同理，所以这里不再介绍。
+{\initvar{PixelSampler::Get2D}{()}}同理，所以这里不再介绍。
 
 \refvar{PixelSampler}{}用的随机数生成器是{\ttfamily protected}的
 而不是{\ttfamily private}的。这对于其一些也需要随机数

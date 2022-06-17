@@ -1,6 +1,115 @@
 \section{Halton采样器}\label{sec:Halton采样器}
+\begin{remark}
+    本节含有高级内容，第一次阅读时可以跳过。
+\end{remark}
+
+\refvar{StratifiedSampler}{}的根本目标是生成
+分布良好但不均匀的样本点集，使得不存在两个靠得太近的样本点且没有不含样本的过大样本空间区域。
+如\refvar{7.18}{}所示，扰动的模式比随机模式做得更好，
+尽管当相邻层中的样本恰好靠近它们两层的公共边界时其质量可能受影响。
+
+本节介绍\refvar{HaltonSampler}{}，它基于直接生成低偏差点集的算法。不像\linebreak
+\refvar{StratifiedSampler}{}生成的点集那样，
+\refvar{HaltonSampler}{}不仅生成保证不会靠得太近抱团的点，
+还生成能同时在样本向量所有维度上都分布良好的点——
+而不是像\refvar{StratifiedSampler}{}那样每次只能在一两个维度上做到。
 
 \subsection{Hammersley和Halton序列}\label{sub:Hammersley和Halton序列}
+Halton和Hammersley序列是两种紧密相关的低偏差点集。
+两者都基于称为\keyindex{倒根}{radical inverse}{}
+\sidenote{译者注：不确定“radical inverse”一词的翻译，欢迎读者提供帮助。}的构造法，
+它基于正整数值$a$可以用下式唯一确定的数字序列$d_m(a)\ldots d_2(a)d_1(a)$
+表示为$b$进制\sidenote{译者注：这里$b$称为基（数）（base）。}的事实：
+\begin{align}
+    \label{eq:7.6}
+    a=\sum\limits_{i=1}^m{d_i(a)b^{i-1}}\, ,
+\end{align}
+其中所有数字$d_i(a)$介于0到$b-1$之间。
+
+$b$进制的倒根函数$\Phi_b$通过将这些数字关于小数点翻转
+将非负整数$a$转化为$[0,1)$的小数值：
+\begin{align}
+    \label{eq:7.7}
+    \Phi_b(a)=0.d_1(a)d_2(a)\ldots d_m(a)\, .
+\end{align}
+因此，数字$d_i(a)$对倒根的贡献为$\displaystyle\frac{d_i(a)}{b^i}$。
+
+最简单的低偏差序列之一是\keyindex{范德科皮特序列}{van der Corput sequence}{}，
+它是由2进制倒根函数给出的1D序列：
+\begin{align*}
+    x_a=\Phi_2(a)\, .
+\end{align*}
+
+\reftab{7.3}展示了范德科皮特序列的前几个值。
+注意它怎样递归地将1D直线上的区间对半划分，生成位于每个区间中心的的样本点。
+\begin{table}[htbp]
+    \centering
+    \begin{tabular}{crl}
+        \toprule
+        $a$      & \textbf{2进制} & $\Phi_2(a)$         \\
+        \midrule
+        0        & 0              & $0$                 \\
+        1        & 1              & $0.1=\frac{1}{2}$   \\
+        2        & 10             & $0.01=\frac{1}{4}$  \\
+        3        & 11             & $0.11=\frac{3}{4}$  \\
+        4        & 100            & $0.001=\frac{1}{8}$ \\
+        5        & 101            & $0.101=\frac{5}{8}$ \\
+        $\vdots$ &                &                     \\
+        \bottomrule
+    \end{tabular}
+    \caption{以2进制计算的前几个非负整数的倒根$\Phi_2(a)$。
+        注意$\Phi_2(a)$的后续值是怎样避开$\Phi_2(a)$先前的任何值的。
+        随着生成该序列越来越多的值，样本必然与之前的样本更加接近，然而仍保证了最小距离足够好。}
+    \label{tab:7.3}
+\end{table}
+
+该序列的偏差为
+\begin{align*}
+    D^*_N(P)=O\left(\frac{\log N}{N}\right)\, ,
+\end{align*}
+它与$n$维无限序列取到的最优偏差相匹配，
+\begin{align*}
+    D^*_N(P)=O\left(\frac{(\log N)^n}{N}\right)\, .
+\end{align*}
+
+为了生成$n$维Halton序列，我们使用$b$进制倒根，且模式的每个维度用不同的基。
+所用的基必须两两互质，所以自然的选择是使用
+前$n$个\keyindex{质数}{prime number}{}$(p_1,\ldots,p_n)$：
+\begin{align*}
+    x_a=(\Phi_2(a),\Phi_3(a),\Phi_4(a),\ldots,\Phi_{p_n}(a))\, .
+\end{align*}
+
+Halton序列最有用的性质之一是即使不能提前知道所需的样本总量也能用它；
+该序列的所有前缀都分布良好，所以向该序列添加额外样本也可保持低偏差
+（然而对于指数$k_i$，当样本总数为基的幂之积$\prod(p_i)^{k_i}$时其分布最好）。
+
+$n$维Halton序列的偏差为
+\begin{align*}
+    D^*_N(x_a)=\left(\frac{(\log N)^n}{N}\right)\, ,
+\end{align*}
+它是渐进最优的。
+
+如果固定样本数目$N$，则可以用偏差还低点的Hammersley点集。
+Hammersley点集定义为
+\begin{align*}
+    x_a=\left(\frac{a}{N},\Phi_{b_1}(a),\Phi_{b_2}(a),\ldots,\Phi_{b_n}(a),\right)\, ,
+\end{align*}
+其中$N$为要取用的样本总数，像之前那样所有基$b_i$都互质。
+\reffig{7.25.1}展示了2D Halton序列前216个点的图示。
+\reffig{7.25.2}展示了Hammersley序列的前256个点。
+\begin{figure}[htbp]
+    \centering
+    \subfloat[]{\includegraphics[width=0.49\linewidth]{chap07/halton-points.eps}\label{fig:7.25.1}}\,
+    \subfloat[]{\includegraphics[width=0.49\linewidth]{chap07/hammersley-points.eps}\label{fig:7.25.2}}
+    \caption{两种2D低偏差序列前面的点。(a)Halton（216个点），(b)Hammersley（256个点）。}
+    \label{fig:7.25}
+\end{figure}
+
+函数\refvar{RadicalInverse}{()}用第{\ttfamily baseIndex}个质数
+作为基为给定数字{\ttfamily a}计算倒根。
+该函数用庞大的{\ttfamily switch}语句实现，其中{\ttfamily baseIndex}被映射到
+合适的质数然后由单独的模板函数\refvar{RadicalInverseSpecialized}{()}实际计算该倒根
+（稍后将解释使用稀奇的基于{\ttfamily switch}的结构的原因）。
 \begin{lstlisting}
 `\initcode{Low Discrepancy Function Definitions}{=}\initnext{LowDiscrepancyFunctionDefinitions}`
 `\refvar{Float}{}` `\initvar{RadicalInverse}{}`(int baseIndex, uint64_t a) {
@@ -14,3 +123,239 @@
     }
 }
 \end{lstlisting}
+
+对于2进制倒根，我们可以利用数字计算机中的数字已经表示为2进制的事实
+来更高效地计算倒根。对于一个64位值$a$，按\refeq{7.6}我们有
+\begin{align*}
+    a=\sum\limits_{i=1}^{64}{d_i(a)2^{i-1}}\, .
+\end{align*}
+首先考虑翻转$a$数位的结果，仍将其视作整数值，得到
+\begin{align*}
+    \sum\limits_{i=1}^{64}{d_i(a)2^{64-i}}\, .
+\end{align*}
+如果我们再用该值除以$2^{64}$，我们有
+\begin{align*}
+    \sum\limits_{i=1}^{64}{d_i(a)2^{-i}}\, ,
+\end{align*}
+它就是$\Phi_2(a)$。因此，2进制倒根可高效地用数位翻转以及2的幂除法算得。
+
+整数量的数位可以用一系列逻辑位运算高效翻转。
+翻转32位整数数位的函数\refvar{ReverseBits32}{()}的第一行
+交换了该值的低16位和高16位。下一行同时交换其结果的前8位与第二组8位、第三组8位与第四组。
+该过程持续到交换相邻数位的最后一行。为了理解该代码，写出各个十六进制常数的二进制值很有帮助。
+例如，{\ttfamily 0xff00ff00}的二进制是{\ttfamily 11111111000000001111111100000000}；
+很容易看到与该值进行按位或屏蔽了第一、三组8位数量。
+\begin{lstlisting}
+`\initcode{Low Discrepancy Inline Functions}{=}\initnext{LowDiscrepancyInlineFunctions}`
+inline uint32_t `\initvar{ReverseBits32}{}`(uint32_t n) {
+    n = (n << 16) | (n >> 16);
+    n = ((n & 0x00ff00ff) << 8) | ((n & 0xff00ff00) >> 8);
+    n = ((n & 0x0f0f0f0f) << 4) | ((n & 0xf0f0f0f0) >> 4);
+    n = ((n & 0x33333333) << 2) | ((n & 0xcccccccc) >> 2);
+    n = ((n & 0x55555555) << 1) | ((n & 0xaaaaaaaa) >> 1);
+    return n;
+}
+\end{lstlisting}
+
+然后通过单独翻转两个32位分量再互换它们可以翻转64位值的数位。
+\begin{lstlisting}
+`\refcode{Low Discrepancy Inline Functions}{+=}\lastnext{LowDiscrepancyInlineFunctions}`
+inline uint64_t `\initvar{ReverseBits64}{}`(uint64_t n) {
+    uint64_t n0 = `\refvar{ReverseBits32}{}`((uint32_t)n);
+    uint64_t n1 = `\refvar{ReverseBits32}{}`((uint32_t)(n >> 32));
+    return (n0 << 32) | n1;
+}
+\end{lstlisting}
+
+然后为了计算2进制倒根，我们翻转数位并乘以$\displaystyle\frac{1}{2^{64}}$，
+其中十六进制浮点常数{\ttfamily 0x1p-64}用于值$2^{-64}$。
+如\refsub{浮点算术}解释的，通过相应的幂2乘法实现幂2除法
+会给出以IEEE浮点数表示的相同结果（且浮点数乘法通常比浮点数除法更高效）。
+\begin{lstlisting}
+`\initcode{Compute base-2 radical inverse}{=}`
+return `\refvar{ReverseBits64}{}`(a) * 0x1p-64;
+\end{lstlisting}
+
+对于其他基，模板函数\refvar{RadicalInverseSpecialized}{()}计算倒根
+是通过计算起始于$d_1$的数字$d_i$并计算一系列$v_i$，
+其中$v_1=d_1$，$v_2=bd_1+d_2$，使得
+\begin{align*}
+    v_n=b^{n-1}d_1+b^{n-2}d_2+\cdots+d_n\, .
+\end{align*}
+（例如，十进制中它会把值1234转化为4321。）
+该值可完全用整数算法求得，不会积累任何舍入误差。
+
+然后倒根的最终值通过转化为浮点并乘以$\displaystyle\frac{1}{b^n}$求得，
+其中$n$是该值的位数，由此得到\refeq{7.7}中的值。
+该乘法项是在处理数字时在{\ttfamily invBaseN}中构建的。
+\begin{lstlisting}
+`\initcode{Low Discrepancy Static Functions}{=}\initnext{LowDiscrepancyStaticFunctions}`
+template <int base>
+static `\refvar{Float}{}` `\initvar{RadicalInverseSpecialized}{}`(uint64_t a) {
+    const `\refvar{Float}{}` invBase = (`\refvar{Float}{}`)1 / (`\refvar{Float}{}`)base;
+    uint64_t reversedDigits = 0;
+    `\refvar{Float}{}` invBaseN = 1;
+    while (a) {
+        uint64_t next  = a / base;
+        uint64_t digit = a - next * base;
+        reversedDigits = reversedDigits * base + digit;
+        invBaseN *= invBase;
+        a = next;
+    }
+    return std::min(reversedDigits * invBaseN, `\refvar{OneMinusEpsilon}{}`);
+}
+\end{lstlisting}
+
+一个自然要问的问题是为什么这里要用对基数参数化的模板函数
+（而不是说调用一个把基数作为参数接收的常规函数，避免为每个基生成单独的代码路径）。
+动机是在现代CPU上整数除法非常地慢，利用编译时常数除法的方法则能高效得多。
+
+例如，32位值除以3的整数除法可以通过用该值乘以2863311531得到64位中间值
+然后将结果右移33位算得；这俩都是非常高效的运算。
+（64位值除以3可以用类似方法，但这个神奇常数大得多；
+见\citet{10.5555/2462741}\sidenote{译者注：此处引用改为了新版。}了解关于该技术的更多内容。）
+因此这里用模板函数允许编译器意识到在{\ttfamily while}循环中计算{\ttfamily next}值的除法时
+实际上是除以常数并给它应用该优化的机会。在2015年代笔记本上用了该优化的代码比
+基于整数除法指令的实现运行起来快至5.9倍。
+
+另一个优化是我们避免计算翻转数字与倒数基之积的实时总和；
+相反，该乘法会一直推迟到结尾直到循环终止。
+这里的主要问题是当前处理器的浮点和整数单元是完全互相独立运算的。
+在一个紧密循环里的浮点计算中引用一个整数变量会引入
+与转化这些值并从一个单元移动到另一个单元所需的时间相关的管道暂停
+\sidenote{译者注：原文pipeline bubble。}。
+
+能计算倒根函数的逆会很有用；函数\refvar{InverseRadicalInverse}{()}接收
+某进制翻转过的整数数字，即对应于模板函数\refvar{RadicalInverseSpecialized}{()}中
+为了转化为$[0,1)$中的浮点值而乘以因子$\displaystyle\frac{1}{b^n}$之前的{\ttfamily reversedDigits}。
+注意为了能正确地计算逆，必须知道原始值中的数字总数：
+例如在倒根算法中只含整数的部分之后，1234和123400都能转化为4321；
+尾部零变为前导零并丢失了。
+\begin{lstlisting}
+`\refcode{Low Discrepancy Inline Functions}{+=}\lastnext{LowDiscrepancyInlineFunctions}`
+template <int base> inline uint64_t
+`\initvar{InverseRadicalInverse}{}`(uint64_t inverse, int nDigits) {
+    uint64_t index = 0;
+    for (int i = 0; i < nDigits; ++i) {
+        uint64_t digit = inverse % base;
+        inverse /= base;
+        index = index * base + digit;
+    }
+    return index;
+}
+\end{lstlisting}
+
+Hammersley和Halton序列的缺点是随着基$b$的增加，样本值会展现出惊人的规律模式。
+该问题可以用\keyindex{扰频的}{scrambled}{}Halton和Hammersley序列解决，
+其计算倒根时对数字施加了重排。
+\begin{align}
+    \label{eq:7.8}
+    \Psi_b(a)=0.p(d_1(a))p(d_2(a))\ldots p(d_m(a))\, ,
+\end{align}
+其中$p$是数字$(0,1,\ldots,b-1)$的重排。
+注意每个数字用的重排是一样的，在给定基$b$下生成所有样本点用的重排也一样。
+\reffig{7.26}展示了对Halton序列扰频后的效果。
+\begin{figure}[htbp]
+    \centering
+    \subfloat[]{\includegraphics[width=0.45\linewidth]{chap07/halton2931.eps}\label{fig:7.26.1}}\,
+    \subfloat[]{\includegraphics[width=0.45\linewidth]{chap07/halton2931-permuted.eps}\label{fig:7.26.2}}
+    \caption{Halton样本值是否有扰频的图示。(a)在样本向量的高维中，
+    样本值的投影开始表现出规律结构。这里展示了来自维度$(\Phi_{29}(a),\Phi_{31}(a))$的点。
+    (b)扰频序列即\refeq{7.8}通过随机重排样本索引的数字打破了该结构。}
+    \label{fig:7.26}
+\end{figure}
+
+尽管专门构造的重排能给出稍微更好的结构，但接下来我们将用随机重排；
+见“扩展阅读”一节了解更多细节。
+
+函数\refvar{ComputeRadicalInversePermutations}{()}计算这些随机重排表。
+它为所有重排初始化单个连续数组，其前两个值是$b=2$时整数零和一的重排，
+接下来三个值是$b=3$时0、1、2的重排，后续质数基以此类推。
+在进入下面的{\ttfamily for}循环时，{\ttfamily p}指向重排数组的起点来为当前的质数基做初始化。
+\begin{lstlisting}
+`\refcode{Low Discrepancy Function Definitions}{+=}\lastnext{LowDiscrepancyFunctionDefinitions}`
+std::vector<uint16_t> `\initvar{ComputeRadicalInversePermutations}{}`(`\refvar{RNG}{}` &rng) {
+    std::vector<uint16_t> perms;
+    `\refcode{Allocate space in perms for radical inverse permutations}{}`
+    uint16_t *p = &perms[0];
+    for (int i = 0; i < `\refvar{PrimeTableSize}{}`; ++i) {
+        `\refcode{Generate random permutation for ith prime base}{}`
+        p += `\refvar{Primes}{}`[i];
+    }
+    return perms;
+}
+\end{lstlisting}
+
+重排数组的总大小由直到预先计算的质数表末尾的质数之和给出。
+\begin{lstlisting}
+`\initcode{Allocate space in perms for radical inverse permutations}{=}`
+int permArraySize = 0;
+for (int i = 0; i < `\refvar{PrimeTableSize}{}`; ++i)
+    permArraySize += `\refvar{Primes}{}`[i];
+perms.resize(permArraySize);
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{Low Discrepancy Declarations}{=}\initnext{LowDiscrepancyDeclarations}`
+static constexpr int `\initvar{PrimeTableSize}{}` = 1000;
+extern const int `\initvar{Primes}{}`[`\refvar{PrimeTableSize}{}`];
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{Low Discrepancy Data Definitions}{=}\initnext{LowDiscrepancyDataDefinitions}`
+const int `\refvar{Primes}{}`[`\refvar{PrimeTableSize}{}`] = {
+    2, 3, 5, 7, 11,
+    `\refcode{Subsequent prime numbers}{}`
+};
+\end{lstlisting}
+
+生成每次重排很简单：我们只需初始化{\ttfamily p}使之指向
+对应当前质数长度的同一重排然后随机打乱它的值。
+\begin{lstlisting}
+`\initcode{Generate random permutation for ith prime base}{=}`
+for (int j = 0; j < `\refvar{Primes}{}`[i]; ++j)
+    p[j] = j;
+`\refvar{Shuffle}{}`(p, `\refvar{Primes}{}`[i], 1, rng);
+\end{lstlisting}
+
+函数\refvar{ScrambledRadicalInverse}{()}本质上和\refvar{RadicalInverse}{()}一样，
+除了它是通过重排表为给定基数放入每个数字的。
+见\refvar{RadicalInverse}{()}之后的习题\refsub{7.11.3}了解关于2进制情况下的更高效实现的讨论。
+\begin{lstlisting}
+`\refcode{Low Discrepancy Function Definitions}{+=}\lastcode{LowDiscrepancyFunctionDefinitions}`
+`\refvar{Float}{}` `\initvar{ScrambledRadicalInverse}{}`(int baseIndex, uint64_t a,
+        const uint16_t *perm) {
+    switch (baseIndex) {
+        case 0: return `\refvar{ScrambledRadicalInverseSpecialized}{}`<2>(perm, a);
+        case 1: return `\refvar{ScrambledRadicalInverseSpecialized}{}`<3>(perm, a);
+        case 2: return `\refvar{ScrambledRadicalInverseSpecialized}{}`<5>(perm, a);
+        case 3: return `\refvar{ScrambledRadicalInverseSpecialized}{}`<7>(perm, a);
+        `\refcode{Remainder of cases for ScrambledRadicalInverse()}{}`
+    }
+}
+\end{lstlisting}
+
+下面的实现也考虑了当{\ttfamily perm}将数字0映射为非零值时可能出现的特殊情况。
+该情况下，一旦{\ttfamily a}到达0迭代就提前停止，
+错误地漏掉了值{\ttfamily perm[0]}与无限长的后继。
+幸运的是，这是一个有简单解析解的几何级数，最后一行加上了其值。
+\begin{lstlisting}
+`\refcode{Low Discrepancy Static Functions}{+=}\lastcode{LowDiscrepancyStaticFunctions}`
+template <int base>
+static `\refvar{Float}{}` `\initvar{ScrambledRadicalInverseSpecialized}{}`(const uint16_t *perm,
+        uint64_t a) {
+    const `\refvar{Float}{}` invBase = (`\refvar{Float}{}`)1 / (`\refvar{Float}{}`)base;
+    uint64_t reversedDigits = 0;
+    `\refvar{Float}{}` invBaseN = 1;
+    while (a) {
+        uint64_t next  = a / base;
+        uint64_t digit = a - next * base;
+        reversedDigits = reversedDigits * base + perm[digit];
+        invBaseN *= invBase;
+        a = next;
+    }
+    return std::min(invBaseN * (reversedDigits +
+                    invBase * perm[0] / (1 - invBase)), `\refvar{OneMinusEpsilon}{}`);
+}
+\end{lstlisting}
+
+\subsection{Halton采样器实现}\label{sub:Halton采样器实现}
+\refvar{HaltonSampler}{}

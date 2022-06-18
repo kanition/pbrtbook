@@ -358,4 +358,90 @@ static `\refvar{Float}{}` `\initvar{ScrambledRadicalInverseSpecialized}{}`(const
 \end{lstlisting}
 
 \subsection{Halton采样器实现}\label{sub:Halton采样器实现}
-\refvar{HaltonSampler}{}
+\refvar{HaltonSampler}{}用Halton序列生成样本向量。
+不像\refvar{StratifiedSampler}{}那样，它是完全确定性的；
+在其运算中它没有使用伪随机数。然而，如果没有充分采样好图像，
+则Halton样本可能导致混叠。\reffig{7.27}比较了用基于Halton的采样器
+和用上一节的分层采样器来采样棋盘纹理的结果。
+注意前景中以及朝向地平线处沿边缘的令人难受的模式。
+\begin{figure}[htbp]
+    \centering
+    \subfloat[1个扰动样本]{\includegraphics[width=\linewidth]{chap07/checkerboard-jitter-1spp.png}\label{fig:7.27.1}}\\
+    \subfloat[1个Halton样本]{\includegraphics[width=\linewidth]{chap07/checkerboard-halton-1spp.png}\label{fig:7.27.2}}
+    \caption{在图像平面上比较分层采样器和基于Halton点的低偏差采样器。
+    (a)每个像素只有单个样本的扰动分层采样器与(b)每个像素只有单个样本的\refvar{HaltonSampler}{}采样器。
+    注意尽管Halton模式比分层模式更能复现朝向地平线处的棋盘模式，
+    但在低偏差模式中仍有干扰视觉注意力的规律性错误结构；
+    它没有像扰动法那样把混叠转化为不那么讨厌的噪声。}
+    \label{fig:7.27}
+\end{figure}
+
+\begin{lstlisting}
+`\initcode{HaltonSampler Declarations}{=}`
+class `\initvar{HaltonSampler}{}` : public `\refvar{GlobalSampler}{}` {
+public:
+    `\refcode{HaltonSampler Public Methods}{}`
+private:
+    `\refcode{HaltonSampler Private Data}{}`
+    `\refcode{HaltonSampler Private Methods}{}`
+};
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{HaltonSampler Method Definitions}{=}\initnext{HaltonSamplerMethodDefinitions}`
+`\refvar{HaltonSampler}{}`::`\refvar{HaltonSampler}{}`(int samplesPerPixel,
+        const `\refvar{Bounds2i}{}` &sampleBounds)
+    : `\refvar{GlobalSampler}{}`(samplesPerPixel) {
+    `\refcode{Generate random digit permutations for Halton sampler}{}`
+    `\refcode{Find radical inverse base scales and exponents that cover sampling area}{}`
+    `\refcode{Compute stride in samples for visiting each pixel area}{}`
+    `\refcode{Compute multiplicative inverses for baseScales}{}`
+}
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{Compute multiplicative inverses for baseScales}{=}`
+`\refvar{multInverse}{}`[0] = `\refvar{multiplicativeInverse}{}`(`\refvar{baseScales}{}`[1], `\refvar{baseScales}{}`[0]);
+`\refvar{multInverse}{}`[1] = `\refvar{multiplicativeInverse}{}`(`\refvar{baseScales}{}`[0], `\refvar{baseScales}{}`[1]);
+\end{lstlisting}
+
+扰频倒根的重排表在所有\refvar{HaltonSampler}{}实例间
+共享并在构造函数首次运行时算出。对pbrt的需求而言，该方法很好：
+当前实现只为不同图块使用不同采样器实例，而且我们想总是使用相同的重排。
+对于其他用途，对何时使用不同的重排有更强的控制是值得的。
+\begin{lstlisting}
+`\initcode{Generate random digit permutations for Halton sampler}{=}`
+if (`\refvar{radicalInversePermutations}{}`.size() == 0) {
+    `\refvar{RNG}{}` rng;
+    `\refvar{radicalInversePermutations}{}` = `\refvar{ComputeRadicalInversePermutations}{}`(rng);
+}
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{HaltonSampler Private Data}{=}\initnext{HaltonSamplerPrivateData}`
+static std::vector<uint16_t> `\initvar{radicalInversePermutations}{}`;
+\end{lstlisting}
+
+实用方法\refvar{PermutationForDimension}{()}为给定
+维度返回指向重排数组起点的指针。
+\begin{lstlisting}
+`\initcode{HaltonSampler Private Methods}{=}`
+const uint16_t *`\initvar{PermutationForDimension}{}`(int dim) const {
+    if (dim >= `\refvar{PrimeTableSize}{}`)
+        `\refvar{Severe}{}`("HaltonSampler can only sample %d dimensions.",
+               `\refvar{PrimeTableSize}{}`);
+    return &`\refvar{radicalInversePermutations}{}`[`\refvar{PrimeSums}{}`[dim]];
+}
+\end{lstlisting}
+
+为了能为给定维度快速找到偏移量，拥有每个质数之前的所有质数之和是很有帮助的。
+\begin{lstlisting}
+`\refcode{Low Discrepancy Data Definitions}{+=}\lastcode{LowDiscrepancyDataDefinitions}`
+const int `\initvar{PrimeSums}{}`[`\refvar{PrimeTableSize}{}`] = {
+    0, 2, 5, 10, 17, 
+    `\refcode{Subsequent prime sums}{}`
+};
+\end{lstlisting}
+
+为了把来自$[0,1)^2$的样本前两维映射为像素坐标，
+\refvar{HaltonSampler}{}在每个维度上求得比图像分辨率
+和\refvar{kMaxResolution}{}中较小者更大的最小缩放因子$(2^j,3^k)$
+（我们稍后将看到这一专门选出的缩放值是怎样让看出一个样本在哪个像素里变简单的）。
+缩放之后，任何图像范围之外的样本都被简单忽略掉。

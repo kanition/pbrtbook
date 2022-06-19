@@ -260,8 +260,8 @@ Hammersley和Halton序列的缺点是随着基$b$的增加，样本值会展现�
     \subfloat[]{\includegraphics[width=0.45\linewidth]{chap07/halton2931.eps}\label{fig:7.26.1}}\,
     \subfloat[]{\includegraphics[width=0.45\linewidth]{chap07/halton2931-permuted.eps}\label{fig:7.26.2}}
     \caption{Halton样本值是否有扰频的图示。(a)在样本向量的高维中，
-    样本值的投影开始表现出规律结构。这里展示了来自维度$(\Phi_{29}(a),\Phi_{31}(a))$的点。
-    (b)扰频序列即\refeq{7.8}通过随机重排样本索引的数字打破了该结构。}
+        样本值的投影开始表现出规律结构。这里展示了来自维度$(\Phi_{29}(a),\Phi_{31}(a))$的点。
+        (b)扰频序列即\refeq{7.8}通过随机重排样本索引的数字打破了该结构。}
     \label{fig:7.26}
 \end{figure}
 
@@ -369,10 +369,10 @@ static `\refvar{Float}{}` `\initvar{ScrambledRadicalInverseSpecialized}{}`(const
     \subfloat[1个扰动样本]{\includegraphics[width=\linewidth]{chap07/checkerboard-jitter-1spp.png}\label{fig:7.27.1}}\\
     \subfloat[1个Halton样本]{\includegraphics[width=\linewidth]{chap07/checkerboard-halton-1spp.png}\label{fig:7.27.2}}
     \caption{在图像平面上比较分层采样器和基于Halton点的低偏差采样器。
-    (a)每个像素只有单个样本的扰动分层采样器与(b)每个像素只有单个样本的\refvar{HaltonSampler}{}采样器。
-    注意尽管Halton模式比分层模式更能复现朝向地平线处的棋盘模式，
-    但在低偏差模式中仍有干扰视觉注意力的规律性错误结构；
-    它没有像扰动法那样把混叠转化为不那么讨厌的噪声。}
+        (a)每个像素只有单个样本的扰动分层采样器与(b)每个像素只有单个样本的\refvar{HaltonSampler}{}采样器。
+        注意尽管Halton模式比分层模式更能复现朝向地平线处的棋盘模式，
+        但在低偏差模式中仍有干扰视觉注意力的规律性错误结构；
+        它没有像扰动法那样把混叠转化为不那么讨厌的噪声。}
     \label{fig:7.27}
 \end{figure}
 
@@ -445,3 +445,130 @@ const int `\initvar{PrimeSums}{}`[`\refvar{PrimeTableSize}{}`] = {
 和\refvar{kMaxResolution}{}中较小者更大的最小缩放因子$(2^j,3^k)$
 （我们稍后将看到这一专门选出的缩放值是怎样让看出一个样本在哪个像素里变简单的）。
 缩放之后，任何图像范围之外的样本都被简单忽略掉。
+
+对于分辨率在一或两维上大于\refvar{kMaxResolution}{}的图像，
+则在全图上重复一块Halton点。该分辨率限制帮助在算得的样本值中保持足够的浮点精度。
+\begin{lstlisting}
+`\initcode{Find radical inverse base scales and exponents that cover sampling area}{=}`
+`\refvar{Vector2i}{}` res = sampleBounds.`\refvar{pMax}{}` - sampleBounds.`\refvar{pMin}{}`;
+for (int i = 0; i < 2; ++i) {
+    int base = (i == 0) ? 2 : 3;
+    int scale = 1, exp = 0;
+    while (scale < std::min(res[i], `\refvar{kMaxResolution}{}`)) {
+        scale *= base;
+        ++exp;
+    }
+    `\refvar{baseScales}{}`[i] = scale;
+    `\refvar{baseExponents}{}`[i] = exp;
+}
+\end{lstlisting}
+
+对于每个维度，\refvar{baseScales}{}存有缩放因子$2^j$或$3^k$，
+且\refvar{baseExponents}{}存有指数$j$和$k$。
+\begin{lstlisting}
+`\refcode{HaltonSampler Private Data}{+=}\lastnext{HaltonSamplerPrivateData}`
+`\refvar{Point2i}{}` `\initvar{baseScales}{}`, `\initvar{baseExponents}{}`;
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{HaltonSampler Local Constants}{=}`
+static constexpr int `\initvar{kMaxResolution}{}` = 128;
+\end{lstlisting}
+
+为了明白为什么\refvar{HaltonSampler}{}使用该方案来
+将样本映射到像素坐标，考虑用$b$进制倒根因子$b^n$来缩放算出的值的影响。
+如果$a$的数字表示为$b$进制的$d_i(a)$，则回想倒根为$b$进制的值$0.d_1(a)d_2(a)\ldots$。
+例如，如果我们用$b^2$乘以该值，则我们有$d_1(a)d_2(a).d_3(a)\ldots$；
+前两个数字碑移到小数点左边，该值的小数部分从$d_3(a)$开始。
+
+用$b^n$缩放的该运算构建了能够确定哪个样本索引位于哪个像素中的核心。
+考虑上面例子中的前两个数字，我们可以看到缩放后的值的整数部分在0到$b^2-1$的范围内，
+且随着a增加，在该范围内每过$b^2$个值，其$b$进制的最后两个数字就在某特定值上取得一次。
+
+给定值$x$，$0\le x\le b^2-1$，我们可以求得首个整数部分为$x$的值$a$。
+根据定义，$b$进制的$x$数字为$d_2(x)d_1(x)$。
+因此，如果$d_1(a)=d_2(x)$且$d_2(a)=d_1(x)$，
+则$a$的倒根被缩放后的值会有等于$x$的整数部分。
+
+因为\refvar{HaltonSampler}{}中为像素样本用的基$b=2$和$b=3$是互质的，
+所以它满足如果样本值由某个$(2^j,3^k)$缩放，则在
+范围$(0,0)\rightarrow(2^j-1,3^k-1)$内的任意特定像素
+每过$2^j3^k$个样本就会访问一次。该乘积存于\refvar{sampleStride}{}中。
+\begin{lstlisting}
+`\initcode{Compute stride in samples for visiting each pixel area}{=}`
+`\refvar{sampleStride}{}` = `\refvar{baseScales}{}`[0] * `\refvar{baseScales}{}`[1];
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{HaltonSampler Private Data}{+=}\lastnext{HaltonSamplerPrivateData}`
+int `\initvar{sampleStride}{}`;
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{HaltonSampler Private Data}{+=}\lastnext{HaltonSamplerPrivateData}`
+int `\initvar{multInverse}{}`[2];
+\end{lstlisting}
+
+位于\refvar{currentPixel}{}内的首个Halton样本的样本索引存于\refvar{offsetForCurrentPixel}{}
+中。在为当前像素中的首个样本算出该偏移量后，该像素中的后续样本
+可在Halton序列中增量为\refvar{sampleStride}{}的样本处找到。
+\begin{lstlisting}
+`\refcode{HaltonSampler Method Definitions}{+=}\lastnext{HaltonSamplerMethodDefinitions}`
+int64_t `\refvar{HaltonSampler}{}`::`\initvar[HaltonSampler::GetIndexForSample]{\refvar{GetIndexForSample}{}}{}`(int64_t sampleNum) const {
+    if (`\refvar{currentPixel}{}` != `\refvar{pixelForOffset}{}`) {
+        `\refcode{Compute Halton sample offset for currentPixel}{}`
+        `\refvar{pixelForOffset}{}` = `\refvar{currentPixel}{}`;
+    }
+    return `\refvar{offsetForCurrentPixel}{}` + sampleNum * `\refvar{sampleStride}{}`;
+}
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{HaltonSampler Private Data}{+=}\lastcode{HaltonSamplerPrivateData}`
+mutable `\refvar{Point2i}{}` `\initvar{pixelForOffset}{}` = `\refvar{Point2i}{}`(std::numeric_limits<int>::max(),
+                                         std::numeric_limits<int>::max());
+mutable int64_t `\initvar{offsetForCurrentPixel}{}`;
+\end{lstlisting}
+
+在给定像素$(x,y)$内计算首个已被$(2^j,3^k)$缩放的样本索引
+包括计算$x$的2进制最后$j$个数字的逆倒根，我们将其记作$x_r$，
+以及$y$的3进制最后$k$个数字的逆倒根$y_r$。这为我们给出了方程组
+\begin{align*}
+    x_r & \equiv(i \mod 2^j)\, , \\
+    y_r & \equiv(i \mod 3^k)\, ,
+\end{align*}
+其中满足该方程组的索引$i$就是位于给定像素内的缩放后的样本索引。
+本书中我们没有包含这里解出$i$的代码{\refcode{Compute Halton sample offset for currentPixel}{}}
+\sidenote{译者注：我补充回来了。}；见Gr\"{u}nschlo\ss{}和Keller \parencite*{10.1007/978-3-642-04107-5_25}
+了解用于求解$i$的该算法的细节\sidenote{译者注：参考文献列表中作者名字
+    中的德文字母“\ss{}”错误显示为“SS”，目前无法解决，请读者见谅。
+    同时欢迎提供解决办法！此外，原文引用的文献将年份误写为2012，已修正。}。
+\begin{lstlisting}
+`\initcode{Compute Halton sample offset for currentPixel}{=}`
+`\refvar{offsetForCurrentPixel}{}` = 0;
+if (`\refvar{sampleStride}{}` > 1) {
+    `\refvar{Point2i}{}` pm(`\refvar{Mod}{}`(`\refvar{currentPixel}{}`[0], `\refvar{kMaxResolution}{}`),
+               `\refvar{Mod}{}`(`\refvar{currentPixel}{}`[1], `\refvar{kMaxResolution}{}`));
+    for (int i = 0; i < 2; ++i) {
+        uint64_t dimOffset = (i == 0) ?
+            `\refvar{InverseRadicalInverse}{}`<2>(pm[i], `\refvar{baseExponents}{}`[i]) :
+            `\refvar{InverseRadicalInverse}{}`<3>(pm[i], `\refvar{baseExponents}{}`[i]);
+        `\refvar{offsetForCurrentPixel}{}` += dimOffset * (`\refvar{sampleStride}{}` / `\refvar{baseScales}{}`[i]) * `\refvar{multInverse}{}`[i];
+    }
+    `\refvar{offsetForCurrentPixel}{}` %= `\refvar{sampleStride}{}`;
+}
+\end{lstlisting}
+
+样本偏移量的计算不考虑随机数字重排，所以它们没有被包含在这里算出的样本值中。
+此外，因为前两维数字中较小的\refvar{baseExponents}{[i]}用于选择采样哪个样本，
+所以这些数字必须在为样本向量的前两维计算倒根之前就被丢弃掉，
+因为方法\refvar[HaltonSampler::SampleDimension]{SampleDimension}{()}应该返回正被采样的像素内的小数偏移量。
+更高维则被直接采样，包含随机重排。
+\begin{lstlisting}
+`\refcode{HaltonSampler Method Definitions}{+=}\lastcode{HaltonSamplerMethodDefinitions}`
+`\refvar{Float}{}` `\refvar{HaltonSampler}{}`::`\initvar[HaltonSampler::SampleDimension]{\refvar{SampleDimension}{}}{}`(int64_t index, int dim) const {
+    if (dim == 0)
+        return `\refvar{RadicalInverse}{}`(dim, index >> `\refvar{baseExponents}{}`[0]);
+    else if (dim == 1)
+        return `\refvar{RadicalInverse}{}`(dim, index / `\refvar{baseScales}{}`[1]);
+    else
+        return `\refvar{ScrambledRadicalInverse}{}`(dim, index,
+            `\refvar{PermutationForDimension}{}`(dim));
+}
+\end{lstlisting}

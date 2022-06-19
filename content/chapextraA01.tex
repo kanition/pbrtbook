@@ -32,6 +32,21 @@ inline T `\initvar{Clamp}{}`(T val, U low, V high) {
 }
 \end{lstlisting}
 
+\subsubsection*{模数}
+\begin{lstlisting}
+`\refcode{Global Inline Functions}{+=}\lastnext{GlobalInlineFunctions}`
+template <typename T> inline T `\initvar{Mod}{}`(T a, T b) {
+    T result = a - (a/b) * b;
+    return (T)((result < 0) ? result + b : result);
+}
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{Global Inline Functions}{+=}\lastnext{GlobalInlineFunctions}`
+template <> inline `\refvar{Float}{}` `\initvar[fMod]{Mod}{}`(`\refvar{Float}{}` a, `\refvar{Float}{}` b) {
+    return std::fmod(a, b);
+}
+\end{lstlisting}
+
 \subsubsection*{有用的常数}
 \begin{lstlisting}
 `\refcode{Global Constants}{+=}\lastnext{GlobalConstants}`

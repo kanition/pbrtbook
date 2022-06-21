@@ -5,8 +5,8 @@
 
 \refvar{StratifiedSampler}{}的根本目标是生成
 分布良好但不均匀的样本点集，使得不存在两个靠得太近的样本点且没有不含样本的过大样本空间区域。
-如\refvar{7.18}{}所示，扰动的模式比随机模式做得更好，
-尽管当相邻层中的样本恰好靠近它们两层的公共边界时其质量可能受影响。
+如\reffig{7.18}{}所示，扰动的模式比随机模式做得更好，
+不过当相邻层中的样本恰好靠近它们两层的公共边界时其质量可能受影响。
 
 本节介绍\refvar{HaltonSampler}{}，它基于直接生成低偏差点集的算法。不像\linebreak
 \refvar{StratifiedSampler}{}生成的点集那样，
@@ -16,37 +16,37 @@
 
 \subsection{Hammersley和Halton序列}\label{sub:Hammersley和Halton序列}
 Halton和Hammersley序列是两种紧密相关的低偏差点集。
-两者都基于称为\keyindex{倒根}{radical inverse}{}
-\sidenote{译者注：不确定“radical inverse”一词的翻译，欢迎读者提供帮助。}的构造法，
+两者都基于称为\keyindex{倒根}{radical inverse}{}的构造法，
 它基于正整数值$a$可以用下式唯一确定的数字序列$d_m(a)\ldots d_2(a)d_1(a)$
-表示为$b$进制\sidenote{译者注：这里$b$称为基（数）（base）。}的事实：
+表示为$b$进制\sidenote{译者注：这里$b$是大于1的正整数，称为基（数）（base）。}的事实：
 \begin{align}
     \label{eq:7.6}
     a=\sum\limits_{i=1}^m{d_i(a)b^{i-1}}\, ,
 \end{align}
 其中所有数字$d_i(a)$介于0到$b-1$之间。
 
-$b$进制的倒根函数$\Phi_b$通过将这些数字关于小数点翻转
-将非负整数$a$转化为$[0,1)$的小数值：
+$b$进制的倒根函数$\varPhi_b$通过将这些数字关于小数点翻转
+把非负整数$a$转化为$[0,1)$的小数值：
 \begin{align}
     \label{eq:7.7}
-    \Phi_b(a)=0.d_1(a)d_2(a)\ldots d_m(a)\, .
+    \varPhi_b(a)=0.d_1(a)d_2(a)\ldots d_m(a)\, .
 \end{align}
 因此，数字$d_i(a)$对倒根的贡献为$\displaystyle\frac{d_i(a)}{b^i}$。
 
-最简单的低偏差序列之一是\keyindex{范德科皮特序列}{van der Corput sequence}{}，
+最简单的低偏差序列之一是van der Corput序列
+\sidenote{译者注：得名自20世纪荷兰数学家Johannes Gaultherus van der Corput。}，
 它是由2进制倒根函数给出的1D序列：
 \begin{align*}
-    x_a=\Phi_2(a)\, .
+    x_a=\varPhi_2(a)\, .
 \end{align*}
 
-\reftab{7.3}展示了范德科皮特序列的前几个值。
+\reftab{7.3}展示了van der Corput序列的前几个值。
 注意它怎样递归地将1D直线上的区间对半划分，生成位于每个区间中心的的样本点。
 \begin{table}[htbp]
     \centering
     \begin{tabular}{crl}
         \toprule
-        $a$      & \textbf{2进制} & $\Phi_2(a)$         \\
+        $a$      & \textbf{2进制} & $\varPhi_2(a)$      \\
         \midrule
         0        & 0              & $0$                 \\
         1        & 1              & $0.1=\frac{1}{2}$   \\
@@ -57,13 +57,14 @@ $b$进制的倒根函数$\Phi_b$通过将这些数字关于小数点翻转
         $\vdots$ &                &                     \\
         \bottomrule
     \end{tabular}
-    \caption{以2进制计算的前几个非负整数的倒根$\Phi_2(a)$。
-        注意$\Phi_2(a)$的后续值是怎样避开$\Phi_2(a)$先前的任何值的。
+    \caption{以2进制计算的前几个非负整数的倒根$\varPhi_2(a)$。
+        注意$\varPhi_2(a)$的后续值是怎样避开$\varPhi_2(a)$先前的任何值的。
         随着生成该序列越来越多的值，样本必然与之前的样本更加接近，然而仍保证了最小距离足够好。}
     \label{tab:7.3}
 \end{table}
 
-该序列的偏差为
+该序列的偏差为\sidenote{译者注：这里的大$O$项表明了该偏差的变化趋势。
+    事实上它是有界的，相应证明非常复杂，读者可参见\citet{LARCHER2016546}整理的有关结论。}
 \begin{align*}
     D^*_N(P)=O\left(\frac{\log N}{N}\right)\, ,
 \end{align*}
@@ -76,25 +77,26 @@ $b$进制的倒根函数$\Phi_b$通过将这些数字关于小数点翻转
 所用的基必须两两互质，所以自然的选择是使用
 前$n$个\keyindex{质数}{prime number}{}$(p_1,\ldots,p_n)$：
 \begin{align*}
-    x_a=(\Phi_2(a),\Phi_3(a),\Phi_4(a),\ldots,\Phi_{p_n}(a))\, .
+    x_a=(\varPhi_2(a),\varPhi_3(a),\varPhi_5(a),\ldots,\varPhi_{p_n}(a))\, .
 \end{align*}
 
 Halton序列最有用的性质之一是即使不能提前知道所需的样本总量也能用它；
-该序列的所有前缀都分布良好，所以向该序列添加额外样本也可保持低偏差
-（然而对于指数$k_i$，当样本总数为基的幂之积$\prod(p_i)^{k_i}$时其分布最好）。
+该序列的所有前缀\sidenote{译者注：即序列开头的部分。}都分布良好，
+所以向该序列添加额外样本也可保持低偏差（然而对于指数$k_i$，
+当样本总数为基的幂之积$\prod(p_i)^{k_i}$时其分布最好）。
 
 $n$维Halton序列的偏差为
 \begin{align*}
-    D^*_N(x_a)=\left(\frac{(\log N)^n}{N}\right)\, ,
+    D^*_N(x_a)=O\left(\frac{(\log N)^n}{N}\right)\, ,
 \end{align*}
 它是渐进最优的。
 
 如果固定样本数目$N$，则可以用偏差还低点的Hammersley点集。
 Hammersley点集定义为
 \begin{align*}
-    x_a=\left(\frac{a}{N},\Phi_{b_1}(a),\Phi_{b_2}(a),\ldots,\Phi_{b_n}(a),\right)\, ,
+    x_a=\left(\frac{a}{N},\varPhi_{b_1}(a),\varPhi_{b_2}(a),\ldots,\varPhi_{b_n}(a),\right)\, ,
 \end{align*}
-其中$N$为要取用的样本总数，像之前那样所有基$b_i$都互质。
+其中$N$是要取用的样本总数，像之前那样所有基$b_i$都互质。
 \reffig{7.25.1}展示了2D Halton序列前216个点的图示。
 \reffig{7.25.2}展示了Hammersley序列的前256个点。
 \begin{figure}[htbp]
@@ -109,7 +111,7 @@ Hammersley点集定义为
 作为基为给定数字{\ttfamily a}计算倒根。
 该函数用庞大的{\ttfamily switch}语句实现，其中{\ttfamily baseIndex}被映射到
 合适的质数然后由单独的模板函数\refvar{RadicalInverseSpecialized}{()}实际计算该倒根
-（稍后将解释使用稀奇的基于{\ttfamily switch}的结构的原因）。
+（稍后将解释使用少见的基于{\ttfamily switch}的结构的原因）。
 \begin{lstlisting}
 `\initcode{Low Discrepancy Function Definitions}{=}\initnext{LowDiscrepancyFunctionDefinitions}`
 `\refvar{Float}{}` `\initvar{RadicalInverse}{}`(int baseIndex, uint64_t a) {
@@ -137,7 +139,7 @@ Hammersley点集定义为
 \begin{align*}
     \sum\limits_{i=1}^{64}{d_i(a)2^{-i}}\, ,
 \end{align*}
-它就是$\Phi_2(a)$。因此，2进制倒根可高效地用数位翻转以及2的幂除法算得。
+它就是$\varPhi_2(a)$。因此，2进制倒根可高效地用数位翻转以及2的幂除法算得。
 
 整数量的数位可以用一系列逻辑位运算高效翻转。
 翻转32位整数数位的函数\refvar{ReverseBits32}{()}的第一行
@@ -206,7 +208,7 @@ static `\refvar{Float}{}` `\initvar{RadicalInverseSpecialized}{}`(uint64_t a) {
 }
 \end{lstlisting}
 
-一个自然要问的问题是为什么这里要用对基数参数化的模板函数
+一个自然要问的问题是为什么这里要用对基数做参数化的模板函数
 （而不是说调用一个把基数作为参数接收的常规函数，避免为每个基生成单独的代码路径）。
 动机是在现代CPU上整数除法非常地慢，利用编译时常数除法的方法则能高效得多。
 
@@ -221,15 +223,15 @@ static `\refvar{Float}{}` `\initvar{RadicalInverseSpecialized}{}`(uint64_t a) {
 另一个优化是我们避免计算翻转数字与倒数基之积的实时总和；
 相反，该乘法会一直推迟到结尾直到循环终止。
 这里的主要问题是当前处理器的浮点和整数单元是完全互相独立运算的。
-在一个紧密循环里的浮点计算中引用一个整数变量会引入
-与转化这些值并从一个单元移动到另一个单元所需的时间相关的管道暂停
-\sidenote{译者注：原文pipeline bubble。}。
+在一个紧密循环里的浮点计算中引用一个整数变量会引入管道暂停
+\sidenote{译者注：原文pipeline bubble。}，
+它与转化这些值并从一个单元移动到另一个单元所需的时间相关。
 
 能计算倒根函数的逆会很有用；函数\refvar{InverseRadicalInverse}{()}接收
 某进制翻转过的整数数字，即对应于模板函数\refvar{RadicalInverseSpecialized}{()}中
 为了转化为$[0,1)$中的浮点值而乘以因子$\displaystyle\frac{1}{b^n}$之前的{\ttfamily reversedDigits}。
 注意为了能正确地计算逆，必须知道原始值中的数字总数：
-例如在倒根算法中只含整数的部分之后，1234和123400都能转化为4321；
+例如倒根算法中在只含整数的部分之后，1234和123400都能转化为4321；
 尾部零变为前导零并丢失了。
 \begin{lstlisting}
 `\refcode{Low Discrepancy Inline Functions}{+=}\lastnext{LowDiscrepancyInlineFunctions}`
@@ -246,22 +248,22 @@ template <int base> inline uint64_t
 \end{lstlisting}
 
 Hammersley和Halton序列的缺点是随着基$b$的增加，样本值会展现出惊人的规律模式。
-该问题可以用\keyindex{扰频的}{scrambled}{}Halton和Hammersley序列解决，
+该问题可以用\keyindex{置乱}{scrambled}{}Halton和Hammersley序列解决，
 其计算倒根时对数字施加了重排。
 \begin{align}
     \label{eq:7.8}
-    \Psi_b(a)=0.p(d_1(a))p(d_2(a))\ldots p(d_m(a))\, ,
+    \varPsi_b(a)=0.p(d_1(a))p(d_2(a))\ldots p(d_m(a))\, ,
 \end{align}
 其中$p$是数字$(0,1,\ldots,b-1)$的重排。
 注意每个数字用的重排是一样的，在给定基$b$下生成所有样本点用的重排也一样。
-\reffig{7.26}展示了对Halton序列扰频后的效果。
+\reffig{7.26}展示了对Halton序列置乱后的效果。
 \begin{figure}[htbp]
     \centering
     \subfloat[]{\includegraphics[width=0.45\linewidth]{chap07/halton2931.eps}\label{fig:7.26.1}}\,
     \subfloat[]{\includegraphics[width=0.45\linewidth]{chap07/halton2931-permuted.eps}\label{fig:7.26.2}}
-    \caption{Halton样本值是否有扰频的图示。(a)在样本向量的高维中，
-        样本值的投影开始表现出规律结构。这里展示了来自维度$(\Phi_{29}(a),\Phi_{31}(a))$的点。
-        (b)扰频序列即\refeq{7.8}通过随机重排样本索引的数字打破了该结构。}
+    \caption{Halton样本值是否有置乱的图示。(a)在样本向量的高维中，
+        样本值的投影开始表现出规律结构。这里展示了来自维度$(\varPhi_{29}(a),\varPhi_{31}(a))$的点。
+        (b)置乱序列即\refeq{7.8}通过随机重排样本索引的数字打破了该结构。}
     \label{fig:7.26}
 \end{figure}
 
@@ -318,7 +320,7 @@ for (int j = 0; j < `\refvar{Primes}{}`[i]; ++j)
 
 函数\refvar{ScrambledRadicalInverse}{()}本质上和\refvar{RadicalInverse}{()}一样，
 除了它是通过重排表为给定基数放入每个数字的。
-见\refvar{RadicalInverse}{()}之后的习题\refsub{7.11.3}了解关于2进制情况下的更高效实现的讨论。
+见\refvar{RadicalInverse}{()}之后的习题\ref{sub:7.11.3}了解关于2进制情况下的更高效实现的讨论。
 \begin{lstlisting}
 `\refcode{Low Discrepancy Function Definitions}{+=}\lastcode{LowDiscrepancyFunctionDefinitions}`
 `\refvar{Float}{}` `\initvar{ScrambledRadicalInverse}{}`(int baseIndex, uint64_t a,
@@ -335,8 +337,15 @@ for (int j = 0; j < `\refvar{Primes}{}`[i]; ++j)
 
 下面的实现也考虑了当{\ttfamily perm}将数字0映射为非零值时可能出现的特殊情况。
 该情况下，一旦{\ttfamily a}到达0迭代就提前停止，
-错误地漏掉了值{\ttfamily perm[0]}与无限长的后继。
-幸运的是，这是一个有简单解析解的几何级数，最后一行加上了其值。
+错误地漏掉了值{\ttfamily perm[0]}构成的无限长后继。
+幸运的是，这是一个有简单解析解的几何级数，最后一行加上了其值
+\sidenote{译者注：以$b=4$、{\ttfamily perm}数组为$[3,2,1,0]$、$a=9$时为例：
+$a$以四进制表示为21，翻转得12，变为四进制浮点数为0.12，准确点说是0.120000...。
+按照重排表{\ttfamily perm}替换数字后应为0.213333...。
+但代码只处理到前两位即0.21，故应手动加上后面的0.003333...。
+一般地，应补充的$b$进制数字为$0.\underbrace{0\ldots0}_{m\text{个}0}p(0)p(0)p(0)\ldots$，
+其中$m$为$a$的$b$进制位数，依据等比数列求和公式可得
+其值是$\displaystyle\frac{b^{-1}p(0)}{1-b^{-1}}b^{-m}$。}。
 \begin{lstlisting}
 `\refcode{Low Discrepancy Static Functions}{+=}\lastcode{LowDiscrepancyStaticFunctions}`
 template <int base>
@@ -398,14 +407,21 @@ private:
 }
 \end{lstlisting}
 \begin{lstlisting}
+`\initcode{HaltonSampler Public Methods}{=}`
+`\refvar{HaltonSampler}{}`(int nsamp, const `\refvar{Bounds2i}{}` &sampleBounds);
+int64_t `\refvar[HaltonSampler::GetIndexForSample]{GetIndexForSample}{}`(int64_t sampleNum) const;
+`\refvar{Float}{}` `\refvar[HaltonSampler::SampleDimension]{SampleDimension}{}`(int64_t index, int dimension) const;
+std::unique_ptr<`\refvar{Sampler}{}`> `\refvar{Clone}{}`(int seed);
+\end{lstlisting}
+\begin{lstlisting}
 `\initcode{Compute multiplicative inverses for baseScales}{=}`
 `\refvar{multInverse}{}`[0] = `\refvar{multiplicativeInverse}{}`(`\refvar{baseScales}{}`[1], `\refvar{baseScales}{}`[0]);
 `\refvar{multInverse}{}`[1] = `\refvar{multiplicativeInverse}{}`(`\refvar{baseScales}{}`[0], `\refvar{baseScales}{}`[1]);
 \end{lstlisting}
 
-扰频倒根的重排表在所有\refvar{HaltonSampler}{}实例间
+置乱倒根的重排表在所有\refvar{HaltonSampler}{}实例间
 共享并在构造函数首次运行时算出。对pbrt的需求而言，该方法很好：
-当前实现只为不同图块使用不同采样器实例，而且我们想总是使用相同的重排。
+当前实现只是为不同图块使用不同采样器实例，而那时我们想总是使用相同的重排。
 对于其他用途，对何时使用不同的重排有更强的控制是值得的。
 \begin{lstlisting}
 `\initcode{Generate random digit permutations for Halton sampler}{=}`
@@ -478,11 +494,11 @@ static constexpr int `\initvar{kMaxResolution}{}` = 128;
 将样本映射到像素坐标，考虑用$b$进制倒根因子$b^n$来缩放算出的值的影响。
 如果$a$的数字表示为$b$进制的$d_i(a)$，则回想倒根为$b$进制的值$0.d_1(a)d_2(a)\ldots$。
 例如，如果我们用$b^2$乘以该值，则我们有$d_1(a)d_2(a).d_3(a)\ldots$；
-前两个数字碑移到小数点左边，该值的小数部分从$d_3(a)$开始。
+前两个数字被移到小数点左边，该值的小数部分从$d_3(a)$开始。
 
 用$b^n$缩放的该运算构建了能够确定哪个样本索引位于哪个像素中的核心。
 考虑上面例子中的前两个数字，我们可以看到缩放后的值的整数部分在0到$b^2-1$的范围内，
-且随着a增加，在该范围内每过$b^2$个值，其$b$进制的最后两个数字就在某特定值上取得一次。
+且随着$a$增加，在该范围内每过$b^2$个值，其$b$进制的最后两个数字就在某特定值上取得一次。
 
 给定值$x$，$0\le x\le b^2-1$，我们可以求得首个整数部分为$x$的值$a$。
 根据定义，$b$进制的$x$数字为$d_2(x)d_1(x)$。
@@ -508,7 +524,8 @@ int `\initvar{multInverse}{}`[2];
 
 位于\refvar{currentPixel}{}内的首个Halton样本的样本索引存于\refvar{offsetForCurrentPixel}{}
 中。在为当前像素中的首个样本算出该偏移量后，该像素中的后续样本
-可在Halton序列中增量为\refvar{sampleStride}{}的样本处找到。
+可在Halton序列中增量为\refvar{sampleStride}{}的样本处找到
+\sidenote{译者注：指索引每增加\refvar{sampleStride}{}就出现一次该像素的样本。}。
 \begin{lstlisting}
 `\refcode{HaltonSampler Method Definitions}{+=}\lastnext{HaltonSamplerMethodDefinitions}`
 int64_t `\refvar{HaltonSampler}{}`::`\initvar[HaltonSampler::GetIndexForSample]{\refvar{GetIndexForSample}{}}{}`(int64_t sampleNum) const {
@@ -555,10 +572,10 @@ if (`\refvar{sampleStride}{}` > 1) {
 }
 \end{lstlisting}
 
-样本偏移量的计算不考虑随机数字重排，所以它们没有被包含在这里算出的样本值中。
-此外，因为前两维数字中较小的\refvar{baseExponents}{[i]}用于选择采样哪个样本，
+样本偏移量的计算不考虑随机数字重排，所以在这里算出的样本值中没有包含它们。
+此外，因为前两维中低处的\refvar{baseExponents}{[i]}个数字用于选择采样哪个样本，
 所以这些数字必须在为样本向量的前两维计算倒根之前就被丢弃掉，
-因为方法\refvar[HaltonSampler::SampleDimension]{SampleDimension}{()}应该返回正被采样的像素内的小数偏移量。
+此后方法\refvar[HaltonSampler::SampleDimension]{SampleDimension}{()}应该返回正被采样的像素内的小数偏移量。
 更高维则被直接采样，包含随机重排。
 \begin{lstlisting}
 `\refcode{HaltonSampler Method Definitions}{+=}\lastcode{HaltonSamplerMethodDefinitions}`

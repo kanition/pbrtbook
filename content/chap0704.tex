@@ -340,9 +340,9 @@ for (int j = 0; j < `\refvar{Primes}{}`[i]; ++j)
 错误地漏掉了值{\ttfamily perm[0]}构成的无限长后继。
 幸运的是，这是一个有简单解析解的几何级数，最后一行加上了其值
 \sidenote{译者注：以$b=4$、{\ttfamily perm}数组为$[3,2,1,0]$、$a=9$时为例：
-$a$以四进制表示为21，翻转得12，变为四进制浮点数为0.12，准确点说是0.120000...。
-按照重排表{\ttfamily perm}替换数字后应为0.213333...。
-但代码只处理到前两位即0.21，故应手动加上后面的0.003333...。
+$a$以四进制表示为$21$，翻转得$12$，变为四进制浮点数为$0.12$，准确点说是$0.120000\ldots$。
+按照重排表{\ttfamily perm}替换数字后应为$0.213333\ldots$。
+但代码只处理到前两位即0.21，故应手动加上后面的$0.003333\ldots$。
 一般地，应补充的$b$进制数字为$0.\underbrace{0\ldots0}_{m\text{个}0}p(0)p(0)p(0)\ldots$，
 其中$m$为$a$的$b$进制位数，依据等比数列求和公式可得
 其值是$\displaystyle\frac{b^{-1}p(0)}{1-b^{-1}}b^{-m}$。}。
@@ -550,7 +550,7 @@ mutable int64_t `\initvar{offsetForCurrentPixel}{}`;
     x_r & \equiv(i \mod 2^j)\, , \\
     y_r & \equiv(i \mod 3^k)\, ,
 \end{align*}
-其中满足该方程组的索引$i$就是位于给定像素内的缩放后的样本索引。
+其中满足该方程组的索引$i$就是位于给定像素内缩放后的样本索引。
 本书中我们没有包含这里解出$i$的代码{\refcode{Compute Halton sample offset for currentPixel}{}}
 \sidenote{译者注：我补充回来了。}；见Gr\"{u}nschlo\ss{}和Keller \parencite*{10.1007/978-3-642-04107-5_25}
 了解用于求解$i$的该算法的细节\sidenote{译者注：参考文献列表中作者名字

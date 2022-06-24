@@ -1,0 +1,103 @@
+\section{译者补充：初等数论基础}\label{sec:译者补充：初等数论基础}
+
+\begin{remark}
+    本节内容不是原书内容，而是译者根据\citet{ElementaryNumberTheory}
+    所著著作补充的，请酌情参考和斧正。
+\end{remark}
+
+\begin{notation}
+    本节我们重申以下记号：
+    \begin{itemize}
+        \item 用$\mathbb{N}$表示全体正整数构成的集合；$\mathbb{Z}$表示全体整数构成的集合。
+        \item 若命题$p$能推出命题$q$，则记为$p\Rightarrow q$；若$p$与$q$等价，则记为$p\Leftrightarrow q$。
+    \end{itemize}
+\end{notation}
+
+\begin{theorem}[\protect\keyindex{最小自然数原理}{least number principle}{}]
+    设$T$是$\mathbb{N}$的一非空子集，则必有$t_0\in T$，
+    使对任意的$t\in T$有$t_0\le t$，即$t_0$是$T$中最小的自然数。
+\end{theorem}
+
+\begin{theorem}[最大自然数原理]
+    设$M$是$\mathbb{N}$的一非空子集，若$M$有上界（即存在$a\in \mathbb{N}$使
+    对任意的$m\in M$有$m\le a$），则必有$m_0\in M$，使对任意的$m\in M$有$m\le m_0$，
+    即$m_0$是$M$中最大的自然数。
+\end{theorem}
+
+\begin{theorem}[\protect\keyindex{归纳原理}{principle of induction}{}]
+    设$S\subseteq \mathbb{N}$，且满足
+    \begin{enumerate}
+        \item 有$1\in S$；
+        \item 对任意$n\in S$都有$n+1\in S$；
+    \end{enumerate}
+    则$S=\mathbb{N}$。
+\end{theorem}
+
+\begin{theorem}[\protect\keyindex{数学归纳法}{mathematical induction}{}]
+    设$P(n)$是关于自然数$n$的命题，若
+    \begin{enumerate}
+        \item 当$n=1$时，$P(1)$成立；
+        \item $P(n)$成立时必能推出$P(n+1)$成立；
+    \end{enumerate}
+    则$P(n)$对所有自然数$n$均成立。
+\end{theorem}
+
+\begin{theorem}[\protect 第二种数学归纳法]
+    设$P(n)$是关于自然数$n$的命题，若
+    \begin{enumerate}
+        \item 当$n=1$时，$P(1)$成立；
+        \item 设$n>1$，对所有自然数$m<n$都有$P(m)$成立时必能推出$P(n)$成立；
+    \end{enumerate}
+    则$P(n)$对所有自然数$n$均成立。
+\end{theorem}
+
+\begin{theorem}[\protect\keyindex{鸽巢原理}{pigeonhole principle}{}]
+    对于某$n\in\mathbb{N}$，现有$n$个笼子和$n+1$只鸽子，
+    所有的鸽子都被关在鸽笼里，那么至少有一个笼子有至少2只鸽子。
+    也称\keyindex{狄利克雷抽屉原理}{Dirichlet's drawer principle}{}。
+\end{theorem}
+
+\begin{definition}
+    设$a,b\in\mathbb{Z}$且$a\neq0$，若存在$q\in\mathbb{Z}$使得$b=aq$，
+    则称$a$\keyindex{整除}{divide evenly}{}$b$，或说$b$能被$a$整除，记作$a|b$，
+    并称$a$是$b$的\keyindex{因数}{divisor}{}，也称{\sffamily 约数}、{\sffamily 除数}，
+    $b$是$a$的\keyindex{倍数}{multiple}{}。$a$不能整除$b$时记作$a\nmid b$。
+\end{definition}
+
+\begin{example}
+    6能整除18，记作$6|18$，6是18的因数，18是6的倍数。
+\end{example}
+
+\begin{theorem}
+    整除满足以下性质：
+    \begin{enumerate}
+        \item $a|b\Leftrightarrow -a|b \Leftrightarrow a|-b \Leftrightarrow |a|||b|$；
+        \item $a|b$且$b|c \Rightarrow a|c$；
+        \item $a|b$且$a|c \Leftrightarrow$对任意的$x,y\in\mathbb{Z}$有$a|bx+cy$；
+        \item 设$m\neq0$，则$a|b\Leftrightarrow ma|mb$；
+        \item $a|b$且$b|a\Rightarrow b=\pm a$；
+        \item 设$b\neq0$，则$a|b\Rightarrow |a|\le|b|$。
+    \end{enumerate}
+\end{theorem}
+
+\begin{corollary}
+    非零整数的因数只有有限个。
+\end{corollary}
+
+\begin{definition}
+    设$a,b,m\in\mathbb{Z}$且$m\neq0$，若$m|a-b$，则称$a$与$b$\keyindex{模$m$同余}{congruent modulo $m$}{}，
+    也称$a$同余于$b$模$m$、$b$是$a$对模$m$的剩余，记作
+    \begin{align}\label{eq:7.ex02.01}
+        a\equiv b(\mod m)\, ,
+    \end{align}
+    其中$m$称为\keyindex{模}{modulus}{}，称\refeq{7.ex02.01}为模$m$的同余式；
+    否则称$a$不同余于$b$模$m$、$b$不是$a$对模$m$的剩余，记作
+    \begin{align}
+        a\not\equiv b(\mod m)\, .
+    \end{align}
+\end{definition}
+
+\begin{notation}
+    因为$m|a-b\Leftrightarrow -m|a-b$，所以\refeq{7.ex02.01}等价于$a\equiv b(\mod (-m))$。
+    由此，下文均假定模$m\ge1$。
+\end{notation}

@@ -50,7 +50,7 @@ protected:
         相机类持有它们之间的变换。世界空间中的场景物体由相机查看，它位于相机空间原点，并指向$+z$轴。
         近处和远处平面之间的物体被投影到相机空间中的胶片平面$z=\text{near}$上。
         胶片平面在栅格空间中$z=0$处，其中$x$和$y$范围从$(0,0)$变到(resolution.x, resolution.y)。
-        规范化设备坐标（NDC）空间将栅格空间归一化，因此$x$和$y$范围从$(0,0)$变到$(1,1)$。}
+        规范化设备坐标（NDC）空间将栅格空间归一化，因此$x$和$y$范围从$(0,0)$变到$(1,1)$.}
     \label{fig:6.1}
 \end{figure}
 
@@ -159,8 +159,8 @@ private:
 \end{lstlisting}
 
 正交视角变换保持$x$和$y$坐标不变但将近处平面的$z$值映射为0而远处平面的$z$值映射为1。
-为此，场景先沿$z$轴平移使得近处平面对齐到$z=0$。
-然后，场景按$z$缩放使得远处平面映射为$z=1$。
+为此，场景先沿$z$轴平移使得近处平面对齐到$z=0$.
+然后，场景按$z$缩放使得远处平面映射为$z=1$.
 这两个变换合成得到整个变换。（对于像pbrt那样的光线追踪器，
 我们想让近处平面位于0处，这样光线就会从穿过相机位置的平面上发出；
 远处平面偏移量不是很重要。）
@@ -191,7 +191,7 @@ private:
 我们现在可以执行代码取栅格空间中的一个样本点并将其变为相机光线。
 \reffig{6.4}总结了该过程。首先，栅格空间样本位置变换为相机空间的一点，
 即给出近处平面上一点作为相机光线的端点。
-因为相机空间观察方向沿$z$轴指出，相机空间光线方向为$(0,0,1)$。
+因为相机空间观察方向沿$z$轴指出，相机空间光线方向为$(0,0,1)$.
 
 \begin{figure}[htbp]
     \centering\includegraphics[width=0.8\linewidth]{chap06/Orthogenerateray.eps}
@@ -314,7 +314,7 @@ private:
     \caption{投影变换矩阵将相机空间里的点投影到胶片平面。
         被投影点的$x'$和$y'$坐标等于投影前$x$和$y$坐标除以$z$坐标。
         投影后的$z'$坐标的计算使得近处平面的点映射为$z'=0$而
-        远处平面的点映射为$z'=1$。}
+        远处平面的点映射为$z'=1$.}
     \label{fig:6.5}
 \end{figure}
 
@@ -361,7 +361,7 @@ private:
           否则，图像更窄的那个方向映射到$[-1,1]$，
           更宽的方向映射到成比例的更大屏幕空间值范围。
           回想正切等于直角三角形对边与邻边之比。
-          这里邻边长为1，所以对边长为$\tan\frac{\text{\ttfamily fov}}{2}$。
+          这里邻边长为1，所以对边长为$\tan\frac{\text{\ttfamily fov}}{2}$.
           用该长度倒数缩放将视场映射到$[-1,1]$内的范围。
 \end{enumerate}
 \begin{lstlisting}
@@ -468,7 +468,7 @@ ray->`\refvar{ryDirection}{}` = `\refvar{Normalize}{}`(pFocus - ray->`\refvar{ry
 \reffig{6.6}展示了基本设置。这里我们遵循典型透镜坐标系统的惯例
 让透镜垂直于$z$轴并位于$z=0$，场景在$-z$
 （注意这个坐标系统和我们给相机空间用的看向$+z$的不同）。
-透镜场景一侧的距离记为无撇的变量$z$，透镜胶片一侧的距离（正的$z$）记为有撇的$z'$。
+透镜场景一侧的距离记为无撇的变量$z$，透镜胶片一侧的距离（正的$z$）记为有撇的$z'$.
 \begin{figure}[htbp]
     \centering\includegraphics[width=0.6\linewidth]{chap06/Thinlens.eps}
     \caption{沿$z$轴置于$z=0$处的薄透镜。平行于光轴的入射光线穿过薄透镜后（虚线）
@@ -477,14 +477,14 @@ ray->`\refvar{ryDirection}{}` = `\refvar{Normalize}{}`(pFocus - ray->`\refvar{ry
 \end{figure}
 
 对于场景中与焦距为$f$的薄透镜距离为$z$的点
-\sidenote{译者注：注意这里$z<0$。}，
+\sidenote{译者注：注意这里$z<0$.}，
 \keyindex{高斯透镜方程}{Gaussian lens equation}{}将
 物体与透镜的距离和透镜与像点的距离联系起来
 \sidenote{译者注：高斯透镜方程的推导过程可参考译者补充的\refsub{透镜}。}：
 \begin{align}\label{eq:6.1}
     \frac{1}{z'}-\frac{1}{z}=\frac{1}{f}\, .
 \end{align}
-注意对于$z=-\infty$，正如预期那样我们有$z'=f$。
+注意对于$z=-\infty$，正如预期那样我们有$z'=f$.
 
 我们可以用高斯透镜方程求解透镜与胶片的距离即\keyindex{对焦距离}{focal distance}{}
 \sidenote{译者注：笔者查阅到的一些资料中“对焦距离”的含义与本书不同，
@@ -500,7 +500,7 @@ ray->`\refvar{ryDirection}{}` = `\refvar{Normalize}{}`(pFocus - ray->`\refvar{ry
 \begin{figure}[htbp]
     \centering\includegraphics[width=0.6\linewidth]{chap06/Focusthinlens.eps}
     \caption{为了让薄透镜聚焦场景中的深度$z$处，
-        \refeq{6.2}可用于计算$z$处的点聚焦到的透镜胶片一侧的距离$z'$。
+        \refeq{6.2}可用于计算$z$处的点聚焦到的透镜胶片一侧的距离$z'$.
         通过调整透镜和胶片平面的距离执行对焦。}
     \label{fig:6.7}
 \end{figure}
@@ -538,14 +538,14 @@ ray->`\refvar{ryDirection}{}` = `\refvar{Normalize}{}`(pFocus - ray->`\refvar{ry
 
 高斯透镜方程也让我们能计算弥散圆大小；
 令焦距为$f$的透镜聚焦距离$z_{\mathrm{f}}$处，胶片平面位于$z'_{\mathrm{f}}$处。
-给定另一个在深度$z$处的点，高斯透镜方程给出到透镜对焦的点的距离$z'$。
+给定另一个在深度$z$处的点，高斯透镜方程给出到透镜对焦的点的距离$z'$.
 该点要么在胶片平面前方，要么在后方；\reffig{6.10}(a)展示了在后方的情况。
 \begin{figure}[htbp]
     \centering\includegraphics[width=0.7\linewidth]{chap06/Circleofconfusiondiameter.eps}
     \caption{(a)若焦距为$f$的薄透镜对焦某个深度$z_{\mathrm{f}}$，
-    则高斯透镜方程给出从透镜到胶片平面的距离为$z'_{\mathrm{f}}$。
+    则高斯透镜方程给出从透镜到胶片平面的距离为$z'_{\mathrm{f}}$.
     场景中在深度$z\neq z_{\mathrm{f}}$处的点将被投影为胶片平面上的圆；
-    这里$z$对焦到胶片平面之后的$z'$。(b)为了计算弥散圆的直径，
+    这里$z$对焦到胶片平面之后的$z'$.(b)为了计算弥散圆的直径，
     我们可应用相似三角形：透镜直径$d_{\mathrm{l}}$与$z'$之比一定和
     弥散圆直径$d_{\mathrm{c}}$与$z'-z'_{\mathrm{f}}$之比相同。}
     \label{fig:6.10}
@@ -568,7 +568,7 @@ ray->`\refvar{ryDirection}{}` = `\refvar{Normalize}{}`(pFocus - ray->`\refvar{ry
 注意弥散圆直径正比于透镜直径。
 透镜直径常表示为透镜的\keyindex{F值}{$f$-number}{}
 \sidenote{译者注：也称焦比、光圈系数。}$n$，
-它将直径表示为焦距的分数，$\displaystyle d_{\mathrm{l}}=\frac{f}{n}$。
+它将直径表示为焦距的分数，$\displaystyle d_{\mathrm{l}}=\frac{f}{n}$.
 
 \reffig{6.11}展示了50mm焦距和25mm光圈的透镜对焦$z_{\mathrm{f}}=1$m时该函数的图像。
 注意模糊度关于焦平面两边的深度是不对称的，
@@ -624,7 +624,7 @@ if (`\refvar{lensRadius}{}` > 0) {
 第\refchap{蒙特卡罗积分}定义的函数\refvar{ConcentricSampleDisk}{()}接收
 $[0,1)^2$中的样本位置$(u,v)$并将其映射到中心位于原点$(0,0)$处的2D单位圆盘。
 为了将其转化为透镜上的一点，用透镜半径缩放这些坐标。
-类\refvar{CameraSample}{}在成员变量\refvar{pLens}{}中提供透镜采样参数$(u,v)$。
+类\refvar{CameraSample}{}在成员变量\refvar{pLens}{}中提供透镜采样参数$(u,v)$.
 \begin{lstlisting}
 `\initcode{Sample point on lens}{=}`
 `\refvar{Point2f}{}` pLens = `\refvar{lensRadius}{}` * `\refvar{ConcentricSampleDisk}{}`(sample.`\refvar{pLens}{}`);

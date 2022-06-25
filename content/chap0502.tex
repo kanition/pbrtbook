@@ -32,7 +32,7 @@ private:
 \end{lstlisting}
 
 光谱数据经常以一组样本$(\lambda_i,v_i)$提供给我们，
-其中第$i$个样本有在波长$\lambda_i$处的某值$v_i$。
+其中第$i$个样本有在波长$\lambda_i$处的某值$v_i$.
 一般而言，样本可能有不规则间隔，可能比\refvar{SampledSpectrum}{}要存储的更多或更少
 （见pbrt发行中路径\href{https://pbrt.org/scenes-v3}{\ttfamily scenes/spds}下
 pbrt所用的各种SPD，它们许多都有不规则间隔）。
@@ -559,10 +559,10 @@ if (rgb[0] <= rgb[1] && rgb[0] <= rgb[2]) {
 如果红色最小，则我们知道绿色和蓝色有比红色更大的值。
 这样我们可以通过给其赋予红色分量值乘以\refvar{rgbRefl2SpectWhite}{}中的
 白色光谱来开始转换最终要返回的SPD。
-完成后，RGB值中剩下要处理的是$(0,g-r,b-r)$。
+完成后，RGB值中剩下要处理的是$(0,g-r,b-r)$.
 代码依次确定剩下两个分量谁最小。
 该值乘以青色\sidenote{译者注：原文cyan。}（绿蓝）光谱并加到结果中，
-我们还剩下$(0,g-b,0)$或$(0,0,b-g)$。
+我们还剩下$(0,g-b,0)$或$(0,0,b-g)$.
 基于绿色或蓝色通道哪一个非零，绿色或蓝色通道SPD被剩余部分缩放完成转换。
 \begin{lstlisting}
 `\initcode{Compute reflectance SampledSpectrum with rgb[0] as minimum}{=}`

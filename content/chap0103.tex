@@ -587,7 +587,7 @@ std::unique_ptr<`\refvar{Sampler}{}`> `\initvar{tileSampler}{}` = sampler->`\ref
 该计算中必须考虑两个问题：
 第一，要采样的全部像素边界可能不等于全图分辨率。
 例如，用户可能指定采样一个像素子集的“裁窗”。
-第二，如果图像分辨率不是16的倍数，则图像右边和底部的图块不是完整的$16\times16$。
+第二，如果图像分辨率不是16的倍数，则图像右边和底部的图块不是完整的$16\times16$.
 \begin{lstlisting}
 `\initcode{Compute sample bounds for tile}{=}`
 int x0 = sampleBounds.pMin.x + tile.x * tileSize;
@@ -863,7 +863,7 @@ $\bm n$是交点处的表面法向量，
 \protect\refvar{Camera}{}负责规范化生成光线的方向分量，
 所以这里无需再规范化了。
 本书中规范化后的方向用符号$\bm \omega$表示，
-在pbrt代码中我们用{\ttfamily wo}表示散射光的出射方向${\bm \omega}_\mathrm{o}$。
+在pbrt代码中我们用{\ttfamily wo}表示散射光的出射方向${\bm \omega}_\mathrm{o}$.
 \begin{figure}[htbp]
     \centering\input{Pictures/chap01/Whittedintegrationsetting.tex}
     \caption{Whitted积分器的几何设置。

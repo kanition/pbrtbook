@@ -51,7 +51,7 @@ static const `\refvar{Float}{}` OneMinusEpsilon = 0x1.fffffep-1;
 \begin{itemize}
     \item \refvar{Sampler}{}生成的前五维通常由\refvar{Camera}{}使用。
           这种情况下，前两个专门用于选择图像上当前像素区域内的点；
-          第三个用于计算应该取用该样本的时间；第四和五维为景深给出透镜位置$(u,v)$。
+          第三个用于计算应该取用该样本的时间；第四和五维为景深给出透镜位置$(u,v)$.
     \item 一些采样算法在样本向量的某些维度中生成的样本比其他维度更好。
           在系统其他地方，我们假设一般前面的维度具有放置得最好的样本值。
 \end{itemize}
@@ -93,18 +93,18 @@ static const `\refvar{Float}{}` OneMinusEpsilon = 0x1.fffffep-1;
 \begin{figure}[htbp]
     \centering\includegraphics[width=0.5\linewidth]{chap07/Boxdiscrepancy.eps}
     \caption{给定$[0,1)^2$中2D样本点集后矩形（阴影）的偏差。
-    四个样本点中的一个在矩形内，所以该点集将把矩形的面积估为$\frac{1}{4}$。
+    四个样本点中的一个在矩形内，所以该点集将把矩形的面积估为$\frac{1}{4}$.
     该矩形是真实面积是$0.3\times0.3=0.09$，所以该特定矩形的偏差
-    为$0.25-0.09=0.16$。通常，我们关心的是找出所有可能的矩形（或某些其他形状）中的最大偏差。}
+    为$0.25-0.09=0.16$.通常，我们关心的是找出所有可能的矩形（或某些其他形状）中的最大偏差。}
     \label{fig:7.15}
 \end{figure}
 
-为了计算点集的偏差，我们首先取作为$[0,1)^n$子集的一簇形状$B$。
+为了计算点集的偏差，我们首先取作为$[0,1)^n$子集的一簇形状$B$.
 例如常用一个角位于原点的方盒。其对应于
 \begin{align*}
     B=\{[0,v_1]\times[0,v_2]\times\cdots\times[0,v_n]\}\, ,
 \end{align*}
-其中$0\le v_i<1$。给定样本点序列$P=x_1,\ldots,x_N$，
+其中$0\le v_i<1$.给定样本点序列$P=x_1,\ldots,x_N$，
 $P$关于$B$的偏差为\footnote{算符$\sup$，也称作\emph{上确界}，给出了定义域内函数值的最紧上界。}
 \begin{align}\label{eq:7.4}
     D_N(B,P)=\sup\limits_{b\in B}\left|\frac{\#\{x_i\in b\}}{N}-V(b)\right|\, ,
@@ -117,7 +117,7 @@ $P$关于$B$的偏差为\footnote{算符$\sup$，也称作\emph{上确界}，给
 因此，偏差是所有可能的方盒用这种办法逼近其体积时的最差误差。
 当形状集$B$是一个角在原点的方盒集时，
 该值称为\keyindex{星偏差}{star discrepancy}{discrepancy偏差}
-\sidenote{译者注：也称“均匀性偏差”。}，$D^*_N(P)$。
+\sidenote{译者注：也称“均匀性偏差”。}，$D^*_N(P)$.
 对于$B$的另一个流行选择是全体轴对齐框的集合，即去掉了一个角在原点的限制。
 
 对于一些特定点集，可以解析计算偏差。例如考虑一维中的点集
@@ -128,8 +128,8 @@ $P$关于$B$的偏差为\footnote{算符$\sup$，也称作\emph{上确界}，给
 \begin{align*}
     D^*_N(x_1,\ldots,x_N)=\frac{1}{N}\, .
 \end{align*}
-例如，取区间$b=\displaystyle\left[0,\frac{1}{N}\right)$。则$V(b)=\displaystyle\frac{1}{N}$，
-但$\#\{x_i\in b\}=0$。该区间（以及区间$\displaystyle\left[0,\frac{2}{N}\right)$等）
+例如，取区间$b=\displaystyle\left[0,\frac{1}{N}\right)$.则$V(b)=\displaystyle\frac{1}{N}$，
+但$\#\{x_i\in b\}=0$.该区间（以及区间$\displaystyle\left[0,\frac{2}{N}\right)$等）
 的体积与体积内所见点的比例有最大的差异。
 
 该序列的星偏差可通过稍微对其改动来改进：
@@ -143,9 +143,9 @@ $P$关于$B$的偏差为\footnote{算符$\sup$，也称作\emph{上确界}，给
 说明一维点序列的星偏差边界为
 \sidenote{译者注：这里我简单推导了该式：假设$P=\{x_i\}_{i=1}^{N}$已经按照
 升序排列。构造一个新序列$Q=\left\{\frac{j}{N}\right\}_{j=0}^{N}$，然后让$P$和$Q$的元素交错排列构造
-新序列$U=\{u_k\}_{k=1}^{2N+1}=\left\{0,x_1,\frac{1}{N},\ldots,x_i,\frac{i}{N},\ldots,x_N,1\right\}$。
+新序列$U=\{u_k\}_{k=1}^{2N+1}=\left\{0,x_1,\frac{1}{N},\ldots,x_i,\frac{i}{N},\ldots,x_N,1\right\}$.
 则依据偏差的定义可以证明，$D^*_N(x_i)=\max\limits_{1\le k\le 2N}{|u_{k+1}-u_k|}=\max\limits_{1\le i\le N}{d_i}$，
-其中$d_i=\max{\left\{\left|x_i-\frac{i-1}{N}\right|,\left|x_i-\frac{i}{N}\right|\right\}}$。
+其中$d_i=\max{\left\{\left|x_i-\frac{i-1}{N}\right|,\left|x_i-\frac{i}{N}\right|\right\}}$.
 又注意到$d_i=\frac{1}{2N}+\left|x_i-\frac{2i-1}{2N}\right|$，于是得到文中该式。}
 \begin{align*}
     D^*_N(x_i)=\frac{1}{2N}+\max\limits_{1\le i\le N}\left|x_i-\frac{2i-1}{2N}\right|\, .

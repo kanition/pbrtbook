@@ -9,7 +9,7 @@
     E({\bm p},{\bm n})=\int\limits_{\Omega}{L_{\mathrm{i}}({\bm p},{\bm\omega})|\cos\theta|\mathrm{d}\bm\omega}\, ,
 \end{align}
 其中$L_{\mathrm{i}}({\bm p},{\bm\omega})$是入射辐亮度函数（\reffig{5.12}）
-而该积分中项$\cos\theta$取决于辐射亮度定义中的项$\mathrm{d}A^{\perp}$。
+而该积分中项$\cos\theta$取决于辐射亮度定义中的项$\mathrm{d}A^{\perp}$.
 $\theta$度量$\bm\omega$和曲面法线$\bm n$之间的夹角。
 辐射照度通常在关于给定曲面法线$\bm n$的半球方向$H^2(\bm n)$上算出。
 \begin{figure}[htbp]
@@ -57,7 +57,7 @@ $\theta$度量$\bm\omega$和曲面法线$\bm n$之间的夹角。
 \subsection{球坐标上的积分}\label{sub:球坐标上的积分}
 将立体角上的积分转化到球面坐标$(\theta,\varphi)$上常常很方便。
 回想一个$(x,y,z)$方向坐标也可写成球面角形式（\reffig{5.14}）
-\sidenote{译者注：原书此图和后续图中标注为$\varphi$，该公式和后续公式则使用$\phi$。
+\sidenote{译者注：原书此图和后续图中标注为$\varphi$，该公式和后续公式则使用$\phi$.
     笔者修改为统一使用$\varphi$，与前面的章节照应。}：
 \begin{align*}
     x & =\sin\theta\cos\varphi\, , \\
@@ -93,12 +93,12 @@ $\theta$度量$\bm\omega$和曲面法线$\bm n$之间的夹角。
 \begin{align*}
     E({\bm p},{\bm n})=\int_0^{2\pi}\int_0^{\frac{\pi}{2}}L_{\mathrm{i}}({\bm p},\theta,\varphi)\cos\theta\sin\theta\mathrm{d}\theta\mathrm{d}\varphi\, .
 \end{align*}
-如果来自所有方向的辐射亮度都相同，则等式简化为$E=\pi L_{\mathrm{i}}$。
+如果来自所有方向的辐射亮度都相同，则等式简化为$E=\pi L_{\mathrm{i}}$.
 
 为了方便，我们将定义两个把$\theta$和$\varphi$转化为$(x,y,z)$方向向量的函数。
 第一个函数直接应用之前的等式。注意这些函数传入的是$\theta$的正弦和余弦，而不是$\theta$本身。
 这是因为调用者常常已经有$\theta$的正弦和余弦了。
-然而这对于$\varphi$则不是常见情况，所以传入的是$\varphi$。
+然而这对于$\varphi$则不是常见情况，所以传入的是$\varphi$.
 \begin{lstlisting}
 `\refcode{Geometry Inline Functions}{+=}\lastnext{GeometryInlineFunctions}`
 inline `\refvar{Vector3f}{}` `\initvar[SphericalDirection1]{SphericalDirection}{}`(`\refvar{Float}{}` sinTheta, 
@@ -162,7 +162,7 @@ inline `\refvar{Float}{}` `\initvar{SphericalPhi}{}`(const `\refvar{Vector3f}{}`
 如果$\mathrm{d}A$离$\bm p$的距离为1且恰好对齐垂直于$\mathrm{d}\bm\omega$，
 则$\mathrm{d}{\bm\omega}=\mathrm{d}A$，$\theta=0$，进而\refeq{5.6}成立。
 当$\mathrm{d}A$朝着远离$\bm p$运动，或者它旋转而不再对齐$\mathrm{d}\bm\omega$的方向，
-则项$r^2$和$\cos\theta$做相应补偿以减小$\mathrm{d}\bm\omega$。
+则项$r^2$和$\cos\theta$做相应补偿以减小$\mathrm{d}\bm\omega$.
 \begin{figure}[htbp]
     \centering\includegraphics[width=0.5\linewidth]{chap05/DifferentialsolidangleofdA.eps}
     \caption{微分面积$\mathrm{d}A$所对的微分立体角等于$\displaystyle\frac{\mathrm{d}A\cos\theta}{r^2}$，

@@ -9,10 +9,11 @@
     本节我们重申以下记号：
     \begin{itemize}
         \item 用$\mathbb{N}$表示全体正整数构成的集合；$\mathbb{Z}$表示全体整数构成的集合。
-        \item 若命题$p$能推出命题$q$，则记为$p\Rightarrow q$；若$p$与$q$等价，则记为$p\Leftrightarrow q$。
+        \item 若命题$p$能推出命题$q$，则记为$p\Rightarrow q$；若$p$与$q$等价，则记为$p\Leftrightarrow q$.
     \end{itemize}
 \end{notation}
 
+\subsection*{基本原理}
 \begin{theorem}[\protect\keyindex{最小自然数原理}{least number principle}{}]
     设$T$是$\mathbb{N}$的一非空子集，则必有$t_0\in T$，
     使对任意的$t\in T$有$t_0\le t$，即$t_0$是$T$中最小的自然数。
@@ -30,7 +31,7 @@
         \item 有$1\in S$；
         \item 对任意$n\in S$都有$n+1\in S$；
     \end{enumerate}
-    则$S=\mathbb{N}$。
+    则$S=\mathbb{N}$.
 \end{theorem}
 
 \begin{theorem}[\protect\keyindex{数学归纳法}{mathematical induction}{}]
@@ -57,11 +58,12 @@
     也称\keyindex{狄利克雷抽屉原理}{Dirichlet's drawer principle}{}。
 \end{theorem}
 
+\subsection*{整除}
 \begin{definition}
     设$a,b\in\mathbb{Z}$且$a\neq0$，若存在$q\in\mathbb{Z}$使得$b=aq$，
     则称$a$\keyindex{整除}{divide evenly}{}$b$，或说$b$能被$a$整除，记作$a|b$，
     并称$a$是$b$的\keyindex{因数}{divisor}{}，也称{\sffamily 约数}、{\sffamily 除数}，
-    $b$是$a$的\keyindex{倍数}{multiple}{}。$a$不能整除$b$时记作$a\nmid b$。
+    $b$是$a$的\keyindex{倍数}{multiple}{}。$a$不能整除$b$时记作$a\nmid b$.
 \end{definition}
 
 \begin{example}
@@ -76,28 +78,439 @@
         \item $a|b$且$a|c \Leftrightarrow$对任意的$x,y\in\mathbb{Z}$有$a|bx+cy$；
         \item 设$m\neq0$，则$a|b\Leftrightarrow ma|mb$；
         \item $a|b$且$b|a\Rightarrow b=\pm a$；
-        \item 设$b\neq0$，则$a|b\Rightarrow |a|\le|b|$。
+        \item 设$b\neq0$，则$a|b\Rightarrow |a|\le|b|$.
     \end{enumerate}
 \end{theorem}
-
 \begin{corollary}
     非零整数的因数只有有限个。
 \end{corollary}
+\begin{theorem}
+    设整数$b\neq0$，而$d_1,d_2,\ldots,d_k$是$b$的全体因数，
+    则$\displaystyle\frac{b}{d_1},\frac{b}{d_2},\ldots,\frac{b}{d_k}$也是
+    $b$的全体因数。此外，若$b>0$，则当$d$遍历$b$的全体正因数时，
+    $\displaystyle\frac{b}{d}$也遍历$b$的全体正因数。
+\end{theorem}
+\begin{definition}
+    设整数$p\neq0,\pm1$，若$p$除了$\pm1,\pm p$外没有其他因数，
+    则称$p$为\keyindex{质数}{prime number}{}，也称{\sffamily 素数}、{\sffamily 不可约数}。
+    若$a\neq0,\pm1$且$a$不是质数，则称$a$是\keyindex{合数}{composite number}{}。
+\end{definition}
+\begin{example}
+    3、5、11是质数，4、6、12是合数。0和1既不是质数也不是合数。
+\end{example}
+\begin{notation}
+    下文若无特别说明，所指的质数总是正的。
+\end{notation}
+\begin{theorem}
+    \begin{enumerate}
+        \item $a>1$是合数$\Leftrightarrow$$a=de,1<d<a,1<e<a$；
+        \item 若$d>1$，$p$是质数且$d|p$，则$d=p$.
+    \end{enumerate}
+\end{theorem}
+\begin{theorem}
+    若$a$是合数，则必存在质数$p|a$.
+\end{theorem}
+\begin{definition}
+    若一个整数的因数是质数时，称该因数为\keyindex{质因数}{prime factor}{}。
+\end{definition}
+\begin{theorem}
+    设整数$a\ge2$，则$a$一定可表示为质数的乘积（包括$a$本身是质数），即
+    \begin{align}\label{eq:7.ex02.primefactor}
+        a=p_1p_2\cdots p_s\, ,
+    \end{align}
+    其中$p_j(1\le j\le s)$是质数。
+\end{theorem}
+\begin{example}
+    1260共有6个质因数（包括相同的），其中不相同的有4个，即
+    $1260=2\times2\times3\times3\times5\times7=2^2\times3^2\times5\times7$.
+\end{example}
+\begin{corollary}
+    设整数$a\ge2$，
+    \begin{enumerate}
+        \item 若$a$是合数，则必有质数$p|a$且$p\le\sqrt{a}$；
+        \item 若$a$有表示\refeq{7.ex02.primefactor}，则必有质数$p|a$且$p\le a^{\frac{1}{s}}$.
+    \end{enumerate}
+\end{corollary}
+\begin{theorem}
+    质数有无穷多个。
+\end{theorem}
+\begin{theorem}
+    设全体质数按大小排序成
+    \begin{align}
+        p_1=2,\quad p2=3,\quad p_3=5,\ldots\, .
+    \end{align}
+    则有
+    \begin{align}
+        p_n\le2^{2^{n-1}},\quad n=1,2,\ldots\, ,
+    \end{align}
+    及
+    \begin{align}
+        \pi(x)>\log_2{\log_2{x}},\quad x\ge2\, ,
+    \end{align}
+    其中$\pi(x)$表示不超过$x$的质数个数。
+\end{theorem}
 
+\subsection*{带余除法}
+初等数论的证明中最重要、最基本、最直接的工具是下面的
+\keyindex{带余除法}{division with remainder}{}，
+也称\keyindex{欧几里德除法}{Euclidean division}{}。
+\begin{theorem}\label{theorem:7.ex02.EuclideanDivision}
+    对于给定的$a,b\in\mathbb{Z}$且$a\neq0$，必存在唯一一对$q,r\in\mathbb{Z}$，满足
+    \begin{align}\label{eq:7.ex02.EuclideanDivision}
+        b=qa+r,\quad 0\le r<|a|\, .
+    \end{align}
+    此外，$a|b \Leftrightarrow r=0$.
+\end{theorem}
+
+上述定理还有更灵活的形式。
+\begin{theorem}
+    对于给定的$a,b,d\in\mathbb{Z}$且$a\neq0$，必存在唯一一对$q_1,r_1\in\mathbb{Z}$，满足
+    \begin{align}\label{eq:7.7.ex02.remainder}
+        b=q_1a+r_1,\quad d\le r_1<|a|+d\, .
+    \end{align}
+    此外，$a|b \Leftrightarrow a|r_1$.
+\end{theorem}
+
+适当选取$d$可令\refeq{7.7.ex02.remainder}变形为下面两种形式：
+\begin{align}
+    b & =q_1a+r_1, & -\frac{|a|}{2}< r_1\le\frac{|a|}{2}\, ,\label{eq:7.ex02.remainder02} \\
+    b & =q_1a+r_1, & -\frac{|a|}{2}\le r_1<\frac{|a|}{2}\, ,\label{eq:7.ex02.remainder03} \\
+    b & =q_1a+r_1, & 1\le r_1\le |a|\, .\label{eq:7.ex02.remainder04}
+\end{align}
+通常称\refeq{7.ex02.EuclideanDivision}中的$r$为$b$被$a$除后的\keyindex{最小非负余数}{least non-negative remainder}{remainder余数}，
+\refeq{7.ex02.remainder02}和\refeq{7.ex02.remainder03}中的$r_1$都称为\keyindex{绝对最小余数}{least absolute remainder}{remainder余数}，
+\refeq{7.ex02.remainder04}中的$r_1$称为\keyindex{最小正余数}{least positive remainder}{remainder余数}，
+\refeq{7.7.ex02.remainder}中的$r_1$统称为\keyindex{余数}{remainder}{}。
+
+\begin{corollary}
+    设$a>0$，任意整数被$a$除后所得的最小非负余数是且仅是$0,1,\ldots,a-1$这$a$个数中的一个。
+\end{corollary}
+\begin{corollary}
+    给定正整数$a\ge2$，则任一正整数$n$必可唯一表示为
+    \begin{align}
+        n=r_ka^k+r_{k-1}a^{k-1}+\cdots+r_1a+r_0\, ,
+    \end{align}
+    其中整数$k\ge0,0\le r_j\le a-1(0\le j\le k),r_k\neq0$.
+    这即正整数的$a$进制表示。
+\end{corollary}
+
+\subsection*{最大公因数与最小公倍数}
+\begin{definition}
+    设$a_1,a_2\in\mathbb{Z}$，若$d|a_1$且$d|a_2$，则称$d$是
+    $a_1$与$a_2$的\keyindex{公因数}{common divisor}{divisor因数}。
+    一般地，设$a_1,\ldots,a_k$是$k$个整数，若$d|a_1,\cdots,d|a_k$，
+    则称$d$是$a_1,\ldots,a_k$的公因数。
+\end{definition}
+\begin{example}
+    12和18的公因数是$\pm1,\pm2,\pm3,\pm6$.$n$和$n+1$的公因数是$\pm1$.
+    当$a_1,\ldots,a_k$中有一个不为零时，它们的公因数个数有限。
+\end{example}
+\begin{definition}
+    设$a_1,a_2\in\mathbb{Z}$不全为零，称$a_1$和$a_2$的公因数中
+    最大的为$a_1$和$a_2$的\keyindex{最大公因数}{greatest common divisor}{divisor因数}(GCD)，
+    记作$(a_1,a_2)$.一般地，设$a_1,\ldots,a_k$是$k$个不全为零的整数，
+    称$a_1,\ldots,a_k$的公因数中最大的为$a_1,\ldots,a_k$的最大公因数，
+    记作$(a_1,\ldots,a_k)$.用$\mathcal{D}(a_1,\ldots,a_k)$表示$a_1,\ldots,a_k$的
+    所有公因数组成的集合。于是
+    \begin{align}
+        (a_1,a_2)        & =\max\limits_{d\in\mathcal{D}(a_1,a_2)}{d}\, ,        \\
+        (a_1,\ldots,a_k) & =\max\limits_{d\in\mathcal{D}(a_1,\ldots,a_k)}{d}\, .
+    \end{align}
+\end{definition}
+\begin{example}
+    $\mathcal{D}(12,16)=\{\pm1,\pm2,\pm3,\pm6\}$，$(12,18)=6$；
+    $\mathcal{D}(6,10,-15)=\{\pm1\}$，$(6,10,-15)=1$；
+    $(n,n+1)=1$.
+\end{example}
+\begin{theorem}
+    最大公因数满足以下性质：
+    \begin{enumerate}
+        \item $(a_1,a_2)=(a_2,a_1)=(-a_1,a_2)$；一般地，\\
+              $(a_1,a_2,\ldots,a_i,\ldots,a_k)=(a_i,a_2,\ldots,a_1,\ldots,a_k)=(-a_1,a_2,\ldots,a_i,\ldots,a_k)$；
+        \item $a_1|a_j(j=2,\ldots,k)\Rightarrow (a_1,a_2)=(a_1,a_2,\ldots,a_k)=|a_1|$；
+        \item 对任意整数$x$，$(a_1,a_2)=(a_1,a_2,a_1x)$；$(a_1,\ldots,a_k)=(a_1,\ldots,a_k,a_1x)$；
+        \item 对任意整数$x$，$(a_1,a_2)=(a_1,a_2+a_1x)$；\\
+              $(a_1,a_2,a_3,\ldots,a_k)=(a_1,a_2+a_1x,a_3,\ldots,a_k)$；
+        \item 若$p$是质数，则
+              \begin{align}
+                  (p,a_1)=\left\{
+                  \begin{array}{ll}
+                      p, & \text{若}p|a_1\, ,      \\
+                      1, & \text{若}p\nmid a_1\, ;
+                  \end{array}
+                  \right.
+              \end{align}
+              一般地
+              \begin{align}
+                  (p,a_1,\ldots,a_k)=\left\{
+                  \begin{array}{ll}
+                      p, & \text{若}p|a_j,\quad j=1,2,\ldots,k, \\
+                      1, & \text{其他。}
+                  \end{array}
+                  \right.
+              \end{align}
+    \end{enumerate}
+\end{theorem}
+\begin{definition}
+    若$(a_1,a_2)=1$，则称$a_1$和$a_2$是\keyindex{互质}{coprime}{}
+    （或relatively prime、mutually prime）的，也称{\sffamily 互素}、{\sffamily 既约}。
+    一般地，若$(a_1,\ldots,a_k)=1$，则称$a_1,\ldots,a_k$是互质的。
+\end{definition}
+\begin{theorem}
+    若存在整数$x_1,\ldots,x_k$使得$a_1x_1+\cdots+a_kx_k=1$，则$a_1,\ldots,a_k$是互质的。
+\end{theorem}
+\begin{theorem}
+    设正整数$m|(a_1,\ldots,a_k)$，则
+    \begin{align}
+        m\left(\frac{a_1}{m},\cdots,\frac{a_k}{m}\right)=(a_1,\ldots,a_k)\, .
+    \end{align}
+    特别地有
+    \begin{align}
+        \left(\frac{a_1}{(a_1,\cdots,a_k)},\ldots,\frac{a_k}{(a_1,\cdots,a_k)}\right)=1\, .
+    \end{align}
+\end{theorem}
+\begin{definition}
+    设$a_1,a_2\in\mathbb{Z}$均不为零，若$a_1|l$且$a_2|l$，
+    则称$l$是$a_1$和$a_2$的\keyindex{公倍数}{common multiple}{multiple倍数}。
+    一般地，设$a_1,\ldots,a_k$是$k$个均不为零的整数，
+    若$a_1|l,\ldots,a_k|l$，则称$l$是$a_1,\ldots,a_k$的公倍数。
+    此外，以$\mathcal{L}(a_1,\ldots,a_k)$表示$a_1,\ldots,a_k$的所有公倍数构成的集合。
+\end{definition}
+\begin{example}
+    $\mathcal{L}(2,3)=\{0,\pm6,\pm12,\ldots,\pm6k,\ldots\}$.
+\end{example}
+\begin{definition}
+    设$a_1,a_2\in\mathbb{Z}$均不为零，我们把$a_1$和$a_2$公倍数中的最小正数
+    称为$a_1$和$a_2$的\keyindex{最小公倍数}{least common multiple}{multiple倍数}，记作$[a_1,a_2]$，即
+    \begin{align}
+        [a_1,a_2]=\min\limits_{l\in\mathcal{L}(a_1,a_2),l>0}{l}\, .
+    \end{align}
+    一般地，设$a_1,\ldots,a_k\in\mathbb{Z}$均不为零，我们把
+    $a_1,\ldots,a_k$公倍数中的最小正数称为$a_1,\ldots,a_k$的最小公倍数，
+    记作$[a_1,\ldots,a_k]$，即
+    \begin{align}
+        [a_1,\ldots,a_k]=\min\limits_{l\in\mathcal{L}(a_1,\ldots,a_k),l>0}{l}\, .
+    \end{align}
+\end{definition}
+\begin{example}
+    $[2,3]=6$；$[2,3,4]=12$.
+\end{example}
+\begin{theorem}
+    最小公倍数满足以下性质：
+    \begin{enumerate}
+        \item $[a_1,a_2]=[a_2,a_1]=[-a_1,a_2]$；一般有\\
+              $[a_1,a_2,\ldots,a_i,\ldots,a_k]=[a_i,a_2,\ldots,a_1,\ldots,a_k]=[-a_1,a_2,\ldots,a_i,\ldots,a_k]$；
+        \item $a_2|a_1\Rightarrow [a_1,a_2]=|a_1|$；\\
+              $a_j|a_1(2\le j\le k)\Rightarrow [a_1,\ldots,a_k]=|a_1|$；
+        \item 对任意的$d|a_1$，有$[a_1,a_2]=[a_1,a_2,d]$；$[a_1,\ldots,a_k]=[a_1,\ldots,a_k,d]$.
+    \end{enumerate}
+\end{theorem}
+\begin{theorem}
+    设$m>0$，则$[ma_1,\ldots,ma_k]=m[a_1,\ldots,a_k]$.
+\end{theorem}
+\begin{theorem}
+    $a_j|c(1\le j\le k)\Leftrightarrow [a_1,\ldots,a_k]|c$.
+\end{theorem}
+\begin{theorem}
+    设$D$为正整数，则$D=(a_1,\ldots,a_k)$的充要条件是
+    \begin{enumerate}
+        \item $D|a_j(1\le j\le k)$；
+        \item 若$d|a_j(1\le j\le k)$，则$d|D$.
+    \end{enumerate}
+\end{theorem}
+\begin{theorem}
+    设$m>0$，则$m(b_1,\ldots,b_k)=(mb_1,\ldots,mb_k)$.
+\end{theorem}
+\begin{theorem}
+    \begin{enumerate}
+        \item $(a_1,a_2,a_3,\ldots,a_k)=((a_1,a_2),a_3,\ldots,a_k)$；
+        \item $(a_1,\ldots,a_{k+r})=((a_1,\ldots,a_k),(a_{k+1},\ldots,a_{k+r}))$.
+    \end{enumerate}
+\end{theorem}
+\begin{theorem}
+    设$(m,a)=1$，则$(m,ab)=(m,b)$.
+\end{theorem}
+\begin{theorem}
+    设$(m,a)=1$，那么，若$m|ab$，则$m|b$.
+\end{theorem}
+\begin{theorem}
+    $[a_1,a_2](a_1,a_2)=|a_1a_2|$.
+\end{theorem}
+\begin{theorem}
+    设$a_1,\ldots,a_k\in\mathbb{Z}$不全为零，则有
+    \begin{enumerate}
+        \item $(a_1,\ldots,a_k)=\min\{s=a_1x_1+\cdots+a_kx_k:x_j\in\mathbb{Z}(1\le j\le k),s>0\}$，即
+              $a_1,\ldots,a_k$的最大公因数等于$a_1,\ldots,a_k$的所有整系数线性组合
+              构成的集合$S$中的最小正整数。
+        \item 一定存在一组整数$x_{1,0},\ldots,x_{k,0}$使得
+              \begin{align}
+                  (a_1,\ldots,a_k)=a_1x_{1,0}+\cdots+a_kx_{k,0}\, .
+              \end{align}
+    \end{enumerate}
+\end{theorem}
+
+\subsection*{辗转相除法}
+\keyindex{辗转相除法}{Euclidean algorithm}{}，
+也称{\sffamily 欧几里得算法}，是指下面求取最大公因数的算法。
+它最早出现于欧几里得的《几何原本》中，我国则可追溯至约东汉出现的《九章算术》。
+\begin{theorem}\label{theorem:7.ex02.EuclideanAlgorithm}
+    给定$u_0,u_1\in\mathbb{Z}$，且$u_1\neq0,u_1\nmid u_0$.
+    我们一定可以反复应用定理\ref{theorem:7.ex02.EuclideanDivision}得到下面$k+1$个等式：
+    \begin{align}
+        u_0      & =q_0u_1+u_2,             &  & 0<u_2<|u_1|,\nonumber    \\
+        u_1      & =q_1u_2+u_3,             &  & 0<u_3<u_2,\nonumber      \\
+        u_2      & =q_2u_3+u_4,             &  & 0<u_4<u_3,\nonumber      \\
+        \cdots  & \cdots\cdots\cdots\cdots &  & \cdots\cdots\cdots\cdots \\
+        u_{k-2} & =q_{k-2}u_{k-1}+u_k,     &  & 0<u_k<u_{k-1},\nonumber  \\
+        u_{k-1} & =q_{k-1}u_k+u_{k+1},     &  & 0<u_{k+1}<u_k,\nonumber  \\
+        u_k     & =q_ku_{k+1}.             &  & \nonumber                \\
+    \end{align}
+\end{theorem}
+\begin{theorem}
+    在定理\ref{theorem:7.ex02.EuclideanAlgorithm}的条件和符号下，我们有
+    \begin{enumerate}
+        \item $u_{k+1}=(u_0,u_1)$；
+        \item $d|u_0$且$d|u_1$的充要条件是$d|u_{k+1}$；
+        \item 存在整数$x_0,x_1$，使$u_{k+1}=x_0u_0+x_1u_1$.
+    \end{enumerate}
+\end{theorem}
+\begin{example}
+    利用辗转相除法求198和252的最大公因数，并将其表示为198和252的整系数线性组合。因为
+    \begin{align*}
+        252 & =1\times198+54\, , \\
+        198 & =3\times54+36\, ,  \\
+        54  & =1\times36+18\, ,  \\
+        36  & =2\times18\, ,
+    \end{align*}
+    于是$(252,198)=(198,54)=(54,36)=(36,18)=18$，且得
+    \begin{align*}
+        18 & =54-1\times36                 \\
+           & =54-(198-3\times54)           \\
+           & =-198+4\times54               \\
+           & =-198+4\times(252-1\times198) \\
+           & =4\times252-5\times198\, .
+    \end{align*}
+\end{example}
+
+\subsection*{同余}
 \begin{definition}
     设$a,b,m\in\mathbb{Z}$且$m\neq0$，若$m|a-b$，则称$a$与$b$\keyindex{模$m$同余}{congruent modulo $m$}{}，
     也称$a$同余于$b$模$m$、$b$是$a$对模$m$的剩余，记作
-    \begin{align}\label{eq:7.ex02.01}
-        a\equiv b(\mod m)\, ,
+    \begin{align}\label{eq:7.ex02.congruent}
+        a\equiv b\pmod{m}\, ,
     \end{align}
-    其中$m$称为\keyindex{模}{modulus}{}，称\refeq{7.ex02.01}为模$m$的同余式；
+    其中$m$称为\keyindex{模}{modulus}{}，称\refeq{7.ex02.congruent}为模$m$的同余式；
     否则称$a$不同余于$b$模$m$、$b$不是$a$对模$m$的剩余，记作
     \begin{align}
-        a\not\equiv b(\mod m)\, .
+        a\not\equiv b\pmod{m}\, .
     \end{align}
 \end{definition}
 
-\begin{notation}
-    因为$m|a-b\Leftrightarrow -m|a-b$，所以\refeq{7.ex02.01}等价于$a\equiv b(\mod (-m))$。
-    由此，下文均假定模$m\ge1$。
-\end{notation}
+因为$m|a-b\Leftrightarrow -m|a-b$，所以\refeq{7.ex02.congruent}等价于$a\equiv b\pmod{-m}$.
+由此，下文均假定模$m\ge1$.\refeq{7.ex02.congruent}中，
+若$0\le b<m$，则称$b$是$a$对模$m$的最小非负剩余；
+若$1\le b\le m$，则称$b$是$a$对模$m$的最小正剩余；
+若$\displaystyle -\frac{m}{2}<b\le\frac{m}{2}$（或$\displaystyle -\frac{m}{2}\le b<\frac{m}{2}$），
+则称$b$是$a$对模$m$的绝对最小剩余。
+
+\begin{example}
+    $m|a$可记为$a\equiv 0\pmod{m}$；偶数可记为$a\equiv 0\pmod{2}$；
+    奇数可记为$a\equiv 1\pmod{2}$.
+\end{example}
+
+\begin{theorem}
+    $a$与$b$模$m$同余的充要条件是$a$和$b$被$m$除后的最小非负余数相等，即若
+    \begin{align}
+        a & =q_1m+r_1, & 0\le r_1<m\, , \\
+        b & =q_2m+r_2, & 0\le r_2<m\, ,
+    \end{align}
+    则$r_1=r_2$.
+\end{theorem}
+
+容易证明，$a$对模$m$的最小非负剩余、最小正剩余、绝对最小剩余
+正好分别是$a$被$m$除后的最小非负余数、最小正余数、绝对最小余数。
+
+\begin{theorem}
+    同余是一种等价关系，即有
+    \begin{enumerate}
+        \item $a\equiv a\pmod{m}$；
+        \item $a\equiv b\pmod{m} \Leftrightarrow b\equiv a\pmod{m}$；
+        \item $a\equiv b\pmod{m}, b\equiv c\pmod{m} \Rightarrow a\equiv c\pmod{m}$.
+    \end{enumerate}
+\end{theorem}
+\begin{theorem}
+    同余式可以相加，即若
+    \begin{align}\label{eq:7.ex02.addcongruent}
+        a\equiv b\pmod{m},\qquad c\equiv d\pmod{m}\, ,
+    \end{align}
+    则
+    \begin{align}
+        a+c\equiv b+d\pmod{m}\, .
+    \end{align}
+\end{theorem}
+\begin{theorem}
+    同余式可以相乘，即若\refeq{7.ex02.addcongruent}成立，则有
+    \begin{align}
+        ac\equiv bd\pmod{m}\, .
+    \end{align}
+\end{theorem}
+\begin{theorem}
+    设$f(x)=a_nx^n+\cdots+a_0$，$g(x)=b_nx^n+\cdots+b_0$是
+    两个整系数多项式，满足
+    \begin{align}\label{eq:7.ex02.polynomialcongruent}
+        a_j\equiv b_j\pmod{m},\quad 0\le j\le n\, .
+    \end{align}
+    那么若$a\equiv b\pmod{m}$，则
+    \begin{align}
+        f(a)\equiv g(b)\pmod{m}\, .
+    \end{align}
+\end{theorem}
+\begin{definition}
+    把满足\refeq{7.ex02.polynomialcongruent}的这两个多项式
+    称作多项式$f(x)$与$g(x)$模$m$同余，记作
+    \begin{align}
+        f(x)\Equiv g(x)\pmod{m}\, .
+    \end{align}
+\end{definition}
+
+\begin{theorem}
+    设$d\ge1$， $d|m$，则$a\equiv b\pmod{m} \Rightarrow a\equiv b\pmod{d}$.
+\end{theorem}
+\begin{theorem}
+    设$d\neq0$，则$a\equiv b\pmod{m} \Leftrightarrow da\equiv db\pmod{|d|m}$.
+\end{theorem}
+
+注意在模不变的条件下，同余式两边不能相约。
+\begin{example}
+    $6\times3\equiv6\times8\pmod{10}$，但是$3\not\equiv8\pmod{10}$.
+\end{example}
+
+\begin{theorem}
+    同余式$\displaystyle ca\equiv cb\pmod{m}\Leftrightarrow a\equiv b\pmod{\frac{m}{(c,m)}}$.
+    特别地，当$(c,m)=1$时可得$a\equiv b\pmod{m}$，即此时可两边约去$c$.
+\end{theorem}
+
+\begin{theorem}
+    若$m\ge1$，$(a,m)=1$，则存在$c$使得
+    \begin{align}
+        ca\equiv1\pmod{m}\, .
+    \end{align}
+    我们把$c$称作$a$对模$m$的逆，或\keyindex{模逆元}{modular multiplicative inverse}{}，
+    记作$a^{-1}\pmod{m}$或$a^{-1}$.
+\end{theorem}
+
+$a$对模$m$的逆不是唯一的。若$c$是$a$对模$m$的逆，
+则任一$\bar{c}\equiv c\pmod{m}$也必是$a$对模$m$的逆；
+$a$对模$m$的任意两个逆$c_1,c_2$必有$c_1\equiv c_2\pmod{m}$；
+若$(a,m)=1$，则$(a^{-1},m)=1$，及$(a^{-1})^{-1}\equiv a\pmod{m}$.
+
+\begin{theorem}
+    同余式组
+    \begin{align}
+        a\equiv b\pmod{m_j}\, \quad j=1,2,\ldots,k
+    \end{align}
+    同时成立的充要条件是
+    \begin{align}
+        a\equiv b\pmod{[m_1,\ldots,m_k]}\, .
+    \end{align}
+\end{theorem}

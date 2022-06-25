@@ -31,7 +31,7 @@ $b$进制的倒根函数$\varPhi_b$通过将这些数字关于小数点翻转
     \label{eq:7.7}
     \varPhi_b(a)=0.d_1(a)d_2(a)\ldots d_m(a)\, .
 \end{align}
-因此，数字$d_i(a)$对倒根的贡献为$\displaystyle\frac{d_i(a)}{b^i}$。
+因此，数字$d_i(a)$对倒根的贡献为$\displaystyle\frac{d_i(a)}{b^i}$.
 
 最简单的低偏差序列之一是van der Corput序列
 \sidenote{译者注：得名自20世纪荷兰数学家Johannes Gaultherus van der Corput。}，
@@ -57,7 +57,7 @@ $b$进制的倒根函数$\varPhi_b$通过将这些数字关于小数点翻转
         $\vdots$ &                &                     \\
         \bottomrule
     \end{tabular}
-    \caption{以2进制计算的前几个非负整数的倒根$\varPhi_2(a)$。
+    \caption{以2进制计算的前几个非负整数的倒根$\varPhi_2(a)$.
         注意$\varPhi_2(a)$的后续值是怎样避开$\varPhi_2(a)$先前的任何值的。
         随着生成该序列越来越多的值，样本必然与之前的样本更加接近，然而仍保证了最小距离足够好。}
     \label{tab:7.3}
@@ -139,7 +139,7 @@ Hammersley点集定义为
 \begin{align*}
     \sum\limits_{i=1}^{64}{d_i(a)2^{-i}}\, ,
 \end{align*}
-它就是$\varPhi_2(a)$。因此，2进制倒根可高效地用数位翻转以及2的幂除法算得。
+它就是$\varPhi_2(a)$.因此，2进制倒根可高效地用数位翻转以及2的幂除法算得。
 
 整数量的数位可以用一系列逻辑位运算高效翻转。
 翻转32位整数数位的函数\refvar{ReverseBits32}{()}的第一行
@@ -170,7 +170,7 @@ inline uint64_t `\initvar{ReverseBits64}{}`(uint64_t n) {
 \end{lstlisting}
 
 然后为了计算2进制倒根，我们翻转数位并乘以$\displaystyle\frac{1}{2^{64}}$，
-其中十六进制浮点常数{\ttfamily 0x1p-64}用于值$2^{-64}$。
+其中十六进制浮点常数{\ttfamily 0x1p-64}用于值$2^{-64}$.
 如\refsub{浮点算术}解释的，通过相应的幂2乘法实现幂2除法
 会给出以IEEE浮点数表示的相同结果（且浮点数乘法通常比浮点数除法更高效）。
 \begin{lstlisting}
@@ -340,12 +340,12 @@ for (int j = 0; j < `\refvar{Primes}{}`[i]; ++j)
 错误地漏掉了值{\ttfamily perm[0]}构成的无限长后继。
 幸运的是，这是一个有简单解析解的几何级数，最后一行加上了其值
 \sidenote{译者注：以$b=4$、{\ttfamily perm}数组为$[3,2,1,0]$、$a=9$时为例：
-$a$以四进制表示为$21$，翻转得$12$，变为四进制浮点数为$0.12$，准确点说是$0.120000\ldots$。
-按照重排表{\ttfamily perm}替换数字后应为$0.213333\ldots$。
-但代码只处理到前两位即0.21，故应手动加上后面的$0.003333\ldots$。
+$a$以四进制表示为$21$，翻转得$12$，变为四进制浮点数为$0.12$，准确点说是$0.120000\ldots$.
+按照重排表{\ttfamily perm}替换数字后应为$0.213333\ldots$.
+但代码只处理到前两位即0.21，故应手动加上后面的$0.003333\ldots$.
 一般地，应补充的$b$进制数字为$0.\underbrace{0\ldots0}_{m\text{个}0}p(0)p(0)p(0)\ldots$，
 其中$m$为$a$的$b$进制位数，依据等比数列求和公式可得
-其值是$\displaystyle\frac{b^{-1}p(0)}{1-b^{-1}}b^{-m}$。}。
+其值是$\displaystyle\frac{b^{-1}p(0)}{1-b^{-1}}b^{-m}$.}。
 \begin{lstlisting}
 `\refcode{Low Discrepancy Static Functions}{+=}\lastcode{LowDiscrepancyStaticFunctions}`
 template <int base>
@@ -480,7 +480,7 @@ for (int i = 0; i < 2; ++i) {
 \end{lstlisting}
 
 对于每个维度，\refvar{baseScales}{}存有缩放因子$2^j$或$3^k$，
-且\refvar{baseExponents}{}存有指数$j$和$k$。
+且\refvar{baseExponents}{}存有指数$j$和$k$.
 \begin{lstlisting}
 `\refcode{HaltonSampler Private Data}{+=}\lastnext{HaltonSamplerPrivateData}`
 `\refvar{Point2i}{}` `\initvar{baseScales}{}`, `\initvar{baseExponents}{}`;
@@ -492,7 +492,7 @@ static constexpr int `\initvar{kMaxResolution}{}` = 128;
 
 为了明白为什么\refvar{HaltonSampler}{}使用该方案来
 将样本映射到像素坐标，考虑用$b$进制倒根因子$b^n$来缩放算出的值的影响。
-如果$a$的数字表示为$b$进制的$d_i(a)$，则回想倒根为$b$进制的值$0.d_1(a)d_2(a)\ldots$。
+如果$a$的数字表示为$b$进制的$d_i(a)$，则回想倒根为$b$进制的值$0.d_1(a)d_2(a)\ldots$.
 例如，如果我们用$b^2$乘以该值，则我们有$d_1(a)d_2(a).d_3(a)\ldots$；
 前两个数字被移到小数点左边，该值的小数部分从$d_3(a)$开始。
 
@@ -500,8 +500,8 @@ static constexpr int `\initvar{kMaxResolution}{}` = 128;
 考虑上面例子中的前两个数字，我们可以看到缩放后的值的整数部分在0到$b^2-1$的范围内，
 且随着$a$增加，在该范围内每过$b^2$个值，其$b$进制的最后两个数字就在某特定值上取得一次。
 
-给定值$x$，$0\le x\le b^2-1$，我们可以求得首个整数部分为$x$的值$a$。
-根据定义，$b$进制的$x$数字为$d_2(x)d_1(x)$。
+给定值$x$，$0\le x\le b^2-1$，我们可以求得首个整数部分为$x$的值$a$.
+根据定义，$b$进制的$x$数字为$d_2(x)d_1(x)$.
 因此，如果$d_1(a)=d_2(x)$且$d_2(a)=d_1(x)$，
 则$a$的倒根被缩放后的值会有等于$x$的整数部分。
 
@@ -545,7 +545,7 @@ mutable int64_t `\initvar{offsetForCurrentPixel}{}`;
 
 在给定像素$(x,y)$内计算首个已被$(2^j,3^k)$缩放的样本索引
 包括计算$x$的2进制最后$j$个数字的逆倒根，我们将其记作$x_r$，
-以及$y$的3进制最后$k$个数字的逆倒根$y_r$。这为我们给出了方程组
+以及$y$的3进制最后$k$个数字的逆倒根$y_r$.这为我们给出了方程组
 \begin{align*}
     x_r & \equiv(i \mod 2^j)\, , \\
     y_r & \equiv(i \mod 3^k)\, ,

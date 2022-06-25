@@ -27,7 +27,7 @@ private:
 \end{align*}
 \begin{figure}[htbp]
     \centering\input{Pictures/chap03/Disksetting.tex}
-    \caption{圆盘形状基本设置。圆盘半径为$r$，沿$z$轴高度为$h$。
+    \caption{圆盘形状基本设置。圆盘半径为$r$，沿$z$轴高度为$h$.
         通过指定最大$\varphi$值和内径$r_{\mathrm{i}}$可扫掠出部分圆盘。}
     \label{fig:3.8}
 \end{figure}
@@ -83,7 +83,7 @@ bool `\refvar{Disk}{}`::`\initvar[Disk::Intersect]{\refvar[Shape::Intersect]{Int
 \end{lstlisting}
 
 第一步是计算射线与圆盘所在平面相交处的参数$t$值。
-我们想求得射线位置$z$分量等于圆盘高度时的$t$。因此
+我们想求得射线位置$z$分量等于圆盘高度时的$t$.因此
 \begin{align*}
     h=o_z+td_z\, ,
 \end{align*}
@@ -144,7 +144,7 @@ if (phi > `\refvar[Disk::phiMax]{phiMax}{}`)
 {\ttfamily v}通过反解参数方程算得。
 命中点的偏导数方程推导过程和之前二次曲面用的一样。
 因为圆盘的法线在任何地方都一样，
-偏导数$\displaystyle\frac{\partial\bm n}{\partial u}$和$\displaystyle\frac{\partial\bm n}{\partial v}$都是平凡的$(0,0,0)$。
+偏导数$\displaystyle\frac{\partial\bm n}{\partial u}$和$\displaystyle\frac{\partial\bm n}{\partial v}$都是平凡的$(0,0,0)$.
 \begin{lstlisting}
 `\initcode{Find parametric representation of disk hit}{=}`
 `\refvar{Float}{}` u = phi / `\refvar[Disk::phiMax]{phiMax}{}`;

@@ -15,7 +15,7 @@
 \end{align}
 此时$\displaystyle \lim\limits_{i \to \infty}{\bm M_i}$必存在
 且在Frobenius范数\sidenote{矩阵所有元素的平方和。}度量下最接近$\bm M$，可作为$\bm R$或$-\bm R$，
-然后反解$\bm S=\bm R^{-1}\bm M$。
+然后反解$\bm S=\bm R^{-1}\bm M$.
 
 证明该算法之前，先介绍实方阵的正交对角分解定理：
 \begin{theorem}
@@ -25,7 +25,7 @@
         \bm A=\bm P\bm \varSigma\bm Q^{-1}\, ,
     \end{align}
     其中$\bm \varSigma=\mathrm{diag}(\sigma_1,\sigma_2,\ldots,\sigma_n)$，
-    $\sigma_k>0$，$k=1,2,\ldots,n$。
+    $\sigma_k>0$，$k=1,2,\ldots,n$.
 \end{theorem}
 
 我们从两方面证明这个算法：
@@ -33,7 +33,7 @@
     \item 收敛性：该算法中必存在极限$\displaystyle\lim\limits_{i\rightarrow\infty}\bm M_i$，
           且为正交矩阵。
     \item 最优性：在Frobenius范数度量下$\displaystyle\lim\limits_{i\rightarrow\infty}\bm M_i$
-          最接近$\bm M$。
+          最接近$\bm M$.
 \end{itemize}
 
 \subsection{收敛性}\label{sub:收敛性02ex02}
@@ -43,7 +43,7 @@
         \bm M=\bm P\bm \varSigma\bm Q^{-1}\, ,
     \end{align}
     其中${\bm \varSigma}=\mathrm{diag}(\sigma_1,\sigma_2,\sigma_3)$，
-    $\sigma_k>0$，$k=1,2,3$。
+    $\sigma_k>0$，$k=1,2,3$.
 
     构造序列$\displaystyle\{\bm M_i\}_{i=0}^{\infty}$：
     \begin{align}
@@ -84,7 +84,7 @@
     \begin{align}
         d_k^{(i)}-d_k^{(i+1)}=\frac{1}{2}\left(d_k^{(i)}-\frac{1}{d_k^{(i)}}\right)\ge0\, .
     \end{align}
-    所以数列$\{d_k^{(i)}\}_{i=0}^{\infty}$是一个存在下界的单调减数列，必存在极限$d_k=\lim\limits_{i\rightarrow\infty}{d_k^{(i)}}$。
+    所以数列$\{d_k^{(i)}\}_{i=0}^{\infty}$是一个存在下界的单调减数列，必存在极限$d_k=\lim\limits_{i\rightarrow\infty}{d_k^{(i)}}$.
     对\refeq{02ex.03}两边取极限可求得$d_k=1$，因此存在
     \begin{align}
         \lim\limits_{i\rightarrow\infty}\bm D_i & =\bm I\, ,                                                                  \\
@@ -101,7 +101,7 @@
         \min\limits_{\bm X}{\|\bm X-\bm M\|_{\mathrm{F}}^2}\, , \\
         \mathrm{s.t.}\quad \bm X^{\mathrm{T}}\bm X=\bm I\, .
     \end{align}
-    其中$\displaystyle\|\bm X-\bm M\|_{\mathrm{F}}^2=\sum\limits_{i,j}{(x_{i,j}-m_{i,j})^2}$。
+    其中$\displaystyle\|\bm X-\bm M\|_{\mathrm{F}}^2=\sum\limits_{i,j}{(x_{i,j}-m_{i,j})^2}$.
     注意到矩阵恒等式$\|\bm A\|_{\mathrm{F}}^2=\mathrm{tr}(\bm A^{\mathrm{T}}\bm A)$，
     利用拉格朗日乘数法，记拉格朗日乘子为对称矩阵$\bm U$，可转换为优化问题：
     \begin{align}
@@ -146,8 +146,8 @@
     即迭代算法收敛到该优化问题最优解。
 \end{prove}
 
-要注意的是，我们没有说一定是$\bm R$取$\bm P\bm Q^{-1}$以及$\bm S$取$\bm Q\varSigma\bm Q^{-1}$。
+要注意的是，我们没有说一定是$\bm R$取$\bm P\bm Q^{-1}$以及$\bm S$取$\bm Q\varSigma\bm Q^{-1}$.
 这是因为$\bm P\bm Q^{-1}$的行列式可能为负，
 如果渲染器要保持旋转矩阵行列式为正的性质，
-则此时$\bm R$应取$-\bm P\bm Q^{-1}$，$\bm S$应取$-\bm Q\varSigma\bm Q^{-1}$。
+则此时$\bm R$应取$-\bm P\bm Q^{-1}$，$\bm S$应取$-\bm Q\varSigma\bm Q^{-1}$.
 事实上，这种情况是缩放矩阵$\bm S$含有负数因子进行了镜像操作造成的。

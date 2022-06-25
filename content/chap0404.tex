@@ -618,9 +618,9 @@ std::unique_ptr<int[]> prims1(new int[(maxDepth+1) * `\refvar[KdTreeAccel::primi
 \begin{figure}[htbp]
     \centering\input{Pictures/chap04/kdraytraversal.tex}
     \caption{光线遍历穿过kd树。(a)光线与树的边框相交，
-    给出了要考虑的初始参数范围$[t_{\min},t_{\max}]$。
+    给出了要考虑的初始参数范围$[t_{\min},t_{\max}]$.
     (b)因为该范围非空，所以这里需要考虑根节点的两个孩子。
-    光线首先进入左侧孩子，标记为“near”，有参数范围$[t_{\min},t_{\text{split}}]$。
+    光线首先进入左侧孩子，标记为“near”，有参数范围$[t_{\min},t_{\text{split}}]$.
     如果近处节点是含有图元的叶子节点，则执行光线-图元相交测试；
     否则处理其孩子节点。(c)如果该节点内没有找到命中处，或者找到的命中处
     超出了$[t_{\min},t_{\text{split}}]$，则处理右边的远处节点。

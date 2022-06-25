@@ -24,7 +24,7 @@ public:
 它们都有\refvar{Vector2}{}的相应版本，实现的区别也很简单。
 
 一个向量表示为分量的元组，以所在定义空间$x,y,z$（3D）轴的形式给出其表达。
-一个3D向量$\bm v$的各个分量写作$v_x,v_y$和$v_z$。
+一个3D向量$\bm v$的各个分量写作$v_x,v_y$和$v_z$.
 
 \begin{lstlisting}
 `\initcode{Vector2 Public Data}{=}`
@@ -112,9 +112,9 @@ bool `\initvar{HasNaNs}{}`() const {
 向量加减法的一般几何解释如\reffig{2.3}和\reffig{2.4}所示。
 \begin{figure}[htbp]
     \centering\input{Pictures/chap02/Vectoraddition.tex}
-    \caption{（左图）向量加法：$\bm v+\bm w$。
+    \caption{（左图）向量加法：$\bm v+\bm w$.
         （右图）注意和$\bm v+\bm w$表示由$\bm v$与$\bm w$构成的平行四边形的对角线，
-        表明向量加法满足交换律：$\bm v+\bm w=\bm w+\bm v$。}
+        表明向量加法满足交换律：$\bm v+\bm w=\bm w+\bm v$.}
     \label{fig:2.3}
 \end{figure}
 \begin{figure}[htbp]
@@ -276,7 +276,7 @@ inline T `\initvar{AbsDot}{}`(const `\refvar{Vector3}{}`<T> &v1, const `\refvar{
     \end{array}\right|\, ,
 \end{align*}
 其中$\mathbf{i},\mathbf{j}$和$\mathbf{k}$分别表示
-轴$(1,0,0)$、$(0,1,0)$和$(0,0,1)$。
+轴$(1,0,0)$、$(0,1,0)$和$(0,0,1)$.
 注意该式只是辅助记忆的，并没有严格的数学定义，
 因为该矩阵的元素混有标量和向量。
 
@@ -309,12 +309,12 @@ template <typename T> inline `\refvar{Vector3}{}`<T>
 
 该定义还给出了计算平行四边形面积的简便方法（\reffig{2.5}）。
 如果平行四边形两邻边由向量$\bm v_1$和$\bm v_2$给定，
-其高为$h$，面积则为$\|\bm v_1\|h$。
+其高为$h$，面积则为$\|\bm v_1\|h$.
 因为$h=\sin\theta\|\bm v_2\|$，
-我们可以用\refeq{2.2}得到面积为$\|\bm v_1\times\bm v_2\|$。
+我们可以用\refeq{2.2}得到面积为$\|\bm v_1\times\bm v_2\|$.
 \begin{figure}[htbp]
     \centering\input{Pictures/chap02/Parallelogramarea.tex}
-    \caption{由向量$\bm v_1$和$\bm v_2$给定邻边的平行四边形面积等于$\|\bm v_1\|h$。
+    \caption{由向量$\bm v_1$和$\bm v_2$给定邻边的平行四边形面积等于$\|\bm v_1\|h$.
         由\protect\refeq{2.2}，$\bm v_1$和$\bm v_2$点积的长度等于
         两向量长度之积乘以它们夹角的正弦——平行四边形面积。}
     \label{fig:2.5}

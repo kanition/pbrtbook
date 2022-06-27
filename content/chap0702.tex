@@ -415,7 +415,7 @@ std::vector<std::vector<`\refvar{Point2f}{}`>> `\initvar{sampleArray2D}{}`;
 `\initcode{Sampler Private Data}{=}`
 size_t `\initvar{array1DOffset}{}`, `\initvar{array2DOffset}{}`;
 \end{lstlisting}
-当处理新像素或当前像素中样本数量改变时，这些数组偏移量必须重置为0。
+当处理新像素或当前像素中样本数量改变时，这些数组偏移量必须重置为0.
 \begin{lstlisting}
 `\initcode{Reset array offsets for next pixel sample}{=}`
 `\refvar{array1DOffset}{}` = `\refvar{array2DOffset}{}` = 0;
@@ -493,7 +493,7 @@ bool `\refvar[PixelSampler::SetSampleNumber]{SetSampleNumber}{}`(int64_t);
 （以及\refvar{sampleArray1D}{}和\refvar{sampleArray2D}{}）。
 
 \refvar{current1DDimension}{}和\refvar{current2DDimension}{}保存了
-当前像素样本针对对应数组的偏移量。在开始处理每个新样本前必须将它们重置为0。
+当前像素样本针对对应数组的偏移量。在开始处理每个新样本前必须将它们重置为0.
 \begin{lstlisting}
 `\initcode{PixelSampler Protected Data}{=}\initnext{PixelSamplerProtectedData}`
 std::vector<std::vector<`\refvar{Float}{}`>> `\initvar{samples1D}{}`;

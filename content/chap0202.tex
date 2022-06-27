@@ -166,7 +166,7 @@ operator*(T s, const `\refvar{Vector3}{}`<T> &v) { return v * s; }
     编译器一般会被限制执行许多这种转换。
     对于除法，IEEE浮点标准要求对所有\protect{\ttfamily x}都有\protect{\ttfamily x/x=1}，
     但如果我们计算\protect{\ttfamily 1/x}将其存储到变量中再和\protect{\ttfamily x}相乘，
-    并不能保证结果是1。
+    并不能保证结果是1.
     在这种情况下，我们愿意失去这种保证以换取更高的性能。
     关于这个问题的更多讨论详见\protect\refsec{控制舍入误差}。}。
 

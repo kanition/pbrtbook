@@ -325,7 +325,7 @@ SAH适用于kd树和BVH；为节点中一系列候选划分平面计算估计的
 并选择给出最少开销的划分。
 
 在这里的实现中，相交开销$t_{\text{isect}}$和遍历开销$t_{\text{trav}}$可由用户设置；
-它们的默认值分别是80和1。
+它们的默认值分别是80和1.
 重要的是，这两个值的比例决定了树构建算法的表现
 \footnote{该方法的许多其他实现似乎给这些开销使用了接近得多的值，
     有时甚至接近相等值（例如，见\citet{hurley2002fast}）。
@@ -346,7 +346,7 @@ SAH适用于kd树和BVH；为节点中一系列候选划分平面计算估计的
     t_{\text{isect}}N \quad \text{和} \quad t_{\text{trav}}+(1-b_{\mathrm{e}})(p_BN_Bt_{\text{isect}}+p_AN_At_{\text{isect}})\, ,
 \end{align*}
 其中$b_{\mathrm{e}}$是为零的“补贴”\sidenote{译者注：原文bonus。}值，
-除非两个区域之一完全为空时取值0到1。
+除非两个区域之一完全为空时取值0到1.
 
 有了为开销模型计算概率的方法，唯一要解决的问题是
 怎么生成候选划分位置以及怎么为每个候选者高效计算开销。
@@ -468,7 +468,7 @@ std::sort(&edges[axis][0], &edges[axis][2*nPrimitives],
 所以无论如何最终算法的功能是正确的。}。
 
 在第一个边界处，依据定义所有图元必须在该边界之上，
-所以{\ttfamily nAbove}初始化为{\ttfamily nPrimitives}且{\ttfamily nBelow}设为0。
+所以{\ttfamily nAbove}初始化为{\ttfamily nPrimitives}且{\ttfamily nBelow}设为0.
 当循环考虑在边界框范围尾部的划分时，
 {\ttfamily nAbove}需要递减，因为该框以前一定在划分平面之上，
 如果在该点完成划分则它不会再在平面之上。

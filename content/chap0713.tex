@@ -512,10 +512,10 @@
 \keyindex{辗转相除法}{Euclidean algorithm}{}，
 也称{\sffamily 欧几里得算法}，是指下面求取最大公因数的算法。
 它最早出现于欧几里得的《几何原本》中，我国则可追溯至约东汉出现的《九章算术》。
-\begin{theorem}\label{theorem:7.ex02.EuclideanAlgorithm}
+\begin{theorem}\label{theorem:7.ex02.18}
     给定$u_0,u_1\in\mathbb{Z}$，且$u_1\neq0,u_1\nmid u_0$.
-    我们一定可以反复应用定理\ref{theorem:7.ex02.EuclideanDivision}得到下面$k+1$个等式：
-    \begin{align}
+    我们一定可以反复应用定理\ref{theorem:7.ex02.4}得到下面$k+1$个等式：
+    \begin{align}\label{eq:7.ex02.EuclideanAlgorithm}
         u_0     & =q_0u_1+u_2,             &  & 0<u_2<|u_1|,\nonumber    \\
         u_1     & =q_1u_2+u_3,             &  & 0<u_3<u_2,\nonumber      \\
         u_2     & =q_2u_3+u_4,             &  & 0<u_4<u_3,\nonumber      \\
@@ -525,57 +525,86 @@
         u_k     & =q_ku_{k+1}.             &  & \nonumber
     \end{align}
 \end{theorem}
-% \begin{theorem}
-%     在定理\ref{theorem:7.ex02.EuclideanAlgorithm}的条件和符号下，我们有
-%     \begin{enumerate}
-%         \item $u_{k+1}=(u_0,u_1)$；
-%         \item $d|u_0$且$d|u_1$的充要条件是$d|u_{k+1}$；
-%         \item 存在整数$x_0,x_1$，使$u_{k+1}=x_0u_0+x_1u_1$.
-%     \end{enumerate}
-% \end{theorem}
-% \begin{example}
-%     利用辗转相除法求198和252的最大公因数，并将其表示为198和252的整系数线性组合。因为
-%     \begin{align*}
-%         252 & =1\times198+54\, , \\
-%         198 & =3\times54+36\, ,  \\
-%         54  & =1\times36+18\, ,  \\
-%         36  & =2\times18\, ,
-%     \end{align*}
-%     于是$(252,198)=(198,54)=(54,36)=(36,18)=18$，且得
-%     \begin{align*}
-%         18 & =54-1\times36                 \\
-%            & =54-(198-3\times54)           \\
-%            & =-198+4\times54               \\
-%            & =-198+4\times(252-1\times198) \\
-%            & =4\times252-5\times198\, .
-%     \end{align*}
-% \end{example}
+\begin{prove}
+    对$u_0,u_1$应用定理\ref{theorem:7.ex02.4}，由$u_1\nmid u_0$知
+    必有第一式成立。同样地，如果$u_2\nmid u_1$就得到第二式。
+    如果$u_2\nmid u_1$就证明定理对$k=1$成立。以此类推，就得到
+    \begin{align}
+        |u_1|>u_2>u_3\cdots>u_{j+1}>0
+    \end{align}
+    以及前面$j$个等式成立。若$u_{j+1}|u_j$，则定理对$k=j$成立；
+    若$u_{j+1}\nmid u_j$，则继续对$u_j,u_{j+1}$用定理\ref{theorem:7.ex02.4}。
+    由于小于$|u_1|$的正整数只有有限个，而1整除任一整数，
+    所以该过程不能无限进行下去，一定会出现某个$k$，要么$1<u_{k+1}|u_k$，
+    要么$1=u_{k+1}|u_k$，证毕。
+\end{prove}
+\begin{theorem}\label{theorem:7.ex02.19}
+    在定理\ref{theorem:7.ex02.18}的条件和符号下，我们有
+    \begin{enumerate}
+        \item $u_{k+1}=(u_0,u_1)$；
+        \item $d|u_0$且$d|u_1$的充要条件是$d|u_{k+1}$；
+        \item 存在整数$x_0,x_1$，使$u_{k+1}=x_0u_0+x_1u_1$.
+    \end{enumerate}
+\end{theorem}
+\begin{prove}
+    利用定理\ref{theorem:7.ex02.6}(1)、(4)，从\refeq{7.ex02.EuclideanAlgorithm}的
+    最后一式开始依次往上推，可得
+    \begin{align}
+        u_{k+1} & =(u_{k+1},u_k)=(u_k,u_{k-1})=(u_{k-1},u_{k-2})=\cdots\nonumber \\
+                & =(u_4,u_3)=(u_3,u_2)=(u_2,u_1)=(u_1,u_0)\, ,
+    \end{align}
+    这就得到了第一个结论。利用定理\ref{theorem:7.ex02.3}(2)、(3)，
+    从\refeq{7.ex02.EuclideanAlgorithm}立即推出第二个结论。
+    由\refeq{7.ex02.EuclideanAlgorithm}的第$k$式知$u_{k+1}$可
+    表示为$u_{k-1}$和$u_k$的整系数线性组合，
+    利用\refeq{7.ex02.EuclideanAlgorithm}的第$k-1$式
+    可消去该表示中的$u_k$，将$u_{k+1}$表示为$u_{k-2}$和$u_{k-1}$的
+    整系数线性组合。以此类推利用\refeq{7.ex02.EuclideanAlgorithm}的
+    第$k-2,k-3,\ldots,2,1$式，就能相应地消去$u_{k-1},u_{k-2},\ldots,u_3,u_2$，
+    最后将$u_{k+1}$表示为$u_0$和$u_1$的整系数线性组合，即证明了第三个结论。
+\end{prove}
+\begin{example}
+    利用辗转相除法求198和252的最大公因数，并将其表示为198和252的整系数线性组合。因为
+    \begin{align*}
+        252 & =1\times198+54\, , \\
+        198 & =3\times54+36\, ,  \\
+        54  & =1\times36+18\, ,  \\
+        36  & =2\times18\, ,
+    \end{align*}
+    于是$(252,198)=(198,54)=(54,36)=(36,18)=18$，且得
+    \begin{align*}
+        18 & =54-1\times36                 \\
+           & =54-(198-3\times54)           \\
+           & =-198+4\times54               \\
+           & =-198+4\times(252-1\times198) \\
+           & =4\times252-5\times198\, .
+    \end{align*}
+\end{example}
 
-% \subsection*{同余}
-% \begin{definition}
-%     设$a,b,m\in\mathbb{Z}$且$m\neq0$，若$m|a-b$，则称$a$与$b$\keyindex{模$m$同余}{congruent modulo $m$}{}，
-%     也称$a$同余于$b$模$m$、$b$是$a$对模$m$的剩余，记作
-%     \begin{align}\label{eq:7.ex02.congruent}
-%         a\equiv b\pmod{m}\, ,
-%     \end{align}
-%     其中$m$称为\keyindex{模}{modulus}{}，称\refeq{7.ex02.congruent}为模$m$的同余式；
-%     否则称$a$不同余于$b$模$m$、$b$不是$a$对模$m$的剩余，记作
-%     \begin{align}
-%         a\not\equiv b\pmod{m}\, .
-%     \end{align}
-% \end{definition}
+\subsection*{同余}
+\begin{definition}
+    设$a,b,m\in\mathbb{Z}$且$m\neq0$，若$m|a-b$，则称$a$与$b$\keyindex{模$m$同余}{congruent modulo $m$}{}，
+    也称$a$同余于$b$模$m$、$b$是$a$对模$m$的剩余，记作
+    \begin{align}\label{eq:7.ex02.congruent}
+        a\equiv b\pmod{m}\, ,
+    \end{align}
+    其中$m$称为\keyindex{模}{modulus}{}，称\refeq{7.ex02.congruent}为模$m$的同余式；
+    否则称$a$不同余于$b$模$m$、$b$不是$a$对模$m$的剩余，记作
+    \begin{align}
+        a\not\equiv b\pmod{m}\, .
+    \end{align}
+\end{definition}
 
-% 因为$m|a-b\Leftrightarrow -m|a-b$，所以\refeq{7.ex02.congruent}等价于$a\equiv b\pmod{-m}$.
-% 由此，下文均假定模$m\ge1$.\refeq{7.ex02.congruent}中，
-% 若$0\le b<m$，则称$b$是$a$对模$m$的最小非负剩余；
-% 若$1\le b\le m$，则称$b$是$a$对模$m$的最小正剩余；
-% 若$\displaystyle -\frac{m}{2}<b\le\frac{m}{2}$（或$\displaystyle -\frac{m}{2}\le b<\frac{m}{2}$），
-% 则称$b$是$a$对模$m$的绝对最小剩余。
-
-% \begin{example}
-%     $m|a$可记为$a\equiv 0\pmod{m}$；偶数可记为$a\equiv 0\pmod{2}$；
-%     奇数可记为$a\equiv 1\pmod{2}$.
-% \end{example}
+因为$m|a-b\Leftrightarrow -m|a-b$，所以\refeq{7.ex02.congruent}等价于$a\equiv b\pmod{-m}$.
+由此，下文均假定模$m\ge1$.\refeq{7.ex02.congruent}中，
+若$0\le b<m$，则称$b$是$a$对模$m$的最小非负剩余；
+若$1\le b\le m$，则称$b$是$a$对模$m$的最小正剩余；
+若$\displaystyle -\frac{m}{2}<b\le\frac{m}{2}$（或$\displaystyle -\frac{m}{2}\le b<\frac{m}{2}$），
+则称$b$是$a$对模$m$的绝对最小剩余。
+\begin{example}
+    $m|a$可记为$a\equiv 0\pmod{m}$；偶数可记为$a\equiv 0\pmod{2}$；
+    奇数可记为$a\equiv 1\pmod{2}$.
+\end{example}
 
 % \begin{theorem}
 %     $a$与$b$模$m$同余的充要条件是$a$和$b$被$m$除后的最小非负余数相等，即若
@@ -585,34 +614,48 @@
 %     \end{align}
 %     则$r_1=r_2$.
 % \end{theorem}
+% \begin{prove}
+%     因为$a-b=(q_1-q_2)m+(r_1-r_2)$，所以$m|a-b$的充要条件是$m|r_1-r_2$，
+%     由此及$0\le |r_1-r_2|<m$即得$r_1=r_2$.
+% \end{prove}
 
 % 容易证明，$a$对模$m$的最小非负剩余、最小正剩余、绝对最小剩余
 % 正好分别是$a$被$m$除后的最小非负余数、最小正余数、绝对最小余数。
 
-% \begin{theorem}\label{theorem:7.ex02.congruentequivalence}
-%     同余是一种等价关系，即有
-%     \begin{enumerate}
-%         \item $a\equiv a\pmod{m}$；
-%         \item $a\equiv b\pmod{m} \Leftrightarrow b\equiv a\pmod{m}$；
-%         \item $a\equiv b\pmod{m}, b\equiv c\pmod{m} \Rightarrow a\equiv c\pmod{m}$.
-%     \end{enumerate}
-% \end{theorem}
-% \begin{theorem}
-%     同余式可以相加，即若
-%     \begin{align}\label{eq:7.ex02.addcongruent}
-%         a\equiv b\pmod{m},\qquad c\equiv d\pmod{m}\, ,
-%     \end{align}
-%     则
-%     \begin{align}
-%         a+c\equiv b+d\pmod{m}\, .
-%     \end{align}
-% \end{theorem}
-% \begin{theorem}
-%     同余式可以相乘，即若\refeq{7.ex02.addcongruent}成立，则有
-%     \begin{align}
-%         ac\equiv bd\pmod{m}\, .
-%     \end{align}
-% \end{theorem}
+\begin{theorem}\label{theorem:7.ex02.20}
+    同余是一种等价关系，即有
+    \begin{enumerate}
+        \item $a\equiv a\pmod{m}$；
+        \item $a\equiv b\pmod{m} \Leftrightarrow b\equiv a\pmod{m}$；
+        \item $a\equiv b\pmod{m}, b\equiv c\pmod{m} \Rightarrow a\equiv c\pmod{m}$.
+    \end{enumerate}
+\end{theorem}
+\begin{prove}
+    由$m|a-a=0$，$m|a-b\Leftrightarrow m|b-a$，以及
+    $m|a-b,m|b-c\Rightarrow m|(a-b)+(b-c)=a-c$，就推出这三个性质。
+\end{prove}
+\begin{theorem}\label{theorem:7.ex02.21}
+    同余式可以相加，即若
+    \begin{align}\label{eq:7.ex02.addcongruent}
+        a\equiv b\pmod{m},\qquad c\equiv d\pmod{m}\, ,
+    \end{align}
+    则
+    \begin{align}
+        a+c\equiv b+d\pmod{m}\, .
+    \end{align}
+\end{theorem}
+\begin{prove}
+    由$m|a-b,m|c-d\Rightarrow m|(a-b)+(c-d)=(a+c)-(b+d)$，就证明该结论。
+\end{prove}
+\begin{theorem}\label{theorem:7.ex02.22}
+    同余式可以相乘，即若\refeq{7.ex02.addcongruent}成立，则有
+    \begin{align}
+        ac\equiv bd\pmod{m}\, .
+    \end{align}
+\end{theorem}
+\begin{prove}
+    由$a=b+k_1m$，$c=d+k_2m$推出$ac=bd+(bk_2+dk_1+k_1k_2m)m$，就证明该结论。
+\end{prove}
 % \begin{theorem}
 %     设$f(x)=a_nx^n+\cdots+a_0$，$g(x)=b_nx^n+\cdots+b_0$是
 %     两个整系数多项式，满足
@@ -639,60 +682,74 @@
 %     设$d\neq0$，则$a\equiv b\pmod{m} \Leftrightarrow da\equiv db\pmod{|d|m}$.
 % \end{theorem}
 
-% 注意在模不变的条件下，同余式两边不能相约。
-% \begin{example}
-%     $6\times3\equiv6\times8\pmod{10}$，但是$3\not\equiv8\pmod{10}$.
-% \end{example}
+注意在模不变的条件下，同余式两边不能相约。
+\begin{example}
+    $6\times3\equiv6\times8\pmod{10}$，但是$3\not\equiv8\pmod{10}$.
+\end{example}
 
-% \begin{theorem}\label{theorem:7.ex02.congruentreduce}
-%     同余式$\displaystyle ca\equiv cb\pmod{m}\Leftrightarrow a\equiv b\pmod{\frac{m}{(c,m)}}$.
-%     特别地，当$(c,m)=1$时可得$a\equiv b\pmod{m}$，即此时可两边约去$c$.
-% \end{theorem}
+\begin{theorem}\label{theorem:7.ex02.23}
+    同余式$\displaystyle ca\equiv cb\pmod{m}\Leftrightarrow a\equiv b\pmod{\frac{m}{(c,m)}}$.
+    特别地，当$(c,m)=1$时可得$a\equiv b\pmod{m}$，即此时可两边约去$c$.
+\end{theorem}
+\begin{prove}
+    $ca\equiv cb\pmod{m}$即$m|c(a-b)$，这等价于
+    \begin{align}
+        \frac{m}{(c,m)}\bigg|\frac{c}{(c,m)}(a-b)\, .
+    \end{align}
+    由定理\ref{theorem:7.ex02.16}以及$\displaystyle\left(\frac{m}{(c,m)},\frac{c}{(c,m)}\right)=1$知
+    这等价于
+    \begin{align}
+        \frac{m}{(c,m)}\bigg|a-b\, .
+    \end{align}
+    就证明了该结论。
+\end{prove}
+\begin{theorem}\label{theorem:7.ex02.24}
+    若$m\ge1$，$(a,m)=1$，则存在$c$使得
+    \begin{align}\label{eq:7.ex02.modularinverse}
+        ca\equiv1\pmod{m}\, .
+    \end{align}
+    我们把$c$称作$a$对模$m$的逆，或\keyindex{模逆元}{modular multiplicative inverse}{}，
+    记作$a^{-1}\pmod{m}$或$a^{-1}$.
+\end{theorem}
+\begin{prove}
+    由定理\ref{theorem:7.ex02.17}知，存在$x_0,y_0$，
+    使得$ax_0+my_0=1$，取$c=x_0$即满足要求。
+\end{prove}
+$a$对模$m$的逆不是唯一的。若$c$是$a$对模$m$的逆，
+则任一$\bar{c}\equiv c\pmod{m}$也必是$a$对模$m$的逆；
+$a$对模$m$的任意两个逆$c_1,c_2$必有$c_1\equiv c_2\pmod{m}$；
+若$(a,m)=1$，则$(a^{-1},m)=1$，及$(a^{-1})^{-1}\equiv a\pmod{m}$.
+\begin{notation}
+    下文中约定$a^{-1}\pmod{m}$或$a^{-1}$指
+    任一取定的满足\refeq{7.ex02.modularinverse}的$c$.
+\end{notation}
 
-% \begin{theorem}\label{theorem:7.ex02.modularinverse}
-%     若$m\ge1$，$(a,m)=1$，则存在$c$使得
-%     \begin{align}\label{eq:7.ex02.modularinverse}
-%         ca\equiv1\pmod{m}\, .
-%     \end{align}
-%     我们把$c$称作$a$对模$m$的逆，或\keyindex{模逆元}{modular multiplicative inverse}{}，
-%     记作$a^{-1}\pmod{m}$或$a^{-1}$.
-% \end{theorem}
+\begin{example}
+    $a$对模7的逆（只列出了一个值）：
+    \begin{table}[htbp]
+        \centering
+        \begin{tabular}{c|cccccc}
+            \toprule
+            $a$              & 1 & 2 & 3 & 4 & 5 & 6 \\
+            \midrule
+            $a^{-1}\pmod{7}$ & 1 & 4 & 5 & 2 & 3 & 6 \\
+            \bottomrule
+        \end{tabular}
+        \caption{$a$对模7的逆（只列出了一个值）。}
+        \label{tab:7.ex02.modularinverse}
+    \end{table}
+\end{example}
 
-% $a$对模$m$的逆不是唯一的。若$c$是$a$对模$m$的逆，
-% 则任一$\bar{c}\equiv c\pmod{m}$也必是$a$对模$m$的逆；
-% $a$对模$m$的任意两个逆$c_1,c_2$必有$c_1\equiv c_2\pmod{m}$；
-% 若$(a,m)=1$，则$(a^{-1},m)=1$，及$(a^{-1})^{-1}\equiv a\pmod{m}$.
-% \begin{notation}
-%     下文中约定$a^{-1}\pmod{m}$或$a^{-1}$指
-%     任一取定的满足\refeq{7.ex02.modularinverse}的$c$.
-% \end{notation}
-
-% \begin{example}
-%     $a$对模7的逆（只列出了一个值）：
-%     \begin{table}[htbp]
-%         \centering
-%         \begin{tabular}{c|cccccc}
-%             \toprule
-%             $a$              & 1 & 2 & 3 & 4 & 5 & 6 \\
-%             \midrule
-%             $a^{-1}\pmod{7}$ & 1 & 4 & 5 & 2 & 3 & 6 \\
-%             \bottomrule
-%         \end{tabular}
-%         \caption{$a$对模7的逆（只列出了一个值）。}
-%         \label{tab:7.ex02.modularinverse}
-%     \end{table}
-% \end{example}
-
-% \begin{theorem}\label{theorem:7.ex02.conditioncongruentegroup}
-%     同余式组
-%     \begin{align}
-%         a\equiv b\pmod{m_j}\, \quad j=1,2,\ldots,k
-%     \end{align}
-%     同时成立的充要条件是
-%     \begin{align}
-%         a\equiv b\pmod{[m_1,\ldots,m_k]}\, .
-%     \end{align}
-% \end{theorem}
+\begin{theorem}\label{theorem:7.ex02.25}
+    同余式组
+    \begin{align}
+        a\equiv b\pmod{m_j}\, \quad j=1,2,\ldots,k
+    \end{align}
+    同时成立的充要条件是
+    \begin{align}
+        a\equiv b\pmod{[m_1,\ldots,m_k]}\, .
+    \end{align}
+\end{theorem}
 % \begin{definition}[同余类（剩余类）]
 %     由定理\ref{theorem:7.ex02.congruentequivalence}知，对于给定的模$m$，
 %     整数的同余关系是一个等价关系，因此全体整数可按对模$m$是否同余

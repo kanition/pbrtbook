@@ -750,83 +750,137 @@ $a$对模$m$的任意两个逆$c_1,c_2$必有$c_1\equiv c_2\pmod{m}$；
         a\equiv b\pmod{[m_1,\ldots,m_k]}\, .
     \end{align}
 \end{theorem}
-% \begin{definition}[同余类（剩余类）]
-%     由定理\ref{theorem:7.ex02.congruentequivalence}知，对于给定的模$m$，
-%     整数的同余关系是一个等价关系，因此全体整数可按对模$m$是否同余
-%     分为若干个两两不相交的集合，使得在同一个集合中的任意两个数
-%     对模$m$一定同余，而属于不同集合中的两个数对模$m$一定不同余。
-%     每一个这样的集合称为是模$m$的\keyindex{同余类}{congruence class}{}，
-%     或模$m$的\keyindex{剩余类}{residue class}{}。
-%     我们把$r$所属的模$m$的同余类表示为$r\mod{m}$.
-% \end{definition}
-% \begin{theorem}
-%     \begin{enumerate}
-%         \item $r\mod{m}=\{r+km:k\in\mathbb{Z}\}$；
-%         \item $r\mod{m}=s\mod{m}\Leftrightarrow r\equiv s\pmod{m}$；
-%         \item 对任意的$r,s$，要么$r\mod{m}=s\mod{m}$，要么$r\mod{m}$与$s\mod{m}$的交集为空集。
-%     \end{enumerate}
-% \end{theorem}
-% \begin{theorem}
-%     对于给定的模$m$，有且恰有$m$个不同的模$m$的同余类，即
-%     \begin{align}
-%         0\mod{m},\quad 1\mod{m},\quad \ldots,\quad (m-1)\mod{m}\, .
-%     \end{align}
-% \end{theorem}
-% \begin{theorem}
-%     \begin{enumerate}
-%         \item 在任意取定的$m+1$个整数中，必有两个数对模$m$同余；
-%         \item 存在$m$个数两两对模$m$不同余。
-%     \end{enumerate}
-% \end{theorem}
-% \begin{definition}
-%     一组数$y_1,\ldots,y_s$称为是模$m$的\keyindex{完全剩余系}{complete residue system}{}，
-%     如果对任意的$a$有且仅有一个$y_j$满足$a\equiv y_j\pmod{m}$.
-% \end{definition}
+\begin{prove}
+    由定理\ref{theorem:7.ex02.11}知，$m_j|a-b(j=1,2,\ldots,k)$同时成立的
+    充要条件是$[m_1,\ldots,m_k]|a-b$，得证。
+\end{prove}
+\begin{definition}[同余类（剩余类）]
+    由定理\ref{theorem:7.ex02.20}知，对于给定的模$m$，
+    整数的同余关系是一个等价关系，因此全体整数可按对模$m$是否同余
+    分为若干个两两不相交的集合，使得在同一个集合中的任意两个数
+    对模$m$一定同余，而属于不同集合中的两个数对模$m$一定不同余。
+    每一个这样的集合称为是模$m$的\keyindex{同余类}{congruence class}{}，
+    或模$m$的\keyindex{剩余类}{residue class}{}。
+    我们把$r$所属的模$m$的同余类表示为$r\mod{m}$.
+\end{definition}
 
-% \subsection*{同余方程}
-% \begin{definition}
-%     设整系数多项式
-%     \begin{align}
-%         f(x)=a_nx^n+\cdots+a_1x+a_0\, ,
-%     \end{align}
-%     我们称含有变量$x$的同余式
-%     \begin{align}\label{eq:7.ex02.congruenceequation}
-%         f(x)\equiv0\pmod{m}
-%     \end{align}
-%     为模$m$的\keyindex{同余方程}{congruence equation}{equation方程}。
-%     若整数$c$满足
-%     \begin{align}
-%         f(c)\equiv0\pmod{m}\, ,
-%     \end{align}
-%     则称$c$是同余方程\refeq{7.ex02.congruenceequation}的\keyindex{解}{solution}{}。
-% \end{definition}
+\begin{theorem}\label{theorem:7.ex02.26}
+    同余类具有以下性质：
+    \begin{enumerate}
+        \item $r\mod{m}=\{r+km:k\in\mathbb{Z}\}$；
+        \item $r\mod{m}=s\mod{m}\Leftrightarrow r\equiv s\pmod{m}$；
+        \item 对任意的$r,s$，要么$r\mod{m}=s\mod{m}$，要么$r\mod{m}$与$s\mod{m}$的交集为空集。
+    \end{enumerate}
+\end{theorem}
+\begin{theorem}\label{theorem:7.ex02.27}
+    对于给定的模$m$，有且恰有$m$个不同的模$m$的同余类，即
+    \begin{align}\label{eq:7.ex02.theorem27-02}
+        0\mod{m},\quad 1\mod{m},\quad \ldots,\quad (m-1)\mod{m}\, .
+    \end{align}
+\end{theorem}
+\begin{prove}
+    由定理\ref{theorem:7.ex02.26}(2)知这是$m$个两两不同的同余类。
+    对每个整数$a$，由定理\ref{theorem:7.ex02.4}知
+    \begin{align}
+        a=qm+r,\quad 0\le r<m\, .
+    \end{align}
+    故由定理\ref{theorem:7.ex02.26}(1)知，$a\in r\mod{m}$，
+    即必属于\refeq{7.ex02.theorem27-02}中的某个同余类。
+\end{prove}
+\begin{theorem}\label{theorem:7.ex02.28}
+    同余具有以下性质：
+    \begin{enumerate}
+        \item 在任意取定的$m+1$个整数中，必有两个数对模$m$同余；
+        \item 存在$m$个数两两对模$m$不同余。
+    \end{enumerate}
+\end{theorem}
+\begin{prove}
+    由定理\ref{theorem:7.ex02.27}，对模$m$共有$m$个由\refeq{7.ex02.theorem27-02}给出的同余类，
+    所以根据定理\ref{theorem:7.ex02.2}，$m+1$个数中必有两个数属于同一个模$m$的同余类，
+    这两个数就对模$m$同余，第一个结论得证。在每个同余类$r\mod{m}(0\le r<m)$中
+    取定一个数$x_r$作代表，就得到$m$个两两对模$m$不同余的数$x_0,x_1,\ldots,x_{m-1}$，第二个结论得证。
+\end{prove}
 
-% 在上述定义中，显然同余类$c\mod{m}$中的任一整数也是
-% 同余方程\refeq{7.ex02.congruenceequation}的解。
-% 我们把这些解都看作是相同的，也常说同余类$c\mod{m}$是该方程的解，
-% 写为$x\equiv c\pmod{m}$.当$c_1,c_2$均为该同余方程的解且对模$m$不同余时
-% 才把它们看作是不同的解。我们把所有对模$m$两两不同余的解的个数
-% 称为是同余方程\refeq{7.ex02.congruenceequation}
-% 的\keyindex{解数}{number of solutions}{}。
-% 因此我们只需要在模$m$的一组完全剩余系中来解模$m$的同余方程。
-% 显然模$m$的同余方程的解数至多为$m$.
-% \begin{example}
-%     对于同余方程$4x^2+27x-12\equiv0\pmod{15}$，
-%     取模15的一个完全剩余系$-7,-6,\ldots,-1,0,1,\ldots,6,7$，
-%     直接代入验算知$x=-6,3$是解，所以改同余方程的解
-%     是$x\equiv -6,3\pmod{15}$，解数为2.
-% \end{example}
-% \begin{definition}
-%     设$m\nmid a$，称
-%     \begin{align}\label{eq:7.ex02.linearcongruence}
-%         ax\equiv b\pmod{m}
-%     \end{align}
-%     为模$m$的{\sffamily 一次同余方程}。
-% \end{definition}
+由定理\ref{theorem:7.ex02.28}可引进以下概念：
+\begin{definition}
+    一组数$y_1,\ldots,y_s$称为是模$m$的\keyindex{完全剩余系}{complete residue system}{}，
+    如果对任意的$a$有且仅有一个$y_j$满足$a\equiv y_j\pmod{m}$.
+\end{definition}
+
+\subsection*{同余方程}
+\begin{definition}
+    设整系数多项式
+    \begin{align}
+        f(x)=a_nx^n+\cdots+a_1x+a_0\, ,
+    \end{align}
+    我们称含有变量$x$的同余式
+    \begin{align}\label{eq:7.ex02.congruenceequation}
+        f(x)\equiv0\pmod{m}
+    \end{align}
+    为模$m$的\keyindex{同余方程}{congruence equation}{equation方程}。
+    若整数$c$满足
+    \begin{align}
+        f(c)\equiv0\pmod{m}\, ,
+    \end{align}
+    则称$c$是同余方程\refeq{7.ex02.congruenceequation}的\keyindex{解}{solution}{}。
+\end{definition}
+
+在上述定义中，显然同余类$c\mod{m}$中的任一整数也是
+同余方程\refeq{7.ex02.congruenceequation}的解。
+我们把这些解都看作是相同的，也常说同余类$c\mod{m}$是该方程的解，
+写为$x\equiv c\pmod{m}$.当$c_1,c_2$均为该同余方程的解且对模$m$不同余时
+才把它们看作是不同的解。我们把所有对模$m$两两不同余的解的个数
+称为是同余方程\refeq{7.ex02.congruenceequation}
+的\keyindex{解数}{number of solutions}{}。
+因此我们只需要在模$m$的一组完全剩余系中来解模$m$的同余方程。
+显然模$m$的同余方程的解数至多为$m$.
+\begin{example}
+    对于同余方程$4x^2+27x-12\equiv0\pmod{15}$，
+    取模15的一个完全剩余系$-7,-6,\ldots,-1,0,1,\ldots,6,7$，
+    直接代入验算知$x=-6,3$是解，所以该同余方程的解
+    是$x\equiv -6,3\pmod{15}$，解数为2.
+\end{example}
+\begin{definition}
+    设$m\nmid a$，称
+    \begin{align}\label{eq:7.ex02.linearcongruence}
+        ax\equiv b\pmod{m}
+    \end{align}
+    为模$m$的{\sffamily 一次同余方程}。
+\end{definition}
+\begin{example}
+    同余方程$6x\equiv2\pmod{8}$的解是$x\equiv-1,3\pmod{8}$，解数为2.
+\end{example}
+\begin{theorem}\label{theorem:7.ex02.29}
+    当$(a,m)=1$时，同余方程\refeq{7.ex02.linearcongruence}必有解，且其解数为1.
+\end{theorem}
+\begin{prove}
+    当$(a,m)=1$时，由定理\ref{theorem:7.ex02.24}知，
+    $a$对模$m$有逆$a^{-1}$（任取一个）满足
+    \begin{align}
+        aa^{-1}\equiv1\pmod{m}\, .
+    \end{align}
+    容易看出
+    \begin{align}
+        x_1=a^{-1}b
+    \end{align}
+    就满足同余方程\refeq{7.ex02.linearcongruence}。若还有解$x_2$，则有
+    \begin{align}
+        ax_2\equiv ax_1\pmod{m}\, ,
+    \end{align}
+    由此根据定理\ref{theorem:7.ex02.23}得
+    \begin{align}
+        x_2\equiv x_1\pmod{m}\, .
+    \end{align}
+    这就证明了解数为1.
+\end{prove}
 % \begin{theorem}
-%     \refeq{7.ex02.linearcongruence}有解的必要条件是
+%     同余方程\refeq{7.ex02.linearcongruence}有解的充要条件是
 %     \begin{align}\label{eq:7.ex02.conditionsolution}
 %         (a,m)|b\, .
+%     \end{align}
+%     在有解时，其解数等于$(a,m)$；若$x_0$是它的解，则它的$(a,m)$个解是
+%     \begin{align}
+%         x\equiv x_0+\frac{m}{(a,m)}t\pmod{m},\quad t=0,\ldots,(a,m)-1\, .
 %     \end{align}
 % \end{theorem}
 % \begin{theorem}\label{theorem:7.ex02.hassolutionlinear}
@@ -862,111 +916,151 @@ $a$对模$m$的任意两个逆$c_1,c_2$必有$c_1\equiv c_2\pmod{m}$；
 %     \end{align}
 % \end{theorem}
 
-% \begin{definition}
-%     设$f_j(x), j=1,2,\ldots,k$是整系数多项式，我们把含有变量$x$的一组同余式
-%     \begin{align}\label{eq:7.ex02.congruencegroup}
-%         f_j(x)\equiv0\pmod{m_j},\quad 1\le j\le k\, ,
-%     \end{align}
-%     称为{\sffamily 同余方程组}。若整数$c$同时满足
-%     \begin{align}
-%         f_j(c)\equiv0\pmod{m_j},\quad 1\le j\le k\, ,
-%     \end{align}
-%     则称$c$是同余方程组\refeq{7.ex02.congruencegroup}的\keyindex{解}{solution}{}。
-% \end{definition}
+\begin{definition}
+    设$f_j(x), j=1,2,\ldots,k$是整系数多项式，我们把含有变量$x$的一组同余式
+    \begin{align}\label{eq:7.ex02.congruencegroup}
+        f_j(x)\equiv0\pmod{m_j},\quad 1\le j\le k\, ,
+    \end{align}
+    称为{\sffamily 同余方程组}。若整数$c$同时满足
+    \begin{align}
+        f_j(c)\equiv0\pmod{m_j},\quad 1\le j\le k\, ,
+    \end{align}
+    则称$c$是同余方程组\refeq{7.ex02.congruencegroup}的\keyindex{解}{solution}{}。
+\end{definition}
 
-% 显然在上述定义中，同余类
-% \begin{align}\label{eq:7.ex02.groupsolution}
-%     c\mod{m},\quad m=[m_1,\ldots,m_k]
-% \end{align}
-% 中任一整数也是同余方程组\refeq{7.ex02.congruencegroup}的解，
-% 我们把它们看作是相同的，也常说同余类\refeq{7.ex02.groupsolution}是
-% 该同余方程组的一个解，写作$x\equiv c\pmod{m}$.
-% 当$c_1,c_2$均为该同余方程组的解且对模$m$不同余时
-% 才把它们看作是不同的解。我们把所有对模$m$两两不同余的解的个数
-% 称为是同余方程组\refeq{7.ex02.congruencegroup}的\keyindex{解数}{number of solutions}{}。
-% 因此我们只需要在模$m$的一组完全剩余系中来解该同余方程组，
-% 它的解数至多为$m$.此外，只要同余方程组中任一一个方程无解，
-% 则\refeq{7.ex02.congruencegroup}一定无解。
-% \begin{theorem}[\protect\keyindex{中国剩余定理}{Chinese remainder theorem}{}(CRT)]
-%     也称{\sffamily 孙子定理}：设$m_1,\ldots,m_k$是两两互质的正整数，
-%     则对任意整数$a_1,\ldots,a_k$，一次同余方程组
-%     \begin{align}\label{eq:7.ex02.CRT}
-%         x\equiv a_j\pmod{m_j},\quad 1\le j\le k\, ,
-%     \end{align}
-%     必有解，且解数为1.事实上，该同余方程组的解是
-%     \begin{align}
-%         x\equiv M_1M_1^{-1}a_1+\ldots+M_kM_k^{-1}a_k\pmod{m}\, ,
-%     \end{align}
-%     这里$m=m_1\cdots m_k$，$m=m_jM_j(1\le j\le k)$，以及$M_j^{-1}$是满足
-%     \begin{align}
-%         M_jM_j^{-1}\equiv1\pmod{m_j},\quad 1\le j\le k
-%     \end{align}
-%     的一个整数（即是$M_j$对模$m_j$的逆）。
-% \end{theorem}
-% \begin{prove}
-%     首先指出一个事实：若$x_0$满足同余方程组\refeq{7.ex02.CRT}，
-%     且$x_0'$满足下面的另一同余方程组
-%     \begin{align}
-%         x\equiv a_j'\pmod{m_j},\quad 1\le j\le k\, ,
-%     \end{align}
-%     则$x_0+x_0'$一定是同余方程组
-%     \begin{align}
-%         x\equiv a_j+a_j'\pmod{m_j},\quad 1\le j\le k
-%     \end{align}
-%     的解。因此，我们可用下面的叠加方法来求同余方程组\refeq{7.ex02.CRT}的解。设
-%     \begin{align}\label{eq:7.ex02.proveCRT03}
-%         a_j^{(i)}=\left\{\begin{array}{ll}
-%             a_j, & \text{若}i=j\, ,     \\
-%             0,   & \text{若}i\neq j\, .
-%         \end{array}\right.
-%     \end{align}
-%     对每个固定的$i(1\le j\le k)$考虑同余方程组
-%     \begin{align}\label{eq:7.ex02.proveCRT01}
-%         x\equiv a_j^{(i)}\pmod{m_j},\quad 1\le j\le k\, .
-%     \end{align}
-%     注意到$j\neq i$时$a_j^{(i)}=0$，结合$m_j$两两互质，
-%     由这个方程组的第$1,\ldots,i-1,i+1,\ldots,k$个方程知
-%     \begin{align}
-%         x\equiv0\pmod{M_i}\, ,
-%     \end{align}
-%     即
-%     \begin{align}\label{eq:7.ex02.proveCRT02}
-%         x=M_iy\, .
-%     \end{align}
-%     代入第$i$个方程得
-%     \begin{align}
-%         M_iy\equiv a_i\pmod{m_i}\, .
-%     \end{align}
-%     由定理\ref{theorem:7.ex02.hassolutionlinear}的证法知
-%     \begin{align}
-%         y\equiv M_i^{-1}a_i\pmod{m_i}\, ,
-%     \end{align}
-%     即
-%     \begin{align}
-%         M_iy\equiv M_iM_i^{-1}a_i\pmod{m}\, .
-%     \end{align}
-%     由此及\refeq{7.ex02.proveCRT02}得
-%     \begin{align}
-%         x\equiv M_iM_i^{-1}a_i\pmod{m}\, .
-%     \end{align}
-%     容易验证，$M_iM_i^{-1}a_i$确是同余方程组\refeq{7.ex02.proveCRT01}的解
-%     （这就证明了它有解且解数为1）。注意到由\refeq{7.ex02.proveCRT03}可得
-%     \begin{align}
-%         a_j^{(1)}+a_j^{(2)}+\cdots+a_j^{(k)}=a_j\, ,
-%     \end{align}
-%     所以$M_1M_1^{-1}a_1+\cdots+M_kM_k^{-1}a_k$一定是同余方程组\refeq{7.ex02.CRT}的解。
-%     若$c_1,c_2$均是同余方程组\refeq{7.ex02.CRT}的解，
-%     则必有
-%     \begin{align}
-%         c_1\equiv c_2\pmod{m_j},\quad 1\le j\le k\, .
-%     \end{align}
-%     又因为$m_1,\ldots,m_k$两两互质，所以
-%     \begin{align}
-%         m=m_1\cdots m_k=[m_1,\ldots,m_k]\, .
-%     \end{align}
-%     利用\ref{theorem:7.ex02.conditioncongruentegroup}结合上两式可得
-%     \begin{align}
-%         c_1\equiv c_2\pmod{m}\, ,
-%     \end{align}
-%     即同余方程组\refeq{7.ex02.CRT}的解数必为1.
-% \end{prove}
+显然在上述定义中，同余类
+\begin{align}\label{eq:7.ex02.groupsolution}
+    c\mod{m},\quad m=[m_1,\ldots,m_k]
+\end{align}
+中任一整数也是同余方程组\refeq{7.ex02.congruencegroup}的解，
+我们把它们看作是相同的，也常说同余类\refeq{7.ex02.groupsolution}是
+该同余方程组的一个解，写作$x\equiv c\pmod{m}$.
+当$c_1,c_2$均为该同余方程组的解且对模$m$不同余时
+才把它们看作是不同的解。我们把所有对模$m$两两不同余的解的个数
+称为是同余方程组\refeq{7.ex02.congruencegroup}的\keyindex{解数}{number of solutions}{}。
+因此我们只需要在模$m$的一组完全剩余系中来解该同余方程组，
+它的解数至多为$m$.此外，只要同余方程组中任一一个方程无解，
+则\refeq{7.ex02.congruencegroup}一定无解。
+\begin{theorem}[\protect\keyindex{中国剩余定理}{Chinese remainder theorem}{}(CRT)]\label{theorem:7.ex02.30}
+    也称{\sffamily 孙子定理}：设$m_1,\ldots,m_k$是两两互质的正整数，
+    则对任意整数$a_1,\ldots,a_k$，一次同余方程组
+    \begin{align}\label{eq:7.ex02.CRT}
+        x\equiv a_j\pmod{m_j},\quad 1\le j\le k\, ,
+    \end{align}
+    必有解，且解数为1.事实上，该同余方程组的解是
+    \begin{align}
+        x\equiv M_1M_1^{-1}a_1+\ldots+M_kM_k^{-1}a_k\pmod{m}\, ,
+    \end{align}
+    这里$m=m_1m_2\cdots m_k$，$m=m_jM_j(1\le j\le k)$，以及$M_j^{-1}$是满足
+    \begin{align}
+        M_jM_j^{-1}\equiv1\pmod{m_j},\quad 1\le j\le k
+    \end{align}
+    的一个整数（即是$M_j$对模$m_j$的逆）。
+\end{theorem}
+\begin{prove}
+    首先指出一个事实：若$x_0$满足同余方程组\refeq{7.ex02.CRT}，
+    且$x_0'$满足下面的另一同余方程组
+    \begin{align}
+        x\equiv a_j'\pmod{m_j},\quad 1\le j\le k\, ,
+    \end{align}
+    则$x_0+x_0'$一定是同余方程组
+    \begin{align}
+        x\equiv a_j+a_j'\pmod{m_j},\quad 1\le j\le k
+    \end{align}
+    的解。因此，我们可用下面的叠加方法来求同余方程组\refeq{7.ex02.CRT}的解。设
+    \begin{align}\label{eq:7.ex02.proveCRT03}
+        a_j^{(i)}=\left\{\begin{array}{ll}
+            a_j, & \text{若}i=j\, ,     \\
+            0,   & \text{若}i\neq j\, .
+        \end{array}\right.
+    \end{align}
+    对每个固定的$i(1\le j\le k)$考虑同余方程组
+    \begin{align}\label{eq:7.ex02.proveCRT01}
+        x\equiv a_j^{(i)}\pmod{m_j},\quad 1\le j\le k\, .
+    \end{align}
+    注意到$j\neq i$时$a_j^{(i)}=0$，结合$m_j$两两互质，
+    由这个方程组的第$1,\ldots,i-1,i+1,\ldots,k$个方程知
+    \begin{align}
+        x\equiv0\pmod{M_i}\, ,
+    \end{align}
+    即存在整数$y$使得
+    \begin{align}\label{eq:7.ex02.proveCRT02}
+        x=M_iy\, .
+    \end{align}
+    代入第$i$个方程得
+    \begin{align}
+        M_iy\equiv a_i\pmod{m_i}\, .
+    \end{align}
+    由定理\ref{theorem:7.ex02.29}的证明知
+    \begin{align}
+        y\equiv M_i^{-1}a_i\pmod{m_i}\, ,
+    \end{align}
+    即
+    \begin{align}
+        M_iy\equiv M_iM_i^{-1}a_i\pmod{m}\, .
+    \end{align}
+    由此及\refeq{7.ex02.proveCRT02}得
+    \begin{align}
+        x\equiv M_iM_i^{-1}a_i\pmod{m}\, .
+    \end{align}
+    容易验证，$M_iM_i^{-1}a_i$确是同余方程组\refeq{7.ex02.proveCRT01}的解，
+    且由定理\ref{theorem:7.ex02.29}知解数为1。
+    注意到由\refeq{7.ex02.proveCRT03}可得
+    \begin{align}
+        a_j^{(1)}+a_j^{(2)}+\cdots+a_j^{(k)}=a_j\, ,
+    \end{align}
+    所以$M_1M_1^{-1}a_1+\cdots+M_kM_k^{-1}a_k$一定是同余方程组\refeq{7.ex02.CRT}的解。
+    若$c_1,c_2$均是同余方程组\refeq{7.ex02.CRT}的解，
+    则必有
+    \begin{align}
+        c_1\equiv c_2\pmod{m_j},\quad 1\le j\le k\, .
+    \end{align}
+    又因为$m_1,\ldots,m_k$两两互质，所以
+    \begin{align}
+        m=m_1m_2\cdots m_k=[m_1,\ldots,m_k]\, .
+    \end{align}
+    利用定理\ref{theorem:7.ex02.25}结合上两式可得
+    \begin{align}
+        c_1\equiv c_2\pmod{m}\, ,
+    \end{align}
+    即同余方程组\refeq{7.ex02.CRT}的解数必为1.
+\end{prove}
+\begin{example}
+    解同余方程组
+    \begin{align}
+        \left\{
+        \begin{array}{l}
+            x\equiv1\pmod{3}\, ,  \\
+            x\equiv-1\pmod{5}\, , \\
+            x\equiv2\pmod{7}\, ,  \\
+            x\equiv-2\pmod{11}\, .
+        \end{array}
+        \right.
+    \end{align}
+    {\sffamily 解}\quad 取$m_1=3,m_2=5,m_3=7,m_4=11$，
+    满足定理\ref{theorem:7.ex02.30}的条件。这时，
+    $M_1=5\times7\times11,M_2=3\times7\times11,M_3=3\times5\times11,M_4=3\times5\times7$.
+    由于$M_1\equiv(-1)\times1\times(-1)\equiv1\pmod{3}$，所以令
+    \begin{align}
+        1\equiv M_1M_1^{-1}\equiv M_1^{-1}\pmod{3}\, ,
+    \end{align}
+    因此可取$M_1^{-1}=1$.由于$M_2\equiv(-2)\times2\times1\equiv1\pmod{5}$，令
+    \begin{align}
+        1\equiv M_2M_2^{-1}\equiv M_2^{-1}\pmod{5}\, ,
+    \end{align}
+    因此可取$M_2^{-1}=1$.由于$M_3\equiv3\times5\times4\equiv4\pmod{7}$，令
+    \begin{align}
+        1\equiv M_3M_3^{-1}\equiv4M_3^{-1}\pmod{7}\, ,
+    \end{align}
+    因此可取$M_3^{-1}=2$.由$M_4\equiv3\times5\times7\equiv4\times7\equiv6\pmod{11}$，令
+    \begin{align}
+        1\equiv M_4M_4^{-1}\equiv6M_4^{-1}\pmod{11}\, ,
+    \end{align}
+    因此可取$M_4^{-1}=2$.进而由定理\ref{theorem:7.ex02.30}知
+    同余方程组的解为
+    \begin{align}
+        x & \equiv(5\times7\times11)\times1\times1+(3\times7\times11)\times1\times(-1)\nonumber                               \\
+          & \qquad+(3\times5\times11)\times2\times2+(3\times5\times7)\times2\times(-2)\pmod{3\times5\times7\times11}\nonumber \\
+          & \equiv385-231+660-420\equiv394\pmod{1155}\, .
+    \end{align}
+\end{example}

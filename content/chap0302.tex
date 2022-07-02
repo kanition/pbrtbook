@@ -15,7 +15,7 @@ pbrt支持六种二次曲面：球、\keyindex{圆锥体}{cone}{}、
 \end{align*}
 
 所有满足该条件的点$(x,y,z)$的集合定义了该曲面。
-对于位于原点的单位球体，熟悉的隐式函数是$x^2+y^2+z^2-1=0$。
+对于位于原点的单位球体，熟悉的隐式函数是$x^2+y^2+z^2-1=0$.
 只有距离原点一单位的点的集合才满足该约束，给出单位球的表面。
 
 许多曲面也能用函数将2D点映射为曲面上的3D点来参数化地描述。
@@ -165,7 +165,7 @@ bool `\refvar{Sphere}{}`::`\initvar[Sphere::Intersect]{\refvar[Shape::Intersect]
 \begin{align*}
     at^2+bt+c=0\, ,
 \end{align*}
-其中\footnote{一些光线追踪器要求规范化射线方向向量，即$a=1$。
+其中\footnote{一些光线追踪器要求规范化射线方向向量，即$a=1$.
     然而如果调用者忘记规范化射线方向则会导致微妙错误。
     当然，该错误可以通过在射线构造函数内规范化方向来避免，
     但这在提供的方向\emph{已经}规范化时会浪费精力。
@@ -227,7 +227,7 @@ if (!`\refvar{Quadratic}{}`(a, b, c, &t0, &t1))
 则如果$t_0$大于\refvar{tMax}{}或$t_1$小于$0$，
 那么两个相交处都一定超出了考虑范围。
 否则，$t_0$是暂时的命中$t$值。
-但它可能小于$0$，这时我们忽略它并尝试$t_1$。
+但它可能小于$0$，这时我们忽略它并尝试$t_1$.
 如果也超出范围，我们就没有有效相交处。
 如果有一个相交处，则初始化{\ttfamily tShapeHit}来保存该相交处的参数$t$值。
 \begin{lstlisting}
@@ -250,7 +250,7 @@ if (tShapeHit.`\refvar{LowerBound}{}`() <= 0) {
 \begin{align*}
     \frac{y}{x}=\frac{r\sin\theta\sin\varphi}{r\sin\theta\cos\varphi}=\tan\varphi\, ,
 \end{align*}
-所以$\displaystyle\varphi=\arctan\frac{y}{x}$。
+所以$\displaystyle\varphi=\arctan\frac{y}{x}$.
 为了符合球的原始定义，需要将标准库函数{\ttfamily std::atan()}的
 结果重新映射为$0$到$2\pi$的值。
 \begin{lstlisting}
@@ -270,7 +270,7 @@ if (phi < 0) phi += 2 * `\refvar{Pi}{}`;
 一个细节是如果$z$范围包括了整个球体则跳过$z$测试非常重要；
 算得的值{\ttfamily pHit.z}可能因为浮点舍入超出$z$范围一点点，
 所以我们应该只在用户希望球体是部分不完整时才执行该测试。
-如果$t_0$相交处实际无效，例程就再次尝试$t_1$。
+如果$t_0$相交处实际无效，例程就再次尝试$t_1$.
 \begin{lstlisting}
 `\initcode{Test sphere intersection against clipping parameters}{=}`
 if ((`\refvar[Sphere::zMin]{zMin}{}` > -`\refvar[Sphere::radius]{radius}{}` && pHit.z < `\refvar[Sphere::zMin]{zMin}{}`) ||
@@ -293,7 +293,7 @@ if ((`\refvar[Sphere::zMin]{zMin}{}` > -`\refvar[Sphere::radius]{radius}{}` && p
 然后它再求位置的参数化偏导数$\displaystyle\frac{\partial \bm p}{\partial u}$和
 $\displaystyle\frac{\partial \bm p}{\partial v}$以及
 曲面法线的$\displaystyle\frac{\partial \bm n}{\partial u}$和
-$\displaystyle\frac{\partial \bm n}{\partial v}$。
+$\displaystyle\frac{\partial \bm n}{\partial v}$.
 \begin{lstlisting}
 `\initcode{Find parametric representation of sphere hit}{=}`
 `\refvar{Float}{}` u = phi / `\refvar[Sphere::phiMax]{phiMax}{}`;
@@ -473,7 +473,7 @@ bool `\refvar{Sphere}{}`::`\initvar[Sphere::IntersectP]{\refvar[Shape::Intersect
 \begin{align*}
     2\pi\int_a^b{f(x)\sqrt{1+(f'(x))^2}\mathrm{d}x}\, ,
 \end{align*}
-其中$f'(x)$表示导数$\displaystyle\frac{\mathrm{d}f}{\mathrm{d}x}$。
+其中$f'(x)$表示导数$\displaystyle\frac{\mathrm{d}f}{\mathrm{d}x}$.
 因为我们大多数的旋转表面都只是绕轴部分扫掠的，所以我们替代使用公式
 \begin{align*}
     \varphi_{\max}\int_a^b{f(x)\sqrt{1+(f'(x))^2}\mathrm{d}x}\, .

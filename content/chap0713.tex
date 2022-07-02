@@ -1,0 +1,1163 @@
+\section{译者补充：初等数论基础}\label{sec:译者补充：初等数论基础}
+
+\begin{remark}
+    本节内容不是原书内容，而是译者根据\citet{ElementaryNumberTheory}
+    以及\citet{wiki:ExtendedEuclideanAlgorithm}补充的，请酌情参考和斧正。
+\end{remark}
+
+\begin{notation}
+    本节我们重申以下记号：
+    \begin{itemize}
+        \item 用$\mathbb{N}$表示全体正整数构成的集合；$\mathbb{Z}$表示全体整数构成的集合。
+        \item 若命题$p$能推出命题$q$，则记为$p\Rightarrow q$；若$p$与$q$等价，则记为$p\Leftrightarrow q$.
+    \end{itemize}
+\end{notation}
+
+\subsection*{基本原理}
+\begin{theorem}[\protect\keyindex{最小自然数原理}{least number principle}{}]\label{theorem:7.ex02.1}
+    设$T$是$\mathbb{N}$的一非空子集，则必有$t_0\in T$，
+    使对任意的$t\in T$有$t_0\le t$，即$t_0$是$T$中最小的自然数。
+\end{theorem}
+
+% \begin{theorem}[最大自然数原理]
+%     设$M$是$\mathbb{N}$的一非空子集，若$M$有上界（即存在$a\in \mathbb{N}$使
+%     对任意的$m\in M$有$m\le a$），则必有$m_0\in M$，使对任意的$m\in M$有$m\le m_0$，
+%     即$m_0$是$M$中最大的自然数。
+% \end{theorem}
+
+% \begin{theorem}[\protect\keyindex{归纳原理}{principle of induction}{}]
+%     设$S\subseteq \mathbb{N}$，且满足
+%     \begin{enumerate}
+%         \item 有$1\in S$；
+%         \item 对任意$n\in S$都有$n+1\in S$；
+%     \end{enumerate}
+%     则$S=\mathbb{N}$.
+% \end{theorem}
+
+% \begin{theorem}[\protect\keyindex{数学归纳法}{mathematical induction}{}]
+%     设$P(n)$是关于自然数$n$的命题，若
+%     \begin{enumerate}
+%         \item 当$n=1$时，$P(1)$成立；
+%         \item $P(n)$成立时必能推出$P(n+1)$成立；
+%     \end{enumerate}
+%     则$P(n)$对所有自然数$n$均成立。
+% \end{theorem}
+
+% \begin{theorem}[\protect 第二种数学归纳法]
+%     设$P(n)$是关于自然数$n$的命题，若
+%     \begin{enumerate}
+%         \item 当$n=1$时，$P(1)$成立；
+%         \item 设$n>1$，对所有自然数$m<n$都有$P(m)$成立时必能推出$P(n)$成立；
+%     \end{enumerate}
+%     则$P(n)$对所有自然数$n$均成立。
+% \end{theorem}
+
+\begin{theorem}[\protect\keyindex{鸽巢原理}{pigeonhole principle}{}]\label{theorem:7.ex02.2}
+    对于某$n\in\mathbb{N}$，现有$n$个笼子和$n+1$只鸽子，
+    所有的鸽子都被关在鸽笼里，那么至少有一个笼子有至少2只鸽子。
+    也称\keyindex{狄利克雷抽屉原理}{Dirichlet's drawer principle}{}。
+\end{theorem}
+
+\subsection*{整除}
+\begin{definition}
+    设$a,b\in\mathbb{Z}$且$a\neq0$，若存在$q\in\mathbb{Z}$使得$b=aq$，
+    则称$a$\keyindex{整除}{divide evenly}{}$b$，或说$b$能被$a$整除，记作$a|b$，
+    并称$a$是$b$的\keyindex{因数}{divisor}{}，也称{\sffamily 约数}、{\sffamily 除数}，
+    $b$是$a$的\keyindex{倍数}{multiple}{}。$a$不能整除$b$时记作$a\nmid b$.
+\end{definition}
+
+\begin{example}
+    6能整除18，记作$6|18$，6是18的因数，18是6的倍数。
+\end{example}
+
+\begin{theorem}\label{theorem:7.ex02.3}
+    整除具有以下性质：
+    \begin{enumerate}
+        \item $a|b\Leftrightarrow -a|b \Leftrightarrow a|-b \Leftrightarrow |a|||b|$；
+        \item $a|b$且$b|c \Rightarrow a|c$；
+        \item $a|b$且$a|c \Leftrightarrow$对任意的$x,y\in\mathbb{Z}$有$a|bx+cy$；
+        \item 设$m\neq0$，则$a|b\Leftrightarrow ma|mb$；
+        \item $a|b$且$b|a\Rightarrow b=\pm a$；
+        \item 设$b\neq0$，则$a|b\Rightarrow |a|\le|b|$.
+    \end{enumerate}
+\end{theorem}
+% \begin{corollary}
+%     非零整数的因数只有有限个。
+% \end{corollary}
+% \begin{theorem}
+%     设整数$b\neq0$，而$d_1,d_2,\ldots,d_k$是$b$的全体因数，
+%     则$\displaystyle\frac{b}{d_1},\frac{b}{d_2},\ldots,\frac{b}{d_k}$也是
+%     $b$的全体因数。此外，若$b>0$，则当$d$遍历$b$的全体正因数时，
+%     $\displaystyle\frac{b}{d}$也遍历$b$的全体正因数。
+% \end{theorem}
+\begin{definition}
+    设整数$p\neq0,\pm1$，若$p$除了$\pm1,\pm p$外没有其他因数，
+    则称$p$为\keyindex{质数}{prime number}{}，也称{\sffamily 素数}、{\sffamily 不可约数}。
+    若$a\neq0,\pm1$且$a$不是质数，则称$a$是\keyindex{合数}{composite number}{}。
+\end{definition}
+\begin{example}
+    3、5、11是质数，4、6、12是合数。0和1既不是质数也不是合数。
+\end{example}
+\begin{notation}
+    下文若无特别说明，所指的质数总是正的。
+\end{notation}
+% \begin{theorem}
+%     \begin{enumerate}
+%         \item $a>1$是合数$\Leftrightarrow$$a=de,1<d<a,1<e<a$；
+%         \item 若$d>1$，$p$是质数且$d|p$，则$d=p$.
+%     \end{enumerate}
+% \end{theorem}
+% \begin{theorem}
+%     若$a$是合数，则必存在质数$p|a$.
+% \end{theorem}
+% \begin{definition}
+%     若一个整数的因数是质数时，称该因数为\keyindex{质因数}{prime factor}{}。
+% \end{definition}
+% \begin{theorem}
+%     设整数$a\ge2$，则$a$一定可表示为质数的乘积（包括$a$本身是质数），即
+%     \begin{align}\label{eq:7.ex02.primefactor}
+%         a=p_1p_2\cdots p_s\, ,
+%     \end{align}
+%     其中$p_j(1\le j\le s)$是质数。
+% \end{theorem}
+% \begin{example}
+%     1260共有6个质因数（包括相同的），其中不相同的有4个，即
+%     $1260=2\times2\times3\times3\times5\times7=2^2\times3^2\times5\times7$.
+% \end{example}
+% \begin{corollary}
+%     设整数$a\ge2$，
+%     \begin{enumerate}
+%         \item 若$a$是合数，则必有质数$p|a$且$p\le\sqrt{a}$；
+%         \item 若$a$有表示\refeq{7.ex02.primefactor}，则必有质数$p|a$且$p\le a^{\frac{1}{s}}$.
+%     \end{enumerate}
+% \end{corollary}
+% \begin{theorem}
+%     质数有无穷多个。
+% \end{theorem}
+% \begin{theorem}
+%     设全体质数按大小排序成
+%     \begin{align}
+%         p_1=2,\quad p2=3,\quad p_3=5,\ldots\, .
+%     \end{align}
+%     则有
+%     \begin{align}
+%         p_n\le2^{2^{n-1}},\quad n=1,2,\ldots\, ,
+%     \end{align}
+%     及
+%     \begin{align}
+%         \pi(x)>\log_2{\log_2{x}},\quad x\ge2\, ,
+%     \end{align}
+%     其中$\pi(x)$表示不超过$x$的质数个数。
+% \end{theorem}
+
+\subsection*{带余除法}
+初等数论的证明中最重要、最基本、最直接的工具是下面的
+\keyindex{带余除法}{division with remainder}{}，
+也称\keyindex{欧几里德除法}{Euclidean division}{}。
+\begin{theorem}\label{theorem:7.ex02.4}
+    % \label{theorem:7.ex02.EuclideanDivision}
+    对于给定的$a,b\in\mathbb{Z}$且$a\neq0$，必存在唯一一对$q,r\in\mathbb{Z}$，满足
+    \begin{align}\label{eq:7.ex02.EuclideanDivision}
+        b=qa+r,\quad 0\le r<|a|\, .
+    \end{align}
+    此外，$a|b \Leftrightarrow r=0$.
+\end{theorem}
+\begin{prove}
+    {\sffamily 唯一性}\quad 若还有整数$q'$与$r'$满足
+    \begin{align}\label{eq:7.ex02.prove-theorem4-01}
+        b=q'a+r',\quad 0\le r'<|a|\, ,
+    \end{align}
+    不妨设$r'\ge r$.则由\refeq{7.ex02.EuclideanDivision}和
+    \refeq{7.ex02.prove-theorem4-01}得$0\le r'-r<|a|$，及
+    \begin{align}
+        r'-r=(q-q')a\, .
+    \end{align}
+    若$r'-r>0$，则由上式及定理\ref{theorem:7.ex02.3}(6)
+    推出$|a|\le r'-r$.这和$r'-r<|a|$矛盾。所以必有$r'=r$，进而得$q'=q$.
+
+        {\sffamily 存在性}\quad 当$a|b$时，可取$q=\displaystyle\frac{b}{a}$，$r=0$.
+    当$a\nmid b$时。考虑集合
+    \begin{align}
+        T=\{b-ka:k=0,\pm1,\pm2,\ldots\}\, .
+    \end{align}
+    容易看出，集合$T$中必有正整数，所以由定理\ref{theorem:7.ex02.1}知，
+    $T$中必有一个最小正整数，设为
+    \begin{align}
+        t_0=b-k_0a>0\, .
+    \end{align}
+    现在来证明必有$t_0<|a|$.因$a\nmid b$，所以$t_0\neq |a|$.
+    若$t_0>|a|$，则$t_1=t_0-|a|>0$，显然$t_1\in T$，$t_1<t_0$.
+    这和$t_0$的最小性矛盾。取$q=k_0$，$r=t_0$就满足要求。
+
+    最后，显然当$b=qa+r$时，$a|b \Leftrightarrow a|r$.
+    当满足$0\le r<|a|$时，由定理\ref{theorem:7.ex02.3}(6)就
+    推出$a|r \Leftrightarrow r=0$.这就证明了定理的最后一部分。
+\end{prove}
+
+上述定理还有更灵活的形式。
+\begin{theorem}\label{theorem:7.ex02.5}
+    对于给定的$a,b,d\in\mathbb{Z}$且$a\neq0$，必存在唯一一对$q_1,r_1\in\mathbb{Z}$，满足
+    \begin{align}\label{eq:7.7.ex02.remainder}
+        b=q_1a+r_1,\quad d\le r_1<|a|+d\, .
+    \end{align}
+    此外，$a|b \Leftrightarrow a|r_1$.
+\end{theorem}
+
+只要对$a$和$b-d$用定理\ref{theorem:7.ex02.4}即可推出定理\ref{theorem:7.ex02.5}。
+适当选取$d$可令\refeq{7.7.ex02.remainder}变形为下面的形式：
+\begin{align}
+    b & =q_1a+r_1, & -\frac{|a|}{2}< r_1\le\frac{|a|}{2}\, ,\label{eq:7.ex02.remainder02} \\
+    b & =q_1a+r_1, & -\frac{|a|}{2}\le r_1<\frac{|a|}{2}\, ,\label{eq:7.ex02.remainder03} \\
+    b & =q_1a+r_1, & 1\le r_1\le |a|\, .\label{eq:7.ex02.remainder04}
+\end{align}
+通常称\refeq{7.ex02.EuclideanDivision}中的$r$为$b$被$a$除后的\keyindex{最小非负余数}{least non-negative remainder}{remainder余数}，
+\refeq{7.ex02.remainder02}和\refeq{7.ex02.remainder03}中的$r_1$都称为\keyindex{绝对最小余数}{least absolute remainder}{remainder余数}，
+\refeq{7.ex02.remainder04}中的$r_1$称为\keyindex{最小正余数}{least positive remainder}{remainder余数}，
+\refeq{7.7.ex02.remainder}中的$r_1$统称为\keyindex{余数}{remainder}{}。
+
+% \begin{corollary}
+%     设$a>0$，任意整数被$a$除后所得的最小非负余数是且仅是$0,1,\ldots,a-1$这$a$个数中的一个。
+% \end{corollary}
+\begin{corollary}
+    给定正整数$a\ge2$，则任一正整数$n$必可唯一表示为
+    \begin{align}
+        n=r_ka^k+r_{k-1}a^{k-1}+\cdots+r_1a+r_0\, ,
+    \end{align}
+    其中整数$k\ge0,0\le r_j\le a-1(0\le j\le k),r_k\neq0$.
+    这即正整数的$a$进制表示。
+\end{corollary}
+\begin{prove}
+    对正整数$n$必有唯一的$k\ge 0$，使得$a^k\le n<a^{k+1}$.
+    由带余除法知，必有唯一的$q_0,r_0$满足
+    \begin{align}
+        n=q_0a+r_0,\quad 0\le r_0<a\, .
+    \end{align}
+    若$k=0$，则必有$q_0=0$，$1\le r_0<a$，所以结论成立。
+    设结论对$k=m\ge0$成立，则当$k=m+1$时，上式中的$q_0$必满足
+    \begin{align}
+        a^m\le q_0<a^{m+1}\, .
+    \end{align}
+    由假设知
+    \begin{align}
+        q_0=s_ma^m+\cdots+s_0\, ,
+    \end{align}
+    其中$0\le s_j\le a-1(0\le j\le m-1)$，$1\le s_m\le a-1$.因而有
+    \begin{align}
+        n=s_ma^{m+1}+\cdots+s_0a+r_0\, ,
+    \end{align}
+    即结论对$m+1$也成立。由数学归纳法，推论得证。
+\end{prove}
+
+\subsection*{最大公因数与最小公倍数}
+\begin{definition}
+    设$a_1,a_2\in\mathbb{Z}$，若$d|a_1$且$d|a_2$，则称$d$是
+    $a_1$与$a_2$的\keyindex{公因数}{common divisor}{divisor因数}。
+    一般地，设$a_1,\ldots,a_k$是$k$个整数，若$d|a_1,\cdots,d|a_k$，
+    则称$d$是$a_1,\ldots,a_k$的公因数。
+\end{definition}
+\begin{example}
+    12和18的公因数是$\pm1,\pm2,\pm3,\pm6$.$n$和$n+1$的公因数是$\pm1$.
+    当$a_1,\ldots,a_k$中有一个不为零时，它们的公因数个数有限。
+\end{example}
+\begin{definition}
+    设$a_1,a_2\in\mathbb{Z}$不全为零，称$a_1$和$a_2$的公因数中
+    最大的为$a_1$和$a_2$的\keyindex{最大公因数}{greatest common divisor}{divisor因数}(GCD)，
+    记作$(a_1,a_2)$.一般地，设$a_1,\ldots,a_k$是$k$个不全为零的整数，
+    称$a_1,\ldots,a_k$的公因数中最大的为$a_1,\ldots,a_k$的最大公因数，
+    记作$(a_1,\ldots,a_k)$.用$\mathcal{D}(a_1,\ldots,a_k)$表示$a_1,\ldots,a_k$的
+    所有公因数组成的集合。于是
+    \begin{align}
+        (a_1,a_2)        & =\max\limits_{d\in\mathcal{D}(a_1,a_2)}{d}\, ,        \\
+        (a_1,\ldots,a_k) & =\max\limits_{d\in\mathcal{D}(a_1,\ldots,a_k)}{d}\, .
+    \end{align}
+\end{definition}
+\begin{example}
+    $\mathcal{D}(12,16)=\{\pm1,\pm2,\pm3,\pm6\}$，$(12,18)=6$；
+    $\mathcal{D}(6,10,-15)=\{\pm1\}$，$(6,10,-15)=1$；
+    $(n,n+1)=1$.
+\end{example}
+\begin{theorem}\label{theorem:7.ex02.6}
+    最大公因数满足以下性质：
+    \begin{enumerate}
+        \item $(a_1,a_2)=(a_2,a_1)=(-a_1,a_2)$；一般地，\\
+              $(a_1,a_2,\ldots,a_i,\ldots,a_k)=(a_i,a_2,\ldots,a_1,\ldots,a_k)=(-a_1,a_2,\ldots,a_i,\ldots,a_k)$；
+        \item $a_1|a_j(j=2,\ldots,k)\Rightarrow (a_1,a_2)=(a_1,a_2,\ldots,a_k)=|a_1|$；
+        \item 对任意整数$x$，$(a_1,a_2)=(a_1,a_2,a_1x)$；$(a_1,\ldots,a_k)=(a_1,\ldots,a_k,a_1x)$；
+        \item 对任意整数$x$，$(a_1,a_2)=(a_1,a_2+a_1x)$；\\
+              $(a_1,a_2,a_3,\ldots,a_k)=(a_1,a_2+a_1x,a_3,\ldots,a_k)$；
+        \item 若$p$是质数，则
+              \begin{align}
+                  (p,a_1)=\left\{
+                  \begin{array}{ll}
+                      p, & \text{若}p|a_1\, ,      \\
+                      1, & \text{若}p\nmid a_1\, ;
+                  \end{array}
+                  \right.
+              \end{align}
+              一般地
+              \begin{align}
+                  (p,a_1,\ldots,a_k)=\left\{
+                  \begin{array}{ll}
+                      p, & \text{若}p|a_j,\quad j=1,2,\ldots,k, \\
+                      1, & \text{其他。}
+                  \end{array}
+                  \right.
+              \end{align}
+    \end{enumerate}
+\end{theorem}
+\begin{definition}
+    若$(a_1,a_2)=1$，则称$a_1$和$a_2$是\keyindex{互质}{coprime}{}
+    （或relatively prime、mutually prime）的，也称{\sffamily 互素}、{\sffamily 既约}。
+    一般地，若$(a_1,\ldots,a_k)=1$，则称$a_1,\ldots,a_k$是互质的。
+\end{definition}
+\begin{theorem}\label{theorem:7.ex02.7}
+    若存在整数$x_1,\ldots,x_k$使得$a_1x_1+\cdots+a_kx_k=1$，则$a_1,\ldots,a_k$是互质的。
+\end{theorem}
+\begin{prove}
+    因为$a_1,\ldots,a_k$的任意公因数$d$一定要整除1，所以必有$d=\pm1$.定理得证。
+\end{prove}
+\begin{theorem}\label{theorem:7.ex02.8}
+    设正整数$m|(a_1,\ldots,a_k)$，则
+    \begin{align}\label{eq:7.ex02.prove-theorem8-01}
+        m\left(\frac{a_1}{m},\cdots,\frac{a_k}{m}\right)=(a_1,\ldots,a_k)\, .
+    \end{align}
+    特别地有
+    \begin{align}\label{eq:7.ex02.prove-theorem8-02}
+        \left(\frac{a_1}{(a_1,\cdots,a_k)},\ldots,\frac{a_k}{(a_1,\cdots,a_k)}\right)=1\, .
+    \end{align}
+\end{theorem}
+\begin{prove}
+    记$D=(a_1,\ldots,a_k)$.由$m|D$，$D|a_j(1\le j \le k)$知
+    $m|a_j(1\le j \le k)$，故
+    \begin{align}
+        \frac{D}{m}\bigg|\frac{a_j}{m},\quad j=1,\ldots,k\, ,
+    \end{align}
+    即$\displaystyle\frac{D}{m}$是$\displaystyle\frac{a_1}{m},\ldots,\frac{a_k}{m}$的公因数
+    且为正，所以由定义知
+    \begin{align}\label{eq:7.ex02.prove-theorem8-03}
+        \frac{D}{m}\le\left(\frac{a_1}{m},\ldots,\frac{a_k}{m}\right)\, .
+    \end{align}
+    另一方面，若$\displaystyle d\bigg|\frac{a_j}{m}(1\le j\le k)$，
+    则$md|a_j(j=1,\ldots,k)$，由定义知
+    \begin{align}
+        md\le D,\quad \text{即}d\le\frac{D}{m}\, .
+    \end{align}
+    取$d=\displaystyle\left(\frac{a_1}{m},\ldots,\frac{a_k}{m}\right)$，
+    由此及\refeq{7.ex02.prove-theorem8-03}即得\refeq{7.ex02.prove-theorem8-01}。
+    在\refeq{7.ex02.prove-theorem8-01}中取$m=(a_1,\ldots,a_k)$即得\refeq{7.ex02.prove-theorem8-02}。
+\end{prove}
+\begin{definition}
+    设$a_1,a_2\in\mathbb{Z}$均不为零，若$a_1|l$且$a_2|l$，
+    则称$l$是$a_1$和$a_2$的\keyindex{公倍数}{common multiple}{multiple倍数}。
+    一般地，设$a_1,\ldots,a_k$是$k$个均不为零的整数，
+    若$a_1|l,\ldots,a_k|l$，则称$l$是$a_1,\ldots,a_k$的公倍数。
+    此外，以$\mathcal{L}(a_1,\ldots,a_k)$表示$a_1,\ldots,a_k$的所有公倍数构成的集合。
+\end{definition}
+\begin{example}
+    $\mathcal{L}(2,3)=\{0,\pm6,\pm12,\ldots,\pm6k,\ldots\}$.
+\end{example}
+\begin{definition}
+    设$a_1,a_2\in\mathbb{Z}$均不为零，我们把$a_1$和$a_2$公倍数中的最小正数
+    称为$a_1$和$a_2$的\keyindex{最小公倍数}{least common multiple}{multiple倍数}，记作$[a_1,a_2]$，即
+    \begin{align}
+        [a_1,a_2]=\min\limits_{l\in\mathcal{L}(a_1,a_2),l>0}{l}\, .
+    \end{align}
+    一般地，设$a_1,\ldots,a_k\in\mathbb{Z}$均不为零，我们把
+    $a_1,\ldots,a_k$公倍数中的最小正数称为$a_1,\ldots,a_k$的最小公倍数，
+    记作$[a_1,\ldots,a_k]$，即
+    \begin{align}
+        [a_1,\ldots,a_k]=\min\limits_{l\in\mathcal{L}(a_1,\ldots,a_k),l>0}{l}\, .
+    \end{align}
+\end{definition}
+\begin{example}
+    $[2,3]=6$；$[2,3,4]=12$.
+\end{example}
+\begin{theorem}\label{theorem:7.ex02.9}
+    最小公倍数满足以下性质：
+    \begin{enumerate}
+        \item $[a_1,a_2]=[a_2,a_1]=[-a_1,a_2]$；一般有\\
+              $[a_1,a_2,\ldots,a_i,\ldots,a_k]=[a_i,a_2,\ldots,a_1,\ldots,a_k]=[-a_1,a_2,\ldots,a_i,\ldots,a_k]$；
+        \item $a_2|a_1\Rightarrow [a_1,a_2]=|a_1|$；\\
+              $a_j|a_1(2\le j\le k)\Rightarrow [a_1,\ldots,a_k]=|a_1|$；
+        \item 对任意的$d|a_1$，有$[a_1,a_2]=[a_1,a_2,d]$；$[a_1,\ldots,a_k]=[a_1,\ldots,a_k,d]$.
+    \end{enumerate}
+\end{theorem}
+\begin{theorem}\label{theorem:7.ex02.10}
+    设$m>0$，则$[ma_1,\ldots,ma_k]=m[a_1,\ldots,a_k]$.
+\end{theorem}
+\begin{prove}
+    设$L=[ma_1,\ldots,ma_k], L'=[a_1,\ldots,a_k]$.
+    由$ma_j|L(1\le j\le k)$推出$\displaystyle a_j\bigg|\frac{L}{m}(1\le j\le k)$，
+    进而由最小公倍数定义知$L'\le\displaystyle\frac{L}{m}$.
+    另一方面，由$a_j|L'(1\le j\le k)$推出$ma_j|mL'(1\le j\le k)$，
+    进而由最小公倍数定义得$L\le mL'$.由此定理得证。
+\end{prove}
+\begin{theorem}\label{theorem:7.ex02.11}
+    $a_j|c(1\le j\le k)\Leftrightarrow [a_1,\ldots,a_k]|c$.
+\end{theorem}
+\begin{prove}
+    $[a_1,\ldots,a_k]|c\Rightarrow a_j|c(1\le j\le k)$是显然的。
+    下面证$a_j|c(1\le j\le k)\Rightarrow [a_1,\ldots,a_k]|c$.
+    设$L=[a_1,\ldots,a_k]$.由定理\ref{theorem:7.ex02.4}知，有$q,r$使得
+    \begin{align}
+        c=qL+r,\quad 0\le r<L\, .
+    \end{align}
+    由此及$a_j|c$推出$a_j|r(1\le j\le k)$，所以$r$是公倍数。
+    进而由最小公倍数的定义及$0\le r<L$可得$r=0$，即$L|c$.
+    结论表明：公倍数一定是最小公倍数的倍数。
+\end{prove}
+\begin{theorem}\label{theorem:7.ex02.12}
+    设$D$为正整数，则$D=(a_1,\ldots,a_k)$的充要条件是
+    \begin{enumerate}
+        \item $D|a_j(1\le j\le k)$；
+        \item 若$d|a_j(1\le j\le k)$，则$d|D$.
+    \end{enumerate}
+\end{theorem}
+\begin{prove}
+    {\sffamily 充分性}\quad 由第一个条件知$D$是$a_j(1\le j\le k)$的公因数，
+    由第二个条件、定理\ref{theorem:7.ex02.3}(6)及$D\ge1$知，
+    $a_j(1\le j\le k)$的任一公因数$d$有$|d|\le D$.
+    因而由定义知$D=(a_1,\ldots,a_k)$.
+
+        {\sffamily 必要性}\quad 设$d_1,\ldots,d_s$是$a_1,\ldots,a_k$的
+    全体公因数，$L=[d_1,\ldots,d_s]$.由定理\ref{theorem:7.ex02.11}
+    知$L|a_j(1\le j\le k)$，因此$L$满足了两个条件。
+    由上面充分性的证明知$L=(a_1,\ldots,a_k)=D$.必要性得证。
+    结论表明：公因数一定是最大公因数的因数。
+\end{prove}
+\begin{theorem}\label{theorem:7.ex02.13}
+    设$m>0$，则$m(b_1,\ldots,b_k)=(mb_1,\ldots,mb_k)$.
+\end{theorem}
+\begin{prove}
+    在定理\ref{theorem:7.ex02.8}中取$a_j=mb_j(1\le j\le k)$，
+    由定理\ref{theorem:7.ex02.12}可得$m|(a_1,\ldots,a_k)$.
+    因此\refeq{7.ex02.prove-theorem8-01}成立，即本定理结论成立。
+\end{prove}
+\begin{theorem}\label{theorem:7.ex02.14}
+    \begin{enumerate}
+        \item $(a_1,a_2,a_3,\ldots,a_k)=((a_1,a_2),a_3,\ldots,a_k)$；
+        \item $(a_1,\ldots,a_{k+r})=((a_1,\ldots,a_k),(a_{k+1},\ldots,a_{k+r}))$.
+    \end{enumerate}
+\end{theorem}
+\begin{prove}
+    对于第一个结论：若$d|a_j(1\le j\le k)$，则由定理\ref{theorem:7.ex02.12}知，
+    $d|(a_1,a_2)$，$d|a_j(3\le j\le k)$；反过来，若$d|(a_1,a_2)$，$d|a_j(3\le j\le k)$，
+    则由定义知，$d|a_j(1\le j\le k)$.这就证明了
+    \begin{align}
+        \mathcal{D}(a_1,a_2,a_3,\ldots,a_k)=\mathcal{D}((a_1,a_2),a_3,\ldots,a_k)\, .
+    \end{align}
+    故第一个结论成立。由它可立即推出第二个结论。
+\end{prove}
+\begin{theorem}\label{theorem:7.ex02.15}
+    设$(m,a)=1$，则$(m,ab)=(m,b)$.
+\end{theorem}
+\begin{prove}
+    $m=0$时$a=\pm1$，结论显然成立。当$m\neq0$时，
+    由定理\ref{theorem:7.ex02.6}、定理\ref{theorem:7.ex02.13}和定理\ref{theorem:7.ex02.14}可得
+    \begin{align}
+        (m,b)=(m,b(m,a))=(m,(mb,ab))=(m,mb,ab)=(m,ab)\, .
+    \end{align}
+    得证。
+\end{prove}
+\begin{theorem}\label{theorem:7.ex02.16}
+    设$(m,a)=1$，那么，若$m|ab$，则$m|b$.
+\end{theorem}
+\begin{prove}
+    由定理\ref{theorem:7.ex02.6}和定理\ref{theorem:7.ex02.15}得
+    $|m|=(m,ab)=(m,b)$，于是$m|b$.
+\end{prove}
+% \begin{theorem}
+%     $[a_1,a_2](a_1,a_2)=|a_1a_2|$.
+% \end{theorem}
+\begin{theorem}\label{theorem:7.ex02.17}
+    设$a_1,\ldots,a_k\in\mathbb{Z}$不全为零，则有
+    \begin{enumerate}
+        \item $(a_1,\ldots,a_k)=\min\{s=a_1x_1+\cdots+a_kx_k:x_j\in\mathbb{Z}(1\le j\le k),s>0\}$，即
+              $a_1,\ldots,a_k$的最大公因数等于$a_1,\ldots,a_k$的所有整系数线性组合
+              构成的集合$S$中的最小正整数。
+        \item 一定存在一组整数$x'_1,\ldots,x'_k$使得
+              \begin{align}\label{eq:7.ex02.theorem17-02}
+                  (a_1,\ldots,a_k)=a_1x'_1+\cdots+a_kx'_k\, .
+              \end{align}
+    \end{enumerate}
+\end{theorem}
+\begin{prove}
+    由于$0<a_1^2+\cdots+a_k^2\in S$，所以集合$S$中有正整数，
+    由定理\ref{theorem:7.ex02.1}知$S$中必有最小正整数，记为$s_0$.
+    显然对任一公因数$d|a_j(1\le j \le k)$必有$d|s_0$，所以$|d|\le s_0$.
+    另一方面，对任一$a_j$由定理\ref{theorem:7.ex02.4}知存在$q_j,r_j$满足
+    \begin{align}
+        a_j=q_js_0+r_j,\quad 0\le r_j<s_0\, .
+    \end{align}
+    显然$r_j\in S$.若$r_j>0$，则和$s_0$的最小性矛盾，所以$r_j=0$，
+    即$s_0|a_j(1\le j \le k)$.所以$s_0$是最大公因数。$s_0$当然是
+    \refeq{7.ex02.theorem17-02}右边的形式。
+\end{prove}
+
+% \subsection*{算术基本定理}
+% \begin{theorem}
+%     设$p$是质数，$p|a_1a_2$，则$p|a_1$或$p|a_2$至少有一个成立。
+%     一般地，若$p|a_1\cdots a_k$，则$p|a_1,\ldots,p|a_k$至少有一个成立。
+% \end{theorem}
+% \begin{theorem}[\protect\keyindex{算术基本定理}{fundamental theorem of arithmetic}{}]
+%     设$a>1$，则必有
+%     \begin{align}\label{eq:7.ex02.arithmeticfundamental}
+%         a=p_1p_2\cdots p_s\, ,
+%     \end{align}
+%     其中$p_j(1\le j\le s)$是质数，且在不计次序的意义下，
+%     表示\refeq{7.ex02.arithmeticfundamental}是唯一的。
+% \end{theorem}
+
+\subsection*{辗转相除法}
+\keyindex{辗转相除法}{Euclidean algorithm}{}，
+也称{\sffamily 欧几里得算法}，是指下面求取最大公因数的算法。
+它最早出现于欧几里得的《几何原本》中，我国则可追溯至约东汉出现的《九章算术》。
+\begin{theorem}\label{theorem:7.ex02.18}
+    给定$u_0,u_1\in\mathbb{Z}$，且$u_1\neq0,u_1\nmid u_0$.
+    我们一定可以反复应用定理\ref{theorem:7.ex02.4}得到下面$k+1$个等式：
+    \begin{align}\label{eq:7.ex02.EuclideanAlgorithm}
+        u_0     & =q_0u_1+u_2,             &  & 0<u_2<|u_1|,\nonumber    \\
+        u_1     & =q_1u_2+u_3,             &  & 0<u_3<u_2,\nonumber      \\
+        u_2     & =q_2u_3+u_4,             &  & 0<u_4<u_3,\nonumber      \\
+        \cdots  & \cdots\cdots\cdots\cdots &  & \cdots\cdots\cdots\cdots \\
+        u_{k-2} & =q_{k-2}u_{k-1}+u_k,     &  & 0<u_k<u_{k-1},\nonumber  \\
+        u_{k-1} & =q_{k-1}u_k+u_{k+1},     &  & 0<u_{k+1}<u_k,\nonumber  \\
+        u_k     & =q_ku_{k+1}.             &  & \nonumber
+    \end{align}
+\end{theorem}
+\begin{prove}
+    对$u_0,u_1$应用定理\ref{theorem:7.ex02.4}，由$u_1\nmid u_0$知
+    必有第一式成立。同样地，如果$u_2\nmid u_1$就得到第二式。
+    如果$u_2\nmid u_1$就证明定理对$k=1$成立。以此类推，就得到
+    \begin{align}
+        |u_1|>u_2>u_3\cdots>u_{j+1}>0
+    \end{align}
+    以及前面$j$个等式成立。若$u_{j+1}|u_j$，则定理对$k=j$成立；
+    若$u_{j+1}\nmid u_j$，则继续对$u_j,u_{j+1}$用定理\ref{theorem:7.ex02.4}。
+    由于小于$|u_1|$的正整数只有有限个，而1整除任一整数，
+    所以该过程不能无限进行下去，一定会出现某个$k$，要么$1<u_{k+1}|u_k$，
+    要么$1=u_{k+1}|u_k$，证毕。
+\end{prove}
+\begin{theorem}\label{theorem:7.ex02.19}
+    在定理\ref{theorem:7.ex02.18}的条件和符号下，我们有
+    \begin{enumerate}
+        \item $u_{k+1}=(u_0,u_1)$；
+        \item $d|u_0$且$d|u_1$的充要条件是$d|u_{k+1}$；
+        \item 存在整数$x_0,x_1$，使$u_{k+1}=x_0u_0+x_1u_1$.
+    \end{enumerate}
+\end{theorem}
+\begin{prove}
+    利用定理\ref{theorem:7.ex02.6}(1)、(4)，从\refeq{7.ex02.EuclideanAlgorithm}的
+    最后一式开始依次往上推，可得
+    \begin{align}
+        u_{k+1} & =(u_{k+1},u_k)=(u_k,u_{k-1})=(u_{k-1},u_{k-2})=\cdots\nonumber \\
+                & =(u_4,u_3)=(u_3,u_2)=(u_2,u_1)=(u_1,u_0)\, ,
+    \end{align}
+    这就得到了第一个结论。利用定理\ref{theorem:7.ex02.3}(2)、(3)，
+    从\refeq{7.ex02.EuclideanAlgorithm}立即推出第二个结论。
+    由\refeq{7.ex02.EuclideanAlgorithm}的第$k$式知$u_{k+1}$可
+    表示为$u_{k-1}$和$u_k$的整系数线性组合，
+    利用\refeq{7.ex02.EuclideanAlgorithm}的第$k-1$式
+    可消去该表示中的$u_k$，将$u_{k+1}$表示为$u_{k-2}$和$u_{k-1}$的
+    整系数线性组合。以此类推利用\refeq{7.ex02.EuclideanAlgorithm}的
+    第$k-2,k-3,\ldots,2,1$式，就能相应地消去$u_{k-1},u_{k-2},\ldots,u_3,u_2$，
+    最后将$u_{k+1}$表示为$u_0$和$u_1$的整系数线性组合，即证明了第三个结论。
+\end{prove}
+% \begin{example}
+%     利用辗转相除法求198和252的最大公因数，并将其表示为198和252的整系数线性组合。因为
+%     \begin{align*}
+%         252 & =1\times198+54\, , \\
+%         198 & =3\times54+36\, ,  \\
+%         54  & =1\times36+18\, ,  \\
+%         36  & =2\times18\, ,
+%     \end{align*}
+%     于是$(252,198)=(198,54)=(54,36)=(36,18)=18$，且得
+%     \begin{align*}
+%         18 & =54-1\times36                 \\
+%            & =54-(198-3\times54)           \\
+%            & =-198+4\times54               \\
+%            & =-198+4\times(252-1\times198) \\
+%            & =4\times252-5\times198\, .
+%     \end{align*}
+% \end{example}
+
+\keyindex{扩展欧几里得算法}{Extended Euclidean algorithm}{}是
+辗转相除法的扩展。对于给定的不全为零整数$a,b$（不妨设$b\neq0$），
+它求解关于整数变量$x,y$的方程
+\begin{align}\label{eq:7.ex02.ExtendedEuclideanAlgorithm}
+    ax+by=(a,b)\, .
+\end{align}
+由定理\ref{theorem:7.ex02.17}知该方程一定有解。
+如果$a$为负数，则可以转化为
+\begin{align}
+    |a|(-x)+by=(|a|,b)\, ,
+\end{align}
+$b$为负数时同理。因此我们只考虑$a,b$不小于零的情况。
+在定理\ref{theorem:7.ex02.18}的记号下，原始的
+辗转相除法求解$(a,b)$的递推过程是
+\begin{align}
+    u_0     & =a\, ,\nonumber                  \\
+    u_1     & =b\, ,\nonumber                  \\
+    u_2     & =u_0-q_0u_1\, ,\nonumber         \\
+    u_3     & =u_1-q_1u_2\, ,\nonumber         \\
+    \ldots\nonumber                            \\
+    u_{k+1} & =u_{k-1}-q_{k-1}u_k\, ,\nonumber \\
+    u_{k+2} & =u_k-q_ku_{k+1}=0\, .
+\end{align}
+最后一步得到$u_{k+2}=0$时算法终止，此时$u_{k+1}|u_k$，即$(a,b)=u_{k+1}$.
+
+扩展欧几里得算法则还利用了以上步骤中的商$q_i$以求解\refeq{7.ex02.ExtendedEuclideanAlgorithm}：
+它新引入了两组序列$s_i,t_i$，并初始化$s_0=1,s_1=0,t_0=0,t_1=1$，
+在辗转相除法每步计算$u_{i+1}=u_{i-1}-q_{i-1}u_i$后额外计算
+\begin{align}
+    s_{i+1} & =s_{i-1}-q_{i-1}s_i\, , \\
+    t_{i+1} & =t_{i-1}-q_{i-1}t_i\, ,
+\end{align}
+则当$u_{k+2}=0$算法终止时，求得\refeq{7.ex02.ExtendedEuclideanAlgorithm}的解
+即为$x=s_{k+1},y=t_{k+1}$.
+\begin{prove}
+    当$i=0,1$时，显然可以验证
+    \begin{align}\label{eq:7.ex02.ExtendedEuclidean-prove-01}
+        as_i+bt_i=u_i
+    \end{align}
+    成立。若\refeq{7.ex02.ExtendedEuclidean-prove-01}对某个$i$成立，则有
+    \begin{align}
+        u_{i+1} & =u_{i-1}-q_{i-1}u_i\nonumber                          \\
+                & =(as_{i-1}+bt_{i-1})-q_{i-1}(as_i+bt_i)\nonumber      \\
+                & =a(s_{i-1}-q_{i-1}s_i)+b(t_{i-1}-q_{i-1}t_i)\nonumber \\
+                & =as_{i+1}+bt_{i+1}\, ,
+    \end{align}
+    即\refeq{7.ex02.ExtendedEuclidean-prove-01}对$i+1$也成立。
+    由数学归纳法，\refeq{7.ex02.ExtendedEuclidean-prove-01}对
+    算法步骤中的所有$i$都成立，故
+    \begin{align}
+        as_{k+1}+bt_{k+1}=u_{k+1}=(a,b)\, ,
+    \end{align}
+    即求得\refeq{7.ex02.ExtendedEuclideanAlgorithm}的解为$x=s_{k+1},y=t_{k+1}$.
+\end{prove}
+\begin{example}
+    以$a=240,b=46$为例演示扩展欧几里得法，具体步骤是
+    \begin{align}
+        \begin{array}{lrrrr}
+            i & q_{i-2}     & u_i              & s_i             & t_i                \\
+            0 & -           & 240              & 1               & 0                  \\
+            1 & -           & 46               & 0               & 1                  \\
+            2 & 240\div46=5 & 240-5\times46=10 & 1-5\times0=1    & 0-5\times1=-5      \\
+            3 & 46\div10=4  & 46-4\times10=6   & 0-4\times1=-4   & 1-4\times(-5)=21   \\
+            4 & 10\div6=1   & 10-1\times6=4    & 1-1\times(-4)=5 & -5-1\times21=-26   \\
+            5 & 6\div4=1    & 6-1\times4=2     & -4-1\times5=-9  & 21-1\times(-26)=47 \\
+            6 & 4\div2=2    & 4-2\times2=0     & -               & -
+        \end{array}\nonumber
+    \end{align}
+    算法在$i=6$时终止，由$i=5$时的$u_i,s_i,t_i$可得$-9\times240+47\times46=(240,46)=2$.
+\end{example}
+
+\subsection*{同余}
+\begin{definition}
+    设$a,b,m\in\mathbb{Z}$且$m\neq0$，若$m|a-b$，则称$a$与$b$\keyindex{模$m$同余}{congruent modulo $m$}{}，
+    也称$a$同余于$b$模$m$、$b$是$a$对模$m$的剩余，记作
+    \begin{align}\label{eq:7.ex02.congruent}
+        a\equiv b\pmod{m}\, ,
+    \end{align}
+    其中$m$称为\keyindex{模}{modulus}{}，称\refeq{7.ex02.congruent}为模$m$的同余式；
+    否则称$a$不同余于$b$模$m$、$b$不是$a$对模$m$的剩余，记作
+    \begin{align}
+        a\not\equiv b\pmod{m}\, .
+    \end{align}
+\end{definition}
+
+因为$m|a-b\Leftrightarrow -m|a-b$，所以\refeq{7.ex02.congruent}等价于$a\equiv b\pmod{-m}$.
+由此，下文均假定模$m\ge1$.\refeq{7.ex02.congruent}中，
+若$0\le b<m$，则称$b$是$a$对模$m$的最小非负剩余；
+若$1\le b\le m$，则称$b$是$a$对模$m$的最小正剩余；
+若$\displaystyle -\frac{m}{2}<b\le\frac{m}{2}$（或$\displaystyle -\frac{m}{2}\le b<\frac{m}{2}$），
+则称$b$是$a$对模$m$的绝对最小剩余。
+\begin{example}
+    $m|a$可记为$a\equiv 0\pmod{m}$；偶数可记为$a\equiv 0\pmod{2}$；
+    奇数可记为$a\equiv 1\pmod{2}$.
+\end{example}
+
+% \begin{theorem}
+%     $a$与$b$模$m$同余的充要条件是$a$和$b$被$m$除后的最小非负余数相等，即若
+%     \begin{align}
+%         a & =q_1m+r_1, & 0\le r_1<m\, , \\
+%         b & =q_2m+r_2, & 0\le r_2<m\, ,
+%     \end{align}
+%     则$r_1=r_2$.
+% \end{theorem}
+% \begin{prove}
+%     因为$a-b=(q_1-q_2)m+(r_1-r_2)$，所以$m|a-b$的充要条件是$m|r_1-r_2$，
+%     由此及$0\le |r_1-r_2|<m$即得$r_1=r_2$.
+% \end{prove}
+
+% 容易证明，$a$对模$m$的最小非负剩余、最小正剩余、绝对最小剩余
+% 正好分别是$a$被$m$除后的最小非负余数、最小正余数、绝对最小余数。
+
+\begin{theorem}\label{theorem:7.ex02.20}
+    同余是一种等价关系，即有
+    \begin{enumerate}
+        \item $a\equiv a\pmod{m}$；
+        \item $a\equiv b\pmod{m} \Leftrightarrow b\equiv a\pmod{m}$；
+        \item $a\equiv b\pmod{m}, b\equiv c\pmod{m} \Rightarrow a\equiv c\pmod{m}$.
+    \end{enumerate}
+\end{theorem}
+\begin{prove}
+    由$m|a-a=0$，$m|a-b\Leftrightarrow m|b-a$，以及
+    $m|a-b,m|b-c\Rightarrow m|(a-b)+(b-c)=a-c$，就推出这三个性质。
+\end{prove}
+\begin{theorem}\label{theorem:7.ex02.21}
+    同余式可以相加，即若
+    \begin{align}\label{eq:7.ex02.addcongruent}
+        a\equiv b\pmod{m},\qquad c\equiv d\pmod{m}\, ,
+    \end{align}
+    则
+    \begin{align}
+        a+c\equiv b+d\pmod{m}\, .
+    \end{align}
+\end{theorem}
+\begin{prove}
+    由$m|a-b,m|c-d\Rightarrow m|(a-b)+(c-d)=(a+c)-(b+d)$，就证明该结论。
+\end{prove}
+\begin{theorem}\label{theorem:7.ex02.22}
+    同余式可以相乘，即若\refeq{7.ex02.addcongruent}成立，则有
+    \begin{align}
+        ac\equiv bd\pmod{m}\, .
+    \end{align}
+\end{theorem}
+\begin{prove}
+    由$a=b+k_1m$，$c=d+k_2m$推出$ac=bd+(bk_2+dk_1+k_1k_2m)m$，就证明该结论。
+\end{prove}
+% \begin{theorem}
+%     设$f(x)=a_nx^n+\cdots+a_0$，$g(x)=b_nx^n+\cdots+b_0$是
+%     两个整系数多项式，满足
+%     \begin{align}\label{eq:7.ex02.polynomialcongruent}
+%         a_j\equiv b_j\pmod{m},\quad 0\le j\le n\, .
+%     \end{align}
+%     那么若$a\equiv b\pmod{m}$，则
+%     \begin{align}
+%         f(a)\equiv g(b)\pmod{m}\, .
+%     \end{align}
+% \end{theorem}
+% \begin{definition}
+%     把满足\refeq{7.ex02.polynomialcongruent}的这两个多项式
+%     称作多项式$f(x)$与$g(x)$模$m$同余，记作
+%     \begin{align}
+%         f(x)\Equiv g(x)\pmod{m}\, .
+%     \end{align}
+% \end{definition}
+
+% \begin{theorem}
+%     设$d\ge1$， $d|m$，则$a\equiv b\pmod{m} \Rightarrow a\equiv b\pmod{d}$.
+% \end{theorem}
+% \begin{theorem}
+%     设$d\neq0$，则$a\equiv b\pmod{m} \Leftrightarrow da\equiv db\pmod{|d|m}$.
+% \end{theorem}
+
+注意在模不变的条件下，同余式两边不能相约。
+\begin{example}
+    $6\times3\equiv6\times8\pmod{10}$，但是$3\not\equiv8\pmod{10}$.
+\end{example}
+
+\begin{theorem}\label{theorem:7.ex02.23}
+    同余式$\displaystyle ca\equiv cb\pmod{m}\Leftrightarrow a\equiv b\pmod{\frac{m}{(c,m)}}$.
+    特别地，当$(c,m)=1$时可得$a\equiv b\pmod{m}$，即此时可两边约去$c$.
+\end{theorem}
+\begin{prove}
+    $ca\equiv cb\pmod{m}$即$m|c(a-b)$，这等价于
+    \begin{align}
+        \frac{m}{(c,m)}\bigg|\frac{c}{(c,m)}(a-b)\, .
+    \end{align}
+    由定理\ref{theorem:7.ex02.16}以及$\displaystyle\left(\frac{m}{(c,m)},\frac{c}{(c,m)}\right)=1$知
+    这等价于
+    \begin{align}
+        \frac{m}{(c,m)}\bigg|a-b\, .
+    \end{align}
+    就证明了该结论。
+\end{prove}
+\begin{theorem}\label{theorem:7.ex02.24}
+    若$m\ge1$，$(a,m)=1$，则存在$c$使得
+    \begin{align}\label{eq:7.ex02.modularinverse}
+        ca\equiv1\pmod{m}\, .
+    \end{align}
+    我们把$c$称作$a$对模$m$的逆，或\keyindex{模逆元}{modular multiplicative inverse}{}，
+    记作$a^{-1}\pmod{m}$或$a^{-1}$.
+\end{theorem}
+\begin{prove}
+    由定理\ref{theorem:7.ex02.17}知，存在$x_0,y_0$，
+    使得$ax_0+my_0=1$，取$c=x_0$即满足要求。
+\end{prove}
+$a$对模$m$的逆不是唯一的。若$c$是$a$对模$m$的逆，
+则任一$\bar{c}\equiv c\pmod{m}$也必是$a$对模$m$的逆；
+$a$对模$m$的任意两个逆$c_1,c_2$必有$c_1\equiv c_2\pmod{m}$；
+若$(a,m)=1$，则$(a^{-1},m)=1$，及$(a^{-1})^{-1}\equiv a\pmod{m}$.
+\begin{notation}
+    下文中约定$a^{-1}\pmod{m}$或$a^{-1}$指
+    任一取定的满足\refeq{7.ex02.modularinverse}的$c$.
+\end{notation}
+
+\begin{example}
+    $a$对模7的逆（只列出了一个值）：
+    \begin{table}[htbp]
+        \centering
+        \begin{tabular}{c|cccccc}
+            \toprule
+            $a$              & 1 & 2 & 3 & 4 & 5 & 6 \\
+            \midrule
+            $a^{-1}\pmod{7}$ & 1 & 4 & 5 & 2 & 3 & 6 \\
+            \bottomrule
+        \end{tabular}
+        \caption{$a$对模7的逆（只列出了一个值）。}
+        \label{tab:7.ex02.modularinverse}
+    \end{table}
+\end{example}
+
+\begin{theorem}\label{theorem:7.ex02.25}
+    同余式组
+    \begin{align}
+        a\equiv b\pmod{m_j}\, \quad j=1,2,\ldots,k
+    \end{align}
+    同时成立的充要条件是
+    \begin{align}
+        a\equiv b\pmod{[m_1,\ldots,m_k]}\, .
+    \end{align}
+\end{theorem}
+\begin{prove}
+    由定理\ref{theorem:7.ex02.11}知，$m_j|a-b(j=1,2,\ldots,k)$同时成立的
+    充要条件是$[m_1,\ldots,m_k]|a-b$，得证。
+\end{prove}
+\begin{definition}[同余类（剩余类）]
+    由定理\ref{theorem:7.ex02.20}知，对于给定的模$m$，
+    整数的同余关系是一个等价关系，因此全体整数可按对模$m$是否同余
+    分为若干个两两不相交的集合，使得在同一个集合中的任意两个数
+    对模$m$一定同余，而属于不同集合中的两个数对模$m$一定不同余。
+    每一个这样的集合称为是模$m$的\keyindex{同余类}{congruence class}{}，
+    或模$m$的\keyindex{剩余类}{residue class}{}。
+    我们把$r$所属的模$m$的同余类表示为$r\mod{m}$.
+\end{definition}
+
+\begin{theorem}\label{theorem:7.ex02.26}
+    同余类具有以下性质：
+    \begin{enumerate}
+        \item $r\mod{m}=\{r+km:k\in\mathbb{Z}\}$；
+        \item $r\mod{m}=s\mod{m}\Leftrightarrow r\equiv s\pmod{m}$；
+        \item 对任意的$r,s$，要么$r\mod{m}=s\mod{m}$，要么$r\mod{m}$与$s\mod{m}$的交集为空集。
+    \end{enumerate}
+\end{theorem}
+\begin{theorem}\label{theorem:7.ex02.27}
+    对于给定的模$m$，有且恰有$m$个不同的模$m$的同余类，即
+    \begin{align}\label{eq:7.ex02.theorem27-02}
+        0\mod{m},\quad 1\mod{m},\quad \ldots,\quad (m-1)\mod{m}\, .
+    \end{align}
+\end{theorem}
+\begin{prove}
+    由定理\ref{theorem:7.ex02.26}(2)知这是$m$个两两不同的同余类。
+    对每个整数$a$，由定理\ref{theorem:7.ex02.4}知
+    \begin{align}
+        a=qm+r,\quad 0\le r<m\, .
+    \end{align}
+    故由定理\ref{theorem:7.ex02.26}(1)知，$a\in r\mod{m}$，
+    即必属于\refeq{7.ex02.theorem27-02}中的某个同余类。
+\end{prove}
+\begin{theorem}\label{theorem:7.ex02.28}
+    同余具有以下性质：
+    \begin{enumerate}
+        \item 在任意取定的$m+1$个整数中，必有两个数对模$m$同余；
+        \item 存在$m$个数两两对模$m$不同余。
+    \end{enumerate}
+\end{theorem}
+\begin{prove}
+    由定理\ref{theorem:7.ex02.27}，对模$m$共有$m$个由\refeq{7.ex02.theorem27-02}给出的同余类，
+    所以根据定理\ref{theorem:7.ex02.2}，$m+1$个数中必有两个数属于同一个模$m$的同余类，
+    这两个数就对模$m$同余，第一个结论得证。在每个同余类$r\mod{m}(0\le r<m)$中
+    取定一个数$x_r$作代表，就得到$m$个两两对模$m$不同余的数$x_0,x_1,\ldots,x_{m-1}$，第二个结论得证。
+\end{prove}
+
+由定理\ref{theorem:7.ex02.28}可引进以下概念：
+\begin{definition}
+    一组数$y_1,\ldots,y_s$称为是模$m$的\keyindex{完全剩余系}{complete residue system}{}，
+    如果对任意的$a$有且仅有一个$y_j$满足$a\equiv y_j\pmod{m}$.
+\end{definition}
+
+\subsection*{同余方程}
+\begin{definition}
+    设整系数多项式
+    \begin{align}
+        f(x)=a_nx^n+\cdots+a_1x+a_0\, ,
+    \end{align}
+    我们称含有变量$x$的同余式
+    \begin{align}\label{eq:7.ex02.congruenceequation}
+        f(x)\equiv0\pmod{m}
+    \end{align}
+    为模$m$的\keyindex{同余方程}{congruence equation}{equation方程}。
+    若整数$c$满足
+    \begin{align}
+        f(c)\equiv0\pmod{m}\, ,
+    \end{align}
+    则称$c$是同余方程\refeq{7.ex02.congruenceequation}的\keyindex{解}{solution}{}。
+\end{definition}
+
+在上述定义中，显然同余类$c\mod{m}$中的任一整数也是
+同余方程\refeq{7.ex02.congruenceequation}的解。
+我们把这些解都看作是相同的，也常说同余类$c\mod{m}$是该方程的解，
+写为$x\equiv c\pmod{m}$.当$c_1,c_2$均为该同余方程的解且对模$m$不同余时
+才把它们看作是不同的解。我们把所有对模$m$两两不同余的解的个数
+称为是同余方程\refeq{7.ex02.congruenceequation}
+的\keyindex{解数}{number of solutions}{}。
+因此我们只需要在模$m$的一组完全剩余系中来解模$m$的同余方程。
+显然模$m$的同余方程的解数至多为$m$.
+\begin{example}
+    对于同余方程$4x^2+27x-12\equiv0\pmod{15}$，
+    取模15的一个完全剩余系$-7,-6,\ldots,-1,0,1,\ldots,6,7$，
+    直接代入验算知$x=-6,3$是解，所以该同余方程的解
+    是$x\equiv -6,3\pmod{15}$，解数为2.
+\end{example}
+\begin{definition}
+    设$m\nmid a$，称
+    \begin{align}\label{eq:7.ex02.linearcongruence}
+        ax\equiv b\pmod{m}
+    \end{align}
+    为模$m$的{\sffamily 一次同余方程}。
+\end{definition}
+\begin{example}
+    同余方程$6x\equiv2\pmod{8}$的解是$x\equiv-1,3\pmod{8}$，解数为2.
+\end{example}
+\begin{theorem}\label{theorem:7.ex02.29}
+    当$(a,m)=1$时，同余方程\refeq{7.ex02.linearcongruence}必有解，且其解数为1.
+\end{theorem}
+\begin{prove}
+    当$(a,m)=1$时，由定理\ref{theorem:7.ex02.24}知，
+    $a$对模$m$有逆$a^{-1}$（任取一个）满足
+    \begin{align}
+        aa^{-1}\equiv1\pmod{m}\, .
+    \end{align}
+    容易看出
+    \begin{align}
+        x_1=a^{-1}b
+    \end{align}
+    就满足同余方程\refeq{7.ex02.linearcongruence}。若还有解$x_2$，则有
+    \begin{align}
+        ax_2\equiv ax_1\pmod{m}\, ,
+    \end{align}
+    由此根据定理\ref{theorem:7.ex02.23}得
+    \begin{align}
+        x_2\equiv x_1\pmod{m}\, .
+    \end{align}
+    这就证明了解数为1.
+\end{prove}
+% \begin{theorem}
+%     同余方程\refeq{7.ex02.linearcongruence}有解的充要条件是
+%     \begin{align}\label{eq:7.ex02.conditionsolution}
+%         (a,m)|b\, .
+%     \end{align}
+%     在有解时，其解数等于$(a,m)$；若$x_0$是它的解，则它的$(a,m)$个解是
+%     \begin{align}
+%         x\equiv x_0+\frac{m}{(a,m)}t\pmod{m},\quad t=0,\ldots,(a,m)-1\, .
+%     \end{align}
+% \end{theorem}
+% \begin{theorem}\label{theorem:7.ex02.hassolutionlinear}
+%     当$(a,m)=1$时，同余方程\refeq{7.ex02.linearcongruence}必有解，且其解数为1.
+% \end{theorem}
+% \begin{prove}
+%     当$(a,m)=1$时，由定理\ref{theorem:7.ex02.modularinverse}知，
+%     $a$对模$m$有逆$a^{-1}$（任取一个）满足
+%     \begin{align}
+%         aa^{-1}\equiv1\pmod{m}\, .
+%     \end{align}
+%     容易看出
+%     \begin{align}
+%         x_1=a^{-1}b
+%     \end{align}
+%     就满足同余方程\refeq{7.ex02.linearcongruence}。若还有解$x_2$，则有
+%     \begin{align}
+%         ax_2\equiv ax_1\pmod{m}\, ,
+%     \end{align}
+%     则从定理\ref{theorem:7.ex02.congruentreduce}推出
+%     \begin{align}
+%         x_2\equiv x_1\pmod{m}\, .
+%     \end{align}
+%     这就证明了解数为1.
+% \end{prove}
+% \begin{theorem}
+%     同余方程\refeq{7.ex02.linearcongruence}有解的充要条件
+%     是\refeq{7.ex02.conditionsolution}成立。在有解时，
+%     它的解数等于$(a,m)$，以及若$x_0$是\refeq{7.ex02.linearcongruence}的解，
+%     则它的$(a,m)$个解是
+%     \begin{align}
+%         x\equiv x_0+\frac{m}{(a,m)}t\pmod{m},\quad t=0,1,\ldots,(a,m)-1\, .
+%     \end{align}
+% \end{theorem}
+
+\begin{definition}
+    设$f_j(x), j=1,2,\ldots,k$是整系数多项式，我们把含有变量$x$的一组同余式
+    \begin{align}\label{eq:7.ex02.congruencegroup}
+        f_j(x)\equiv0\pmod{m_j},\quad 1\le j\le k\, ,
+    \end{align}
+    称为{\sffamily 同余方程组}。若整数$c$同时满足
+    \begin{align}
+        f_j(c)\equiv0\pmod{m_j},\quad 1\le j\le k\, ,
+    \end{align}
+    则称$c$是同余方程组\refeq{7.ex02.congruencegroup}的\keyindex{解}{solution}{}。
+\end{definition}
+
+显然在上述定义中，同余类
+\begin{align}\label{eq:7.ex02.groupsolution}
+    c\mod{m},\quad m=[m_1,\ldots,m_k]
+\end{align}
+中任一整数也是同余方程组\refeq{7.ex02.congruencegroup}的解，
+我们把它们看作是相同的，也常说同余类\refeq{7.ex02.groupsolution}是
+该同余方程组的一个解，写作$x\equiv c\pmod{m}$.
+当$c_1,c_2$均为该同余方程组的解且对模$m$不同余时
+才把它们看作是不同的解。我们把所有对模$m$两两不同余的解的个数
+称为是同余方程组\refeq{7.ex02.congruencegroup}的\keyindex{解数}{number of solutions}{}。
+因此我们只需要在模$m$的一组完全剩余系中来解该同余方程组，
+它的解数至多为$m$.此外，只要同余方程组中任一一个方程无解，
+则\refeq{7.ex02.congruencegroup}一定无解。
+\begin{theorem}[\protect\keyindex{中国剩余定理}{Chinese remainder theorem}{}(CRT)]\label{theorem:7.ex02.30}
+    也称{\sffamily 孙子定理}：设$m_1,\ldots,m_k$是两两互质的正整数，
+    则对任意整数$a_1,\ldots,a_k$，一次同余方程组
+    \begin{align}\label{eq:7.ex02.CRT}
+        x\equiv a_j\pmod{m_j},\quad 1\le j\le k\, ,
+    \end{align}
+    必有解，且解数为1.事实上，该同余方程组的解是
+    \begin{align}
+        x\equiv M_1M_1^{-1}a_1+\ldots+M_kM_k^{-1}a_k\pmod{m}\, ,
+    \end{align}
+    这里$m=m_1m_2\cdots m_k$，$m=m_jM_j(1\le j\le k)$，以及$M_j^{-1}$是满足
+    \begin{align}
+        M_jM_j^{-1}\equiv1\pmod{m_j},\quad 1\le j\le k
+    \end{align}
+    的一个整数（即是$M_j$对模$m_j$的逆）。
+\end{theorem}
+\begin{prove}
+    首先指出一个事实：若$x_0$满足同余方程组\refeq{7.ex02.CRT}，
+    且$x_0'$满足下面的另一同余方程组
+    \begin{align}
+        x\equiv a_j'\pmod{m_j},\quad 1\le j\le k\, ,
+    \end{align}
+    则$x_0+x_0'$一定是同余方程组
+    \begin{align}
+        x\equiv a_j+a_j'\pmod{m_j},\quad 1\le j\le k
+    \end{align}
+    的解。因此，我们可用下面的叠加方法来求同余方程组\refeq{7.ex02.CRT}的解。设
+    \begin{align}\label{eq:7.ex02.proveCRT03}
+        a_j^{(i)}=\left\{\begin{array}{ll}
+            a_j, & \text{若}i=j\, ,     \\
+            0,   & \text{若}i\neq j\, .
+        \end{array}\right.
+    \end{align}
+    对每个固定的$i(1\le j\le k)$考虑同余方程组
+    \begin{align}\label{eq:7.ex02.proveCRT01}
+        x\equiv a_j^{(i)}\pmod{m_j},\quad 1\le j\le k\, .
+    \end{align}
+    注意到$j\neq i$时$a_j^{(i)}=0$，结合$m_j$两两互质，
+    由这个方程组的第$1,\ldots,i-1,i+1,\ldots,k$个方程知
+    \begin{align}
+        x\equiv0\pmod{M_i}\, ,
+    \end{align}
+    即存在整数$y$使得
+    \begin{align}\label{eq:7.ex02.proveCRT02}
+        x=M_iy\, .
+    \end{align}
+    代入第$i$个方程得
+    \begin{align}
+        M_iy\equiv a_i\pmod{m_i}\, .
+    \end{align}
+    由定理\ref{theorem:7.ex02.29}的证明知
+    \begin{align}
+        y\equiv M_i^{-1}a_i\pmod{m_i}\, ,
+    \end{align}
+    即
+    \begin{align}
+        M_iy\equiv M_iM_i^{-1}a_i\pmod{m}\, .
+    \end{align}
+    由此及\refeq{7.ex02.proveCRT02}得
+    \begin{align}
+        x\equiv M_iM_i^{-1}a_i\pmod{m}\, .
+    \end{align}
+    容易验证，$M_iM_i^{-1}a_i$确是同余方程组\refeq{7.ex02.proveCRT01}的解，
+    且由定理\ref{theorem:7.ex02.29}知解数为1。
+    注意到由\refeq{7.ex02.proveCRT03}可得
+    \begin{align}
+        a_j^{(1)}+a_j^{(2)}+\cdots+a_j^{(k)}=a_j\, ,
+    \end{align}
+    所以$M_1M_1^{-1}a_1+\cdots+M_kM_k^{-1}a_k$一定是同余方程组\refeq{7.ex02.CRT}的解。
+    若$c_1,c_2$均是同余方程组\refeq{7.ex02.CRT}的解，
+    则必有
+    \begin{align}
+        c_1\equiv c_2\pmod{m_j},\quad 1\le j\le k\, .
+    \end{align}
+    又因为$m_1,\ldots,m_k$两两互质，所以
+    \begin{align}
+        m=m_1m_2\cdots m_k=[m_1,\ldots,m_k]\, .
+    \end{align}
+    利用定理\ref{theorem:7.ex02.25}结合上两式可得
+    \begin{align}
+        c_1\equiv c_2\pmod{m}\, ,
+    \end{align}
+    即同余方程组\refeq{7.ex02.CRT}的解数必为1.
+\end{prove}
+\begin{example}
+    解同余方程组
+    \begin{align}
+        \left\{
+        \begin{array}{l}
+            x\equiv1\pmod{3}\, ,  \\
+            x\equiv-1\pmod{5}\, , \\
+            x\equiv2\pmod{7}\, ,  \\
+            x\equiv-2\pmod{11}\, .
+        \end{array}
+        \right.
+    \end{align}
+    {\sffamily 解}\quad 取$m_1=3,m_2=5,m_3=7,m_4=11$，
+    满足定理\ref{theorem:7.ex02.30}的条件。这时，
+    $M_1=5\times7\times11,M_2=3\times7\times11,M_3=3\times5\times11,M_4=3\times5\times7$.
+    由于$M_1\equiv(-1)\times1\times(-1)\equiv1\pmod{3}$，所以令
+    \begin{align}
+        1\equiv M_1M_1^{-1}\equiv M_1^{-1}\pmod{3}\, ,
+    \end{align}
+    因此可取$M_1^{-1}=1$.由于$M_2\equiv(-2)\times2\times1\equiv1\pmod{5}$，令
+    \begin{align}
+        1\equiv M_2M_2^{-1}\equiv M_2^{-1}\pmod{5}\, ,
+    \end{align}
+    因此可取$M_2^{-1}=1$.由于$M_3\equiv3\times5\times4\equiv4\pmod{7}$，令
+    \begin{align}
+        1\equiv M_3M_3^{-1}\equiv4M_3^{-1}\pmod{7}\, ,
+    \end{align}
+    因此可取$M_3^{-1}=2$.由$M_4\equiv3\times5\times7\equiv4\times7\equiv6\pmod{11}$，令
+    \begin{align}
+        1\equiv M_4M_4^{-1}\equiv6M_4^{-1}\pmod{11}\, ,
+    \end{align}
+    因此可取$M_4^{-1}=2$.进而由定理\ref{theorem:7.ex02.30}知
+    同余方程组的解为
+    \begin{align}
+        x & \equiv(5\times7\times11)\times1\times1+(3\times7\times11)\times1\times(-1)\nonumber                               \\
+          & \qquad+(3\times5\times11)\times2\times2+(3\times5\times7)\times2\times(-2)\pmod{3\times5\times7\times11}\nonumber \\
+          & \equiv385-231+660-420\equiv394\pmod{1155}\, .
+    \end{align}
+\end{example}
+
+至此我们介绍了Halton样本生成中求解一次同余方程组所需的全部背景知识。
+代码片{\refcode{Compute Halton sample offset for currentPixel}{}}中
+即采用了定理\ref{theorem:7.ex02.30}：其中{\ttfamily dimOffset}对应了$a_j$，
+{\ttfamily\refvar{sampleStride}{} / \refvar{baseScales}{}}对应了$M_j$，
+{\refvar{multInverse}{}}对应了$M_j^{-1}$，它由扩展欧几里得法求得，代码为
+\begin{lstlisting}
+static uint64_t `\initvar{multiplicativeInverse}{}`(int64_t a, int64_t n) {
+    int64_t x, y;
+    `\refvar{extendedGCD}{}`(a, n, &x, &y);
+    return `\refvar{Mod}{}`(x, n);
+}
+\end{lstlisting}
+\begin{lstlisting}
+static void `\initvar{extendedGCD}{}`(uint64_t a, uint64_t b, int64_t *x, int64_t *y) {
+    if (b == 0) {
+        *x = 1;
+        *y = 0;
+        return;
+    }
+    int64_t d = a / b, xp, yp;
+    `\refvar{extendedGCD}{}`(b, a % b, &xp, &yp);
+    *x = yp;
+    *y = xp - (d * yp);
+}
+\end{lstlisting}

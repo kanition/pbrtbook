@@ -212,13 +212,13 @@ $\varPhi$并向所有方向均匀辐射光
 \begin{figure}[htbp]
       \centering\input{Pictures/chap01/Basicreflectionsetting.tex}
       \caption{确定由点光源到达一点的单位面积功率的几何结构。
-            该点到光源的距离记作$r$。}\label{fig:1.3}
+            该点到光源的距离记作$r$.}\label{fig:1.3}
 \end{figure}
 
 如果考虑两个这样的球面（\reffig{1.4}），
 很明显大球上一点的单位面积功率必然比小球低，
 因为相同的总功率分布在了更大的面积上。
-特别地，到达半径为$r$的球面上一点的单位面积功率正比于$\displaystyle\frac{1}{r^2}$。
+特别地，到达半径为$r$的球面上一点的单位面积功率正比于$\displaystyle\frac{1}{r^2}$.
 \begin{figure}[htbp]
       \centering\input{Pictures/chap01/Lightspheresequalpower.tex}
       \caption{因为点光源向所有方向均匀辐射光，
@@ -228,7 +228,7 @@ $\varPhi$并向所有方向均匀辐射光
 
 此外可以看出，如果一小块曲面$\mathrm{d}A$相对于
 从曲面指向光源的向量倾斜了角度$\theta$，
-则$\mathrm{d}A$上积累的功率正比于$\cos{\theta}$。
+则$\mathrm{d}A$上积累的功率正比于$\cos{\theta}$.
 综上所述，单位面积上的微分功率
 （\keyindex{辐射照度}{irradiance}{}\sidenote{译者注：
       原文differential irradiance，鉴于其本身就是定义为功率对面积的微分，此处翻译略去了“微分”。}）
@@ -261,7 +261,7 @@ $\mathrm{d}E$为
 这种特殊射线称为\keyindex{阴影射线}{shadow ray}{ray射线}。
 如果追踪这些射线穿过环境，
 我们就能检查在射线原点与光源之间能否找到相交处，
-方法是沿射线方向比较相交处和光源位置的相应参数值$t$。
+方法是沿射线方向比较相交处和光源位置的相应参数值$t$.
 如果光源与表面之间没有遮挡物，
 就应考虑该光源的作用。
 
@@ -283,7 +283,7 @@ $\mathrm{d}E$为
 这个描述由\keyindex{双向反射分布函数}{bidirectional reflectance distribution function}{}(BRDF)给定。
 该函数告诉我们从\keyindex{入射}{incoming}{}方向${\bm \omega}_\mathrm{i}$
 到\keyindex{出射}{outgoing}{}方向${\bm \omega}_\mathrm{o}$会反射多少能量。
-我们把$\bm p$处的BRDF写作$f_{\mathrm{r}}({\bm p},{\bm \omega}_\mathrm{o},{\bm \omega}_\mathrm{i})$。
+我们把$\bm p$处的BRDF写作$f_{\mathrm{r}}({\bm p},{\bm \omega}_\mathrm{o},{\bm \omega}_\mathrm{i})$.
 现在计算散射回相机的光量$L$就很直接了：
 \begin{lstlisting}
 for each light:
@@ -354,7 +354,7 @@ BSSRDF将在\refsub{BSSRDF}、\refsec{BSSRDF}和\refsec{使用扩散方程的次
 Whitted算法通过忽略绝大多数方向的入射光来简化积分，
 只计算到光源方向以及
 完美\keyindex{反射}{reflection}{}与\keyindex{折射}{refraction}{}方向
-的$L_{\mathrm{i}}({\bm p},{\bm \omega}_\mathrm{i})$。
+的$L_{\mathrm{i}}({\bm p},{\bm \omega}_\mathrm{i})$.
 换句话说，它把积分变为少量方向上的求和。
 
 Whitted的方法可以扩展到实现镜面和玻璃外的更多效果。

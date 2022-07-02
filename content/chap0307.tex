@@ -17,7 +17,7 @@
 给定在其他三次基中指定的曲线，例如\keyindex{Hermite样条}{Hermite spline}{spline样条}
 \sidenote{译者注：三次Hermite样条
     形如$\bm p(u)=(2u^3-3u^2+1)\bm p_0+(u^3-2u^2+t)\bm m_0+(-2u^3+3u^2)\bm p_1+(u^3-u^2)\bm m_1$，
-    其中$\bm p_i$是起点和终点，$\bm m_i$是起点和终点处的切向量，$u\in[0,1]$。}，
+    其中$\bm p_i$是起点和终点，$\bm m_i$是起点和终点处的切向量，$u\in[0,1]$.}，
 很容易将其转化为贝塞尔基，所以这里的实现将这一负担留给用户。
 如果经常用的话，可以很容易添加该功能。
 \begin{figure}[htbp]
@@ -159,7 +159,7 @@ struct `\initvar{CurveCommon}{}` {
 \sidenote{译者注：在实数向量空间中，对于给定集合$X$，
 所有包含$X$的凸集的交集$S$称为$X$的凸包，
 它可以用$X$内所有点$(x_1,\ldots,x_n)$的线性组合来构造，
-即$\displaystyle S=\{\sum\limits_{j=1}^n{t_jx_j}|x_j\in X,\sum\limits_{j=1}^n{t_j}=1,t_j\in[0,1]\}$。}。
+即$\displaystyle S=\{\sum\limits_{j=1}^n{t_jx_j}|x_j\in X,\sum\limits_{j=1}^n{t_j}=1,t_j\in[0,1]\}$.}。
 因此，控制点的边界框给出了底层曲线的保守边界。
 方法\refvar[Curve::ObjectBound]{ObjectBound}{()}首先
 计算1D贝塞尔段的控制点边界框来沿曲线的中心包围样条。
@@ -441,10 +441,10 @@ return true;
 第一个控制点$\bm p_0$是第一个点的不错选择。
 对于第二个点，我们将计算垂直于曲线切线的向量并将该偏移量加到控制点上。
 
-\refeq{3.3}的微分说明曲线在第一个控制点$\bm p_0$处的切线为$3(\bm p_1-\bm p_0)$。
-缩放因子在这里无关紧要，所以我们这里用$\bm t=\bm p_1-\bm p_0$。
+\refeq{3.3}的微分说明曲线在第一个控制点$\bm p_0$处的切线为$3(\bm p_1-\bm p_0)$.
+缩放因子在这里无关紧要，所以我们这里用$\bm t=\bm p_1-\bm p_0$.
 在2D中计算垂直于切线的向量很容易：只需要交换$x$和$y$坐标并让其中一个取相反数。
-（为了理解为什么这样可行，考虑点积$(x,y)\cdot(y,-x)=xy+(-yx)=0$。
+（为了理解为什么这样可行，考虑点积$(x,y)\cdot(y,-x)=xy+(-yx)=0$.
 因为两个向量夹角的余弦为零，它们一定垂直。）
 因此，边上的第二个点为
 \begin{align*}
@@ -500,7 +500,7 @@ if (edge < 0)
     \caption{(a)给定无限直线和点$\bm p$，则从该点到直线上
         最近点$\bm p'$的向量垂直于该直线。
         (b)因为该向量垂直，我们可以计算从直线上第一点到
-        最近点$\bm p'$的距离为$d=\|\bm p-\bm p_0\|\cos\theta$。}
+        最近点$\bm p'$的距离为$d=\|\bm p-\bm p_0\|\cos\theta$.}
     \label{fig:3.23}
 \end{figure}
 
@@ -604,7 +604,7 @@ static `\refvar{Point3f}{}` `\initvar{EvalBezier}{}`(const `\refvar{Point3f}{}` 
 现在可以计算交点的$v$坐标了。
 曲线的$v$坐标在0到1内变化，曲线中心取值为0.5；
 这里我们根据过曲线上的点{\ttfamily pc}和沿其导数的点的边函数
-将交点$(0,0)$分类，决定交点在中心的哪边以及该怎样计算$v$。
+将交点$(0,0)$分类，决定交点在中心的哪边以及该怎样计算$v$.
 \begin{lstlisting}
 `\initcode{Compute v coordinate of curve intersection point}{=}`
 `\refvar{Float}{}` ptCurveDist = std::sqrt(ptCurveDist2);

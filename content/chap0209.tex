@@ -86,9 +86,9 @@ pbrt用的变换插值方法基于\keyindex{矩阵分解}{matrix decomposition}{
 其中$\mathbf{i}, \mathbf{j}, \mathbf{k}$定义
 \footnote{Hamilton发现分量之间的这种关系非常有趣，
     以至于当他想到这个时立即用刀子把公式刻在了他正经过的桥上。}
-为$\mathbf{i}^2=\mathbf{j}^2=\mathbf{k}^2=\mathbf{i}\mathbf{j}\mathbf{k}=-1$。
+为$\mathbf{i}^2=\mathbf{j}^2=\mathbf{k}^2=\mathbf{i}\mathbf{j}\mathbf{k}=-1$.
 分量间的另一重要关系是$\mathbf{i}\mathbf{j}=\mathbf{k}$且
-$\mathbf{j}\mathbf{i}=-\mathbf{k}$。
+$\mathbf{j}\mathbf{i}=-\mathbf{k}$.
 这说明四元数乘法一般是不可交换的。
 
 四元数可以表示为四元组$\bm q=[q_x,q_y,q_z,q_w]$或$[\bm q_{xyz},q_w]$，
@@ -172,7 +172,7 @@ inline `\refvar{Quaternion}{}` `\initvar[Quaternion::Normalize]{Normalize}{}`(co
 我们需要将插值后的旋转转换回变换矩阵来计算最后合成的插值矩阵。
 
 为了推导四元数的旋转矩阵，回忆一下四元数对点的变换由$\bm q\bm p\bm q^{-1}$给出。
-我们想要矩阵$\bm M$执行相同的变换，即$\bm p'=\bm M\bm p$。
+我们想要矩阵$\bm M$执行相同的变换，即$\bm p'=\bm M\bm p$.
 如果我们用\refeq{2.5}展开四元数乘法$\bm q\bm p\bm q^{-1}$、
 用四元数基本恒等式化简、合并项并把结果表示为矩阵，
 我们可以得到如下$3\times3$矩阵表示同一变换：
@@ -198,14 +198,14 @@ $\displaystyle[\bm q_{xyz}\sin\frac{\theta}{2},\cos\frac{\theta}{2}]$表示
 绕单位轴$\hat{\bm q}_{xyz}$旋转角度$\theta$的事实计算旋转矩阵。
 首先我们计算出旋转角度为$\theta=2\arccos q_w$，
 然后利用之前定义的函数\refvar{Rotate}{()}，
-传入轴$\hat{\bm q}_{xyz}$和旋转角度$\theta$。
+传入轴$\hat{\bm q}_{xyz}$和旋转角度$\theta$.
 然而，这个替代方法会很低效，因为需要多次调用三角函数，
 但是这里实现的方法只用了浮点加法、减法和乘法。
 
 从旋转矩阵创建四元数也很有用。
 为此，\refvar{Quaternion}{}提供了接收\refvar{Transform}{}
 的构造函数。合适的四元数可以通过利用\refeq{2.6}中旋转矩阵元素与四元数分量之间的关系算得。
-例如，如果我们从矩阵本身中减去它的转置，则结果矩阵的$(0,1)$分量为$-4q_wq_z$。
+例如，如果我们从矩阵本身中减去它的转置，则结果矩阵的$(0,1)$分量为$-4q_wq_z$.
 因此，给定已知值的特定旋转矩阵实例，
 可以利用矩阵值与四元数分量之间大量这样的关系生成一系列可以求解四元数分量的方程。
 
@@ -242,16 +242,16 @@ $\displaystyle[\bm q_{xyz}\sin\frac{\theta}{2},\cos\frac{\theta}{2}]$表示
 \end{align*}
 
 \citet{Blow_2004}提出了一种直观的方式理解\refvar{Slerp}{()}。
-下文中，给定要在其间插值的四元数$\bm q_1$和$\bm q_2$，两者角度记为$\theta$。
+下文中，给定要在其间插值的四元数$\bm q_1$和$\bm q_2$，两者角度记为$\theta$.
 然后，给定参数值$t\in[0,1]$，我们想要找到中间的四元数$\bm q'$使得
-它沿从$\bm q_1$到$\bm q_2$的路径与$\bm q_1$的角度为$\theta'=\theta t$。
+它沿从$\bm q_1$到$\bm q_2$的路径与$\bm q_1$的角度为$\theta'=\theta t$.
 
 \begin{figure}[htbp]
     \centering\includegraphics[scale=0.6]{chap02/Quaternionrotation.eps}
     \caption{为了理解四元数球面线性插值，考虑2D下的两个单位圆上的向量$\bm v_0$和$\bm v_1$，
-        两者夹角$\theta$。我们想要计算两者间角度为$\theta'$的插值向量。
+        两者夹角$\theta$.我们想要计算两者间角度为$\theta'$的插值向量。
         为此，我们可以寻找正交于$\bm v_0$的向量$\bm v_{\perp}$，
-        再应用三角恒等式$\bm v'=\bm v_0\cos\theta'+\bm v_{\perp}\sin\theta'$。}
+        再应用三角恒等式$\bm v'=\bm v_0\cos\theta'+\bm v_{\perp}\sin\theta'$.}
     \label{fig:2.17}
 \end{figure}
 
@@ -379,14 +379,14 @@ for (int i = 0; i < 3; ++i)
 M.`\refvar[Matrix4x4::m]{m}{}`[3][3] = 1.f;
 \end{lstlisting}
 
-接着我们想提取纯旋转分量$\bm R$。
+接着我们想提取纯旋转分量$\bm R$.
 我们使用称为\keyindex{极分解}{polar decomposition}{}的技术来完成它。
 可以证明矩阵$\bm M$极分解为旋转$\bm R$和缩放$\bm S$可以通过
 依次平均$\bm M$和它的逆转置算得
 \begin{align}\label{eq:2.10}
     \bm M_{i+1}=\frac{1}{2}(\bm M_i+(\bm M_i^\mathrm{T})^{-1})\, ,
 \end{align}
-直到收敛于点$\bm M_i=\bm R$。
+直到收敛于点$\bm M_i=\bm R$.
 （容易看到如果$\bm M$是纯旋转，则平均它及其逆转置会保持不变，
 因为它的逆等于转置。“扩展阅读”一节有更多讨论
 为什么该序列收敛于原始变换旋转分量的参考文献。）
@@ -429,8 +429,8 @@ for (int i = 0; i < 3; ++i) {
 \end{lstlisting}
 
 一旦我们从$\bm M$提取了旋转，剩下的全部就是缩放了。
-我们想寻找满足$\bm M=\bm R\bm S$的矩阵$\bm S$。
-现在我们知道了$\bm R$和$\bm M$，只需解得$\bm S=\bm R^{-1}\bm M$。
+我们想寻找满足$\bm M=\bm R\bm S$的矩阵$\bm S$.
+现在我们知道了$\bm R$和$\bm M$，只需解得$\bm S=\bm R^{-1}\bm M$.
 \begin{lstlisting}
 `\initcode{Compute scale S using rotation and original matrix}{=}`
 *S = `\refvar{Matrix4x4::Mul}{}`(`\refvar[Matrix4x4::Inverse]{Inverse}{}`(R), M);
@@ -540,7 +540,7 @@ for (int i = 0; i < 3; ++i)
 第二，如果变换只包括缩放和/或平移，
 则包围了边界框在开始和结束时刻变换位置的边界框将包围所有运动。
 为了理解为什么会这样，将变换的点$\bm p$考虑为时间的函数；
-我们将其记为两个矩阵、一个点和时间的函数$a(\bm M_0,\bm M_1,\bm p,t)$。
+我们将其记为两个矩阵、一个点和时间的函数$a(\bm M_0,\bm M_1,\bm p,t)$.
 
 因为这种情况下分解的旋转分量是恒等变换，所以我们将矩阵分解为：
 \begin{align*}
@@ -613,7 +613,7 @@ return bounds;
 它的完整代数运算非常壮观，
 对于给定的一对分解的矩阵、点和时间，需要两千多次运算才能求值。
 然而，对于特定的变换矩阵和特定点，$a$可以大大简化；
-我们把专门关于$t$的函数表示为$a_{\bm M,\bm p}(t)$。
+我们把专门关于$t$的函数表示为$a_{\bm M,\bm p}(t)$.
 对每个坐标\sidenote{译者注：$b_i$表示不含$t$的系数。
 缩放变换后每维坐标为$b_1t+b_2$；
 旋转相应的四元数各分量为$b_3\sin(\theta t)+b_4\cos(\theta t)$，
@@ -621,7 +621,7 @@ return bounds;
 $b_5\sin^2(\theta t)+b_6\cos^2(\theta t)+b_7\sin(\theta t)\cos(\theta t)$，即
 $b_8+b_9\sin(2\theta t)+b_{10}\cos(2\theta t)$，故坐标旋转为
 $(b_8+b_9\sin(2\theta t)+b_{10}\cos(2\theta t))(b_1t+b_2)$；$\bm T(t)$再加上$t$的一次式得
-$(b_8+b_9\sin(2\theta t)+b_{10}\cos(2\theta t))(b_1t+b_2)+b_{11}t+b_{12}$。
+$(b_8+b_9\sin(2\theta t)+b_{10}\cos(2\theta t))(b_1t+b_2)+b_{11}t+b_{12}$.
 对$t$求导即形如\refeq{2.12}。}
 求导数大约要十次浮点运算、一次正弦和一次余弦：
 \begin{align}\label{eq:2.12}
@@ -651,7 +651,7 @@ $(b_8+b_9\sin(2\theta t)+b_{10}\cos(2\theta t))(b_1t+b_2)+b_{11}t+b_{12}$。
 \end{align*}
 
 因此，给定系数$\bm k_i$和我们想定界其运动的特定点$\bm p$，
-我们可以高效计算\refeq{2.12}中导函数的系数$\bm c_i$。
+我们可以高效计算\refeq{2.12}中导函数的系数$\bm c_i$.
 结构体\refvar{DerivativeTerm}{}封装了这些系数和计算。
 \begin{lstlisting}
 `\refcode{AnimatedTransform Private Data}{+=}\lastnext{AnimatedTransformPrivateData}`
@@ -730,10 +730,10 @@ for (int i = 0; i < nZeros; ++i) {
 它是一种运算的推广，即了解函数在一定范围值上的特性，
 这让稳定寻找函数零点成为可能。
 
-例如，为了理解区间运算的基本思想，考虑函数$f(x)=2x$。
+例如，为了理解区间运算的基本思想，考虑函数$f(x)=2x$.
 如果有一区间值$[a,b]\in\mathbb{R}$，
-则我们可以看到在该区间上，$f$的范围是区间$[2a,2b]$。
-换句话说$f([a,b])\subset[2a,2b]$。
+则我们可以看到在该区间上，$f$的范围是区间$[2a,2b]$.
+换句话说$f([a,b])\subset[2a,2b]$.
 
 更一般地，所有基本算术运算都有\keyindex{区间推广}{interval extension}{}即
 描述它们怎样运算区间。例如，

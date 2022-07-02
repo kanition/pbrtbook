@@ -273,7 +273,7 @@ pbrt的光线-三角形相交测试基于首先计算仿射变换
 \end{lstlisting}
 
 计算从世界空间到光线-三角形相交坐标空间的变换有三步：
-平移$\bm T$、坐标\keyindex{置换}{permutation}{}$\bm P$和\keyindex{错切}{shear}{}$\bm S$。
+平移$\bm T$、坐标\keyindex{置换}{permutation}{}$\bm P$和\keyindex{错切}{shear}{}$\bm S$.
 下列实现没有为它们每个都计算显式的变换矩阵
 再计算合成变换矩阵$\bm M=\bm S\bm P\bm T$来把顶点变换到坐标空间，
 而是直接施加每步的变换，这最终是更高效的方法。
@@ -304,7 +304,7 @@ pbrt的光线-三角形相交测试基于首先计算仿射变换
 接下来，置换空间三个维度使得$z$维的射线方向绝对值最大。
 $x$和$y$维任意分配给另外两维。
 例如，这步保证如果原始射线的$z$方向为零，
-则非零幅度的维度映射到$+z$。
+则非零幅度的维度映射到$+z$.
 
 例如，如果光线方向在$x$有最大幅值，则置换为：
 \begin{align*}
@@ -411,7 +411,7 @@ p2t.y += Sy * p2t.z;
 因此若某点的边函数值对三角形三条边有相同符号，
 它一定在三条边的同侧并因此必在三角形内。
 
-得益于坐标系变换，我们要测试的点$\bm p$是$(0,0)$。
+得益于坐标系变换，我们要测试的点$\bm p$是$(0,0)$.
 这简化了边函数表达式。例如，对于从$\bm p_1$到$\bm p_2$的边$e_0$，我们有：
 \begin{align}\label{eq:3.2}
     e_0(\bm p) & =(p_{2x}-p_{1x})(p_y-p_{1y})-(p_x-p_{1x})(p_{2y}-p_{1y})\nonumber \\
@@ -471,7 +471,7 @@ if (det == 0)
 \sidenote{译者注：提示：$b_i$表示了原点接近$\bm p_i$的程度。
     利用向量知识可以证明，2D中对于包围了点$O$（不在边缘上）的$\triangle P_0P_1P_2$，
     存在比例固定的非零系数$e_i$使得$e_0\overrightarrow{OP_0}+e_1\overrightarrow{OP_1}+e_2\overrightarrow{OP_2}=\bm 0$，
-    且三角形面积满足$\displaystyle\frac{|e_0|}{S_{\triangle OP_1P_2}}=\frac{|e_1|}{S_{\triangle OP_2P_0}}=\frac{|e_2|}{S_{\triangle OP_0P_1}}$。}：
+    且三角形面积满足$\displaystyle\frac{|e_0|}{S_{\triangle OP_1P_2}}=\frac{|e_1|}{S_{\triangle OP_2P_0}}=\frac{|e_2|}{S_{\triangle OP_0P_1}}$.}：
 \begin{align*}
     b_i=\frac{e_i}{e_0+e_1+e_2}\, .
 \end{align*}
@@ -520,7 +520,7 @@ else if (det > 0 && (tScaled <= 0 || tScaled > ray.tMax * det))
 为了在三角网格上生成一致的切向量，如果提供了的话，
 有必要用参数值$(u,v)$计算三角形顶点处的偏导数
 $\displaystyle\frac{\partial \bm p}{\partial u}$和
-$\displaystyle\frac{\partial \bm p}{\partial v}$。
+$\displaystyle\frac{\partial \bm p}{\partial v}$.
 尽管三角形上所有点的偏导数都一样，这里的实现
 还是每次找到相交处就重算它们。
 尽管这导致多余的计算，但对于大型三角网格节约的存储是显著的。
@@ -531,7 +531,7 @@ $\displaystyle\frac{\partial \bm p}{\partial v}$。
 \end{align*}
 对于某点$\bm p_{\mathrm{o}}$，$u$和$v$在三角形参数坐标范围内变动。
 我们还知道三个顶点位置$\bm p_i, i=0,1,2$，
-以及每个顶点的纹理坐标$(u_i,v_i)$。
+以及每个顶点的纹理坐标$(u_i,v_i)$.
 由此推出$\bm p$的偏导数一定满足
 \begin{align*}
     \bm p_i=\bm p_{\mathrm{o}}+u_i\frac{\partial \bm p}{\partial u}+v_i\frac{\partial \bm p}{\partial v}\, .

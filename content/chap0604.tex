@@ -114,7 +114,7 @@ const bool `\initvar{simpleWeighting}{}`;
 （例如为了让保持手机变薄，其相机厚度非常有限）。
 
 最容易生产的是横截面为球形的透镜，
-透镜系统通常是绕\keyindex{光轴}{optical axis}{}对称的，习惯记为$z$。
+透镜系统通常是绕\keyindex{光轴}{optical axis}{}对称的，习惯记为$z$.
 我们将假设这两个性质在本节下文中成立。
 用胶片对齐到平面$z=0$且透镜在胶片左侧沿$-z$轴放置的坐标系统定义透镜系统。
 
@@ -152,10 +152,10 @@ const bool `\initvar{simpleWeighting}{}`;
 \end{table}
 \begin{figure}[htbp]
     \centering\includegraphics[width=0.6\linewidth]{chap06/Lenselement.eps}
-    \caption{透镜界面（实曲线）与光轴相交于位置$z$。界面几何形状由
+    \caption{透镜界面（实曲线）与光轴相交于位置$z$.界面几何形状由
         表示其在光轴上下方范围的光圈半径以及元件的曲率半径$r$描述。
         如果元件有球形横截面，则它的轮廓由球心在光轴上距离$r$的球体给定，
-        该球体也穿过$z$。如果$r$是负的，则元件界面就如从场景中看到那样是凹的
+        该球体也穿过$z$.如果$r$是负的，则元件界面就如从场景中看到那样是凹的
         （如图所示）；否则就是\protect\keyindex{凸}{convex}{}的。透镜厚度给出了到
         右边下一个界面的距离，或者对于最右边的界面是到胶片平面的距离。}
     \label{fig:6.17}
@@ -204,8 +204,8 @@ std::vector<`\refvar{LensElementInterface}{}`> `\initvar{elementInterfaces}{}`;
 \begin{figure}[htbp]
     \centering\includegraphics[width=0.4\linewidth]{chap06/Elementthicknessandposition.eps}
     \caption{元件厚度与光轴上位置的关系。胶片平面位于$z=0$，尾部元件的厚度$t_3$给出
-        了从胶片到其界面的距离；这里尾部界面与轴交于$z=-t_3$。下一个元件厚度为$t_2$且
-        位于$z=-t_3-t_2$，以此类推。头部元件交$z$轴于$\sum_i-t_i$。}
+        了从胶片到其界面的距离；这里尾部界面与轴交于$z=-t_3$.下一个元件厚度为$t_2$且
+        位于$z=-t_3-t_2$，以此类推。头部元件交$z$轴于$\sum_i-t_i$.}
     \label{fig:6.18}
 \end{figure}
 \begin{lstlisting}
@@ -267,7 +267,7 @@ elementZ -= element.`\refvar{thickness}{}`;
 `\refcode{Update ray path for element interface interaction}{}`
 \end{lstlisting}
 
-有了元件的$z$轴截距，下一步是计算沿光线与元件界面（或光圈平面）相交处的参数值$t$。
+有了元件的$z$轴截距，下一步是计算沿光线与元件界面（或光圈平面）相交处的参数值$t$.
 对于光圈，采用光线-平面测试（见\refsub{光线-边界相交}）。
 对于球形界面，\refvar{IntersectSphericalElement}{()}执行该测试
 并且如果找到相交处则还返回曲面法线；计算折射光方向时将需要该法线。
@@ -436,9 +436,9 @@ bool `\initvar{TraceLensesFromScene}{}`(const `\refvar{Ray}{}` &rCamera, `\refva
 （正如\refsub{薄透镜模型与景深}，有撇的变量表示透镜系统胶片一侧的点，
 无撇的变量表示场景中要成像的点）。
 
-给定离开透镜的光线，求焦点要先计算光线的$x$和$y$分量为零时的值$t_{\mathrm{f}}$。
+给定离开透镜的光线，求焦点要先计算光线的$x$和$y$分量为零时的值$t_{\mathrm{f}}$.
 若进入的光线只沿$x$偏移了光轴，则我们要求出
-使$o_x+t_{\mathrm{f}}d_x=0$的$t_{\mathrm{f}}$。因此
+使$o_x+t_{\mathrm{f}}d_x=0$的$t_{\mathrm{f}}$.因此
 \begin{align*}
     t_{\mathrm{f}}=\frac{-o_x}{d_x}\, .
 \end{align*}
@@ -540,10 +540,10 @@ rFilm = `\refvar{Ray}{}`(`\refvar{Point3f}{}`(x, 0, `\refvar{LensRearZ}{}`() - 1
 }
 \end{lstlisting}
 
-\refeq{6.4}给出了偏移量$\delta$。透镜的焦距$f$是主点$f'_z$和$p'_z$间的距离。
+\refeq{6.4}给出了偏移量$\delta$.透镜的焦距$f$是主点$f'_z$和$p'_z$间的距离。
 还要注意对于$z$用的是对焦距离
 \sidenote{译者注：和\refsec{投影相机模型}中的“focal distance”不同，这里的原文是“focus distance”。}
-的相反数，因为光轴指向负的$z$。
+的相反数，因为光轴指向负的$z$.
 \begin{lstlisting}
 `\initcode{Compute translation of lens, delta, to focus at focusDistance}{=}`
 `\refvar{Float}{}` f = fz[0] - pz[0];
@@ -599,7 +599,7 @@ rFilm = `\refvar{Ray}{}`(`\refvar{Point3f}{}`(x, 0, `\refvar{LensRearZ}{}`() - 1
 \begin{figure}[htbp]
     \centering\includegraphics[width=0.7\linewidth]{chap06/Exitpupilboundsfilm.eps}
     \caption{预先计算出射瞳边界。(a)\refvar{RealisticCamera}{}为胶片平面上
-        沿$x$轴的一系列线段计算出射瞳的边界，直到达到胶片中心到角点的距离$r$。
+        沿$x$轴的一系列线段计算出射瞳的边界，直到达到胶片中心到角点的距离$r$.
         (b)鉴于径向对称的假设，我们可以通过计算点与$x$轴间的夹角$\theta$来
         为胶片上的任意点（实心点）求取出射瞳边界。如果初始出射瞳边界内的一点被采样
         再旋转$\theta$，则我们就有了原始点处出射瞳内的一点。}
@@ -862,7 +862,7 @@ ray->`\refvar[Ray::medium]{medium}{}` = `\refvar[Camera::medium]{medium}{}`;
 
 因为胶片平面平行
 \sidenote{译者注：原文误写为垂直，已修改。}
-于出射瞳平面，所以$\theta=\theta'$。
+于出射瞳平面，所以$\theta=\theta'$.
 我们可进一步利用$\bm p$和$\bm p'$间的距离等于从胶片平面到出射瞳轴向距离
 （这里我们表示为$z$）除以$\cos\theta$的事实。
 将这些全部结合起来，我们有
@@ -877,7 +877,7 @@ ray->`\refvar[Ray::medium]{medium}{}` = `\refvar[Camera::medium]{medium}{}`;
 胶片上一点的辐射照度对快门开启时间的积分
 给出了\keyindex{注量}{fluence}{}
 \sidenote{译者注：即\keyindex{辐射曝光量}{radiant exposure}{}。}，
-即单位面积上的辐射能量，单位$\text{J/m}^2$。
+即单位面积上的辐射能量，单位$\text{J/m}^2$.
 \begin{align}\label{eq:6.6}
     H({\bm p})=\frac{1}{z^2}\int_{t_0}^{t_1}\int_{A_{\mathrm{e}}}
     L_{\mathrm{i}}({\bm p},{\bm p}',t')|\cos^4\theta|\mathrm{d}A_{\mathrm{e}}\mathrm{d}t'\, .

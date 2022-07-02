@@ -40,10 +40,10 @@
     \begin{align}\label{eq:02ex0304}
         \min\{f(a),f(b)\}<u<\max\{f(a),f(b)\}\, ,
     \end{align}
-    则必存在$\xi\in(a,b)$使得$f(\xi)=u$。
+    则必存在$\xi\in(a,b)$使得$f(\xi)=u$.
 \end{theorem}
 \begin{corollary}
-    若实值函数$f$在闭区间$[a,b]$上连续，且$f(a)f(b)<0$，则必存在$\xi\in(a,b)$使得$f(\xi)=0$。
+    若实值函数$f$在闭区间$[a,b]$上连续，且$f(a)f(b)<0$，则必存在$\xi\in(a,b)$使得$f(\xi)=0$.
 \end{corollary}
 \begin{theorem}[\protect\keyindex{拉格朗日中值定理}{Lagrange mean value theorem}{}]
     若实值函数$f$在闭区间$[a,b]$上连续，在开区间$(a,b)$上可导，其中$a<b$，
@@ -63,9 +63,9 @@
     \begin{align}\label{eq:02ex0307}
         x_{k+1}=\varphi(x_k),\quad k=0,1,\ldots\, ,
     \end{align}
-    构造序列$\{x_k\}_{k=0}^\infty$。
+    构造序列$\{x_k\}_{k=0}^\infty$.
     若有$\displaystyle\lim\limits_{k\rightarrow\infty}{x_k}=x^*$，
-    且函数$\varphi(x)$在$x^*$邻域内连续，则对上式取极限有$x^*=\varphi(x^*)$。
+    且函数$\varphi(x)$在$x^*$邻域内连续，则对上式取极限有$x^*=\varphi(x^*)$.
     因此$x^*$是\refeq{02ex0306}的根，也即$f(x)=0$的根。
     称$\varphi(x)$为\keyindex{迭代函数}{iterative function}{}，
     所得序列$\{x_k\}_{k=0}^\infty$为\keyindex{迭代序列}{iterative sequence}{}，
@@ -106,9 +106,9 @@
         g'(x)=1-\varphi'(x)\ge1-L>0\, ,
     \end{align}
     所以$g(x)$在$[a,b]$上是严格单调增函数，存在唯一零点，
-    即$x=\varphi(x)$在区间$[a,b]$上有唯一实根，记为$x^*$。
+    即$x=\varphi(x)$在区间$[a,b]$上有唯一实根，记为$x^*$.
 
-    (2) 由$x_0\in[a,b]$及条件1知$x_k\in[a,b]$，$k=1,2,\ldots$。
+    (2) 由$x_0\in[a,b]$及条件1知$x_k\in[a,b]$，$k=1,2,\ldots$.
     考虑到$x_{k+1}=\varphi(x_k)$以及$x^*=\varphi(x^*)$，
     两者作差并利用拉格朗日中值定理得
     \begin{align}\label{eq:02ex0314}
@@ -126,7 +126,7 @@
                           & \le L^{k+1}|x_0-x^*|,\quad k=0,1,\ldots\, .
     \end{align}
     因为$L\in(0,1)$，所以对上式取极限易得$\displaystyle\lim\limits_{k\rightarrow\infty}{|x_{k+1}-x^*|}=0$，
-    即$\displaystyle\lim\limits_{k\rightarrow\infty}{x_k}=x^*$。
+    即$\displaystyle\lim\limits_{k\rightarrow\infty}{x_k}=x^*$.
 
     (3) 由\refeq{02ex0314.5}得
     \begin{align}\label{eq:02ex0316}
@@ -157,7 +157,7 @@
     \begin{align}\label{eq:02ex0321}
         \frac{x_{k+1}-x^*}{x_k-x^*}=\varphi'(\xi_k),\quad k=0,1,\ldots\, .
     \end{align}
-    注意$\xi_k$介于$x_k$与$x^*$之间，故$\displaystyle\lim\limits_{k\rightarrow\infty}{\xi_k}=x^*$。
+    注意$\xi_k$介于$x_k$与$x^*$之间，故$\displaystyle\lim\limits_{k\rightarrow\infty}{\xi_k}=x^*$.
     由$\varphi'(x)$的连续性，上式取极限得
     \begin{align}\label{eq:02ex0322}
         \lim\limits_{k\rightarrow\infty}{\frac{x_{k+1}-x^*}{x_k-x^*}}=\varphi'(x^*)\, .
@@ -174,13 +174,13 @@
     \begin{align}\label{eq:02ex0323}
         |\varphi(x)-x^*|=|\varphi(x)-\varphi(x^*)|=|\varphi'(\eta)(x-x^*)|\le L\delta<\delta\, ,
     \end{align}
-    其中$\eta$介于$x$与$x^*$之间。于是$\varphi(x)\in U(x^*,\delta)$。
+    其中$\eta$介于$x$与$x^*$之间。于是$\varphi(x)\in U(x^*,\delta)$.
     根据全局收敛性定理，迭代$x_{k+1}=\varphi(x_k)$对任意$x_0\in U(x^*,\delta)$收敛。
 \end{prove}
 
 接下来引入收敛阶的概念刻画迭代法收敛速度。
 \begin{definition}
-    设迭代序列$\{x_k\}_{k=0}^\infty$收敛到根$x^*$，记$e_k=x_k-x^*$。
+    设迭代序列$\{x_k\}_{k=0}^\infty$收敛到根$x^*$，记$e_k=x_k-x^*$.
     若存在常数$c>0$和实数$p\ge1$使得
     \begin{align}\label{eq:02ex0324}
         \lim\limits_{k\rightarrow\infty}{\frac{|e_{k+1}|}{|e_k|^p}}=c\, ,

@@ -101,7 +101,7 @@ pbrt提供该方法的默认实现将物体空间边界变换到世界空间。
 
 基本的光线-边界框相交算法算法工作如下：
 我们从一个参数化区间开始，它沿我们想要求交的光线覆盖了位置$t$的范围；
-该范围通常是$(0,+\infty)$。
+该范围通常是$(0,+\infty)$.
 然后我们先后计算光线与每个厚板相交的两个参数化$t$位置。
 我们计算每个厚板相交区间与当前相交区间的交集，
 如果我们发现结果区间退化则返回失败。
@@ -118,7 +118,7 @@ pbrt提供该方法的默认实现将物体空间边界变换到世界空间。
 \begin{figure}[htb]
     \centering\input{Pictures/chap03/Rayslabintersect.tex}
     \caption{光线与轴对齐厚板相交。这里展示的两平面由关于常数$c$的$x=c$描述。
-        每个平面的法线为$(1,0,0)$。除非光线平行于平面，否则它会在
+        每个平面的法线为$(1,0,0)$.除非光线平行于平面，否则它会在
         参数位置$t_{\mathrm{near}}$和$t_{\mathrm{far}}$处与厚板相交两次。}
     \label{fig:3.3}
 \end{figure}
@@ -126,7 +126,7 @@ pbrt提供该方法的默认实现将物体空间边界变换到世界空间。
 如果方法\refvar{Bounds3::IntersectP}{()}返回{\ttfamily true}，
 相交的参数范围在可选参数{\ttfamily hitt0}和{\ttfamily hitt1}内返回。
 光线超出范围{\ttfamily (0, \refvar[tMax]{Ray::tMax}{})}的相交部分被忽略。
-如果射线端点在框内，{\ttfamily hitt0}返回$0$。
+如果射线端点在框内，{\ttfamily hitt0}返回$0$.
 \begin{lstlisting}
 `\refcode{Geometry Inline Functions}{+=}\lastnext{GeometryInlineFunctions}`
 template <typename T>
@@ -144,8 +144,8 @@ inline bool `\refvar{Bounds3}{}`<T>::`\initvar[Bounds3::IntersectP]{IntersectP}{
 
 对于每对平面，该例程需要两处光线-平面相交。
 例如，两个垂直于$x$轴的平面描述的厚板可以由
-通过点$(x_0,0,0)$和$(x_1,0,0)$的平面描述，每个的法线都是$(1,0,0)$。
-考虑平面相交的第一个$t$值即$t_0$。
+通过点$(x_0,0,0)$和$(x_1,0,0)$的平面描述，每个的法线都是$(1,0,0)$.
+考虑平面相交的第一个$t$值即$t_0$.
 端点为$\bm o$方向为$\bm d$的射线与平面$ax+by+cz+d=0$相交处的参数$t$值
 可通过将射线方程代入平面方程求得：
 \begin{align*}
@@ -157,8 +157,8 @@ inline bool `\refvar{Bounds3}{}`<T>::`\initvar[Bounds3::IntersectP]{IntersectP}{
     t=\frac{-d-(a,b,c)\cdot\bm o}{(a,b,c)\cdot\bm d}\, .
 \end{align*}
 
-因为平面法线的$y$和$z$分量是零，所以$b$和$c$是零，$a$是1。
-平面的系数$d$是$-x_0$。我们可以用这些信息和点积的定义大大简化计算：
+因为平面法线的$y$和$z$分量是零，所以$b$和$c$是零，$a$是1.
+平面的系数$d$是$-x_0$.我们可以用这些信息和点积的定义大大简化计算：
 \begin{align*}
     t_0=\frac{x_0-o_x}{d_x}\, .
 \end{align*}
@@ -172,7 +172,7 @@ inline bool `\refvar{Bounds3}{}`<T>::`\initvar[Bounds3::IntersectP]{IntersectP}{
 IEEE浮点算术相关属性是对于所有{\ttfamily v>0}，{\ttfamily v/0=}$\infty$，
 对所有{\ttfamily w<0}，{\ttfamily w/0=-}$\infty$，
 其中$\infty$是特殊值即任意正数乘以$\infty$为$\infty$，
-任意负数乘以$\infty$为$-\infty$。
+任意负数乘以$\infty$为$-\infty$.
 关于浮点算术的更多信息见\protect\refsub{浮点算术}。}。
 \begin{lstlisting}
 `\initcode{Update interval for ith bounding box slab}{=}`

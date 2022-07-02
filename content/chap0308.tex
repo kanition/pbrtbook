@@ -613,7 +613,7 @@ Loop细分尤其高效，因为其细分规则均有该性质。
 \footnote{再次见本节开头和“扩展阅读”一节引用的文献
     了解关于如何推导出$\beta$等值的信息。}。
 下面的函数\refvar{beta}{()}基于顶点的价计算能够保证光滑性的$\beta$值。
-对于正则内部顶点，\refvar{beta}{()}返回$\displaystyle\frac{1}{16}$。
+对于正则内部顶点，\refvar{beta}{()}返回$\displaystyle\frac{1}{16}$.
 因为这是常见情况，所以实现直接用$\displaystyle\frac{1}{16}$而不是每次都调用\refvar{beta}{()}。
 \begin{lstlisting}
 `\initcode{Apply one-ring rule for even vertex}{=}`
@@ -704,7 +704,7 @@ do {
     \bm v'=(1-2\beta)\bm v+\beta\bm v_1+\beta\bm v_2\, .
 \end{align*}
 
-正则和非凡顶点都用相同的权重$\displaystyle\frac{1}{8}$。
+正则和非凡顶点都用相同的权重$\displaystyle\frac{1}{8}$.
 \begin{figure}[htbp]
     \centering\includegraphics[width=0.25\linewidth]{chap03/Subdivboundaryweighting.eps}
     \caption{边界边上的细分。中心顶点的新位置通过对它和它的两个相邻顶点赋予所示权重算得。}
@@ -952,7 +952,7 @@ v = newVertices;
 所有顶点的原始位置必须保持不变直到完成计算。
 
 边界顶点的极限规则对两个相邻顶点赋权$\displaystyle\frac{1}{5}$，
-中心顶点赋权$\displaystyle\frac{3}{5}$。
+中心顶点赋权$\displaystyle\frac{3}{5}$.
 内部顶点的规则基于函数\refvar{loopGamma}{()}，
 它基于顶点的价计算合适的顶点权重。
 \begin{lstlisting}
@@ -998,10 +998,10 @@ for (`\refvar{SDVertex}{}` *vertex : v) {
 \end{lstlisting}
 
 \reffig{3.37}展示了计算网格内部切线的设置。
-中心顶点赋权为零，邻居赋权$w_i$。
+中心顶点赋权为零，邻居赋权$w_i$.
 \begin{figure}[htbp]
     \centering\includegraphics[width=0.35\linewidth]{chap03/Subdivtangents.eps}
-    \caption{计算内部顶点的切线，一环顶点赋权为$w_i$。计算切线的中心顶点总是赋权为零。}
+    \caption{计算内部顶点的切线，一环顶点赋权为$w_i$.计算切线的中心顶点总是赋权为零。}
     \label{fig:3.37}
 \end{figure}
 
@@ -1039,7 +1039,7 @@ for (int j = 0; j < valence; ++j) {
 
 第二条切线叫\keyindex{横断切线}{transverse tangent}{tangent line切线}，
 基于顶点的价算得。
-中心顶点赋权$w_{\mathrm{c}}$，一环顶点赋权指定为向量$(w_0,w_1,\ldots,w_{n-1})$。
+中心顶点赋权$w_{\mathrm{c}}$，一环顶点赋权指定为向量$(w_0,w_1,\ldots,w_{n-1})$.
 我们的横断切线规则是
 \begin{table}[h]
     \centering\begin{tabular}{lll}

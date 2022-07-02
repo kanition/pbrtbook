@@ -30,7 +30,7 @@ protected:
 \end{align*}
 
 \reffig{3.7}展示了两个圆柱体的渲染图像。像球体图像那样，
-左边圆柱体是完整圆柱体，右边是部分圆柱体，因为它的$\varphi_{\max}$值小于$2\pi$。
+左边圆柱体是完整圆柱体，右边是部分圆柱体，因为它的$\varphi_{\max}$值小于$2\pi$.
 \begin{figure}[htbp]
     \centering\includegraphics[width=\linewidth]{chap03/twocylinders.png}
     \caption{两个圆柱体。左边是完整圆柱体，右边是部分圆柱体。}
@@ -53,7 +53,7 @@ const `\refvar{Float}{}` `\initvar[Cylinder::radius]{radius}{}`, `\initvar[Cylin
 \end{lstlisting}
 
 \subsection{边界}\label{sub:边界3}
-像球那样，圆柱体边界方法用$z$的范围计算保守边界框但不考虑最大的$\varphi$。
+像球那样，圆柱体边界方法用$z$的范围计算保守边界框但不考虑最大的$\varphi$.
 \begin{lstlisting}
 `\initcode{Cylinder Method Definitions}{=}\initnext{CylinderMethodDefinitions}`
 `\refvar{Bounds3f}{}` `\refvar{Cylinder}{}`::`\initvar[Cylinder::ObjectBound]{\refvar{ObjectBound}{}}{}`() const {
@@ -120,7 +120,7 @@ phi = std::atan2(pHit.y, pHit.x);
 if (phi < 0) phi += 2 * `\refvar{Pi}{}`;
 \end{lstlisting}
 
-相交方法下一部分保证命中点在指定$z$范围内且能接受角度$\varphi$。
+相交方法下一部分保证命中点在指定$z$范围内且能接受角度$\varphi$.
 否则它就拒绝该命中点，并在之前还没尝试的前提下检查$t_1$——这和
 \refvar{Sphere::Intersect}{()}
 中的条件逻辑很像。

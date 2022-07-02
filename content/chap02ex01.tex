@@ -27,7 +27,7 @@
 \end{definition}
 \begin{definition}
     当$x=y=z=0$时，${\bm q}$称为\keyindex{标量四元数}{scalar quaternion}{quaternion四元数}。
-    其中，当$w=x=y=z=0$时，${\bm q}$称为\keyindex{零四元数}{zero quaternion}{quaternion四元数}，记作$0$。
+    其中，当$w=x=y=z=0$时，${\bm q}$称为\keyindex{零四元数}{zero quaternion}{quaternion四元数}，记作$0$.
 \end{definition}
 \begin{notation}
     在实际书写时，我们做如下约定
@@ -40,7 +40,7 @@
         \item $w, x, y, z$之一等于$0$时，略写相应项；
         \item $x, y, z$之一等于$1$时，相应项简写为$\mathbf{i, j}$或$\mathbf{k}$；
         \item 也可写作${\bm q}=w+{\bm u}$，其中$w$为标量，${\bm u}=x\mathbf{i}+y\mathbf{j}+z\mathbf{k}$为向量；
-        \item 所有四元数构成的集合记作$\mathbb{H}$。
+        \item 所有四元数构成的集合记作$\mathbb{H}$.
     \end{itemize}
 \end{notation}
 
@@ -128,7 +128,7 @@
     也称为\keyindex{哈密顿积}{Hamilton product}{}。
 \end{definition}
 \begin{proposition}
-    四元数乘法的单位元是$1$。
+    四元数乘法的单位元是$1$.
 \end{proposition}
 \begin{corollary}
     四元数的乘法不满足交换律。
@@ -144,7 +144,7 @@
         {\bm q}_1{\bm q}_2 & =-60+12\mathbf{i}+30\mathbf{j}+24\mathbf{k}\, , \\
         {\bm q}_2{\bm q}_1 & =-60+20\mathbf{i}+14\mathbf{j}+32\mathbf{k}\, .
     \end{align}
-    显然${\bm q}_1{\bm q}_2\neq{\bm q}_2{\bm q}_1$。
+    显然${\bm q}_1{\bm q}_2\neq{\bm q}_2{\bm q}_1$.
 \end{example}
 \begin{proposition}
     四元数的乘法满足结合律
@@ -304,7 +304,7 @@
         =                          & (w_1^2+x_1^2+y_1^2+z_1^2)(w_2^2+x_2^2+y_2^2+z_2^2)\nonumber \\
         =                          & \|{\bm q}_1\|^2\|{\bm q}_2\|^2\, ,
     \end{align}
-    所以$\|{\bm q}_1{\bm q}_2\|=\|{\bm q}_1\|\|{\bm q}_2\|$。
+    所以$\|{\bm q}_1{\bm q}_2\|=\|{\bm q}_1\|\|{\bm q}_2\|$.
 \end{prove}
 
 \begin{proposition}
@@ -321,7 +321,7 @@
                            & =w^2+{\bm u}\cdot{\bm u}\nonumber                                                     \\
                            & =\|{\bm q}\|^2\, .
     \end{align}
-    同理有$\bar{\bm q}{\bm q}=\|{\bm q}\|^2$。
+    同理有$\bar{\bm q}{\bm q}=\|{\bm q}\|^2$.
 \end{prove}
 \begin{definition}
     非零四元数${\bm q}$的\keyindex{逆}{inverse}{}是
@@ -344,7 +344,7 @@
 \end{corollary}
 
 \subsection{四元数与旋转变换}\label{sub:四元数与旋转变换}
-如\reffig{2.ex1}所示，点$P$绕单位向量$\bm n$给定的轴顺时针旋转角度$\theta$得到点$P'$。
+如\reffig{2.ex1}所示，点$P$绕单位向量$\bm n$给定的轴顺时针旋转角度$\theta$得到点$P'$.
 我们现在说明该一般旋转变换和四元数运算的关系。
 \begin{figure}[htbp]
     \centering\input{Pictures/chap02/QuaternionAndRotaion.tex}
@@ -352,9 +352,9 @@
     \label{fig:2.ex1}
 \end{figure}
 
-作点$P$在$\bm n$所在直线（过点$O$）上的投影$H$，即$PH\perp OH$。
-点$P$绕$\bm n$顺时针旋转角度$\theta$得到点$P'$，即$\angle PHP'=\theta$且$HP'\perp OH$。
-最后，作点$P$绕$\bm n$顺时针旋转角度$\displaystyle\frac{\pi}{2}$得到的点$V$，即$HV\perp HP$且$HV\perp OH$。
+作点$P$在$\bm n$所在直线（过点$O$）上的投影$H$，即$PH\perp OH$.
+点$P$绕$\bm n$顺时针旋转角度$\theta$得到点$P'$，即$\angle PHP'=\theta$且$HP'\perp OH$.
+最后，作点$P$绕$\bm n$顺时针旋转角度$\displaystyle\frac{\pi}{2}$得到的点$V$，即$HV\perp HP$且$HV\perp OH$.
 记向量
 \begin{align}
     \bm h=\overrightarrow{OH},\quad
@@ -383,7 +383,7 @@
 \begin{align}
     \bm q=c+\bm s=\cos\frac{\theta}{2}+\bm n\sin\frac{\theta}{2}\, ,
 \end{align}
-其中$\displaystyle c=\cos\frac{\theta}{2}$，$\displaystyle \bm s=\bm n\sin\frac{\theta}{2}$。
+其中$\displaystyle c=\cos\frac{\theta}{2}$，$\displaystyle \bm s=\bm n\sin\frac{\theta}{2}$.
 于是有四元数积
 \begin{align}
     \bar{\bm q}\bm p\bm q & =(c-\bm s)\bm p(c+\bm s)\nonumber                                                                                                                                                                \\
@@ -447,7 +447,7 @@
             \end{array}
             \right]\, .
     \end{align}
-    相应$4\times4$旋转矩阵只需将4阶单位矩阵左上角$3\times3$子阵替换为$\bm R_{\bm n}(\theta)$。
+    相应$4\times4$旋转矩阵只需将4阶单位矩阵左上角$3\times3$子阵替换为$\bm R_{\bm n}(\theta)$.
 \end{theorem}
 
 \begin{corollary}
@@ -469,7 +469,7 @@
 
 \begin{prove}
     考虑$\theta\in[0,2\pi]$的情况\sidenote{思考一下：为什么只需要考虑这个角度区间？超过这个区间又该如何处理？}，
-    此时有$\displaystyle\frac{\theta}{2}\in[0,\pi]$。因为
+    此时有$\displaystyle\frac{\theta}{2}\in[0,\pi]$.因为
     \begin{align}
         w+x\mathbf{i}+y\mathbf{j}+z\mathbf{k}=\cos\frac{\theta}{2}+\bm n\sin\frac{\theta}{2}\, ,
     \end{align}

@@ -37,7 +37,7 @@ public:
 \end{align}
 
 \refvar{Ray}{}还有一个成员变量沿其无限端把射线限制为线段。
-该域\refvar{tMax}{}允许我们把射线限制到线段点集$[\bm o,\bm r(t_{\max}))$。
+该域\refvar{tMax}{}允许我们把射线限制到线段点集$[\bm o,\bm r(t_{\max}))$.
 
 注意到该域声明为{\ttfamily mutable}，
 意味着即使含有它的\refvar{Ray}{}是{\ttfamily const}它也可以改变——
@@ -72,7 +72,7 @@ const `\refvar{Medium}{}` *`\initvar[Ray::medium]{medium}{}`;
 
 构造\refvar{Ray}{}是很简单的。
 默认构造函数依赖\refvar{Point3f}{}和\refvar{Vector3f}{}的
-构造函数把端点和方向设为$(0,0,0)$。
+构造函数把端点和方向设为$(0,0,0)$.
 也可以提供特定点和方向。
 如果提供了端点和方向，
 则构造函数允许为\refvar{tMax}{}、射线的时间和介质给定一个值。

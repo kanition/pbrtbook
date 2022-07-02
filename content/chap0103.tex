@@ -587,7 +587,7 @@ std::unique_ptr<`\refvar{Sampler}{}`> `\initvar{tileSampler}{}` = sampler->`\ref
 该计算中必须考虑两个问题：
 第一，要采样的全部像素边界可能不等于全图分辨率。
 例如，用户可能指定采样一个像素子集的“裁窗”。
-第二，如果图像分辨率不是16的倍数，则图像右边和底部的图块不是完整的$16\times16$。
+第二，如果图像分辨率不是16的倍数，则图像右边和底部的图块不是完整的$16\times16$.
 \begin{lstlisting}
 `\initcode{Compute sample bounds for tile}{=}`
 int x0 = sampleBounds.pMin.x + tile.x * tileSize;
@@ -784,7 +784,7 @@ private:
 
 Whitted积分器工作时递归地计算沿反射和折射光线方向的辐亮度。
 它在达到预设最大深度\refvar[maxDepth]{WhittedIntegrator::maxDepth}{}时停止递归。
-默认最大递归深度为5。
+默认最大递归深度为5.
 没有这项终止准则，递归可能无法停止（例如想象一下镜厅场景）。
 这个成员变量在\refvar{WhittedIntegrator}{}构造函数内
 基于场景描述文件设置的参数进行初始化。
@@ -863,7 +863,7 @@ $\bm n$是交点处的表面法向量，
 \protect\refvar{Camera}{}负责规范化生成光线的方向分量，
 所以这里无需再规范化了。
 本书中规范化后的方向用符号$\bm \omega$表示，
-在pbrt代码中我们用{\ttfamily wo}表示散射光的出射方向${\bm \omega}_\mathrm{o}$。
+在pbrt代码中我们用{\ttfamily wo}表示散射光的出射方向${\bm \omega}_\mathrm{o}$.
 \begin{figure}[htbp]
     \centering\input{Pictures/chap01/Whittedintegrationsetting.tex}
     \caption{Whitted积分器的几何设置。
@@ -924,7 +924,7 @@ pbrt的代码是按该方式组织的，
 为采样方向${\bm \omega}_\mathrm{i}$的光返回了概率密度。
 该值用于复杂面光源的蒙特卡罗积分，
 那时光是从多个方向到达一点的，尽管这里只采样一个方向；
-对于点光源那般的简单光源，{\ttfamily pdf}的值为1。
+对于点光源那般的简单光源，{\ttfamily pdf}的值为1.
 如何在渲染中算出和使用这个概率密度的细节
 是第\refchap{蒙特卡罗积分}和\refchap{光传输I：表面反射}的主题；
 最后，光的作用必须除以{\ttfamily pdf}，这由此处的实现完成。

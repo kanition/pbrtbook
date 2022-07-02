@@ -2,7 +2,7 @@
 
 \begin{remark}
     本节内容不是原书内容，而是译者根据\citet{ElementaryNumberTheory}
-    所著著作补充的，请酌情参考和斧正。
+    以及\citet{wiki:ExtendedEuclideanAlgorithm}补充的，请酌情参考和斧正。
 \end{remark}
 
 \begin{notation}
@@ -563,22 +563,93 @@
     第$k-2,k-3,\ldots,2,1$式，就能相应地消去$u_{k-1},u_{k-2},\ldots,u_3,u_2$，
     最后将$u_{k+1}$表示为$u_0$和$u_1$的整系数线性组合，即证明了第三个结论。
 \end{prove}
+% \begin{example}
+%     利用辗转相除法求198和252的最大公因数，并将其表示为198和252的整系数线性组合。因为
+%     \begin{align*}
+%         252 & =1\times198+54\, , \\
+%         198 & =3\times54+36\, ,  \\
+%         54  & =1\times36+18\, ,  \\
+%         36  & =2\times18\, ,
+%     \end{align*}
+%     于是$(252,198)=(198,54)=(54,36)=(36,18)=18$，且得
+%     \begin{align*}
+%         18 & =54-1\times36                 \\
+%            & =54-(198-3\times54)           \\
+%            & =-198+4\times54               \\
+%            & =-198+4\times(252-1\times198) \\
+%            & =4\times252-5\times198\, .
+%     \end{align*}
+% \end{example}
+
+\keyindex{扩展欧几里得算法}{Extended Euclidean algorithm}{}是
+辗转相除法的扩展。对于给定的不全为零整数$a,b$（不妨设$b\neq0$），
+它求解关于整数变量$x,y$的方程
+\begin{align}\label{eq:7.ex02.ExtendedEuclideanAlgorithm}
+    ax+by=(a,b)\, .
+\end{align}
+由定理\ref{theorem:7.ex02.17}知该方程一定有解。
+如果$a$为负数，则可以转化为
+\begin{align}
+    |a|(-x)+by=(|a|,b)\, ,
+\end{align}
+$b$为负数时同理。因此我们只考虑$a,b$不小于零的情况。
+在定理\ref{theorem:7.ex02.18}的记号下，原始的
+辗转相除法求解$(a,b)$的递推过程是
+\begin{align}
+    u_0     & =a\, ,\nonumber                  \\
+    u_1     & =b\, ,\nonumber                  \\
+    u_2     & =u_0-q_0u_1\, ,\nonumber         \\
+    u_3     & =u_1-q_1u_2\, ,\nonumber         \\
+    \ldots\nonumber                            \\
+    u_{k+1} & =u_{k-1}-q_{k-1}u_k\, ,\nonumber \\
+    u_{k+2} & =u_k-q_ku_{k+1}=0\, .
+\end{align}
+最后一步得到$u_{k+2}=0$时算法终止，此时$u_{k+1}|u_k$，即$(a,b)=u_{k+1}$.
+
+扩展欧几里得算法则还利用了以上步骤中的商$q_i$以求解\refeq{7.ex02.ExtendedEuclideanAlgorithm}：
+它新引入了两组序列$s_i,t_i$，并初始化$s_0=1,s_1=0,t_0=0,t_1=1$，
+在辗转相除法每步计算$u_{i+1}=u_{i-1}-q_{i-1}u_i$后额外计算
+\begin{align}
+    s_{i+1} & =s_{i-1}-q_{i-1}s_i\, , \\
+    t_{i+1} & =t_{i-1}-q_{i-1}t_i\, ,
+\end{align}
+则当$u_{k+2}=0$算法终止时，求得\refeq{7.ex02.ExtendedEuclideanAlgorithm}的解
+即为$x=s_{k+1},y=t_{k+1}$.
+\begin{prove}
+    当$i=0,1$时，显然可以验证
+    \begin{align}\label{eq:7.ex02.ExtendedEuclidean-prove-01}
+        as_i+bt_i=u_i
+    \end{align}
+    成立。若\refeq{7.ex02.ExtendedEuclidean-prove-01}对某个$i$成立，则有
+    \begin{align}
+        u_{i+1} & =u_{i-1}-q_{i-1}u_i\nonumber                          \\
+                & =(as_{i-1}+bt_{i-1})-q_{i-1}(as_i+bt_i)\nonumber      \\
+                & =a(s_{i-1}-q_{i-1}s_i)+b(t_{i-1}-q_{i-1}t_i)\nonumber \\
+                & =as_{i+1}+bt_{i+1}\, ,
+    \end{align}
+    即\refeq{7.ex02.ExtendedEuclidean-prove-01}对$i+1$也成立。
+    由数学归纳法，\refeq{7.ex02.ExtendedEuclidean-prove-01}对
+    算法步骤中的所有$i$都成立，故
+    \begin{align}
+        as_{k+1}+bt_{k+1}=u_{k+1}=(a,b)\, ,
+    \end{align}
+    即求得\refeq{7.ex02.ExtendedEuclideanAlgorithm}的解为$x=s_{k+1},y=t_{k+1}$.
+\end{prove}
 \begin{example}
-    利用辗转相除法求198和252的最大公因数，并将其表示为198和252的整系数线性组合。因为
-    \begin{align*}
-        252 & =1\times198+54\, , \\
-        198 & =3\times54+36\, ,  \\
-        54  & =1\times36+18\, ,  \\
-        36  & =2\times18\, ,
-    \end{align*}
-    于是$(252,198)=(198,54)=(54,36)=(36,18)=18$，且得
-    \begin{align*}
-        18 & =54-1\times36                 \\
-           & =54-(198-3\times54)           \\
-           & =-198+4\times54               \\
-           & =-198+4\times(252-1\times198) \\
-           & =4\times252-5\times198\, .
-    \end{align*}
+    以$a=240,b=46$为例演示扩展欧几里得法，具体步骤是
+    \begin{align}
+        \begin{array}{lrrrr}
+            i & q_{i-2}     & u_i              & s_i             & t_i                \\
+            0 & -           & 240              & 1               & 0                  \\
+            1 & -           & 46               & 0               & 1                  \\
+            2 & 240\div46=5 & 240-5\times46=10 & 1-5\times0=1    & 0-5\times1=-5      \\
+            3 & 46\div10=4  & 46-4\times10=6   & 0-4\times1=-4   & 1-4\times(-5)=21   \\
+            4 & 10\div6=1   & 10-1\times6=4    & 1-1\times(-4)=5 & -5-1\times21=-26   \\
+            5 & 6\div4=1    & 6-1\times4=2     & -4-1\times5=-9  & 21-1\times(-26)=47 \\
+            6 & 4\div2=2    & 4-2\times2=0     & -               & -
+        \end{array}\nonumber
+    \end{align}
+    算法在$i=6$时终止，由$i=5$时的$u_i,s_i,t_i$可得$-9\times240+47\times46=(240,46)=2$.
 \end{example}
 
 \subsection*{同余}
@@ -1064,3 +1135,29 @@ $a$对模$m$的任意两个逆$c_1,c_2$必有$c_1\equiv c_2\pmod{m}$；
           & \equiv385-231+660-420\equiv394\pmod{1155}\, .
     \end{align}
 \end{example}
+
+至此我们介绍了Halton样本生成中求解一次同余方程组所需的全部背景知识。
+代码片{\refcode{Compute Halton sample offset for currentPixel}{}}中
+即采用了定理\ref{theorem:7.ex02.30}：其中{\ttfamily dimOffset}对应了$a_j$，
+{\ttfamily\refvar{sampleStride}{} / \refvar{baseScales}{}}对应了$M_j$，
+{\refvar{multInverse}{}}对应了$M_j^{-1}$，它由扩展欧几里得法求得，代码为
+\begin{lstlisting}
+static uint64_t `\initvar{multiplicativeInverse}{}`(int64_t a, int64_t n) {
+    int64_t x, y;
+    `\refvar{extendedGCD}{}`(a, n, &x, &y);
+    return `\refvar{Mod}{}`(x, n);
+}
+\end{lstlisting}
+\begin{lstlisting}
+static void `\initvar{extendedGCD}{}`(uint64_t a, uint64_t b, int64_t *x, int64_t *y) {
+    if (b == 0) {
+        *x = 1;
+        *y = 0;
+        return;
+    }
+    int64_t d = a / b, xp, yp;
+    `\refvar{extendedGCD}{}`(b, a % b, &xp, &yp);
+    *x = yp;
+    *y = xp - (d * yp);
+}
+\end{lstlisting}

@@ -1,10 +1,11 @@
 # 基于物理的渲染：从理论到实现 中文整合翻译计划
 ## Physically Based Rendering: From Theory To Implementation (pbrt book) 
-[![](https://img.shields.io/badge/Made%20with-TeX-brightgreen?style=flat-square)](.)
-[![](https://img.shields.io/github/downloads/kanition/pbrtbook/total?color=blue&style=flat-square)](https://github.com/kanition/pbrtbook/releases)
-[![](https://img.shields.io/github/v/release/kanition/pbrtbook?include_prereleases&style=flat-square&color=orange)](https://github.com/kanition/pbrtbook/releases/latest)
-[![](https://img.shields.io/github/release-date-pre/kanition/pbrtbook?color=yellow&label=date&style=flat-square)](https://github.com/kanition/pbrtbook/releases/latest)
-# [**下载本书**](https://github.com/kanition/pbrtbook/releases) | [翻译进度](https://github.com/kanition/pbrtbook/projects/1) | [你问我答](https://github.com/kanition/pbrtbook/discussions) | [我要报错](https://github.com/kanition/pbrtbook/issues/new/choose) | [编译指南](https://github.com/kanition/pbrtbook/blob/main/CONTRIBUTING.md) | [长期求助文献传递](https://github.com/kanition/pbrtbook/discussions/41)
+[![](https://img.shields.io/badge/源码语言-TeX-brightgreen?style=flat-square)](.)
+[![](https://img.shields.io/github/downloads/kanition/pbrtbook/total?color=blue&label=下载量&style=flat-square)](https://github.com/kanition/pbrtbook/releases)
+[![](https://img.shields.io/github/v/release/kanition/pbrtbook?color=orange&include_prereleases&label=最新进度版本&style=flat-square)](https://github.com/kanition/pbrtbook/releases/latest)
+[![](https://img.shields.io/github/release-date-pre/kanition/pbrtbook?color=yellow&label=最新发布时间&style=flat-square)](https://github.com/kanition/pbrtbook/releases/latest)
+[![](https://licensebuttons.net/l/by-nc-sa/4.0/80x15.png)](#许可证)
+# [**下载本书**](https://github.com/kanition/pbrtbook/releases) | [翻译进度](https://github.com/kanition/pbrtbook/projects/1) | [你问我答](https://github.com/kanition/pbrtbook/discussions) | [我要报错](https://github.com/kanition/pbrtbook/issues/new/choose) | [编译指南](./CONTRIBUTING.md) | [长期求助文献传递](https://github.com/kanition/pbrtbook/discussions/41)
 
 ![Landscape view-3 @pbrt-v3-scenes/landscape](Pictures/title.png)
 
@@ -50,4 +51,4 @@
 | 7.13   | 初等数论基础             |
 
 ## 许可证
-<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="知识共享许可协议" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />本作品采用<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a>进行许可。
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh"><img alt="知识共享许可协议" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />本作品采用<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a>进行许可。

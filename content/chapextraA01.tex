@@ -77,6 +77,12 @@ inline int `\initvar{Log2Int}{}`(uint32_t v) {
     return 31 - __builtin_clz(v);
 }
 \end{lstlisting}
+\begin{lstlisting}
+`\refcode{Global Inline Functions}{+=}\lastnext{GlobalInlineFunctions}`
+inline int `\initvar{CountTrailingZeros}{}`(uint32_t v) {
+    return __builtin_ctz(v);
+}
+\end{lstlisting}
 
 \subsubsection*{区间搜索}
 \begin{lstlisting}

@@ -77,6 +77,22 @@ inline int `\initvar{Log2Int}{}`(uint32_t v) {
     return 31 - __builtin_clz(v);
 }
 \end{lstlisting}
+\begin{lstlisting}
+`\refcode{Global Inline Functions}{+=}\lastnext{GlobalInlineFunctions}`
+inline int32_t `\initvar{RoundUpPow2}{}`(int32_t v) {
+    v--;
+    v |= v >> 1;    v |= v >> 2;
+    v |= v >> 4;    v |= v >> 8;
+    v |= v >> 16;
+    return v+1;
+}
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{Global Inline Functions}{+=}\lastnext{GlobalInlineFunctions}`
+inline int `\initvar{CountTrailingZeros}{}`(uint32_t v) {
+    return __builtin_ctz(v);
+}
+\end{lstlisting}
 
 \subsubsection*{区间搜索}
 \begin{lstlisting}
@@ -104,10 +120,13 @@ template <typename Predicate> int `\initvar{FindInterval}{}`(int size,
 `\refcode{RNG Public Methods}{+=}\lastnext{RNGPublicMethods}`
 void `\initvar{SetSequence}{}`(uint64_t sequenceIndex);
 \end{lstlisting}
-
 \begin{lstlisting}
 `\refcode{RNG Public Methods}{+=}\lastnext{RNGPublicMethods}`
-uint32_t `\initvar{UniformUInt32}{}`(uint32_t b) {
+uint32_t `\initvar{UniformUInt32}{}`();
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{RNG Public Methods}{+=}\lastnext{RNGPublicMethods}`
+uint32_t `\initvar[UniformUInt32-B]{UniformUInt32}{}`(uint32_t b) {
     uint32_t threshold = (~b + 1u) % b;
     while (true) {
         uint32_t r = `\refvar{UniformUInt32}{}`();

@@ -183,7 +183,7 @@ void `\initvar{StratifiedSample2D}{}`(`\refvar{Point2f}{}` *samp, int nx, int ny
 template <typename T>
 void `\initvar{Shuffle}{}`(T *samp, int count, int nDimensions, `\refvar{RNG}{}` &rng) {
     for (int i = 0; i < count; ++i) {
-        int other = i + rng.`\refvar{UniformUInt32}{}`(count - i);
+        int other = i + rng.`\refvar[UniformUInt32-B]{UniformUInt32}{}`(count - i);
         for (int j = 0; j < nDimensions; ++j)
             std::swap(samp[nDimensions * i + j],
                       samp[nDimensions * other + j]);
@@ -280,7 +280,7 @@ for (int i = 0; i < nSamples; ++i)
 `\initcode{Permute LHS samples in each dimension}{=}`
 for (int i = 0; i < nDim; ++i) {
     for (int j = 0; j < nSamples; ++j) {
-        int other = j + rng.`\refvar{UniformUInt32}{}`(nSamples - j);
+        int other = j + rng.`\refvar[UniformUInt32-B]{UniformUInt32}{}`(nSamples - j);
         std::swap(samples[nDim * j + i], samples[nDim * other + i]);
     }
 }

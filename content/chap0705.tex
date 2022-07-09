@@ -17,7 +17,7 @@ $(0,2)$序列以非常常规的方式分层。例如，$(0,2)$序列中的前16�
 然而它们还满足拉丁超立方约束，即在每个范围为$\displaystyle\left(\frac{1}{16},1\right)$和
 $\displaystyle\left(1,\frac{1}{16}\right)$的矩形中只有一个样本。
 此外，在每个范围为$\displaystyle\left(\frac{1}{2},\frac{1}{8}\right)$和
-$\displaystyle\left(\frac{1}{8},\frac{1}{2}\right)$的矩形中只有一个样本。
+$\displaystyle\left(\frac{1}{8},\frac{1}{2}\right)$的矩形中也只有一个样本。
 
 \reffig{7.28}展示了划分域的所有可能，其中$(0,2)$序列前16个样本都满足分层性质。
 从该模式中获取的每组含16个样本的后续序列也都满足这些分布性质。
@@ -33,7 +33,7 @@ $\displaystyle\left(\frac{1}{8},\frac{1}{2}\right)$的矩形中只有一个样�
 \end{figure}
 
 通常任何来自$(0,2)$序列的长为$2^{l_1+l_2}$的序列（其中$l_i$为非负整数）
-都满足该一般分层约束。以2为底的两维的\keyindex{基本区间}{elementary interval}{}定义为
+都满足该一般分层约束。以2为底的两维\keyindex{基本区间}{elementary interval}{}定义为
 \begin{align*}
     E=\left\{\left[\frac{a_1}{2^{l_1}},\frac{a_1+1}{2^{l_1}}\right)\times\left[\frac{a_2}{2^{l_2}},\frac{a_2+1}{2^{l_2}}\right)\right\}\, ,
 \end{align*}
@@ -64,7 +64,7 @@ $\displaystyle\left(\frac{1}{8},\frac{1}{2}\right)$的矩形中只有一个样�
 就能生成非常好的低偏差分布点。例如，$(0,2)$序列可用两个特定的2进制生成矩阵定义。
 
 为了看看怎样使用生成矩阵，考虑一个$n$位$b$进制数$a$，
-其中$a$的第$i$个数字是$d_i(a)$，且我们有个$n\times n$生成矩阵$\bm C$.
+其中$a$的第$i$位数字是$d_i(a)$，且我们有个$n\times n$生成矩阵$\bm C$.
 则相应样本点$x_a\in[0,1)$定义为
 \begin{align}\label{eq:7.9}
     x_a=[b^{-1}\,b^{-2}\, \cdots\,b^{-n}]\left[
@@ -136,7 +136,7 @@ $\displaystyle\left(\frac{1}{8},\frac{1}{2}\right)$的矩形中只有一个样�
 换句话说，对于$d_i$每个值为1的数字，$\bm C$的对应列应被求和。
 该加法反过来可以在$\mathsf{Z}_2$中高效执行：
 在该设置下，加法对应于异或运算（考虑两个运算值可能的组合——
-0和1——相加$\mod{2}$的结果，并与同样运算值异或后算出的值比较）。
+0和1——相加$\mod{2}$的结果，并与相同运算值异或后算出的值比较）。
 因此，乘法${\bm C}[d_i(a)]^{\mathrm{T}}$只是在$d_i(a)$位为1处
 将$\bm C$的第$i$列异或在一起。该计算在函数\refvar{MultiplyGenerator}{()}中实现。
 \begin{lstlisting}
@@ -217,7 +217,7 @@ inline `\refvar{Float}{}` `\initvar{SampleGeneratorMatrix}{}`(const uint32_t *C,
 
 函数\refvar{SampleGeneratorMatrix}{()}已经足够高效，
 它每次在运行次数等于值{\ttfamily a}以2为底的对数
-的\refvar{MultiplyGenerator}{()}循环中执行少量算数运算。
+的\refvar{MultiplyGenerator}{()}循环中执行少量算术运算。
 值得注意的是，通过改变生成样本的顺序、
 以\keyindex{格雷码}{Gray code}{}顺序枚举甚至可以做得更好。
 
@@ -248,7 +248,7 @@ inline `\refvar{Float}{}` `\initvar{SampleGeneratorMatrix}{}`(const uint32_t *C,
     \label{tab:7.4}
 \end{table}
 
-可以非常高效地完成计算第$n$个格雷码值。
+可以非常高效地完成第$n$个格雷码值的计算。
 \begin{lstlisting}
 `\refcode{Low Discrepancy Inline Functions}{+=}\lastnext{LowDiscrepancyInlineFunctions}`
 inline uint32_t `\initvar{GrayCode}{}`(uint32_t n) {
@@ -315,7 +315,7 @@ public:
     \subfloat[参考]{\includegraphics[width=0.49\linewidth]{chap07/dof-ref.png}\label{fig:7.30.1}}\,
     \subfloat[分层采样]{\includegraphics[width=0.49\linewidth]{chap07/dof-stratified.png}\label{fig:7.30.2}}\\
     \subfloat[$(0,2)$序列]{\includegraphics[width=0.49\linewidth]{chap07/dof-02.png}\label{fig:7.30.3}}
-    \caption{用分层和$(0,2)$序列采样器渲染景深的比较。
+    \caption{比较用分层和$(0,2)$序列采样器渲染景深。
         (a)失焦球体模糊边缘的参考图像，
         (b)用\protect\refvar{StratifiedSampler}{}渲染的图像，以及
         (c)用\refvar{ZeroTwoSequenceSampler}{}渲染的图像。
@@ -343,7 +343,7 @@ int `\initvar{RoundCount}{}`(int count) const { return `\refvar{RoundUpPow2}{}`(
 必须为像素内的样本生成数组样本值，还必须为多维非数组样本生成样本。
 \begin{lstlisting}
 `\refcode{ZeroTwoSequenceSampler Method Definitions}{+=}\lastcode{ZeroTwoSequenceSamplerMethodDefinitions}`
-void `\refvar{ZeroTwoSequenceSampler}{}`::`\initvar[ZeroTwoSequenceSampler::StartPixel]{\refvar{StartPixel}{}}{}`(const `\refvar{Point2i}{}` &p) {
+void `\refvar{ZeroTwoSequenceSampler}{}`::`\initvar[ZeroTwoSequenceSampler::StartPixel]{StartPixel}{}`(const `\refvar{Point2i}{}` &p) {
     `\refcode{Generate 1D and 2D pixel sample components using (0,2)-sequence}{}`
     `\refcode{Generate 1D and 2D array samples using (0,2)-sequence}{}`
     `\refvar{PixelSampler}{}`::StartPixel(p);

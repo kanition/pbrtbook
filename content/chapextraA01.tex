@@ -120,10 +120,13 @@ template <typename Predicate> int `\initvar{FindInterval}{}`(int size,
 `\refcode{RNG Public Methods}{+=}\lastnext{RNGPublicMethods}`
 void `\initvar{SetSequence}{}`(uint64_t sequenceIndex);
 \end{lstlisting}
-
 \begin{lstlisting}
 `\refcode{RNG Public Methods}{+=}\lastnext{RNGPublicMethods}`
-uint32_t `\initvar{UniformUInt32}{}`(uint32_t b) {
+uint32_t `\initvar{UniformUInt32}{}`();
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{RNG Public Methods}{+=}\lastnext{RNGPublicMethods}`
+uint32_t `\initvar[UniformUInt32-B]{UniformUInt32}{}`(uint32_t b) {
     uint32_t threshold = (~b + 1u) % b;
     while (true) {
         uint32_t r = `\refvar{UniformUInt32}{}`();

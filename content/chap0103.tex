@@ -524,8 +524,8 @@ C++ lambda表达式提供循环体。
 处理包含无用像素的局部图块。
 \begin{lstlisting}
 `\initcode{Compute number of tiles, nTiles, to use for parallel rendering}{=}`
-`\refvar{Bounds2i}{}` `\initvar{sampleBounds}{}` = `\refvar{camera}{}`->`\refvar{film}{}`->`\refvar{GetSampleBounds}{}`();
-`\refvar{Vector2i}{}` `\initvar{sampleExtent}{}` = sampleBounds.`\refvar{Diagonal}{}`();
+`\refvar{Bounds2i}{}` sampleBounds = `\refvar{camera}{}`->`\refvar{film}{}`->`\refvar{GetSampleBounds}{}`();
+`\refvar{Vector2i}{}` sampleExtent = sampleBounds.`\refvar{Diagonal}{}`();
 const int `\initvar{tileSize}{}` = 16;
 `\refvar{Point2i}{}` `\initvar{nTiles}{}`((sampleExtent.x + tileSize - 1) / tileSize,
                (sampleExtent.y + tileSize - 1) / tileSize);

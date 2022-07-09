@@ -79,6 +79,16 @@ inline int `\initvar{Log2Int}{}`(uint32_t v) {
 \end{lstlisting}
 \begin{lstlisting}
 `\refcode{Global Inline Functions}{+=}\lastnext{GlobalInlineFunctions}`
+inline int32_t `\initvar{RoundUpPow2}{}`(int32_t v) {
+    v--;
+    v |= v >> 1;    v |= v >> 2;
+    v |= v >> 4;    v |= v >> 8;
+    v |= v >> 16;
+    return v+1;
+}
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{Global Inline Functions}{+=}\lastnext{GlobalInlineFunctions}`
 inline int `\initvar{CountTrailingZeros}{}`(uint32_t v) {
     return __builtin_ctz(v);
 }

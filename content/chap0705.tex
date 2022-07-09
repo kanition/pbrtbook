@@ -22,7 +22,6 @@ $\displaystyle\left(\frac{1}{8},\frac{1}{2}\right)$的矩形中只有一个样�
 \reffig{7.28}展示了划分域的所有可能，其中$(0,2)$序列前16个样本都满足分层性质。
 从该模式中获取的每组含16个样本的后续序列也都满足这些分布性质。
 \begin{figure}[htbp]
-    \centering
     \includegraphics[width=0.49\linewidth]{chap07/elementary1x16.eps}\,
     \includegraphics[width=0.49\linewidth]{chap07/elementary2x8.eps}\\
     \includegraphics[width=0.49\linewidth]{chap07/elementary4x4.eps}\,
@@ -171,7 +170,7 @@ inline uint32_t `\initvar{MultiplyGenerator}{}`(const uint32_t *C, uint32_t a) {
 \begin{align*}
     v'=\sum\limits_{i=1}^{32}{2^{32-i}v_i}\, .
 \end{align*}
-这是更有用的值：如果我们将该值除以$2^{32}$，则我们得到\refeq{7.11}，
+该值更有用：若我们将该值除以$2^{32}$，则得到\refeq{7.11}，
 即我们要尝试算出的$x_a$.
 
 因此，如果我们取函数\refvar{MultiplyGenerator}{()}的结果，
@@ -310,3 +309,141 @@ public:
     `\refcode{ZeroTwoSequenceSampler Public Methods}{}`
 };
 \end{lstlisting}
+
+\reffig{7.30}比较了用$(0,2)$序列为景深采样透镜的结果和用分层模式的结果。
+\begin{figure}[htbp]
+    \subfloat[参考]{\includegraphics[width=0.49\linewidth]{chap07/dof-ref.png}\label{fig:7.30.1}}\,
+    \subfloat[分层采样]{\includegraphics[width=0.49\linewidth]{chap07/dof-stratified.png}\label{fig:7.30.2}}\\
+    \subfloat[$(0,2)$序列]{\includegraphics[width=0.49\linewidth]{chap07/dof-02.png}\label{fig:7.30.3}}
+    \caption{用分层和$(0,2)$序列采样器渲染景深的比较。
+        (a)失焦球体模糊边缘的参考图像，
+        (b)用\protect\refvar{StratifiedSampler}{}渲染的图像，以及
+        (c)用\refvar{ZeroTwoSequenceSampler}{}渲染的图像。
+        \refvar{ZeroTwoSequenceSampler}{}的结果优于分层的图像，
+        尽管其区别小于分层与随机采样间的差异。}
+    \label{fig:7.30}
+\end{figure}
+
+如果必要，构造函数把样本数量进位到2的幂，
+因为$(0,2)$序列的子集若大小不是2的幂则在$[0,1)^2$上比是2的幂的分布得差得多。
+\begin{lstlisting}
+`\initcode{ZeroTwoSequenceSampler Method Definitions}{=}\initnext{ZeroTwoSequenceSamplerMethodDefinitions}`
+`\refvar{ZeroTwoSequenceSampler}{}`::`\refvar{ZeroTwoSequenceSampler}{}`(int64_t samplesPerPixel,
+        int nSampledDimensions)
+    : `\refvar{PixelSampler}{}`(`\refvar{RoundUpPow2}{}`(samplesPerPixel), nSampledDimensions) {
+}
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{ZeroTwoSequenceSampler Public Methods}{=}`
+int `\initvar{RoundCount}{}`(int count) const { return `\refvar{RoundUpPow2}{}`(count); }
+\end{lstlisting}
+
+既然\refvar{ZeroTwoSequenceSampler}{}是种\refvar{PixelSampler}{}，
+则其方法{\refvar[ZeroTwoSequenceSampler::StartPixel]{StartPixel}{()}}不仅
+必须为像素内的样本生成数组样本值，还必须为多维非数组样本生成样本。
+\begin{lstlisting}
+`\refcode{ZeroTwoSequenceSampler Method Definitions}{+=}\lastcode{ZeroTwoSequenceSamplerMethodDefinitions}`
+void `\refvar{ZeroTwoSequenceSampler}{}`::`\initvar[ZeroTwoSequenceSampler::StartPixel]{\refvar{StartPixel}{}}{}`(const `\refvar{Point2i}{}` &p) {
+    `\refcode{Generate 1D and 2D pixel sample components using (0,2)-sequence}{}`
+    `\refcode{Generate 1D and 2D array samples using (0,2)-sequence}{}`
+    `\refvar{PixelSampler}{}`::StartPixel(p);
+}
+\end{lstlisting}
+
+为\refvar{PixelSampler}{}想要的非数组维度生成样本
+就是用适当数目的样本值填入合适的向量。
+\begin{lstlisting}
+`\initcode{Generate 1D and 2D pixel sample components using (0,2)-sequence}{=}`
+for (size_t i = 0; i < `\refvar{samples1D}{}`.size(); ++i)
+    `\refvar{VanDerCorput}{}`(1, `\refvar{samplesPerPixel}{}`, &`\refvar{samples1D}{}`[i][0], `\refvar[PixelSampler::rng]{rng}{}`);
+for (size_t i = 0; i < `\refvar{samples2D}{}`.size(); ++i)
+    `\refvar{Sobol2D}{}`(1, `\refvar{samplesPerPixel}{}`, &`\refvar{samples2D}{}`[i][0], `\refvar[PixelSampler::rng]{rng}{}`);
+\end{lstlisting}
+
+具有数组样本的样本向量维度是类似的，不过每维内有多个样本值。
+\begin{lstlisting}
+`\initcode{Generate 1D and 2D array samples using (0,2)-sequence}{=}`
+for (size_t i = 0; i < `\refvar{samples1DArraySizes}{}`.size(); ++i)
+    `\refvar{VanDerCorput}{}`(`\refvar{samples1DArraySizes}{}`[i], `\refvar{samplesPerPixel}{}`,
+                 &`\refvar{sampleArray1D}{}`[i][0], `\refvar[PixelSampler::rng]{rng}{}`);
+for (size_t i = 0; i < `\refvar{samples2DArraySizes}{}`.size(); ++i)
+    `\refvar{Sobol2D}{}`(`\refvar{samples2DArraySizes}{}`[i], `\refvar{samplesPerPixel}{}`,
+            &`\refvar{sampleArray2D}{}`[i][0], `\refvar[PixelSampler::rng]{rng}{}`);
+\end{lstlisting}
+
+函数\refvar{VanDerCorput}{()}用基于格雷码的采样机制生成大量置乱的1D样本值。
+尽管可以利用单位矩阵的结构编写该函数的专门实现，
+但这里我们使用已有的格雷码实现，它极其高效。
+\begin{lstlisting}
+`\refcode{Low Discrepancy Inline Functions}{+=}\lastnext{LowDiscrepancyInlineFunctions}`
+inline void `\initvar{VanDerCorput}{}`(int nSamplesPerPixelSample, int nPixelSamples,
+        `\refvar{Float}{}` *samples, `\refvar{RNG}{}` &rng) {
+    uint32_t scramble = rng.`\refvar{UniformUInt32}{}`();
+    `\refcode{Define CVanDerCorput Generator Matrix}{}`
+    int totalSamples = nSamplesPerPixelSample * nPixelSamples;
+    `\refvar{GrayCodeSample}{}`(CVanDerCorput, totalSamples, scramble, samples);
+    `\refcode{Randomly shuffle 1D sample points}{}`
+}
+\end{lstlisting}
+
+1D van der Corput序列的生成矩阵就是单位矩阵
+但按照之前的惯例翻转了每列的数位。
+\begin{lstlisting}
+`\initcode{Define CVanDerCorput Generator Matrix}{=}`
+const uint32_t CVanDerCorput[] = {
+    0b10000000000000000000000000000000,
+    0b1000000000000000000000000000000,
+    0b100000000000000000000000000000,
+    0b10000000000000000000000000000,
+    `\refcode{Remainder of Van Der Corput generator matrix entries}{}`
+};
+\end{lstlisting}
+
+当使用置乱的$(0,2)$序列时必须考虑一个微妙的实现细节
+\footnote{事实上，当使用该采样器时作者经历了
+    调试渲染图像中的一些意外噪声模式后才充分意识到该问题的重要性。}。
+通常在计算特定积分值的过程中，积分器会使用来自采样器创建的多种采样模式的样本。
+例如，它们可能使用来自一个1D模式的样本来选择场景中$N$个光源中的一个
+以采样来自它的光照，然后如果它是个面光源，则可能用来自一个2D模式的样本以选择该光源上的样本点。
+
+即使这两种模式是用随机置乱算出的且各自用了不同的随机置乱值，
+这些模式的元素间仍可能保留某些关联性，例如1D模式的第$i$个元素
+和2D模式的第$i$个元素是相关的。因此在前面的面光源例子中，
+每个光源上的样本点分布因为该相关性而通常不会覆盖整个光源，造成不寻常的渲染错误。
+
+通过在生成它们后独立随机打乱各个维度可以很轻松地解决该问题。
+生成置乱的1D低偏差采样模式后，给定该像素下在所有图像样本上都分布良好的样本集，
+该函数用两种方法打乱这些样本。例如考虑一个像素有8个图像样本，
+每个有4个1D样本给积分器（即一共有32个积分器样本）。
+首先，它在8组样本的每组内都打乱样本，让每组的4个样本乱序。
+然后它以每4个样本为一个整体，把这8组打乱。
+\begin{lstlisting}
+`\initcode{Randomly shuffle 1D sample points}{=}`
+for (int i = 0; i < nPixelSamples; ++i)
+    `\refvar{Shuffle}{}`(samples + i * nSamplesPerPixelSample,
+            nSamplesPerPixelSample, 1, rng);
+`\refvar{Shuffle}{}`(samples, nPixelSamples, nSamplesPerPixelSample, rng);
+\end{lstlisting}
+
+函数\refvar{Sobol2D}{()}遵顼和\refvar{VanDerCorput}{()}一样的结构
+但使用两个生成矩阵来生成Sobol点的前两维。这里不介绍其实现。
+\begin{lstlisting}
+`\refcode{Low Discrepancy Declarations}{+=}\lastnext{LowDiscrepancyDeclarations}`
+inline void `\initvar{Sobol2D}{}`(int nSamplesPerPixelSample, int nPixelSamples,
+        `\refvar{Point2f}{}` *samples, `\refvar{RNG}{}` &rng);
+\end{lstlisting}
+
+\reffig{7.31}展示了为面光源示例场景使用$(0,2)$序列的结果。
+注意它不仅给出了比分层模式明显更好的图像，
+在每个图像样本仅一个光源样本时也做得很好，而不会像分层采样器那样。
+\begin{figure}[htbp]
+    \centering
+    \subfloat[一个图像样本，16个阴影样本]{\includegraphics[width=\linewidth]{chap07/zerotwo-1-16.png}\label{fig:7.31.1}}\\
+    \subfloat[16个图像样本，一个阴影样本]{\includegraphics[width=\linewidth]{chap07/zerotwo-16-1.png}\label{fig:7.31.2}}
+    \caption{当\refvar{ZeroTwoSequenceSampler}{}用于面光源采样例子时所得的相似结果，
+        (a)由1个图像样本和16个光源样本生成，而(b)由16个图像样本与1个光源样本生成，
+        幸亏$(0,2)$序列采样模式保证了两种情况下样本在整个像素区域上都有很好的分布。
+        将这些图像和\reffig{7.24}比较，后者的分层模式在为16个图像样本的每一个
+        只取一个光源样本时生成了差得多的光源样本集。}
+    \label{fig:7.31}
+\end{figure}

@@ -649,7 +649,7 @@ if (testAlphaTexture && `\refvar{mesh}{}`->`\refvar{alphaMask}{}`) {
     `\refvar{SurfaceInteraction}{}` isectLocal(pHit, `\refvar{Vector3f}{}`(0,0,0), uvHit,
         `\refvar{Vector3f}{}`(0,0,0), dpdu, dpdv, `\refvar{Normal3f}{}`(0,0,0), `\refvar{Normal3f}{}`(0,0,0),
         ray.`\refvar[Ray::time]{time}{}`, this);
-    if (`\refvar{mesh}{}`->`\refvar{alphaMask}{}`->`\refvar{Evaluate}{}`(isectLocal) == 0)
+    if (`\refvar{mesh}{}`->`\refvar{alphaMask}{}`->`\refvar[Texture::Evaluate]{Evaluate}{}`(isectLocal) == 0)
         return false;
 }
 \end{lstlisting}

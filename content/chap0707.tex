@@ -139,7 +139,7 @@ inline `\refvar{Float}{}` `\initvar{SobolSample}{}`(int64_t index, int dimension
 函数\refvar{SobolSampleFloat}{()}的实现和\refvar{MultiplyGenerator}{()}非常像，
 区别是它接收64位索引，所用的矩阵尺寸是$32\times52$.
 这些更大的矩阵允许它生成不同的样本值至$a=2^{52}-1$，
-而不是之前所用$32\times32$矩阵的$2^{32}-1$。
+而不是之前所用$32\times32$矩阵的$2^{32}-1$.
 \begin{lstlisting}
 `\refcode{Low Discrepancy Inline Functions}{+=}\lastcode{LowDiscrepancyInlineFunctions}`
 inline float `\initvar{SobolSampleFloat}{}`(int64_t a, int dimension,

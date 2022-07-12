@@ -179,7 +179,7 @@ shah函数$III_T(x)$定义为\sidenote{译者注：为了和虚数单位$\mathrm
     \label{fig:7.4}
 \end{figure}
 
-通过选择重建滤波器函数$r(x)$并计算\keyindex{卷积}{convolution}{}，
+通过选择重建\keyindex{滤波}{filter}{}函数$r(x)$并计算\keyindex{卷积}{convolution}{}，
 这些样本值可用于定义重建的函数$\tilde{f}$，即
 \begin{align*}
     (III_T(x)f(x))\otimes r(x)\, ,
@@ -194,7 +194,7 @@ shah函数$III_T(x)$定义为\sidenote{译者注：为了和虚数单位$\mathrm
     \tilde{f}(x)=T\sum\limits_{k=-\infty}^{\infty}f(kT)r(x-kT)\, .
 \end{align*}
 
-例如\reffig{7.1}中使用了三角形重建滤波器$r(x)=\max(0,1-|x|)$.
+例如\reffig{7.1}中使用了三角形重建\keyindex{滤波器}{filter}{}$r(x)=\max(0,1-|x|)$.
 \reffig{7.5}展示了为该例所用的缩放后的三角形函数。
 \begin{figure}[htbp]
     \centering\includegraphics[width=0.6\linewidth]{chap07/func-tri-reconstruction.eps}
@@ -273,12 +273,12 @@ shah函数$III_T(x)$定义为\sidenote{译者注：为了和虚数单位$\mathrm
 
 在空域运用等价过程同样能完全恢复$f(x)$.因为矩形函数的傅里叶逆变换是sinc函数，
 所以空域中的理想重建是\sidenote{译者注：原文该式继承了\reftab{7.1}的错误，
-这里笔者补回了第一项的系数$\frac{1}{T}$.}
+    这里笔者补回了第一项的系数$\frac{1}{T}$.}
 \begin{align*}
     \tilde{f}=\left(\frac{1}{T}f(x)III_T(x)\right)\otimes \mathrm{sinc}_T(x)\, ,
 \end{align*}
 其中$\mathrm{sinc}_T(x)=\mathrm{sinc}(Tx)$，因此\sidenote{译者注：原文该式
-将$\mathrm{sinc}_T(x-kT)$误写为$\mathrm{sinc}(x-kT)$，已修正。}
+    将$\mathrm{sinc}_T(x-kT)$误写为$\mathrm{sinc}(x-kT)$，已修正。}
 \begin{align*}
     \tilde{f}(x)=\sum\limits_{k=-\infty}^{\infty}\mathrm{sinc}_T(x-kT)f(kT)\, .
 \end{align*}

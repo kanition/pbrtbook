@@ -1,6 +1,6 @@
 \section{图像重建}\label{sec:图像重建}
 有了精心选好的图像样本后，我们需要把样本及其算出的辐射值
-转化为用于显式或存储的像素值。根据信号处理理论，
+转化为用于显示或存储的像素值。根据信号处理理论，
 我们需要做三件事来为输出图像中的每个像素计算最终值：
 \begin{enumerate}
     \item 从图像样本集中重建连续的图像函数$\tilde{L}$.
@@ -24,7 +24,7 @@
 此外，因为知道采样率不足以刻画函数，所以完美重建是不可能的。
 采样理论领域最近的研究重新看待了重建问题，
 明确承认实践中完美重建通常是不可能的。
-这一观点的微笑转变带来了强大的重建新技术。
+这一观点的微小转变带来了强大的重建新技术。
 例如参见\citet{843002}了解关于这些进展的调研。
 特别地，重建理论的研究目标已经从完美重建转为
 开发能被证明可最小化重建函数与原始函数间差异的重建技术，
@@ -53,13 +53,13 @@
     \item $L(x_i,y_i)$是位于$(x_i,y_i)$的第$i$个样本的辐亮度值；
     \item $w(x_i,y_i)$是\refvar{Camera}{}返回的样本贡献权重。
           如\refsub{相机测量方程}和\refsub{采样相机1}所述，
-          计算这些权重的方法决定了胶片度量哪个辐射度学量。
+          计算这些权重的方法决定了胶片度量哪个辐射度学量；
     \item $f$是滤波函数。
 \end{itemize}
 
 \reffig{7.38}展示了位于$(x,y)$的像素，它有个在$x$和$y$方向
 范围分别为{\ttfamily radius.x}和{\ttfamily radius.y}的像素滤波器。
-在滤波器范围范围给出的方盒内的所有样本都可能对该像素值有贡献，
+在滤波器范围给出的方盒内的所有样本都可能对该像素值有贡献，
 这取决于滤波函数值$f(x-x_i,y-y_i)$.
 
 这里sinc滤波器不是合适的选择：回想当基本函数有超过奈奎斯特上限的频率时
@@ -76,7 +76,7 @@ pbrt中的所有滤波器实现都从抽象类\refvar{Filter}{}派生，
 并在把图像样本的贡献累加到最终图像时对其滤波。
 （\reffig{7.39}展示比较了用本节各种滤波器来重建像素值而渲染出的图像放大区域。）
 基类\refvar{Filter}{}定义在文件\href{https://github.com/mmp/pbrt-v3/blob/master/src/core/filter.h}{\ttfamily core/filter.h}
-和\href{https://github.com/mmp/pbrt-v3/blob/master/src/core/filter.cpp}{\ttfamily filter.cpp}中。
+和\href{https://github.com/mmp/pbrt-v3/blob/master/src/core/filter.cpp}{\ttfamily core/filter.cpp}中。
 \begin{figure}[htbp]
     \centering
     \subfloat[矩形滤波器]{\includegraphics[width=0.65\linewidth]{chap07/crown-box.png}\label{fig:7.39.1}}\\
@@ -136,7 +136,7 @@ virtual `\refvar{Float}{}` `\initvar[Filter::Evaluate]{Evaluate}{}`(const `\refv
 矩形滤波器对图像的一个方形区域内的所有样本等值赋权。
 尽管计算很高效，但它可能是最差的滤波器。
 从\refsub{理想采样与重建}的讨论中回想矩形滤波器允许高频样本数据
-泄漏到重建的值中。这会造成后混叠\sidenote{译者注：原文postaliasing。}——
+泄漏到重建的值中。这会造成后混叠——
 即使原始样本值足够高频以避免混叠，糟糕的滤波还是会引入误差。
 
 \reffig{7.41}(a)展示了矩形滤波器的图像，
@@ -182,7 +182,7 @@ public:
 \end{lstlisting}
 
 \subsubsection*{三角滤波器}
-三角滤波器给出了比矩形稍好的结果：在滤波器的方形范围上权重从滤波器中心起线性下降。
+\keyindex{三角滤波器}{triangle filter}{filter滤波器}给出了比矩形稍好的结果：在滤波器的方形范围上权重从滤波器中心起线性下降。
 参见\reffig{7.41}(b)的三角滤波器图示。
 \begin{lstlisting}
 `\initcode{TriangleFilter Declarations}{=}`
@@ -203,7 +203,7 @@ public:
 \end{lstlisting}
 
 \subsubsection*{高斯滤波器}
-不像矩形和三角滤波器那样，高斯滤波器在实践中给出了较好的结果。
+不像矩形和三角滤波器那样，\keyindex{高斯滤波器}{Gaussian filter}{filter滤波器}在实践中给出了较好的结果。
 该滤波器应用了中心在像素处且绕其径向对称的高斯凸块。
 高斯从滤波器值中减去了它在范围末端的值，
 好让滤波器在其界限处变为0（\reffig{7.43}）。
@@ -269,3 +269,165 @@ const `\refvar{Float}{}` `\initvar{expX}{}`, `\initvar{expY}{}`;
 \end{lstlisting}
 
 \subsubsection*{Mitchell滤波器}
+设计滤波器是出了名的难，混合了数学分析与感知实验。
+\citet{10.1145/54852.378514}为了能以系统的方式
+探索该空间而开发了一系列参数化滤波函数。
+在分析了受试者对用各种参数值滤波后的图像的主观反应后，
+它们开发的滤波器能很好地权衡\emph{振铃}（图像中的幻影边缘挨着实际边缘）
+与\emph{模糊}（过于模糊的结果）——两种来自糟糕重建滤波器的常见伪影。
+
+从\reffig{7.43.2}中注意到该滤波函数在其边缘处取负值；
+它有\keyindex{负波瓣}{negative lobe}{}。
+实践中这些负区域提升了边缘的清晰度，给出更保真的
+\sidenote{译者注：原文crisper。}图像（降低模糊）。
+然而如果它们变得太大，则振铃就开始进入图像。
+此外，因为最终像素值可能因此变为负数，
+所以最终需要将它们截断到合法输出范围。
+
+\reffig{7.44}展示了该滤波器重建的两个测试函数。
+它对于两者都做得非常好：对于阶跃函数有最小的振铃，
+对于正弦函数也做得非常好，直到采样率不足以刻画函数细节。
+\begin{figure}[htbp]
+    \centering
+    \subfloat[]{\includegraphics[width=0.49\linewidth]{chap07/mitchell-recon-a.eps}\label{fig:7.44.1}}\,
+    \subfloat[]{\includegraphics[width=0.49\linewidth]{chap07/mitchell-recon-b.eps}\label{fig:7.44.2}}
+    \caption{Mitchell-Netravali滤波器用于重建示例函数。
+        它对这两个函数都工作得很好，(a)对阶跃函数引入了最小振铃
+        且(b)准确地表示了正弦曲线直到来自欠采样的混叠开始占主要地位。}
+    \label{fig:7.44}
+\end{figure}
+
+\begin{lstlisting}
+`\initcode{MitchellFilter Declarations}{=}`
+class `\initvar{MitchellFilter}{}` : public `\refvar{Filter}{}` {
+public:
+    `\refcode{MitchellFilter Public Methods}{}`
+private:
+    const `\refvar{Float}{}` `\initvar[MitchellFilter::B]{B}{}`, `\initvar[MitchellFilter::C]{C}{}`;
+};
+\end{lstlisting}
+
+Mitchell滤波器有两个参数叫$B$和$C$.
+尽管这些参数可用任意值，但\citeauthor{10.1145/54852.378514}
+建议它们位于直线$B+2C=1$上。
+\begin{lstlisting}
+`\initcode{MitchellFilter Public Methods}{=}\initnext{MitchellFilterPublicMethods}`
+`\refvar{MitchellFilter}{}`(const `\refvar{Vector2f}{}` &radius, `\refvar{Float}{}` B, `\refvar{Float}{}` C)
+    : `\refvar{Filter}{}`(radius), `\refvar[MitchellFilter::B]{B}{}`(B), `\refvar[MitchellFilter::C]{C}{}`(C) {
+}
+\end{lstlisting}
+
+Mitchell-Netravali滤波器是在$x$和$y$方向上的1D滤波函数的乘积，
+因此像高斯滤波器那样是可分离的（事实上pbrt中提供的所有滤波器都是可分离的）。
+然而接口\refvar{Filter::Evaluate}{()}并不这样强制要求，
+给将来实现新的滤波器提供更多灵活性。
+\begin{lstlisting}
+`\initcode{MitchellFilter Method Definitions}{=}`
+`\refvar{Float}{}` `\refvar{MitchellFilter}{}`::`\initvar[MitchellFilter::Evaluate]{\refvar[Filter::Evaluate]{Evaluate}{}}{}`(const `\refvar{Point2f}{}` &p) const {
+    return `\refvar{Mitchell1D}{}`(p.x * `\refvar[Filter::invRadius]{invRadius}{}`.x) * `\refvar{Mitchell1D}{}`(p.y * `\refvar[Filter::invRadius]{invRadius}{}`.y);
+}
+\end{lstlisting}
+
+Mitchell滤波器中用的1D函数是个定义在范围$[-2,2]$上的偶函数。
+通过联合定义在$[0,1]$上的三次多项式和另一个定义在$[1,2]$上的三次多项式得出了该函数。
+这个结合的多项式还被平面$x=0$反射以得到完整的函数。
+这些多项式由参数$B$和$C$控制，且被精心挑选以保证在$x=0$，$x=1$和$x=2$处
+的$C^0$和$C^1$连续性。该多项式是
+\begin{align*}
+    f(x)=\frac{1}{6}\left\{
+    \begin{array}{ll}
+        (12-9B-6C)|x|^3+(-18+12B+6C)|x|^2+(6-2B),          & |x|<1\, ,      \\
+        (-B-6C)|x|^3+(6B+30C)|x|^2+(-12B-48C)|x|+(8B+24C), & 1\le |x|<2\, , \\
+        0,                                                 & \text{其他。}
+    \end{array}
+    \right.
+\end{align*}
+
+\begin{lstlisting}
+`\refcode{MitchellFilter Public Methods}{+=}\lastcode{MitchellFilterPublicMethods}`
+`\refvar{Float}{}` `\initvar{Mitchell1D}{}`(`\refvar{Float}{}` x) const {
+    x = std::abs(2 * x);
+    if (x > 1)
+        return ((-`\refvar[MitchellFilter::B]{B}{}` - 6*`\refvar[MitchellFilter::C]{C}{}`) * x*x*x + (6*`\refvar[MitchellFilter::B]{B}{}` + 30*`\refvar[MitchellFilter::C]{C}{}`) * x*x +
+                (-12*`\refvar[MitchellFilter::B]{B}{}` - 48*`\refvar[MitchellFilter::C]{C}{}`) * x + (8*`\refvar[MitchellFilter::B]{B}{}` + 24*`\refvar[MitchellFilter::C]{C}{}`)) * (1.f/6.f);
+    else
+        return ((12 - 9*`\refvar[MitchellFilter::B]{B}{}` - 6*`\refvar[MitchellFilter::C]{C}{}`) * x*x*x + 
+                (-18 + 12*`\refvar[MitchellFilter::B]{B}{}` + 6*`\refvar[MitchellFilter::C]{C}{}`) * x*x +
+                (6 - 2*`\refvar[MitchellFilter::B]{B}{}`)) * (1.f/6.f);
+}
+\end{lstlisting}
+
+\subsubsection*{窗sinc滤波器}
+最后，类\refvar{LanczosSincFilter}{}实现了基于sinc函数的滤波器。
+实践中，sinc滤波器常常乘以另一个在一定距离后变为0的函数。
+这得到了有限范围的滤波函数，它对具有合理性能的实现是必要的。
+一个额外的参数$\tau$控制sinc函数在把值截断为0前要经过多少个周期
+\sidenote{译者注：原文cycle，此处翻译为“周期”是折中做法，不是指严格意义上周期函数的周期。}。
+\reffig{7.45}展示了三个周期的sinc函数图示，以及我们用的窗函数图示，
+它由Lanczos开发。Lanczos窗就是sinc函数的中心波瓣，它被缩放以覆盖$\tau$个周期：
+\begin{align*}
+    w(x)=\frac{\sin\left(\displaystyle\frac{\pi x}{\tau}\right)}{\displaystyle\frac{\pi x}{\tau}}\, .
+\end{align*}
+
+\reffig{7.45}也展示了我们这里实现的滤波器，它是sinc函数和窗函数的乘积。
+\begin{figure}[htbp]
+    \centering
+    \subfloat[]{\includegraphics[width=0.49\linewidth]{chap07/sinc-and-window.eps}\label{fig:7.45.1}}\,
+    \subfloat[]{\includegraphics[width=0.49\linewidth]{chap07/sinc-times-window.eps}\label{fig:7.45.2}}
+    \caption{sinc滤波器的图示。(a)三个周期后被截断了的sinc函数（蓝线）
+        以及Lanczos窗函数（橙线）。(b)这两个函数的乘积，正如在\refvar{LanczosSincFilter}{}中的实现。}
+    \label{fig:7.45}
+\end{figure}
+
+\reffig{7.46}为均匀1D样本展示了加窗的sinc重建结果。
+因为加窗，重建的阶跃函数比用无限范围sinc函数重建的展现出小得多的振铃
+（和\reffig{7.11}比较）。加窗的sinc滤波器在重建正弦函数时也做得极好，直到预混叠开始。
+\begin{figure}[htbp]
+    \centering
+    \subfloat[]{\includegraphics[width=0.49\linewidth]{chap07/sinc-recon-a.eps}\label{fig:7.46.1}}\,
+    \subfloat[]{\includegraphics[width=0.49\linewidth]{chap07/sinc-recon-b.eps}}
+    \caption{用加窗sinc滤波器重建示例函数的结果。这里$\tau=3$.
+        (a)像无限sinc那样，对于阶跃函数它也遭受了振铃，尽管在加窗版本中的振铃要少得多。
+        (b)然而滤波器对于正弦函数做得很好。}
+    \label{fig:7.46}
+\end{figure}
+
+\begin{lstlisting}
+`\initcode{Sinc Filter Declarations}{=}`
+class `\initvar{LanczosSincFilter}{}` : public `\refvar{Filter}{}` {
+public:
+    `\refcode{LanczosSincFilter Public Methods}{}`
+private:
+    const `\refvar{Float}{}` `\initvar[LanczosSincFilter::tau]{tau}{}`;
+};
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{LanczosSincFilter Public Methods}{=}\initnext{LanczosSincFilterPublicMethods}`
+`\refvar{LanczosSincFilter}{}`(const `\refvar{Vector2f}{}` &radius, `\refvar{Float}{}` tau)
+    : `\refvar{Filter}{}`(radius), `\refvar[LanczosSincFilter::tau]{tau}{}`(tau) { }
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{Sinc Filter Method Definitions}{=}`
+`\refvar{Float}{}` `\refvar{LanczosSincFilter}{}`::`\initvar[LanczosSincFilter::Evaluate]{\refvar[Filter::Evaluate]{Evaluate}{}}{}`(const `\refvar{Point2f}{}` &p) const {
+    return `\refvar{WindowedSinc}{}`(p.x, `\refvar[Filter::radius]{radius}{}`.x) * `\refvar{WindowedSinc}{}`(p.y, `\refvar[Filter::radius]{radius}{}`.y);
+}
+\end{lstlisting}
+
+该实现计算sinc函数值然后乘以Lanczos窗函数值。
+\begin{lstlisting}
+`\refcode{LanczosSincFilter Public Methods}{+=}\lastnext{LanczosSincFilterPublicMethods}`
+`\refvar{Float}{}` `\initvar{Sinc}{}`(`\refvar{Float}{}` x) const {
+    x = std::abs(x);
+    if (x < 1e-5)  return 1;
+    return std::sin(`\refvar{Pi}{}` * x) / (`\refvar{Pi}{}` * x);
+}
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{LanczosSincFilter Public Methods}{+=}\lastcode{LanczosSincFilterPublicMethods}`
+`\refvar{Float}{}` `\initvar{WindowedSinc}{}`(`\refvar{Float}{}` x, `\refvar{Float}{}` radius) const {
+    x = std::abs(x);
+    if (x > radius) return 0;
+    `\refvar{Float}{}` lanczos = `\refvar{Sinc}{}`(x / `\refvar[LanczosSincFilter::tau]{tau}{}`);
+    return `\refvar{Sinc}{}`(x) * lanczos;
+}
+\end{lstlisting}

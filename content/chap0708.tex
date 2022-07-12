@@ -79,13 +79,13 @@ pbrt中的所有滤波器实现都从抽象类\refvar{Filter}{}派生，
 和\href{https://github.com/mmp/pbrt-v3/blob/master/src/core/filter.cpp}{\ttfamily filter.cpp}中。
 \begin{figure}[htbp]
     \centering
-    \subfloat[矩形滤波器]{\includegraphics[width=0.62\linewidth]{chap07/crown-box.png}\label{fig:7.39.1}}\\
-    \subfloat[高斯滤波器]{\includegraphics[width=0.62\linewidth]{chap07/crown-gaussian.png}\label{fig:7.39.2}}\\
-    \subfloat[Mitchell-Netravali滤波器]{\includegraphics[width=0.62\linewidth]{chap07/crown-mitchell.png}\label{fig:7.39.3}}\\
+    \subfloat[矩形滤波器]{\includegraphics[width=0.65\linewidth]{chap07/crown-box.png}\label{fig:7.39.1}}\\
+    \subfloat[高斯滤波器]{\includegraphics[width=0.65\linewidth]{chap07/crown-gaussian.png}\label{fig:7.39.2}}\\
+    \subfloat[Mitchell-Netravali滤波器]{\includegraphics[width=0.65\linewidth]{chap07/crown-mitchell.png}\label{fig:7.39.3}}\\
     \caption{用来将图像样本转化为像素值的像素重建滤波器对最终图像的质量有明显的影响。
         这里我们看到用(a)矩形滤波器、(b)高斯以及(c) Mitchell-Netravali滤波器滤波的皇冠模型放大区域。
         注意Mitchell滤波器给出了最清晰的图像，而高斯则模糊了它。
-        矩形是最不可取的，因为它允许高频混叠掺入到最终图像中
+        矩形是最不可取的，因为它允许高频混叠泄漏到最终图像中
         （例如注意沿明亮金色边缘的阶梯状模式）。}
     \label{fig:7.39}
 \end{figure}
@@ -133,3 +133,139 @@ virtual `\refvar{Float}{}` `\initvar[Filter::Evaluate]{Evaluate}{}`(const `\refv
 \subsubsection*{矩形滤波器}
 图形学中最常用的滤波器之一是\keyindex{矩形滤波器}{box filter}{filter滤波器}
 （且实际上当没有明确解决滤波和重建时，矩形滤波器就是\emph{事实上}的结果）。
+矩形滤波器对图像的一个方形区域内的所有样本等值赋权。
+尽管计算很高效，但它可能是最差的滤波器。
+从\refsub{理想采样与重建}的讨论中回想矩形滤波器允许高频样本数据
+泄漏到重建的值中。这会造成后混叠\sidenote{译者注：原文postaliasing。}——
+即使原始样本值足够高频以避免混叠，糟糕的滤波还是会引入误差。
+
+\reffig{7.41}(a)展示了矩形滤波器的图像，
+\reffig{7.42}展示了用矩形滤波器重建两个1D函数的结果。
+
+对于之前我们用来说明吉布斯现象的阶跃函数，矩形滤波器尚能做得很好。
+然而对于频率沿$x$轴增加的正弦函数结果则差得多。
+不仅在低频时矩形滤波器把函数重建得很差，即使原始函数是光滑的也给出不连续的结果，
+而且它在函数频率接近和超过奈奎斯特上限时也重建得很差。
+\begin{lstlisting}
+`\initcode{BoxFilter Declarations}{=}`
+class `\initvar{BoxFilter}{}` : public `\refvar{Filter}{}` {
+public:
+    `\refvar{BoxFilter}{}`(const `\refvar{Vector2f}{}` &radius) : `\refvar{Filter}{}`(radius) { }
+    `\refvar{Float}{}` `\refvar[BoxFilter::Evaluate]{Evaluate}{}`(const `\refvar{Point2f}{}` &p) const;
+};
+\end{lstlisting}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.45\linewidth]{chap07/box-filter.eps}\,
+    \includegraphics[width=0.45\linewidth]{chap07/triangle-filter.eps}
+    \caption{(a)矩形滤波器和(b)三角滤波器的图示。尽管两者都不是特别好的滤波器，
+        但它们的计算都很高效，易于实现，且对于评估其他滤波器是很好的基准线。}
+    \label{fig:7.41}
+\end{figure}
+\begin{figure}[htbp]
+    \centering
+    \subfloat[]{\includegraphics[width=0.49\linewidth]{chap07/box-recon-a.eps}\label{fig:7.42.1}}\,
+    \subfloat[]{\includegraphics[width=0.49\linewidth]{chap07/box-recon-b.eps}\label{fig:7.42.2}}
+    \caption{矩形滤波器重建(a)阶跃函数和(b)频率随着$x$增加而增加的正弦函数。
+        该滤波器对阶跃函数如料想那样工作得很好，但对于正弦函数则工作得极其糟糕。}
+    \label{fig:7.42}
+\end{figure}
+
+因为不会在$(x,y)$值超出滤波器范围时调用求值函数，
+所以对于滤波函数值它可以总是返回1.
+\begin{lstlisting}
+`\initcode{BoxFilter Method Definitions}{=}`
+`\refvar{Float}{}` `\refvar{BoxFilter}{}`::`\initvar[BoxFilter::Evaluate]{\refvar[Filter::Evaluate]{Evaluate}{}}{}`(const `\refvar{Point2f}{}` &p) const {
+    return 1.;
+}
+\end{lstlisting}
+
+\subsubsection*{三角滤波器}
+三角滤波器给出了比矩形稍好的结果：在滤波器的方形范围上权重从滤波器中心起线性下降。
+参见\reffig{7.41}(b)的三角滤波器图示。
+\begin{lstlisting}
+`\initcode{TriangleFilter Declarations}{=}`
+class `\initvar{TriangleFilter}{}` : public `\refvar{Filter}{}` {
+public:
+    `\refvar{TriangleFilter}{}`(const `\refvar{Vector2f}{}` &radius) : `\refvar{Filter}{}`(radius) { }
+    `\refvar{Float}{}` `\refvar[TriangleFilter::Evaluate]{Evaluate}{}`(const `\refvar{Point2f}{}` &p) const;
+};
+\end{lstlisting}
+
+三角滤波器求值很简单：该实现只需计算同时基于滤波器在$x$和$y$方向上宽度的线性函数。
+\begin{lstlisting}
+`\initcode{TriangleFilter Method Definitions}{=}`
+`\refvar{Float}{}` `\refvar{TriangleFilter}{}`::`\initvar[TriangleFilter::Evaluate]{\refvar[Filter::Evaluate]{Evaluate}{}}{}`(const `\refvar{Point2f}{}` &p) const {
+    return std::max((`\refvar{Float}{}`)0, `\refvar[Filter::radius]{radius}{}`.x - std::abs(p.x)) *
+           std::max((`\refvar{Float}{}`)0, `\refvar[Filter::radius]{radius}{}`.y - std::abs(p.y));
+}
+\end{lstlisting}
+
+\subsubsection*{高斯滤波器}
+不像矩形和三角滤波器那样，高斯滤波器在实践中给出了较好的结果。
+该滤波器应用了中心在像素处且绕其径向对称的高斯凸块。
+高斯从滤波器值中减去了它在范围末端的值，
+好让滤波器在其界限处变为0（\reffig{7.43}）。
+比起其他一些滤波器，高斯确实倾向于造成最终图像轻微模糊，
+但该模糊实际上能帮助遮住图像中留下的任何混叠。
+
+\begin{figure}[htbp]
+    \centering
+    \subfloat[]{\includegraphics[width=0.49\linewidth]{chap07/gaussian-filter.eps}\label{fig:7.43.1}}\,
+    \subfloat[]{\includegraphics[width=0.49\linewidth]{chap07/mitchell-filter.eps}\label{fig:7.43.2}}
+    \caption{(a)高斯滤波器和(b) $\displaystyle B=\frac{1}{3}$
+        且$\displaystyle C=\frac{1}{3}$的Mitchell滤波器的图示，每个的宽度是2.
+        高斯给出倾向于有点模糊的图像，而Mitchell滤波器的负波瓣有助于强调和
+        锐化最终图像中的边界。}
+    \label{fig:7.43}
+\end{figure}
+
+\begin{lstlisting}
+`\initcode{GaussianFilter Declarations}{=}`
+class `\initvar{GaussianFilter}{}` : public `\refvar{Filter}{}` {
+public:
+    `\refcode{GaussianFilter Public Methods}{}`
+private:
+    `\refcode{GaussianFilter Private Data}{}`
+    `\refcode{GaussianFilter Utility Functions}{}`
+};
+\end{lstlisting}
+
+半径为$r$的1D高斯滤波函数是
+\begin{align*}
+    f(x)={\mathrm{e}}^{-\alpha x^2}-{\mathrm{e}}^{-\alpha r^2}\, ,
+\end{align*}
+其中$\alpha$控制滤波器的衰减速率。更小的值使衰减更慢，给出更模糊的图像。
+这里第二项保证高斯在其范围末端变为0而不是有个陡崖。
+为了效率，构造函数在每个方向上预先计算了常数项${\mathrm{e}}^{-\alpha r^2}$.
+\begin{lstlisting}
+`\initcode{GaussianFilter Public Methods}{=}`
+`\refvar{GaussianFilter}{}`(const `\refvar{Vector2f}{}` &radius, `\refvar{Float}{}` alpha)
+    : `\refvar{Filter}{}`(radius), `\refvar[GaussianFilter::alpha]{alpha}{}`(alpha),
+      `\refvar{expX}{}`(std::exp(-alpha * radius.x * radius.x)),
+      `\refvar{expY}{}`(std::exp(-alpha * radius.y * radius.y)) { }
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{GaussianFilter Private Data}{=}`
+const `\refvar{Float}{}` `\initvar[GaussianFilter::alpha]{alpha}{}`;
+const `\refvar{Float}{}` `\initvar{expX}{}`, `\initvar{expY}{}`;
+\end{lstlisting}
+
+因为2D高斯函数可分解为两个1D高斯的乘积，
+所以实现调用函数\refvar{Gaussian}{()}
+两次并把结果相乘。
+\begin{lstlisting}
+`\initcode{GaussianFilter Method Definitions}{=}`
+`\refvar{Float}{}` `\refvar{GaussianFilter}{}`::`\initvar[GaussianFilter::Evaluate]{\refvar[Filter::Evaluate]{Evaluate}{}}{}`(const `\refvar{Point2f}{}` &p) const {
+    return `\refvar{Gaussian}{}`(p.x, `\refvar{expX}{}`) * `\refvar{Gaussian}{}`(p.y, `\refvar{expY}{}`);
+}
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{GaussianFilter Utility Functions}{=}`
+`\refvar{Float}{}` `\initvar{Gaussian}{}`(`\refvar{Float}{}` d, `\refvar{Float}{}` expv) const {
+    return std::max((`\refvar{Float}{}`)0, `\refvar{Float}{}`(std::exp(-`\refvar[GaussianFilter::alpha]{alpha}{}` * d * d) - expv));
+}
+\end{lstlisting}
+
+\subsubsection*{Mitchell滤波器}

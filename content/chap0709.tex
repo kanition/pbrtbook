@@ -1,7 +1,34 @@
 \section{胶片与成像管道}\label{sec:胶片与成像管道}
+相机中胶片或传感器类型对入射光转换为图像中颜色的方式具有戏剧性影响。
+在pbrt中，类\refvar{Film}{}在模拟相机中对传感设备建模。
+在为每条相机光线求得辐亮度后，\refvar{Film}{}的实现
+决定了样本对胶片平面上的相机光线起始点周围像素的贡献并更新其图像表示。
+当主渲染循环退出时，\refvar{Film}{}将最终图像写入文件。
+
+对于真实相机模型，\refsub{相机测量方程}介绍了测量方程，
+它描述了相机中的传感器怎样度量一段时间内到达传感器区域上的能量大小。
+对于更简单的相机模型，我们可将传感器视作度量某段时间内一小片区域上的平均辐亮度。
+选择采用哪种度量的影响被封装在\refvar[GenerateRayDifferential]{Camera::GenerateRayDifferential}{()}为
+光线返回的权重中。因此，\refvar{Film}{}的实现
+可在不考虑这些变化的情况下处理，只需用这些权重缩放提供的辐亮度。
+
+本节介绍了单个\refvar{Film}{}实现，它将像素重建方程应用于计算最终像素值。
+对于基于物理的渲染器，通常最好是把结果图像存于浮点图像格式。
+这样做在如何使用输出方面比起用8位无符号整数值的传统图像格式提供了更多的灵活性；
+浮点格式避免了将图像量化为8位时造成的大量信息损失。
+
+为了在现代显示设备上显示这样的图像，有必要将这些浮点像素值映射为离散值。
+例如，计算机监视器通常希望每个像素的颜色由一个RGB颜色三元组描述，
+而不是用任意的光谱功率分布。因此通用基函数系数描述的光谱在能显示之前必须转化为RGB表示。
+一个相关问题是，比起许多真实世界场景中出现的范围，
+显示器具有小得多的可显示辐亮度值范围。因此，像素值必须
+以让最终显示的图像看起来尽可能接近其在无限制的理想显示设备上的样子的方式映射到可显示的范围。
+这些问题是通过研究\keyindex{色调映射}{tone mapping}{}来解决的；
+“扩展阅读”一节有关于该话题的更多信息。
 
 \subsection{胶片类}\label{sub:胶片类}
-
+\refvar{Film}{}定义在文件\href{https://github.com/mmp/pbrt-v3/blob/master/src/core/film.h}{\ttfamily core/film.h}
+和\href{https://github.com/mmp/pbrt-v3/blob/master/src/core/film.cpp}{\ttfamily core/film.cpp}中。
 \begin{lstlisting}
 `\initcode{Film Declarations}{=}\initnext{FilmDeclarations}`
 class `\initvar{Film}{}` {
@@ -13,6 +40,7 @@ private:
     `\refcode{Film Private Methods}{}`
 };
 \end{lstlisting}
+
 
 \begin{lstlisting}
 `\initcode{Film Method Definitions}{=}\initnext{FilmMethodDefinitions}`

@@ -40,15 +40,32 @@ private:
     `\refcode{Film Private Methods}{}`
 };
 \end{lstlisting}
+\begin{lstlisting}
+`\initcode{Film Public Methods}{=}`
+`\refvar{Film}{}`(const `\refvar{Point2i}{}` &resolution, const `\refvar{Bounds2f}{}` &cropWindow,
+    std::unique_ptr<`\refvar{Filter}{}`> filter,
+    `\refvar{Float}{}` diagonal, const std::string &filename, `\refvar{Float}{}` scale);
+`\refvar{Bounds2i}{}` `\refvar{GetSampleBounds}{}`() const;
+`\refvar{Bounds2f}{}` `\refvar{GetPhysicalExtent}{}`() const;
+std::unique_ptr<`\refvar{FilmTile}{}`> `\refvar{GetFilmTile}{}`(const `\refvar{Bounds2i}{}` &sampleBounds);
+void `\refvar{MergeFilmTile}{}`(std::unique_ptr<`\refvar{FilmTile}{}`> tile);
+void `\refvar{SetImage}{}`(const `\refvar{Spectrum}{}` *img) const;
+void `\refvar{AddSplat}{}`(const `\refvar{Point2f}{}` &p, const `\refvar{Spectrum}{}` &v);
+void `\refvar[Film::WriteImage]{WriteImage}{}`(`\refvar{Float}{}` splatScale = 1);
+void `\refvar[Film::Clear]{Clear}{}`();
+\end{lstlisting}
 
-
+许多值传给了构造函数：图像以像素为单位的整个分辨率；
+可能指定了要渲染的图像子集的裁剪窗口；
+胶片物理区域的对角线长度，它在构造函数中单位是毫米，但这里转换为了米；
+一个滤波函数；输出图像的文件名以及控制图像像素值如何存于文件的参数。
 \begin{lstlisting}
 `\initcode{Film Method Definitions}{=}\initnext{FilmMethodDefinitions}`
 `\refvar{Film}{}`::`\refvar{Film}{}`(const `\refvar{Point2i}{}` &resolution, const `\refvar{Bounds2f}{}` &cropWindow,
-        std::unique_ptr<`\refvar{Filter}{}`> filt, `\refvar{Float}{}` `\refvar{diagonal}{}`,
-        const std::string &`\refvar{filename}{}`, `\refvar{Float}{}` `\refvar{scale}{}`)
-    : `\refvar{fullResolution}{}`(resolution), `\refvar{diagonal}{}`(`\refvar{diagonal}{}` * .001),
-    `\refvar{filter}{}`(std::move(filt)), `\refvar{filename}{}`(`\refvar{filename}{}`), `\refvar{scale}{}`(`\refvar{scale}{}`) {
+        std::unique_ptr<`\refvar{Filter}{}`> filt, `\refvar{Float}{}` diagonal,
+        const std::string &filename, `\refvar{Float}{}` scale)
+    : `\refvar{fullResolution}{}`(resolution), `\refvar{diagonal}{}`(diagonal * .001),
+    `\refvar{filter}{}`(std::move(filt)), `\refvar{filename}{}`(filename), `\refvar{scale}{}`(scale) {
     `\refcode{Compute film image bounds}{}`
     `\refcode{Allocate film image storage}{}`
     `\refcode{Precompute filter weight table}{}`
@@ -63,6 +80,47 @@ std::unique_ptr<`\refvar{Filter}{}`> `\initvar{filter}{}`;
 const std::string `\initvar{filename}{}`;
 \end{lstlisting}
 
+裁剪窗口于整体图像分辨率结合起来给出了实际需要存储和写出的像素边界。
+裁剪窗口对于调试或将大图像分解为可在不同电脑上渲染的小块然后重新组装很有用。
+裁剪窗口是在NDC空间中指定的，每个坐标范围是0到1（\reffig{7.47}）。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.5\linewidth]{chap07/Cropwindow.eps}
+    \caption{图像裁剪窗口指定要渲染的图像子集。
+    它在NDC空间中给出，坐标范围为从$(0,0)$到$(1,1)$.
+    类\refvar{Film}{}仅为裁剪窗口内的区域分配空间存储像素值。}
+    \label{fig:7.47}
+\end{figure}
+
+\refvar[croppedPixelBounds]{Film::croppedPixelBounds}{}保存了
+裁剪窗口从左上角到右下角的像素边界。小数像素坐标被舍入；
+这保证了如果图像按邻接的裁剪窗口分块渲染，则最终像素只在一个子图像内出现。
+\begin{lstlisting}
+`\initcode{Compute film image bounds}{=}`
+`\refvar{croppedPixelBounds}{}` =
+    `\refvar{Bounds2i}{}`(`\refvar{Point2i}{}`(std::ceil(`\refvar{fullResolution}{}`.x * cropWindow.pMin.x),
+                     std::ceil(`\refvar{fullResolution}{}`.y * cropWindow.pMin.y)),
+             `\refvar{Point2i}{}`(std::ceil(`\refvar{fullResolution}{}`.x * cropWindow.pMax.x),
+                     std::ceil(`\refvar{fullResolution}{}`.y * cropWindow.pMax.y)));
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{Film Public Data}{+=}\lastcode{FilmPublicData}`
+`\refvar{Bounds2i}{}` `\initvar{croppedPixelBounds}{}`;
+\end{lstlisting}
+
+有了（可能被裁的）图像像素分辨率后，构造函数
+为每个像素分配一个\refvar{Pixel}{}结构体数组。
+光谱像素贡献值的运行加权和用XYZ颜色（\refsub{XYZ颜色}）表示
+并保存于成员变量\refvar[Pixel:xyz]{xyz}{}中。
+\refvar[Pixel:filterWeightSum]{filterWeightSum}{}
+持有表示样本对像素的贡献的滤波权重值之和。
+\refvar[Pixel:splatXYZ]{splatXYZ}{}持有样本背板
+\sidenote{译者注：此短语翻译不确定，原文sample splats。欢迎读者提供帮助。}（不加权）的和。
+成员\refvar[Pixel:pad]{pad}{}是没用的；
+它唯一的目的是保证结构体\refvar{Pixel}{}是32字节大小，而不是28
+（这里假设\refvar{Float}{}是4字节；否则它保证是64字节结构体）。
+该填充保证了\refvar{Pixel}{}不会跨越缓存行，
+这样当获取\refvar{Pixel}{}时引发的缓存缺失不超过一次
+（只要数组的首个\refvar{Pixel}{}是在缓存行开头分配的）。
 \begin{lstlisting}
 `\initcode{Film Private Data}{=}\initnext{FilmPrivateData}`
 struct `\initvar{Pixel}{}` {
@@ -73,14 +131,62 @@ struct `\initvar{Pixel}{}` {
 };
 std::unique_ptr<`\refvar{Pixel}{}`[]> `\initvar[Pixel::pixels]{pixels}{}`;
 \end{lstlisting}
+\begin{lstlisting}
+`\initcode{Allocate film image storage}{=}`
+`\refvar[Pixel::pixels]{pixels}{}` = std::unique_ptr<`\refvar{Pixel}{}`[]>(new `\refvar{Pixel}{}`[`\refvar{croppedPixelBounds}{}`.Area()]);
+\end{lstlisting}
+用XYZ颜色存储像素值的两个自然选择是用\refvar{Spectrum}{}值或存储RGB值。
+这里即使是在进行全光谱渲染时也不值得保存完整的\refvar{Spectrum}{}值。
+因为写入到输出文件的最终颜色不包括\refvar{Spectrum}{}样本全集，
+所以这里转换为三刺激值和先保存\refvar{Spectrum}{}再转换
+为图像输出上的三刺激值相比并不代表损失了信息。
+该情况下如果\refvar{Spectrum}{}有大量样本，
+则不保存完整的\refvar{Spectrum}{}值能节约大量内存
+（如果pbrt支持把\refvar{SampledSpectrum}{}值保存到文件，则需要重新考虑该设计选择）。
+
+我们已选择用XYZ颜色而不是RGB以强调XYZ是独立于显示器的颜色表示，
+而RGB需要假定显示器响应曲线的特定集合（\refsub{RGB颜色}）。
+（然而最后我们还是不得不转换为RGB，因为很少有图像文件格式保存XYZ颜色。）
+
+有了典型的滤波器设置，每个图像样本都可能对最终图像中的16个或更多像素作出贡献。
+特别是对于在光线相交测试和着色计算上花费相对较少时间的简单场景，
+花在为每个样本更新图像上的时间会很多。
+因此，\refvar{Film}{}预先计算滤波值的表使得
+我们可以免去对方法\refvar{Filter::Evaluate}{()}的虚函数调用开销
+以及推算滤波器的开销，而可以为滤波使用来自表中的值。
+实践中不在每个样本的精确位置上推算滤波而引入的误差并不明显。
+
+这里的实现做了合理假设即滤波器定义满足$f(x,y)=f(|x|,|y|)$，
+所以表格只需要为滤波偏移量正象限存储值。
+该假设对于pbrt中目前所有可用的\refvar{Filter}{}都成立且在实践中对大多数滤波器成立。
+这让表的大小变为四分之一并改进了内存访问的一致性，
+使缓存性能更好\footnote{这里该实现可进一步利用目前pbrt中所有滤波器都是可分离的事实，
+只分配两个1D表。然而，为了允许更容易地添加不同滤波函数，我们这里没有假定可分离性。}。
+\begin{lstlisting}
+`\initcode{Precompute filter weight table}{=}`
+int offset = 0;
+for (int y = 0; y < `\refvar{filterTableWidth}{}`; ++y) {
+    for (int x = 0; x < `\refvar{filterTableWidth}{}`; ++x, ++offset) {
+        `\refvar{Point2f}{}` p;
+        p.x = (x + 0.5f) * `\refvar{filter}{}`->`\refvar[Filter::radius]{radius}{}`.x / `\refvar{filterTableWidth}{}`;
+        p.y = (y + 0.5f) * `\refvar{filter}{}`->`\refvar[Filter::radius]{radius}{}`.y / `\refvar{filterTableWidth}{}`;
+        `\refvar{filterTable}{}`[offset] = filter->`\refvar[Filter::Evaluate]{Evaluate}{}`(p);
+    }
+}
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{Film Private Data}{+=}\lastnext{FilmPrivateData}`
+static constexpr int `\initvar{filterTableWidth}{}` = 16;
+`\refvar{Float}{}` `\initvar{filterTable}{}`[`\refvar{filterTableWidth}{}` * `\refvar{filterTableWidth}{}`];
+\end{lstlisting}
 
 \begin{lstlisting}
 `\refcode{Film Method Definitions}{+=}\lastnext{FilmMethodDefinitions}`
 `\refvar{Bounds2i}{}` `\refvar{Film}{}`::`\initvar{GetSampleBounds}{()}` const {
     `\refvar{Bounds2f}{}` floatBounds(
-        `\refvar{Floor}{}`(`\refvar{Point2f}{}`(croppedPixelBounds.pMin) + `\refvar{Vector2f}{}`(0.5f, 0.5f) -
+        `\refvar{Floor}{}`(`\refvar{Point2f}{}`(`\refvar{croppedPixelBounds}{}`.pMin) + `\refvar{Vector2f}{}`(0.5f, 0.5f) -
               `\refvar{filter}{}`->`\refvar[Filter::radius]{radius}{}`),
-        `\refvar{Ceil}{}`( `\refvar{Point2f}{}`(croppedPixelBounds.pMax) - `\refvar{Vector2f}{}`(0.5f, 0.5f) +
+        `\refvar{Ceil}{}`( `\refvar{Point2f}{}`(`\refvar{croppedPixelBounds}{}`.pMax) - `\refvar{Vector2f}{}`(0.5f, 0.5f) +
               `\refvar{filter}{}`->`\refvar[Filter::radius]{radius}{}`));
     return (`\refvar{Bounds2i}{}`)floatBounds;
 }

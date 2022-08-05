@@ -142,7 +142,7 @@ std::unique_ptr<`\refvar{Pixel}{}`[]> `\initvar[Pixel::pixels]{pixels}{}`;
 因为写入到输出文件的最终颜色不含\refvar{Spectrum}{}样本全集，
 故这里转换为三刺激值和先保存\refvar{Spectrum}{}再转换
 为图像输出上的三刺激值相比并不代表损失了信息。
-该情况下若refvar{Spectrum}{}有大量样本，
+该情况下若\refvar{Spectrum}{}有大量样本，
 则不保存完整的\refvar{Spectrum}{}值能节约大量内存
 （若pbrt支持把\refvar{SampledSpectrum}{}值保存到文件，则需重新考虑该设计选择）。
 
@@ -173,14 +173,14 @@ for (int y = 0; y < `\refvar{filterTableWidth}{}`; ++y) {
         `\refvar{Point2f}{}` p;
         p.x = (x + 0.5f) * `\refvar{filter}{}`->`\refvar[Filter::radius]{radius}{}`.x / `\refvar{filterTableWidth}{}`;
         p.y = (y + 0.5f) * `\refvar{filter}{}`->`\refvar[Filter::radius]{radius}{}`.y / `\refvar{filterTableWidth}{}`;
-        `\refvar{filterTable}{}`[offset] = `\refvar{filter}{}`->`\refvar[Filter::Evaluate]{Evaluate}{}`(p);
+        `\refvar[Film::filterTable]{filterTable}{}`[offset] = `\refvar{filter}{}`->`\refvar[Filter::Evaluate]{Evaluate}{}`(p);
     }
 }
 \end{lstlisting}
 \begin{lstlisting}
 `\refcode{Film Private Data}{+=}\lastnext{FilmPrivateData}`
 static constexpr int `\initvar{filterTableWidth}{}` = 16;
-`\refvar{Float}{}` `\initvar{filterTable}{}`[`\refvar{filterTableWidth}{}` * `\refvar{filterTableWidth}{}`];
+`\refvar{Float}{}` `\initvar[Film::filterTable]{filterTable}{}`[`\refvar{filterTableWidth}{}` * `\refvar{filterTableWidth}{}`];
 \end{lstlisting}
 
 \refvar{Film}{}的实现负责确定\refvar{Sampler}{}要
@@ -228,16 +228,43 @@ static constexpr int `\initvar{filterTableWidth}{}` = 16;
 \end{lstlisting}
 
 \subsection{为胶片提供像素值}\label{sub:为胶片提供像素值}
+有三种方式可以把样本贡献提供给胶片。
+第一种由\refvar{Sampler}{}在图块上生成的样本驱动。
+尽管大多数简单接口都允许渲染器提供一个胶片像素位置
+以及表示相应光线对\refvar{Film}{}的直接贡献的\refvar{Spectrum}{}，
+但在多线程情形下要提供这类方法的高性能实现并不容易，
+多线程可能最终试图并发地更新图像的同一部分。
+
+因此\refvar{Film}{}定义了能让线程表明其正生成整个图像中某一范围像素的接口。
+有了样本边界，\refvar{GetFilmTile}{()}转而返回指向\refvar{FilmTile}{}对象的指针，
+它存有图像相应区域中像素的贡献。\refvar{FilmTile}{}的所有权
+及其存储的数据只属于调用者，故线程可以给\refvar{FilmTile}{}提供样本值
+而不担心和其他线程争夺。当它完成该图块上的工作，
+线程就将完整图块回传给\refvar{Film}{}，安全地将其合并到最终图像。
 \begin{lstlisting}
 `\refcode{Film Method Definitions}{+=}\lastnext{FilmMethodDefinitions}`
 std::unique_ptr<`\refvar{FilmTile}{}`> `\refvar{Film}{}`::`\initvar{GetFilmTile}{}`(
         const `\refvar{Bounds2i}{}` &sampleBounds) {
     `\refcode{Bound image pixels that samples in sampleBounds contribute to}{}`
-    return std::unique_ptr<`\refvar{FilmTile}{}`>(new FilmTile(tilePixelBounds,
-        filter->radius, filterTable, filterTableWidth));
+    return std::unique_ptr<`\refvar{FilmTile}{}`>(new `\refvar{FilmTile}{}`(tilePixelBounds,
+        `\refvar{filter}{}`->`\refvar[Filter::radius]{radius}{}`, `\refvar[Film::filterTable]{filterTable}{}`, `\refvar{filterTableWidth}{}`));
 }
 \end{lstlisting}
 
+有了将在其中生成样本的像素区域边界框，计算样本值将要贡献的图像像素边界框有两步。
+第一，必须考虑离散到连续像素坐标变换的影响以及滤波器半径。
+第二，结果边界必须裁剪到全图像素边界；按照定义不需要考虑图像之外的像素。
+\begin{lstlisting}
+`\initcode{Bound image pixels that samples in sampleBounds contribute to}{=}`
+`\refvar{Vector2f}{}` halfPixel = `\refvar{Vector2f}{}`(0.5f, 0.5f);
+`\refvar{Bounds2f}{}` floatBounds = (`\refvar{Bounds2f}{}`)sampleBounds;
+`\refvar{Point2i}{}` p0 = (`\refvar{Point2i}{}`)`\refvar{Ceil}{}`(floatBounds.pMin - halfPixel -
+                           `\refvar{filter}{}`->`\refvar[Filter::radius]{radius}{}`);
+`\refvar{Point2i}{}` p1 = (`\refvar{Point2i}{}`)`\refvar{Floor}{}`(floatBounds.pMax - halfPixel +
+                            `\refvar{filter}{}`->`\refvar[Filter::radius]{radius}{}`) + `\refvar{Point2i}{}`(1, 1);
+`\refvar{Bounds2i}{}` tilePixelBounds =
+    `\refvar[Bounds3::Intersect]{Intersect}{}`(`\refvar{Bounds2i}{}`(p0, p1), `\refvar{croppedPixelBounds}{}`);
+\end{lstlisting}
 \begin{lstlisting}
 `\refcode{Film Declarations}{+=}\lastcode{FilmDeclarations}`
 class `\initvar{FilmTile}{}` {
@@ -248,13 +275,16 @@ private:
 };
 \end{lstlisting}
 
+\refvar{FilmTile}{}构造函数接收一个2D边界框，
+它给出了最终图像中的像素边界，须为这些像素提供存储和所用重建滤波器的额外信息，
+包括指向在{\refcode{Precompute filter weight table}{}}中制成表的滤波器函数值的指针。
 \begin{lstlisting}
 `\initcode{FilmTile Public Methods}{=}\initnext{FilmTilePublicMethods}`
 `\refvar{FilmTile}{}`(const `\refvar{Bounds2i}{}` &pixelBounds, const `\refvar{Vector2f}{}` &filterRadius,
     const `\refvar{Float}{}` *filterTable, int filterTableSize)
     : `\refvar{pixelBounds}{}`(pixelBounds), `\refvar{filterRadius}{}`(filterRadius),
     `\refvar{invFilterRadius}{}`(1 / filterRadius.x, 1 / filterRadius.y),
-    `\refvar{filterTable}{}`(filterTable), `\refvar{filterTableSize}{}`(filterTableSize) {
+    `\refvar[FilmTile::filterTable]{filterTable}{}`(filterTable), `\refvar{filterTableSize}{}`(filterTableSize) {
     `\refvar[FilmTile::pixels]{pixels}{}` = std::vector<`\refvar{FilmTilePixel}{}`>(std::max(0, pixelBounds.Area()));
 }
 \end{lstlisting}
@@ -263,7 +293,7 @@ private:
 `\initcode{FilmTile Private Data}{=}`
 const `\refvar{Bounds2i}{}` `\initvar{pixelBounds}{}`;
 const `\refvar{Vector2f}{}` `\initvar{filterRadius}{}`, `\initvar{invFilterRadius}{}`;
-const `\refvar{Float}{}` *`\initvar{filterTable}{}`;
+const `\refvar{Float}{}` *`\initvar[FilmTile::filterTable]{filterTable}{}`;
 const int `\initvar{filterTableSize}{}`;
 std::vector<`\refvar{FilmTilePixel}{}`> `\initvar[FilmTile::pixels]{pixels}{}`;
 \end{lstlisting}

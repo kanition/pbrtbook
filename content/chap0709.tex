@@ -298,6 +298,21 @@ const int `\initvar{filterTableSize}{}`;
 std::vector<`\refvar{FilmTilePixel}{}`> `\initvar[FilmTile::pixels]{pixels}{}`;
 \end{lstlisting}
 
+对于每个像素，保留来自像素样本的加权贡献之和
+（依据重建滤波器权重）以及滤波器权重之和。
+\begin{lstlisting}
+`\initcode{FilmTilePixel Declarations}{=}`
+struct `\initvar{FilmTilePixel}{}` {
+    `\refvar{Spectrum}{}` `\initvar[FilmTilePixel::contribSum]{contribSum}{}` = 0.f;
+    `\refvar{Float}{}` `\initvar[FilmTilePixel::filterWeightSum]{filterWeightSum}{}` = 0.f;
+};
+\end{lstlisting}
+
+一旦算出光线为样本所带的辐亮度，\refvar{Integrator}{}就
+调用\refvar[AddSample]{FilmTile::AddSample}{()}。
+它接收一个样本以及相应的辐亮度值和
+\refvar[GenerateRayDifferential]{Camera::GenerateRayDifferential}{()}
+原本返回的样本贡献权重。它用重建滤波器和像素滤波方程更新存储的图像。
 \begin{lstlisting}
 `\refcode{FilmTile Public Methods}{+=}\lastnext{FilmTilePublicMethods}`
 void `\initvar{AddSample}{}`(const `\refvar{Point2f}{}` &pFilm, const `\refvar{Spectrum}{}` &L,
@@ -307,15 +322,130 @@ void `\initvar{AddSample}{}`(const `\refvar{Point2f}{}` &pFilm, const `\refvar{S
 }
 \end{lstlisting}
 
+为了理解\refvar[AddSample]{FilmTile::AddSample}{()}的操作，
+首先回想像素滤波方程：
+\begin{align*}
+    I(x,y)=\frac{\sum\limits_i{f(x-x_i,y-y_i)w(x_i,y_i)L(x_i,y_i)}}{\sum\limits_i{f(x-x_i,y-y_i)}}\, .
+\end{align*}
+它同时用滤波函数$f$和\refvar{Camera}{}返回的样本权重$w(x_i,y_i)$计算
+辐亮度值对最终像素值的贡献，把每个像素的值$I(x,y)$算为附近样本辐亮度值的加权和。
+因为pbrt中所有\refvar{Filter}{}都具有有限范围，
+所以该方法先计算哪些像素将被当前样本影响。
+然后它翻转像素滤波方程，为受该样本影响的每个像素$(x,y)$更新两个滑动之和。
+一个和累积了像素滤波方程的分子，另一个累积了分母。
+在渲染结束时，通过执行除法算得最终像素值。
+
+为了求得一个样本可能对哪些像素有贡献，\refvar[AddSample]{FilmTile::AddSample}{()}通过
+从$x$和$y$中减去0.5将连续样本坐标转化为离散坐标。
+然后它用每个方向的滤波半径来偏移该值（\reffig{7.48}），
+将其变换到图块坐标空间，并对最小坐标向上取整，对最大坐标向下取整，
+因为范围边界外的像素不受该样本影响。
+最后，该像素边界被裁剪到图块中的像素边界。
+尽管理论上该样本可能贡献于图块之外的像素，
+但任何这样的像素都一定在图像范围之外。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.5\linewidth]{chap07/Samplepixelcontributions.eps}
+    \caption{给定图像平面上某一位置的一个图像样本（实心点），
+    必须确定哪些像素值（空心点）会受该样本贡献的影响。
+    依据像素重建滤波器半径（实线）取得$x$和$y$方向的偏移量
+    并找出该区域内的像素即可完成之。}
+    \label{fig:7.48}
+\end{figure}
+
 \begin{lstlisting}
 `\initcode{Compute sample's raster bounds}{=}`
 `\refvar{Point2f}{}` pFilmDiscrete = pFilm - `\refvar{Vector2f}{}`(0.5f, 0.5f);
-`\refvar{Point2i}{}` p0 = (`\refvar{Point2i}{}`)`\refvar{Ceil}{}`(pFilmDiscrete - filterRadius);
-`\refvar{Point2i}{}` p1 = (`\refvar{Point2i}{}`)`\refvar{Floor}{}`(pFilmDiscrete + filterRadius) + `\refvar{Point2i}{}`(1, 1);
-p0 = `\refvar[Point3::Max]{Max}{}`(p0, pixelBounds.pMin);
-p1 = `\refvar[Point3::Min]{Min}{}`(p1, pixelBounds.pMax);
+`\refvar{Point2i}{}` p0 = (`\refvar{Point2i}{}`)`\refvar{Ceil}{}`(pFilmDiscrete - `\refvar{filterRadius}{}`);
+`\refvar{Point2i}{}` p1 = (`\refvar{Point2i}{}`)`\refvar{Floor}{}`(pFilmDiscrete + `\refvar{filterRadius}{}`) + `\refvar{Point2i}{}`(1, 1);
+p0 = `\refvar[Point3::Max]{Max}{}`(p0, `\refvar{pixelBounds}{}`.`\refvar{pMin}{}`);
+p1 = `\refvar[Point3::Min]{Min}{}`(p1, `\refvar{pixelBounds}{}`.`\refvar{pMax}{}`);
 \end{lstlisting}
 
+有了受该样本影响的像素边界，现在就能在所有那些像素上循环，
+对其每一个都累积滤波后的样本权重。
+\begin{lstlisting}
+`\initcode{Loop over filter support and add sample to pixel arrays}{=}`
+`\refcode{Precompute x and y filter table offsets}{}`
+for (int y = p0.y; y < p1.y; ++y) {
+    for (int x = p0.x; x < p1.x; ++x) {
+        `\refcode{Evaluate filter value at (x,y) pixel}{}`
+        `\refcode{Update pixel values with filtered sample contribution}{}`
+    }
+}
+\end{lstlisting}
+
+每个离散整数像素$(x,y)$都有以其为中心的滤波函数实例。
+为了给特定样本计算滤波权重，需要在离散坐标中
+求出从像素到该样本位置的偏移量并代入滤波函数。
+如果我们显式代入滤波器，则合适的计算将是
+{\ttfamily\newline\noindent
+filterWeight = filter->Evaluate(Point2i(x - pFilmDiscrete.x,\newline\noindent
+\indent\indent\indent\indent\indent\indent\indent\indent\indent\indent\quad y - pFilmDiscrete.y));\newline\noindent}
+而该实现代之以从表中检索合适的滤波权重。
+
+给定样本位置$(x,y)$，为了给像素$(x',y')$求得滤波权重，
+该例程计算偏移量$(x'-x,y'-y)$并将其转化为滤波权重查询表所需的坐标。
+这可通过用样本偏移量每个分量除以那个方向的滤波器半径直接做到，
+得到在0和1间的值，然后乘以表的大小。注意到沿$x$方向上的每行像素，
+其$y$的差，即滤波表中的$y$偏移量，是常数，由此可进一步优化该过程。
+类似地，对于每列像素，$x$偏移量也是常数。
+因此，这里于像素上循环之前可以预先计算这些索引并将其存入两个1D数组，
+节约循环中的重复工作。
+\begin{lstlisting}
+`\initcode{Precompute x and y filter table offsets}{=}`
+int *ifx = `\refvar{ALLOCA}{}`(int, p1.x - p0.x);
+for (int x = p0.x; x < p1.x; ++x) {
+    `\refvar{Float}{}` fx = std::abs((x - pFilmDiscrete.x) * 
+                        `\refvar{invFilterRadius}{}`.x * `\refvar{filterTableSize}{}`);
+    ifx[x - p0.x] = std::min((int)std::floor(fx), `\refvar{filterTableSize}{}` - 1);
+}
+int *ify = `\refvar{ALLOCA}{}`(int, p1.y - p0.y);
+for (int y = p0.y; y < p1.y; ++y) {
+    `\refvar{Float}{}` fy = std::abs((y - pFilmDiscrete.y) * 
+                        `\refvar{invFilterRadius}{}`.y * `\refvar{filterTableSize}{}`);
+    ify[y - p0.y] = std::min((int)std::floor(fy), `\refvar{filterTableSize}{}` - 1);
+}
+\end{lstlisting}
+
+现在对于每个像素，可为其求得滤波表中的$x$和$y$偏移量，
+得到对数组的偏移量以及滤波值。
+\begin{lstlisting}
+`\initcode{Evaluate filter value at (x,y) pixel}{=}`
+int offset = ify[y - p0.y] * `\refvar{filterTableSize}{}` + ifx[x - p0.x];
+`\refvar{Float}{}` filterWeight = `\refvar[FilmTile::filterTable]{filterTable}{}`[offset];
+\end{lstlisting}
+
+对于每个被影响的像素，我们现在可以将其加权的光谱贡献
+以及滤波权重加到\refvar[FilmTile::pixels]{pixels}{}数组中的适当值上。
+\begin{lstlisting}
+`\initcode{Update pixel values with filtered sample contribution}{=}`
+`\refvar{FilmTilePixel}{}` &pixel = `\refvar{GetPixel}{}`(`\refvar{Point2i}{}`(x, y));
+pixel.`\refvar[FilmTilePixel::contribSum]{contribSum}{}` += L * sampleWeight * filterWeight;
+pixel.`\refvar[FilmTilePixel::filterWeightSum]{filterWeightSum}{}` += filterWeight;
+\end{lstlisting}
+
+方法\refvar{GetPixel}{()}接收相对整幅图像的像素坐标
+并在对数组\refvar[FilmTile::pixels]{pixels}{}索引前
+将其转化为胶片分块上的坐标。除了这里的版本，
+该方法还有返回{\ttfamily const \refvar{FilmTilePixel}{} \&}的{\ttfamily const}变种。
+\begin{lstlisting}
+`\refcode{FilmTile Public Methods}{+=}\lastnext{FilmTilePublicMethods}`
+`\refvar{FilmTilePixel}{}` &`\initvar{GetPixel}{}`(const `\refvar{Point2i}{}` &p) {
+    int width = `\refvar{pixelBounds}{}`.`\refvar{pMax}{}`.x - `\refvar{pixelBounds}{}`.`\refvar{pMin}{}`.x;
+    int offset = (p.x - `\refvar{pixelBounds}{}`.`\refvar{pMin}{}`.x) +
+                 (p.y - `\refvar{pixelBounds}{}`.`\refvar{pMin}{}`.y) * width;
+    return `\refvar[FilmTile::pixels]{pixels}{}`[offset];
+}
+\end{lstlisting}
+
+渲染进程使用方法\refvar{MergeFilmTile}{()}呈递将要
+合并到图像中的\refvar{FilmTile}{}，图像由\refvar{Film}{}保存。
+其实现先获取互斥锁以保证多个线程不会同时修改图像像素值。
+注意到因为\refvar{MergeFilmTile}{()}接收对图块的{\ttfamily std::unique\_ptr}，
+所以当调用该方法时该图块内存的所有权被转移了。
+因此在调用该方法后调用代码不应再试图把贡献加到图块上。
+\refvar{MergeFilmTile}{()}执行结束时，
+当参数{\ttfamily tile}离开作用域，\refvar{FilmTile}{}的存储被自动释放。
 \begin{lstlisting}
 `\refcode{Film Method Definitions}{+=}\lastnext{FilmMethodDefinitions}`
 void `\refvar{Film}{}`::`\initvar{MergeFilmTile}{}`(std::unique_ptr<`\refvar{FilmTile}{}`> tile) {
@@ -329,6 +459,8 @@ void `\refvar{Film}{}`::`\initvar{MergeFilmTile}{}`(std::unique_ptr<`\refvar{Fil
 `\refcode{Film Private Data}{+=}\lastnext{FilmPrivateData}`
 std::mutex `\initvar{mutex}{}`;
 \end{lstlisting}
+
+当
 \begin{lstlisting}
 `\refcode{FilmTile Public Methods}{+=}\lastcode{FilmTilePublicMethods}`
 `\refvar{Bounds2i}{}` `\initvar{GetPixelBounds}{}`() const { return `\refvar{pixelBounds}{}`; }

@@ -14,7 +14,19 @@ private:
     `\refcode{AtomicFloat Private Data}{}`
 };
 \end{lstlisting}
-
+\begin{lstlisting}
+`\initcode{AtomicFloat Public Methods}{=}\initnext{AtomicFloatPublicMethods}`
+explicit `\refvar{AtomicFloat}{}`(`\refvar{Float}{}` v = 0) { bits = `\refvar{FloatToBits}{}`(v); }
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{AtomicFloat Public Methods}{+=}\lastcode{AtomicFloatPublicMethods}`
+void `\initvar{Add}{}`(`\refvar{Float}{}` v) {
+    uint32_t oldBits = bits, newBits;
+    do {
+        newBits = `\refvar{FloatToBits}{}`(`\refvar{BitsToFloat}{}`(oldBits) + v);
+    } while (!bits.compare_exchange_weak(oldBits, newBits));
+}
+\end{lstlisting}
 \subsection{并行的for循环}\label{sub:并行的for循环}
 \begin{lstlisting}
 `\initcode{Parallel Definitions}{=}\initnext{ParallelDefinitions}`

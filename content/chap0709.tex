@@ -65,7 +65,7 @@ void `\refvar[Film::Clear]{Clear}{}`();
         std::unique_ptr<`\refvar{Filter}{}`> filt, `\refvar{Float}{}` diagonal,
         const std::string &filename, `\refvar{Float}{}` scale)
     : `\refvar{fullResolution}{}`(resolution), `\refvar{diagonal}{}`(diagonal * .001),
-    `\refvar{filter}{}`(std::move(filt)), `\refvar{filename}{}`(filename), `\refvar{scale}{}`(scale) {
+    `\refvar{filter}{}`(std::move(filt)), `\refvar{filename}{}`(filename), `\refvar[Film::scale]{scale}{}`(scale) {
     `\refcode{Compute film image bounds}{}`
     `\refcode{Allocate film image storage}{}`
     `\refcode{Precompute filter weight table}{}`
@@ -110,13 +110,13 @@ const std::string `\initvar{filename}{}`;
 有了（可能被裁的）图像像素分辨率后，构造函数
 为每个像素分配一个\refvar{Pixel}{}结构体数组。
 光谱像素贡献值的滑动加权和用XYZ颜色（\refsub{XYZ颜色}）表示
-并保存于成员变量\refvar[Pixel:xyz]{xyz}{}中。
-\refvar[Pixel:filterWeightSum]{filterWeightSum}{}
+并保存于成员变量\refvar[Pixel::xyz]{xyz}{}中。
+\refvar[Pixel::filterWeightSum]{filterWeightSum}{}
 持有表示样本对像素的贡献的滤波权重值之和。
-\refvar[Pixel:splatXYZ]{splatXYZ}{}持有样本溅射
+\refvar[Pixel::splatXYZ]{splatXYZ}{}持有样本溅射
 \sidenote{译者注：此短语翻译不确定，原文sample splats。
 目前笔者查阅到splatting一词常译作抛雪球算法。欢迎读者提供帮助。}（不加权）的和。
-成员\refvar[Pixel:pad]{pad}{}是没用的；
+成员\refvar[Pixel::pad]{pad}{}是没用的；
 它唯一的目的是保证结构体\refvar{Pixel}{}是32字节大小，而不是28
 （这里假设\refvar{Float}{}是4字节；否则它保证这是64字节结构体）。
 该填充保证了\refvar{Pixel}{}不会跨越缓存行，
@@ -125,16 +125,16 @@ const std::string `\initvar{filename}{}`;
 \begin{lstlisting}
 `\initcode{Film Private Data}{=}\initnext{FilmPrivateData}`
 struct `\initvar{Pixel}{}` {
-    `\refvar{Float}{}` `\initvar[Pixel:xyz]{xyz}{}`[3] = { 0, 0, 0 };
-    `\refvar{Float}{}` `\initvar[Pixel:filterWeightSum]{filterWeightSum}{}` = 0;
-    `\refvar{AtomicFloat}{}` `\initvar[Pixel:splatXYZ]{splatXYZ}{}`[3];
-    `\refvar{Float}{}` `\initvar[Pixel:pad]{pad}{}`;
+    `\refvar{Float}{}` `\initvar[Pixel::xyz]{xyz}{}`[3] = { 0, 0, 0 };
+    `\refvar{Float}{}` `\initvar[Pixel::filterWeightSum]{filterWeightSum}{}` = 0;
+    `\refvar{AtomicFloat}{}` `\initvar[Pixel::splatXYZ]{splatXYZ}{}`[3];
+    `\refvar{Float}{}` `\initvar[Pixel::pad]{pad}{}`;
 };
-std::unique_ptr<`\refvar{Pixel}{}`[]> `\initvar[Pixel::pixels]{pixels}{}`;
+std::unique_ptr<`\refvar{Pixel}{}`[]> `\initvar[Film::pixels]{pixels}{}`;
 \end{lstlisting}
 \begin{lstlisting}
 `\initcode{Allocate film image storage}{=}`
-`\refvar[Pixel::pixels]{pixels}{}` = std::unique_ptr<`\refvar{Pixel}{}`[]>(new `\refvar{Pixel}{}`[`\refvar{croppedPixelBounds}{}`.Area()]);
+`\refvar[Film::pixels]{pixels}{}` = std::unique_ptr<`\refvar{Pixel}{}`[]>(new `\refvar{Pixel}{}`[`\refvar{croppedPixelBounds}{}`.Area()]);
 \end{lstlisting}
 
 用XYZ颜色存储像素值的两个自然选择是用\refvar{Spectrum}{}值或存储RGB值。
@@ -253,14 +253,14 @@ std::unique_ptr<`\refvar{FilmTile}{}`> `\refvar{Film}{}`::`\initvar{GetFilmTile}
 
 有了将在其中生成样本的像素区域边界框，计算样本值将要贡献的图像像素边界框有两步。
 第一，必须考虑离散到连续像素坐标变换的影响以及滤波器半径。
-第二，结果边界必须裁剪到全图像素边界；按照定义不需要考虑图像之外的像素。
+第二，结果的边界必须裁剪到全图像素边界；按照定义不需要考虑图像之外的像素。
 \begin{lstlisting}
 `\initcode{Bound image pixels that samples in sampleBounds contribute to}{=}`
 `\refvar{Vector2f}{}` halfPixel = `\refvar{Vector2f}{}`(0.5f, 0.5f);
 `\refvar{Bounds2f}{}` floatBounds = (`\refvar{Bounds2f}{}`)sampleBounds;
-`\refvar{Point2i}{}` p0 = (`\refvar{Point2i}{}`)`\refvar{Ceil}{}`(floatBounds.pMin - halfPixel -
+`\refvar{Point2i}{}` p0 = (`\refvar{Point2i}{}`)`\refvar{Ceil}{}`(floatBounds.`\refvar{pMin}{}` - halfPixel -
                            `\refvar{filter}{}`->`\refvar[Filter::radius]{radius}{}`);
-`\refvar{Point2i}{}` p1 = (`\refvar{Point2i}{}`)`\refvar{Floor}{}`(floatBounds.pMax - halfPixel +
+`\refvar{Point2i}{}` p1 = (`\refvar{Point2i}{}`)`\refvar{Floor}{}`(floatBounds.`\refvar{pMax}{}` - halfPixel +
                             `\refvar{filter}{}`->`\refvar[Filter::radius]{radius}{}`) + `\refvar{Point2i}{}`(1, 1);
 `\refvar{Bounds2i}{}` tilePixelBounds =
     `\refvar[Bounds3::Intersect]{Intersect}{}`(`\refvar{Bounds2i}{}`(p0, p1), `\refvar{croppedPixelBounds}{}`);
@@ -277,7 +277,7 @@ private:
 
 \refvar{FilmTile}{}构造函数接收一个2D边界框，
 它给出了最终图像中的像素边界，须为这些像素提供存储和所用重建滤波器的额外信息，
-包括指向在{\refcode{Precompute filter weight table}{}}中制成表的滤波器函数值的指针。
+包括指向在{\refcode{Precompute filter weight table}{}}中制成表的滤波函数值的指针。
 \begin{lstlisting}
 `\initcode{FilmTile Public Methods}{=}\initnext{FilmTilePublicMethods}`
 `\refvar{FilmTile}{}`(const `\refvar{Bounds2i}{}` &pixelBounds, const `\refvar{Vector2f}{}` &filterRadius,
@@ -419,18 +419,18 @@ int offset = ify[y - p0.y] * `\refvar{filterTableSize}{}` + ifx[x - p0.x];
 以及滤波权重加到\refvar[FilmTile::pixels]{pixels}{}数组中的适当值上。
 \begin{lstlisting}
 `\initcode{Update pixel values with filtered sample contribution}{=}`
-`\refvar{FilmTilePixel}{}` &pixel = `\refvar{GetPixel}{}`(`\refvar{Point2i}{}`(x, y));
+`\refvar{FilmTilePixel}{}` &pixel = `\refvar[FilmTilePixel::GetPixel]{GetPixel}{}`(`\refvar{Point2i}{}`(x, y));
 pixel.`\refvar[FilmTilePixel::contribSum]{contribSum}{}` += L * sampleWeight * filterWeight;
 pixel.`\refvar[FilmTilePixel::filterWeightSum]{filterWeightSum}{}` += filterWeight;
 \end{lstlisting}
 
-方法\refvar{GetPixel}{()}接收相对整幅图像的像素坐标
+方法\refvar[FilmTilePixel::GetPixel]{GetPixel}{()}接收相对整幅图像的像素坐标
 并在对数组\refvar[FilmTile::pixels]{pixels}{}索引前
 将其转化为胶片分块上的坐标。除了这里的版本，
 该方法还有返回{\ttfamily const \refvar{FilmTilePixel}{} \&}的{\ttfamily const}变种。
 \begin{lstlisting}
 `\refcode{FilmTile Public Methods}{+=}\lastnext{FilmTilePublicMethods}`
-`\refvar{FilmTilePixel}{}` &`\initvar{GetPixel}{}`(const `\refvar{Point2i}{}` &p) {
+`\refvar{FilmTilePixel}{}` &`\initvar[FilmTilePixel::GetPixel]{GetPixel}{}`(const `\refvar{Point2i}{}` &p) {
     int width = `\refvar{pixelBounds}{}`.`\refvar{pMax}{}`.x - `\refvar{pixelBounds}{}`.`\refvar{pMin}{}`.x;
     int offset = (p.x - `\refvar{pixelBounds}{}`.`\refvar{pMin}{}`.x) +
                  (p.y - `\refvar{pixelBounds}{}`.`\refvar{pMin}{}`.y) * width;
@@ -460,14 +460,71 @@ void `\refvar{Film}{}`::`\initvar{MergeFilmTile}{}`(std::unique_ptr<`\refvar{Fil
 std::mutex `\initvar{mutex}{}`;
 \end{lstlisting}
 
-当
+当把图块的贡献并入最终图像时，调用代码必须能找到该图块有做贡献的像素边界。
 \begin{lstlisting}
 `\refcode{FilmTile Public Methods}{+=}\lastcode{FilmTilePublicMethods}`
 `\refvar{Bounds2i}{}` `\initvar{GetPixelBounds}{}`() const { return `\refvar{pixelBounds}{}`; }
 \end{lstlisting}
+
+对于图块中的每个像素，只需要将其贡献并入存于\refvar{Film::pixels}{}的值。
 \begin{lstlisting}
-`\refcode{Film Private Data}{+=}\lastcode{FilmPrivateData}`
-const `\refvar{Float}{}` `\initvar{scale}{}`;
+`\initcode{Merge pixel into Film::pixels}{=}`
+const `\refvar{FilmTilePixel}{}` &tilePixel = tile->`\refvar[FilmTilePixel::GetPixel]{GetPixel}{}`(pixel);
+`\refvar{Pixel}{}` &mergePixel = `\refvar[Film::GetPixel]{GetPixel}{}`(pixel);
+`\refvar{Float}{}` xyz[3];
+tilePixel.`\refvar[FilmTilePixel::contribSum]{contribSum}{}`.`\refvar{ToXYZ}{}`(xyz);
+for (int i = 0; i < 3; ++i)
+    mergePixel.`\refvar[Pixel::xyz]{xyz}{}`[i] += xyz[i];
+mergePixel.`\refvar[Pixel::filterWeightSum]{filterWeightSum}{}` += tilePixel.`\refvar[FilmTilePixel::filterWeightSum]{filterWeightSum}{}`;
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{Film Private Methods}{=}`
+`\refvar{Pixel}{}` &`\initvar[Film::GetPixel]{GetPixel}{}`(const `\refvar{Point2i}{}` &p) {
+    int width = `\refvar{croppedPixelBounds}{}`.`\refvar{pMax}{}`.x - `\refvar{croppedPixelBounds}{}`.`\refvar{pMin}{}`.x;
+    int offset = (p.x - `\refvar{croppedPixelBounds}{}`.`\refvar{pMin}{}`.x) +
+        (p.y - `\refvar{croppedPixelBounds}{}`.`\refvar{pMin}{}`.y) * width;
+    return `\refvar[Film::pixels]{pixels}{}`[offset];
+}
+\end{lstlisting}
+
+能够一次性为整幅图像的所有像素直接提供值对于
+某些\refvar{Integrator}{}实现也很有用。
+方法\refvar{SetImage}{()}允许这样的操作模式。
+注意参数{\ttfamily img}\sidenote{译者注：原文笔误写成{\ttfamily image}，
+此处已修正为和代码的表述一致。}所指数组的元素数量
+应该等于{\ttfamily\refvar{croppedPixelBounds}{}.Area()}。
+\refvar{SetImage}{()}的实现很简单即在将其转化为XYZ颜色后复制给出的值。
+\begin{lstlisting}
+`\refcode{Film Method Definitions}{+=}\lastnext{FilmMethodDefinitions}`
+void `\refvar{Film}{}`::`\initvar{SetImage}{}`(const `\refvar{Spectrum}{}` *img) const {
+    int nPixels = `\refvar{croppedPixelBounds}{}`.Area();
+    for (int i = 0; i < nPixels; ++i) {
+        `\refvar{Pixel}{}` &p = `\refvar[Film::pixels]{pixels}{}`[i];
+        img[i].`\refvar{ToXYZ}{}`(p.xyz);
+        p.`\refvar[Pixel::filterWeightSum]{filterWeightSum}{}` = 1;
+        p.`\refvar[Pixel::splatXYZ]{splatXYZ}{}`[0] = p.`\refvar[Pixel::splatXYZ]{splatXYZ}{}`[1] = p.`\refvar[Pixel::splatXYZ]{splatXYZ}{}`[2] = 0;
+    }
+}
+\end{lstlisting}
+
+某些光传输算法（尤其是\refsec{双向路径追踪}介绍的双向路径追踪）
+需要把贡献“溅射”\sidenote{译者注：原文splat，如前所述该词翻译不确定，下同。}
+到任意像素的能力。最终像素值简单计算为有贡献的溅射之和，而不是其加权均值。
+通常，给定像素周围的溅射越多，该像素就越亮。
+成员变量\refvar{Pixel::splatXYZ}{}声明为\refvar{AtomicFloat}{}类型，
+它允许多线程通过方法\refvar{AddSplat}{()}
+并发地更新像素值而不用额外同步。
+\begin{lstlisting}
+`\refcode{Film Method Definitions}{+=}\lastnext{FilmMethodDefinitions}`
+void `\refvar{Film}{}`::`\initvar{AddSplat}{}`(const `\refvar{Point2f}{}` &p, const `\refvar{Spectrum}{}` &v) {
+    if (!`\refvar{InsideExclusive}{}`((`\refvar{Point2i}{}`)p, `\refvar{croppedPixelBounds}{}`))
+        return;
+    `\refvar{Float}{}` xyz[3];
+    v.`\refvar{ToXYZ}{}`(xyz);
+    `\refvar{Pixel}{}` &pixel = `\refvar[Film::GetPixel]{GetPixel}{}`((`\refvar{Point2i}{}`)p);
+    for (int i = 0; i < 3; ++i)
+        pixel.`\refvar[Pixel::splatXYZ]{splatXYZ}{}`[i].`\refvar{Add}{}`(xyz[i]);
+}
 \end{lstlisting}
 
 \subsection{图像输出}\label{sub:图像输出}
@@ -477,4 +534,8 @@ void `\refvar{Film}{}`::`\initvar[Film::WriteImage]{WriteImage}{}`(`\refvar{Floa
     `\refcode{Convert image to RGB and compute final pixel values}{}`
     `\refcode{Write RGB image}{}`
 }
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{Film Private Data}{+=}\lastcode{FilmPrivateData}`
+const `\refvar{Float}{}` `\initvar[Film::scale]{scale}{}`;
 \end{lstlisting}

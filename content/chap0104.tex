@@ -93,7 +93,7 @@ globalCounter = temp;
 if (globalCounter == 0)           if (globalCounter == 0)
     printf("done!\n");                printf("done!\n");
 \end{lstlisting}
-（从系统中断线程到丢失缓存等,
+（从系统中断线程到缓存缺失等,
 许多不可预测的事件会造成
 这类执行泡沫\sidenote{译者注：原文execution bubbles。}。）
 在这个顺序下，两个线程都从{\ttfamily globalCounter}读到零值，

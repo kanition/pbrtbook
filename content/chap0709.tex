@@ -528,6 +528,13 @@ void `\refvar{Film}{}`::`\initvar{AddSplat}{}`(const `\refvar{Point2f}{}` &p, co
 \end{lstlisting}
 
 \subsection{图像输出}\label{sub:图像输出}
+渲染主循环退出之后，\refvar{Integrator}{}的
+方法\refvar[Integrator::Render]{Render}{()}通常调用方法\linebreak
+\refvar{Film::WriteImage}{()}，它指示胶片进行必要的处理
+以生成最终图像并将其存到文件中。该方法接收一个缩放因子
+并应用到由方法\refvar{AddSplat}{()}提供的样本上
+（见\refsub{MLT积分器}末尾关于该缩放因子
+用于\refvar{MLTIntegrator}{}的更多讨论）。
 \begin{lstlisting}
 `\refcode{Film Method Definitions}{+=}\lastcode{FilmMethodDefinitions}`
 void `\refvar{Film}{}`::`\initvar[Film::WriteImage]{WriteImage}{}`(`\refvar{Float}{}` splatScale) {
@@ -535,7 +542,82 @@ void `\refvar{Film}{}`::`\initvar[Film::WriteImage]{WriteImage}{}`(`\refvar{Floa
     `\refcode{Write RGB image}{}`
 }
 \end{lstlisting}
+该方法先分配一个数组来保存最终的RGB像素值。
+然后它在图像中的所有像素上循环以填充该数组。
+\begin{lstlisting}
+`\initcode{Convert image to RGB and compute final pixel values}{=}`
+std::unique_ptr<`\refvar{Float}{}`[]> rgb(new `\refvar{Float}{}`[3 * `\refvar{croppedPixelBounds}{}`.Area()]);
+int offset = 0;
+for (`\refvar{Point2i}{}` p : `\refvar{croppedPixelBounds}{}`) {
+    `\refcode{Convert pixel XYZ color to RGB}{}`
+    `\refcode{Normalize pixel with weight sum}{}`
+    `\refcode{Add splat value at pixel}{}`
+    `\refcode{Scale pixel value by scale}{}`
+    ++offset;
+}
+\end{lstlisting}
+
+有了关于所用显示设备响应特性的信息，
+像素值就能从与设备无关的XYZ三刺激值转换为依赖于设备的RGB值。
+该转换是光谱基的又一变动，新基决定于显示设备红、绿、蓝原色的光谱响应曲线。
+这里使用了从XYZ转换到基于sRGB原色的设备RGB的权重；
+sRGB是一个标准化颜色空间，事实上2015年代的所有显示器和打印机都已支持。
+\begin{lstlisting}
+`\initcode{Convert pixel XYZ color to RGB}{=}`
+`\refvar{Pixel}{}` &pixel = `\refvar[Film::GetPixel]{GetPixel}{}`(p);
+`\refvar{XYZToRGB}{}`(pixel.`\refvar[Pixel::xyz]{xyz}{}`, &rgb[3 * offset]);
+\end{lstlisting}
+
+初始化RGB输出值时，它们来自像素滤波方程的最终值是
+通过每个像素样本值除以\refvar{Pixel::filterWeightSum}{}算出的。
+该转换会导致RGB值一些分量为负；这些\keyindex{色域外}{out-of-gamut}{}的
+颜色不能用所选的显示原色表示。为了处理该问题已提出了各种方法，
+如截断到0，偏移所有分量使之位于色域内，或者
+甚至基于图像中的所有像素执行全局优化。
+重建像素最终也可能因重建滤波函数中的负波瓣而成负值。
+这里将颜色分量截断到0以一起处理这两种情况。
+\begin{lstlisting}
+`\initcode{Normalize pixel with weight sum}{=}`
+`\refvar{Float}{}` filterWeightSum = pixel.`\refvar[Pixel::filterWeightSum]{filterWeightSum}{}`;
+if (filterWeightSum != 0) {
+    `\refvar{Float}{}` invWt = (`\refvar{Float}{}`)1 / filterWeightSum;
+    rgb[3 * offset  ] = std::max((`\refvar{Float}{}`)0, rgb[3 * offset    ] * invWt);
+    rgb[3 * offset+1] = std::max((`\refvar{Float}{}`)0, rgb[3 * offset + 1] * invWt);
+    rgb[3 * offset+2] = std::max((`\refvar{Float}{}`)0, rgb[3 * offset + 2] * invWt);
+}
+\end{lstlisting}
+
+把对该像素的溅射值的贡献加到最终值中也是必要的。
+\begin{lstlisting}
+`\initcode{Add splat value at pixel}{=}`
+`\refvar{Float}{}` splatRGB[3];
+`\refvar{Float}{}` splatXYZ[3] = { pixel.`\refvar[Pixel::splatXYZ]{splatXYZ}{}`[0], pixel.`\refvar[Pixel::splatXYZ]{splatXYZ}{}`[1],
+                      pixel.`\refvar[Pixel::splatXYZ]{splatXYZ}{}`[2] };
+`\refvar{XYZToRGB}{}`(splatXYZ, splatRGB);
+rgb[3 * offset    ] += splatScale * splatRGB[0];
+rgb[3 * offset + 1] += splatScale * splatRGB[1];
+rgb[3 * offset + 2] += splatScale * splatRGB[2];
+\end{lstlisting}
+
+最终像素值由用户提供的因子（没有指定时为1）缩放；
+当把图像写为8位整数图像格式时它对充分利用有限的动态范围很有用。
+\begin{lstlisting}
+`\initcode{Scale pixel value by scale}{=}`
+rgb[3 * offset    ] *= `\refvar[Film::scale]{scale}{}`;
+rgb[3 * offset + 1] *= `\refvar[Film::scale]{scale}{}`;
+rgb[3 * offset + 2] *= `\refvar[Film::scale]{scale}{}`;
+\end{lstlisting}
 \begin{lstlisting}
 `\refcode{Film Private Data}{+=}\lastcode{FilmPrivateData}`
 const `\refvar{Float}{}` `\initvar[Film::scale]{scale}{}`;
+\end{lstlisting}
+
+定义在\refsec{图像文件输入与输出}的函数\refvar{WriteImage}{()}处理
+将图像写入文件的细节。如果写入到8位整数格式，
+则它在将其转换为整数前根据sRGB标准
+把\keyindex{伽马校正}{Gamma correction}{}应用到浮点像素值上
+（见第\refchap{纹理}末尾“扩展阅读”一节关于伽马校正的更多信息）。
+\begin{lstlisting}
+`\initcode{Write RGB image}{=}`
+::`\refvar{WriteImage}{}`(`\refvar{filename}{}`, &rgb[0], `\refvar{croppedPixelBounds}{}`, `\refvar{fullResolution}{}`);
 \end{lstlisting}

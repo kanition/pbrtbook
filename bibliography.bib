@@ -1235,7 +1235,7 @@
 }
 
 @inproceedings{10.5555/93267.93276,
-  author    = {Mitchell, D. P.},
+  author    = {Mitchell, Don P.},
   title     = {Robust Ray Intersection with Interval Arithmetic},
   year      = {1990},
   publisher = {Canadian Information Processing Society},
@@ -4537,6 +4537,288 @@
   numpages  = {8},
   keywords  = {cubic filters, antialiasing, sampling, reconstruction, filters, derivative reconstruction},
   series    = {SIGGRAPH '88}
+}
+
+# 7.10
+@book{91250711,
+  title     = {The {F}ourier Transform and Its Applications},
+  author    = {Bracewell, Ronald N.},
+  publisher = {McGraw Hill},
+  isbn      = {9780071160438; 0071160434; 0073039381; 9780073039381},
+  year      = {2000},
+  edition   = {3},
+  address   = {New York}
+}
+
+@article{993400,
+  author  = {Meijering, E.},
+  journal = {Proceedings of the IEEE},
+  title   = {A chronology of interpolation: from ancient astronomy to modern signal and image processing},
+  year    = {2002},
+  volume  = {90},
+  number  = {3},
+  pages   = {319-342},
+  doi     = {10.1109/5.993400}
+}
+
+@article{4815542,
+  author  = {Eldar, Yonina C. and Michaeli, Tomer},
+  journal = {IEEE Signal Processing Magazine},
+  title   = {Beyond bandlimited sampling},
+  year    = {2009},
+  volume  = {26},
+  number  = {3},
+  pages   = {48-68},
+  doi     = {10.1109/MSP.2009.932125}
+}
+
+@article{10.1145/359863.359869,
+  author     = {Crow, Franklin C.},
+  title      = {The Aliasing Problem in Computer-Generated Shaded Images},
+  year       = {1977},
+  issue_date = {Nov. 1977},
+  publisher  = {Association for Computing Machinery},
+  address    = {New York, NY, USA},
+  volume     = {20},
+  number     = {11},
+  issn       = {0001-0782},
+  doi        = {10.1145/359863.359869},
+  abstract   = {Certain defects, such as jagged edges and disappearing detail, have long been an annoyance in digitally generated shaded images. Although increasing the resolution or defocusing the display can attenuate them, an understanding of these defects leads to more effective methods. This paper explains the observed defects in terms of the aliasing phenomenon inherent in sampled signals and discusses prefiltering as a recognized cure. A method for evaluating filters is presented, the application of prefiltering to hidden-surface algorithms is discussed, and an implementation of a filtering tiler is shown accompanied by examples of its effectiveness.},
+  journal    = {Commun. ACM},
+  month      = {nov},
+  pages      = {799-805},
+  numpages   = {7},
+  keywords   = {aliasing, hidden-surface removal, sampling, convolutional filtering, computer graphics}
+}
+
+@inproceedings{10.1145/325334.325182,
+  author    = {Dipp\'{e}, Mark A. Z. and Wold, Erling Henry},
+  title     = {Antialiasing through Stochastic Sampling},
+  year      = {1985},
+  isbn      = {0897911660},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  doi       = {10.1145/325334.325182},
+  abstract  = {Stochastic sampling techniques, in particular Poisson and fittered sampling, are developed and analyzed. These approaches allow the construction of alias-free approximations to continuous functions using discrete calculations. Stochastic sampling scatters high frequency information into broadband noise rather than generating the false patterne produced by regular sampling. The type of randomness used in the sampling process controls the spectral character of the noise. The average sampling rate and the function being sampled determine the amount of noise that is produced. Stochastic sampling is applied adaptively so that a greater number of samples are taken where the function varies most. An estimate is used to determine how many samples to take over a given region. Noise reducing filters are used to increase the efficacy of a given sampling rate. The filter width is adaptively controlled to further improve performance. Stochastic sampling can be applied spatiotemporally as well as to other aspects of scene simulation. Ray tracing is one example of an image synthesis approach that can be antialiased by stochastic sampling.},
+  booktitle = {Proceedings of the 12th Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {69-78},
+  numpages  = {10},
+  keywords  = {ray tracing, antialiasing, aliasing, filtering, adaptive, stochastic sampling, noise},
+  series    = {SIGGRAPH '85}
+}
+
+@article{10.1126/science.6867716,
+  author   = {John I. Yellott},
+  title    = {Spectral Consequences of Photoreceptor Sampling in the Rhesus Retina},
+  journal  = {Science},
+  volume   = {221},
+  number   = {4608},
+  pages    = {382-385},
+  year     = {1983},
+  doi      = {10.1126/science.6867716},
+  abstract = {Optical transforms were used to compute the power spectra of rhesus cones treated as arrays of image sampling points. Spectra were obtained for the central fovea, parafovea, periphery, and far periphery. All were consistent with a novel spatial sampling principle that introduces minimal noise for spatial frequencies below the Nyquist limits implied by local receptor densities, while frequencies above the nominal Nyquist limits are not converted into conspicuous moire patterns, but instead are scattered into broadband noise. This sampling scheme allows the visual system to escape aliasing distortion despite a large mismatch between retinal image bandwidth and the Nyquist limits implied by extrafoveal cone densities.}
+}
+
+@inproceedings{10.1145/325334.325179,
+  author    = {Lee, Mark E. and Redner, Richard A. and Uselton, Samuel P.},
+  title     = {Statistically Optimized Sampling for Distributed Ray Tracing},
+  year      = {1985},
+  isbn      = {0897911660},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  doi       = {10.1145/325334.325179},
+  abstract  = {Cook, Porter, and Carpenter coined the phrase "distributed ray tracing" to describe a technique for using each ray of a super-sampled ray tracing procedure as a sample in several dimensions to achieve effects such as penumbras and motion blur in addition to spatial anti-aliasing. The shade to be displayed at a pixel is a weighted integral of the image function. The purpose of using many rays per pixel is to estimate the value of this integral. In this work, a relationship between the number of sample rays and the quality of the estimate of this integral is derived. Furthermore, the number of rays required does not depend on the dimensionality of the space being sampled, but only on the variance of the multi-dimensional image function. The algorithm has been optimized through the use of statistical testing and stratified sampling.},
+  booktitle = {Proceedings of the 12th Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {61-68},
+  numpages  = {8},
+  keywords  = {shadows, ray tracing, transparency, penumbras, translucency, anti-aliasing},
+  series    = {SIGGRAPH '85}
+}
+
+@inproceedings{10.1145/37401.37410,
+  author    = {Mitchell, Don P.},
+  title     = {Generating Antialiased Images at Low Sampling Densities},
+  year      = {1987},
+  isbn      = {0897912276},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  doi       = {10.1145/37401.37410},
+  abstract  = {Ray tracing produces point samples of an image from a 3-D model. Constructing an antialiased digital picture from point samples is difficult without resorting to extremely high sampling densities. This paper describes a program that focuses on that problem. While it is impossible to eliminate aliasing totally, it has been shown that nonuniform sampling yields aliasing that is less conspicuous to the observer. An algorithm is presented for fast generation of nonuniform sampling patterns that are optimal in some sense. Some regions of an image may require extra sampling to avoid strong aliasing. Deciding where to do extra sampling can be guided by knowledge of how the eye perceives noise as a function of contrast and color. Finally, to generate the digital picture, the image must be reconstructed from the samples and resampled at the display pixel rate. The nonuniformity of the samples complicates this process, and a new nonuniform reconstruction filter is presented which solves this problem efficiently.},
+  booktitle = {Proceedings of the 14th Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {65-72},
+  numpages  = {8},
+  series    = {SIGGRAPH '87}
+}
+
+@inproceedings{10.1145/122718.122736,
+  author    = {Mitchell, Don P.},
+  title     = {Spectrally Optimal Sampling for Distribution Ray Tracing},
+  year      = {1991},
+  isbn      = {0897914368},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  doi       = {10.1145/122718.122736},
+  abstract  = {Nonuniform sampling of images is a useful technique in computer graphics, because a properly designed pattern of samples can make aliasing take the form of high-frequency random noise. In this paper, the technique of nonuniform sampling is extended from two dimensions to include the extra parameter dimensions of distribution ray tracing. A condition for optimality is suggested, and algorithms for approximating optimal sampling are developed. The technique is demonstrated at low sampling densities, so the characteristics of aliasing noise are clearly visible. At supersampling rates, this technique should move noise into frequencies above the passband of the pixel-reconstruction filter.},
+  booktitle = {Proceedings of the 18th Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {157-164},
+  numpages  = {8},
+  keywords  = {noise perception, nonuniform sampling, distribution Ray tracing, antialiasing},
+  series    = {SIGGRAPH '91}
+}
+
+@inproceedings{10.1145/237170.237265,
+  author    = {Mitchell, Don P.},
+  title     = {Consequences of Stratified Sampling in Graphics},
+  year      = {1996},
+  isbn      = {0897917464},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  doi       = {10.1145/237170.237265},
+  booktitle = {Proceedings of the 23rd Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {277-280},
+  numpages  = {4},
+  keywords  = {variance reduction, antialiasing, discrepancy, sampling, stratification},
+  series    = {SIGGRAPH '96}
+}
+@incollection{CHIU1994370,
+  title     = {V.4. - Multi-Jittered Sampling},
+  editor    = {Paul S. Heckbert},
+  booktitle = {Graphics Gems},
+  publisher = {Academic Press},
+  pages     = {370-374},
+  year      = {1994},
+  isbn      = {978-0-12-336156-1},
+  doi       = {10.1016/B978-0-12-336156-1.50045-8},
+  author    = {Kenneth Chiu and Changyaw Wang and Peter Shirley},
+  abstract  = {Jittered sampling patterns perform better than random sampling patterns because they limit the degree of clumping that can occur. Clumping can still be present in one-dimensional projections of jittered patterns, however. We present a simple method to reduce the clumping of the X-axis and Y-axis projections by imposing an additional N-rooks constraint on the jittered sampling pattern. The resulting sampling pattern can reduce the number of rays necessary for a satisfactory image when ray-tracing.}
+}
+
+@manual{Kensler2013Pixar,
+  author = {Andrew Kensler},
+  title  = {Correlated Multi-Jittered Sampling},
+  year   = {2013},
+  url    = {https://graphics.pixar.com/library/MultiJitteredSampling},
+  note   = {Pixar Technical Memo},
+  number = {13-01}
+}
+
+@article{10.1111/j.1467-8659.2007.01100.x,
+  author   = {Lagae, Ares and Dutré, Philip},
+  title    = {A Comparison of Methods for Generating Poisson Disk Distributions},
+  journal  = {Computer Graphics Forum},
+  volume   = {27},
+  number   = {1},
+  pages    = {114-129},
+  keywords = {Poisson disk distributions, spectral analysis, I.3.3 Computer Graphics: Picture/Image Generation},
+  doi      = {10.1111/j.1467-8659.2007.01100.x},
+  abstract = {Abstract Poisson disk distributions have many applications in the field of computer graphics. Besides sampling, Poisson disk distributions are used in object distribution, non-photorealistic rendering and procedural texturing. Over the years, a large number of methods for generating Poisson disk distributions have been proposed, making it difficult to choose the right method for a given application. In this paper, we present a detailed comparison of most techniques for generating Poisson disk distributions. The methods we study include dart throwing, relaxation dart throwing, Lloyd's relaxation, Shade's Poisson disk tiles, tiled blue noise samples, fast hierarchical importance sampling with blue noise properties, edge-based Poisson disk tiles, template Poisson disk tiles, corner-based Poisson disk tiles and recursive Wang tiles for real-time blue noise. Analysing all of these methods within a single framework is one of the major contributions of this work.},
+  year     = {2008}
+}
+
+@article{10.1080/2151237X.2006.10129217,
+  author    = {Thouis R. Jones},
+  title     = {Efficient Generation of Poisson-Disk Sampling Patterns},
+  journal   = {Journal of Graphics Tools},
+  volume    = {11},
+  number    = {2},
+  pages     = {27-36},
+  year      = {2006},
+  publisher = {Taylor & Francis},
+  doi       = {10.1080/2151237X.2006.10129217}
+}
+
+@inproceedings{10.1145/1179352.1141915,
+  author    = {Dunbar, Daniel and Humphreys, Greg},
+  title     = {A Spatial Data Structure for Fast Poisson-Disk Sample Generation},
+  year      = {2006},
+  isbn      = {1595933646},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  doi       = {10.1145/1179352.1141915},
+  abstract  = {Sampling distributions with blue noise characteristics are widely used in computer graphics. Although Poisson-disk distributions are known to have excellent blue noise characteristics, they are generally regarded as too computationally expensive to generate in real time. We present a new method for sampling by dart-throwing in O(N log N) time and introduce a novel and efficient variation for generating Poisson-disk distributions in O(N) time and space.},
+  booktitle = {ACM SIGGRAPH 2006 Papers},
+  pages     = {503-508},
+  numpages  = {6},
+  keywords  = {Poisson disk, blue noise, sampling},
+  location  = {Boston, Massachusetts},
+  series    = {SIGGRAPH '06}
+}
+
+@inproceedings{10.1145/1399504.1360619,
+  author    = {Wei, Li-Yi},
+  title     = {Parallel Poisson Disk Sampling},
+  year      = {2008},
+  isbn      = {9781450301121},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  doi       = {10.1145/1399504.1360619},
+  abstract  = {Sampling is important for a variety of graphics applications include rendering, imaging, and geometry processing. However, producing sample sets with desired efficiency and blue noise statistics has been a major challenge, as existing methods are either sequential with limited speed, or are parallel but only through pre-computed datasets and thus fall short in producing samples with blue noise statistics. We present a Poisson disk sampling algorithm that runs in parallel and produces all samples on the fly with desired blue noise properties. Our main idea is to subdivide the sample domain into grid cells and we draw samples concurrently from multiple cells that are sufficiently far apart so that their samples cannot conflict one another. We present a parallel implementation of our algorithm running on a GPU with constant cost per sample and constant number of computation passes for a target number of samples. Our algorithm also works in arbitrary dimension, and allows adaptive sampling from a user-specified importance field. Furthermore, our algorithm is simple and easy to implement, and runs faster than existing techniques.},
+  booktitle = {ACM SIGGRAPH 2008 Papers},
+  articleno = {20},
+  numpages  = {9},
+  keywords  = {sampling, GPU techniques, Poisson disk, parallel computation, blue noise, texture synthesis},
+  location  = {Los Angeles, California},
+  series    = {SIGGRAPH '08}
+}
+
+@inproceedings{10.1145/1866158.1866189,
+  author    = {Li, Hongwei and Wei, Li-Yi and Sander, Pedro V. and Fu, Chi-Wing},
+  title     = {Anisotropic Blue Noise Sampling},
+  year      = {2010},
+  isbn      = {9781450304399},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  doi       = {10.1145/1866158.1866189},
+  abstract  = {Blue noise sampling is widely employed for a variety of imaging, geometry, and rendering applications. However, existing research so far has focused mainly on isotropic sampling, and challenges remain for the anisotropic scenario both in sample generation and quality verification. We present anisotropic blue noise sampling to address these issues. On the generation side, we extend dart throwing and relaxation, the two classical methods for isotropic blue noise sampling, for the anisotropic setting, while ensuring both high-quality results and efficient computation. On the verification side, although Fourier spectrum analysis has been one of the most powerful and widely adopted tools, so far it has been applied only to uniform isotropic samples. We introduce approaches based on warping and sphere sampling that allow us to extend Fourier spectrum analysis for adaptive and/or anisotropic samples; thus, we can detect problems in alternative anisotropic sampling techniques that were not yet found via prior verification. We present several applications of our technique, including stippling, visualization, surface texturing, and object distribution.},
+  booktitle = {ACM SIGGRAPH Asia 2010 Papers},
+  articleno = {167},
+  numpages  = {12},
+  keywords  = {relaxation, dart throwing, stippling, blue noise sampling, anisotropy, texturing, spectrum analysis, rendering},
+  location  = {Seoul, South Korea},
+  series    = {SIGGRAPH ASIA '10}
+}
+
+@inproceedings{10.1145/1964921.1964944,
+  author    = {Ebeida, Mohamed S. and Davidson, Andrew A. and Patney, Anjul and Knupp, Patrick M. and Mitchell, Scott A. and Owens, John D.},
+  title     = {Efficient Maximal Poisson-Disk Sampling},
+  year      = {2011},
+  isbn      = {9781450309431},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  doi       = {10.1145/1964921.1964944},
+  abstract  = {We solve the problem of generating a uniform Poisson-disk sampling that is both maximal and unbiased over bounded non-convex domains. To our knowledge this is the first provably correct algorithm with time and space dependent only on the number of points produced. Our method has two phases, both based on classical dart-throwing. The first phase uses a background grid of square cells to rapidly create an unbiased, near-maximal covering of the domain. The second phase completes the maximal covering by calculating the connected components of the remaining uncovered voids, and by using their geometry to efficiently place unbiased samples that cover them. The second phase converges quickly, overcoming a common difficulty in dart-throwing methods. The deterministic memory is O(n) and the expected running time is O(n log n), where n is the output size, the number of points in the final sample. Our serial implementation verifies that the log n dependence is minor, and nearly O(n) performance for both time and memory is achieved in practice. We also present a parallel implementation on GPUs to demonstrate the parallel-friendly nature of our method, which achieves 2.4x the performance of our serial version.},
+  booktitle = {ACM SIGGRAPH 2011 Papers},
+  articleno = {49},
+  numpages  = {12},
+  keywords  = {linear complexity, sampling, maximal, Poisson disk, blue noise, provable convergence},
+  location  = {Vancouver, British Columbia, Canada},
+  series    = {SIGGRAPH '11}
+}
+
+@article{10.1111/j.1467-8659.2012.03059.x,
+  author   = {Ebeida, Mohamed S. and Mitchell, Scott A. and Patney, Anjul and Davidson, Andrew A. and Owens, John D.},
+  title    = {A Simple Algorithm for Maximal Poisson-Disk Sampling in High Dimensions},
+  journal  = {Computer Graphics Forum},
+  volume   = {31},
+  number   = {2pt4},
+  pages    = {785-794},
+  keywords = {Computing Methodologies I.3.5: Computer Graphics—Computational Geometry and Object Modeling},
+  doi      = {10.1111/j.1467-8659.2012.03059.x},
+  abstract = {Abstract We provide a simple algorithm and data structures for d-dimensional unbiased maximal Poisson-disk sampling. We use an order of magnitude less memory and time than the alternatives. Our results become more favorable as the dimension increases. This allows us to produce bigger samplings. Domains may be non-convex with holes. The generated point cloud is maximal up to round-off error. The serial algorithm is provably bias-free. For an output sampling of size n in fixed dimension d, we use a linear memory budget and empirical θ(n) runtime. No known methods scale well with dimension, due to the “curse of dimensionality.” The serial algorithm is practical in dimensions up to 5, and has been demonstrated in 6d. We have efficient GPU implementations in 2d and 3d. The algorithm proceeds through a finite sequence of uniform grids. The grids guide the dart throwing and track the remaining disk-free area. The top-level grid provides an efficient way to test if a candidate dart is disk-free. Our uniform grids are like quadtrees, except we delay splits and refine all leaves at once. Since the quadtree is flat it can be represented using very little memory: we just need the indices of the active leaves and a global level. Also it is very simple to sample from leaves with uniform probability.},
+  year     = {2012}
+}
+
+@article{10.1111/cgf.12725,
+  author   = {Reinert, Bernhard and Ritschel, Tobias and Seidel, Hans-Peter and Georgiev, Iliyan},
+  title    = {Projective Blue-Noise Sampling},
+  journal  = {Computer Graphics Forum},
+  volume   = {35},
+  number   = {1},
+  pages    = {285-295},
+  keywords = {sampling, blue-noise, Monte Carlo rendering, image reconstruction, primitive placement, I.3.3 Computer Graphics: Picture/Image Generation—Antialiasing; I.4.1 Image Processing and Computer Vision: Digitization and Image Capture—Sampling},
+  doi      = {10.1111/cgf.12725},
+  abstract = {Abstract We propose projective blue-noise patterns that retain their blue-noise characteristics when undergoing one or multiple projections onto lower dimensional subspaces. These patterns are produced by extending existing methods, such as dart throwing and Lloyd relaxation, and have a range of applications. For numerical integration, our patterns often outperform state-of-the-art stochastic and low-discrepancy patterns, which have been specifically designed only for this purpose. For image reconstruction, our method outperforms traditional blue-noise sampling when the variation in the signal is concentrated along one dimension. Finally, we use our patterns to distribute primitives uniformly in 3D space such that their 2D projections retain a blue-noise distribution.},
+  year     = {2016}
 }
 
 # 7.12

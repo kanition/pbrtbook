@@ -525,14 +525,14 @@ ray->`\refvar{ryDirection}{}` = `\refvar{Normalize}{}`(pFocus - ray->`\refvar{ry
 \end{figure}
 
 \reffig{6.9}展示了用于渲染景观场景的景深。
-注意该效应是如何把观察者的视线吸引到图像中间对焦的小草上的。
+注意该效应是如何把观察者的视线吸引到图像中间合焦的小草上的。
 \begin{figure}[htbp]
     \centering\includegraphics[width=\linewidth]{chap06/landscape-dof.png}
     \caption{景深赋予这部分景观场景很强的纵深感（{\itshape 感谢Laubwerk提供场景}）。}
     \label{fig:6.9}
 \end{figure}
 
-实践中，物体不必刚好在焦平面上才能清晰对焦显示；
+实践中，物体不必刚好在焦平面上才能清晰合焦显示；
 只要弥散圆大致小于胶片传感器上的一个像素，物体就会清晰显示。
 能让物体清晰显示的到透镜的距离范围称为透镜的\keyindex{景深}{depth of field}{}。
 
@@ -580,7 +580,7 @@ ray->`\refvar{ryDirection}{}` = `\refvar{Normalize}{}`(pFocus - ray->`\refvar{ry
 \end{figure}
 
 在光线追踪器中建模薄透镜非常简单：只需要选择透镜上一点
-并找到起始于透镜上该点的合适光线使得焦平面上的物体能在胶片上对焦（\reffig{6.12}）。
+并找到起始于透镜上该点的合适光线使得焦平面上的物体能在胶片上合焦（\reffig{6.12}）。
 因此，投影相机为景深接收两个额外参数：一个设置透镜光圈大小，另一个设置对焦距离。
 \begin{figure}[htbp]
     \centering\includegraphics[width=0.4\linewidth]{chap06/Thinlenschooseray.eps}

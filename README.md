@@ -15,7 +15,9 @@
 
 ## 本库链接
 - GitHub：[https://github.com/kanition/pbrtbook](https://github.com/kanition/pbrtbook)
-- GitCode：[https://gitcode.net/imjiangjun/pbrtbook](https://gitcode.net/imjiangjun/pbrtbook)
+- <s>GitCode：[https://gitcode.net/imjiangjun/pbrtbook](https://gitcode.net/imjiangjun/pbrtbook)</s>
+
+因抗议GitCode的审查行为，该库停止更新。
 ## 友情链接
 ### 第三版
 * 原书官网：[https://www.pbr-book.org/](https://www.pbr-book.org/)

@@ -656,7 +656,7 @@ ray->`\refvar[Ray::o]{o}{}` = `\refvar{Point3f}{}`(pLens.x, pLens.y, 0);
 ray->`\refvar[Ray::d]{d}{}` = `\refvar{Normalize}{}`(pFocus - ray->`\refvar[Ray::o]{o}{}`);
 \end{lstlisting}
 
-为了计算薄透镜的光线差分，代码片\refcode{Update ray for effect of lens}{}中
+为了计算薄透镜的射线差分，代码片\refcode{Update ray for effect of lens}{}中
 用的方法也用到在胶片平面上于$x$和$y$方向偏移一像素的光线上。
 这里不再介绍此处实现的代码片\refcode{Compute OrthographicCamera ray differentials accounting for lens}{}和
 \refcode{Compute PerspectiveCamera ray differentials accounting for lens}{}了

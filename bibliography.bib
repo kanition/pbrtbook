@@ -4263,7 +4263,7 @@
 @inproceedings{10.2312:EGWR:EGSR07:121-126,
   booktitle = {Rendering Techniques},
   editor    = {Jan Kautz and Sumanta Pattanaik},
-  title     = {{General Linear Cameras with Finite Aperture}},
+  title     = {General Linear Cameras with Finite Aperture},
   author    = {Adams, Andrew and Levoy, Marc},
   year      = {2007},
   publisher = {The Eurographics Association},
@@ -5572,6 +5572,108 @@
   publisher = {SPIE Press}
 }
 
+# 7.11
+@inproceedings{10.1007/3-540-31186-6_14,
+  author    = {Keller, Alexander},
+  editor    = {Niederreiter, Harald and Talay, Denis},
+  title     = {Myths of Computer Graphics},
+  booktitle = {Monte Carlo and Quasi-Monte Carlo Methods 2004},
+  year      = {2006},
+  publisher = {Springer Berlin Heidelberg},
+  address   = {Berlin, Heidelberg},
+  pages     = {217-243},
+  abstract  = {Computer graphics textbooks teach that sampling by deterministic patterns or even lattices causes aliasing, which only can be avoided by random, i.e. independent sampling. They recommend random samples with blue noise characteristic, which however are highly correlated due to their maximized minimum mutual distance. On the other hand the rendering software mental ray, which is used to generate the majority of visual effects in movies, entirely is based on parametric integration by quasi-Monte Carlo methods and consequently is strictly deterministic. For its superior quality the software even received a Technical Achievement Award (Oscar) by the American Academy of Motion Picture Arts and Sciences in 2003. Along the milestones of more than ten years of development of quasi-Monte Carlo methods in computer graphics, we point out that the two previous statements are not contradictory.},
+  isbn      = {978-3-540-31186-7}
+}
+
+@inproceedings{10.1007/978-3-540-74496-2_12,
+  author    = {Dammertz, Sabrina and Keller, Alexander},
+  editor    = {Keller, Alexander and Heinrich, Stefan and Niederreiter, Harald},
+  title     = {Image Synthesis by Rank-1 Lattices},
+  booktitle = {Monte Carlo and Quasi-Monte Carlo Methods 2006},
+  year      = {2008},
+  publisher = {Springer Berlin Heidelberg},
+  address   = {Berlin, Heidelberg},
+  pages     = {217-236},
+  abstract  = {Considering uniform points for sampling, rank-1 lattices provide the simplest generation algorithm. Compared to classical tensor product lattices or random samples, their geometry allows for a higher sampling efficiency. These considerations result in a proof that for periodic Lipschitz continuous functions, rank-1 lattices with maximized minimum distance perform best. This result is then investigated in the context of image synthesis, where we study anti-aliasing by rank-1 lattices and using the geometry of rank-1 lattices for sensor and display layouts.},
+  isbn      = {978-3-540-74496-2}
+}
+
+@inproceedings{10.1145/122718.122723,
+  author    = {Dorsey, Julie O'B. and Sillion, Fran\c{c}is X. and Greenberg, Donald P.},
+  title     = {Design and Simulation of Opera Lighting and Projection Effects},
+  year      = {1991},
+  isbn      = {0897914368},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  doi       = {10.1145/122718.122723},
+  abstract  = {A major problem challenging opera designers is the inability to co-ordinate lighting, projection systems, and set designs in the preliminary planning phase. New computer graphics techniques, which provide the set and lighting designer the opportunity to evaluate, test, and control opera designs prior to the construction of full scale systems are presented. These techniques---light source input, simulation of directional lighting, modeling of scenic projection systems, and full three-dimensional simulation---show the potential for the use of computer graphics in theater design.The light source input component consists of a program for assigning light source attributes with a set of theater lighting icons. This module allows a designer to specify light source characteristics in a way familiar to the discipline and to make preliminary evaluations of the lighting conditions.An extended progressive radiosity method is introduced to simulate the directional lighting characteristics which are specified by the input program.A new projection approach is presented to simulate the optical effects of scenic projectors. In addition, a solution to the distortion problem produced by angular projections is described.The above components are integrated to produce full three-dimensional simulations of the global illumination effects in an opera scene.},
+  booktitle = {Proceedings of the 18th Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {41-50},
+  numpages  = {10},
+  series    = {SIGGRAPH '91}
+}
+
+@inproceedings{10.1145/237170.237199,
+  author    = {Levoy, Marc and Hanrahan, Pat},
+  title     = {Light Field Rendering},
+  year      = {1996},
+  isbn      = {0897917464},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  doi       = {10.1145/237170.237199},
+  booktitle = {Proceedings of the 23rd Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {31-42},
+  numpages  = {12},
+  keywords  = {epipolar analysis, holographic stereogram, image-based rendering, light field, vector quantization},
+  series    = {SIGGRAPH '96}
+}
+
+@inproceedings{10.1145/237170.237200,
+  author    = {Gortler, Steven J. and Grzeszczuk, Radek and Szeliski, Richard and Cohen, Michael F.},
+  title     = {The Lumigraph},
+  year      = {1996},
+  isbn      = {0897917464},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  doi       = {10.1145/237170.237200},
+  booktitle = {Proceedings of the 23rd Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {43-54},
+  numpages  = {12},
+  series    = {SIGGRAPH '96}
+}
+
+@inproceedings{10.1145/325334.325247,
+  author    = {Perlin, Ken},
+  title     = {An Image Synthesizer},
+  year      = {1985},
+  isbn      = {0897911660},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  doi       = {10.1145/325334.325247},
+  abstract  = {We introduce the concept of a Pixel Stream Editor. This forms the basis for an interactive synthesizer for designing highly realistic Computer Generated Imagery. The designer works in an interactive Very High Level programming environment which provides a very fast concept/implement/view iteration cycle.Naturalistic visual complexity is built up by composition of non-linear functions, as opposed to the more conventional texture mapping or growth model algorithms. Powerful primitives are included for creating controlled stochastic effects. We introduce the concept of "solid texture" to the field of CGI.We have used this system to create very convincing representations of clouds, fire, water, stars, marble, wood, rock, soap films and crystal. The algorithms created with this paradigm are generally extremely fast, highly realistic, and asynchronously parallelizable at the pixel level.},
+  booktitle = {Proceedings of the 12th Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {287-296},
+  numpages  = {10},
+  keywords  = {turbulence, algorithm development, functional composition, waves, stochastic modelling, pixel stream editor, interactive, space function, solid texture, fire},
+  series    = {SIGGRAPH '85}
+}
+
+@inproceedings{10.1145/97879.97901,
+  author    = {Saito, Takafumi and Takahashi, Tokiichiro},
+  title     = {Comprehensible Rendering of 3-D Shapes},
+  year      = {1990},
+  isbn      = {0897913442},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  doi       = {10.1145/97879.97901},
+  abstract  = {We propose a new rendering technique that produces 3-D images with enhanced visual comprehensibility. Shape features can be readily understood if certain geometric properties are enhanced. To achieve this, we develop drawing algorithms for discontinuities, edges, contour lines, and curved hatching. All of them are realized with 2-D image processing operations instead of line tracking processes, so that they can be efficiently combined with conventional surface rendering algorithms.Data about the geometric properties of the surfaces are preserved as Geometric Buffers (G-buffers). Each G-buffer contains one geometric property such as the depth or the normal vector of each pixel. By using G-buffers as intermediate results, artificial enhancement processes are separated from geometric processes (projection and hidden surface removal) and physical processes (shading and texture mapping), and performed as postprocesses. This permits a user to rapidly examine various combinations of enhancement techniques without excessive recomputation, and easily obtain the most comprehensible image.Our method can be widely applied for various purposes. Several of these, edge enhancement, line drawing illustrations, topographical maps, medical imaging, and surface analysis, are presented in this paper.},
+  booktitle = {Proceedings of the 17th Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {197-206},
+  numpages  = {10},
+  location  = {Dallas, TX, USA},
+  series    = {SIGGRAPH '90}
+}
 
 # 7.12
 @book{DigitalSignalProcessing,

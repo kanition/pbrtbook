@@ -6,8 +6,9 @@ TEX系统：笔者使用完整安装的TeX Live 2019。建议使用不低于2019
 
 Windows系统推荐：https://tug.org/texlive
 
-Mac系统建议使用MacTex：https://www.tug.org/mactex/
+Mac系统建议使用MacTex：https://www.tug.org/mactex
 
+Git：编译脚本含有Git命令，所以必须安装[Git](https://git-scm.com)。
 ### 2. 拉取仓库
 选取一合适的工作目录，拉取本书仓库：
 ```cmd

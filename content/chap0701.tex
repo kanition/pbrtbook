@@ -115,8 +115,7 @@ $\mathcal{F}$显然是线性运算——即对任意标量$a$都有$\mathcal{F}\
 
 \reftab{7.1}展示了许多重要函数及其频率空间表示
 \sidenote{译者注：表中原文将频域函数写作$f(\omega)$，译者改为了$F(\omega)$.
-    此外，表中原文对余弦函数和shah函数的频域表示混用了系数不同的傅里叶变换定义，
-    导致与本书所采用的定义不符，译者已根据本书定义对其作了修正。
+    此外，译者怀疑表中原文对shah函数的频域表示的系数有误，已根据本书定义对其作了修正。
     具体推导过程可参考译者补充的\refsec{译者补充：信号处理}。}。
 这些函数中许多都基于狄拉克$\delta$分布
 \sidenote{译者注：也称作单位\keyindex{冲激函数}{impulse function}{}、脉冲函数。}，
@@ -143,7 +142,7 @@ $\delta$分布不能表示为标准数学函数，但通常可以视作以原点
         常函数：$f(x)=1$                                                   & $\delta$函数：$F(\omega)=\delta(\omega)$                                                     \\
         \hline
         余弦函数：$f(x)=\cos x$                                            & 平移的$\delta$函数：
-        $F(\omega)=\frac{1}{2}(\delta(1-2\pi\omega)+\delta(1+2\pi\omega))$                                                                                                \\
+        $F(\omega)=\pi(\delta(1-2\pi\omega)+\delta(1+2\pi\omega))$                                                                                                        \\
         \hline
         shah函数：$\displaystyle f(x)=III_T(x)=T\sum\limits_k\delta(x-kT)$ & $\displaystyle F(\omega)=TIII_{\frac{1}{T}}(\omega)=\sum\limits_k\delta(\omega-\frac{k}{T})$ \\
         \bottomrule

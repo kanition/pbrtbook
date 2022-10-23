@@ -1,16 +1,66 @@
 \section{译者补充：信号处理}\label{sec:译者补充：信号处理}
 \begin{remark}
-    本节内容不是原书内容，而是译者根据\citet{DigitalSignalProcessing}
-    所著著作补充的，请酌情参考和斧正。
+    本节内容不是原书内容，而是译者根据\citet{DigitalSignalProcessing}、
+    \citet{enwiki:1115652231}补充的，请酌情参考和斧正。
 \end{remark}
 
+\subsection{单位冲激函数}\label{sub:单位冲激函数}
+\begin{definition}
+    数学中，\keyindex{狄拉克$\delta$分布}{Dirac delta distribution}{}是定义在实数域上的广义分布或函数。
+    它在除零以外的点上都取零，且在整个实数域上的积分等于一。通常记作$\delta(\cdot)$.
+\end{definition}
+
+狄拉克$\delta$分布也称\keyindex{狄拉克$\delta$函数}{Dirac delta function}{}，
+简称\keyindex{$\delta$分布}{delta distribution}{}或
+\keyindex{$\delta$函数}{delta function}{}，
+它最早由英国理论物理学家保罗·狄拉克(Paul Adrien Maurice Dirac)提出，
+在物理和工程界有广泛应用，也称作\keyindex{单位冲激函数}{unit impulse function}{}。
+
+单位冲激函数不是严格意义上的函数，但形式上遵守微积分运算法则。
+可以将其视作在非零处取零，在零处取无穷大，即
+\begin{align}
+    \delta(t)\approx\left\{
+    \begin{array}{ll}
+        +\infty, & \text{当}t=0,     \\
+        0,       & \text{当}t\neq 0.
+    \end{array}
+    \right.
+\end{align}
+且满足如下积分约束的函数：
+\begin{align}
+    \int_{-\infty}^{\infty}\delta(t)\mathrm{d}t=1\, .
+\end{align}
+
+依据单位冲激函数的定义，可推导出以下性质：
+\begin{theorem}
+    单位冲激函数具有缩放性质：对任意实数$\alpha\neq0$，有
+    \begin{align}
+        \delta(\alpha t)=\frac{\delta(t)}{|\alpha|}\, .
+    \end{align}
+\end{theorem}
+\begin{corollary}
+    单位冲激函数具有对称性，即
+    \begin{align}
+        \delta(t)=\delta(-t)\, .
+    \end{align}
+\end{corollary}
+\begin{theorem}
+    单位冲激函数具有时延性质，也称平移性质或筛选性质，
+    即对于可积函数$f$，它可以采样出$t=\tau$处的值：
+    \begin{align}
+        \int_{-\infty}^{\infty}\delta(t-\tau)f(t)\mathrm{d}t=f(\tau)\, .
+    \end{align}
+\end{theorem}
+\subsection{关于傅里叶变换的推导}\label{sub:关于傅里叶变换的推导}
+\subsubsection*{矩形函数}
+对于矩形函数
 \begin{align}
     f(t)=\left\{\begin{array}{ll}
         1, & \displaystyle\text{若}|t|<\frac{1}{2}, \\
         0, & \text{其他}.
     \end{array}\right.
 \end{align}
-
+其频率表示为
 \begin{align}
     F(\omega) & =\int_{-\infty}^{\infty}f(t)\mathrm{e}^{-\mathrm{i}2\pi\omega t}\mathrm{d}t
     =\int_{-\frac{1}{2}}^{\frac{1}{2}}\mathrm{e}^{-\mathrm{i}2\pi\omega t}\mathrm{d}t
@@ -20,10 +70,12 @@
     =\frac{\sin(\pi\omega)}{\pi\omega}\, .
 \end{align}
 
+\subsubsection*{高斯函数}
+对于高斯函数
 \begin{align}
-    f(t)=\mathrm{e}^{-\pi t^2}\, .
+    f(t)=\mathrm{e}^{-\pi t^2}\, ,
 \end{align}
-
+其频率表示为
 \begin{align}
     F(\omega) & =\int_{-\infty}^{\infty}f(t)\mathrm{e}^{-\mathrm{i}2\pi\omega t}\mathrm{d}t
     =\int_{-\infty}^{\infty}\mathrm{e}^{-\pi t^2}\mathrm{e}^{-\mathrm{i}2\pi\omega t}\mathrm{d}t
@@ -32,30 +84,28 @@
     =\mathrm{e}^{-\pi\omega^2}\int_{-\infty}^{\infty}\mathrm{e}^{-\pi t^2}\mathrm{d}t
     =\mathrm{e}^{-\pi\omega^2}\, .
 \end{align}
-
+\subsubsection*{单位冲激函数}
+对于单位冲激函数
 \begin{align}
-    \int_{-\infty}^{\infty}\delta(t-\tau)f(t)\mathrm{d}t=f(\tau)\, .
+    f(t)=\delta(t)\, ,
 \end{align}
-
-\begin{align}
-    f(t)=\delta(t)\, .
-\end{align}
-
+其频率表示为
 \begin{align}
     F(\omega)=\int_{-\infty}^{\infty}f(t)\mathrm{e}^{-\mathrm{i}2\pi\omega t}\mathrm{d}t
     =\int_{-\infty}^{\infty}\delta(t)\mathrm{e}^{-\mathrm{i}2\pi\omega t}\mathrm{d}t
     =\mathrm{e}^{-\mathrm{i}2\pi\omega\cdot0}
     =1\, .
 \end{align}
-
+\subsection*{单位常函数}
+定义指数衰减函数为
 \begin{align}
     f_a(t)=\mathrm{e}^{-a|t|},\quad (a>0)\, .
 \end{align}
-
+则单位常函数可视作指数衰减函数的极限，即
 \begin{align}
     f(t)=\lim\limits_{a\rightarrow0^+}f_a(t)=1\, .
 \end{align}
-
+于是常函数的频率表示满足
 \begin{align}
     F(\omega) & =\int_{-\infty}^{\infty}f(t)\mathrm{e}^{-\mathrm{i}2\pi\omega t}\mathrm{d}t
     =\int_{-\infty}^{\infty}\lim\limits_{a\rightarrow0^+}\mathrm{e}^{-a|t|}\mathrm{e}^{-\mathrm{i}2\pi\omega t}\mathrm{d}t
@@ -63,81 +113,106 @@
               & =\lim\limits_{a\rightarrow0^+}\left(\int_{-\infty}^0\mathrm{e}^{(a-\mathrm{i}2\pi\omega)t}\mathrm{d}t+\int_0^{\infty}\mathrm{e}^{-(a+\mathrm{i}2\pi\omega)t}\mathrm{d}t\right)\nonumber \\
               & =\lim\limits_{a\rightarrow0^+}\left(\frac{\mathrm{e}^{(a-\mathrm{i}2\pi\omega)t}}{a-\mathrm{i}2\pi\omega}\bigg|_{t=-\infty}^0
     +\frac{\mathrm{e}^{-(a+\mathrm{i}2\pi\omega)t}}{-(a+\mathrm{i}2\pi\omega)}\bigg|_{t=0}^{\infty}\right)\nonumber                                                                                     \\
-              & =\lim\limits_{a\rightarrow0^+}\left(\frac{1}{a-\mathrm{i}2\pi\omega}+\frac{1}{a+\mathrm{i}2\pi\omega}\right)\nonumber                                                                   \\
-              & =\lim\limits_{a\rightarrow0^+}\frac{2a}{a^2+4\pi^2\omega^2}\nonumber                                                                                                                    \\
+              & =\lim\limits_{a\rightarrow0^+}\left(\frac{1}{a-\mathrm{i}2\pi\omega}+\frac{1}{a+\mathrm{i}2\pi\omega}\right)=\lim\limits_{a\rightarrow0^+}\frac{2a}{a^2+4\pi^2\omega^2}\nonumber        \\
               & =\left\{\begin{array}{ll}
         0,      & \text{若}\omega\neq0, \\
         \infty, & \text{若}\omega=0.
     \end{array}\right.
 \end{align}
-
+注意到该频率表示取极限的部分在实数域上积分与$a$无关且为
 \begin{align}
     \int_{-\infty}^{\infty}\frac{2a}{a^2+4\pi^2\omega^2}\mathrm{d}\omega
     =\frac{1}{\pi}\int_{-\infty}^{\infty}\frac{1}{1+\left(\frac{2\pi\omega}{a}\right)^2}\mathrm{d}\frac{2\pi\omega}{a}
     =\frac{1}{\pi}\arctan\frac{2\pi\omega}{a}\bigg|_{\omega=-\infty}^{\infty}=1\, .
 \end{align}
-
+于是该频率表示实际上就是单位冲激函数，即
 \begin{align}
     F(\omega)=\delta(\omega)\, .
 \end{align}
 
-\begin{align}
-    F(\omega)=1\, .
-\end{align}
+\subsubsection*{傅里叶变换的性质}
+\begin{theorem}
+    傅里叶变换具有频移与时移性质，即对于傅里叶变换对$f(t)\leftrightarrow F(\omega)$，
+    给定任意常数$\tau$和$\omega_0$，则有相应的变换对
+    \begin{align}
+        f(t)\mathrm{e}^{\mathrm{i}2\pi\omega_0 t} & \leftrightarrow F(\omega-\omega_0)\, ,                              \\
+        f(t-\tau)                                 & \leftrightarrow F(\omega)\mathrm{e}^{-\mathrm{i}2\pi\omega\tau}\, .
+    \end{align}
+\end{theorem}
+\begin{prove}
+    对于时域表示$f(t)\mathrm{e}^{\mathrm{i}2\pi\omega_0 t}$，其傅里叶变换为
+    \begin{align}
+        \int_{-\infty}^{\infty}f(t)\mathrm{e}^{\mathrm{i}2\pi\omega_0 t}\mathrm{e}^{-\mathrm{i}2\pi\omega t}\mathrm{d}t
+        =\int_{-\infty}^{\infty}f(t)\mathrm{e}^{-\mathrm{i}2\pi(\omega-\omega_0) t}\mathrm{d}t=F(\omega-\omega_0)\, .
+    \end{align}
+    对于频率表示$F(\omega)\mathrm{e}^{-\mathrm{i}2\pi\omega\tau}$，其傅里叶逆变换为
+    \begin{align}
+        \int_{-\infty}^{\infty}F(\omega)\mathrm{e}^{-\mathrm{i}2\pi\omega\tau}\mathrm{e}^{\mathrm{i}2\pi\omega t}\mathrm{d}\omega
+        =\int_{-\infty}^{\infty}F(\omega)\mathrm{e}^{\mathrm{i}2\pi\omega(t-\tau)}\mathrm{d}\omega
+        =f(t-\tau)\, .
+    \end{align}
+\end{prove}
+\begin{theorem}
+    傅里叶变换和逆变换互为逆运算，即
+    \begin{align}
+        \mathcal{F}^{-1}\{\mathcal{F}\{f(t)\}\}      & =f(t)\, ,      \\
+        \mathcal{F}\{\mathcal{F}^{-1}\{F(\omega)\}\} & =F(\omega)\, .
+    \end{align}
+\end{theorem}
 
-\begin{align}
-    f(t)=\delta(t)\, .
-\end{align}
+\begin{prove}
+    利用时延性质和单位冲激函数的傅里叶变换对可得
+    \begin{align}
+        \mathcal{F}^{-1}\{\mathcal{F}\{f(t)\}\}= & \int_{-\infty}^{\infty}\left(\int_{-\infty}^{\infty}f(\tau)\mathrm{e}^{-\mathrm{i}2\pi\omega\tau}\mathrm{d}\tau\right)\mathrm{e}^{\mathrm{i}2\pi\omega t}\mathrm{d}\omega\nonumber \\
+        =                                        & \int_{-\infty}^{\infty}f(\tau)\left(\int_{-\infty}^{\infty}\mathrm{e}^{\mathrm{i}2\pi\omega(t-\tau)}\mathrm{d}\omega\right)\mathrm{d}\tau\nonumber                                 \\
+        =                                        & \int_{-\infty}^{\infty}f(\tau)\delta(t-\tau)\mathrm{d}\tau\nonumber                                                                                                                \\
+        =                                        & f(t)\, .
+    \end{align}
+    第二个式子同理运用频移性质和单位常函数的傅里叶变换对可证。
+\end{prove}
 
+\subsubsection*{余弦函数}
+对于余弦函数
 \begin{align}
-    \int_{-\infty}^{\infty}f(t)\mathrm{e}^{\mathrm{i}2\pi\omega_0 t}\mathrm{e}^{-\mathrm{i}2\pi\omega t}\mathrm{d}t
-    =\int_{-\infty}^{\infty}f(t)\mathrm{e}^{-\mathrm{i}2\pi(\omega-\omega_0) t}\mathrm{d}t=F(\omega-\omega_0)\, .
+    f(t)=\cos t\, ,
 \end{align}
-
-\begin{align}
-    \int_{-\infty}^{\infty}F(\omega)\mathrm{e}^{-\mathrm{i}2\pi\omega\tau}\mathrm{e}^{\mathrm{i}2\pi\omega t}\mathrm{d}\omega
-    =\int_{-\infty}^{\infty}F(\omega)\mathrm{e}^{\mathrm{i}2\pi\omega(t-\tau)}\mathrm{d}\omega
-    =f(t-\tau)\, .
-\end{align}
-
-\begin{align}
-      & \int_{-\infty}^{\infty}\left(\int_{-\infty}^{\infty}f(\tau)\mathrm{e}^{-\mathrm{i}2\pi\omega\tau}\mathrm{d}\tau\right)\mathrm{e}^{\mathrm{i}2\pi\omega t}\mathrm{d}\omega\nonumber \\
-    = & \int_{-\infty}^{\infty}f(\tau)\left(\int_{-\infty}^{\infty}\mathrm{e}^{\mathrm{i}2\pi\omega(t-\tau)}\mathrm{d}\omega\right)\mathrm{d}\tau\nonumber                                 \\
-    = & \int_{-\infty}^{\infty}f(\tau)\delta(t-\tau)\mathrm{d}\tau\nonumber                                                                                                                \\
-    = & f(t)\, .
-\end{align}
-
+其频率表示为
 \begin{align}
     F(\omega) & =\int_{-\infty}^{\infty}f(t)\mathrm{e}^{-\mathrm{i}2\pi\omega t}\mathrm{d}t\nonumber                                                                                                \\
               & =\int_{-\infty}^{\infty}\mathrm{e}^{-\mathrm{i}2\pi\omega t}\cos t\mathrm{d}t\nonumber                                                                                              \\
               & =\int_{-\infty}^{\infty}\frac{1}{2}(\mathrm{e}^{\mathrm{i}t}+\mathrm{e}^{-\mathrm{i}t})\mathrm{e}^{-\mathrm{i}2\pi\omega t}\mathrm{d}t\nonumber                                     \\
               & =\frac{1}{2}\int_{-\infty}^{\infty}(\mathrm{e}^{\mathrm{i}2\pi\frac{1}{2\pi}t}+\mathrm{e}^{\mathrm{i}2\pi\frac{-1}{2\pi}t})\mathrm{e}^{-\mathrm{i}2\pi\omega t}\mathrm{d}t\nonumber \\
               & =\frac{1}{2}(\delta(\omega-\frac{1}{2\pi})+\delta(\omega+\frac{1}{2\pi}))\nonumber                                                                                                  \\
-              & =\frac{1}{2}(\delta(1-2\pi\omega)+\delta(1+2\pi\omega))\, .
+              & =\pi(\delta(1-2\pi\omega)+\delta(1+2\pi\omega))\, .
 \end{align}
 
+\subsubsection*{shah函数}
+\begin{theorem}
+    周期为$T$的函数$f(t)$可被展开为唯一的\keyindex{傅里叶级数}{Fourier series}{}，其指数形式为
+    \begin{align}
+        f(t)=\sum\limits_{n=-\infty}^{\infty}a_n\mathrm{e}^{\mathrm{i}2\pi\frac{n}{T}t}\, ,
+    \end{align}
+    其中系数
+    \begin{align}
+        a_n=\frac{1}{T}\int\limits_T f(t)\mathrm{e}^{-\mathrm{i}2\pi\frac{n}{T}t}\mathrm{d}t\, .
+    \end{align}
+\end{theorem}
+
+对于周期为$T$的shah函数
 \begin{align}
-    f(t)=\sum\limits_{n=-\infty}^{\infty}a_n\mathrm{e}^{\mathrm{i}2\pi\frac{n}{T}t}\, .
+    f(t)=T\sum\limits_{k=-\infty}^{\infty}\delta(t-kT)\, ,
 \end{align}
-
-\begin{align}
-    a_n=\frac{1}{T}\int\limits_T f(t)\mathrm{e}^{-\mathrm{i}2\pi\frac{n}{T}t}\mathrm{d}t\, .
-\end{align}
-
-\begin{align}
-    f(t)=T\sum\limits_{k=-\infty}^{\infty}\delta(t-kT)\, .
-\end{align}
-
+其傅里叶展开中的系数为
 \begin{align}
     a_n=\frac{1}{T}\int_{-\frac{T}{2}}^{\frac{T}{2}}f(t)\mathrm{e}^{-\mathrm{i}2\pi\frac{n}{T}t}\mathrm{d}t
     =\frac{1}{T}\int_{-\frac{T}{2}}^{\frac{T}{2}}T\delta(t)\mathrm{e}^{-\mathrm{i}2\pi\frac{n}{T}t}\mathrm{d}t
     =1\, .
 \end{align}
-
+于是shah函数可展开为
 \begin{align}
     f(t)=\sum\limits_{n=-\infty}^{\infty}\mathrm{e}^{\mathrm{i}2\pi\frac{n}{T}t}\, .
 \end{align}
-
+因此其频域表示为
 \begin{align}
     F(\omega) & =\int_{-\infty}^{\infty}f(t)\mathrm{e}^{-\mathrm{i}2\pi\omega t}\mathrm{d}t\nonumber                                                                    \\
               & =\int_{-\infty}^{\infty}\sum\limits_{n=-\infty}^{\infty}\mathrm{e}^{\mathrm{i}2\pi\frac{n}{T}t}\mathrm{e}^{-\mathrm{i}2\pi\omega t}\mathrm{d}t\nonumber \\

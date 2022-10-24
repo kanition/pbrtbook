@@ -37,27 +37,26 @@
     \begin{align}
         \delta(\alpha t)=\frac{\delta(t)}{|\alpha|}\, .
     \end{align}
-\end{theorem}
-\begin{corollary}
-    单位冲激函数具有对称性，即
+    特别地，单位冲激函数具有对称性，即
     \begin{align}
         \delta(t)=\delta(-t)\, .
     \end{align}
-\end{corollary}
+\end{theorem}
 \begin{theorem}
     单位冲激函数具有时延性质，也称平移性质或筛选性质，
-    即对于可积函数$f$，它可以采样出$t=\tau$处的值：
+    即对于\keyindex{可积函数}{integrable function}{}$f$，它可以采样出$t=\tau$处的值：
     \begin{align}
         \int_{-\infty}^{\infty}\delta(t-\tau)f(t)\mathrm{d}t=f(\tau)\, .
     \end{align}
 \end{theorem}
 \subsection{关于傅里叶变换的推导}\label{sub:关于傅里叶变换的推导}
 \subsubsection*{矩形函数}
-对于矩形函数
+对于\keyindex{矩形函数}{rectangular function}{}
 \begin{align}
     f(t)=\left\{\begin{array}{ll}
-        1, & \displaystyle\text{若}|t|<\frac{1}{2}, \\
-        0, & \text{其他}.
+        1,                        & \displaystyle\text{若}|t|<\frac{1}{2}, \\
+        \displaystyle\frac{1}{2}, & \displaystyle\text{若}|t|=\frac{1}{2}, \\
+        0,                        & \displaystyle\text{若}|t|>\frac{1}{2}.
     \end{array}\right.
 \end{align}
 其频率表示为
@@ -71,7 +70,7 @@
 \end{align}
 
 \subsubsection*{高斯函数}
-对于高斯函数
+对于\keyindex{高斯函数}{Gaussian function}{}
 \begin{align}
     f(t)=\mathrm{e}^{-\pi t^2}\, ,
 \end{align}
@@ -96,12 +95,13 @@
     =\mathrm{e}^{-\mathrm{i}2\pi\omega\cdot0}
     =1\, .
 \end{align}
-\subsection*{单位常函数}
-定义指数衰减函数为
+\subsubsection*{单位常函数}
+定义\keyindex{双边指数衰减函数}{two-sided decaying exponential function}{}
+\sidenote{属于\keyindex{拉普拉斯分布}{Laplace distribution}{distribution分布}。}为
 \begin{align}
     f_a(t)=\mathrm{e}^{-a|t|},\quad (a>0)\, .
 \end{align}
-则单位常函数可视作指数衰减函数的极限，即
+则单位常函数可视作该函数的极限，即
 \begin{align}
     f(t)=\lim\limits_{a\rightarrow0^+}f_a(t)=1\, .
 \end{align}
@@ -119,7 +119,9 @@
         \infty, & \text{若}\omega=0.
     \end{array}\right.
 \end{align}
-注意到该频率表示取极限的部分在实数域上积分与$a$无关且为
+注意到该频率表示取极限的部分
+\sidenote{属于\keyindex{柯西分布}{Cauchy distribution}{distribution分布}。}
+在实数域上积分与$a$无关且为
 \begin{align}
     \int_{-\infty}^{\infty}\frac{2a}{a^2+4\pi^2\omega^2}\mathrm{d}\omega
     =\frac{1}{\pi}\int_{-\infty}^{\infty}\frac{1}{1+\left(\frac{2\pi\omega}{a}\right)^2}\mathrm{d}\frac{2\pi\omega}{a}
@@ -133,7 +135,7 @@
 \subsubsection*{傅里叶变换的性质}
 \begin{theorem}
     傅里叶变换具有频移与时移性质，即对于傅里叶变换对$f(t)\leftrightarrow F(\omega)$，
-    给定任意常数$\tau$和$\omega_0$，则有相应的变换对
+    给定任意常数$\omega_0$和$\tau$，则有相应的变换对
     \begin{align}
         f(t)\mathrm{e}^{\mathrm{i}2\pi\omega_0 t} & \leftrightarrow F(\omega-\omega_0)\, ,                              \\
         f(t-\tau)                                 & \leftrightarrow F(\omega)\mathrm{e}^{-\mathrm{i}2\pi\omega\tau}\, .
@@ -161,7 +163,7 @@
 \end{theorem}
 
 \begin{prove}
-    利用时延性质和单位冲激函数的傅里叶变换对可得
+    利用时移性质和单位冲激函数的傅里叶变换对可得
     \begin{align}
         \mathcal{F}^{-1}\{\mathcal{F}\{f(t)\}\}= & \int_{-\infty}^{\infty}\left(\int_{-\infty}^{\infty}f(\tau)\mathrm{e}^{-\mathrm{i}2\pi\omega\tau}\mathrm{d}\tau\right)\mathrm{e}^{\mathrm{i}2\pi\omega t}\mathrm{d}\omega\nonumber \\
         =                                        & \int_{-\infty}^{\infty}f(\tau)\left(\int_{-\infty}^{\infty}\mathrm{e}^{\mathrm{i}2\pi\omega(t-\tau)}\mathrm{d}\omega\right)\mathrm{d}\tau\nonumber                                 \\
@@ -182,8 +184,7 @@
               & =\int_{-\infty}^{\infty}\mathrm{e}^{-\mathrm{i}2\pi\omega t}\cos t\mathrm{d}t\nonumber                                                                                              \\
               & =\int_{-\infty}^{\infty}\frac{1}{2}(\mathrm{e}^{\mathrm{i}t}+\mathrm{e}^{-\mathrm{i}t})\mathrm{e}^{-\mathrm{i}2\pi\omega t}\mathrm{d}t\nonumber                                     \\
               & =\frac{1}{2}\int_{-\infty}^{\infty}(\mathrm{e}^{\mathrm{i}2\pi\frac{1}{2\pi}t}+\mathrm{e}^{\mathrm{i}2\pi\frac{-1}{2\pi}t})\mathrm{e}^{-\mathrm{i}2\pi\omega t}\mathrm{d}t\nonumber \\
-              & =\frac{1}{2}(\delta(\omega-\frac{1}{2\pi})+\delta(\omega+\frac{1}{2\pi}))\nonumber                                                                                                  \\
-              & =\pi(\delta(1-2\pi\omega)+\delta(1+2\pi\omega))\, .
+              & =\frac{1}{2}\left(\delta\left(\omega-\frac{1}{2\pi}\right)+\delta\left(\omega+\frac{1}{2\pi}\right)\right)\, .
 \end{align}
 
 \subsubsection*{shah函数}
@@ -200,22 +201,22 @@
 
 对于周期为$T$的shah函数
 \begin{align}
-    f(t)=T\sum\limits_{k=-\infty}^{\infty}\delta(t-kT)\, ,
+    f(t)=\sum\limits_{k=-\infty}^{\infty}\delta(t-kT)\, ,
 \end{align}
 其傅里叶展开中的系数为
 \begin{align}
     a_n=\frac{1}{T}\int_{-\frac{T}{2}}^{\frac{T}{2}}f(t)\mathrm{e}^{-\mathrm{i}2\pi\frac{n}{T}t}\mathrm{d}t
-    =\frac{1}{T}\int_{-\frac{T}{2}}^{\frac{T}{2}}T\delta(t)\mathrm{e}^{-\mathrm{i}2\pi\frac{n}{T}t}\mathrm{d}t
-    =1\, .
+    =\frac{1}{T}\int_{-\frac{T}{2}}^{\frac{T}{2}}\delta(t)\mathrm{e}^{-\mathrm{i}2\pi\frac{n}{T}t}\mathrm{d}t
+    =\frac{1}{T}\, .
 \end{align}
 于是shah函数可展开为
 \begin{align}
-    f(t)=\sum\limits_{n=-\infty}^{\infty}\mathrm{e}^{\mathrm{i}2\pi\frac{n}{T}t}\, .
+    f(t)=\frac{1}{T}\sum\limits_{n=-\infty}^{\infty}\mathrm{e}^{\mathrm{i}2\pi\frac{n}{T}t}\, .
 \end{align}
 因此其频域表示为
 \begin{align}
-    F(\omega) & =\int_{-\infty}^{\infty}f(t)\mathrm{e}^{-\mathrm{i}2\pi\omega t}\mathrm{d}t\nonumber                                                                    \\
-              & =\int_{-\infty}^{\infty}\sum\limits_{n=-\infty}^{\infty}\mathrm{e}^{\mathrm{i}2\pi\frac{n}{T}t}\mathrm{e}^{-\mathrm{i}2\pi\omega t}\mathrm{d}t\nonumber \\
-              & =\sum\limits_{n=-\infty}^{\infty}\int_{-\infty}^{\infty}\mathrm{e}^{-\mathrm{i}2\pi(\omega-\frac{n}{T})t}\mathrm{d}t\nonumber                           \\
-              & =\sum\limits_{n=-\infty}^{\infty}\delta(\omega-\frac{n}{T})\, .
+    F(\omega) & =\int_{-\infty}^{\infty}f(t)\mathrm{e}^{-\mathrm{i}2\pi\omega t}\mathrm{d}t\nonumber                                                                                            \\
+              & =\int_{-\infty}^{\infty}\left(\frac{1}{T}\sum\limits_{n=-\infty}^{\infty}\mathrm{e}^{\mathrm{i}2\pi\frac{n}{T}t}\right)\mathrm{e}^{-\mathrm{i}2\pi\omega t}\mathrm{d}t\nonumber \\
+              & =\frac{1}{T}\sum\limits_{n=-\infty}^{\infty}\int_{-\infty}^{\infty}\mathrm{e}^{-\mathrm{i}2\pi(\omega-\frac{n}{T})t}\mathrm{d}t\nonumber                                        \\
+              & =\frac{1}{T}\sum\limits_{n=-\infty}^{\infty}\delta\left(\omega-\frac{n}{T}\right)\, .
 \end{align}

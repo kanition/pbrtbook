@@ -104,23 +104,26 @@ $f(x')$的值称为\keyindex{样本值}{sample value}{}。
 $\mathcal{F}$显然是线性运算——即对任意标量$a$都有$\mathcal{F}\{af(x)\}=a\mathcal{F}\{f(x)\}$，
 且$\mathcal{F}\{f(x)+g(x)\}=\mathcal{F}\{f(x)\}+\mathcal{F}\{g(x)\}$.
 
-\refeq{7.1}称为\keyindex{傅里叶分析}{Fourier analysis}{}方程，有时简称\keyindex{傅里叶变换}{Fourier transform}{transform变换}。
+\refeq{7.1}称为\keyindex{傅里叶分析}{Fourier analysis}{}方程，
+有时简称\keyindex{傅里叶变换}{Fourier transform}{transform变换}
+\sidenote{译者注：一般要求函数$f(x)$是实数域上
+    的\keyindex{可积函数}{integrable function}{}，
+    即$\int_{-\infty}^{\infty}|f(x)|\mathrm{d}x<\infty$.}。
 我们也可用\keyindex{傅里叶合成}{Fourier synthesis}{}方程从频域变换回空域，
 也称作\keyindex{傅里叶逆变换}{inverse Fourier transform}{transform变换}
-\sidenote{译者注：大多数文献采用的傅里叶变换或逆变换定义中$\omega$是角频率，
-    但本书的定义中$\omega$是频率。数值上角频率等于频率乘以$2\pi$.}：
+\sidenote{译者注：本书定义中$\omega$是频率，此外用角频率的定义也很常见。}：
 \begin{align}\label{eq:7.2}
     f(x)=\int_{-\infty}^{\infty}F(\omega)\mathrm{e}^{\mathrm{i}2\pi\omega x}\mathrm{d}\omega\, .
 \end{align}
 
 \reftab{7.1}展示了许多重要函数及其频率空间表示
 \sidenote{译者注：表中原文将频域函数写作$f(\omega)$，译者改为了$F(\omega)$.
-    此外，译者怀疑表中原文对shah函数的频域表示的系数有误，已根据本书定义对其作了修正。
+    译者还把原文余弦函数的频域表示改为等价但更常见的写法；
+    此外，原文表中shah函数一行系数与后文矛盾，已对其作了修正。
     具体推导过程可参考译者补充的\refsec{译者补充：信号处理}。}。
-这些函数中许多都基于狄拉克$\delta$分布
-\sidenote{译者注：也称作单位\keyindex{冲激函数}{impulse function}{}、脉冲函数。}，
+这些函数中许多都基于\keyindex{狄拉克$\delta$分布}{Dirac delta distribution}{}，
 该空间函数的定义使得$\displaystyle\int_{-\infty}^{\infty}\delta(x)\mathrm{d}x=1$，且对任意$x\neq0$，都有$\delta(x)=0$.
-这些性质的一个重要结论是\sidenote{译者注：我在原文基础上为该式加上了积分上下限以表明它是定积分。}
+这些性质的一个重要结论是\sidenote{译者注：我为该式加上了积分上下限以表明它是定积分。}
 \begin{align*}
     \int_{-\infty}^{\infty} f(x)\delta(x)\mathrm{d}x=f(0)\, .
 \end{align*}
@@ -130,21 +133,21 @@ $\delta$分布不能表示为标准数学函数，但通常可以视作以原点
 \begin{table}[htbp]
     \centering\begin{tabular}{l p{170pt}}
         \toprule
-        {\bfseries 空域}                                                   & {\bfseries 频率空间表示}                                                                     \\
+        {\bfseries 空域}                                         & {\bfseries 频率空间表示}                                                                                       \\
         \midrule
         矩形函数：$f(x)=\left\{\begin{array}{ll}
                 1, & \text{若}|x|<\frac{1}{2}, \\
                 0, & \text{其他}.
-            \end{array}\right.$           & sinc函数：$\displaystyle F(\omega)=\mathrm{sinc}(\omega)=\frac{\sin(\pi\omega)}{\pi\omega}$  \\
+            \end{array}\right.$ & sinc函数：$\displaystyle F(\omega)=\mathrm{sinc}(\omega)=\frac{\sin(\pi\omega)}{\pi\omega}$                    \\
         \hline
-        高斯函数：$f(x)=\mathrm{e}^{-\pi x^2}$                             & 高斯函数：$F(\omega)=\mathrm{e}^{-\pi \omega^2}$                                             \\
+        高斯函数：$f(x)=\mathrm{e}^{-\pi x^2}$                   & 高斯函数：$F(\omega)=\mathrm{e}^{-\pi \omega^2}$                                                               \\
         \hline
-        常函数：$f(x)=1$                                                   & $\delta$函数：$F(\omega)=\delta(\omega)$                                                     \\
+        常函数：$f(x)=1$                                         & $\delta$函数：$F(\omega)=\delta(\omega)$                                                                       \\
         \hline
-        余弦函数：$f(x)=\cos x$                                            & 平移的$\delta$函数：
-        $F(\omega)=\pi(\delta(1-2\pi\omega)+\delta(1+2\pi\omega))$                                                                                                        \\
+        余弦函数：$f(x)=\cos x$                                  & 平移的$\delta$函数：
+        $F(\omega)=\frac{1}{2}\left(\delta\left(\omega-\frac{1}{2\pi}\right)+\delta\left(\omega+\frac{1}{2\pi}\right)\right)$                                                     \\
         \hline
-        shah函数：$\displaystyle f(x)=III_T(x)=T\sum\limits_k\delta(x-kT)$ & $\displaystyle F(\omega)=TIII_{\frac{1}{T}}(\omega)=\sum\limits_k\delta(\omega-\frac{k}{T})$ \\
+        shah函数：$f(x)=III_T(x)=\sum\limits_k\delta(x-kT)$      & $F(\omega)=\frac{1}{T}III_{\frac{1}{T}}(\omega)=\frac{1}{T}\sum\limits_k\delta\left(\omega-\frac{k}{T}\right)$ \\
         \bottomrule
     \end{tabular}
     \caption{傅里叶变换对。空域中的函数及其频率空间表示。
@@ -157,16 +160,21 @@ $\delta$分布不能表示为标准数学函数，但通常可以视作以原点
 利用频率空间分析，我们现在能正式研究采样的性质了。
 回想采样过程要求我们选择一组等间隔样本位置并计算这些位置的函数值。
 形式上，这对应于让该函数乘以“shah”——或称“冲激串”函数
-\sidenote{译者注：也称狄拉克梳状函数。}，即无数等间隔的$\delta$函数之和。
-shah函数$III_T(x)$定义为\sidenote{译者注：为了和虚数单位$\mathrm{i}$更好区分，
-    译者将式子中的下标$i$改为$k$，下同。}
+\sidenote{译者注：也称\keyindex{狄拉克梳状函数}{Dirac comb function}{}、
+    \keyindex{shah函数}{shah function}{}或\keyindex{采样函数}{sampling function}{}。}，
+即无数等间隔的$\delta$函数之和。
+shah函数$III_T(x)$定义为
+\sidenote{译者注：为了和虚数单位$\mathrm{i}$更好区分，
+    译者将式子中的下标$i$改为$k$，下同；
+    此外，译者去掉了该式系数$T$.}
 \begin{align*}
-    III_T(x)=T\sum\limits_{k=-\infty}^{\infty}\delta(x-kT)\, ,
+    III_T(x)=\sum\limits_{k=-\infty}^{\infty}\delta(x-kT)\, ,
 \end{align*}
 其中$T$定义了\keyindex{周期}{period}{}，也称\keyindex{采样率}{sampling rate}{}。
-\reffig{7.4}展示了采样的正式定义。相乘后得到函数在等间隔点处取值的无限序列：
+\reffig{7.4}展示了采样的正式定义。相乘后得到函数在等间隔点处取值的无限序列
+\sidenote{译者注：我去掉了该式系数$T$.}：
 \begin{align*}
-    III_T(x)f(x)=T\sum\limits_k\delta(x-kT)f(kT)\, .
+    III_T(x)f(x)=\sum\limits_k\delta(x-kT)f(kT)\, .
 \end{align*}
 \begin{figure}[htbp]
     \centering
@@ -188,9 +196,10 @@ shah函数$III_T(x)$定义为\sidenote{译者注：为了和虚数单位$\mathrm
     f(x)\otimes g(x)=\int_{-\infty}^{\infty}f(x')g(x-x')\mathrm{d}x'\, .
 \end{align*}
 
-对于重建，卷积给出以样本点为中心并缩放后的重建滤波器实例加权和：
+对于重建，卷积给出以样本点为中心缩放后的重建滤波器实例加权和
+\sidenote{译者注：我去掉了该式系数$T$.}：
 \begin{align*}
-    \tilde{f}(x)=T\sum\limits_{k=-\infty}^{\infty}f(kT)r(x-kT)\, .
+    \tilde{f}(x)=\sum\limits_{k=-\infty}^{\infty}f(kT)r(x-kT)\, .
 \end{align*}
 
 例如\reffig{7.1}中使用了三角形重建\keyindex{滤波器}{filter}{}$r(x)=\max(0,1-|x|)$.
@@ -262,19 +271,19 @@ shah函数$III_T(x)$定义为\sidenote{译者注：为了和虚数单位$\mathrm
     \end{array}\right.
 \end{align*}
 
-该相乘步骤对应了用重建滤波器在空域做卷积。这是理想采样与重建过程。总结为：
+该相乘步骤对应了用重建滤波器在空域做卷积。这是理想采样与重建过程。总结为
+\sidenote{译者注：我增加了系数$\frac{1}{T}$.}：
 \begin{align*}
-    \tilde{F}=(F(\omega)\otimes III_{\frac{1}{T}}(\omega))\textstyle\prod_{\frac{1}{T}}(\omega)\, .
+    \tilde{F}=(F(\omega)\otimes \frac{1}{T}III_{\frac{1}{T}}(\omega))\textstyle\prod_{\frac{1}{T}}(\omega)\, .
 \end{align*}
 
 这是个重要结论：仅仅通过采样一组均匀间隔的点，我们就能确定$f(x)$的精准频率空间表示。
 除了知道该函数是带限的外，没有使用关于函数成分的额外信息。
 
 在空域运用等价过程同样能完全恢复$f(x)$.因为矩形函数的傅里叶逆变换是sinc函数，
-所以空域中的理想重建是\sidenote{译者注：原文该式继承了\reftab{7.1}的错误，
-    这里笔者补回了第一项的系数$\frac{1}{T}$.}
+所以空域中的理想重建是
 \begin{align*}
-    \tilde{f}=\left(\frac{1}{T}f(x)III_T(x)\right)\otimes \mathrm{sinc}_T(x)\, ,
+    \tilde{f}=(f(x)III_T(x))\otimes \mathrm{sinc}_T(x)\, ,
 \end{align*}
 其中$\mathrm{sinc}_T(x)=\mathrm{sinc}(Tx)$，因此\sidenote{译者注：原文该式
     将$\mathrm{sinc}_T(x-kT)$误写为$\mathrm{sinc}(x-kT)$，已修正。}

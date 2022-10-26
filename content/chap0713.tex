@@ -13,7 +13,7 @@
     \end{itemize}
 \end{notation}
 
-\subsection*{基本原理}
+
 \begin{theorem}[\protect\keyindex{最小自然数原理}{least number principle}{}]\label{theorem:7.ex02.1}
     设$T$是$\mathbb{N}$的一非空子集，则必有$t_0\in T$，
     使对任意的$t\in T$有$t_0\le t$，即$t_0$是$T$中最小的自然数。
@@ -58,7 +58,7 @@
     也称\keyindex{狄利克雷抽屉原理}{Dirichlet's drawer principle}{}。
 \end{theorem}
 
-\subsection*{整除}
+\subsection{整除与带余除法}\label{sub:整除与带余除法}
 \begin{definition}
     设$a,b\in\mathbb{Z}$且$a\neq0$，若存在$q\in\mathbb{Z}$使得$b=aq$，
     则称$a$\keyindex{整除}{divide evenly}{}$b$，或说$b$能被$a$整除，记作$a|b$，
@@ -150,7 +150,6 @@
 %     其中$\pi(x)$表示不超过$x$的质数个数。
 % \end{theorem}
 
-\subsection*{带余除法}
 初等数论的证明中最重要、最基本、最直接的工具是下面的
 \keyindex{带余除法}{division with remainder}{}，
 也称\keyindex{欧几里德除法}{Euclidean division}{}。
@@ -247,7 +246,7 @@
     即结论对$m+1$也成立。由数学归纳法，推论得证。
 \end{prove}
 
-\subsection*{最大公因数与最小公倍数}
+\subsection{最大公因数与最小公倍数}\label{sub:最大公因数与最小公倍数}
 \begin{definition}
     设$a_1,a_2\in\mathbb{Z}$，若$d|a_1$且$d|a_2$，则称$d$是
     $a_1$与$a_2$的\keyindex{公因数}{common divisor}{divisor因数}。
@@ -507,7 +506,7 @@
 %     表示\refeq{7.ex02.arithmeticfundamental}是唯一的。
 % \end{theorem}
 
-\subsection*{辗转相除法}
+\subsection{辗转相除法}\label{sub:辗转相除法}
 \keyindex{辗转相除法}{Euclidean algorithm}{}，
 也称{\sffamily 欧几里得算法}，是指下面求取最大公因数的算法。
 它最早出现于欧几里得的《几何原本》中，我国则可追溯至约东汉出现的《九章算术》。
@@ -651,7 +650,7 @@ $b$为负数时同理。因此我们只考虑$a,b$不小于零的情况。
     算法在$i=6$时终止，由$i=5$时的$u_i,s_i,t_i$可得$-9\times240+47\times46=(240,46)=2$.
 \end{example}
 
-\subsection*{同余}
+\subsection{同余}\label{sub:同余}
 \begin{definition}
     设$a,b,m\in\mathbb{Z}$且$m\neq0$，若$m|a-b$，则称$a$与$b$\keyindex{模$m$同余}{congruent modulo $m$}{}，
     也称$a$同余于$b$模$m$、$b$是$a$对模$m$的剩余，记作
@@ -877,7 +876,7 @@ $a$对模$m$的任意两个逆$c_1,c_2$必有$c_1\equiv c_2\pmod{m}$；
     如果对任意的$a$有且仅有一个$y_j$满足$a\equiv y_j\pmod{m}$.
 \end{definition}
 
-\subsection*{同余方程}
+\subsection{同余方程}\label{sub:同余方程}
 \begin{definition}
     设整系数多项式
     \begin{align}

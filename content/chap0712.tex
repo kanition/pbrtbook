@@ -9,7 +9,7 @@
 \end{notation}
 \subsection{单位冲激函数}\label{sub:单位冲激函数}
 \begin{definition}
-    数学中，\keyindex{狄拉克$\delta$分布}{Dirac delta distribution}{}是定义在实数域上的广义分布或函数。
+    数学中，\keyindex{狄拉克$\delta$分布}{Dirac delta distribution}{}是定义在实数域上的广义分布。
     它在除零以外的点上都取零，且在整个实数域上的积分等于一。通常记作$\delta(\cdot)$.
 \end{definition}
 
@@ -35,7 +35,7 @@
 \end{align}
 
 依据单位冲激函数的定义，可推导出以下性质：
-\begin{theorem}
+\begin{theorem}\label{theorem:7.ex01.symmetry}
     单位冲激函数具有缩放性质：对任意实数$\alpha\neq0$，有
     \begin{align}
         \delta(\alpha t)=\frac{\delta(t)}{|\alpha|}\, .
@@ -127,38 +127,38 @@
 \subsection{傅里叶变换的性质}\label{sub:傅里叶变换的性质}
 \begin{theorem}
     傅里叶变换具有线性性质：对于傅里叶变换对$g(t)\leftrightarrow G(\omega)$
-    与$h(t)\leftrightarrow H(\omega)$，给定任意实数$a,b$，则
+    与$h(t)\leftrightarrow H(\omega)$，给定任意实数$\alpha,\beta$，则
     \begin{align}
-        ag(t)+bh(t)\leftrightarrow aG(\omega)+bH(\omega)\, .
+        \alpha g(t)+\beta h(t)\leftrightarrow \alpha G(\omega)+\beta H(\omega)\, .
     \end{align}
 \end{theorem}
 
 \begin{theorem}
     傅里叶变换具有缩放性质：对于傅里叶变换对$f(t)\leftrightarrow F(\omega)$，
-    给定任意实数$a\neq0$，则
+    给定任意实数$\alpha\neq0$，则
     \begin{align}
-        f(at)\leftrightarrow\frac{1}{|a|} F\left(\frac{\omega}{a}\right)\, .
+        f(\alpha t)\leftrightarrow\frac{1}{|\alpha|} F\left(\frac{\omega}{\alpha}\right)\, .
     \end{align}
 \end{theorem}
 \begin{prove}
     依照傅里叶变换定义，
     \begin{align}\label{eq:7.ex01.scale}
-        \mathcal{F}\{f(at)\}=\int_{-\infty}^{\infty}f(at)\mathrm{e}^{-\mathrm{i}2\pi\omega t}\mathrm{d}t
-        =\frac{1}{a}\int_{-\infty}^{\infty}f(at)\mathrm{e}^{-\mathrm{i}2\pi\frac{\omega}{a}at}\mathrm{d}(at)\, .
+        \mathcal{F}\{f(\alpha t)\}=\int_{-\infty}^{\infty}f(\alpha t)\mathrm{e}^{-\mathrm{i}2\pi\omega t}\mathrm{d}t
+        =\frac{1}{\alpha}\int_{-\infty}^{\infty}f(\alpha t)\mathrm{e}^{-\mathrm{i}2\pi\frac{\omega}{\alpha}\alpha t}\mathrm{d}(\alpha t)\, .
     \end{align}
-    当$a>0$时，\refeq{7.ex01.scale}化为
+    当$\alpha>0$时，\refeq{7.ex01.scale}化为
     \begin{align}
-        \mathcal{F}\{f(at)\}=\frac{1}{a}\int_{-\infty}^{\infty}f(t)\mathrm{e}^{-\mathrm{i}2\pi\frac{\omega}{a}t}\mathrm{d}t
-        =\frac{1}{a}F\left(\frac{\omega}{a}\right)\, .
+        \mathcal{F}\{f(\alpha t)\}=\frac{1}{\alpha}\int_{-\infty}^{\infty}f(t)\mathrm{e}^{-\mathrm{i}2\pi\frac{\omega}{\alpha}t}\mathrm{d}t
+        =\frac{1}{\alpha}F\left(\frac{\omega}{\alpha}\right)\, .
     \end{align}
-    当$a<0$时，\refeq{7.ex01.scale}化为
+    当$\alpha<0$时，\refeq{7.ex01.scale}化为
     \begin{align}
-        \mathcal{F}\{f(at)\}=\frac{1}{a}\int_{\infty}^{-\infty}f(t)\mathrm{e}^{-\mathrm{i}2\pi\frac{\omega}{a}t}\mathrm{d}t
-        =-\frac{1}{a}F\left(\frac{\omega}{a}\right)\, .
+        \mathcal{F}\{f(\alpha t)\}=\frac{1}{\alpha}\int_{\infty}^{-\infty}f(t)\mathrm{e}^{-\mathrm{i}2\pi\frac{\omega}{\alpha}t}\mathrm{d}t
+        =-\frac{1}{\alpha}F\left(\frac{\omega}{\alpha}\right)\, .
     \end{align}
     于是综合起来表示有
     \begin{align}
-        \mathcal{F}\{f(at)\}=\frac{1}{|a|}F\left(\frac{\omega}{a}\right)\, .
+        \mathcal{F}\{f(\alpha t)\}=\frac{1}{|\alpha|}F\left(\frac{\omega}{\alpha}\right)\, .
     \end{align}
 \end{prove}
 
@@ -192,7 +192,7 @@
     \end{align}
 \end{theorem}
 \begin{prove}
-    利用定理\ref{theorem:7.ex01.1}、\ref{theorem:7.ex01.2}以及\ref{theorem:7.ex01.4}可得
+    利用定理\ref{theorem:7.ex01.symmetry}、\ref{theorem:7.ex01.1}、\ref{theorem:7.ex01.2}以及\ref{theorem:7.ex01.4}可得
     \begin{align}
         \mathcal{F}^{-1}\{\mathcal{F}\{f(t)\}\}= & \int_{-\infty}^{\infty}\left(\int_{-\infty}^{\infty}f(\tau)\mathrm{e}^{-\mathrm{i}2\pi\omega\tau}\mathrm{d}\tau\right)\mathrm{e}^{\mathrm{i}2\pi\omega t}\mathrm{d}\omega\nonumber \\
         =                                        & \int_{-\infty}^{\infty}f(\tau)\left(\int_{-\infty}^{\infty}\mathrm{e}^{\mathrm{i}2\pi\omega(t-\tau)}\mathrm{d}\omega\right)\mathrm{d}\tau\nonumber                                 \\
@@ -334,7 +334,7 @@
 其频率表示为
 \begin{align}
     F(\omega) & =\int_{-\infty}^{\infty}f(t)\mathrm{e}^{-\mathrm{i}2\pi\omega t}\mathrm{d}t\nonumber                                                                                                \\
-              & =\int_{-\infty}^{\infty}\mathrm{e}^{-\mathrm{i}2\pi\omega t}\cos t\mathrm{d}t\nonumber                                                                                              \\
+              & =\int_{-\infty}^{\infty}(\cos t)\mathrm{e}^{-\mathrm{i}2\pi\omega t}\mathrm{d}t\nonumber                                                                                            \\
               & =\int_{-\infty}^{\infty}\frac{1}{2}(\mathrm{e}^{\mathrm{i}t}+\mathrm{e}^{-\mathrm{i}t})\mathrm{e}^{-\mathrm{i}2\pi\omega t}\mathrm{d}t\nonumber                                     \\
               & =\frac{1}{2}\int_{-\infty}^{\infty}(\mathrm{e}^{\mathrm{i}2\pi\frac{1}{2\pi}t}+\mathrm{e}^{\mathrm{i}2\pi\frac{-1}{2\pi}t})\mathrm{e}^{-\mathrm{i}2\pi\omega t}\mathrm{d}t\nonumber \\
               & =\frac{1}{2}\left(\delta\left(\omega-\frac{1}{2\pi}\right)+\delta\left(\omega+\frac{1}{2\pi}\right)\right)\, .
@@ -344,11 +344,11 @@
 \begin{theorem}
     周期为$T$的函数$f(t)$可被展开为唯一的\keyindex{傅里叶级数}{Fourier series}{}，其指数形式为
     \begin{align}
-        f(t)=\sum\limits_{n=-\infty}^{\infty}a_n\mathrm{e}^{\mathrm{i}2\pi\frac{n}{T}t}\, ,
+        f(t)=\sum\limits_{n=-\infty}^{\infty}c_n\mathrm{e}^{\mathrm{i}2\pi\frac{n}{T}t}\, ,
     \end{align}
     其中系数
     \begin{align}
-        a_n=\frac{1}{T}\int\limits_T f(t)\mathrm{e}^{-\mathrm{i}2\pi\frac{n}{T}t}\mathrm{d}t\, .
+        c_n=\frac{1}{T}\int\limits_T f(t)\mathrm{e}^{-\mathrm{i}2\pi\frac{n}{T}t}\mathrm{d}t\, .
     \end{align}
 \end{theorem}
 
@@ -358,7 +358,7 @@
 \end{align}
 其傅里叶展开中的系数为
 \begin{align}
-    a_n=\frac{1}{T}\int_{-\frac{T}{2}}^{\frac{T}{2}}f(t)\mathrm{e}^{-\mathrm{i}2\pi\frac{n}{T}t}\mathrm{d}t
+    c_n=\frac{1}{T}\int_{-\frac{T}{2}}^{\frac{T}{2}}f(t)\mathrm{e}^{-\mathrm{i}2\pi\frac{n}{T}t}\mathrm{d}t
     =\frac{1}{T}\int_{-\frac{T}{2}}^{\frac{T}{2}}\delta(t)\mathrm{e}^{-\mathrm{i}2\pi\frac{n}{T}t}\mathrm{d}t
     =\frac{1}{T}\, .
 \end{align}

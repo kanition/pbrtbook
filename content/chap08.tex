@@ -1,6 +1,59 @@
 \chapterimage{Pictures/chap08/dragons-fourier-600x1200.png}
 \chapter{反射模型}\label{chap:反射模型}
+\setcounter{sidenote}{1}
+本章定义一组类来描述光在表面上散射的方式。回想\refsub{BRDF}中
+我们介绍了双向反射分布函数(BRDF)抽象来描述表面的光反射，
+双向透射分布函数(BTDF)来描述表面的透射，以及
+双向散射分布函数(BSFD)来统合这两种效应。
+本章中，我们将从为这些表面反射和透射函数定义通用接口开始。
 
+许多来自表面的散射通常最好描述为多个BRDF和BTDF随空间变化的混合体；
+在第\refchap{材质}，我们将介绍结合了多个BRDF和BTDF的BSDF对象
+以表示来自表面的整体散射。本章回避了反射和折射性质随表面变化的问题；
+第\refchap{纹理}的纹理类将解决该问题。
+BRDF和BTDF只显式建模了在表面上同一点入射和出射的光的散射。
+对于展现出有意义的次表面光传输的曲面，我们将引入类\refvar{BSSRDF}{}，
+在第\refchap{体积散射}介绍一些相关理论后，它将在\refsec{BSSRDF}对次表面散射建模。
+
+表面反射模型有以下几个来源：
+\begin{itemize}
+    \item \emph{测量的数据}：许多真实世界表面的反射分布性质已在实验室中测定。
+          这样的数据可直接以表格形式使用或用来为一组基函数计算系数。
+    \item \emph{现象模型}\sidenote{译者注：原文phenomenological models。}：
+          试图描述真实世界表面定性性质的方程在仿真时可能很有效。
+          这类BSDF可能很容易使用，因为它们常常有直观的参数来修改其表现（例如“粗糙度”）。
+    \item \emph{模拟}：有时关于表面组成的底层信息是已知的。
+          例如，我们可能知道涂料是悬浮在介质中的平均大小彩色颗粒组成的，
+          或者某种布料是两种织线组成的，且知道每种的反射性质。
+          在这些情况下，可以模拟来自微观几何体的光散射来生成反射数据。
+          该模拟可在渲染时进行，或作为预处理完成后去适配一组基函数供渲染时使用。
+    \item \emph{物理（波动）光学}：一些反射模型是用详细的光模型推导出的，
+          将其视作波并计算麦克斯韦方程组的解以求解光是怎么从已知性质的表面散射的。
+          这些模型常常计算量很大，然而对于渲染应用而言它们通常并不比基于几何光学的模型精确多少。
+    \item \emph{几何光学}：像模拟方法那样，如果表面的底层散射和几何性质已知，
+          则有时能直接从这些描述中推出解析式的反射模型。几何光学让建模光与表面的交互
+          更加容易处理，因为可以忽略像偏振那样的复杂波动效应。
+\end{itemize}
+本章末的“扩展阅读”一节给出了许多这样的反射模型索引。
+
+在我们定义相关接口前，简要回顾下它们是怎么嵌入整个系统的。
+如果用了\refvar{SamplerIntegrator}{}，则会为每条光线
+调用方法\refvar[Li]{SamplerIntegrator::Li}{()}的实现。
+在找到与几何图元最近的相交处后，它调用与该图元关联的表面着色器。
+表面着色器实现为\refvar{Material}{}子类的方法并负责决定表面上特定点的BSDF是什么；
+它返回的BSDF对象持有BRDF和BTDF且已分配内存和初始化来表示该点的散射。
+然后积分器基于该点的入射光照用BSDF计算该点的散射光
+（使用\refvar{BDPTIntegrator}{}、\refvar{MLTIntegrator}{}或\refvar{SPPMIntegrator}{}而
+不是\refvar{SamplerIntegrator}{}的过程大致相同）。
+
+\subsection{基本术语}\label{sub:基本术语}
+为了能比较不同反射模型的视觉表现，我们将介绍一些基本术语以描述来自表面的反射。
+
+来自表面的反射可分为四大类：\keyindex{漫反射}{diffuse}{}、\keyindex{光泽镜面}{glossy specular}{}、
+\keyindex{完美镜面}{perfect specular}{}和\keyindex{逆反射}{retro-reflective}{}（\reffig{8.1}）。
+大多数真实表面展现的反射都是这四种的混合。漫反射表面在所有方向均等地散射光。
+尽管完美的漫反射表面是不可物理实现的，但几乎是漫反射表面的例子包括暗沉的黑板和哑光的油漆。
+光泽镜面表面例如塑料或高光泽涂料优先在一组反射方向上散射光——
 \begin{lstlisting}
 `\initcode{BSDF Inline Functions}{=}\initnext{BSDFInlineFunctions}`
 inline `\refvar{Float}{}` `\initvar{CosTheta}{}`(const `\refvar{Vector3f}{}` &w) { return w.z; }

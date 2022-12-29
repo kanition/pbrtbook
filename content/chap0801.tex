@@ -1,5 +1,8 @@
 \section{基本接口}\label{sec:基本接口}
-
+我们将首先定义单个BRDF和BTDF函数的接口。
+BRDF和BTDF共享共同的基类\refvar{BxDF}{}。
+因为两者都有一样的接口，共享相同的基类减少了重复代码并
+允许系统的一些部分和一般的\refvar{BxDF}{}配合而不用区分BRDF和BTDF。
 \begin{lstlisting}
 `\initcode{BxDF Declarations}{=}\initnext{BxDFDeclarations}`
 class `\initvar{BxDF}{}` {
@@ -8,6 +11,7 @@ public:
     `\refcode{BxDF Public Data}{}`
 };
 \end{lstlisting}
+\refsec{BSDF}将要介绍的类\refvar{BSDF}{}
 
 \begin{lstlisting}
 `\initcode{BSDF Declarations}{=}\initnext{BSDFDeclarations}`

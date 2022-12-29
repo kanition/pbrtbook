@@ -17,22 +17,22 @@ BRDF和BTDF只显式建模了在表面上同一点入射和出射的光的散射
 
 表面反射模型有以下几个来源：
 \begin{itemize}
-    \item \emph{测量的数据}：许多真实世界表面的反射分布性质已在实验室中测定。
-          这样的数据可直接以表格形式使用或用来为一组基函数计算系数。
-    \item \emph{现象模型}\sidenote{译者注：原文phenomenological models。}：
-          试图描述真实世界表面定性性质的方程在仿真时可能很有效。
-          这类BSDF可能很容易使用，因为它们常常有直观的参数来修改其表现（例如“粗糙度”）。
-    \item \emph{模拟}：有时关于表面组成的底层信息是已知的。
-          例如，我们可能知道涂料是悬浮在介质中的平均大小彩色颗粒组成的，
-          或者某种布料是两种织线组成的，且知道每种的反射性质。
-          在这些情况下，可以模拟来自微观几何体的光散射来生成反射数据。
-          该模拟可在渲染时进行，或作为预处理完成后去适配一组基函数供渲染时使用。
-    \item \emph{物理（波动）光学}：一些反射模型是用详细的光模型推导出的，
-          将其视作波并计算麦克斯韦方程组的解以求解光是怎么从已知性质的表面散射的。
-          这些模型常常计算量很大，然而对于渲染应用而言它们通常并不比基于几何光学的模型精确多少。
-    \item \emph{几何光学}：像模拟方法那样，如果表面的底层散射和几何性质已知，
-          则有时能直接从这些描述中推出解析式的反射模型。几何光学让建模光与表面的交互
-          更加容易处理，因为可以忽略像偏振那样的复杂波动效应。
+      \item \emph{测量的数据}：许多真实世界表面的反射分布性质已在实验室中测定。
+            这样的数据可直接以表格形式使用或用来为一组基函数计算系数。
+      \item \emph{现象模型}\sidenote{译者注：原文phenomenological models。}：
+            试图描述真实世界表面定性性质的方程在仿真时可能很有效。
+            这类BSDF可能很容易使用，因为它们常常有直观的参数来修改其表现（例如“粗糙度”）。
+      \item \emph{模拟}：有时关于表面组成的底层信息是已知的。
+            例如，我们可能知道涂料是悬浮在介质中的平均大小彩色颗粒组成的，
+            或者某种布料是两种织线组成的，且知道每种的反射性质。
+            在这些情况下，可以模拟来自微观几何体的光散射来生成反射数据。
+            该模拟可在渲染时进行，或作为预处理完成后去适配一组基函数供渲染时使用。
+      \item \emph{物理（波动）光学}：一些反射模型是用详细的光模型推导出的，
+            将其视作波并计算麦克斯韦方程组的解以求解光是怎么从已知性质的表面散射的。
+            这些模型常常计算量很大，然而对于渲染应用而言它们通常并不比基于几何光学的模型精确多少。
+      \item \emph{几何光学}：像模拟方法那样，如果表面的底层散射和几何性质已知，
+            则有时能直接从这些描述中推出解析式的反射模型。几何光学让建模光与表面的交互
+            更加容易处理，因为可以忽略像偏振那样的复杂波动效应。
 \end{itemize}
 本章末的“扩展阅读”一节给出了许多这样的反射模型索引。
 
@@ -54,12 +54,153 @@ BRDF和BTDF只显式建模了在表面上同一点入射和出射的光的散射
 大多数真实表面展现的反射都是这四种的混合。漫反射表面在所有方向均等地散射光。
 尽管完美的漫反射表面是不可物理实现的，但几乎是漫反射表面的例子包括暗沉的黑板和哑光的油漆。
 光泽镜面表面例如塑料或高光泽涂料优先在一组反射方向上散射光——
+它们展示了其他物体的模糊反射。完美镜像表面将入射光朝单个出射方向散射。
+镜子和玻璃就是完美镜面表面的例子。
+最后，像天鹅绒或月壤那样的逆反射表面主要沿着入射方向把光散射回去。
+本章的图像将展示渲染场景中使用这几种反射的差别。
+\begin{figure}[htbp]
+      \centering
+      \subfloat[漫反射BSDF]{\includegraphics[width=0.5\linewidth]{chap08/brdf-diffuse-plot.jpg}\label{fig:8.1.1}}
+      \subfloat[光泽BRDF]{\includegraphics[width=0.5\linewidth]{chap08/brdf-glossy-plot.jpg}\label{fig:8.1.2}}\\
+      \subfloat[几乎完美的镜面BRDF]{\includegraphics[width=0.5\linewidth]{chap08/brdf-specular-plot.jpg}\label{fig:8.1.3}}
+      \subfloat[逆反射BRDF]{\includegraphics[width=0.5\linewidth]{chap08/brdf-retro-plot.jpg}\label{fig:8.1.4}}
+      \caption{来自表面的反射通常可按反射光相对于入射方向（粗线）的分布来划分：
+            (1)漫反射、(2)光泽镜面、(3)几乎完美的镜面、(4)逆反射分布。}
+      \label{fig:8.1}
+\end{figure}
+
+对于特定的某种反射，反射分布函数可能是\keyindex{各向同性}{isotropic}{}
+或\keyindex{各向异性}{anisotropic}{}的。大部分物体是各向同性的：
+如果你在表面上选一点并绕该处的法线轴旋转它，反射光的分布不变。
+相反，当你像这样旋转各向异性材料时，它们反射的光量会不同。
+各向异性表面的例子包括拉丝金属、多种布料和压缩光盘。
+
+\subsection{几何设置}\label{sub:几何设置}
+pbrt中的反射计算是在反射坐标系中进行的，
+被着色点的两个切向量和法向量分别对齐到$x$、$y$和$z$轴（\reffig{8.2}）。
+所有传入BRDF和BTDF例程及其返回的各方向向量都在该坐标系下定义。
+为了理解本章的BRDF和BTDF实现，理解该坐标系很重要。
+\begin{figure}[htbp]
+      \centering
+      \includegraphics[width=0.7\linewidth]{chap08/BSDFcoordinatesystem.eps}
+      \caption{基本BSDF接口设置。着色坐标系由正交基向量$({\bm s},{\bm t},{\bm n})$定义。
+            我们将调整这些向量朝向使得它们在该坐标系中沿着$x$、$y$和$z$轴。
+            在调用任何BRDF或BTDF方法前，世界空间中的方向向量$\bm \omega$会被
+            变换到着色坐标系。}
+      \label{fig:8.2}
+\end{figure}
+
+着色坐标系也给出了表示球面坐标$(\theta,\varphi)$中方向的坐标系；
+角度$\theta$从给定方向测量到$z$轴，$\varphi$是方向投影到$xy$平面后
+与$x$轴所成角度。给定该坐标系下的方向向量$\bm\omega$，
+很容易计算与法向夹角的余弦等量：
+\begin{align*}
+      \cos\theta=({\bm n}\cdot{\bm\omega})=((0,0,1)\cdot{\bm\omega})=\omega_z\, .
+\end{align*}
+
+我们将提供实用函数来计算这些值和一些有用的变量；
+它们的使用有助于阐明BRDF和BTDF的实现。
 \begin{lstlisting}
 `\initcode{BSDF Inline Functions}{=}\initnext{BSDFInlineFunctions}`
 inline `\refvar{Float}{}` `\initvar{CosTheta}{}`(const `\refvar{Vector3f}{}` &w) { return w.z; }
 inline `\refvar{Float}{}` `\initvar{Cos2Theta}{}`(const `\refvar{Vector3f}{}` &w) { return w.z * w.z; }
 inline `\refvar{Float}{}` `\initvar{AbsCosTheta}{}`(const `\refvar{Vector3f}{}` &w) { return std::abs(w.z); }
 \end{lstlisting}
+
+$\sin^2\theta$的值可用三角恒等式$\sin^2\theta+\cos^2\theta=1$算得，
+但我们要注意避免取负数的平方根，罕见情况下浮点舍入误差
+会让{\ttfamily 1 - \refvar{Cos2Theta}{}(w)}小于零。
+\begin{lstlisting}
+`\refcode{BSDF Inline Functions}{+=}\lastnext{BSDFInlineFunctions}`
+inline `\refvar{Float}{}` `\initvar{Sin2Theta}{}`(const `\refvar{Vector3f}{}` &w) {
+    return std::max((`\refvar{Float}{}`)0, (`\refvar{Float}{}`)1 - `\refvar{Cos2Theta}{}`(w));
+}
+inline `\refvar{Float}{}` `\initvar{SinTheta}{}`(const `\refvar{Vector3f}{}` &w) {
+    return std::sqrt(`\refvar{Sin2Theta}{}`(w));
+}
+\end{lstlisting}
+
+角$\theta$的正切可以由恒等式$\displaystyle\tan\theta=\frac{\sin\theta}{\cos\theta}$计算。
+\begin{lstlisting}
+`\refcode{BSDF Inline Functions}{+=}\lastnext{BSDFInlineFunctions}`
+inline `\refvar{Float}{}` `\initvar{TanTheta}{}`(const `\refvar{Vector3f}{}` &w) {
+    return `\refvar{SinTheta}{}`(w) / `\refvar{CosTheta}{}`(w);
+}
+inline `\refvar{Float}{}` `\initvar{Tan2Theta}{}`(const `\refvar{Vector3f}{}` &w) {
+    return `\refvar{Sin2Theta}{}`(w) / `\refvar{Cos2Theta}{}`(w);
+}
+\end{lstlisting}
+
+我们可以类似地用着色坐标系来简化角$\varphi$的正余弦计算（\reffig{8.3}）。
+在被着色点的平面内，向量$\bm\omega$的坐标$(x,y)$分别由$r\cos\varphi$和$r\sin\varphi$给出。
+半径$r$是$\sin\theta$，所以
+\begin{align*}
+      \cos\varphi & =\frac{x}{r}=\frac{x}{\sin\theta}\,   \\
+      \sin\varphi & =\frac{y}{r}=\frac{y}{\sin\theta}\, .
+\end{align*}
+
+\begin{figure}[htbp]
+      \centering
+      \includegraphics[width=0.7\linewidth]{chap08/BSDFthetaphiangles.eps}
+      \caption{$\sin\varphi$和$\cos\varphi$的值可用球面坐标
+            方程$x=r\cos\varphi$和$y=r\sin\varphi$算得，其中$r$是虚线的长度，等于$\sin\theta$。}
+      \label{fig:8.3}
+\end{figure}
+
+\begin{lstlisting}
+`\refcode{BSDF Inline Functions}{+=}\lastnext{BSDFInlineFunctions}`
+inline `\refvar{Float}{}` `\initvar{CosPhi}{}`(const `\refvar{Vector3f}{}` &w) {
+    `\refvar{Float}{}` sinTheta = `\refvar{SinTheta}{}`(w);
+    return (sinTheta == 0) ? 1 : `\refvar{Clamp}{}`(w.x / sinTheta, -1, 1);
+}
+inline `\refvar{Float}{}` `\initvar{SinPhi}{}`(const `\refvar{Vector3f}{}` &w) {
+    `\refvar{Float}{}` sinTheta = `\refvar{SinTheta}{}`(w);
+    return (sinTheta == 0) ? 0 : `\refvar{Clamp}{}`(w.y / sinTheta, -1, 1);
+}
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{BSDF Inline Functions}{+=}\lastnext{BSDFInlineFunctions}`
+inline `\refvar{Float}{}` `\initvar{Cos2Phi}{}`(const `\refvar{Vector3f}{}` &w) {
+    return `\refvar{CosPhi}{}`(w) * `\refvar{CosPhi}{}`(w);
+}
+inline `\refvar{Float}{}` `\initvar{Sin2Phi}{}`(const `\refvar{Vector3f}{}` &w) {
+    return `\refvar{SinPhi}{}`(w) * `\refvar{SinPhi}{}`(w);
+}
+\end{lstlisting}
+
+两个向量在着色坐标系下$\varphi$值间的角$\Delta\varphi$的余弦
+可以通过置零两个向量的$z$坐标获得2D向量后再规范化求得。
+这两个向量的点积给出了它们夹角的余弦。
+为了高效，下面的实现重新排列了项使得只需执行一次平方根运算。
+\begin{lstlisting}
+`\refcode{BSDF Inline Functions}{+=}\lastnext{BSDFInlineFunctions}`
+inline `\refvar{Float}{}` `\initvar{CosDPhi}{}`(const `\refvar{Vector3f}{}` &wa, const `\refvar{Vector3f}{}` &wb) {
+    return `\refvar{Clamp}{}`((wa.x * wb.x + wa.y * wb.y) /
+                 std::sqrt((wa.x * wa.x + wa.y * wa.y) *
+                           (wb.x * wb.x + wb.y * wb.y)), -1, 1);
+}
+\end{lstlisting}
+
+当阅读本章代码和向pbrt增添BRDF和BTDF时，需要记住一些重要约定和实现细节。
+\begin{itemize}
+      \item 入射光方向${\bm\omega}_{\mathrm{i}}$和出射查看方向${\bm\omega}_{\mathrm{o}}$都是
+            规范化的，且变换到表面的局部坐标系后都是朝外指的。
+      \item 按pbrt的约定，曲面法线$\bm n$总是指向物体的“外侧”，这让确定光是进入还是射出透明物体更简单：
+            如果入射光方向${\bm\omega}_{\mathrm{i}}$和$\bm n$在同一半球，
+            则光在射入；否则光在射出。因此，要记住的一个细节是法线可能相对于
+            一个或两个方向向量${\bm\omega}_{\mathrm{i}}$和${\bm\omega}_{\mathrm{o}}$
+            在表面的对侧。不像许多其他渲染器那样，pbrt不会翻转法线使其和${\bm\omega}_{\mathrm{o}}$在同侧。
+      \item 用于着色的局部坐标系可能并不和来自第\refchap{形状}的例程\refvar{Shape::Intersect}{()}
+            返回的坐标系一样；它们在相交和着色间为了达到凹凸贴图等效果可能会被修改。见第\refchap{材质}这类修改的例子。
+      \item 最后，BRDF和BTDF的实现不应关心${\bm\omega}_{\mathrm{i}}$和${\bm\omega}_{\mathrm{o}}$是否在同一半球。
+            例如，尽管反射BRDF原则上应该检测是否入射方向在表面之上而出射方向在下面并在这种情况下总是不返回反射，
+            但这里我们希望反射函数代之以利用其反射模型的合适公式计算和返回反射的光量，
+            忽略它们不在同一半球的细节。pbrt中的高层级代码会保证只有反射或透射散射例程会适当求值。
+            该约定的价值将在\refsec{BSDF}解释。
+\end{itemize}
+
 \input{content/chap0801.tex}
+
+{\noindent\hfil$=========$\hfil{\color{red}{施工分割线}}\hfil$=========$\
 
 \input{content/chap0802.tex}

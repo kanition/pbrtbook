@@ -11,7 +11,15 @@ public:
     `\refcode{BxDF Public Data}{}`
 };
 \end{lstlisting}
-\refsec{BSDF}将要介绍的类\refvar{BSDF}{}
+
+\refsec{BSDF}将要介绍的类\refvar{BSDF}{}持有一系列\refvar{BxDF}{}对象
+来一起描述表面上一点的散射。尽管我们把\refvar{BxDF}{}的实现细节隐藏到
+反射和透射材质的公共接口后，第\refchap{光传输I：表面反射}到\refchap{光传输III：双向方法}的
+一些光传输算法还是需要区分这两个类型。因此，所有\refvar{BxDF}{}都
+有成员\refvar{BxDF::type}{}持有来自\refvar{BxDFType}{}的标志。
+对于每个\refvar{BxDF}{}，该标志应至少有一个置为\refvar[BSDFREFLECTION]{BSDF\_REFLECTION}{}
+或\refvar[BSDFTRANSMISSION]{BSDF\_TRANSMISSION}{}，且恰有一个漫反射、光泽或镜面标志。
+注意没有逆反射标志；这里的分类中逆反射被当作光泽反射。
 
 \begin{lstlisting}
 `\initcode{BSDF Declarations}{=}\initnext{BSDFDeclarations}`
@@ -22,7 +30,7 @@ enum `\initvar{BxDFType}{}` {
     `\initvar[BSDFGLOSSY]{BSDF\_GLOSSY}{}` = 1 << 3,
     `\initvar[BSDFSPECULAR]{BSDF\_SPECULAR}{}` = 1 << 4,
     `\initvar[BSDFALL]{BSDF\_ALL}{}` = BSDF_DIFFUSE | BSDF_GLOSSY | BSDF_SPECULAR |
-    BSDF_REFLECTION | BSDF_TRANSMISSION,
+                        BSDF_REFLECTION | BSDF_TRANSMISSION,
 };
 \end{lstlisting}
 
@@ -36,6 +44,7 @@ enum `\initvar{BxDFType}{}` {
 const `\refvar{BxDFType}{}` `\initvar[BxDF::type]{type}{}`;
 \end{lstlisting}
 
+实用方法\refvar{MatchesFlags}{()}确定\refvar{BxDF}{}是否匹配用户提供的类型标志：
 \begin{lstlisting}
 `\refcode{BxDF Interface}{+=}\lastnext{BxDFInterface}`
 bool `\initvar{MatchesFlags}{}`(`\refvar{BxDFType}{}` t) const {
@@ -43,7 +52,104 @@ bool `\initvar{MatchesFlags}{}`(`\refvar{BxDFType}{}` t) const {
 }
 \end{lstlisting}
 
+\refvar{BxDF}{}提供的关键方法是\refvar{BxDF::f}{()}。
+它为给定的方向对返回分布函数的值。该接口隐式假设了不同波长的光是解耦的——
+某一波长的能量不会反射成不同波长。通过作出该假设，反射函数的效应可以直接用\refvar{Spectrum}{}表示。
+支持该假设不成立的荧光材料则要求该方法返回一个$n\times n$矩阵以编码光谱样本间的能量转化
+（其中$n$是\refvar{Spectrum}{}表示中的样本数量）。
 \begin{lstlisting}
 `\refcode{BxDF Interface}{+=}\lastnext{BxDFInterface}`
 virtual `\refvar{Spectrum}{}` `\initvar[BxDF::f]{f}{}`(const `\refvar{Vector3f}{}` &wo, const `\refvar{Vector3f}{}` &wi) const = 0;
+\end{lstlisting}
+
+不是所有\refvar{BxDF}{}都能用方法\refvar[BxDF::f]{f}{()}求值。
+例如，像镜子、玻璃或水那样的完美镜面物体只把来自单个入射方向的光朝单个出射方向散射。
+这样的\refvar{BxDF}{}最好用$\delta$分布描述，即除了光散射的单个方向外都取零。
+pbrt中这些\refvar{BxDF}{}需要特殊处理，所以我们也会提供方法\refvar[BxDF::Samplef]{BxDF::Sample\_f}{()}。
+该方法既能用于处理由$\delta$分布描述的散射，
+也能从散射光有多个方向的\refvar{BxDF}{}中随机采样方向；
+第二种应用将在\refsec{采样反射函数}中讨论蒙特卡罗BSDF采样时解释。
+
+\refvar[BxDF::Samplef]{BxDF::Sample\_f}{()}计算给定出射方向${\bm\omega}_{\mathrm{o}}$的
+入射光方向${\bm\omega}_{\mathrm{i}}$并为这对方向返回\refvar{BxDF}{}的值。
+对于$\delta$分布，\refvar{BxDF}{}有必要这样选择入射光方向，因为调用者
+无法生成合适的方向${\bm\omega}_{\mathrm{i}}$
+\footnote{反射函数中的$\delta$分布对于光传输算法有一些额外微妙的影响。
+    \refsub{镜面反射与透射}和\refsub{被积函数中的delta分布}详细描述了该问题。}。
+$\delta$分布的\refvar{BxDF}{}不需要参数{\ttfamily sample}和{\ttfamily pdf}，
+所以它们会在后面的\refsec{采样反射函数}解释，到时我们将为非镜面反射函数提供该方法的实现。
+\begin{lstlisting}
+`\refcode{BxDF Interface}{+=}\lastnext{BxDFInterface}`
+virtual `\refvar{Spectrum}{}` `\initvar[BxDF::Samplef]{Sample\_f}{}`(const `\refvar{Vector3f}{}` &wo, `\refvar{Vector3f}{}` *wi,
+    const `\refvar{Point2f}{}` &sample, `\refvar{Float}{}` *pdf,
+    `\refvar{BxDFType}{}` *sampledType = nullptr) const;
+\end{lstlisting}
+
+\subsection{反射}\label{sub:反射}
+将4D的BRDF或BTDF的表现聚合起来定义为一对方向上的函数，
+并将其简化为单个方向上的2D函数甚至是描述其整体散射表现的常数值很有用。
+
+\keyindex{半球定向反射率}{hemispherical-directional reflectance}{}是
+一个2D函数，它给出了半球上常量照明于给定方向上的反射率，
+或者等价地，因来自给定方向的光而在半球上的总反射率
+\footnote{这两个量相等的事实源自反射函数的互易性。BTDF通常不互易；见\refsub{非对称散射}。}。
+它定义为
+\begin{align}
+    \label{eq:8.1}
+    \rho_{\mathrm{hd}}({\bm\omega}_{\mathrm{o}})=\int_{H^2({\bm n})}{f_{\mathrm{r}}({\bm p},{\bm \omega}_\mathrm{o},{\bm \omega}_\mathrm{i})|\cos{\theta_{\mathrm{i}}}|\mathrm{d}{\bm \omega}_\mathrm{i}}\, .
+\end{align}
+
+方法\refvar{BxDF::rho}{()}计算反射函数$\rho_{\mathrm{hd}}$。
+一些\refvar{BxDF}{}能解析地计算该值，然而大部分用蒙特卡罗积分来计算其近似值。
+对于那些\refvar{BxDF}{}，参数{\ttfamily nSamples}和{\ttfamily samples}供
+蒙特卡罗算法的实现使用；它们将在\refsub{应用：估计反射率}解释。
+\begin{lstlisting}
+`\refcode{BxDF Interface}{+=}\lastnext{BxDFInterface}`
+virtual `\refvar{Spectrum}{}` `\initvar[BxDF::rho]{rho}{}`(const `\refvar{Vector3f}{}` &wo, int nSamples,
+                     const `\refvar{Point2f}{}` *samples) const;
+\end{lstlisting}
+
+表面的\keyindex{半球半球反射率}{hemispherical-hemispherical reflectance}{}记为$\rho_{\mathrm{hh}}$，
+该光谱值给出了当各方向入射光相同时表面反射的入射光比例。它是
+\begin{align}
+    \rho_{\mathrm{hh}}=\frac{1}{\pi}\int_{H^2({\bm n})}\int_{H^2({\bm n})}f_{\mathrm{r}}({\bm p},{\bm \omega}_\mathrm{o},{\bm \omega}_\mathrm{i})|\cos{\theta_{\mathrm{o}}}\cos{\theta_{\mathrm{i}}}|\mathrm{d}{\bm \omega}_\mathrm{o}\mathrm{d}{\bm \omega}_\mathrm{i}\, .
+\end{align}
+
+如果不提供方向${\bm\omega}_\mathrm{o}$，则方法\refvar[BxDF::rho2]{BxDF::rho}{()}计算$\rho_{\mathrm{hh}}$。
+剩下的参数又是在需要时用于计算$\rho_{\mathrm{hh}}$值的蒙特卡罗估计。
+\begin{lstlisting}
+`\refcode{BxDF Interface}{+=}\lastcode{BxDFInterface}`
+virtual `\refvar{Spectrum}{}` `\initvar[BxDF::rho2]{rho}{}`(int nSamples, const `\refvar{Point2f}{}` *samples1,
+                     const `\refvar{Point2f}{}` *samples2) const;
+\end{lstlisting}
+
+\subsection{BxDF缩放适配器}\label{sub:BxDF缩放适配器}
+取一个给定的\refvar{BxDF}{}并用一个\refvar{Spectrum}{}值
+缩放它的作用也很有用。\refvar{ScaledBxDF}{}
+封装器持有一个\refvar{BxDF}{*}和\refvar{Spectrum}{}并实现其功能。
+该类由\refvar{MixMaterial}{}（定义于\refsub{混合材料}）使用，
+它基于另两种材料的加权和创建\refvar{BSDF}{}。
+\begin{lstlisting}
+`\refcode{BxDF Declarations}{+=}\lastnext{BxDFDeclarations}`
+class `\initvar{ScaledBxDF}{}` : public `\refvar{BxDF}{}` {
+public:
+    `\refcode{ScaledBxDF Public Methods}{}`
+private:
+    `\refvar{BxDF}{}` *`\initvar[ScaledBxDF::bxdf]{bxdf}{}`;
+    `\refvar{Spectrum}{}` `\initvar[ScaledBxDF::scale]{scale}{}`;
+};
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{ScaledBxDF Public Methods}{=}`
+`\refvar{ScaledBxDF}{}`(`\refvar{BxDF}{}` *bxdf, const `\refvar{Spectrum}{}` &scale)
+    : `\refvar{BxDF}{}`(`\refvar{BxDFType}{}`(bxdf->`\refvar[BxDF::type]{type}{}`)), `\refvar[ScaledBxDF::bxdf]{bxdf}{}`(bxdf), `\refvar[ScaledBxDF::scale]{scale}{}`(scale) {
+}
+\end{lstlisting}
+
+\refvar{ScaledBxDF}{}的方法实现很简单；我们这里只介绍\refvar[ScaledBxDF::f]{f}{()}。
+\begin{lstlisting}
+`\initcode{BxDF Method Definitions}{=}\initnext{BxDFMethodDefinitions}`
+`\refvar{Spectrum}{}` `\refvar{ScaledBxDF}{}`::`\initvar[ScaledBxDF::f]{f}{}`(const `\refvar{Vector3f}{}` &wo, const `\refvar{Vector3f}{}` &wi) const {
+    return `\refvar[ScaledBxDF::scale]{scale}{}` * `\refvar[ScaledBxDF::bxdf]{bxdf}{}`->`\refvar[BxDF::f]{f}{}`(wo, wi);
+}
 \end{lstlisting}

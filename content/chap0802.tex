@@ -1,6 +1,236 @@
 \section{镜面反射与透射}\label{sec:镜面反射与透射}
 
+绝对光滑表面上光的特性较容易用物理和几何光学模型分析刻画。
+这些表面展现出入射光的完美镜像反射和透射；
+对于给定的方向${\bm\omega}_{\mathrm{i}}$，
+所有光都散射到单个出射方向${\bm\omega}_{\mathrm{o}}$.
+对于镜面反射，该出射方向和法线所成角与入射方向相同：
+\begin{align*}
+    \theta_{\mathrm{i}}=\theta_{\mathrm{o}}\, ,
+\end{align*}
+且其中$\varphi_{\mathrm{o}}=\varphi_{\mathrm{i}}+\pi$.
+对于透射，我们也有$\varphi_{\mathrm{o}}=\varphi_{\mathrm{i}}+\pi$，
+且出射方向$\theta_{\mathrm{t}}$由斯涅尔定律给出，
+它将折射方向与曲面法线$\bm n$的夹角$\theta_{\mathrm{t}}$与
+入射光线与曲面法线$\bm n$的夹角$\theta_{\mathrm{i}}$联系起来
+（本章末的习题之一是用光学的费马原理推导斯涅尔定律）。
+斯涅尔定律基于入射光线所在介质的\keyindex{折射率}{index of refraction}{}和
+要进入的介质的折射率。折射率描述了光在特定介质中相比在真空中传播要慢多少。
+我们用希腊字母$\eta$表示折射率，读作“eta”。斯涅尔定律是
+\begin{align}
+    \label{eq:8.2}
+    \eta_{\mathrm{i}}\sin\theta_{\mathrm{i}}=\eta_{\mathrm{t}}\sin\theta_{\mathrm{t}}\, .
+\end{align}
+
+通常，折射率随波长变化。因此，在两种不同介质界面上入射光通常散射到多个方向，
+该效应称为\keyindex{色散}{dispersion}{}。
+当入射白光被棱镜分出光谱成分时可以观察到该效应。
+图形学中的通行做法是忽略该波长依赖性，
+因为该效应通常对视觉准确性并不关键且忽略它能极大简化光传输计算。
+可选地，可以在有色散物体的环境中追踪多束光路（例如一系列离散波长）。
+第\refchap{光传输I：表面反射}末的“扩展阅读”一节有关于该话题的更多信息指引。
+\begin{figure}[htbp]
+    \centering
+    \subfloat[镜面反射]{\includegraphics[width=0.75\linewidth]{chap08/dragon-specular-reflect.png}\label{fig:8.4.1}}\\
+    \subfloat[镜面透射]{\includegraphics[width=0.75\linewidth]{chap08/dragon-specular-transmit.png}\label{fig:8.4.2}}
+    \caption{用(1)完美镜面反射和(2)完美镜面折射渲染的龙模型。图像(2)排除了
+        内外反射的影响；导致的能量损失产生了显眼的暗区（感谢Christian Schüller提供模型）。}
+    \label{fig:8.4}
+\end{figure}
+
+\reffig{8.4}展示了完美镜面反射和透射的效果。
+
 \subsection{菲涅尔反射率}\label{sub:菲涅尔反射率}
+除了反射和透射方向，还有必要计算反射或透射的入射光占比。
+为了物理上准确反射或折射，该项依赖于方向，而不能用每个表面的缩放常数表征。
+\keyindex{菲涅耳方程}{Fresnel equations}{}
+\sidenote{译者注：得名于法国物理学家奥古斯丁·菲涅耳(Augustin-Jean Fresnel)。}描述了
+表面上反射光的量；它们是麦克斯韦方程在光滑表面上的解。
+
+给定折射率和入射光与曲面法线所成角度，菲涅耳方程
+指定了材料对两种不同偏振状态的入射照明相应的反射率。
+因为偏振的视觉效果在大多数环境下是受限的，
+所以在pbrt中我们将作出光是无偏振的常用假设；
+即光波是随机朝向的。有了该简化假设，菲涅尔反射率就是
+平行和垂直偏振项的均方。
+
+此刻有必要指出几个重要材料类别的差异：
+\begin{enumerate}
+    \item 第一类是\keyindex{介电质}{dielectric}{}，
+          是不会导电的材料。它们有实数值的折射率（通常在范围1-3内）且
+          透射\footnote{注意介电质可能充满能吸收大部分或所有透射光的粒子（例如石油）。
+              像水那样的介电质也能通过添加离子使之导电而变成电解质溶液。
+              这两方面都和材料本身划分为介电质或导体无关。}一部分入射照明。
+          介电质的例子有玻璃、矿油、水和空气。
+    \item 第二类组成是\keyindex{导体}{conductor}{}例如金属。
+          价电子可以自由地在原子晶格中移动，允许电流从一个地方流到另一处。
+          当导体受到电磁辐射例如可见光时，这一基本的原子属性就会转化为完全不同的特性：
+          该材料是不透明的并反射回大部分照明。一部分光也透射进导体内部并被迅速吸收：
+          总吸收通常发生在材料表面0.1$\mu\mathrm{m}$内，因此只有极薄的金属膜才能透射足够的光量。
+          我们在pbrt中忽略该效应而只建模导体的反射部分。与介电质相反，
+          导体有复数值的折射率$\bar{\eta}=\eta+\mathrm{i}k$.
+    \item \keyindex{半导体}{semiconductor}{}例如硅或锗是本书中我们不予考虑的第三类。
+\end{enumerate}
+
+导体和介电质都由同一组菲涅尔方程表征。
+尽管如此，我们更喜欢为介电质创建特殊的求值函数，
+这样当折射率保证为实数值时，这些方程会取特别简单的形式。
+
+\begin{table}[htbp]
+    \centering
+    \begin{tabular}{ll}
+        \toprule
+        \textbf{介质}  & \textbf{折射率}$\eta$ \\
+        \midrule
+        真空           & 1.0                   \\
+        海平面上的空气 & 1.00029               \\
+        冰             & 1.31                  \\
+        水（20℃）      & 1.333                 \\
+        熔融石英       & 1.46                  \\
+        玻璃           & 1.5-1.6               \\
+        蓝宝石         & 1.77                  \\
+        钻石           & 2.42                  \\
+        \bottomrule
+    \end{tabular}
+    \caption{各种物体的折射率，给出了光在真空中的速度与
+        光在介质中的速度的比值。它们通常是与波长相关的量；
+        这些值是在可见波长上的均值。}
+    \label{tab:8.1}
+\end{table}
+
+为了计算两种介电质界面处的菲涅尔反射率，我们
+需要知道这两种介质的折射率。\reftab{8.1}有许多介电质的折射率。
+介电质的菲涅尔反射率公式是
+\begin{align*}
+    r_{\parallel} & =\frac{\eta_{\mathrm{t}}\cos\theta_{\mathrm{i}}-\eta_{\mathrm{i}}\cos\theta_{\mathrm{t}}}{\eta_{\mathrm{t}}\cos\theta_{\mathrm{i}}+\eta_{\mathrm{i}}\cos\theta_{\mathrm{t}}}\, , \\
+    r_{\perp}     & =\frac{\eta_{\mathrm{i}}\cos\theta_{\mathrm{i}}-\eta_{\mathrm{t}}\cos\theta_{\mathrm{t}}}{\eta_{\mathrm{i}}\cos\theta_{\mathrm{i}}+\eta_{\mathrm{t}}\cos\theta_{\mathrm{t}}}\, ,
+\end{align*}
+其中$r_{\parallel}$是平行偏振光的菲涅尔反射率，
+$r_{\perp}$是垂直偏振光的反射率，$eta_{\mathrm{i}}$和$\eta_{\mathrm{t}}$是
+入射和透射介质的折射率，$\bm\omega_{\mathrm{i}}$和$\bm\omega_{\mathrm{t}}$是
+入射和透射方向。$\bm\omega_{\mathrm{t}}$由斯涅尔定律算出（见\refsub{镜面透射}）。
+
+余弦项应该大于或等于零；出于计算这些值的目的，
+当计算$\cos\theta_{\mathrm{i}}$和$\cos\theta_{\mathrm{t}}$时，
+几何法线应该分别翻转到和$\bm\omega_{\mathrm{i}}$或$\bm\omega_{\mathrm{t}}$同侧。
+
+对于非偏振光，菲涅尔反射率是
+\begin{align*}
+    F_{\mathrm{r}}=\frac{1}{2}(r_{\parallel}^2+r_{\perp}^2)\, .
+\end{align*}
+
+因为能量守恒，介电质传输的能量为$1-F_{\mathrm{r}}$.
+
+函数\refvar{FrDielectric}{()}为介电质材料和非偏振光计算菲涅尔反射率公式。
+量$\cos\theta_{\mathrm{i}}$作为参数{\ttfamily cosThetaI}传入。
+\begin{lstlisting}
+`\initcode{BxDF Utility Functions}{=}`
+`\refvar{Float}{}` `\initvar{FrDielectric}{}`(`\refvar{Float}{}` cosThetaI, `\refvar{Float}{}` etaI, `\refvar{Float}{}` etaT) {
+    cosThetaI = `\refvar{Clamp}{}`(cosThetaI, -1, 1);
+    `\refcode{Potentially swap indices of refraction}{}`
+    `\refcode{Compute cosThetaT using Snell's law}{}`
+    `\refvar{Float}{}` Rparl = ((etaT * cosThetaI) - (etaI * cosThetaT)) /
+                  ((etaT * cosThetaI) + (etaI * cosThetaT));
+    `\refvar{Float}{}` Rperp = ((etaI * cosThetaI) - (etaT * cosThetaT)) /
+                  ((etaI * cosThetaI) + (etaT * cosThetaT));
+    return (Rparl * Rparl + Rperp * Rperp) / 2;
+}
+\end{lstlisting}
+
+为了求得折射角的余弦{\ttfamily cosThetaT}，
+首先需要确定入射方向是在介质的外面还是里面，这样才能恰当解释两个折射率。
+
+入射角余弦的符号表明了入射光在介质的哪一侧（\reffig{8.5}）。
+如果余弦在0到1间，则光线在外侧，如果在-1到0间，则光线在内侧。
+调整参数{\ttfamily etaI}和{\ttfamily etaT}使得{\ttfamily etaI}
+是入射介质的折射率，这样保证了{\ttfamily cosThetaI}非负。
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.7\linewidth]{chap08/BSDFanglegivesinout.eps}
+    \caption{方向$\bm\omega$和几何曲面法线间夹角$\theta$的余弦
+        表明方向是指向表面外侧（和法线在同一半球）还是表面内侧。
+        在标准反射坐标系中，该测试只要求检查方向向量的$z$分量。
+        这里，$\bm\omega$在上半球，取正值余弦，而${\bm\omega}'$在下半球。}
+    \label{fig:8.5}
+\end{figure}
+
+\begin{lstlisting}
+`\initcode{Potentially swap indices of refraction}{=}`
+bool entering = cosThetaI > 0.f;
+if (!entering) {
+    std::swap(etaI, etaT);
+    cosThetaI = std::abs(cosThetaI);
+}
+\end{lstlisting}
+
+一旦确定折射率，我们就能用斯涅尔定律（\refeq{8.2}）计算
+透射方向和曲面法线夹角的正弦$\sin\theta_{\mathrm{t}}$.
+最后，用恒等式$\sin^2\theta+\cos^2\theta=1$求得该角的余弦。
+\begin{lstlisting}
+`\initcode{Compute cosThetaT using Snell's law}{=}`
+`\refvar{Float}{}` sinThetaI = std::sqrt(std::max((`\refvar{Float}{}`)0,
+                                     1 - cosThetaI * cosThetaI));
+`\refvar{Float}{}` sinThetaT = etaI / etaT * sinThetaI;
+`\refcode{Handle total internal reflection}{}`
+`\refvar{Float}{}` cosThetaT = std::sqrt(std::max((`\refvar{Float}{}`)0,
+                                     1 - sinThetaT * sinThetaT));
+\end{lstlisting}
+
+当从一种介质传播到另一种折射率更低的介质时，入射角接近掠角的光不能进入另一介质。
+发生该现象的最大角称为\keyindex{临界角}{critical angle}{}；
+当$\theta_{\mathrm{i}}$大于临界角时，发生\keyindex{全内反射}{total internal reflection}{reflection反射}，
+所有光都被反射。这里通过$\sin\theta_{\mathrm{t}}$大于1检测到该情况；
+此时不需要菲涅尔方程。
+\begin{lstlisting}
+`\initcode{Handle total internal reflection}{=}`
+if (sinThetaT >= 1)
+    return 1;
+\end{lstlisting}
+
+我们现在聚焦一般情况下的复数折射率$\bar{\eta}=\eta+\mathrm{i}k$，
+其中一些入射光被材料部分吸收并变为热量。
+除了实部，一般菲涅尔公式现在也依赖于虚部$k$，
+称为\keyindex{吸收系数}{absorption coefficient}{}。
+
+\reffig{8.6}展示了金的折射率和吸收系数图示。两者都是与波长相关的量。
+pbrt发行版中目录{\ttfamily scenes/spds/metals}下有各种金属的$\eta$与$k$与波长相关的数据。
+下章的\reffig{9.4}展示了用金属材料渲染的模型。
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.7\linewidth]{chap08/au-k-eta.eps}
+    \caption{金的吸收系数和折射率。该图展示了金的吸收系数$k$（实线）
+        和折射率$\eta$（虚线）随光谱变化的值，横轴是波长，单位纳米。}
+    \label{fig:8.6}
+\end{figure}
+
+导体和介电质界面处的菲涅尔反射率是
+\begin{align}
+    \label{eq:8.3}
+    r_{\perp}     & =\frac{a^2+b^2-2a\cos\theta+\cos^2\theta}{a^2+b^2+2a\cos\theta+\cos^2\theta}\, ,\nonumber                                                     \\
+    r_{\parallel} & =r_{\perp}\frac{(a^2+b^2)\cos^2\theta-2a\cos\theta\sin^2\theta+\sin^4\theta}{(a^2+b^2)\cos^2\theta+2a\cos\theta\sin^2\theta+\sin^4\theta}\, ,
+\end{align}
+其中
+\begin{align*}
+    a^2+b^2=\sqrt{(\eta^2-k^2-\sin^2\theta)^2+4\eta^2k^2}\, ,
+\end{align*}
+且$\displaystyle\eta+\mathrm{i}k=\frac{\bar{\eta_\mathrm{t}}}{\bar{\eta_\mathrm{i}}}$是
+用复数除法算出的相对折射率。然而，通常$\bar{\eta_\mathrm{i}}$是介电质的
+所以可以替代使用普通的实数除法。
+
+该计算由函数\refvar{FrConductor}{()}实现
+\footnote{注意这稍微用词不当，因为函数在技术上包含了介电质$k=0$的情况。
+    也就是说，我们选这个名称是为了表明该函数应只用于处理导体，
+    因为它比求\refvar{FrDielectric}{()}的开销更大。}；
+该实现直接对应\refeq{8.3}所以这里不介绍了。
+\begin{lstlisting}
+`\initcode{Reflection Declarations}{=}`
+`\refvar{Spectrum}{}` `\initvar{FrConductor}{}`(`\refvar{Float}{}` cosThetaI, const `\refvar{Spectrum}{}` &etaI,
+    const `\refvar{Spectrum}{}` &etaT, const `\refvar{Spectrum}{}` &k);
+\end{lstlisting}
+
+为了方便，我们定义抽象类\refvar{Fresnel}{}以提供接口计算菲涅尔反射系数。
+用该接口的实现帮助简化后续可能需要支持两种形式的BRDF实现。
 \begin{lstlisting}
 `\refcode{BxDF Declarations}{+=}\lastnext{BxDFDeclarations}`
 class `\initvar{Fresnel}{}` {
@@ -9,9 +239,85 @@ public:
 };
 \end{lstlisting}
 
+\refvar{Fresnel}{}接口提供的唯一函数是\refvar{Fresnel::Evaluate}{()}。
+给定入射方向和曲面法线夹角的余弦，它返回表面反射的光量。
+\begin{lstlisting}
+`\initcode{Fresnel Interface}{=}`
+virtual `\refvar{Spectrum}{}` `\initvar[Fresnel::Evaluate]{Evaluate}{}`(`\refvar{Float}{}` cosI) const = 0;
+\end{lstlisting}
+
 \subsubsection*{菲涅尔导体}
+\refvar{FresnelConductor}{}为导体实现该接口。
+\begin{lstlisting}
+`\refcode{BxDF Declarations}{+=}\lastnext{BxDFDeclarations}`
+class `\initvar{FresnelConductor}{}` : public `\refvar{Fresnel}{}` {
+public:
+    `\refcode{FresnelConductor Public Methods}{}`
+private:
+    `\refvar{Spectrum}{}` `\initvar[FresnelConductor::etaI]{etaI}{}`, `\initvar[FresnelConductor::etaT]{etaT}{}`, `\initvar[FresnelConductor::k]{k}{}`;
+};
+\end{lstlisting}
+
+其构造函数存有给定的折射率$\eta$和吸收系数$k$.
+\begin{lstlisting}
+`\initcode{FresnelConductor Public Methods}{=}`
+`\refvar{FresnelConductor}{}`(const `\refvar{Spectrum}{}` &etaI, const `\refvar{Spectrum}{}` &etaT,
+    const `\refvar{Spectrum}{}` &k) : `\refvar[FresnelConductor::etaI]{etaI}{}`(etaI), `\refvar[FresnelConductor::etaT]{etaT}{}`(), `\refvar[FresnelConductor::k]{k}{}`(k) { }
+\end{lstlisting}
+
+\refvar{FresnelConductor}{}的求值例程也很简单；它只需调用之前定义的函数
+\refvar{FrConductor}{()}。注意在调用\refvar{FrConductor}{()}
+前{\ttfamily cosThetaI}要取绝对值，因为\refvar{FrConductor}{()}
+要求该余弦是在法线和${\bm\omega}_{\mathrm{i}}$在表面的同一侧时测出的，
+或者等价地，应该用$\cos\theta_{\mathrm{i}}$的绝对值。
+\begin{lstlisting}
+`\refcode{BxDF Method Definitions}{+=}\lastnext{BxDFMethodDefinitions}`
+`\refvar{Spectrum}{}` `\refvar{FresnelConductor}{}`::`\initvar[FresnelConductor::Evaluate]{Evaluate}{}`(`\refvar{Float}{}` cosThetaI) const {
+    return `\refvar{FrConductor}{}`(std::abs(cosThetaI), `\refvar[FresnelConductor::etaI]{etaI}{}`, `\refvar[FresnelConductor::etaT]{etaT}{}`, `\refvar[FresnelConductor::k]{k}{}`);
+}
+\end{lstlisting}
+
+\subsubsection*{菲涅尔介电质}
+\refvar{FresnelDielectric}{}类似地为介电质材料实现了\refvar{Fresnel}{}接口。
+\begin{lstlisting}
+`\refcode{BxDF Declarations}{+=}\lastnext{BxDFDeclarations}`
+class `\initvar{FresnelDielectric}{}` : public `\refvar{Fresnel}{}` {
+public:
+    `\refcode{FresnelDielectric Public Methods}{}`
+private:
+    `\refvar{Float}{}` `\initvar[FresnelDielectric::etaI]{etaI}{}`, `\initvar[FresnelDielectric::etaT]{etaT}{}`;
+};
+\end{lstlisting}
+
+其构造函数存有表面内外侧的折射率。
+\begin{lstlisting}
+`\initcode{FresnelDielectric Public Methods}{=}`
+`\refvar{FresnelDielectric}{}`(`\refvar{Float}{}` etaI, `\refvar{Float}{}` etaT) : `\refvar[FresnelDielectric::etaI]{etaI}{}`(etaI), `\refvar[FresnelDielectric::etaT]{etaT}{}`(etaT) { }
+\end{lstlisting}
+
+\refvar{FresnelDielectric}{}的求值例程类似地调用\refvar{FrDielectric}{()}。
+\begin{lstlisting}
+`\refcode{BxDF Method Definitions}{+=}\lastnext{BxDFMethodDefinitions}`
+`\refvar{Spectrum}{}` `\refvar{FresnelDielectric}{}`::`\initvar[FresnelDielectric::Evaluate]{Evaluate}{}`(`\refvar{Float}{}` cosThetaI) const {
+    return `\refvar{FrDielectric}{}`(cosThetaI, `\refvar[FresnelDielectric::etaI]{etaI}{}`, `\refvar[FresnelDielectric::etaT]{etaT}{}`);
+}
+\end{lstlisting}
+
+\subsubsection*{特殊菲涅尔接口}
+\refvar{Fresnel}{}接口的实现\refvar{FresnelNoOp}{}对所有入射方向返回100\%反射率。
+尽管这在物理上不可实现，但这是可用的方便能力。
+\begin{lstlisting}
+`\refcode{BxDF Declarations}{+=}\lastnext{BxDFDeclarations}`
+class `\initvar{FresnelNoOp}{}` : public `\refvar{Fresnel}{}` {
+public:
+    `\refvar{Spectrum}{}` `\initvar[FresnelNoOp::Evaluate]{Evaluate}{}`(`\refvar{Float}{}`) const { return `\refvar{Spectrum}{}`(1.); }
+};
+\end{lstlisting}
 
 \subsection{镜面反射}\label{sub:镜面反射}
+我们现在可以实现类\refvar{SpecularReflection}{}，
+它用菲涅尔接口计算反射光的占比，描述了物理可实现的镜面反射。
+首先，我们将推导描述镜面反射的BRDF。
 
 \subsection{镜面透射}\label{sub:镜面透射}
 \begin{lstlisting}

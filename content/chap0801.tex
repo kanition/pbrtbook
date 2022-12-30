@@ -111,11 +111,11 @@ virtual `\refvar{Spectrum}{}` `\initvar[BxDF::rho]{rho}{}`(const `\refvar{Vector
 
 表面的\keyindex{半球半球反射率}{hemispherical-hemispherical reflectance}{}记为$\rho_{\mathrm{hh}}$，
 该光谱值给出了当各方向入射光相同时表面反射的入射光比例。它是
-\begin{align}
+\begin{align*}
     \rho_{\mathrm{hh}}=\frac{1}{\pi}\int_{H^2({\bm n})}\int_{H^2({\bm n})}f_{\mathrm{r}}({\bm p},{\bm \omega}_\mathrm{o},{\bm \omega}_\mathrm{i})|\cos{\theta_{\mathrm{o}}}\cos{\theta_{\mathrm{i}}}|\mathrm{d}{\bm \omega}_\mathrm{o}\mathrm{d}{\bm \omega}_\mathrm{i}\, .
-\end{align}
+\end{align*}
 
-如果不提供方向${\bm\omega}_\mathrm{o}$，则方法\refvar[BxDF::rho2]{BxDF::rho}{()}计算$\rho_{\mathrm{hh}}$。
+如果不提供方向${\bm\omega}_\mathrm{o}$，则方法\refvar[BxDF::rho2]{BxDF::rho}{()}计算$\rho_{\mathrm{hh}}$.
 剩下的参数又是在需要时用于计算$\rho_{\mathrm{hh}}$值的蒙特卡罗估计。
 \begin{lstlisting}
 `\refcode{BxDF Interface}{+=}\lastcode{BxDFInterface}`

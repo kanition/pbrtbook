@@ -1,7 +1,7 @@
 \section{RGBSpectrum的实现}\label{sec:RGBSpectrum的实现}
 
 这里\refvar{RGBSpectrum}{}的实现用红绿蓝分量的加权和表示SPD。
-回想该表示是定义病态的：给定两个不同的计算机显示器，
+回顾下该表示的定义并不明确：给定两个不同的计算机显示器，
 让它们显示相同RGB值并不会让它们发射相同的SPD。
 因此，为了给一组RGB值指定实际的SPD，我们必须知道定义时所依据的显示器原色；
 这些信息一般不会随RGB值提供。
@@ -22,7 +22,7 @@ public:
 \begin{lstlisting}
 `\initcode{RGBSpectrum Public Methods}{=}\initnext{RGBSpectrumPublicMethods}`
 `\refvar{RGBSpectrum}{}`(`\refvar{Float}{}` v = 0.f) : `\refvar{CoefficientSpectrum}{}`<3>(v) { }
-`\refvar{RGBSpectrum}{}`(const `\refvar{CoefficientSpectrum}{}`<3> &v) 
+`\refvar{RGBSpectrum}{}`(const `\refvar{CoefficientSpectrum}{}`<3> &v)
     : `\refvar{CoefficientSpectrum}{}`<3>(v) { }
 \end{lstlisting}
 
@@ -91,7 +91,7 @@ static `\refvar{RGBSpectrum}{}` `\initvar[RGBSpectrum::FromSampled]{FromSampled}
     xyz[0] *= scale;
     xyz[1] *= scale;
     xyz[2] *= scale;
-    return `\refvar[RGBSpectrum::FromXYZ]{FromXYZ}{}`(xyz);    
+    return `\refvar[RGBSpectrum::FromXYZ]{FromXYZ}{}`(xyz);
 }
 \end{lstlisting}
 

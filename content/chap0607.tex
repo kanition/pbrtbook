@@ -10,7 +10,7 @@
 光是人眼可见频段的电磁波，可在真空与介质中传播。
 光在真空中的传播速度最大，在介质中的传播速度与介质类型有关。
 \begin{definition}
-    三维中的\keyindex{波前}{wavefront}{}是某一时刻波\keyindex{相位}{phase}{}相同的点构成的面。
+    三维中的\keyindex{波阵面}{wavefront}{}是某一时刻波\keyindex{相位}{phase}{}相同的点构成的面。
 \end{definition}
 \begin{definition}
     电磁波在真空中的传播速率$c$与在介质中的传播速率$v$的比值
@@ -79,7 +79,7 @@
 \end{align}
 相对于空间路程$\sum\limits_{j=1}^{m}{s_j}$，
 我们定义上式中的$\sum\limits_{j=1}^{m}{n_js_j}$
-为\keyindex{光程}{optical path length}{}(OPL)。
+为\keyindex{光程长度}{optical path length}{}(OPL)。
 更一般地，在非均匀介质中折射率是位置的函数，因此有
 \begin{align}
     OPL=\int_S^P {n(s)\mathrm{d}s}\, .
@@ -94,7 +94,7 @@
 它可推导出光线在真空中沿直线传播的性质以及反射定律和折射定律。
 \begin{proposition}
     \keyindex{费马原理}{Fermat's principle}{}的现代形式是：
-    光线从点$S$到点$P$的传播路径一定是对光程\keyindex{稳定}{stationary}{}的。
+    光线从点$S$到点$P$所走路径的光程长度相对于该路径的变化一定是\keyindex{平稳}{stationary}{}的。
 \end{proposition}
 
 \begin{figure}[htbp]
@@ -106,7 +106,7 @@
 如\reffig{6.28}所示，我们利用费马原理来推导斯涅尔定律：
 \begin{prove}
     考虑从点$S$到点$P$的光线，它在界面上点$O$处发生折射，
-    相应量已标在图中。其光程为
+    相应量已标在图中。其光程长度为
     \begin{align}
         OPL=n_i\overline{SO}+n_t\overline{OP}=n_i\sqrt{x^2+h^2}+n_t\sqrt{b^2+(a-x)^2}\, .
     \end{align}
@@ -128,19 +128,19 @@
     \subfloat[日常的反射光可视作由无数原子级散射复合而成，例如这张人脸。]
     {\includegraphics[width=0.25\linewidth]{chap06/PersonFace.eps}\label{fig:6.29.1}}\,
     \subfloat[光学系统的共轭点]{\includegraphics[width=0.7\linewidth]{chap06/ConjugateFoci.eps}\label{fig:6.29.2}}
-    \caption{光的发散与汇聚。}
+    \caption{光的发散与会聚。}
     \label{fig:6.29}
 \end{figure}
 
 如\reffig{6.29.1}，自身发光或被照亮的物体可以视作是大量辐射点\keyindex{源}{source}{}构成的。
 每个点源都在发出\keyindex{球面波}{spherical wave}{}。
 此时我们说光线从给定点源\keyindex{发散}{diverge}{}。
-反之，若球面波坍缩到一点，我们说光线\keyindex{汇聚}{converge}{}到该点。
-实际中我们往往只处理\keyindex{波前}{wavefront}{}的一部分。
+反之，若球面波坍缩到一点，我们说光线\keyindex{会聚}{converge}{}到该点。
+实际中我们往往只处理\keyindex{波阵面}{wavefront}{}的一部分。
 在\keyindex{几何光学}{geometrical optics}{optics光学}中，
-我们研究如何通过插入反射和折射体来控制改变波前（光线）并忽略所有衍射效应。
-如\reffig{6.29.2}所示，当点$S$发散的一部分波前经过\keyindex{光学系统}{optical system}{}后
-汇聚到点$P$时，依据光路可逆性原理，在点$P$处发散的波前可以反向经过该系统处理后汇聚到点$S$.
+我们研究如何通过插入反射和折射体来控制改变波阵面（光线）并忽略所有衍射效应。
+如\reffig{6.29.2}所示，当点$S$发散的一部分波阵面经过\keyindex{光学系统}{optical system}{}后
+会聚到点$P$时，依据光路可逆性原理，在点$P$处发散的波阵面可以反向经过该系统处理后会聚到点$S$.
 我们称点$S$和点$P$互为\keyindex{共轭点}{conjugate point}{}。
 对于理想光学系统，三维空间中的任意区域都会完美成像为另一区域，
 前者称为\keyindex{物空间}{object space}{}，后者称为\keyindex{像空间}{image space}{}。
@@ -152,12 +152,12 @@
 \end{definition}
 
 如\reffig{6.30}，最常见的是中间厚边缘薄的\keyindex{凸透镜}{convex lens}{lens透镜}，
-也称\keyindex{汇聚透镜}{converging lens}{lens透镜}、\keyindex{正透镜}{positive lens}{lens透镜}，
+也称\keyindex{会聚透镜}{converging lens}{lens透镜}、\keyindex{正透镜}{positive lens}{lens透镜}，
 以及中间薄边缘厚的\keyindex{凹透镜}{concave lens}{lens透镜}，
 也称\keyindex{发散透镜}{diverging lens}{lens透镜}、\keyindex{负透镜}{negative lens}{lens透镜}。
 当一束平行光穿过凸透镜（或凹透镜）时，
-光线汇聚的点（或从之发散的点）称为透镜的一个\keyindex{焦点}{focal point}{}。
-对于\reffig{6.30}(b)，将点源置于透镜前方光轴上的$F_1$处，光线汇聚到共轭点$F_2$.
+光线会聚的点（或从之发散的点）称为透镜的一个\keyindex{焦点}{focal point}{}。
+对于\reffig{6.30}(b)，将点源置于透镜前方光轴上的$F_1$处，光线会聚到共轭点$F_2$.
 此时若在$F_2$处放置一个光屏，则屏上会有相应发亮的像，称该像是\keyindex{实}{real}{}的。
 对于\reffig{6.30}(c)，将点源置于透镜前方无穷远处，从透镜射出的光是发散的，
 且看起来好像是从点$F_2$发散。但在该位置的光屏上不会出现发亮的像，所以称该像是\keyindex{虚}{virtual}{}的。
@@ -190,7 +190,7 @@
 长度$s_i=\overline{VP}$称为\keyindex{像距}{image distance}{}。
 连线$\overline{CA}$与光轴的夹角为$\varphi$，并记
 长度$\mathcal{l}_o=\overline{SA}, \mathcal{l}_i=\overline{AP}$.
-因此光线从点$S$经$A$到$P$的光程为
+因此光线从点$S$经$A$到$P$的光程长度为
 \begin{align}
     OPL=n_1\mathcal{l}_o+n_2\mathcal{l}_i\, ,
 \end{align}
@@ -201,8 +201,8 @@
 \end{align}
 
 考虑到点$A$的位置由$\varphi$完全决定，而$n_1, n_2, s_o, s_i, R$等量是定值，
-所以光程是关于$\varphi$的函数。
-依据费马原理，令光程对$\varphi$的导数为零，得到
+所以光程长度是关于$\varphi$的函数。
+依据费马原理，令光程长度对$\varphi$的导数为零，得到
 \begin{align}
     \frac{n_1R(s_o+R)\sin\varphi}{\mathcal{l}_o}-\frac{n_2R(s_i-R)\sin\varphi}{\mathcal{l}_i}=0\, ,
 \end{align}
@@ -221,43 +221,43 @@
 
 按照这样的约定确定符号时，该规律对球面凹透镜同样适用。
 然而它形式仍较复杂，我们考虑进一步化简它：当$\varphi$非常接近0时，点$A$十分接近点$V$，
-且此时运用一阶近似$\sin\varphi\approx\varphi$和$\cos\varphi\approx 1$易
+且此时运用一级近似$\sin\varphi\approx\varphi$和$\cos\varphi\approx 1$易
 知$\mathcal{l}_o\approx s_o, \mathcal{l}_i\approx s_i$，此时近似有
 \begin{align}\label{eq:6.24}
     \frac{n_1}{s_o}+\frac{n_2}{s_i}=\frac{n_2-n_1}{R}\, ,
 \end{align}
 
-我们称这样与光轴所成角度很小的光线为\keyindex{近轴光线}{paraxial ray}{ray光线}。
+我们称这样与光轴所成角度很小的光线为\keyindex{傍轴光线}{paraxial ray}{ray光线}。
 注意\refeq{6.24}在关于光轴对称的很小一片区域上与点$A$的位置无关，
-我们称该区域为\keyindex{近轴区域}{paraxial region}{}。
+我们称该区域为\keyindex{傍轴区域}{paraxial region}{}。
 1841年，高斯在上述近似下系统阐述了成像规律，因此也称该结论为
-一阶、近轴或\keyindex{高斯光学}{Gaussian optics}{optics光学}。
+一阶、傍轴或\keyindex{高斯光学}{Gaussian optics}{optics光学}。
 
 如\reffig{6.32.1}，当光轴上点$F_o$的像在无穷远时，$s_i=\infty$，此时的物距$s_o$称为
 \keyindex{第一焦距}{first focal length}{focal length焦距}或
-\keyindex{物焦距}{object focal length}{focal length焦距}$f_o$，即
+\keyindex{物方焦距}{object focal length}{focal length焦距}$f_o$，即
 \begin{align}
     f_o=\frac{n_1}{n_2-n_1}R\, .
 \end{align}
-点$F_o$称为\keyindex{第一焦点}{first focus}{focus焦点}或\keyindex{物焦点}{object focus}{focus焦点}。
+点$F_o$称为\keyindex{第一焦点}{first focus}{focus焦点}或\keyindex{物方焦点}{object focus}{focus焦点}。
 当$f_o>0$时，焦点$F_o$在顶点$V$左侧，反之在右侧。
 类似地如\reffig{6.32.2}，当$s_o=\infty$时，光轴上对应成像的点$F_i$
-称为\keyindex{第二焦点}{second focus}{focus焦点}或\keyindex{像焦点}{image focus}{focus焦点}。
-此时的像距$s_i$称为\keyindex{第二焦距}{second focal length}{focal length焦距}或\keyindex{像焦距}{image focal length}{focal length焦距}，即
+称为\keyindex{第二焦点}{second focus}{focus焦点}或\keyindex{像方焦点}{image focus}{focus焦点}。
+此时的像距$s_i$称为\keyindex{第二焦距}{second focal length}{focal length焦距}或\keyindex{像方焦距}{image focal length}{focal length焦距}，即
 \begin{align}
     f_i=\frac{n_2}{n_2-n_1}R\, .
 \end{align}
 且当$f_i>0$时，焦点$F_i$在顶点$V$右侧，反之在左侧。
 \begin{figure}[htbp]
     \centering
-    \subfloat[物焦点与物焦距]{\includegraphics[scale=1.25]{chap06/ObjectFocus.eps}\label{fig:6.32.1}}\,\,
-    \subfloat[像焦点与像焦距]{\includegraphics[scale=1.25]{chap06/ImageFocus.eps}\label{fig:6.32.2}}
+    \subfloat[物方焦点与物方焦距]{\includegraphics[scale=1.25]{chap06/ObjectFocus.eps}\label{fig:6.32.1}}\,\,
+    \subfloat[像方焦点与像方焦距]{\includegraphics[scale=1.25]{chap06/ImageFocus.eps}\label{fig:6.32.2}}
     \caption{球面透镜的焦距与焦点}
     \label{fig:6.32}
 \end{figure}
 
 之前我们说过，当出射光线是发散时我们称该像是虚的（\reffig{6.33.1}），
-此时$s_i<0$，像点$F_i$在顶点$V$的左边；类似地，当入射光线是汇聚时我们称物是虚的
+此时$s_i<0$，像点$F_i$在顶点$V$的左边；类似地，当入射光线是会聚时我们称物是虚的
 （\reffig{6.33.2}），此时$s_o<0$，物点$F_o$在顶点$V$右边。
 \begin{figure}[htbp]
     \centering
@@ -282,7 +282,7 @@
 这里外部介质折射率为$n_m$，透镜折射率为$n_l, (n_l>n_m)$，
 左边（第一）界面的球心为$C_1$，半径为$R_1>0$，顶点为$V_1$；
 右边（第二）界面的球心为$C_2$，半径为$R_2<0$，顶点为$V_2$.
-两个顶点距离为$d$.在近轴近似下，光轴上的点源$S$发出的光线经过
+两个顶点距离为$d$.在傍轴近似下，光轴上的点源$S$发出的光线经过
 第一界面折射后的像点为$P'$，对应有物距$s_{o1}=\overline{SV_1}>0$，
 像距$s_{i1}=\overline{V_1P'}<0$；
 同时$P'$也是第二次折射的物点，折射后为光轴上的像点$P$，
@@ -301,15 +301,15 @@
 同时假设外部介质是空气，即$n_m\approx 1$，
 于是我们得到：
 \begin{proposition}
-    \keyindex{薄透镜方程}{thin-lens equation}{}：
+    \keyindex{薄透镜方程}{thin-lens equation}{}，也称\keyindex{透镜制造者公式}{Lensmaker's Formula}{}：
     \begin{align}
         \frac{1}{s_o}+\frac{1}{s_i}=(n_l-1)\left(\frac{1}{R_1}-\frac{1}{R_2}\right)\, .
     \end{align}
 \end{proposition}
 
 事实上该结论对各量取正负的情况都成立。分别令物距和像距取无穷远，
-可以得到透镜对应的像焦距$f_i=\lim\limits_{s_o\to\infty}s_i$
-和物焦距$f_o=\lim\limits_{s_i\to\infty}s_o$.
+可以得到透镜对应的像方焦距$f_i=\lim\limits_{s_o\to\infty}s_i$
+和物方焦距$f_o=\lim\limits_{s_i\to\infty}s_o$.
 显然$f_i=f_o$，我们去掉下标把焦距记为$f$，则有
 \begin{align}
     \frac{1}{f}=(n_l-1)\left(\frac{1}{R_1}-\frac{1}{R_2}\right)\, .
@@ -342,15 +342,15 @@
 也就是说，当且仅当光线经过球面透镜的定点$O$时不改变方向，称定点$O$为透镜的\keyindex{光心}{optical center}{}。
 此时光线的横向偏移量正比于透镜厚度。对于薄透镜而言，我们可以近似地把整条过光心的光线视作直线。
 
-我们已经知道平行近轴光线会被球形界面聚焦到一点。
+我们已经知道平行傍轴光线会被球形界面聚焦到一点。
 因此如\reffig{6.36}所示，若干束与光轴倾角很小、范围很小、且垂直于界面入射的光线
 对应的焦点将分布在球面$\sigma$上，其球心即界面的球心$C$.
 在光线范围很小的情况下，我们可把$\sigma$视作与透镜光轴垂直的平面，
 称之为\keyindex{焦平面}{focal plane}{}。
-如\reffig{6.37}，在近轴假设下，所有平行光束都会被球面透镜聚焦
+如\reffig{6.37}，在傍轴假设下，所有平行光束都会被球面透镜聚焦
 到\keyindex{第二焦平面}{second focal plane}{focal plane焦平面}上，
 也称\keyindex{后焦平面}{back focal plane}{focal plane焦平面}。
-类似地还有与物焦点对应的\keyindex{第一焦平面}{first focal plane}{focal plane焦平面}，
+类似地还有与物方焦点对应的\keyindex{第一焦平面}{first focal plane}{focal plane焦平面}，
 也称\keyindex{前焦平面}{front focal plane}{focal plane焦平面}。
 \begin{figure}[htbp]
     \centering\includegraphics[width=0.75\linewidth]{chap06/FocusingSeveralRayBundles.eps}
@@ -379,9 +379,9 @@
 在轴上方取正，下方取负。所以这里图中有$y_o>0, y_i<0$.
 当$y_o$与$y_i$异号时，我们说像是\keyindex{倒}{inverted}{}的，
 反之则是\keyindex{正}{erect}{}的。
-记物到物焦点$F_o$的轴向距离为$x_o=\overline{S_1F_o}=s_o-f$，
+记物到物方焦点$F_o$的轴向距离为$x_o=\overline{S_1F_o}=s_o-f$，
 当$S_1$在$F_o$左边时$x_o$取正，反之取负；
-记像到像焦点$F_i$的轴向距离为$x_i=\overline{F_iP_1}=s_i-f$，
+记像到像方焦点$F_i$的轴向距离为$x_i=\overline{F_iP_1}=s_i-f$，
 当$P_1$在$F_i$右边时$x_i$取正，反之取负。
 \begin{figure}[htbp]
     \centering\includegraphics[width=0.75\linewidth]{chap06/ObjectAndImageLocation.eps}
@@ -478,7 +478,7 @@
 \end{figure}
 
 还有一种特殊的成像情况：
-即入射光线（的延长线）汇聚在透镜右侧，即物是虚的，$s_o<0$.
+即入射光线（的延长线）会聚在透镜右侧，即物是虚的，$s_o<0$.
 这种情况在复合透镜中十分常见。
 \reffig{6.42}依次展示了虚物所成的正实像、倒虚像、放大正实像。
 \begin{corollary}
@@ -588,7 +588,7 @@ $P_1$则是第二个透镜的实像，也是整个复合透镜的像。
 \subsection{光圈}\label{sub:光圈}
 \subsubsection{孔径光阑与视场光阑}
 透镜的大小是有限的，这限制了能进入光学系统的光线范围。
-此时透镜的有效直径就充当了\keyindex{光圈}{aperture}{}\sidenote{也可称作光阑。}。
+此时透镜的有效直径就充当了\keyindex{光圈}{aperture}{}\sidenote{也可称作孔径或光阑。}。
 如\reffig{6.48}，我们称像这样决定成像光量的透镜边缘或单独的快门等为\keyindex{孔径光阑}{aperture stop}{aperture光圈}(A.S.)。
 光学系统的孔径光阑是物理实体，它限制了从光轴上的物点发出且能进入系统的光束范围。
 复杂相机中位于一部分元件后的可调叶片式快门通常就是孔径光阑（\reffig{6.52}），它决定了整组透镜聚集光线的能力。
@@ -603,86 +603,86 @@ $P_1$则是第二个透镜的实像，也是整个复合透镜的像。
     \label{fig:6.48}
 \end{figure}
 
-\subsubsection{入射瞳与出射瞳}
-孔径光阑的像称为\keyindex{瞳}{pupil}{}，它决定给定光线能否通过整个光学系统。
+\subsubsection{入射光瞳与出射光瞳}
+孔径光阑的像称为\keyindex{光瞳}{pupil}{}，它决定给定光线能否通过整个光学系统。
 \begin{definition}
-    从光轴上的物点通过孔径光阑之前的元件看到的该光阑的像称为\keyindex{入射瞳}{entrance pupil}{pupil瞳}。
+    从光轴上的物点通过孔径光阑之前的元件看到的该光阑的像称为\keyindex{入射光瞳}{entrance pupil}{pupil光瞳}。
 \end{definition}
 \begin{definition}
-    从光轴上的像点通过孔径光阑之后的元件看到的该光阑的像称为\keyindex{出射瞳}{exit pupil}{pupil瞳}。
+    从光轴上的像点通过孔径光阑之后的元件看到的该光阑的像称为\keyindex{出射光瞳}{exit pupil}{pupil光瞳}。
 \end{definition}
 
-\reffig{6.49}展示了孔径光阑分别在透镜前方和后方时的入射瞳与出射瞳，
-瞳的位置和大小均可以利用前文介绍的成像规律确定。
-如果物与孔径光阑之间没有其他透镜，则孔径光阑本身就是入射瞳（\reffig{6.49.1}）；
-如果孔径光阑与像之间没有其他透镜，则孔径光阑本身就是出射瞳（\reffig{6.49.2}）。
-入射瞳决定了能确实进入光学系统的光锥，出射瞳则决定离开系统的光锥。
-在这任意一种光锥范围之外的任何点源发出的光线都无法到达像平面。此外，瞳和孔径光阑是共轭的。
-当没有暗角时，任意进入入射瞳的发散光锥都能穿过孔径光阑并变为穿过出射瞳的汇聚光锥。
+\reffig{6.49}展示了孔径光阑分别在透镜前方和后方时的入射光瞳与出射光瞳，
+光瞳的位置和大小均可以利用前文介绍的成像规律确定。
+如果物与孔径光阑之间没有其他透镜，则孔径光阑本身就是入射光瞳（\reffig{6.49.1}）；
+如果孔径光阑与像之间没有其他透镜，则孔径光阑本身就是出射光瞳（\reffig{6.49.2}）。
+入射光瞳决定了能确实进入光学系统的光锥，出射光瞳则决定离开系统的光锥。
+在这任意一种光锥范围之外的任何点源发出的光线都无法到达像平面。此外，光瞳和孔径光阑是共轭的。
+当没有渐晕时，任意进入入射光瞳的发散光锥都能穿过孔径光阑并变为穿过出射光瞳的会聚光锥。
 
-要强调的是，光轴上不同位置的物点可能对应着不同的瞳和孔径光阑。
-例如\reffig{6.49.1}中，如果透镜更小一些，物体离透镜更近一些，
-则通过光圈的光线可能超出了透镜有效直径范围，此时透镜本身就充当孔径光阑，瞳也相应变化。
-反之，如果透镜更大一些，物体离透镜更远一些，则孔径光阑和瞳都没变。
+要强调的是，光轴上不同位置的物点可能对应着不同的光瞳和孔径光阑。
+例如\reffig{6.49.1}中，若透镜更小一些，物体离透镜更近一些，
+则通过光圈的光线可能超出了透镜有效直径范围，此时透镜本身就充当孔径光阑，光瞳也相应变化。
+反之，若透镜更大一些，物体离透镜更远一些，则孔径光阑和光瞳都没变。
 
-在设计光学系统时，瞳的位置和尺寸十分重要。
-例如使用一些观察设备时，人会把眼睛置于出射瞳中心。
+在设计光学系统时，光瞳的位置和尺寸十分重要。
+例如使用一些观察设备时，人会把眼睛置于出射光瞳中心。
 考虑到人眼瞳孔大小根据照明水平一般在2mm至8mm间，
-所以夜视望远镜的出射瞳通常至少为8mm，
-而昼视设备使用3mm至4mm的出射瞳就足够了。
-高能步枪的瞄准镜则会使用更大的出射瞳且在镜筒后端较远处，以避免后座力伤到眼睛。
+所以夜视望远镜的出射光瞳通常至少为8mm，
+而昼视设备使用3mm至4mm的出射光瞳就足够了。
+高能步枪的瞄准镜则会使用更大的出射光瞳且在镜筒后端较远处，以避免后座力伤到眼睛。
 
 我们把离轴物点发出并穿过孔径光阑中心的光线称为\keyindex{主光线}{chief ray}{ray光线}。
-主光线进入光学系统时所沿直线会穿过入射瞳中心$E_{np}$，
-且离开系统时所沿直线会穿过出射瞳中心$E_{xp}$.
+主光线进入光学系统时所沿直线会穿过入射光瞳中心$E_{np}$，
+且离开系统时所沿直线会穿过出射光瞳中心$E_{xp}$.
 它对于校正透镜设计的像差十分重要。
 \begin{figure}[htbp]
     \centering
     \subfloat[孔径光阑在前方。]{\includegraphics[scale=1]{chap06/FrontApertureStop.eps}\label{fig:6.49.1}}\\
     \subfloat[孔径光阑在后方。]{\includegraphics[scale=1]{chap06/EntrancePupilAndExitPupil.eps}\label{fig:6.49.2}}
-    \caption{入射瞳与出射瞳。}
+    \caption{入射光瞳与出射光瞳。}
     \label{fig:6.49}
 \end{figure}
 
-\reffig{6.50}则展示了三透镜系统的瞳和孔径光阑，
+\reffig{6.50}则展示了三透镜系统的光瞳和孔径光阑，
 其中标注出了两种光线，一种是主光线，另一种则称为\keyindex{边缘光线}{marginal ray}{ray光线}。
-边缘光线从光轴上的物点出发并射向入射瞳（或孔径光阑）的边缘。
+边缘光线从光轴上的物点出发并射向入射光瞳（或孔径光阑）的边缘。
 \begin{figure}[htbp]
     \centering\includegraphics{chap06/PupilsAndStopsForAThree-LensSystem.eps}
-    \caption{三透镜系统的瞳和孔径光阑。}
+    \caption{三透镜系统的光瞳和孔径光阑。}
     \label{fig:6.50}
 \end{figure}
 
 当不清楚哪一个元件实际充当孔径光阑时，须让系统的每个元件被其左边的元件组合成像。
-光轴上某一物点对应的张角范围最小的像即为入射瞳。
+光轴上某一物点对应的张角范围最小的像即为入射光瞳。
 该像对应的元件即为该物点相应的孔径光阑。
 
 注意\reffig{6.51}中，当物点在光轴上时，透镜$L_1$的边缘充当孔径光阑；
 当物点远离光轴时，到达成像平面的对应光锥变窄，有效孔径光阑变小。
-像这样图像靠近边缘的点会变淡（暗）的现象称为\keyindex{暗角}{vignetting}{}。
+像这样图像靠近边缘的点会变淡（暗）的现象称为\keyindex{渐晕}{vignetting}{}。
 \begin{figure}[htbp]
     \centering\includegraphics[width=\linewidth]{chap06/Vignetting.eps}
-    \caption{暗角。}
+    \caption{渐晕。}
     \label{fig:6.51}
 \end{figure}
 
-\subsubsection{相对光圈与F值}
+\subsubsection{相对孔径与$f$数}
 当我们使用透镜对较远处的物体成像时，其上某一极小区域发出
-并能进入透镜的光能正比于透镜的面积，或说正比于入射瞳的面积。
+并能进入透镜的光能正比于透镜的面积，或说正比于入射光瞳的面积。
 不过如果光源是极窄的激光束，则这一结论不成立。
 我们排除这类特殊情况，并忽略反射损耗、像差等，
 则入射光能会分布到相应的成像区域（\reffig{6.52}），其辐照度反比于成像面积。
-考虑到当入射瞳是圆形时，其面积正比于直径$D$.
+考虑到当入射光瞳是圆形时，其面积正比于直径$D$.
 而成像面积则是横向维度的平方，故正比于焦距的平方。
 因此成像平面的辐照度正比于$\displaystyle\left(\frac{D}{f}\right)^2$.
-我们称$\displaystyle\frac{D}{f}$为\keyindex{相对光圈}{relative aperture}{aperture光圈}，
-称其倒数为\keyindex{F值}{$f$-number}{}或\keyindex{焦比}{focal ratio}{}，记作$f/\#$，即
+我们称$\displaystyle\frac{D}{f}$为\keyindex{相对孔径}{relative aperture}{aperture光圈}，
+称其倒数为\keyindex{$f$数}{$f$-number}{}或\keyindex{焦比}{focal ratio}{}，记作$f/\#$，即
 \begin{align}
     f/\#=\frac{f}{D}\, .
 \end{align}
-例如光圈25mm、焦距50mm的透镜的F值为2，记作$f/2$.
-F值越小进光量越大。\reffig{6.53}(a)是一个透镜后接可调叶片式光圈
-时F值分别取2和4的情况。
+例如光圈25mm、焦距50mm的透镜的$f$数为2，记作$f/2$.
+$f$数越小进光量越大。\reffig{6.53}(a)是一个透镜后接可调叶片式光圈
+时$f$数分别取2和4的情况。
 \begin{figure}[htbp]
     \centering\includegraphics{chap06/ALarge-FormatCamera.eps}
     \caption{相机光学系统构造示意图。}
@@ -690,14 +690,14 @@ F值越小进光量越大。\reffig{6.53}(a)是一个透镜后接可调叶片式
 \end{figure}
 \begin{figure}[htbp]
     \centering\includegraphics{chap06/F-number.eps}
-    \caption{(a)遮挡透镜以改变F值。(b)镜头的可调光圈设置。}
+    \caption{(a)遮挡透镜以改变$f$数。(b)镜头的可调光圈设置。}
     \label{fig:6.53}
 \end{figure}
 
 通常我们用焦距和最大光圈来指定透镜，例如镜筒上写着“50mm，$f/1.4$”。
-因为摄影曝光时间正比于F值的平方，所以F值有时也称为透镜的\keyindex{速度}{speed}{}。
+因为摄影曝光时间正比于$f$数的平方，所以$f$数有时也称为透镜的\keyindex{速度}{speed}{}。
 例如$f/1.4$的透镜是$f/2$的两倍快。
-镜头光圈的F值常标为1、1.4、2、2.8、4、5.6、8、11、16和22等，此时它的最大相对光圈为$f/1$.
-这些相邻光圈设置的F值依次扩大为$\sqrt{2}$倍（再舍入），因此辐照度依次减半。
+镜头光圈的$f$数常标为1、1.4、2、2.8、4、5.6、8、11、16和22等，此时它的最大相对孔径为$f/1$.
+这些相邻光圈设置的$f$数依次扩大为$\sqrt{2}$倍（再舍入），因此辐照度依次减半。
 所以相机用$f/1.4$曝光$\displaystyle\frac{1}{500}$秒、用$f/2$曝光$\displaystyle\frac{1}{250}$秒、
 用$f/2.8$曝光$\displaystyle\frac{1}{125}$秒的进光量是相同的。

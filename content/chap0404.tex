@@ -245,7 +245,7 @@ for (const std::shared_ptr<`\refvar{Primitive}{}`> &prim : `\refvar[KdTreeAccel:
 
 树构建例程的参数之一是图元索引数组，表示哪个图元与当前节点重合。
 因为（当递归开始时）所有图元都和根节点重合，
-所以我们从初始化值为零到{\ttfamily primitives.size()-1}的数组开始。
+所以让我们从一个用从0到{\ttfamily primitives.size()-1}的值初始化了的数组着手。
 \begin{lstlisting}
 `\initcode{Initialize primNums for kd-tree construction}{=}`
 std::unique_ptr<int[]> primNums(new int[`\refvar[KdTreeAccel::primitives]{primitives}{}`.size()]);
@@ -260,7 +260,7 @@ for (size_t i = 0; i < `\refvar[KdTreeAccel::primitives]{primitives}{}`.size(); 
 稍后几页会对此作定义和介绍。
 \begin{lstlisting}
 `\initcode{Start recursive construction of kd-tree}{=}`
-`\refvar[KdTreeAccel::buildTree]{buildTree}{}`(0, `\refvar[KdTreeAccel::bounds]{bounds}{}`, primBounds, primNums.get(), `\refvar[KdTreeAccel::primitives]{primitives}{}`.size(), 
+`\refvar[KdTreeAccel::buildTree]{buildTree}{}`(0, `\refvar[KdTreeAccel::bounds]{bounds}{}`, primBounds, primNums.get(), `\refvar[KdTreeAccel::primitives]{primitives}{}`.size(),
           maxDepth, edges, prims0.get(), prims1.get());
 \end{lstlisting}
 
@@ -274,7 +274,7 @@ for (size_t i = 0; i < `\refvar[KdTreeAccel::primitives]{primitives}{}`.size(); 
 void `\refvar{KdTreeAccel}{}::\initvar[KdTreeAccel::buildTree]{buildTree}{}`(int nodeNum, const `\refvar{Bounds3f}{}` &nodeBounds,
         const std::vector<`\refvar{Bounds3f}{}`> &allPrimBounds, int *primNums,
         int nPrimitives, int depth,
-        const std::unique_ptr<`\refvar{BoundEdge}{}`[]> edges[3], 
+        const std::unique_ptr<`\refvar{BoundEdge}{}`[]> edges[3],
         int *prims0, int *prims1, int badRefines) {
     `\refcode{Get next free node from nodes array}{}`
     `\refcode{Initialize leaf node if termination criteria met}{}`
@@ -349,13 +349,13 @@ SAH适用于kd树和BVH；为节点中一系列候选划分平面计算估计的
 除非两个区域之一完全为空时取值0到1.
 
 有了为开销模型计算概率的方法，唯一要解决的问题是
-怎么生成候选划分位置以及怎么为每个候选者高效计算开销。
+怎么生成候选划分位置以及怎么为每个候选方案高效计算开销。
 可以证明该模型最小开销能于在某一图元边界框的一个面上划分时取得——
 不需要考虑在中间位置的划分（为了帮助你自己理解，
 考虑一下开销函数在面的边界之间时的特性）。
 这里，我们将考虑该区域内三个坐标轴之一或以上的所有边界框面。
 
-利用精心构造的算法可以把检查所有这些候选者的开销维持在相对低的水平。
+利用精心构造的算法可以把检查所有这些候选方案的开销维持在相对低的水平。
 为了计算这些开销，我们将扫掠边界框在每个轴上的投影并追踪开销最低的那些（\reffig{4.15}）。
 每个边界框在每个轴上有两处边界，每处都用结构体\refvar{BoundEdge}{}的实例表示。
 该结构体记录了边界沿轴的位置，它表示边界框的开始或结束
@@ -385,7 +385,7 @@ struct `\initvar{BoundEdge}{}` {
 `\initcode{BoundEdge Public Methods}{=}`
 `\refvar{BoundEdge}{}`(`\refvar{Float}{}` t, int primNum, bool starting)
     : `\refvar[BoundEdge::t]{t}{}`(t), `\refvar[BoundEdge::primNum]{primNum}{}`(primNum) {
-    `\refvar[BoundEdge::type]{type}{}` = starting ? `\refvar{EdgeType::Start}{}` : `\refvar{EdgeType::End}{}`; 
+    `\refvar[BoundEdge::type]{type}{}` = starting ? `\refvar{EdgeType::Start}{}` : `\refvar{EdgeType::End}{}`;
 }
 \end{lstlisting}
 
@@ -453,7 +453,7 @@ std::sort(&edges[axis][0], &edges[axis][2*nPrimitives],
     [](const `\refvar{BoundEdge}{}` &e0, const `\refvar{BoundEdge}{}` &e1) -> bool {
         if (e0.`\refvar[BoundEdge::t]{t}{}` == e1.`\refvar[BoundEdge::t]{t}{}`)
             return (int)e0.`\refvar[BoundEdge::type]{type}{}` < (int)e1.`\refvar[BoundEdge::type]{type}{}`;
-        else return e0.`\refvar[BoundEdge::t]{t}{}` < e1.`\refvar[BoundEdge::t]{t}{}`; 
+        else return e0.`\refvar[BoundEdge::t]{t}{}` < e1.`\refvar[BoundEdge::t]{t}{}`;
     });
 \end{lstlisting}
 
@@ -495,10 +495,10 @@ for (int i = 0; i < 2 * nPrimitives; ++i) {
 `\initcode{Compute child surface areas for split at edgeT}{=}`
 int otherAxis0 = (axis + 1) % 3, otherAxis1 = (axis + 2) % 3;
 `\refvar{Float}{}` belowSA = 2 * (d[otherAxis0] * d[otherAxis1] +
-                     (edgeT - nodeBounds.`\refvar{pMin}{}`[axis]) * 
+                     (edgeT - nodeBounds.`\refvar{pMin}{}`[axis]) *
                      (d[otherAxis0] + d[otherAxis1]));
 `\refvar{Float}{}` aboveSA = 2 * (d[otherAxis0] * d[otherAxis1] +
-                     (nodeBounds.`\refvar{pMax}{}`[axis] - edgeT) * 
+                     (nodeBounds.`\refvar{pMax}{}`[axis] - edgeT) *
                      (d[otherAxis0] + d[otherAxis1]));
 \end{lstlisting}
 
@@ -506,10 +506,10 @@ int otherAxis0 = (axis + 1) % 3, otherAxis1 = (axis + 2) % 3;
 \begin{lstlisting}
 `\initcode{Compute cost for split at ith edge}{=}`
 `\refcode{Compute child surface areas for split at edgeT}{}`
-`\refvar{Float}{}` pBelow = belowSA * invTotalSA; 
+`\refvar{Float}{}` pBelow = belowSA * invTotalSA;
 `\refvar{Float}{}` pAbove = aboveSA * invTotalSA;
 `\refvar{Float}{}` eb = (nAbove == 0 || nBelow == 0) ? emptyBonus : 0;
-`\refvar{Float}{}` cost = `\refvar{traversalCost}{}` + 
+`\refvar{Float}{}` cost = `\refvar{traversalCost}{}` +
              `\refvar{isectCost}{}` * (1 - eb) * (pBelow * nBelow + pAbove * nAbove);
 `\refcode{Update best split if this is lowest cost so far}{}`
 \end{lstlisting}
@@ -549,10 +549,10 @@ if (bestAxis == -1 && retries < 2) {
     goto retrySplit;
 }
 if (bestCost > oldCost) ++badRefines;
-if ((bestCost > 4 * oldCost && nPrimitives < 16) || 
+if ((bestCost > 4 * oldCost && nPrimitives < 16) ||
     bestAxis == -1 || badRefines == 3) {
     nodes[nodeNum].`\refvar[KdAccelNode::InitLeaf]{InitLeaf}{}`(primNums, nPrimitives, &`\refvar{primitiveIndices}{}`);
-    return; 
+    return;
 }
 \end{lstlisting}
 
@@ -593,7 +593,7 @@ bounds0.`\refvar{pMax}{}`[bestAxis] = bounds1.`\refvar{pMin}{}`[bestAxis] = tSpl
           depth - 1, edges, prims0, prims1 + nPrimitives, badRefines);
 int aboveChild = `\refvar{nextFreeNode}{}`;
 nodes[nodeNum].`\refvar[KdAccelNode::InitInterior]{InitInterior}{}`(bestAxis, aboveChild, tSplit);
-`\refvar[KdTreeAccel::buildTree]{buildTree}{}`(aboveChild, bounds1, allPrimBounds, prims1, n1, 
+`\refvar[KdTreeAccel::buildTree]{buildTree}{}`(aboveChild, bounds1, allPrimBounds, prims1, n1,
           depth - 1, edges, prims0, prims1 + nPrimitives, badRefines);
 \end{lstlisting}
 
@@ -643,7 +643,7 @@ bool `\refvar{KdTreeAccel}{}`::`\initvar[KdTreeAccel::Intersect]{Intersect}{}`(c
 \begin{lstlisting}
 `\initcode{Compute initial parametric range of ray inside kd-tree extent}{=}`
 `\refvar{Float}{}` tMin, tMax;
-if (!bounds.`\refvar[Bounds3::IntersectP]{IntersectP}{}`(ray, &tMin, &tMax)) 
+if (!bounds.`\refvar[Bounds3::IntersectP]{IntersectP}{}`(ray, &tMin, &tMax))
     return false;
 \end{lstlisting}
 
@@ -711,7 +711,7 @@ int axis = node->`\refvar[KdAccelNode::SplitAxis]{SplitAxis}{}`();
 `\refvar{Float}{}` tPlane = (node->`\refvar{SplitPos}{}`() - ray.`\refvar[Ray::o]{o}{}`[axis]) * invDir[axis];
 \end{lstlisting}
 
-现在需要确定光线遇到孩子节点的顺序使得是沿光线按从前往后的顺序遍历树的。
+现在有必要确定光线遇到孩子节点的顺序，以便沿光线按从前到后的顺序遍历树的。
 \reffig{4.18}展示了该计算的几何结构。
 射线端点关于划分平面的位置足够区分两种情况，
 现在忽略光线实际上没有穿过两节点之一的情况。
@@ -796,7 +796,7 @@ if (nPrimitives == 1) {
 处理单个图元就是把相交请求传给图元的事。
 \begin{lstlisting}
 `\initcode{Check one primitive inside leaf node}{=}`
-if (p->`\refvar[Primitive::Intersect]{Intersect}{}`(ray, isect)) 
+if (p->`\refvar[Primitive::Intersect]{Intersect}{}`(ray, isect))
     hit = true;
 \end{lstlisting}
 

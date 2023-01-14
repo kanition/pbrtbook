@@ -650,7 +650,7 @@ for (`\refvar{Point2i}{}` pixel : tileBounds) {
 相机还返回与光线关联的浮点权重。
 对于单个相机模型，每条光线都平等赋权，
 但更精确建模透镜系统成像过程的相机模型生成的一些光线可能比另一些作用更大。
-这样的相机模型也许模拟了到达胶片平面边缘的光比中心更少的效应，称为\keyindex{暗角}{vignetting}{}。
+这样的相机模型也许模拟了到达胶片平面边缘的光比中心更少的效应，称为\keyindex{渐晕}{vignetting}{}。
 返回的权重之后会用于缩放光线对图像的作用。
 \begin{lstlisting}
 `\initcode{Generate camera ray for current sample}{=}`

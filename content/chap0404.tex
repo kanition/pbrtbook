@@ -245,7 +245,7 @@ for (const std::shared_ptr<`\refvar{Primitive}{}`> &prim : `\refvar[KdTreeAccel:
 
 树构建例程的参数之一是图元索引数组，表示哪个图元与当前节点重合。
 因为（当递归开始时）所有图元都和根节点重合，
-所以让我们从一个用从0到{\ttfamily primitives.size()-1}的值初始化了的数组着手。
+所以我们从一个初始值为零到{\ttfamily primitives.size()-1}的数组着手。
 \begin{lstlisting}
 `\initcode{Initialize primNums for kd-tree construction}{=}`
 std::unique_ptr<int[]> primNums(new int[`\refvar[KdTreeAccel::primitives]{primitives}{}`.size()]);
@@ -711,7 +711,7 @@ int axis = node->`\refvar[KdAccelNode::SplitAxis]{SplitAxis}{}`();
 `\refvar{Float}{}` tPlane = (node->`\refvar{SplitPos}{}`() - ray.`\refvar[Ray::o]{o}{}`[axis]) * invDir[axis];
 \end{lstlisting}
 
-现在有必要确定光线遇到孩子节点的顺序，以便沿光线按从前到后的顺序遍历树的。
+现在需要确定光线遇到孩子节点的顺序以便沿光线按从前到后的顺序遍历树。
 \reffig{4.18}展示了该计算的几何结构。
 射线端点关于划分平面的位置足够区分两种情况，
 现在忽略光线实际上没有穿过两节点之一的情况。

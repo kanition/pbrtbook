@@ -318,6 +318,151 @@ public:
 我们现在可以实现类\refvar{SpecularReflection}{}，
 它用菲涅尔接口计算反射光的占比，描述了物理可实现的镜面反射。
 首先，我们将推导描述镜面反射的BRDF。
+既然菲涅尔方程给出了反射光的比例$F_{\mathrm{r}}({\bm\omega})$，
+那么我们需要这样的BRDF
+\begin{align*}
+    L_{\mathrm{o}}({\bm\omega}_{\mathrm{o}})=\int{f_{\mathrm{r}}({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})L_{\mathrm{i}}({\bm\omega}_{\mathrm{i}})|\cos\theta_{\mathrm{i}}|\mathrm{d}{\bm\omega}_{\mathrm{i}}}=F_{\mathrm{r}}({\bm\omega}_{\mathrm{r}})L_{\mathrm{i}}({\bm\omega}_{\mathrm{r}})\, ,
+\end{align*}
+其中${\bm\omega}_{\mathrm{r}}=R({\bm\omega}_{\mathrm{o}},{\bm n})$是由${\bm\omega}_{\mathrm{o}}$关于
+曲面法线$\bm n$反射的镜面反射向量（回想对于镜面反射有$\theta_{\mathrm{r}}=\theta_{\mathrm{o}}$，
+因此$F_{\mathrm{r}}({\bm\omega}_{\mathrm{o}})=F_{\mathrm{r}}({\bm\omega}_{\mathrm{r}})$）。
+
+此类BRDF可用狄拉克$\delta$分布构造。
+回顾\refsec{采样理论}中$\delta$分布有个好用的性质
+\begin{align}\label{eq:8.4}
+    \int{f(x)\delta(x-x_0)\mathrm{d}x}=f(x_0)\, .
+\end{align}
+然而相比于标准函数，$\delta$分布需要特殊处理。
+特别地，对有$\delta$分布的积分求数值积分必须显式考虑$\delta$分布。
+考虑\refeq{8.4}中的积分：如果我们尝试用梯形法则或
+其他一些数值积分技术计算它，则按$\delta$分布的定义，
+在任意取值点$x_i$处$\delta(x_i)$为非零值的概率都为零。
+确切地说，我们必须允许$\delta$分布自己确定取值点。
+我们将在来自特殊\refvar{BxDF}{}的光传输积分以及
+第\refchap{光源}的一些光源中遇到$\delta$分布。
+
+直觉上，我们想让镜面反射BRDF在完美反射方向以外任何地方都取零，
+这暗示了要用$\delta$分布。首先可能想到的是用$\delta$函数
+把入射方向限制到镜面反射方向${\bm\omega}_{\mathrm{r}}$.
+这样得到BRDF
+\begin{align*}
+    f_{\mathrm{r}}({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})=\delta_{\mathrm{r}}({\bm\omega}_{\mathrm{i}}-{\bm\omega}_{\mathrm{r}})F_{\mathrm{r}}({\bm\omega}_{\mathrm{i}})\, .
+\end{align*}
+
+尽管这看起来很诱人，但把它代入散射方程\refeq{5.9}就暴露了问题：
+\begin{align*}
+    L_{\mathrm{o}}({\bm\omega}_{\mathrm{o}}) & =\int{\delta_{\mathrm{r}}({\bm\omega}_{\mathrm{i}}-{\bm\omega}_{\mathrm{r}})F_{\mathrm{r}}({\bm\omega}_{\mathrm{i}})}L_{\mathrm{i}}({\bm\omega}_{\mathrm{i}})|\cos\theta_{\mathrm{i}}|\mathrm{d}{\bm\omega}_{\mathrm{i}} \\
+                                             & =F_{\mathrm{r}}({\bm\omega}_{\mathrm{r}})L_{\mathrm{i}}({\bm\omega}_{\mathrm{r}})|\cos\theta_{\mathrm{r}}|\, .
+\end{align*}
+这是错的，因为它含有额外因子$\cos\theta_{\mathrm{r}}$.
+然而，我们可以把该因子分解以求得完美镜面反射正确的BRDF：
+\begin{align*}
+    f_\mathrm{r}({\bm p},{\bm \omega}_\mathrm{o},{\bm \omega}_\mathrm{i})=F_{\mathrm{r}}({\bm\omega}_{\mathrm{r}})\frac{\delta_{\mathrm{r}}({\bm\omega}_{\mathrm{i}}-{\bm\omega}_{\mathrm{r}})}{|\cos\theta_{\mathrm{r}|}}\, ,
+\end{align*}
+\begin{lstlisting}
+`\refcode{BxDF Declarations}{+=}\lastnext{BxDFDeclarations}`
+class `\initvar{SpecularReflection}{}` : public `\refvar{BxDF}{}` {
+public:
+    `\refcode{SpecularReflection Public Methods}{}`
+private:
+    `\refcode{SpecularReflection Private Data}{}`
+};
+\end{lstlisting}
+
+\refvar{SpecularReflection}{}的构造函数接收用于缩放反射颜色的\refvar{Spectrum}{}和
+描述介电质或导体菲涅尔性质的\refvar{Fresnel}{}对象指针。
+\begin{lstlisting}
+`\initcode{SpecularReflection Public Methods}{=}\initnext{SpecularReflectionPublicMethods}`
+`\refvar{SpecularReflection}{}`(const `\refvar{Spectrum}{}` &R, `\refvar{Fresnel}{}` *fresnel) 
+    : `\refvar{BxDF}{}`(`\refvar{BxDFType}{}`(`\refvar[BSDFREFLECTION]{BSDF\_REFLECTION}{}` | `\refvar[BSDFSPECULAR]{BSDF\_SPECULAR}{}`)), `\refvar[SpecularReflection::R]{R}{}`(R),
+      `\refvar[SpecularReflection::fresnel]{fresnel}{}`(fresnel) { }
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{SpecularReflection Private Data}{=}`
+const `\refvar{Spectrum}{}` `\initvar[SpecularReflection::R]{R}{}`;
+const `\refvar{Fresnel}{}` *`\initvar[SpecularReflection::fresnel]{fresnel}{}`;
+\end{lstlisting}
+
+剩下的实现就简单了。没有散射从\refvar{SpecularReflection::f}{()}返回，
+因为对于任意一对方向，$\delta$函数不返回散射
+\footnote{如果调用者碰巧传入一个向量及其完美镜像方向，该函数仍然返回零。
+    尽管这些反射函数的接口有点奇怪，我们最终仍然能得到正确结果，
+    因为带有$\delta$分布奇点的反射函数将得到光传输例程的特殊处理（见第\refchap{光传输I：表面反射}）。}。
+\begin{lstlisting}
+`\refcode{SpecularReflection Public Methods}{+=}\lastnext{SpecularReflectionPublicMethods}`
+`\refvar{Spectrum}{}` `\initvar[SpecularReflection::f]{f}{}`(const `\refvar{Vector3f}{}` &wo, const `\refvar{Vector3f}{}` &wi) const { 
+    return `\refvar{Spectrum}{}`(0.f); 
+}
+\end{lstlisting}
+然而，我们确实实现了方法\refvar[SpecularReflection::Samplef]{Sample\_f}{()}，
+它根据$\delta$分布选择合适的方向。
+它把输出变量{\ttfamily wi}设为提供的方向{\ttfamily wo}关于
+曲面法线的反射。值{\ttfamily *pdf}设为一；
+\refsub{镜面反射与透射}讨论了关于该数值一所表示的数学量的一些细节。
+\begin{lstlisting}
+`\refcode{BxDF Method Definitions}{+=}\lastnext{BxDFMethodDefinitions}`
+`\refvar{Spectrum}{}` `\refvar{SpecularReflection}{}`::`\initvar[SpecularReflection::Samplef]{Sample\_f}{}`(const `\refvar{Vector3f}{}` &wo,
+        `\refvar{Vector3f}{}` *wi, const `\refvar{Point2f}{}` &sample, `\refvar{Float}{}` *pdf,
+        `\refvar{BxDFType}{}` *sampledType) const {
+    `\refcode{Compute perfect specular reflection direction}{}`
+    *pdf = 1;
+    return `\refvar[SpecularReflection::fresnel]{fresnel}{}`->`\refvar[Fresnel::Evaluate]{Evaluate}{}`(`\refvar{CosTheta}{}`(*wi)) * `\refvar[SpecularReflection::R]{R}{}` / `\refvar{AbsCosTheta}{}`(*wi);
+}
+\end{lstlisting}
+
+期望的入射方向是${\bm\omega}_{\mathrm{o}}$关于曲面法线的反射$R({\bm\omega}_{\mathrm{o}},{\bm n})$.
+用向量几何学可以非常简单地计算该方向。
+首先，注意到入射方向、反射方向和曲面法线均在同一平面内。
+我们可以把平面内的向量$\bm\omega$分解为两个分量之和：
+一个平行于$\bm n$，我们记作${\bm\omega}_{\parallel}$，另一个垂直即${\bm\omega}_{\perp}$.
+
+这些向量很容易计算：如果$\bm n$和$\bm\omega$规范化了，
+则${\bm\omega}_{\parallel}$是$(\cos\theta){\bm n}=({\bm n}\cdot{\bm\omega}){\bm n}$（\reffig{8.7}）。
+因为${\bm\omega}_{\parallel}+{\bm\omega}_{\perp}={\bm\omega}$，
+\begin{align*}
+    {\bm\omega}_{\perp}={\bm\omega}-{\bm\omega}_{\parallel}={\bm\omega}-({\bm n}\cdot{\bm\omega}){\bm n}\, .
+\end{align*}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.4\linewidth]{Pictures/chap08/Parallelprojectionomeganormal.eps}
+    \caption{向量$\bm\omega$在法线$\bm n$上的平行投影由${\bm\omega}_{\parallel}=(\cos\theta){\bm n}=({\bm n}\cdot{\bm\omega}){\bm n}$给出。
+    垂直分量由${\bm\omega}_{\perp}=(\sin\theta){\bm n}$给出但用${\bm\omega}_{\perp}={\bm\omega}-{\bm\omega}_{\parallel}$计算更简单。}
+    \label{fig:8.7}
+\end{figure}
+
+\reffig{8.8}展示了计算反射方向${\bm\omega}_{\mathrm{r}}$的设置。
+我们可以看到两个向量都有相同的${\bm\omega}_{\parallel}$分量，
+且${\bm\omega}_{\mathrm{r}\perp}$的值是${\bm\omega}_{\mathrm{o}\perp}$取反。
+因此，我们有
+\begin{align}
+    \label{eq:8.5}
+    {\bm\omega}_{\mathrm{r}}={\bm\omega}_{\mathrm{r}\perp}+{\bm\omega}_{\mathrm{r}\parallel} & =-{\bm\omega}_{\mathrm{o}\perp}+{\bm\omega}_{\mathrm{o}\parallel}\nonumber                                                        \\
+                                                                                             & =-({\bm\omega}_{\mathrm{o}}-({\bm n}\cdot{\bm\omega}_{\mathrm{o}}){\bm n})+({\bm n}\cdot{\bm\omega}_{\mathrm{o}}){\bm n}\nonumber \\
+                                                                                             & =-{\bm\omega}_{\mathrm{o}}+2({\bm n}\cdot{\bm\omega}_{\mathrm{o}}){\bm n}\, .
+\end{align}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.5\linewidth]{Pictures/chap08/Perfectreflectioncomponents.eps}
+    \caption{因为角$\theta_{\mathrm{o}}$和$\theta_{\mathrm{r}}$相等，
+    所以完美反射方向的平行分量${\bm\omega}_{\mathrm{r}\parallel}$和
+    入射方向的相同：${\bm\omega}_{\mathrm{r}\parallel}={\bm\omega}_{\mathrm{o}\parallel}$.
+    其垂直分量就是入射方向垂直分量取反。}
+    \label{fig:8.8}
+\end{figure}
+
+函数\refvar{Reflect}{()}实现了该计算。
+\begin{lstlisting}
+`\refcode{BSDF Inline Functions}{+=}\lastnext{BSDFInlineFunctions}`
+inline `\refvar{Vector3f}{}` `\initvar{Reflect}{}`(const `\refvar{Vector3f}{}` &wo, const `\refvar{Vector3f}{}` &n) {
+    return -wo + 2 * `\refvar{Dot}{}`(wo, n) * n;
+}
+\end{lstlisting}
+
+在BRDF坐标系中，${\bm n}=(0,0,1)$，该表达式可极大简化。
+\begin{lstlisting}
+`\initcode{Compute perfect specular reflection direction}{=}`
+*wi = `\refvar{Vector3f}{}`(-wo.x, -wo.y, wo.z);
+\end{lstlisting}
 
 \subsection{镜面透射}\label{sub:镜面透射}
 \begin{lstlisting}

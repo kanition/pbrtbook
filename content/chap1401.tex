@@ -1,11 +1,24 @@
 \section{采样反射函数}\label{sec:采样反射函数}
 
 \subsection{镜面反射与透射}\label{sub:镜面反射与透射}
+\begin{lstlisting}
+`\refcode{BxDF Method Definitions}{+=}\lastnext{BxDFMethodDefinitions}`
+`\refvar{Spectrum}{}` `\refvar{FresnelSpecular}{}`::`\initvar[FresnelSpecular::Samplef]{Sample\_f}{}`(const `\refvar{Vector3f}{}` &wo,
+        `\refvar{Vector3f}{}` *wi, const `\refvar{Point2f}{}` &u, `\refvar{Float}{}` *pdf,
+        `\refvar{BxDFType}{}` *sampledType) const {
+    `\refvar{Float}{}` F = `\refvar{FrDielectric}{}`(`\refvar{CosTheta}{}`(wo), `\refvar[FresnelSpecular::etaA]{etaA}{}`, `\refvar[FresnelSpecular::etaB]{etaB}{}`);
+    if (u[0] < F) {
+        `\refcode{Compute specular reflection for FresnelSpecular}{}`
+    } else {
+        `\refcode{Compute specular transmission for FresnelSpecular}{}`
+    }
+}
+\end{lstlisting}
 \subsection{应用：估计反射率}\label{sub:应用：估计反射率}
 \subsection{采样BSDF}\label{sub:采样BSDF}
 \begin{lstlisting}
 `\refcode{BSDF Method Definitions}{+=}\lastcode{BSDFMethodDefinitions}`
-`\refvar{Spectrum}{}` `\refvar{BSDF}{}`::`\initvar[Samplef]{Sample\_f}{}`(const `\refvar{Vector3f}{}` &woWorld, `\refvar{Vector3f}{}` *wiWorld,
+`\refvar{Spectrum}{}` `\refvar{BSDF}{}`::`\initvar[BSDF::Samplef]{Sample\_f}{}`(const `\refvar{Vector3f}{}` &woWorld, `\refvar{Vector3f}{}` *wiWorld,
 const `\refvar{Point2f}{}` &u, `\refvar{Float}{}` *pdf, `\refvar{BxDFType}{}` type,
 `\refvar{BxDFType}{}` *sampledType) const {
     `\refcode{Choose which BxDF to sample}{}`

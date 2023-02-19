@@ -465,6 +465,211 @@ inline `\refvar{Vector3f}{}` `\initvar{Reflect}{}`(const `\refvar{Vector3f}{}` &
 \end{lstlisting}
 
 \subsection{镜面透射}\label{sub:镜面透射}
+我们现在推导镜面透射的BTDF。斯涅尔定律是推导的基础。
+斯涅尔定律不仅给出了透射光线的方向，它还能用于说明
+当光线穿过折射率不同的介质时，沿该光线的辐亮度会变。
+
+考虑入射光线到达两种介质的边界，入射和出射介质的折射率
+分别为$\eta_{\mathrm{i}}$和$\eta_{\mathrm{o}}$（\reffig{8.9}）
+\sidenote{译者注：原图把$\eta_{\mathrm{o}}$写成$\eta_{\mathrm{t}}$，
+    与正文不一致，已修改。}。
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.5\linewidth]{Pictures/chap08/Radiancechangeatrefraction.eps}
+    \caption{折射率不同的介质边界处透射辐亮度由这两个折射率之比的平方缩放。
+        直观上这可以理解为辐射的微分立体角被压缩或展开作为透射的结果。}
+    \label{fig:8.9}
+\end{figure}
+
+我们用$\tau$来表示菲涅尔方程给出的入射能量透射到出射方向的比例，
+所以$\tau=1-F_{\mathrm{r}}({\bm\omega}_{\mathrm{i}})$.
+于是透射的微分通量大小为
+\begin{align*}
+    \mathrm{d}\varPhi_{\mathrm{o}}=\tau\mathrm{d}\varPhi_{\mathrm{i}}\, .
+\end{align*}
+如果我们用辐亮度的定义\refeq{5.2}，则我们有
+\begin{align*}
+    L_{\mathrm{o}}\cos\theta_{\mathrm{o}}\mathrm{d}A\mathrm{d}{\bm\omega}_{\mathrm{o}}=\tau(L_{\mathrm{i}}\cos\theta_{\mathrm{i}}\mathrm{d}A\mathrm{d}{\bm\omega}_{\mathrm{i}})\, .
+\end{align*}
+把立体角展开为球面角，我们有
+\begin{align}
+    \label{eq:8.6}
+    L_{\mathrm{o}}\cos\theta_{\mathrm{o}}\mathrm{d}A\sin\theta_{\mathrm{o}}\mathrm{d}\theta_{\mathrm{o}}\mathrm{d}\varphi_{\mathrm{o}}=\tau L_{\mathrm{i}}\cos\theta_{\mathrm{i}}\mathrm{d}A\sin\theta_{\mathrm{i}}\mathrm{d}\theta_{\mathrm{i}}\mathrm{d}\varphi_{\mathrm{i}}\, .
+\end{align}
+
+我们现在可以对斯涅尔定律求$\theta$的微分，得到关系
+\begin{align*}
+    \eta_{\mathrm{o}}\cos\theta_{\mathrm{o}}\mathrm{d}\theta_{\mathrm{o}}=\eta_{\mathrm{i}}\cos\theta_{\mathrm{i}}\mathrm{d}\theta_{\mathrm{i}}\, .
+\end{align*}
+整理各项，我们有
+\begin{align*}
+    \frac{\cos\theta_{\mathrm{o}}\mathrm{d}\theta_{\mathrm{o}}}{\cos\theta_{\mathrm{i}}\mathrm{d}\theta_{\mathrm{i}}}=\frac{\eta_{\mathrm{i}}}{\eta_{\mathrm{o}}}\, .
+\end{align*}
+把该关系和斯涅尔定律代入\refeq{8.6}并化简，我们有
+\begin{align*}
+    L_{\mathrm{o}}\eta_{\mathrm{i}}^2\mathrm{d}\varphi_{\mathrm{o}}=\tau L_{\mathrm{i}}\eta_{\mathrm{o}}^2\mathrm{d}\varphi_{\mathrm{i}}\, .
+\end{align*}
+因为$\varphi_{\mathrm{i}}=\varphi_{\mathrm{o}}+\pi$，所以$\mathrm{d}\varphi_{\mathrm{i}}=\mathrm{d}\varphi_{\mathrm{o}}$，
+我们有最终关系：
+\begin{align}
+    \label{eq:8.7}
+    L_{\mathrm{o}}=\tau L_{\mathrm{i}}\frac{\eta_{\mathrm{o}}^2}{\eta_{\mathrm{i}}^2}\, .
+\end{align}
+对于镜面反射的BRDF，我们需要分离一个$\cos\theta_{\mathrm{i}}$项
+来得到正确的镜面透射BTDF：
+\begin{align*}
+    f_{\mathrm{r}}({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})=\frac{\eta_{\mathrm{o}}^2}{\eta_{\mathrm{i}}^2}(1-F_{\mathrm{r}}({\bm\omega}_{\mathrm{i}}))\frac{\delta({\bm\omega}_{\mathrm{i}}-T({\bm\omega}_{\mathrm{o}},{\bm n}))}{|\cos\theta_{\mathrm{i}|}}\, ,
+\end{align*}
+其中$T({\bm\omega}_{\mathrm{o}},{\bm n})$是
+镜面透射${\bm\omega}_{\mathrm{o}}$穿过
+曲面法线为$\bm n$的界面所得的镜面透射向量。
+
+该方程中的项$1-F_{\mathrm{r}}({\bm\omega}_{\mathrm{i}})$对应了
+容易观察到的效应：接近垂直的角度透射更强。例如，如果你直接朝下看着清澈的湖水，
+你会看见水下深处，但角度平视时大部分光都像是镜子反射的。
+
+类\refvar{SpecularTransmission}{}几乎和\refvar{SpecularReflection}{}一样，
+除了采样方向是完美镜面透射的方向。\reffig{8.10}展示了使用
+镜面反射和透射BRDF与BTDF来模拟玻璃的龙模型图像。
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{Pictures/chap08/dragon-glass.png}
+    \caption{当用菲涅尔公式调制了介电质的镜面反射BRDF和镜面透射BTDF，
+        反射和透射量随角度的真实变化给出了玻璃在视觉上的准确表现
+        （感谢Christian Schüller提供模型）。}
+    \label{fig:8.10}
+\end{figure}
+
+\begin{lstlisting}
+`\refcode{BxDF Declarations}{+=}\lastnext{BxDFDeclarations}`
+class `\initvar{SpecularTransmission}{}` : public `\refvar{BxDF}{}` {
+public:
+    `\refcode{SpecularTransmission Public Methods}{}`
+private:
+    `\refcode{SpecularTransmission Private Data}{}`
+};
+\end{lstlisting}
+
+\refvar{SpecularTransmission}{}的构造函数保存了曲面两侧的折射率，
+其中{\ttfamily etaA}是曲面上方的折射率（这里曲面法线所在的一侧为“上方”），
+{\ttfamily etaB}是曲面下方的折射率，而{\ttfamily T}给出了透射缩放因子。
+参数\refvar{TransportMode}{}表示入射光线交点的\refvar{BxDF}{}是
+从光源还是相机开始计算的。该区别指出了该怎样计算\refvar{BxDF}{}的作用。
+\begin{lstlisting}
+`\initcode{SpecularTransmission Public Methods}{=}\initnext{SpecularTransmissionPublicMethods}`
+`\refvar{SpecularTransmission}{}`(const `\refvar{Spectrum}{}` &T, `\refvar{Float}{}` etaA, `\refvar{Float}{}` etaB,
+        `\refvar{TransportMode}{}` mode) 
+    : `\refvar{BxDF}{}`(`\refvar{BxDFType}{}`(`\refvar[BSDFTRANSMISSION]{BSDF\_TRANSMISSION}{}` | `\refvar[BSDFSPECULAR]{BSDF\_SPECULAR}{}`)), `\refvar[SpecularTransmission::T]{T}{}`(T), `\refvar[SpecularTransmission::etaA]{etaA}{}`(etaA),
+      `\refvar[SpecularTransmission::etaB]{etaB}{}`(etaB), `\refvar[SpecularTransmission::fresnel]{fresnel}{}`(etaA, etaB), `\refvar[SpecularTransmission::mode]{mode}{}`(mode) {
+}
+\end{lstlisting}
+因为导体不透射光，所以\refvar{FresnelDielectric}{}对象
+总是用于菲涅尔计算。
+
+\begin{lstlisting}
+`\initcode{SpecularTransmission Private Data}{=}`
+const `\refvar{Spectrum}{}` `\initvar[SpecularTransmission::T]{T}{}`;
+const `\refvar{Float}{}` `\initvar[SpecularTransmission::etaA]{etaA}{}`, `\initvar[SpecularTransmission::etaB]{etaB}{}`;
+const `\refvar{FresnelDielectric}{}` `\initvar[SpecularTransmission::fresnel]{fresnel}{}`;
+const `\refvar{TransportMode}{}` `\initvar[SpecularTransmission::mode]{mode}{}`;
+\end{lstlisting}
+
+对于\refvar{SpecularReflection}{}，因为BTDF是缩放后的$\delta$分布，所以\linebreak
+\refvar{SpecularTransmission::f}{()}总是返回零。
+\begin{lstlisting}
+`\refcode{SpecularTransmission Public Methods}{+=}\lastnext{SpecularTransmissionPublicMethods}`
+`\refvar{Spectrum}{}` `\initvar[SpecularTransmission::f]{f}{}`(const `\refvar{Vector3f}{}` &wo, const `\refvar{Vector3f}{}` &wi) const { 
+    return `\refvar{Spectrum}{}`(0.f); 
+}
+\end{lstlisting}
+
+\refeq{8.7}描述了当光线从一种介质进入另一种时辐亮度是怎样变化的。
+然而事实证明，尽管该缩放应该应用于从光源开始的光线，
+但\emph{绝不}该用于从相机开始的光线。
+\refsec{路径-空间测量方程}将更细致地讨论该问题以及到时候定义的运用该缩放的
+代码片{\refcode{Account for non-symmetry with transmission to different medium}{}}。
+\begin{lstlisting}
+`\refcode{BxDF Method Definitions}{+=}\lastnext{BxDFMethodDefinitions}`
+`\refvar{Spectrum}{}` `\refvar{SpecularTransmission}{}`::`\initvar[SpecularTransmission::Samplef]{Sample\_f}{}`(const `\refvar{Vector3f}{}` &wo,
+        `\refvar{Vector3f}{}` *wi, const `\refvar{Point2f}{}` &sample, `\refvar{Float}{}` *pdf,
+        `\refvar{BxDFType}{}` *sampledType) const {
+    `\refcode{Figure out which $\eta$ is incident and which is transmitted}{}`
+    `\refcode{Compute ray direction for specular transmission}{}`
+    *pdf = 1;
+    `\refvar{Spectrum}{}` ft = `\refvar[SpecularTransmission::T]{T}{}` * (`\refvar{Spectrum}{}`(1.) - `\refvar[SpecularTransmission::fresnel]{fresnel}{}`.`\refvar[FresnelDielectric::Evaluate]{Evaluate}{}`(`\refvar{CosTheta}{}`(*wi)));
+    `\refcode{Account for non-symmetry with transmission to different medium}{}`
+    return ft / `\refvar{AbsCosTheta}{}`(*wi);
+}
+\end{lstlisting}
+
+该方法首先确定入射光线是否正进入或退出折射介质。
+pbrt遵循局部反射空间中的曲面法线即$(0,0,1)$方向指向
+物体外侧的惯例。因此，如果方向${\bm\omega_{\mathrm{o}}}$的$z$分量
+大于零，则入射光线来自物体外侧。
+\begin{lstlisting}
+`\initcode{Figure out which $\eta$ is incident and which is transmitted}{=}`
+bool entering = `\refvar{CosTheta}{}`(wo) > 0;
+`\refvar{Float}{}` etaI = entering ? `\refvar[SpecularTransmission::etaA]{etaA}{}` : `\refvar[SpecularTransmission::etaB]{etaB}{}`;
+`\refvar{Float}{}` etaT = entering ? `\refvar[SpecularTransmission::etaB]{etaB}{}` : `\refvar[SpecularTransmission::etaA]{etaA}{}`;
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{Compute ray direction for specular transmission}{=}`
+if (!`\refvar{Refract}{}`(wo, `\refvar{Faceforward}{}`(`\refvar{Normal3f}{}`(0, 0, 1), wo), etaI / etaT, wi))
+    return 0;
+\end{lstlisting}
+
+为了推导给出透射方向向量的表达式，我们可以采用
+类似于我们为镜面反射所用的更简单的方法。
+\reffig{8.11}展示了该设置。
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.5\linewidth]{Pictures/chap08/Speculartransmissionprojections.eps}
+    \caption{镜面透射的几何结构。给定入射方向${\bm\omega}_{\mathrm{i}}$和
+        曲面法线$\bm n$间的夹角$\theta_{\mathrm{i}}$，镜面透射方向与
+        曲面法线成角为$\theta_{\mathrm{t}}$. 该方向${\bm\omega}_{\mathrm{t}}$可
+        用斯涅尔定律算得，即求其垂直分量${\bm\omega}_{\mathrm{t}\perp}$，
+        再算${\bm\omega}_{\mathrm{t}\parallel}$得到规范化结果${\bm\omega}_{\mathrm{t}}$.}
+    \label{fig:8.11}
+\end{figure}
+
+然而这次，我们将从垂直分量开始：如果入射向量规范化了且有
+垂直分量${\bm\omega}_{\mathrm{i}\perp}$，则我们从三角学
+以及${\bm\omega}_{\perp}$的定义中知道${\bm\omega}_{\mathrm{i}\perp}$的长度
+等于$\sin\theta_{\mathrm{i}}$. 斯涅尔定律告诉
+我们$\displaystyle\sin\theta_{\mathrm{t}}=\frac{\eta_{\mathrm{i}}}{\eta_{\mathrm{t}}}\sin\theta_{\mathrm{i}}$.
+让方向${\bm\omega}_{\mathrm{i}\perp}$取反并相应调整长度，我们有
+\begin{align*}
+    {\bm\omega}_{\mathrm{t}\perp}=\frac{\eta_{\mathrm{i}}}{\eta_{\mathrm{t}}}(-{\bm\omega}_{\mathrm{i}\perp})\, .
+\end{align*}
+等价地，因为${\bm\omega}_{\perp}={\bm\omega}-{\bm\omega}_{\parallel}$，
+\begin{align*}
+    {\bm\omega}_{\mathrm{t}\perp}=\frac{\eta_{\mathrm{i}}}{\eta_{\mathrm{t}}}(-{\bm\omega}_{\mathrm{i}}+({\bm\omega}_{\mathrm{i}}\cdot{\bm n}){\bm n})\, .
+\end{align*}
+
+现在对于${\bm\omega}_{\mathrm{t}\parallel}$：我们
+知道${\bm\omega}_{\mathrm{t}\parallel}$平行于$\bm n$但面向相反方向，
+且我们还知道${\bm\omega}_{\mathrm{t}}$应该规范化。把这些合起来，
+\begin{align*}
+    {\bm\omega}_{\mathrm{t}\parallel}=-\left(\sqrt{1-\|{\bm\omega}_{\mathrm{t}\perp}\|^2}\right){\bm n}\, .
+\end{align*}
+于是完整的向量${\bm\omega}_{\mathrm{t}}$是
+\begin{align*}
+    {\bm\omega}_{\mathrm{t}}={\bm\omega}_{\mathrm{t}\perp}+{\bm\omega}_{\mathrm{t}\parallel}=\frac{\eta_{\mathrm{i}}}{\eta_{\mathrm{t}}}(-{\bm\omega}_{\mathrm{i}})+\left[\frac{\eta_{\mathrm{i}}}{\eta_{\mathrm{t}}}({\bm\omega}_{\mathrm{i}}\cdot{\bm n})-\sqrt{1-\|{\bm\omega}_{\mathrm{t}\perp}\|^2}\right]{\bm n}\, .
+\end{align*}
+因为$\|{\bm\omega}_{\mathrm{t}\perp}\|=\sin\theta_{\mathrm{t}}$，
+平方根下的项为$1-\sin^2\theta_{\mathrm{t}}=\cos^2\theta_{\mathrm{t}}$，
+这给出了最终结果：
+\begin{align}
+    \label{eq:8.8}
+    {\bm\omega}_{\mathrm{t}}=\frac{\eta_{\mathrm{i}}}{\eta_{\mathrm{t}}}(-{\bm\omega}_{\mathrm{i}})+\left[\frac{\eta_{\mathrm{i}}}{\eta_{\mathrm{t}}}({\bm\omega}_{\mathrm{i}}\cdot{\bm n})-\cos\theta_{\mathrm{t}}\right]{\bm n}\, .
+\end{align}
+
+分别给定入射方向{\ttfamily wi}、和{\ttfamily wi}在同一半球的
+曲面法线{\ttfamily n}以及入射和透射介质折射率之比{\ttfamily eta}，
+函数\refvar{Refract}{()}计算折射方向{\ttfamily wt}。
+布尔返回值表示{\ttfamily *wt}中是否返回了有效的折射光线；
+全内反射情况下它取{\ttfamily false}。
 \begin{lstlisting}
 `\refcode{BSDF Inline Functions}{+=}\lastnext{BSDFInlineFunctions}`
 inline bool `\initvar{Refract}{}`(const `\refvar{Vector3f}{}` &wi, const `\refvar{Normal3f}{}` &n, `\refvar{Float}{}` eta,
@@ -474,3 +679,77 @@ inline bool `\initvar{Refract}{}`(const `\refvar{Vector3f}{}` &wi, const `\refva
     return true;
 }
 \end{lstlisting}
+
+让斯涅尔定律两边平方能让我们计算$\cos\theta_{\mathrm{t}}$：
+\begin{align*}
+    \eta_{\mathrm{i}}^2\sin^2\theta_{\mathrm{i}} & =\eta_{\mathrm{t}}^2\sin^2\theta_{\mathrm{t}}\, ,                                      \\
+    \sin^2\theta_{\mathrm{t}}                    & =\frac{\eta_{\mathrm{i}}^2}{\eta_{\mathrm{t}}^2}\sin^2\theta_{\mathrm{i}}\, ,          \\
+    1-\cos^2\theta_{\mathrm{t}}                  & =\frac{\eta_{\mathrm{i}}^2}{\eta_{\mathrm{t}}^2}\sin^2\theta_{\mathrm{i}}\, ,          \\
+    \cos\theta_{\mathrm{t}}                      & =\sqrt{1-\frac{\eta_{\mathrm{i}}^2}{\eta_{\mathrm{t}}^2}\sin^2\theta_{\mathrm{i}}}\, .
+\end{align*}
+
+\begin{lstlisting}
+`\initcode{Compute cos $\theta_t$ using Snell's law}{=}`
+`\refvar{Float}{}` cosThetaI = `\refvar{Dot}{}`(n, wi);
+`\refvar{Float}{}` sin2ThetaI = std::max(0.f, 1.f - cosThetaI * cosThetaI);
+`\refvar{Float}{}` sin2ThetaT = eta * eta * sin2ThetaI;
+`\refcode{Handle total internal reflection for transmission}{}`
+`\refvar{Float}{}` cosThetaT = std::sqrt(1 - sin2ThetaT);
+\end{lstlisting}
+
+我们这里也需要处理全内反射的情况。
+如果$\sin\theta_{\mathrm{t}}$的平方值大于或等于一，
+就发生了全内反射，所以返回{\ttfamily false}
+\footnote{第一版pbrt在这里测试的“>1”而不是“>=1”。
+    尽管两者的区别看起来无害，但该差异使得偶尔会算出not-a-number值，
+    因为$\omega$（在曲面切平面上）的$z$分量为零，进而项$\frac{1}{\cos\theta}$为无穷。}。
+\begin{lstlisting}
+`\initcode{Handle total internal reflection for transmission}{=}`
+if (sin2ThetaT >= 1) return false;
+\end{lstlisting}
+
+\subsection{菲涅尔调制的镜面反射与透射}\label{sub:菲涅尔调制的镜面反射与透射}
+为了后续第\refchap{光传输I：表面反射}、
+\refchap{光传输II：体积渲染}、\refchap{光传输III：双向方法}的
+一些蒙特卡罗光传输算法有更优的效率，拥有能同时表示
+镜面反射与镜面透射的单个\refvar{BxDF}{}很有用，
+其中散射类型的相对权重由介电质菲涅尔方程调制。
+\refvar{FresnelSpecular}{}中提供了这样的\refvar{BxDF}{}。
+\begin{lstlisting}
+`\refcode{BxDF Declarations}{+=}\lastnext{BxDFDeclarations}`
+class `\initvar{FresnelSpecular}{}` : public `\refvar{BxDF}{}` {
+public:
+    `\refcode{FresnelSpecular Public Methods}{}`
+private:
+    `\refcode{FresnelSpecular Private Data}{}`
+};
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{FresnelSpecular Public Methods}{=}\initnext{FresnelSpecularPublicMethods}`
+`\refvar{FresnelSpecular}{}`(const `\refvar{Spectrum}{}` &R, const `\refvar{Spectrum}{}` &T, `\refvar{Float}{}` etaA,
+        `\refvar{Float}{}` etaB, `\refvar{TransportMode}{}` mode) 
+    : `\refvar{BxDF}{}`(`\refvar{BxDFType}{}`(`\refvar[BSDFREFLECTION]{BSDF\_REFLECTION}{}` | `\refvar[BSDFTRANSMISSION]{BSDF\_TRANSMISSION}{}` | `\refvar[BSDFSPECULAR]{BSDF\_SPECULAR}{}`)),
+      `\refvar[FresnelSpecular::R]{R}{}`(R), `\refvar[FresnelSpecular::T]{T}{}`(T), `\refvar[FresnelSpecular::etaA]{etaA}{}`(etaA), `\refvar[FresnelSpecular::etaB]{etaB}{}`(etaB), `\refvar[FresnelSpecular::fresnel]{fresnel}{}`(etaA, etaB),
+      `\refvar[FresnelSpecular::mode]{mode}{}`(mode) { }
+\end{lstlisting}
+
+因为我们只关注介电质情形，所以\refvar{FresnelDielectric}{}对象
+总是只用于菲涅尔计算。
+
+\begin{lstlisting}
+`\initcode{FresnelSpecular Private Data}{=}`
+const `\refvar{Spectrum}{}` `\initvar[FresnelSpecular::R]{R}{}`, `\initvar[FresnelSpecular::T]{T}{}`;
+const `\refvar{Float}{}` `\initvar[FresnelSpecular::etaA]{etaA}{}`, `\initvar[FresnelSpecular::etaB]{etaB}{}`;
+const `\refvar{FresnelDielectric}{}` `\initvar[FresnelSpecular::fresnel]{fresnel}{}`;
+const `\refvar{TransportMode}{}` `\initvar[FresnelSpecular::mode]{mode}{}`
+\end{lstlisting}
+\begin{lstlisting}
+`\refcode{FresnelSpecular Public Methods}{+=}\lastcode{FresnelSpecularPublicMethods}`
+`\refvar{Spectrum}{}` `\initvar[FresnelSpecular::f]{f}{}`(const `\refvar{Vector3f}{}` &wo, const `\refvar{Vector3f}{}` &wi) const { 
+    return `\refvar{Spectrum}{}`(0.f); 
+}
+\end{lstlisting}
+
+因为一些实现细节依赖于第\refchap{蒙特卡罗积分}介绍的蒙特卡罗积分原理，
+方法\refvar[FresnelSpecular::Samplef]{Sample\_f}{()}
+的实现在\refsub{镜面反射与透射}。

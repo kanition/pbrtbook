@@ -99,7 +99,7 @@ virtual `\refvar{Spectrum}{}` `\initvar[BxDF::Samplef]{Sample\_f}{}`(const `\ref
     \rho_{\mathrm{hd}}({\bm\omega}_{\mathrm{o}})=\int_{H^2({\bm n})}{f_{\mathrm{r}}({\bm p},{\bm \omega}_\mathrm{o},{\bm \omega}_\mathrm{i})|\cos{\theta_{\mathrm{i}}}|\mathrm{d}{\bm \omega}_\mathrm{i}}\, .
 \end{align}
 
-方法\refvar{BxDF::rho}{()}计算反射函数$\rho_{\mathrm{hd}}$。
+方法\refvar{BxDF::rho}{()}计算反射函数$\rho_{\mathrm{hd}}$.
 一些\refvar{BxDF}{}能解析地计算该值，然而大部分用蒙特卡罗积分来计算其近似值。
 对于那些\refvar{BxDF}{}，参数{\ttfamily nSamples}和{\ttfamily samples}供
 蒙特卡罗算法的实现使用；它们将在\refsub{应用：估计反射率}解释。

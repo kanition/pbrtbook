@@ -988,12 +988,12 @@ const `\refvar{SurfaceInteraction}{}` &isect, const `\refvar{Scene}{}` &scene,
 \end{lstlisting}
 
 方法\refvar{SpecularReflect}{()}和\refvar{SpecularTransmit}{()}中，方法
-\refvar[Samplef]{BSDF::Sample\_f}{()}
+\refvar[BSDF::Samplef]{BSDF::Sample\_f}{()}
 对给定出射方向返回入射光线方向并给出光散射的方式。
 该方法是本书最后几章所述的蒙特卡罗光传输算法的基础之一。
 这里我们只用它寻找关于完美镜面反射或折射的出射方向，
-并用标志指示\refvar[Samplef]{BSDF::Sample\_f}{()}忽略其他类型的反射。
-尽管\refvar[Samplef]{BSDF::Sample\_f}{()}能
+并用标志指示\refvar[BSDF::Samplef]{BSDF::Sample\_f}{()}忽略其他类型的反射。
+尽管\refvar[BSDF::Samplef]{BSDF::Sample\_f}{()}能
 为概率积分算法采样离开表面的随机方向，
 但随机性被约束为和\refvar{BSDF}{}的散射属性一致。
 在完美镜面反射或折射中，只有一个可能的方向，所以根本没有随机性。
@@ -1008,7 +1008,7 @@ const `\refvar{SurfaceInteraction}{}` &isect, const `\refvar{Scene}{}` &scene,
 `\refvar{Vector3f}{}` wo = isect.`\refvar[Interaction::wo]{wo}{}`, wi;
 `\refvar{Float}{}` pdf;
 `\refvar{BxDFType}{}` type = `\refvar{BxDFType}{}`(`\refvar[BSDFREFLECTION]{BSDF\_REFLECTION}{}` | `\refvar[BSDFSPECULAR]{BSDF\_SPECULAR}{}`);
-`\refvar{Spectrum}{}` f = isect.bsdf->`\refvar[Samplef]{Sample\_f}{}`(wo, &wi, sampler.`\refvar{Get2D}{}`(), &pdf, type);
+`\refvar{Spectrum}{}` f = isect.bsdf->`\refvar[BSDF::Samplef]{Sample\_f}{}`(wo, &wi, sampler.`\refvar{Get2D}{}`(), &pdf, type);
 \end{lstlisting}
 
 为了用射线差分对反射或折射看到的纹理做抗锯齿，

@@ -1,1 +1,55 @@
 \section{朗伯反射}\label{sec:朗伯反射}
+
+最简单的BRDF之一是朗伯模型。它建模的是把入射光照
+朝所有方向均匀散射的完美漫反射曲面。
+尽管该反射模型在物理上不太合理，
+但它是许多真实世界表面例如哑光涂料
+\sidenote{译者注：原文matte paint。}的合理近似。
+
+\begin{lstlisting}
+`\refcode{BxDF Declarations}{+=}\lastnext{BxDFDeclarations}`
+class `\initvar{LambertianReflection}{}` : public `\refvar{BxDF}{}` {
+public:
+    `\refcode{LambertianReflection Public Methods}{}`
+private:
+    `\refcode{LambertianReflection Private Data}{}`
+};
+\end{lstlisting}
+
+\refvar{LambertianReflection}{}的构造函数接收反射率光谱$R$，
+它给出了被散射的入射光比例。
+\begin{lstlisting}
+`\initcode{LambertianReflection Public Methods}{=}\initnext{LambertianReflectionPublicMethods}`
+`\refvar{LambertianReflection}{}`(const `\refvar{Spectrum}{}` &R) 
+    : `\refvar{BxDF}{}`(`\refvar{BxDFType}{}`(`\refvar[BSDFREFLECTION]{BSDF\_REFLECTION}{}` | `\refvar[BSDFDIFFUSE]{BSDF\_DIFFUSE}{}`)), `\refvar[LambertianReflection::R]{R}{}`(R) { }
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{LambertianReflection Private Data}{=}`
+const `\refvar{Spectrum}{}` `\initvar[LambertianReflection::R]{R}{}`;
+\end{lstlisting}
+
+\refvar{LambertianReflection}{}的反射分布函数很简单，
+因为它的值是常数。然而，应该返回的值
+是$\displaystyle\frac{R}{\pi}$而不是提供给构造函数的反射率$R$.
+通过令$R$和定义了$\rho_{\mathrm{hd}}$的\refeq{8.1}相等并
+求解BRDF的值可以看出这一点。
+\begin{lstlisting}
+`\refcode{BxDF Method Definitions}{+=}\lastnext{BxDFMethodDefinitions}`
+`\refvar{Spectrum}{}` `\refvar{LambertianReflection}{}`::`\initvar[LambertianReflection::f]{f}{}`(const `\refvar{Vector3f}{}` &wo,
+                                 const `\refvar{Vector3f}{}` &wi) const {
+    return `\refvar[LambertianReflection::R]{R}{}` * `\refvar{InvPi}{}`;
+}
+\end{lstlisting}
+
+朗伯BRDF的半球定向和半球半球反射率值的解析计算很简单，
+所以文中省略了其推导。
+\begin{lstlisting}
+`\refcode{LambertianReflection Public Methods}{+=}\lastnext{LambertianReflectionPublicMethods}`
+`\refvar{Spectrum}{}` `\initvar[LambertianReflection::rho1]{rho}{}`(const `\refvar{Vector3f}{}` &, int, const `\refvar{Point2f}{}` *) const { return `\refvar[LambertianReflection::R]{R}{}`; }
+`\refvar{Spectrum}{}` `\initvar[LambertianReflection::rho2]{rho}{}`(int, const `\refvar{Point2f}{}` *, const `\refvar{Point2f}{}` *) const { return `\refvar[LambertianReflection::R]{R}{}`; }
+\end{lstlisting}
+
+能表示穿过曲面的完美朗伯透射也很有用；该BTDF在\linebreak
+\refvar{LambertianTransmission}{}中实现。
+它的实现几乎仿照\refvar{LambertianReflection}{}
+所以这里不再介绍。

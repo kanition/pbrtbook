@@ -1,0 +1,19 @@
+\section{微面模型}\label{sec:微面模型}
+
+许多建模表面反射和透射的基于几何光学的方法
+都基于一个观点即粗糙表面可以建模为
+小的\keyindex{微面}{microfacet}{}合集。
+由微面构成的曲面经常建模为高度场\sidenote{译者注：原文heightfield。}，
+其中微面的朝向分布是统计描述的。
+\reffig{8.12}展示了相对粗糙表面的横截面和光滑得多的微面表面。
+当区别不明显时，我们将用术语\keyindex{微曲面}{microsurface}{}来
+描述微面曲面，用\keyindex{宏曲面}{macrosurface}{}来描述基本的光滑曲面
+（即由\refvar{Shape}{}表示的）。
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.75\linewidth]{Pictures/chap08/Roughsmoothmicrofacets.eps}
+    \caption{微面曲面模型经常由给出微面法线${\bm n}_{\mathrm{f}}$关于
+        曲面法线$\bm n$的分布的函数来描述。(a)微面法线变化越大，表面越粗糙。
+        (b)光滑表面的微面法线变化相对较小。}
+    \label{fig:8.12}
+\end{figure}

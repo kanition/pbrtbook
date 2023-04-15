@@ -146,5 +146,51 @@ if (`\refvar{AbsCosTheta}{}`(wi) > `\refvar{AbsCosTheta}{}`(wo)) {
 \end{lstlisting}
 
 \subsection{微面分布函数}\label{sub:微面分布函数}
-反射模型所基于的微面展现完美镜面反射和透射时，
+反射模型所基于的微面展现出完美镜面反射和透射时，
 其对来自各种光泽材料的光散射的建模已经很高效了，包括金属、塑料和磨砂玻璃。
+在我们讨论这些模型的辐射度量细节前，
+我们将首先介绍概括了其几何属性的抽象。
+这里的代码包括了两个广泛使用的微面模型的实现。
+这些代码都在文件\href{https://github.com/mmp/pbrt-v3/tree/master/src/core/microfacet.h}{\ttfamily core/microfacet.h}
+和\href{https://github.com/mmp/pbrt-v3/tree/master/src/core/microfacet.cpp}{\ttfamily core/microfacet.cpp}中。
+
+\refvar{MicrofacetDistribution}{}定义了
+由微面实现提供的接口及其一些常用功能。
+\begin{lstlisting}
+`\initcode{MicrofacetDistribution Declarations}{=}\initnext{MicrofacetDistributionDeclarations}`
+class `\initvar{MicrofacetDistribution}{}` {
+public:
+    `\refcode{MicrofacetDistribution Public Methods}{}`
+protected:
+    `\refcode{MicrofacetDistribution Protected Methods}{}`
+    `\refcode{MicrofacetDistribution Protected Data}{}`
+};
+\end{lstlisting}
+
+微面曲面的一个重要特性由分布函数$D({\bm\omega}_{\mathrm{h}})$表示，
+它给出了曲面法线为${\bm\omega}_{\mathrm{h}}$的微面的微分面积
+（回想\reffig{8.12}展示了曲面的粗糙度是怎样和微面法线分布函数相联系的）。
+在pbrt中，微面分布函数和\refvar{BxDF}{}在相同的BSDF坐标系下定义；
+这样，完全光滑的曲面可由仅当${\bm\omega}_{\mathrm{h}}$等于
+曲面法线时才取非零值的$\delta$分布描述：$D({\bm\omega}_{\mathrm{h}})=\delta({\bm\omega}_{\mathrm{h}}-(0,0,1))$.
+
+微面分布函数必须规范化以保证它们的物理合理性。
+直观上，如果我们考虑微曲面上沿法线方向$\bm n$的入射光线，
+则每条光线一定和微面曲面恰好相交一次。更形式化地，
+给定微曲面的微分面积$\mathrm{d}A$，则该区域之上微面的投影面积
+一定等于$\mathrm{d}A$（\reffig{8.15}）。
+数学上，这对应着以下条件\footnote{规范化微面分布
+    的常见错误是在整个立体角上而不是投影立体角上执行该积分
+    （即略去的项$\cos\theta_{\mathrm{h}}$），
+    这无法保证具有正确分布的高度场存在。}：
+\begin{align*}
+    \int\limits_{H^2({\bm n})}D({\bm\omega}_{\mathrm{h}})\cos\theta_{\mathrm{h}}\mathrm{d}{\bm\omega}_{\mathrm{h}}=1\, .
+\end{align*}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.5\linewidth]{Pictures/chap08/MicrofacetnormalizedA.eps}
+    \caption{给定曲面上的微分面积$\mathrm{d}A$，
+        则微面法线分布函数$D({\bm\omega}_{\mathrm{h}})$必须规范化使得
+        该区域上的微面的投影曲面面积等于$\mathrm{d}A$.}
+    \label{fig:8.15}
+\end{figure}

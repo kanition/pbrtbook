@@ -179,9 +179,9 @@ protected:
 则每条光线一定和微面曲面恰好相交一次。更形式化地，
 给定微曲面的微分面积$\mathrm{d}A$，则该区域之上微面的投影面积
 一定等于$\mathrm{d}A$（\reffig{8.15}）。
-数学上，这对应着以下条件\footnote{规范化微面分布
-    的常见错误是在整个立体角上而不是投影立体角上执行该积分
-    （即略去的项$\cos\theta_{\mathrm{h}}$），
+数学上，这对应着以下条件
+\footnote{规范化微面分布的常见错误是在整个立体角上
+    而不是投影立体角上执行该积分（即略去的项$\cos\theta_{\mathrm{h}}$），
     这无法保证具有正确分布的高度场存在。}：
 \begin{align*}
     \int\limits_{H^2({\bm n})}D({\bm\omega}_{\mathrm{h}})\cos\theta_{\mathrm{h}}\mathrm{d}{\bm\omega}_{\mathrm{h}}=1\, .
@@ -194,3 +194,81 @@ protected:
         该区域上的微面的投影曲面面积等于$\mathrm{d}A$.}
     \label{fig:8.15}
 \end{figure}
+
+方法\refvar{MicrofacetDistribution::D}{()}对应函数$D({\bm\omega}_{\mathrm{h}})$；
+实现返回具有给定法线向量$\omega$朝向的微面的微分面积。
+\begin{lstlisting}
+`\initcode{MicrofacetDistribution Public Methods}{=}\initnext{MicrofacetDistributionPublicMethods}`
+virtual `\refvar{Float}{}` `\initvar[MicrofacetDistribution::D]{D}{}`(const `\refvar{Vector3f}{}` &wh) const = 0;
+\end{lstlisting}
+
+\citet{1987BeckmannSpizzichino}\sidenote{译者注：
+    笔者只查到了1987年同名同作者书籍，原文引用为1963年。}提出了
+一种广泛使用的基于微面斜率高斯分布的微面分布函数；
+我们的实现在类\refvar{BeckmannDistribution}{}中。
+\begin{lstlisting}
+`\refcode{MicrofacetDistribution Declarations}{+=}\lastnext{MicrofacetDistributionDeclarations}`
+class `\initvar{BeckmannDistribution}{}` : public `\refvar{MicrofacetDistribution}{}` {
+public:
+    `\refcode{BeckmannDistribution Public Methods}{}`
+private:
+    `\refcode{BeckmannDistribution Private Methods}{}`
+    `\refcode{BeckmannDistribution Private Data}{}`
+};
+\end{lstlisting}
+
+Beckmann-Spizzichino模型的传统定义是
+\begin{align}\label{eq:8.9}
+    D({\bm\omega}_{\mathrm{h}})=\frac{\mathrm{e}^{-\frac{\tan^2\theta_{\mathrm{h}}}{\alpha^2}}}{\pi\alpha^2\cos^4\theta_{\mathrm{h}}}\, ,
+\end{align}
+其中如果$\sigma$是微面斜率的均方根\sidenote{译者注：原文RMS。}，则$\alpha=\sqrt{2}\sigma$.
+
+定义各向异性分布很有用，即法线分布也随${\bm\omega}_{\mathrm{h}}$的
+方位朝向变化。例如，所朝方向垂直于$x$轴的微面对应记为$\alpha_x$，
+而$y$轴的为$\alpha_y$，则中间朝向的$\alpha$值可用通过这些值构造的椭圆来插值。
+
+对应的各向异性微面分布函数为
+\begin{align}\label{eq:8.10}
+    D({\bm\omega}_{\mathrm{h}})=\frac{\mathrm{e}^{-\left(\frac{\cos^2\varphi_{\mathrm{h}}}{\alpha_x^2}+\frac{\sin^2\varphi_{\mathrm{h}}}{\alpha_y^2}\right)\tan^2\theta_{\mathrm{h}}}}{\pi\alpha_x\alpha_y\cos^4\theta_{\mathrm{h}}}\, .
+\end{align}
+注意当$\alpha_x=\alpha_y$时Beckmann-Spizzichino模型
+变为原始的各向同性版本。
+
+成员变量\refvar[BeckmannDistribution::alphax]{alphax}{}和
+\refvar[BeckmannDistribution::alphay]{alphay}{}都在
+\refvar{BeckmannDistribution}{}的构造函数中设定，
+它很简单所以这里不再介绍。
+\begin{lstlisting}
+`\initcode{BeckmannDistribution Private Data}{=}`
+const `\refvar{Float}{}` `\initvar[BeckmannDistribution::alphax]{alphax}{}`, `\initvar[BeckmannDistribution::alphay]{alphay}{}`;
+\end{lstlisting}
+
+方法\refvar{BeckmannDistribution::D}{()}直接翻译了\refeq{8.10}。
+仅有的额外实现细节是必须特殊处理$\tan^2\theta$的无限值。
+该情况实际上是有效的——它在完全扫掠的方向上发生。
+该情况下，下面的代码最终企图计算$\displaystyle\frac{0}{0}$，
+这会得到“not a number”(NaN)值，最终导致为当前像素样本的辐射亮度返回NaN值。
+因此，为该情况明确地返回零，也即当$\tan^2\theta_{\mathrm{h}}$趋向
+无穷大时$D({\bm\omega}_{\mathrm{h}})$收敛的值。
+\begin{lstlisting}
+`\initcode{MicrofacetDistribution Method Definitions}{=}\initnext{MicrofacetDistributionMethodDefinitions}`
+`\refvar{Float}{}` `\refvar{BeckmannDistribution}{}`::`\initvar[BeckmannDistribution::D]{D}{}`(const `\refvar{Vector3f}{}` &wh) const {
+    `\refvar{Float}{}` tan2Theta = `\refvar{Tan2Theta}{}`(wh);
+    if (std::isinf(tan2Theta)) return 0.;
+    `\refvar{Float}{}` cos4Theta = `\refvar{Cos2Theta}{}`(wh) * `\refvar{Cos2Theta}{}`(wh);
+    return std::exp(-tan2Theta * (`\refvar{Cos2Phi}{}`(wh) / (`\refvar[BeckmannDistribution::alphax]{alphax}{}` * `\refvar[BeckmannDistribution::alphax]{alphax}{}`) +
+                                  `\refvar{Sin2Phi}{}`(wh) / (`\refvar[BeckmannDistribution::alphay]{alphay}{}` * `\refvar[BeckmannDistribution::alphay]{alphay}{}`))) /
+        (`\refvar{Pi}{}` * `\refvar[BeckmannDistribution::alphax]{alphax}{}` * `\refvar[BeckmannDistribution::alphay]{alphay}{}` * cos4Theta);
+}
+\end{lstlisting}
+
+\citet{Trowbridge:75}提出了另一个有用的微面分布函数
+\footnote{该模型也由\citet{10.5555/2383847.2383874}独立推导出，称作“GGX”。}。
+其各向异性变体由下式给出：
+\begin{align}\label{eq:8.11}
+    D({\bm\omega}_{\mathrm{h}})=\frac{1}{\pi\alpha_x\alpha_y\left(1+\left(\frac{\cos^2\varphi_{\mathrm{h}}}{\alpha_x^2}+\frac{\sin^2\varphi_{\mathrm{h}}}{\alpha_y^2}\right)\tan^2\theta_{\mathrm{h}}\right)^2\cos^4\theta_{\mathrm{h}}}\, .
+\end{align}
+
+相比于Beckmann-Spizzichino模型，Trowbridge-Reitz模型有更高的拖尾——
+在远离曲面法线的方向上它会更慢地降到零。该特性与许多真实世界表面的性质吻合得很好。
+见\reffig{8.16}中这两个微面分布函数的图示。

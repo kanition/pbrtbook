@@ -39,6 +39,7 @@ $\wideparen{BF}$的弧长为$r\sin\theta\mathrm{d}\varphi$；
 \end{align}
 依据定义，则相应的立体角元为
 \begin{align}
+      \label{eq:05ex-solidangle}
       \mathrm{d}\varOmega=\frac{\mathrm{d}A}{r^2}=\sin\theta\mathrm{d}\theta\mathrm{d}\varphi\, .
 \end{align}
 对立体角元做曲面积分则可得立体角
@@ -70,8 +71,8 @@ $\wideparen{BF}$的弧长为$r\sin\theta\mathrm{d}\varphi$；
 其中$t$表示时间。
 
 \begin{definition}
-      \keyindex{辐射照度}{irradiance}{}/\keyindex{辐射出射度}{radiant exitance}{}指
-      照射/离开表面一点处的单位面元上的辐射能通量。
+      \keyindex{辐射照度}{irradiance}{}指辐射接收面单位面积内收到的辐射能通量。
+      \keyindex{辐射出射度}{radiant exitance}{}指辐射源面单位面积内向半空间发射的辐射能通量。
 \end{definition}
 辐射照度常用$E$表示，辐射出射度常用$M$表示，单位均为$\text{W}/\text{m}^2$.
 它们定义中面元所对应的立体角是辐射的整个半球空间，与辐通量的关系为
@@ -82,7 +83,7 @@ $\wideparen{BF}$的弧长为$r\sin\theta\mathrm{d}\varphi$；
 
 \begin{definition}
       \keyindex{辐射强度}{radiant intensity}{}指
-      在给定方向的单位立体角元内离开点辐射源（或辐射源面元）的辐射通量。
+      辐射源在给定方向上发射在单位立体角内的辐射通量。
 \end{definition}
 辐射强度常用$I$表示，单位为$\text{W}/\text{sr}$.
 它一般适合于描述（近似）点光源的辐射方向特性，
@@ -92,15 +93,20 @@ $\wideparen{BF}$的弧长为$r\sin\theta\mathrm{d}\varphi$；
 \end{align}
 
 \begin{definition}
-      \keyindex{辐射亮度}{radiance}{}指
-      表面一点在垂直于给定方向的单位面元上于该方向的辐射强度。
+      面辐射源上一点沿给定方向的\keyindex{辐射亮度}{radiance}{}指
+      包含该点的面元朝该方向上的辐射强度与面元在垂直于该方向的平面上的正投影面积之比。
 \end{definition}
 辐射亮度常用$L$表示，单位为W$/$(sr$\cdot$m$^2$)。
 它与其他辐射度量的关系为
 \begin{align}\label{eq:5.ex-radiance}
       L=\frac{\mathrm{d}I}{\cos\theta\mathrm{d}A}=\frac{\mathrm{d}^2\varPhi}{\cos\theta\mathrm{d}A\mathrm{d}\varOmega}=\frac{\mathrm{d}E}{\cos\theta\mathrm{d}\varOmega}\, ,
 \end{align}
-其中$\theta$是曲面法线与给定方向的夹角。
+其中$\theta$是面元法线与给定方向的夹角（\reffig{5.ex01-add01}）。
+\begin{figure}[htbp]
+      \centering\includegraphics[width=0.4\linewidth]{chap05/ex-radiance.eps}
+      \caption{辐射亮度示意图。}
+      \label{fig:5.ex01-add01}
+\end{figure}
 
 \reffig{5.ex02}展示了辐射度量之间的微分关系。
 \begin{figure}[htbp]
@@ -127,6 +133,53 @@ $\wideparen{BF}$的弧长为$r\sin\theta\mathrm{d}\varphi$；
       \caption{辐射度量的微分关系。}
       \label{fig:5.ex02}
 \end{figure}
+
+满足辐射亮度在任意方向大小都一样的辐射体
+称为\keyindex{理想漫辐射体}{ideal diffuse radiator}{radiator辐射体}。
+它遵循朗伯余弦定律。
+\begin{proposition}[\keyindex{朗伯余弦定律}{Lambert's cosine law}{}]
+      理想漫辐射体面元在给定方向的辐射强度与该方向和面元法线夹角的余弦成正比。
+\end{proposition}
+\begin{prove}
+      由\refeq{5.ex-radiance}，理想漫辐射体在微小面积$\Delta A$上有恒定的辐射亮度
+      \begin{align*}
+            L=\frac{I}{\cos\theta\Delta A}\, .
+      \end{align*}
+      因为在法线方向上有$\theta=0$，此时对应的辐射强度为$I_0=L\Delta A$；
+      而其他方向上的辐射强度为$I_{\theta}=L\Delta A\cos\theta$，于是
+      \begin{align*}\label{eq:5.ex-LambertCosine}
+            I_{\theta}=I_0\cos\theta\, .
+      \end{align*}
+\end{prove}
+因此理想漫辐射体也称\keyindex{朗伯辐射体}{Lambertian radiator}{}、余弦辐射体。
+
+\begin{proposition}
+      假设辐射在传播介质中不损失能量（例如被吸收、散射），
+      则点光源对物体表面的照度还满足距离\keyindex{平方反比定律}{inverse-square law}{}。
+\end{proposition}
+\begin{figure}[htbp]
+      \centering
+      \includegraphics[width=0.5\linewidth]{chap05/ex-InverseSquareLaw.eps}
+      \caption{点光源光照的距离平方反比定律。}
+      \label{fig:5.exInverseSquareLaw}
+\end{figure}
+\begin{prove}
+      如\reffig{5.exInverseSquareLaw}，一强度为$I$的点光源
+      以倾角$\theta$照亮物体表面上与其距离为$r$的点$P$。
+      记该点处的曲面法线为$\bm n$，考虑点$P$周围被照射的面元$\mathrm{d}A$，
+      设其关于光源的立体角为$\mathrm{d}\varOmega$，辐射能通量为$\mathrm{d}\varPhi$。
+      由立体角的定义\refeq{05ex-solidangle}，有
+      \sidenote{注意理解为什么这里多了一项$\cos\theta$——
+            因为立体角原始定义中面元与到球心的方向垂直，但此处有倾角，需折算。}
+      \begin{align}
+            \mathrm{d}\varOmega=\frac{\cos\theta\mathrm{d}A}{r^2}\, .
+      \end{align}
+      结合辐射照度与辐射强度的定义，点$P$处的辐射照度$E$为
+      \begin{align}
+            E=\frac{\mathrm{d}\varPhi}{\mathrm{d}A}=\frac{I\mathrm{d}\varOmega}{\mathrm{d}A}=\frac{I\cos\theta\mathrm{d}A}{r^2\mathrm{d}A}=\frac{I}{r^2}\cos\theta\, .
+      \end{align}
+      也即当倾角$\theta$固定时，辐射照度$E$与点光源到被照射处距离的平方$r^2$成反比。
+\end{prove}
 
 \subsection{光度学}\label{sub:光度学}
 光度量是光辐射能为平均人眼接收所引起的视觉刺激大小的度量。

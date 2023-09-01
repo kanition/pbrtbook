@@ -101,7 +101,7 @@ $\wideparen{BF}$的弧长为$r\sin\theta\mathrm{d}\varphi$；
 \begin{align}\label{eq:5.ex-radiance}
       L=\frac{\mathrm{d}I}{\cos\theta\mathrm{d}A}=\frac{\mathrm{d}^2\varPhi}{\cos\theta\mathrm{d}A\mathrm{d}\varOmega}=\frac{\mathrm{d}E}{\cos\theta\mathrm{d}\varOmega}\, ,
 \end{align}
-其中$\theta$是面元法线与给定方向的夹角（\reffig{5.ex01-add01}）。
+其中$\theta$是面元法线$\bm n$与给定方向的夹角（\reffig{5.ex01-add01}）。
 \begin{figure}[htbp]
       \centering\includegraphics[width=0.4\linewidth]{chap05/ex-radiance.eps}
       \caption{辐射亮度示意图。}
@@ -150,8 +150,11 @@ $\wideparen{BF}$的弧长为$r\sin\theta\mathrm{d}\varphi$；
       \begin{align*}\label{eq:5.ex-LambertCosine}
             I_{\theta}=I_0\cos\theta\, .
       \end{align*}
+      因此理想漫辐射体也称\keyindex{朗伯辐射体}{Lambertian radiator}{}、余弦辐射体。
 \end{prove}
-因此理想漫辐射体也称\keyindex{朗伯辐射体}{Lambertian radiator}{}、余弦辐射体。
+\begin{example}
+      若一个球是朗伯辐射体，则视觉上它看起来像个均匀的发光盘。
+\end{example}
 
 \begin{proposition}
       假设辐射在传播介质中不损失能量（例如被吸收、散射），
@@ -161,10 +164,10 @@ $\wideparen{BF}$的弧长为$r\sin\theta\mathrm{d}\varphi$；
       \centering
       \includegraphics[width=0.5\linewidth]{chap05/ex-InverseSquareLaw.eps}
       \caption{点光源光照的距离平方反比定律。}
-      \label{fig:5.exInverseSquareLaw}
+      \label{fig:5.ex-InverseSquareLaw}
 \end{figure}
 \begin{prove}
-      如\reffig{5.exInverseSquareLaw}，一强度为$I$的点光源
+      如\reffig{5.ex-InverseSquareLaw}，一强度为$I$的点光源
       以倾角$\theta$照亮物体表面上与其距离为$r$的点$P$。
       记该点处的曲面法线为$\bm n$，考虑点$P$周围被照射的面元$\mathrm{d}A$，
       设其关于光源的立体角为$\mathrm{d}\varOmega$，辐射能通量为$\mathrm{d}\varPhi$。
@@ -179,7 +182,50 @@ $\wideparen{BF}$的弧长为$r\sin\theta\mathrm{d}\varphi$；
             E=\frac{\mathrm{d}\varPhi}{\mathrm{d}A}=\frac{I\mathrm{d}\varOmega}{\mathrm{d}A}=\frac{I\cos\theta\mathrm{d}A}{r^2\mathrm{d}A}=\frac{I}{r^2}\cos\theta\, .
       \end{align}
       也即当倾角$\theta$固定时，辐射照度$E$与点光源到被照射处距离的平方$r^2$成反比。
+      此外还能看出，当距离固定时，辐射照度也按倾角的余弦变化。
 \end{prove}
+
+\begin{proposition}[\keyindex{亮度守恒}{conservation of radiance}{}]
+      在没有耗散的理想光学系统中，辐射亮度是守恒的。
+\end{proposition}
+\begin{prove}
+      \begin{figure}[htbp]
+            \centering
+            \includegraphics[width=0.75\linewidth]{chap05/ex-ConservationRadiance.eps}
+            \caption{辐射亮度的守恒特性。}
+            \label{fig:5.ex-ConservationRadiance}
+      \end{figure}
+      如\reffig{5.ex-ConservationRadiance}所示：
+      忽略介质对辐射的耗散、折射等影响，
+      设点$S$向点$R$直接发出的辐射亮度为$L_S$，
+      而点$R$从点$S$直接接收到的辐射亮度为$L_R$.
+      我们记两点间的距离为$l$，并分别考虑这两点周围的
+      面元$\mathrm{d}A_S$和$\mathrm{d}A_R$，
+      记相应的法线分别为${\bm n}_S$和${\bm n}_R$，
+      并设两点连线$SR$与两条法线形成的夹角分别为$\theta_S$和$\theta_R$.
+
+      现在考虑两面元相对于对方的立体角。面元$\mathrm{d}A_R$相对于点$S$的立体角为
+      \begin{align}\label{eq:5.ex-source-solid-angle}
+            \mathrm{d}\varOmega_S=\frac{\cos\theta_R\mathrm{d}A_R}{l^2}\, .
+      \end{align}
+      同理，面元$\mathrm{d}A_S$相对于点$R$的立体角为
+      \begin{align}\label{eq:5.ex-receiver-solid-angle}
+            \mathrm{d}\varOmega_R=\frac{\cos\theta_S\mathrm{d}A_S}{l^2}\, .
+      \end{align}
+      又因为辐射能没有耗散，所以点$S$的面元向点$R$的面元发射的辐射能通量
+      等于点$R$的面元从点$S$的面元接收的辐射能通量，因此根据辐射亮度定义有
+      \begin{align}
+            L_S & =\frac{\mathrm{d}^2\varPhi}{\cos\theta_S\mathrm{d}A_S\mathrm{d}\varOmega_S}\, , \\
+            L_R & =\frac{\mathrm{d}^2\varPhi}{\cos\theta_R\mathrm{d}A_R\mathrm{d}\varOmega_R}\, .
+      \end{align}
+      将\refeq{5.ex-source-solid-angle}和\refeq{5.ex-receiver-solid-angle}代入上面两式可得
+      \begin{align}
+            L_S=L_R=l^2\frac{\mathrm{d}^2\varPhi}{\cos\theta_S\cos\theta_R\mathrm{d}A_S\mathrm{d}A_R}\, .
+      \end{align}
+      也即从点$S$到点$R$的亮度是守恒的。
+\end{prove}
+
+
 
 \subsection{光度学}\label{sub:光度学}
 光度量是光辐射能为平均人眼接收所引起的视觉刺激大小的度量。
@@ -303,6 +349,11 @@ $\wideparen{BF}$的弧长为$r\sin\theta\mathrm{d}\varphi$；
 \subsection{色度学}\label{sub:色度学}
 \keyindex{色度学}{colorimetry}{}是在物理上量化描述人类颜色知觉的科学技术。
 \subsubsection*{人眼视觉特性与颜色视觉理论}
+\begin{figure}[htbp]
+      \centering\includegraphics[width=0.5\linewidth]{chap05/Schematic_diagram_of_the_human_eye_zh-hans.eps}
+      \caption{人眼结构。}
+      \label{fig:5.ex04}
+\end{figure}
 人眼（\reffig{5.ex04}）中负责感光的部分是\keyindex{视网膜}{retina}{}，
 其中具有两种\keyindex{感光细胞}{photoreceptor cell}{}，
 即\keyindex{视杆细胞}{rod cell}{}和\keyindex{视锥细胞}{cone cell}{}。
@@ -314,11 +365,6 @@ $\wideparen{BF}$的弧长为$r\sin\theta\mathrm{d}\varphi$；
 它主要负责颜色识别，在相对较亮的光照条件下发挥作用（一般需要数十到上百个光子激发），
 按所含有的视色素分为三种，分别对黄绿色、绿色和蓝紫色的光最为敏感（\reffig{5.ex05}），
 其形成的视觉信号复合后呈现出色彩缤纷的世界。
-\begin{figure}[htbp]
-      \centering\includegraphics[width=0.5\linewidth]{chap05/Schematic_diagram_of_the_human_eye_zh-hans.eps}
-      \caption{人眼结构。}
-      \label{fig:5.ex04}
-\end{figure}
 
 \begin{figure}[htbp]
       \centering\includegraphics[width=0.75\linewidth]{chap05/NormalizedResponsivitySpectra.eps}

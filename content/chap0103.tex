@@ -459,7 +459,7 @@ virtual void `\initvar[SamplerIntegrator::Preprocess]{Preprocess}{}`(const `\ref
     \centering\input{Pictures/chap01/ClassRelationships.tex}
     \caption{\protect\href{https://github.com/mmp/pbrt-v3/tree/master/src/core/integrator.cpp}{\ttfamily core/integrator.cpp}里
     方法\protect\refvar{SamplerIntegrator::Render}{()}中主渲染循环的类关系。
-    \protect\refvar{Sampler}{}提供了一采样值序列，每张图像样本取一个。
+    \protect\refvar{Sampler}{}提供了一采样值序列，每个图像样本取一个。
     \protect\refvar{Camera}{}把样本转为来自胶片平面的相应光线，
     方法{\ttfamily Li()}的实现计算沿光线到达胶片的辐亮度。
     样本和其辐亮度传给\protect\refvar{Film}{}，
@@ -570,7 +570,7 @@ arena\sidenote{译者注：arena，竞技场。}内存池总是整体释放，
 
 多数\refvar{Sampler}{}实现发现保留一些状态很有用，
 例如当前渲染的像素坐标。
-这意味着多处理线程不能兼用单个\refvar{Sampler}{}。
+这意味着多个处理线程不能兼用单个\refvar{Sampler}{}。
 因此，\refvar{Sampler}{}提供了方法\refvar{Clone}{()}来
 创建给定\refvar{Sampler}{}的新实例；
 它取用的种子也用于伪随机数生成器的一些实现，

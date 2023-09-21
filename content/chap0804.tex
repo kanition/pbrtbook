@@ -272,3 +272,48 @@ const `\refvar{Float}{}` `\initvar[BeckmannDistribution::alphax]{alphax}{}`, `\i
 相比于Beckmann-Spizzichino模型，Trowbridge-Reitz模型有更高的拖尾——
 在远离曲面法线的方向上它会更慢地降到零。该特性与许多真实世界表面的性质吻合得很好。
 见\reffig{8.16}中这两个微面分布函数的图示。
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.75\linewidth]{Pictures/chap08/beckmann-vs-tr-tails.eps}
+    \caption{当$\alpha=0.5$时各向同性的Beckmann-Spizzichino和Trowbridge-Reitz微面分布函数
+        关于$\theta$的函数图像。注意Trowbridge-Reitz对于更大量级的$\theta$有更高的尾部。}
+    \label{fig:8.16}
+\end{figure}
+
+\begin{lstlisting}
+`\refcode{MicrofacetDistribution Declarations}{+=}\lastnext{MicrofacetDistributionDeclarations}`
+class `\initvar{TrowbridgeReitzDistribution}{}` : public `\refvar{MicrofacetDistribution}{}` {
+public:
+    `\refcode{TrowbridgeReitzDistribution Public Methods}{}`
+private:
+    `\refcode{TrowbridgeReitzDistribution Private Methods}{}`
+    `\refcode{TrowbridgeReitzDistribution Private Data}{}`
+};
+\end{lstlisting}
+
+比起直接指定$\alpha$的值，用一个$[0,1]$中的标量参数来
+指定BRDF的粗糙度会很方便，其中接近零的值对应几乎完美的镜面反射。
+这里略去的方法\refvar{RoughnessToAlpha}{()}执行从该粗糙度值到$\alpha$值的映射。
+\begin{lstlisting}
+`\initcode{TrowbridgeReitzDistribution Public Methods}{=}`
+static inline `\refvar{Float}{}` `\initvar{RoughnessToAlpha}{}`(`\refvar{Float}{}` roughness);
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{TrowbridgeReitzDistribution Private Data}{=}`
+const `\refvar{Float}{}` `\initvar[TrowbridgeReitzDistribution::alphax]{alphax}{}`, `\initvar[TrowbridgeReitzDistribution::alphay]{alphay}{}`;
+\end{lstlisting}
+
+方法\refvar[TrowbridgeReitzDistribution::D]{D}{()}是直接照着\refeq{8.11}写的。
+\begin{lstlisting}
+`\refcode{MicrofacetDistribution Method Definitions}{+=}\lastnext{MicrofacetDistributionMethodDefinitions}`
+`\refvar{Float}{}` `\refvar{TrowbridgeReitzDistribution}{}`::`\initvar[TrowbridgeReitzDistribution::D]{D}{}`(const `\refvar{Vector3f}{}` &wh) const {
+    `\refvar{Float}{}` tan2Theta = `\refvar{Tan2Theta}{}`(wh);
+    if (std::isinf(tan2Theta)) return 0.;
+    const `\refvar{Float}{}` cos4Theta = `\refvar{Cos2Theta}{}`(wh) * `\refvar{Cos2Theta}{}`(wh);
+    `\refvar{Float}{}` e = (`\refvar{Cos2Phi}{}`(wh) / (`\refvar[TrowbridgeReitzDistribution::alphax]{alphax}{}` * `\refvar[TrowbridgeReitzDistribution::alphax]{alphax}{}`) +
+               `\refvar{Sin2Phi}{}`(wh) / (`\refvar[TrowbridgeReitzDistribution::alphay]{alphay}{}` * `\refvar[TrowbridgeReitzDistribution::alphay]{alphay}{}`)) * tan2Theta;
+    return 1 / (`\refvar{Pi}{}` * `\refvar[TrowbridgeReitzDistribution::alphax]{alphax}{}` * `\refvar[TrowbridgeReitzDistribution::alphay]{alphay}{}` * cos4Theta * (1 + e) * (1 + e));
+}
+\end{lstlisting}
+
+\subsection{掩模和阴影}\label{sub:掩模和阴影}

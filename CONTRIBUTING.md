@@ -15,7 +15,7 @@ Git：编译脚本含有Git命令，所以必须安装[Git](https://git-scm.com)
 git clone https://github.com/kanition/pbrtbook.git
 ```
 ### 3. 字体
-为了方便管理以及降低仓库大小，本书的字体并不包含在仓库中。在成功拉取文件后请创建一个名为`fonts`的新文件夹并将以下**5种**字体添加进`fonts`内。注意保留字体的原有文件名。
+为了方便管理以及降低仓库大小，本书的字体并不包含在仓库中。在成功拉取仓库后请创建一个名为`fonts`的新文件夹并将以下**5种**字体添加进`fonts`内。注意保留字体的原有文件名。
 
 ```cmd
 cd .\pbrtbook
@@ -23,7 +23,7 @@ mkdir .\fonts
 ```
 
 #### 思源字体
-本书中文字体主要使用免费开源的[思源宋体](https://github.com/adobe-fonts/source-han-serif)和[思源黑体](https://github.com/adobe-fonts/source-han-sans)。
+本书中文字体主要使用免费开源的[思源宋体](https://github.com/adobe-fonts/source-han-serif)和[思源黑体](https://github.com/adobe-fonts/source-han-sans)，以下为下载路径：
 
 - https://raw.githubusercontent.com/adobe-fonts/source-han-sans/release/OTF/SimplifiedChinese/SourceHanSansSC-Bold.otf
 - https://raw.githubusercontent.com/adobe-fonts/source-han-sans/release/OTF/SimplifiedChinese/SourceHanSansSC-Regular.otf
@@ -37,7 +37,7 @@ mkdir .\fonts
 ```cmd
 copy %windir%\Fonts\simkai.ttf .\fonts\
 ```
-非Windows用户：需要自行搜索并下载到fonts文件夹下。
+其他用户：需要自行搜索并下载到fonts文件夹下。
 
 ### 4. 编译
 执行工作根目录下的编译脚本，它使用xelatex编译：
@@ -47,7 +47,17 @@ copy %windir%\Fonts\simkai.ttf .\fonts\
 ```
 
 #### Mac/Linux
-```cmd
+```bash
 chmod +x cp.sh
 ./cp.sh
 ```
+Linux下若遇到以下报错：
+```
+! LaTeX Error: File `boondox-calo.sty` not found.
+```
+可以前往[https://ctan.org/pkg/boondox](https://ctan.org/pkg/boondox)下载boondox包并解压，然后将所需文件所在路径加入环境变量，
+注意保留末尾冒号，例如：
+```bash
+export TEXINPUTS=somewhere/boondox/tex:
+```
+然后重新尝试编译。

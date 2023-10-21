@@ -5,7 +5,7 @@
 [![](https://img.shields.io/github/v/release/kanition/pbrtbook?color=orange&include_prereleases&label=最新进度版本&style=flat-square)](https://github.com/kanition/pbrtbook/releases/latest)
 [![](https://img.shields.io/github/release-date-pre/kanition/pbrtbook?color=yellow&label=最新发布时间&style=flat-square)](https://github.com/kanition/pbrtbook/releases/latest)
 [![](https://licensebuttons.net/l/by-nc-sa/4.0/80x15.png)](#许可证)
-# [**下载本书**](https://github.com/kanition/pbrtbook/releases) | [翻译进度](https://github.com/kanition/pbrtbook/projects/1) | [你问我答](https://github.com/kanition/pbrtbook/discussions) | [我要报错](https://github.com/kanition/pbrtbook/issues/new/choose) | [编译指南](./CONTRIBUTING.md) | [长期求助文献传递](https://github.com/kanition/pbrtbook/discussions/41)
+# [**下载本书**](https://github.com/kanition/pbrtbook/releases) | [翻译进度](https://github.com/kanition/pbrtbook/projects/1) | [你问我答](https://github.com/kanition/pbrtbook/discussions?discussions_q=) | [我要报错](https://github.com/kanition/pbrtbook/issues/new/choose) | [编译指南](./CONTRIBUTING.md) | [长期求助文献传递](https://github.com/kanition/pbrtbook/discussions/41)
 
 ![Landscape view-3 @pbrt-v3-scenes/landscape](Pictures/title.png)
 
@@ -49,16 +49,17 @@
 ## 补充章节
 笔者根据其他资料整理了相应的背景知识并作为补充章节附在各章末尾，以下为这些章节的列表。
 
-| 章节号 | 标题                     |
-| ------ | ------------------------ |
-| 2.13   | 四元数                   |
-| 2.14   | 分解旋转矩阵             |
-| 2.15   | 牛顿迭代法               |
-| 3.12   | 微分几何基础             |
-| 5.9    | 辐射度学、光度学与色度学 |
-| 6.7    | 几何光学                 |
-| 7.12   | 信号处理                 |
-| 7.13   | 初等数论基础             |
+| 章节号 | 标题                         |
+| ------ | ---------------------------- |
+| 2.13   | 四元数                       |
+| 2.14   | 分解旋转矩阵                 |
+| 2.15   | 牛顿迭代法                   |
+| 3.12   | 微分几何基础                 |
+| 5.9    | 辐射度学、光度学与色度学     |
+| 6.7    | 几何光学                     |
+| 7.12   | 傅里叶变换                   |
+| 7.13   | 初等数论基础                 |
+| 8.7   | 两个微面分布函数的规范性证明 |
 
 ## 许可证
 <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh"><img alt="知识共享许可协议" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />本作品采用<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a>进行许可。

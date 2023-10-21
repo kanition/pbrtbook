@@ -155,7 +155,7 @@ if (`\refvar{AbsCosTheta}{}`(wi) > `\refvar{AbsCosTheta}{}`(wo)) {
 和\href{https://github.com/mmp/pbrt-v3/tree/master/src/core/microfacet.cpp}{\ttfamily core/microfacet.cpp}中。
 
 \refvar{MicrofacetDistribution}{}定义了
-由微面实现提供的接口及其一些常用功能。
+由微面实现提供的接口及其常用功能。
 \begin{lstlisting}
 `\initcode{MicrofacetDistribution Declarations}{=}\initnext{MicrofacetDistributionDeclarations}`
 class `\initvar{MicrofacetDistribution}{}` {
@@ -169,6 +169,9 @@ protected:
 
 微面曲面的一个重要特性由分布函数$D({\bm\omega}_{\mathrm{h}})$表示，
 它给出了曲面法线为${\bm\omega}_{\mathrm{h}}$的微面的微分面积
+\sidenote{译者注：更严格地说，是用于计算微面微分面积的因子。
+    原文把它以及后文多个类似的因子直接称为“面积”起到了简化理解的作用，
+    但笔者认为有必要向读者澄清这一点，请读者注意区分。}
 （回想\reffig{8.12}展示了曲面的粗糙度是怎样和微面法线分布函数相联系的）。
 在pbrt中，微面分布函数和\refvar{BxDF}{}在相同的BSDF坐标系下定义；
 这样，完全光滑的曲面可由仅当${\bm\omega}_{\mathrm{h}}$等于
@@ -228,6 +231,8 @@ Beckmann-Spizzichino模型的传统定义是
 而$y$轴的为$\alpha_y$，则中间朝向的$\alpha$值可用通过这些值构造的椭圆来插值。
 
 对应的各向异性微面分布函数为
+\sidenote{译者注：笔者补充编写了\refsec{译者补充：两个微面分布函数的规范性证明}，
+    给出了本节微面分布模型满足规范性的证明。}
 \begin{align}\label{eq:8.10}
     D({\bm\omega}_{\mathrm{h}})=\frac{\mathrm{e}^{-\left(\frac{\cos^2\varphi_{\mathrm{h}}}{\alpha_x^2}+\frac{\sin^2\varphi_{\mathrm{h}}}{\alpha_y^2}\right)\tan^2\theta_{\mathrm{h}}}}{\pi\alpha_x\alpha_y\cos^4\theta_{\mathrm{h}}}\, .
 \end{align}
@@ -316,4 +321,94 @@ const `\refvar{Float}{}` `\initvar[TrowbridgeReitzDistribution::alphax]{alphax}{
 }
 \end{lstlisting}
 
-\subsection{掩模和阴影}\label{sub:掩模和阴影}
+\subsection{掩模和遮挡}\label{sub:掩模和遮挡}
+对于渲染，只有微面法线分布不足以完全表征微曲面。
+同样很重要的是，要考虑到一些微面从某给定视角或光照方向看去
+会因为它们是背面朝向而不可见（因而其他微面在它们的前方），
+以及一些正面朝向的微面区域会因为受到背面朝向微面的遮挡而被隐藏。
+Smith的\keyindex{掩模遮挡函数}{masking-shadowing function}{}
+$G_1({\bm\omega},{\bm\omega}_{\mathrm{h}})$考虑了这些效应，
+给出了从方向$\bm\omega$可见且法线为${\bm\omega}_{\mathrm{h}}$的微面比例
+（注意$0\le G_1({\bm\omega},{\bm\omega}_{\mathrm{h}})\le 1$）。
+通常情况下微面可见的概率独立于其朝向${\bm\omega}_{\mathrm{h}}$，
+我们可以把该函数写作$G_1({\bm\omega})$.
+
+如\reffig{8.17}所示，从和曲面法线夹角为$\theta$的方向$\bm\omega$上
+去观察曲面上的微分面积$\mathrm{d}A$时看到的面积为$\mathrm{d}A\cos\theta$.
+从该方向可见的微面面积也一定等于$\mathrm{d}A\cos\theta$，
+由此导出对$G_1$的规范化约束：
+\begin{align}
+    \label{eq:8.12}
+    \cos\theta=\int\limits_{H^2({\bm n})}G_1({\bm\omega},{\bm\omega}_{\mathrm{h}})\max(0,{\bm\omega}\cdot{\bm\omega}_{\mathrm{h}})D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\, .
+\end{align}
+换句话说，对给定方向$\bm\omega$可见的微面的投影面积一定等于
+宏曲面微分面积$\mathrm{d}A$的$({\bm\omega}\cdot{\bm n})=\cos\theta$倍。
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.5\linewidth]{Pictures/chap08/Microfacetvisiblearea.eps}
+    \caption{从观察者或光源处看时，曲面上的微分面积变为$\mathrm{d}A\cos\theta$，
+        其中$\cos\theta$是入射方向与曲面法线夹角的余弦。
+        可见微面（粗线）的投影曲面面积也一定等于$\mathrm{d}A\cos\theta$；
+        掩模遮挡函数$G_1$给出了$\mathrm{d}A$上的微面总面积中在给定方向可见的比例。}
+    \label{fig:8.17}
+\end{figure}
+
+因为微面构成了高度场，所以每个背向微面遮住的正向微面面积
+都等于它在方向$\bm\omega$的投影面积。
+\refeq{8.12}中，如果$A^{+}({\bm\omega})$是从方向$\bm\omega$看到的
+正向微面投影面积，而$A^{-}({\bm\omega})$是背向微面的投影面积
+\sidenote{译者注：用公式表达的话，记$H^2({\bm n})$内
+满足${\bm\omega}\cdot{\bm\omega}_{\mathrm{h}}\ge0$的部分为$P$，
+不满足的部分为$N$，则$A^{+}({\bm\omega})$和$A^{-}({\bm\omega})$分别是
+在$P$和$N$上的积分值$\displaystyle\int({\bm\omega}\cdot{\bm\omega}_{\mathrm{h}})D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}$.}，
+则$\cos\theta=A^{+}({\bm\omega})-A^{-}({\bm\omega})$.
+因此我们可以把掩模遮挡函数改写为可见微面面积与正向微面面积之比
+\sidenote{译者注：读者可以将其视作$G_1({\bm\omega})$的数学定义，
+它从$G_1({\bm\omega},{\bm\omega}_{\mathrm{h}})$继续推导而来，
+而不必太纠结它与后者的“简化关系”。}：
+\begin{align*}
+    G_1({\bm\omega})=\frac{A^{+}({\bm\omega})-A^{-}({\bm\omega})}{A^{+}({\bm\omega})}\, .
+\end{align*}
+
+掩模遮挡函数习惯上用一个辅助函数$\Lambda({\bm\omega})$来表示，
+后者度量了单位可见微面面积内被遮挡不可见的微面面积。
+\begin{align}
+    \label{eq:8.13}
+    \Lambda({\bm\omega})=\frac{A^{-}({\bm\omega})}{A^{+}({\bm\omega})-A^{-}({\bm\omega})}=\frac{A^{-}({\bm\omega})}{\cos\theta}\, .
+\end{align}
+
+方法\refvar[MicrofacetDistribution::Lambda]{Lambda}{()}计算该函数。对于每个微面分布它都有特定实现。
+\begin{lstlisting}
+`\refcode{MicrofacetDistribution Public Methods}{+=}\lastnext{MicrofacetDistributionPublicMethods}`
+virtual `\refvar{Float}{}` `\initvar[MicrofacetDistribution::Lambda]{Lambda}{}`(const `\refvar{Vector3f}{}` &w) const = 0;
+\end{lstlisting}
+
+我们通过一些代数变换用$\Lambda({\bm\omega})$表示$G_1({\bm\omega})$：
+\begin{align*}
+    G_1({\bm\omega})=\frac{1}{1+\Lambda({\bm\omega})}\, ,
+\end{align*}
+因此我们利用\refvar[MicrofacetDistribution::Lambda]{Lambda}{()}来
+提供方法\refvar[MicrofacetDistribution::G1]{G1}{()}。
+\begin{lstlisting}
+`\refcode{MicrofacetDistribution Public Methods}{+=}\lastnext{MicrofacetDistributionPublicMethods}`
+`\refvar{Float}{}` `\initvar[MicrofacetDistribution::G1]{G1}{}`(const `\refvar{Vector3f}{}` &w) const {
+    return 1 / (1 + `\refvar[MicrofacetDistribution::Lambda]{Lambda}{}`(w));
+}
+\end{lstlisting}
+
+只是微面分布还不能施加足够的条件以明确一个特定的$\Lambda({\bm\omega})$函数；
+许多函数都能满足\refeq{8.12}中的约束。
+例如，如果我们假设微面上邻近点的高度之间没有关联，
+则可能为给定的$D({\bm\omega}_{\mathrm{h}})$找到唯一的$\Lambda({\bm\omega})$
+（对于许多微面模型来说都能找到解析解）。
+尽管该基本假设在现实中不成立——对于实际的微面，
+一点的高度通常接近邻近点的高度——但所得函数$\Lambda({\bm\omega})$与
+从实际表面测量到的情况相比已经很精确了。
+
+在邻近点高度无关的假设下，各向同性的Beckmann-Spizzichino分布的$\Lambda({\bm\omega})$是
+\begin{align}
+    \Lambda({\bm\omega})=\frac{1}{2}\left(\mathrm{erf}(a)-1+\frac{\mathrm{e}^{-a^2}}{a\sqrt{\pi}}\right)\, ,
+\end{align}
+其中$a=\displaystyle\frac{1}{\alpha\tan\theta}$，而$\mathrm{erf}$是
+误差函数，$\displaystyle\mathrm{erf}(x)=\frac{2}{\sqrt{\pi}}\int_0^x\mathrm{e}^{-x'^2}\mathrm{d}x'$.

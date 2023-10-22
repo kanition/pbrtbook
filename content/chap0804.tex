@@ -169,19 +169,19 @@ protected:
 
 微面曲面的一个重要特性由分布函数$D({\bm\omega}_{\mathrm{h}})$表示，
 它给出了曲面法线为${\bm\omega}_{\mathrm{h}}$的微面的微分面积
-\sidenote{译者注：更严格地说，是用于计算微面微分面积的因子。
-    原文把它以及后文多个类似的因子直接称为“面积”起到了简化理解的作用，
-    但笔者认为有必要向读者澄清这一点，请读者注意区分。}
 （回想\reffig{8.12}展示了曲面的粗糙度是怎样和微面法线分布函数相联系的）。
 在pbrt中，微面分布函数和\refvar{BxDF}{}在相同的BSDF坐标系下定义；
 这样，完全光滑的曲面可由仅当${\bm\omega}_{\mathrm{h}}$等于
 曲面法线时才取非零值的$\delta$分布描述：$D({\bm\omega}_{\mathrm{h}})=\delta({\bm\omega}_{\mathrm{h}}-(0,0,1))$.
 
-微面分布函数必须规范化以保证它们的物理合理性。
+微面分布函数必须规范化以保证它们的物理合理性
+\sidenote{译者注：除了下文的归一化约束，$D({\bm\omega}_{\mathrm{h}})$还有非负性。}。
 直观上，如果我们考虑微曲面上沿法线方向$\bm n$的入射光线，
 则每条光线一定和微面曲面恰好相交一次。更形式化地，
 给定微曲面的微分面积$\mathrm{d}A$，则该区域之上微面的投影面积
-一定等于$\mathrm{d}A$（\reffig{8.15}）。
+一定等于$\mathrm{d}A$（\reffig{8.15}）
+\sidenote{译者注：该公式积分区域取半空间并不严谨，实际上应取全空间才对，否则会漏掉背面朝向的微面面积。
+    有关$D({\bm\omega}_{\mathrm{h}})$的详细说明可参见笔者编写的\refsec{译者补充：微面模型相关推导}。}。
 数学上，这对应着以下条件
 \footnote{规范化微面分布的常见错误是在整个立体角上
     而不是投影立体角上执行该积分（即略去的项$\cos\theta_{\mathrm{h}}$），
@@ -231,7 +231,7 @@ Beckmann-Spizzichino模型的传统定义是
 而$y$轴的为$\alpha_y$，则中间朝向的$\alpha$值可用通过这些值构造的椭圆来插值。
 
 对应的各向异性微面分布函数为
-\sidenote{译者注：笔者补充编写了\refsec{译者补充：两个微面分布函数的规范性证明}，
+\sidenote{译者注：\refsec{译者补充：微面模型相关推导}，
     给出了本节微面分布模型满足规范性的证明。}
 \begin{align}\label{eq:8.10}
     D({\bm\omega}_{\mathrm{h}})=\frac{\mathrm{e}^{-\left(\frac{\cos^2\varphi_{\mathrm{h}}}{\alpha_x^2}+\frac{\sin^2\varphi_{\mathrm{h}}}{\alpha_y^2}\right)\tan^2\theta_{\mathrm{h}}}}{\pi\alpha_x\alpha_y\cos^4\theta_{\mathrm{h}}}\, .
@@ -357,16 +357,9 @@ $G_1({\bm\omega},{\bm\omega}_{\mathrm{h}})$考虑了这些效应，
 因为微面构成了高度场，所以每个背向微面遮住的正向微面面积
 都等于它在方向$\bm\omega$的投影面积。
 \refeq{8.12}中，如果$A^{+}({\bm\omega})$是从方向$\bm\omega$看到的
-正向微面投影面积，而$A^{-}({\bm\omega})$是背向微面的投影面积
-\sidenote{译者注：用公式表达的话，记$H^2({\bm n})$内
-满足${\bm\omega}\cdot{\bm\omega}_{\mathrm{h}}\ge0$的部分为$P$，
-不满足的部分为$N$，则$A^{+}({\bm\omega})$和$A^{-}({\bm\omega})$分别是
-在$P$和$N$上的积分值$\displaystyle\int({\bm\omega}\cdot{\bm\omega}_{\mathrm{h}})D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}$.}，
+正向微面投影面积，而$A^{-}({\bm\omega})$是背向微面的投影面积，
 则$\cos\theta=A^{+}({\bm\omega})-A^{-}({\bm\omega})$.
-因此我们可以把掩模遮挡函数改写为可见微面面积与正向微面面积之比
-\sidenote{译者注：读者可以将其视作$G_1({\bm\omega})$的数学定义，
-它从$G_1({\bm\omega},{\bm\omega}_{\mathrm{h}})$继续推导而来，
-而不必太纠结它与后者的“简化关系”。}：
+因此我们可以把掩模遮挡函数改写为可见微面面积与正向微面面积之比：
 \begin{align*}
     G_1({\bm\omega})=\frac{A^{+}({\bm\omega})-A^{-}({\bm\omega})}{A^{+}({\bm\omega})}\, .
 \end{align*}

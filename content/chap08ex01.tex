@@ -1,5 +1,71 @@
-\section{译者补充：两个微面分布函数的规范性证明}\label{sec:译者补充：两个微面分布函数的规范性证明}
-本节中译者补充了\refeq{8.10}和\refeq{8.11}所给的
+\section{译者补充：微面模型相关推导}\label{sec:译者补充：微面模型相关推导}
+\begin{remark}
+    本节内容不是原书内容，而是译者根据\citet{heitz:hal-01024289}并自行推导补充的，请酌情参考和斧正。
+\end{remark}
+\subsection{微面分布函数的定义与性质}\label{sub:微面分布函数的定义与性质}
+如图，我们考虑一个足够小的宏曲面$\mathcal{G}$，设它是个绝对光滑的平面，具有法线$\bm n$.
+微面模型中，真正粗糙起伏的曲面，即微曲面$\mathcal{M}$，是由许多偏离宏曲面的微面构成的。
+或者说，微曲面$\mathcal{M}$上所有的点在方向$\bm n$上投影即得$\mathcal{G}$.
+将宏曲面上的点记为${\bm p}_{\mathrm{g}}$，其周围的微分面元为$\mathrm{d}{\bm p}_{\mathrm{g}}$，
+则宏曲面的面积为
+\begin{align}
+    \label{eq:08ex01-macrosurfaceArea}
+    S=\int\limits_{\mathcal{G}}\mathrm{d}{\bm p}_{\mathrm{g}}\, .
+\end{align}
+
+将$\mathcal{M}$上的点记作${\bm p}_{\mathrm{m}}$，该点处的法线记作${\bm\omega}_{\mathrm{m}}({\bm p}_{\mathrm{m}})$.
+引入三维意义下的狄拉克$\delta$分布，
+它满足$\displaystyle\int\limits_{\varOmega}\delta({\bm\omega})\mathrm{d}{\bm\omega}=1$.
+并记$\delta_{\bm\omega}({\bm\omega}')=\delta({\bm\omega}'-{\bm\omega})$.
+由此定义微面分布函数为
+\begin{align}
+    \label{eq:08ex01-distributionOfNormals}
+    D({\bm\omega})=\displaystyle\frac{1}{S}\int\limits_{\mathcal{M}}\delta_{\bm\omega}({\bm\omega}_{\mathrm{m}}({\bm p}_{\mathrm{m}}))\mathrm{d}{\bm p}_{\mathrm{m}}\, ,
+\end{align}
+其中狄拉克$\delta$分布和$D({\bm\omega})$的量纲均为
+球面度的倒数即$\displaystyle\frac{1}{\text{sr}}$，也相当于无量纲。
+
+我们可以把${\bm\omega}_{\mathrm{m}}$视作从$\mathcal{M}$到整个方向空间$\varOmega$的映射。
+注意$\varOmega$包含了球心到完整球面上任意一点的所有可能方向（总立体角为$4\pi$，尽管该映射不一定能覆盖全）。
+现在考虑$\mathcal{M}$和$\varOmega$各自的子集$\mathcal{M'}$和$\varOmega'$，
+并设它们满足以下条件：点${\bm p}_{\mathrm{m}}$属于$\mathcal{M'}$当且仅当
+该点处的微面法线${\bm\omega}_{\mathrm{m}}({\bm p}_{\mathrm{m}})$属于$\varOmega'$，即
+\begin{align}
+    \label{eq:08ex01-spatialToStatistical}
+    {\bm p}_{\mathrm{m}}\in\mathcal{M'}\Leftrightarrow{\bm\omega}_{\mathrm{m}}({\bm p}_{\mathrm{m}})\in\varOmega'\, .
+\end{align}
+由此利用积分换元可得微面分布函数具有计算指定微曲面面积的能力：
+\begin{align}
+    \label{eq:08ex01-microsurfaceArea}
+    \int\limits_{\mathcal{M}'}\mathrm{d}{\bm p}_{\mathrm{m}}=S\int\limits_{\varOmega'}D({\bm\omega}_{\mathrm{m}})\mathrm{d}{\bm\omega}_{\mathrm{m}}\, .
+\end{align}
+而整个微曲面面积就是
+\begin{align}
+    \label{eq:08ex01-microsurfaceTotalArea}
+    \int\limits_{\mathcal{M}}\mathrm{d}{\bm p}_{\mathrm{m}}=S\int\limits_{\varOmega}D({\bm\omega}_{\mathrm{m}})\mathrm{d}{\bm\omega}_{\mathrm{m}}\, .
+\end{align}
+
+进一步地，对于任意关于微面法线的函数$f({\bm\omega}_{\mathrm{m}})$，
+利用$D({\bm\omega})$可将空间积分与统计积分相互转化：
+\begin{align}
+    \label{eq:08ex01-spatialStatisticalIntegral}
+    \int\limits_{\mathcal{M}}f({\bm\omega}_{\mathrm{m}}({\bm p}_{\mathrm{m}}))\mathrm{d}{\bm p}_{\mathrm{m}}=S\int\limits_{\varOmega}f({\bm\omega}_{\mathrm{m}})D({\bm\omega}_{\mathrm{m}})\mathrm{d}{\bm\omega}_{\mathrm{m}}\, .
+\end{align}
+
+反之，对于任意定义在$\mathcal{M}$上的函数$g({\bm p}_{\mathrm{m}})$，
+我们可以定义对应的统计函数$g({\bm\omega}_{\mathrm{m}})$为：
+\begin{align}
+    \label{eq:08ex01-statisticalFunction}
+    g({\bm\omega})=\frac{\displaystyle\int\limits_{\mathcal{M}}\delta_{\bm\omega}({\bm\omega}_{\mathrm{m}}({\bm p}_{\mathrm{m}}))g({\bm p}_{\mathrm{m}})\mathrm{d}{\bm p}_{\mathrm{m}}}{\displaystyle\int\limits_{\mathcal{M}}\delta_{\bm\omega}({\bm\omega}_{\mathrm{m}}({\bm p}_{\mathrm{m}}))\mathrm{d}{\bm p}_{\mathrm{m}}}\, .
+\end{align}
+该函数也可以实现空间积分与统计积分的相互转化：
+\begin{align}
+    \label{eq:08ex01-spatialStatisticalIntegral02}
+    \int\limits_{\mathcal{M}}g({\bm p}_{\mathrm{m}})\mathrm{d}{\bm p}_{\mathrm{m}}=S\int\limits_{\varOmega}g({\bm\omega}_{\mathrm{m}})D({\bm\omega}_{\mathrm{m}})\mathrm{d}{\bm\omega}_{\mathrm{m}}\, .
+\end{align}
+
+\subsection{典型微面分布函数的规范性证明}\label{sub:典型微面分布函数的规范性证明}
+本节补充了\refeq{8.10}和\refeq{8.11}所给的
 微面分布函数$D({\bm\omega}_{\mathrm{h}})$满足规范性要求的证明，即证明
 \begin{align}\label{eq:8.ex-01}
     \int\limits_{H^2({\bm n})}D({\bm\omega}_{\mathrm{h}})\cos\theta_{\mathrm{h}}\mathrm{d}{\bm\omega}_{\mathrm{h}}=1\, .

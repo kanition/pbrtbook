@@ -24,9 +24,9 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
      showgrid="false"
-     inkscape:zoom="6.7277216"
-     inkscape:cx="113.41135"
-     inkscape:cy="52.766749"
+     inkscape:zoom="13.455443"
+     inkscape:cx="60.793241"
+     inkscape:cy="35.07874"
      inkscape:window-width="2560"
      inkscape:window-height="1494"
      inkscape:window-x="-11"
@@ -269,12 +269,12 @@
            style="fill:#008000;fill-opacity:1;fill-rule:evenodd;stroke:#008000;stroke-width:0.582732;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            id="path1312" /></g></g><text
        xml:space="preserve"
-       transform="matrix(0.26458333,0,0,0.26458333,5.9703797,1.6306697)"
+       transform="matrix(0.26458333,0,0,0.26458333,4.9085418,1.2607617)"
        id="text5577"
-       style="font-size:8px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect5579);fill:#008000;fill-opacity:1"><tspan
+       style="font-size:9.33333px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect5579);display:inline;fill:#008000;fill-opacity:1"><tspan
          x="395.18945"
-         y="364.33575"
-         id="tspan8104">出射方向</tspan></text><g
+         y="365.55219"
+         id="tspan857">出射方向</tspan></text><g
        inkscape:label=""
        transform="matrix(0.8,0,0,0.8,119.49588,96.982965)"
        id="g5881"
@@ -562,9 +562,9 @@
   </g>
 </g><text
        xml:space="preserve"
-       transform="matrix(0.18266799,-0.19140727,0.19140727,0.18266799,-42.430468,113.90771)"
+       transform="matrix(0.18266799,-0.19140727,0.19140727,0.18266799,-42.430468,113.37854)"
        id="text7760"
-       style="font-size:8px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect7762);fill:#008000;fill-opacity:1"><tspan
+       style="font-size:9.33333px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect7762);display:inline;fill:#008000;fill-opacity:1"><tspan
          x="394.78516"
-         y="417.4256"
-         id="tspan8106">投影方向</tspan></text></g></svg>
+         y="418.64203"
+         id="tspan859">投影方向</tspan></text></g></svg>

@@ -64,10 +64,10 @@
     \int\limits_{\mathcal{M}}g({\bm p}_{\mathrm{m}})\mathrm{d}{\bm p}_{\mathrm{m}}=S\int\limits_{\varOmega}g({\bm\omega}_{\mathrm{m}})D({\bm\omega}_{\mathrm{m}})\mathrm{d}{\bm\omega}_{\mathrm{m}}\, .
 \end{align}
 
-理解以上推导后，如\reffig{08ex01-ProjectionsMicrofacetArea}我们可以计算以下面积。
+如\reffig{08ex01-ProjectionsMicrofacetArea}，理解以上推导后，我们可以计算以下面积。
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.6\linewidth]{Pictures/chap08/ProjectionsMicrofacet.eps}
+    \includegraphics[width=0.5\linewidth]{Pictures/chap08/ProjectionsMicrofacet.eps}
     \caption{微面可见部分在${\bm\omega}_{\mathrm{o}}$上的投影面积。}
     \label{fig:08ex01-ProjectionsMicrofacetArea}
 \end{figure}
@@ -80,6 +80,7 @@
 
 接着我们从出射方向${\bm\omega}_{\mathrm{o}}$来观察曲面。此时宏曲面在${\bm\omega}_{\mathrm{o}}$上的投影面积为
 \begin{align}
+    \label{eq:08ex01-AreaMacrosurface}
     ({\bm\omega}_{\mathrm{o}}\cdot{\bm\omega}_{\mathrm{g}})S=S\cos\theta_{\mathrm{o}}\, ,
 \end{align}
 其中$\theta_{\mathrm{o}}$为${\bm\omega}_{\mathrm{o}}$与${\bm\omega}_{\mathrm{g}}$的夹角。
@@ -97,8 +98,18 @@
 \end{align}
 由此得到投影面积的另一计算方式：
 \begin{align}
+    \label{eq:08ex01-AreaMicrosurface}
     S\int\limits_{\varOmega}G_1({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{m}})\max\{{\bm\omega}_{\mathrm{o}}\cdot{\bm\omega}_{\mathrm{m}},0\}D({\bm\omega}_{\mathrm{m}})\mathrm{d}{\bm\omega}_{\mathrm{m}}\, .
 \end{align}
+
+由于可见微面投影面积等于宏曲面投影面积，所以
+结合\refeq{08ex01-AreaMacrosurface}和\refeq{08ex01-AreaMicrosurface}可得
+基于物理的掩膜函数$G_1$总是满足如下约束：
+\begin{align}
+    \cos\theta_{\mathrm{o}}=\int\limits_{\varOmega}G_1({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{m}})\max\{{\bm\omega}_{\mathrm{o}}\cdot{\bm\omega}_{\mathrm{m}},0\}D({\bm\omega}_{\mathrm{m}})\mathrm{d}{\bm\omega}_{\mathrm{m}}\, .
+\end{align}
+注意这并不意味着该约束唯一确定了$G_1$，它常常有无数个解。
+还需引入其他约束或假设才能限定为唯一解。
 
 \subsection{典型微面分布函数的规范性证明}\label{sub:典型微面分布函数的规范性证明}
 本节补充了\refeq{8.10}和\refeq{8.11}所给的

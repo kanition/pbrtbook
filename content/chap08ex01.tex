@@ -56,11 +56,11 @@
 
 反之，对于任意定义在$\mathcal{M}$上的函数$g({\bm p}_{\mathrm{m}})$，
 我们可以定义对应的统计函数$g({\bm\omega}_{\mathrm{m}})$为：
-\begin{align}
+\begin{align}\label{eq:08ex01-StaticFunc}
     g({\bm\omega})=\frac{\displaystyle\int\limits_{\mathcal{M}}\delta_{\bm\omega}({\bm\omega}_{\mathrm{m}}({\bm p}_{\mathrm{m}}))g({\bm p}_{\mathrm{m}})\mathrm{d}{\bm p}_{\mathrm{m}}}{\displaystyle\int\limits_{\mathcal{M}}\delta_{\bm\omega}({\bm\omega}_{\mathrm{m}}({\bm p}_{\mathrm{m}}))\mathrm{d}{\bm p}_{\mathrm{m}}}\, .
 \end{align}
 该函数也可以实现空间积分与统计积分的相互转化：
-\begin{align}
+\begin{align}\label{eq:08ex01-TransferSpaceStatic}
     \int\limits_{\mathcal{M}}g({\bm p}_{\mathrm{m}})\mathrm{d}{\bm p}_{\mathrm{m}}=S\int\limits_{\varOmega}g({\bm\omega}_{\mathrm{m}})D({\bm\omega}_{\mathrm{m}})\mathrm{d}{\bm\omega}_{\mathrm{m}}\, .
 \end{align}
 
@@ -86,14 +86,14 @@
 其中$\theta_{\mathrm{o}}$为${\bm\omega}_{\mathrm{o}}$与${\bm\omega}_{\mathrm{g}}$的夹角。
 
 最后我们算得微面可见部分在${\bm\omega}_{\mathrm{o}}$上的投影面积为
-\begin{align}
+\begin{align}\label{eq:08ex01-AreaProjectionsMicrofacetVisible}
     \int\limits_{\mathcal{M}}G_1({\bm\omega}_{\mathrm{o}},{\bm p}_{\mathrm{m}})\max\{{\bm\omega}_{\mathrm{o}}\cdot{\bm\omega}_{\mathrm{m}}({\bm p}_{\mathrm{m}}),0\}\mathrm{d}{\bm p}_{\mathrm{m}}\, ,
 \end{align}
 其中空间掩膜函数$G_1({\bm\omega}_{\mathrm{o}},{\bm p}_{\mathrm{m}})$在${\bm p}_{\mathrm{m}}$被
 遮挡时取0，否则取1. 而$\max$项则过滤了背向不可见的微面。
 其对应的统计掩膜函数$G_1({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{m}})$的值域为$[0,1]$，
 它给出了从方向${\bm\omega}_{\mathrm{o}}$观察时，法线为${\bm\omega}_{\mathrm{m}}$的微面中可见的比例：
-\begin{align}
+\begin{align}\label{eq:08ex01-StaticMaskFunc}
     G_1({\bm\omega}_{\mathrm{o}},{\bm\omega})=\frac{\displaystyle\int\limits_{\mathcal{M}}\delta_{\bm\omega}({\bm\omega}_{\mathrm{m}}({\bm p}_{\mathrm{m}}))G_1({\bm\omega}_{\mathrm{o}},{\bm p}_{\mathrm{m}})\mathrm{d}{\bm p}_{\mathrm{m}}}{\displaystyle\int\limits_{\mathcal{M}}\delta_{\bm\omega}({\bm\omega}_{\mathrm{m}}({\bm p}_{\mathrm{m}}))\mathrm{d}{\bm p}_{\mathrm{m}}}\, .
 \end{align}
 由此得到投影面积的另一计算方式：
@@ -110,6 +110,39 @@
 \end{align}
 注意这并不意味着该约束唯一确定了$G_1$，它常常有无数个解。
 还需引入其他约束或假设才能限定为唯一解。
+
+此外，译者再补充两个\refeq{08ex01-StaticMaskFunc}可能让人感到困惑的地方：
+
+第一个是记号的问题。$G_1({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{m}})$中
+第二个自变量是${\bm\omega}_{\mathrm{m}}$，该变量应出现在其定义式中狄拉克$\delta$分布的下标，
+但狄拉克$\delta$分布后面的括号内还有一个记号相同的函数${\bm\omega}_{\mathrm{m}}({\bm p}_{\mathrm{m}})$，
+所以为了区分它们，\refeq{08ex01-StaticMaskFunc}中临时把第二个自变量改写为${\bm\omega}$.
+笔者保留了原论文的这个做法，请读者注意区分。
+\refeq{08ex01-StaticFunc}和\refeq{08ex01-AnotherStaticFunc}也用了类似的临时记号。
+
+第二个是定义的问题。细心的读者可能注意到，
+比对\refeq{08ex01-AreaProjectionsMicrofacetVisible}和\refeq{08ex01-TransferSpaceStatic}，
+我们本该设
+\begin{align}\label{eq:08ex01-AnotherSpaceFunc}
+    g({\bm p}_{\mathrm{m}})=G_1({\bm\omega}_{\mathrm{o}},{\bm p}_{\mathrm{m}})\max\{{\bm\omega}_{\mathrm{o}}\cdot{\bm\omega}_{\mathrm{m}}({\bm p}_{\mathrm{m}}),0\}\, ,
+\end{align}
+此时使得\refeq{08ex01-TransferSpaceStatic}成立的$g({\bm\omega}_{\mathrm{m}})$应该是
+把\refeq{08ex01-AnotherSpaceFunc}带入\refeq{08ex01-StaticFunc}得到的
+\begin{align}\label{eq:08ex01-AnotherStaticFunc}
+    g({\bm\omega})=\frac{\displaystyle\int\limits_{\mathcal{M}}\delta_{\bm\omega}({\bm\omega}_{\mathrm{m}}({\bm p}_{\mathrm{m}}))G_1({\bm\omega}_{\mathrm{o}},{\bm p}_{\mathrm{m}})\max\{{\bm\omega}_{\mathrm{o}}\cdot{\bm\omega}_{\mathrm{m}}({\bm p}_{\mathrm{m}}),0\}\mathrm{d}{\bm p}_{\mathrm{m}}}{\displaystyle\int\limits_{\mathcal{M}}\delta_{\bm\omega}({\bm\omega}_{\mathrm{m}}({\bm p}_{\mathrm{m}}))\mathrm{d}{\bm p}_{\mathrm{m}}}\, .
+\end{align}
+将上式回代\refeq{08ex01-TransferSpaceStatic}的右边后，
+读者会发现它和\refeq{08ex01-AreaMicrosurface}并不是完全一样的——
+后者相当于把前者内层积分中的项$\max\{{\bm\omega}_{\mathrm{o}}\cdot{\bm\omega}_{\mathrm{m}}({\bm p}_{\mathrm{m}}),0\}$
+（里面的${\bm\omega}_{\mathrm{m}}$是函数）提到外层积分中
+变成了$\max\{{\bm\omega}_{\mathrm{o}}\cdot{\bm\omega}_{\mathrm{m}},0\}$
+（里面的${\bm\omega}_{\mathrm{m}}$是变量）。
+一般来说积分变量并不能随便外提，但因为这里内层积分中含有狄拉克$\delta$分布，
+它使得此处外提$\max$项的做法恰好没有改变整个式子的值。
+所以原论文中作出简化处理，相当于令$g({\bm p}_{\mathrm{m}})=G_1({\bm\omega}_{\mathrm{o}},{\bm p}_{\mathrm{m}})$，
+此时对应的$g({\bm\omega}_{\mathrm{m}})$即为\refeq{08ex01-StaticMaskFunc}中
+的$G_1({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{m}})$.
+不过原作者并未交代这样的细节。
 
 \subsection{典型微面分布函数的规范性证明}\label{sub:典型微面分布函数的规范性证明}
 本节补充了\refeq{8.10}和\refeq{8.11}所给的

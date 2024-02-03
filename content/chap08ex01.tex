@@ -12,15 +12,16 @@
     S=\int\limits_{\mathcal{G}}\mathrm{d}{\bm p}_{\mathrm{g}}\, .
 \end{align}
 
-将$\mathcal{M}$上的点记作${\bm p}_{\mathrm{m}}$，该点处的法线记作${\bm\omega}_{\mathrm{m}}({\bm p}_{\mathrm{m}})$.
+将$\mathcal{M}$上的点记作${\bm p}_{\mathrm{h}}$，该点处的法线记作${\bm\omega}_{\mathrm{h}}({\bm p}_{\mathrm{h}})$.
 引入三维意义下的狄拉克$\delta$分布，
 它满足$\displaystyle\int\limits_{\varOmega}\delta({\bm\omega})\mathrm{d}{\bm\omega}=1$.
 并记$\delta_{\bm\omega}({\bm\omega}')=\delta({\bm\omega}'-{\bm\omega})$.
 由此定义微面分布函数为
-\begin{align}
-    D({\bm\omega})=\displaystyle\frac{1}{S}\int\limits_{\mathcal{M}}\delta_{\bm\omega}({\bm\omega}_{\mathrm{m}}({\bm p}_{\mathrm{m}}))\mathrm{d}{\bm p}_{\mathrm{m}}\, ,
+\sidenote{原论文全文假定$S=1$来讨论，不用除以面积，这里笔者的处理有所不同。}
+\begin{align}\label{eq:08ex01-MicrosurfaceDistribution}
+    D({\bm\omega})=\displaystyle\frac{1}{S}\int\limits_{\mathcal{M}}\delta_{\bm\omega}({\bm\omega}_{\mathrm{h}}({\bm p}_{\mathrm{h}}))\mathrm{d}{\bm p}_{\mathrm{h}}\, ,
 \end{align}
-其中狄拉克$\delta$分布和$D({\bm\omega})$的量纲均为
+其中狄拉克$\delta$分布和$D({\bm\omega}_{\mathrm{h}})$的量纲均为
 球面度的倒数即$\displaystyle\frac{1}{\text{sr}}$，也相当于无量纲。
 
 \begin{figure}[htbp]
@@ -30,40 +31,40 @@
     \label{fig:08ex01-macrosurfaceMicrosurface}
 \end{figure}
 
-我们可以把${\bm\omega}_{\mathrm{m}}$视作从$\mathcal{M}$到整个方向空间$\varOmega$的映射。
+我们可以把${\bm\omega}_{\mathrm{h}}$视作从$\mathcal{M}$到整个方向空间$\varOmega$的映射。
 注意$\varOmega$包含了球心到完整球面上任意一点的所有可能方向（总立体角为$4\pi$，尽管该映射不一定能覆盖全）。
 现在考虑$\mathcal{M}$和$\varOmega$各自的子集$\mathcal{M'}$和$\varOmega'$，
-并设它们满足以下条件：点${\bm p}_{\mathrm{m}}$属于$\mathcal{M'}$当且仅当
-该点处的微面法线${\bm\omega}_{\mathrm{m}}({\bm p}_{\mathrm{m}})$属于$\varOmega'$，即
+并设它们满足以下条件：点${\bm p}_{\mathrm{h}}$属于$\mathcal{M'}$当且仅当
+该点处的微面法线${\bm\omega}_{\mathrm{h}}({\bm p}_{\mathrm{h}})$属于$\varOmega'$，即
 \begin{align}
-    {\bm p}_{\mathrm{m}}\in\mathcal{M'}\Leftrightarrow{\bm\omega}_{\mathrm{m}}({\bm p}_{\mathrm{m}})\in\varOmega'\, .
+    {\bm p}_{\mathrm{h}}\in\mathcal{M'}\Leftrightarrow{\bm\omega}_{\mathrm{h}}({\bm p}_{\mathrm{h}})\in\varOmega'\, .
 \end{align}
 由此利用积分换元可得微面分布函数具有计算指定微曲面面积的能力：
 \begin{align}
     \label{eq:08ex01-microsurfaceArea}
-    \int\limits_{\mathcal{M}'}\mathrm{d}{\bm p}_{\mathrm{m}}=S\int\limits_{\varOmega'}D({\bm\omega}_{\mathrm{m}})\mathrm{d}{\bm\omega}_{\mathrm{m}}\, .
+    \int\limits_{\mathcal{M}'}\mathrm{d}{\bm p}_{\mathrm{h}}=S\int\limits_{\varOmega'}D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\, .
 \end{align}
 而整个微曲面面积就是
 \begin{align}
-    \int\limits_{\mathcal{M}}\mathrm{d}{\bm p}_{\mathrm{m}}=S\int\limits_{\varOmega}D({\bm\omega}_{\mathrm{m}})\mathrm{d}{\bm\omega}_{\mathrm{m}}\, .
+    \int\limits_{\mathcal{M}}\mathrm{d}{\bm p}_{\mathrm{h}}=S\int\limits_{\varOmega}D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\, .
 \end{align}
 
-进一步地，对于任意关于微面法线的函数$f({\bm\omega}_{\mathrm{m}})$，
-利用$D({\bm\omega})$可将空间积分与统计积分相互转化：
+进一步地，对于任意关于微面法线的函数$f({\bm\omega}_{\mathrm{h}})$，
+利用$D({\bm\omega}_{\mathrm{h}})$可将空间积分与统计积分相互转化：
 \begin{align}
-    \int\limits_{\mathcal{M}}f({\bm\omega}_{\mathrm{m}}({\bm p}_{\mathrm{m}}))\mathrm{d}{\bm p}_{\mathrm{m}}=S\int\limits_{\varOmega}f({\bm\omega}_{\mathrm{m}})D({\bm\omega}_{\mathrm{m}})\mathrm{d}{\bm\omega}_{\mathrm{m}}\, .
+    \int\limits_{\mathcal{M}}f({\bm\omega}_{\mathrm{h}}({\bm p}_{\mathrm{h}}))\mathrm{d}{\bm p}_{\mathrm{h}}=S\int\limits_{\varOmega}f({\bm\omega}_{\mathrm{h}})D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\, .
 \end{align}
 
-反之，对于任意定义在$\mathcal{M}$上的函数$g({\bm p}_{\mathrm{m}})$，
-我们可以定义对应的统计函数$g({\bm\omega}_{\mathrm{m}})$为
+反之，对于任意定义在$\mathcal{M}$上的函数$g({\bm p}_{\mathrm{h}})$，
+我们可以定义对应的统计函数$g({\bm\omega}_{\mathrm{h}})$为
 \sidenote{这里原论文为了在记号上强调二者的联系，仍然使用了符号$g$，
-但读者应明白这是一个新的函数了。后面\refeq{08ex01-StaticMaskFunc}等的情况类似。}：
+    但读者应明白这是一个新的函数了。后面\refeq{08ex01-StaticMaskFunc}等的情况类似。}：
 \begin{align}\label{eq:08ex01-StaticFunc}
-    g({\bm\omega})=\frac{\displaystyle\int\limits_{\mathcal{M}}\delta_{\bm\omega}({\bm\omega}_{\mathrm{m}}({\bm p}_{\mathrm{m}}))g({\bm p}_{\mathrm{m}})\mathrm{d}{\bm p}_{\mathrm{m}}}{\displaystyle\int\limits_{\mathcal{M}}\delta_{\bm\omega}({\bm\omega}_{\mathrm{m}}({\bm p}_{\mathrm{m}}))\mathrm{d}{\bm p}_{\mathrm{m}}}\, .
+    g({\bm\omega})=\frac{\displaystyle\int\limits_{\mathcal{M}}\delta_{\bm\omega}({\bm\omega}_{\mathrm{h}}({\bm p}_{\mathrm{h}}))g({\bm p}_{\mathrm{h}})\mathrm{d}{\bm p}_{\mathrm{h}}}{\displaystyle\int\limits_{\mathcal{M}}\delta_{\bm\omega}({\bm\omega}_{\mathrm{h}}({\bm p}_{\mathrm{h}}))\mathrm{d}{\bm p}_{\mathrm{h}}}\, .
 \end{align}
 该函数也可以实现空间积分与统计积分的相互转化：
 \begin{align}\label{eq:08ex01-TransferSpaceStatic}
-    \int\limits_{\mathcal{M}}g({\bm p}_{\mathrm{m}})\mathrm{d}{\bm p}_{\mathrm{m}}=S\int\limits_{\varOmega}g({\bm\omega}_{\mathrm{m}})D({\bm\omega}_{\mathrm{m}})\mathrm{d}{\bm\omega}_{\mathrm{m}}\, .
+    \int\limits_{\mathcal{M}}g({\bm p}_{\mathrm{h}})\mathrm{d}{\bm p}_{\mathrm{h}}=S\int\limits_{\varOmega}g({\bm\omega}_{\mathrm{h}})D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\, .
 \end{align}
 
 如\reffig{08ex01-ProjectionsMicrofacetArea}，理解以上推导后，我们可以计算以下面积。
@@ -77,7 +78,7 @@
 首先，微曲面在宏曲面法线方向${\bm\omega}_{\mathrm{g}}$上的
 投影面积（不论是否遮挡，且背向时记负值）为
 \begin{align}
-    \int\limits_{\mathcal{M}}({\bm\omega}_{\mathrm{m}}({\bm p}_{\mathrm{m}})\cdot{\bm\omega}_{\mathrm{g}})\mathrm{d}{\bm p}_{\mathrm{m}}=S\int\limits_{\varOmega}({\bm\omega}_{\mathrm{m}}\cdot{\bm\omega}_{\mathrm{g}})D({\bm\omega}_{\mathrm{m}})\mathrm{d}{\bm\omega}_{\mathrm{m}}=\int\limits_{\mathcal{G}}\mathrm{d}{\bm p}_{\mathrm{g}}=S\, .
+    \int\limits_{\mathcal{M}}({\bm\omega}_{\mathrm{h}}({\bm p}_{\mathrm{h}})\cdot{\bm\omega}_{\mathrm{g}})\mathrm{d}{\bm p}_{\mathrm{h}}=S\int\limits_{\varOmega}({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}})D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}=\int\limits_{\mathcal{G}}\mathrm{d}{\bm p}_{\mathrm{g}}=S\, .
 \end{align}
 
 接着我们从出射方向${\bm\omega}_{\mathrm{o}}$来观察曲面。此时宏曲面在${\bm\omega}_{\mathrm{o}}$上的投影面积为
@@ -89,62 +90,94 @@
 
 最后我们算得微面可见部分在${\bm\omega}_{\mathrm{o}}$上的投影面积为
 \begin{align}\label{eq:08ex01-AreaProjectionsMicrofacetVisible}
-    \int\limits_{\mathcal{M}}G_1({\bm\omega}_{\mathrm{o}},{\bm p}_{\mathrm{m}})\max({\bm\omega}_{\mathrm{o}}\cdot{\bm\omega}_{\mathrm{m}}({\bm p}_{\mathrm{m}}),0)\mathrm{d}{\bm p}_{\mathrm{m}}\, ,
+    \int\limits_{\mathcal{M}}G_1({\bm p}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})\max({\bm\omega}_{\mathrm{h}}({\bm p}_{\mathrm{h}})\cdot{\bm\omega}_{\mathrm{o}},0)\mathrm{d}{\bm p}_{\mathrm{h}}\, ,
 \end{align}
-其中空间掩膜函数$G_1({\bm\omega}_{\mathrm{o}},{\bm p}_{\mathrm{m}})$在${\bm p}_{\mathrm{m}}$被
+其中空间掩模函数$G_1({\bm p}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})$在${\bm p}_{\mathrm{h}}$被
 遮挡时取0，否则取1. 而$\max$项则过滤了背向不可见的微面。
-其对应的统计掩膜函数$G_1({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{m}})$的值域为$[0,1]$，
-它给出了从方向${\bm\omega}_{\mathrm{o}}$观察时，法线为${\bm\omega}_{\mathrm{m}}$的微面中可见的比例：
+其对应的统计掩模函数$G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})$的值域为$[0,1]$，
+它给出了从方向${\bm\omega}_{\mathrm{o}}$观察时，法线为${\bm\omega}_{\mathrm{h}}$的微面中可见的比例：
 \begin{align}\label{eq:08ex01-StaticMaskFunc}
-    G_1({\bm\omega}_{\mathrm{o}},{\bm\omega})=\frac{\displaystyle\int\limits_{\mathcal{M}}\delta_{\bm\omega}({\bm\omega}_{\mathrm{m}}({\bm p}_{\mathrm{m}}))G_1({\bm\omega}_{\mathrm{o}},{\bm p}_{\mathrm{m}})\mathrm{d}{\bm p}_{\mathrm{m}}}{\displaystyle\int\limits_{\mathcal{M}}\delta_{\bm\omega}({\bm\omega}_{\mathrm{m}}({\bm p}_{\mathrm{m}}))\mathrm{d}{\bm p}_{\mathrm{m}}}\, .
+    G_1({\bm\omega},{\bm\omega}_{\mathrm{o}})=\frac{\displaystyle\int\limits_{\mathcal{M}}\delta_{\bm\omega}({\bm\omega}_{\mathrm{h}}({\bm p}_{\mathrm{h}}))G_1({\bm p}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})\mathrm{d}{\bm p}_{\mathrm{h}}}{\displaystyle\int\limits_{\mathcal{M}}\delta_{\bm\omega}({\bm\omega}_{\mathrm{h}}({\bm p}_{\mathrm{h}}))\mathrm{d}{\bm p}_{\mathrm{h}}}\, .
 \end{align}
 由此得到投影面积的另一计算方式：
 \begin{align}
     \label{eq:08ex01-AreaMicrosurface}
-    S\int\limits_{\varOmega}G_1({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{m}})\max({\bm\omega}_{\mathrm{o}}\cdot{\bm\omega}_{\mathrm{m}},0)D({\bm\omega}_{\mathrm{m}})\mathrm{d}{\bm\omega}_{\mathrm{m}}\, .
+    S\int\limits_{\varOmega}G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\, .
 \end{align}
 
 由于可见微面投影面积等于宏曲面投影面积，所以
 结合\refeq{08ex01-AreaMacrosurface}和\refeq{08ex01-AreaMicrosurface}可得
-基于物理的掩膜函数$G_1$总是满足如下约束：
-\begin{align}
-    \cos\theta_{\mathrm{o}}=\int\limits_{\varOmega}G_1({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{m}})\max({\bm\omega}_{\mathrm{o}}\cdot{\bm\omega}_{\mathrm{m}},0)D({\bm\omega}_{\mathrm{m}})\mathrm{d}{\bm\omega}_{\mathrm{m}}\, .
+基于物理的掩模函数$G_1$总是满足如下约束：
+\begin{align}\label{eq:08ex01-CosThetaO}
+    \cos\theta_{\mathrm{o}}=\int\limits_{\varOmega}G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\, .
 \end{align}
 注意这并不意味着该约束唯一确定了$G_1$，它常常有无数个解。
 还需引入其他约束或假设才能限定为唯一解。
 
 此外，译者再补充两个\refeq{08ex01-StaticMaskFunc}可能让人感到困惑的地方：
 
-第一个是记号的问题。$G_1({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{m}})$中
-第二个自变量是${\bm\omega}_{\mathrm{m}}$，该变量应出现在其定义式中狄拉克$\delta$分布的下标，
-但狄拉克$\delta$分布后面的括号内还有一个记号相同的函数${\bm\omega}_{\mathrm{m}}({\bm p}_{\mathrm{m}})$，
-所以为了区分它们，\refeq{08ex01-StaticMaskFunc}中临时把第二个自变量改写为${\bm\omega}$.
-笔者保留了原论文的这个做法，请读者注意区分。
+第一个是记号的问题。$G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})$中
+第一个自变量是${\bm\omega}_{\mathrm{h}}$，该变量应出现在其定义式中狄拉克$\delta$分布的下标，
+但狄拉克$\delta$分布后面的括号内还有一个记号相同的函数${\bm\omega}_{\mathrm{h}}({\bm p}_{\mathrm{h}})$，
+所以为了区分它们，\refeq{08ex01-StaticMaskFunc}中临时把第一个自变量改写为${\bm\omega}$.
+笔者保留了原论文的这个做法，请读者注意区分。\refeq{08ex01-MicrosurfaceDistribution}、
 \refeq{08ex01-StaticFunc}和\refeq{08ex01-AnotherStaticFunc}也用了类似的临时记号。
 
 第二个是定义的问题。细心的读者可能注意到，
 比对\refeq{08ex01-AreaProjectionsMicrofacetVisible}和\refeq{08ex01-TransferSpaceStatic}，
 我们本该设
 \begin{align}\label{eq:08ex01-AnotherSpaceFunc}
-    g({\bm p}_{\mathrm{m}})=G_1({\bm\omega}_{\mathrm{o}},{\bm p}_{\mathrm{m}})\max({\bm\omega}_{\mathrm{o}}\cdot{\bm\omega}_{\mathrm{m}}({\bm p}_{\mathrm{m}}),0)\, ,
+    g({\bm p}_{\mathrm{h}})=G_1({\bm p}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})\max({\bm\omega}_{\mathrm{h}}({\bm p}_{\mathrm{h}})\cdot{\bm\omega}_{\mathrm{o}},0)\, ,
 \end{align}
-此时使得\refeq{08ex01-TransferSpaceStatic}成立的$g({\bm\omega}_{\mathrm{m}})$应该是
+此时使得\refeq{08ex01-TransferSpaceStatic}成立的$g({\bm\omega}_{\mathrm{h}})$应该是
 把\refeq{08ex01-AnotherSpaceFunc}带入\refeq{08ex01-StaticFunc}得到的
 \begin{align}\label{eq:08ex01-AnotherStaticFunc}
-    g({\bm\omega})=\frac{\displaystyle\int\limits_{\mathcal{M}}\delta_{\bm\omega}({\bm\omega}_{\mathrm{m}}({\bm p}_{\mathrm{m}}))G_1({\bm\omega}_{\mathrm{o}},{\bm p}_{\mathrm{m}})\max({\bm\omega}_{\mathrm{o}}\cdot{\bm\omega}_{\mathrm{m}}({\bm p}_{\mathrm{m}}),0)\mathrm{d}{\bm p}_{\mathrm{m}}}{\displaystyle\int\limits_{\mathcal{M}}\delta_{\bm\omega}({\bm\omega}_{\mathrm{m}}({\bm p}_{\mathrm{m}}))\mathrm{d}{\bm p}_{\mathrm{m}}}\, .
+    g({\bm\omega})=\frac{\displaystyle\int\limits_{\mathcal{M}}\delta_{\bm\omega}({\bm\omega}_{\mathrm{h}}({\bm p}_{\mathrm{h}}))G_1({\bm p}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})\max({\bm\omega}_{\mathrm{h}}({\bm p}_{\mathrm{h}})\cdot{\bm\omega}_{\mathrm{o}},0)\mathrm{d}{\bm p}_{\mathrm{h}}}{\displaystyle\int\limits_{\mathcal{M}}\delta_{\bm\omega}({\bm\omega}_{\mathrm{h}}({\bm p}_{\mathrm{h}}))\mathrm{d}{\bm p}_{\mathrm{h}}}\, .
 \end{align}
 将上式回代\refeq{08ex01-TransferSpaceStatic}的右边后，
 读者会发现它和\refeq{08ex01-AreaMicrosurface}并不是完全一样的——
-后者相当于把前者内层积分中的项$\max({\bm\omega}_{\mathrm{o}}\cdot{\bm\omega}_{\mathrm{m}}({\bm p}_{\mathrm{m}}),0)$
-（里面的${\bm\omega}_{\mathrm{m}}$是函数）提到外层积分中
-变成了$\max({\bm\omega}_{\mathrm{o}}\cdot{\bm\omega}_{\mathrm{m}},0)$
-（里面的${\bm\omega}_{\mathrm{m}}$是变量）。
+后者相当于把前者内层积分中的项$\max({\bm\omega}_{\mathrm{h}}({\bm p}_{\mathrm{h}})\cdot{\bm\omega}_{\mathrm{o}},0)$
+（里面的${\bm\omega}_{\mathrm{h}}$是函数）提到外层积分中
+变成了$\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)$
+（里面的${\bm\omega}_{\mathrm{h}}$是变量）。
 一般来说积分变量并不能随便外提，但因为这里内层积分中含有狄拉克$\delta$分布，
 它使得此处外提$\max$项的做法恰好没有改变整个式子的值。
-所以原论文中作出简化处理，相当于令$g({\bm p}_{\mathrm{m}})=G_1({\bm\omega}_{\mathrm{o}},{\bm p}_{\mathrm{m}})$，
-此时对应的$g({\bm\omega}_{\mathrm{m}})$即为\refeq{08ex01-StaticMaskFunc}中
-的$G_1({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{m}})$.
+所以原论文中作出简化处理，相当于令$g({\bm p}_{\mathrm{h}})=G_1({\bm p}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})$，
+此时对应的$g({\bm\omega}_{\mathrm{h}})$即为\refeq{08ex01-StaticMaskFunc}中
+的$G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})$.
 不过原作者并未交代这样的细节。
+
+\subsection{基于微面模型的BRDF}\label{sub:基于微面模型的BRDF}
+本节继承上节的记号。在微面尺度上，我们设微面上一点朝出射方向${\bm\omega}_{\mathrm{o}}$的辐亮度
+为$L_{\mathrm{o}}({\bm\omega}_{\mathrm{h}}({\bm p}_{\mathrm{h}}),{\bm\omega}_{\mathrm{o}})$.
+则从宏观尺度看，该微面整体朝${\bm\omega}_{\mathrm{o}}$等价的出射
+辐亮度$L_{\mathcal{M}}({\bm\omega}_{\mathrm{o}})$即为
+微面尺度的辐亮度按出射方向可见投影面积比例的加权：
+\begin{align}
+    L_{\mathcal{M}}({\bm\omega}_{\mathrm{o}})=\frac{\displaystyle\int\limits_{\mathcal{M}}{L_{\mathrm{o}}({\bm\omega}_{\mathrm{h}}({\bm p}_{\mathrm{h}}),{\bm\omega}_{\mathrm{o}})G_1({\bm p}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})\max({\bm\omega}_{\mathrm{h}}({\bm p}_{\mathrm{h}})\cdot{\bm\omega}_{\mathrm{o}},0)\mathrm{d}{\bm p}_{\mathrm{h}}}}{\displaystyle\int\limits_{\mathcal{M}}{G_1({\bm p}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})\max({\bm\omega}_{\mathrm{h}}({\bm p}_{\mathrm{h}})\cdot{\bm\omega}_{\mathrm{o}},0)\mathrm{d}{\bm p}_{\mathrm{h}}}}\, .
+\end{align}
+上式利用空间掩模函数\refeq{08ex01-StaticMaskFunc}转化为统计积分形式，
+并将\refeq{08ex01-AreaProjectionsMicrofacetVisible}带入分母可得：
+\begin{align}\label{eq:08ex01-RadianceMicrofacet}
+    L_{\mathcal{M}}({\bm\omega}_{\mathrm{o}})=\frac{1}{\cos\theta_{\mathrm{o}}}\int\limits_{\varOmega}L_{\mathrm{o}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\, .
+\end{align}
+观察上式，我们把被积分项中对$L_{\mathrm{o}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})$加权的系数
+定义为\keyindex{可见法线分布}{distribution of visible normals}{}：
+\begin{align}\label{eq:08ex01-DistributionOfVisibleNormals}
+    D_{{\bm\omega}_{\mathrm{o}}}({\bm\omega}_{\mathrm{h}})=\frac{G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)D({\bm\omega}_{\mathrm{h}})}{\cos\theta_{\mathrm{o}}}\, .
+\end{align}
+于是\refeq{08ex01-RadianceMicrofacet}可以表示为：
+\begin{align}
+    L_{\mathcal{M}}({\bm\omega}_{\mathrm{o}})=\int\limits_{\varOmega}L_{\mathrm{o}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})D_{{\bm\omega}_{\mathrm{o}}}({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\, .
+\end{align}
+同时应注意到该定义下$D_{{\bm\omega}_{\mathrm{o}}}({\bm\omega}_{\mathrm{h}})$满足规范化性质：
+\begin{align}
+    \int\limits_{\varOmega}D_{{\bm\omega}_{\mathrm{o}}}({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}=1\, .
+\end{align}
+若再结合\refeq{08ex01-CosThetaO}，则$L_{\mathcal{M}}({\bm\omega}_{\mathrm{o}})$还可以表示为以下形式：
+\begin{align}
+    L_{\mathcal{M}}({\bm\omega}_{\mathrm{o}})=\frac{\displaystyle\int\limits_{\varOmega}L_{\mathrm{o}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}}{\displaystyle\int\limits_{\varOmega}G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}}\, .
+\end{align}
 
 \subsection{典型微面分布函数的规范性证明}\label{sub:典型微面分布函数的规范性证明}
 本节补充了\refeq{8.10}和\refeq{8.11}所给的

@@ -92,9 +92,11 @@
 \begin{align}\label{eq:08ex01-AreaProjectionsMicrofacetVisible}
     \int\limits_{\mathcal{M}}G_1({\bm p}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})\max({\bm\omega}_{\mathrm{h}}({\bm p}_{\mathrm{h}})\cdot{\bm\omega}_{\mathrm{o}},0)\mathrm{d}{\bm p}_{\mathrm{h}}\, ,
 \end{align}
-其中空间掩模函数$G_1({\bm p}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})$在${\bm p}_{\mathrm{h}}$被
+其中\keyindex{空间掩模函数}{spatial masking function}{masking function掩模函数}
+$G_1({\bm p}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})$在${\bm p}_{\mathrm{h}}$被
 遮挡时取0，否则取1. 而$\max$项则过滤了背向不可见的微面。
-其对应的统计掩模函数$G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})$的值域为$[0,1]$，
+其对应的\keyindex{统计掩模函数}{statistical masking function}{masking function掩模函数}
+$G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})$的值域为$[0,1]$，
 它给出了从方向${\bm\omega}_{\mathrm{o}}$观察时，法线为${\bm\omega}_{\mathrm{h}}$的微面中可见的比例：
 \begin{align}\label{eq:08ex01-StaticMaskFunc}
     G_1({\bm\omega},{\bm\omega}_{\mathrm{o}})=\frac{\displaystyle\int\limits_{\mathcal{M}}\delta_{\bm\omega}({\bm\omega}_{\mathrm{h}}({\bm p}_{\mathrm{h}}))G_1({\bm p}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})\mathrm{d}{\bm p}_{\mathrm{h}}}{\displaystyle\int\limits_{\mathcal{M}}\delta_{\bm\omega}({\bm\omega}_{\mathrm{h}}({\bm p}_{\mathrm{h}}))\mathrm{d}{\bm p}_{\mathrm{h}}}\, .
@@ -153,7 +155,7 @@
 则从宏观尺度看，该微面整体朝${\bm\omega}_{\mathrm{o}}$等价的出射
 辐亮度$L_{\mathrm{o}}({\bm\omega}_{\mathrm{o}})$即为
 微面尺度的辐亮度按出射方向可见投影面积比例的加权：
-\begin{align}
+\begin{align}\label{eq:08ex01-RadianceMicrofacetAverageSum}
     L_{\mathrm{o}}({\bm\omega}_{\mathrm{o}})=\frac{\displaystyle\int\limits_{\mathcal{M}}{L_{\mathcal{M}}({\bm\omega}_{\mathrm{h}}({\bm p}_{\mathrm{h}}),{\bm\omega}_{\mathrm{o}})G_1({\bm p}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})\max({\bm\omega}_{\mathrm{h}}({\bm p}_{\mathrm{h}})\cdot{\bm\omega}_{\mathrm{o}},0)\mathrm{d}{\bm p}_{\mathrm{h}}}}{\displaystyle\int\limits_{\mathcal{M}}{G_1({\bm p}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})\max({\bm\omega}_{\mathrm{h}}({\bm p}_{\mathrm{h}})\cdot{\bm\omega}_{\mathrm{o}},0)\mathrm{d}{\bm p}_{\mathrm{h}}}}\, .
 \end{align}
 上式利用空间掩模函数\refeq{08ex01-StaticMaskFunc}转化为统计积分形式，
@@ -162,12 +164,14 @@
     L_{\mathrm{o}}({\bm\omega}_{\mathrm{o}})=\frac{1}{\cos\theta_{\mathrm{o}}}\int\limits_{\varOmega}L_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\, .
 \end{align}
 观察上式，我们把被积分项中对$L_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})$加权的系数
-定义为\keyindex{可见法线分布}{distribution of visible normals}{分布}：
+定义为\keyindex{可见法线分布}{distribution of visible normals}{distribution分布}：
 \begin{align}\label{eq:08ex01-DistributionOfVisibleNormals}
     D_{{\bm\omega}_{\mathrm{o}}}({\bm\omega}_{\mathrm{h}})=\frac{G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)D({\bm\omega}_{\mathrm{h}})}{\cos\theta_{\mathrm{o}}}\, .
 \end{align}
+其中$\cos\theta_{\mathrm{o}}$如\refeq{08ex01-AreaMacrosurface}所述
+即${\bm\omega}_{\mathrm{o}}\cdot{\bm\omega}_{\mathrm{g}}$，
 于是\refeq{08ex01-RadianceMicrofacet}可以表示为：
-\begin{align}
+\begin{align}\label{eq:08ex01-RadianceMacroOut}
     L_{\mathrm{o}}({\bm\omega}_{\mathrm{o}})=\int\limits_{\varOmega}L_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})D_{{\bm\omega}_{\mathrm{o}}}({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\, .
 \end{align}
 同时应注意到该定义下$D_{{\bm\omega}_{\mathrm{o}}}({\bm\omega}_{\mathrm{h}})$满足规范化性质：
@@ -175,9 +179,60 @@
     \int\limits_{\varOmega}D_{{\bm\omega}_{\mathrm{o}}}({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}=1\, .
 \end{align}
 若再结合\refeq{08ex01-CosThetaO}，则$L_{\mathrm{o}}({\bm\omega}_{\mathrm{o}})$还可以表示为以下形式：
-\begin{align}
+\begin{align}\label{eq:08ex01-RadianceMacroOutV2}
     L_{\mathrm{o}}({\bm\omega}_{\mathrm{o}})=\frac{\displaystyle\int\limits_{\varOmega}L_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}}{\displaystyle\int\limits_{\varOmega}G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}}\, .
 \end{align}
+
+接下来我们利用微面尺度上的BRDF推导微面模型在宏观尺度下的BRDF。
+把微面尺度上的BRDF记作$f_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})$，
+考虑到有效的角度范围，则根据\refeq{5.8}中BRDF的定义有
+\begin{align}\label{eq:08ex01-MicrosurfaceBRDF}
+    f_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})=\frac{\mathrm{d} L_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})}{\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{i}},0)L_{\mathrm{i}}({\bm\omega}_{\mathrm{i}})\mathrm{d}{\bm\omega}_{\mathrm{i}}}\, ,
+\end{align}
+其中$L_{\mathrm{i}}({\bm\omega}_{\mathrm{i}})$是入射辐亮度。
+由此我们根据定义并结合\refeq{08ex01-RadianceMacroOut}、\refeq{08ex01-MicrosurfaceBRDF}、
+\refeq{08ex01-DistributionOfVisibleNormals}得到宏观尺度下的BRDF为：
+\begin{align}\label{eq:08ex01-MacroBRDFG1}
+    f_{\mathrm{r}}({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}}) & = \frac{\mathrm{d} L_{\mathrm{o}}({\bm\omega}_{\mathrm{o}})}{|{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{i}}|L_{\mathrm{i}}({\bm\omega}_{\mathrm{i}})\mathrm{d}{\bm\omega}_{\mathrm{i}}}= \frac{1}{|{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{i}}|}\int\limits_{\varOmega}\frac{\mathrm{d} L_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})}{L_{\mathrm{i}}({\bm\omega}_{\mathrm{i}})\mathrm{d}{\bm\omega}_{\mathrm{i}}}D_{{\bm\omega}_{\mathrm{o}}}({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber \\
+                                                                      & = \frac{1}{|{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{i}}|}\int\limits_{\varOmega}f_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{i}},0)D_{{\bm\omega}_{\mathrm{o}}}({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber                                                                                                                                                                                                        \\
+                                                                      & = \frac{1}{|{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{i}}||{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{o}}|}\int\limits_{\varOmega}f_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{i}},0)\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\, .
+\end{align}
+
+我们应注意到，上式考虑的其实是入射光在曲面上经历第一次反射后刚刚离开的情形，
+并未考虑到反射的光线可能还会再命中曲面一次甚至多次然后从其他方向射出的情况。
+然而我们在宏观尺度下的BRDF是定义在单次反射的情形下的，所以应排除掉这些光线。
+为此，我们引入\keyindex{遮挡函数}{shadowing function}{}来到达这一效果。
+实际中，我们通常直接使用联合的\keyindex{掩模遮挡函数}{masking-shadowing function}{}$G2$来代替$G_1$，即
+\begin{align}\label{eq:08ex01-MacroBRDFG2}
+    f_{\mathrm{r}}({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})=\frac{1}{|{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{i}}||{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{o}}|}\int\limits_{\varOmega}f_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{i}},0)\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)G_2({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\, .
+\end{align}
+
+最后，笔者认为对于透射的情况，将
+\refeq{08ex01-RadianceMicrofacetAverageSum}、
+\refeq{08ex01-RadianceMicrofacet}、
+\refeq{08ex01-DistributionOfVisibleNormals}、
+\refeq{08ex01-RadianceMacroOutV2}、\refeq{08ex01-MicrosurfaceBRDF}、
+\refeq{08ex01-MacroBRDFG1}、\refeq{08ex01-MacroBRDFG2}
+中的$\max(\cdot,0)$项均改为对应的绝对值$|\cdot|$即可。
+
+\subsection{镜面微面模型的BRDF}\label{sub:镜面微面模型的BRDF}
+本节继承上节的记号。为了算出微面模型在宏观尺度下的BRDF，
+即\refeq{08ex01-MacroBRDFG1}或\refeq{08ex01-MacroBRDFG2}，
+我们需要知道微面尺度下的BRDF即$f_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})$的具体形式。
+本小节假设微面都遵循完美镜面反射，由此给出具体推导。
+设微面镜面的菲涅尔反射率为$F_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})$，
+这意味着微面的入射和出射辐亮度满足约束
+\begin{align}\label{eq:08ex01-FresnelMicrofacet}
+    L_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})=F_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})L_{\mathrm{i}}({\bm\omega}_{\mathrm{i}})\, .
+\end{align}
+考虑到微面遵循完美镜面反射，只有当入射方向、出射方向、法线三者满足
+反射定律\ref{theorem:0607-LawOfReflection}描述的情形时，反射才实际成立，
+其余情况则不成立，所以$f_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})$应
+含有狄拉克$\delta$分布来描述这种情况。综合以上考量，我们构造出
+\begin{align}
+    f_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})=F_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})\frac{\delta_{{\bm\omega}_{\mathrm{r}}}({\bm\omega}_{\mathrm{i}})}{|{\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{i}}|}\, .
+\end{align}
+
 
 \subsection{典型微面分布函数的规范性证明}\label{sub:典型微面分布函数的规范性证明}
 本节补充了\refeq{8.10}和\refeq{8.11}所给的

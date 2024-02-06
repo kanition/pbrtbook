@@ -57,9 +57,11 @@
 推导出对凹槽\sidenote{译者注：原文groove。}集的整体反射建模的BRDF。
 
 所得模型考虑了微面间的阴影、遮掩和互反射，但没有解析解，
-所以他们发现下列近似拟合得很好：
+所以他们发现下列近似拟合得很好
+\sidenote{译者注：原文可能因笔误写作$f_{\mathrm{r}}({\bm\omega}_{\mathrm{i}},{\bm\omega}_{\mathrm{o}})$，
+    与前后文记号不一致，这里笔者改回为$f_{\mathrm{r}}({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})$.}：
 \begin{align*}
-    f_{\mathrm{r}}({\bm\omega}_{\mathrm{i}},{\bm\omega}_{\mathrm{o}})=\frac{R}{\pi}(A+B\max(0,\cos(\varphi_{\mathrm{i}}-\varphi_{\mathrm{o}}))\sin\alpha\tan\beta)\, ,
+    f_{\mathrm{r}}({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})=\frac{R}{\pi}(A+B\max(0,\cos(\varphi_{\mathrm{i}}-\varphi_{\mathrm{o}}))\sin\alpha\tan\beta)\, ,
 \end{align*}
 其中如果$\sigma$单位是弧度，则
 \begin{align*}
@@ -325,7 +327,15 @@ const `\refvar{Float}{}` `\initvar[TrowbridgeReitzDistribution::alphax]{alphax}{
 对于渲染，只有微面法线分布不足以完全表征微曲面。
 同样很重要的是，要考虑到一些微面从某给定视角或光照方向看去
 会因为它们是背面朝向而不可见（因而其他微面在它们的前方），
-以及一些正面朝向的微面区域会因为受到背面朝向微面的遮挡而被隐藏。
+以及一些正面朝向的微面区域会因为受到背面朝向微面的遮挡而被隐藏
+\sidenote{译者注：在英语中，“mask”和“shadow”都能表示遮盖遮挡之意。
+    为了区分这里所述的因观察角度与微面方向相背而引发的遮挡和
+    因微面本身粗糙而引发的局部遮挡，英语术语特地选用了这两个意思相同但读写不同的称呼。
+    但是在中文里这种做法就显得不太合适，以“遮挡”“遮盖”“遮蔽”之类的近义词作区分
+    并不能帮助读者意识到它们的差别，反而更容易引起混淆。
+    权衡之下，笔者选用“mask”的另一种翻译——“掩模”（也可作“掩膜”）来增强和“遮挡”的区别感。
+    因为该词在图像处理中常常指规定取用哪些像素的布尔量集合，与本文中“遮挡”的作用十分类似。
+    读者不必对该词感到奇怪和陌生，只需理解为遮挡的别名即可。}。
 Smith的\keyindex{掩模遮挡函数}{masking-shadowing function}{}
 $G_1({\bm\omega},{\bm\omega}_{\mathrm{h}})$考虑了这些效应，
 给出了从方向$\bm\omega$可见且法线为${\bm\omega}_{\mathrm{h}}$的微面比例
@@ -403,5 +413,8 @@ virtual `\refvar{Float}{}` `\initvar[MicrofacetDistribution::Lambda]{Lambda}{}`(
 \begin{align}
     \Lambda({\bm\omega})=\frac{1}{2}\left(\mathrm{erf}(a)-1+\frac{\mathrm{e}^{-a^2}}{a\sqrt{\pi}}\right)\, ,
 \end{align}
-其中$a=\displaystyle\frac{1}{\alpha\tan\theta}$，而$\mathrm{erf}$是
-误差函数，$\displaystyle\mathrm{erf}(x)=\frac{2}{\sqrt{\pi}}\int_0^x\mathrm{e}^{-x'^2}\mathrm{d}x'$.
+其中$a=\displaystyle\frac{1}{\alpha\tan\theta}$，
+而$\mathrm{erf}$是误差函数
+\sidenote{译者注：为了减少理解障碍，这里笔者把函数$\mathrm{erf}$的
+自变量改回成了$\Lambda({\bm\omega})$中所用的$a$.}，
+$\displaystyle\mathrm{erf}(a)=\frac{2}{\sqrt{\pi}}\int_0^a\mathrm{e}^{-x^2}\mathrm{d}x$.

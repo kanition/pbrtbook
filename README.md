@@ -5,7 +5,7 @@
 [![](https://img.shields.io/github/v/release/kanition/pbrtbook?color=orange&include_prereleases&label=最新进度版本&style=flat-square)](https://github.com/kanition/pbrtbook/releases/latest)
 [![](https://img.shields.io/github/release-date-pre/kanition/pbrtbook?color=yellow&label=最新发布时间&style=flat-square)](https://github.com/kanition/pbrtbook/releases/latest)
 [![](https://licensebuttons.net/l/by-nc-sa/4.0/80x15.png)](#许可证)
-# [**下载本书**](https://github.com/kanition/pbrtbook/releases) | [翻译进度](https://github.com/kanition/pbrtbook/projects/1) | [你问我答](https://github.com/kanition/pbrtbook/discussions?discussions_q=) | [我要报错](https://github.com/kanition/pbrtbook/issues/new/choose) | [编译指南](./CONTRIBUTING.md) | [长期求助文献传递](https://github.com/kanition/pbrtbook/discussions/41)
+# [**下载本书**](https://github.com/kanition/pbrtbook/releases) | [翻译进度](https://github.com/users/kanition/projects/4) | [你问我答](https://github.com/kanition/pbrtbook/discussions?discussions_q=) | [我要报错](https://github.com/kanition/pbrtbook/issues/new/choose) | [编译指南](./CONTRIBUTING.md) | [长期求助文献传递](https://github.com/kanition/pbrtbook/discussions/41)
 
 ![Landscape view-3 @pbrt-v3-scenes/landscape](Pictures/title.png)
 
@@ -15,9 +15,7 @@
 
 ## 本库链接
 - GitHub：[https://github.com/kanition/pbrtbook](https://github.com/kanition/pbrtbook)
-- <s>GitCode：[https://gitcode.net/imjiangjun/pbrtbook](https://gitcode.net/imjiangjun/pbrtbook)</s>
 
-因抗议GitCode的审查行为，该库停止更新。
 ## 友情链接
 ### 第三版
 * 原书官网：[https://www.pbr-book.org/](https://www.pbr-book.org/)

@@ -145,7 +145,7 @@ $P$关于$B$的偏差为\footnote{算符$\sup$，也称作\emph{上确界}，给
 升序排列。构造一个新序列$Q=\left\{\frac{j}{N}\right\}_{j=0}^{N}$，然后让$P$和$Q$的元素交错排列构造
 新序列$U=\{u_k\}_{k=1}^{2N+1}=\left\{0,x_1,\frac{1}{N},\ldots,x_i,\frac{i}{N},\ldots,x_N,1\right\}$.
 则依据偏差的定义可以证明，$D^*_N(x_i)=\max\limits_{1\le k\le 2N}{|u_{k+1}-u_k|}=\max\limits_{1\le i\le N}{d_i}$，
-其中$d_i=\max{\left\{\left|x_i-\frac{i-1}{N}\right|,\left|x_i-\frac{i}{N}\right|\right\}}$.
+其中$d_i=\max{\left(\left|x_i-\frac{i-1}{N}\right|,\left|x_i-\frac{i}{N}\right|\right)}$.
 又注意到$d_i=\frac{1}{2N}+\left|x_i-\frac{2i-1}{2N}\right|$，于是得到文中该式。}
 \begin{align*}
     D^*_N(x_i)=\frac{1}{2N}+\max\limits_{1\le i\le N}\left|x_i-\frac{2i-1}{2N}\right|\, .

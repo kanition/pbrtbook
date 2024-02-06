@@ -57,9 +57,11 @@
 推导出对凹槽\sidenote{译者注：原文groove。}集的整体反射建模的BRDF。
 
 所得模型考虑了微面间的阴影、遮掩和互反射，但没有解析解，
-所以他们发现下列近似拟合得很好：
+所以他们发现下列近似拟合得很好
+\sidenote{译者注：原文可能因笔误写作$f_{\mathrm{r}}({\bm\omega}_{\mathrm{i}},{\bm\omega}_{\mathrm{o}})$，
+    与前后文记号不一致，这里笔者改回为$f_{\mathrm{r}}({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})$.}：
 \begin{align*}
-    f_{\mathrm{r}}({\bm\omega}_{\mathrm{i}},{\bm\omega}_{\mathrm{o}})=\frac{R}{\pi}(A+B\max(0,\cos(\varphi_{\mathrm{i}}-\varphi_{\mathrm{o}}))\sin\alpha\tan\beta)\, ,
+    f_{\mathrm{r}}({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})=\frac{R}{\pi}(A+B\max(0,\cos(\varphi_{\mathrm{i}}-\varphi_{\mathrm{o}}))\sin\alpha\tan\beta)\, ,
 \end{align*}
 其中如果$\sigma$单位是弧度，则
 \begin{align*}
@@ -411,5 +413,8 @@ virtual `\refvar{Float}{}` `\initvar[MicrofacetDistribution::Lambda]{Lambda}{}`(
 \begin{align}
     \Lambda({\bm\omega})=\frac{1}{2}\left(\mathrm{erf}(a)-1+\frac{\mathrm{e}^{-a^2}}{a\sqrt{\pi}}\right)\, ,
 \end{align}
-其中$a=\displaystyle\frac{1}{\alpha\tan\theta}$，而$\mathrm{erf}$是
-误差函数，$\displaystyle\mathrm{erf}(x)=\frac{2}{\sqrt{\pi}}\int_0^x\mathrm{e}^{-x'^2}\mathrm{d}x'$.
+其中$a=\displaystyle\frac{1}{\alpha\tan\theta}$，
+而$\mathrm{erf}$是误差函数
+\sidenote{译者注：为了减少理解障碍，这里笔者把函数$\mathrm{erf}$的
+自变量改回成了$\Lambda({\bm\omega})$中所用的$a$.}，
+$\displaystyle\mathrm{erf}(a)=\frac{2}{\sqrt{\pi}}\int_0^a\mathrm{e}^{-x^2}\mathrm{d}x$.

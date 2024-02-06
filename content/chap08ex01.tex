@@ -145,38 +145,38 @@
 所以原论文中作出简化处理，相当于令$g({\bm p}_{\mathrm{h}})=G_1({\bm p}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})$，
 此时对应的$g({\bm\omega}_{\mathrm{h}})$即为\refeq{08ex01-StaticMaskFunc}中
 的$G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})$.
-不过原作者并未交代这样的细节。
+不过原作者并未交代这样的细节。后面\refeq{08ex01-RadianceMicrofacet}也用了类似技巧。
 
 \subsection{基于微面模型的BRDF}\label{sub:基于微面模型的BRDF}
 本节继承上节的记号。在微面尺度上，我们设微面上一点朝出射方向${\bm\omega}_{\mathrm{o}}$的辐亮度
-为$L_{\mathrm{o}}({\bm\omega}_{\mathrm{h}}({\bm p}_{\mathrm{h}}),{\bm\omega}_{\mathrm{o}})$.
+为$L_{\mathcal{M}}({\bm\omega}_{\mathrm{h}}({\bm p}_{\mathrm{h}}),{\bm\omega}_{\mathrm{o}})$.
 则从宏观尺度看，该微面整体朝${\bm\omega}_{\mathrm{o}}$等价的出射
-辐亮度$L_{\mathcal{M}}({\bm\omega}_{\mathrm{o}})$即为
+辐亮度$L_{\mathrm{o}}({\bm\omega}_{\mathrm{o}})$即为
 微面尺度的辐亮度按出射方向可见投影面积比例的加权：
 \begin{align}
-    L_{\mathcal{M}}({\bm\omega}_{\mathrm{o}})=\frac{\displaystyle\int\limits_{\mathcal{M}}{L_{\mathrm{o}}({\bm\omega}_{\mathrm{h}}({\bm p}_{\mathrm{h}}),{\bm\omega}_{\mathrm{o}})G_1({\bm p}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})\max({\bm\omega}_{\mathrm{h}}({\bm p}_{\mathrm{h}})\cdot{\bm\omega}_{\mathrm{o}},0)\mathrm{d}{\bm p}_{\mathrm{h}}}}{\displaystyle\int\limits_{\mathcal{M}}{G_1({\bm p}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})\max({\bm\omega}_{\mathrm{h}}({\bm p}_{\mathrm{h}})\cdot{\bm\omega}_{\mathrm{o}},0)\mathrm{d}{\bm p}_{\mathrm{h}}}}\, .
+    L_{\mathrm{o}}({\bm\omega}_{\mathrm{o}})=\frac{\displaystyle\int\limits_{\mathcal{M}}{L_{\mathcal{M}}({\bm\omega}_{\mathrm{h}}({\bm p}_{\mathrm{h}}),{\bm\omega}_{\mathrm{o}})G_1({\bm p}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})\max({\bm\omega}_{\mathrm{h}}({\bm p}_{\mathrm{h}})\cdot{\bm\omega}_{\mathrm{o}},0)\mathrm{d}{\bm p}_{\mathrm{h}}}}{\displaystyle\int\limits_{\mathcal{M}}{G_1({\bm p}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})\max({\bm\omega}_{\mathrm{h}}({\bm p}_{\mathrm{h}})\cdot{\bm\omega}_{\mathrm{o}},0)\mathrm{d}{\bm p}_{\mathrm{h}}}}\, .
 \end{align}
 上式利用空间掩模函数\refeq{08ex01-StaticMaskFunc}转化为统计积分形式，
 并将\refeq{08ex01-AreaProjectionsMicrofacetVisible}带入分母可得：
 \begin{align}\label{eq:08ex01-RadianceMicrofacet}
-    L_{\mathcal{M}}({\bm\omega}_{\mathrm{o}})=\frac{1}{\cos\theta_{\mathrm{o}}}\int\limits_{\varOmega}L_{\mathrm{o}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\, .
+    L_{\mathrm{o}}({\bm\omega}_{\mathrm{o}})=\frac{1}{\cos\theta_{\mathrm{o}}}\int\limits_{\varOmega}L_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\, .
 \end{align}
-观察上式，我们把被积分项中对$L_{\mathrm{o}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})$加权的系数
-定义为\keyindex{可见法线分布}{distribution of visible normals}{}：
+观察上式，我们把被积分项中对$L_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})$加权的系数
+定义为\keyindex{可见法线分布}{distribution of visible normals}{分布}：
 \begin{align}\label{eq:08ex01-DistributionOfVisibleNormals}
     D_{{\bm\omega}_{\mathrm{o}}}({\bm\omega}_{\mathrm{h}})=\frac{G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)D({\bm\omega}_{\mathrm{h}})}{\cos\theta_{\mathrm{o}}}\, .
 \end{align}
 于是\refeq{08ex01-RadianceMicrofacet}可以表示为：
 \begin{align}
-    L_{\mathcal{M}}({\bm\omega}_{\mathrm{o}})=\int\limits_{\varOmega}L_{\mathrm{o}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})D_{{\bm\omega}_{\mathrm{o}}}({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\, .
+    L_{\mathrm{o}}({\bm\omega}_{\mathrm{o}})=\int\limits_{\varOmega}L_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})D_{{\bm\omega}_{\mathrm{o}}}({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\, .
 \end{align}
 同时应注意到该定义下$D_{{\bm\omega}_{\mathrm{o}}}({\bm\omega}_{\mathrm{h}})$满足规范化性质：
 \begin{align}
     \int\limits_{\varOmega}D_{{\bm\omega}_{\mathrm{o}}}({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}=1\, .
 \end{align}
-若再结合\refeq{08ex01-CosThetaO}，则$L_{\mathcal{M}}({\bm\omega}_{\mathrm{o}})$还可以表示为以下形式：
+若再结合\refeq{08ex01-CosThetaO}，则$L_{\mathrm{o}}({\bm\omega}_{\mathrm{o}})$还可以表示为以下形式：
 \begin{align}
-    L_{\mathcal{M}}({\bm\omega}_{\mathrm{o}})=\frac{\displaystyle\int\limits_{\varOmega}L_{\mathrm{o}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}}{\displaystyle\int\limits_{\varOmega}G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}}\, .
+    L_{\mathrm{o}}({\bm\omega}_{\mathrm{o}})=\frac{\displaystyle\int\limits_{\varOmega}L_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}}{\displaystyle\int\limits_{\varOmega}G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}}\, .
 \end{align}
 
 \subsection{典型微面分布函数的规范性证明}\label{sub:典型微面分布函数的规范性证明}

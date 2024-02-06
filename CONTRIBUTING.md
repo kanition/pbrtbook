@@ -61,3 +61,8 @@ Linux下若遇到以下报错：
 export TEXINPUTS=somewhere/boondox/tex:
 ```
 然后重新尝试编译。
+如果上述命令打错造成搜索路径设置错误，
+使得本仓库源文件目录不在`TEXINPUTS`中，则可能遇到以下报错：
+```
+! I can't find file `main`
+```

@@ -1,6 +1,7 @@
 \section{译者补充：微面模型相关推导}\label{sec:译者补充：微面模型相关推导}
 \begin{remark}
-    本节内容不是原书内容，而是译者根据\citet{heitz:hal-01024289}并自行推导补充的，请酌情参考和斧正。
+    本节内容不是原书内容，而是译者根据\citet{heitz:hal-01024289}和\citet{10.5555/2383847.2383874}整理
+    并推导后补充的，请酌情参考和斧正。
 \end{remark}
 \subsection{微面分布函数的定义与性质}\label{sub:微面分布函数的定义与性质}
 如\reffig{08ex01-macrosurfaceMicrosurface}，我们考虑一个足够小的宏曲面$\mathcal{G}$，设它是个绝对光滑的平面，具有法线$\bm n$.
@@ -228,8 +229,8 @@ $G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})$的值域为$[0,1]$，
 \begin{align}\label{eq:08ex01-DistributionOfVisibleNormals}
     D_{{\bm\omega}_{\mathrm{o}}}({\bm\omega}_{\mathrm{h}})
     =\frac{G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})
-    \max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)
-    D({\bm\omega}_{\mathrm{h}})}{\cos\theta_{\mathrm{o}}}\, .
+        \max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)
+        D({\bm\omega}_{\mathrm{h}})}{\cos\theta_{\mathrm{o}}}\, .
 \end{align}
 其中$\cos\theta_{\mathrm{o}}$如\refeq{08ex01-AreaMacrosurface}所述
 即${\bm\omega}_{\mathrm{o}}\cdot{\bm\omega}_{\mathrm{g}}$，
@@ -269,23 +270,23 @@ $G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})$的值域为$[0,1]$，
 由此我们根据定义并结合\refeq{08ex01-RadianceMacroOut}、\refeq{08ex01-MicrosurfaceBRDF}、
 \refeq{08ex01-DistributionOfVisibleNormals}得到宏观尺度下的BRDF为：
 \begin{align}\label{eq:08ex01-MacroBRDFG1}
-    f_{\mathrm{r}}({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}}) 
-    & = \frac{\mathrm{d} L_{\mathrm{o}}({\bm\omega}_{\mathrm{o}})}
+    f_{\mathrm{r}}({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})
+     & = \frac{\mathrm{d} L_{\mathrm{o}}({\bm\omega}_{\mathrm{o}})}
     {|{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{i}}|
     L_{\mathrm{i}}({\bm\omega}_{\mathrm{i}})\mathrm{d}{\bm\omega}_{\mathrm{i}}}
     = \frac{1}{|{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{i}}|}
     \int\limits_{\varOmega}\frac{\mathrm{d}L_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})}
     {L_{\mathrm{i}}({\bm\omega}_{\mathrm{i}})\mathrm{d}{\bm\omega}_{\mathrm{i}}}
-    D_{{\bm\omega}_{\mathrm{o}}}({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber\\
-    & = \frac{1}{|{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{i}}|}
+    D_{{\bm\omega}_{\mathrm{o}}}({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber \\
+     & = \frac{1}{|{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{i}}|}
     \int\limits_{\varOmega}f_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})
     \max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{i}},0)
-    D_{{\bm\omega}_{\mathrm{o}}}({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber\\
-    & = \frac{1}{|{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{i}}|
+    D_{{\bm\omega}_{\mathrm{o}}}({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber \\
+     & = \frac{1}{|{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{i}}|
     |{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{o}}|}
     \int\limits_{\varOmega}f_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})
-    \max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{i}},0)\nonumber\\
-    & \qquad\qquad\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)
+    \max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{i}},0)\nonumber                            \\
+     & \qquad\qquad\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)
     G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})
     D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\, .
 \end{align}
@@ -297,10 +298,10 @@ $G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})$的值域为$[0,1]$，
 实际中，我们通常直接使用联合的\keyindex{掩模遮挡函数}{masking-shadowing function}{}$G_2$来代替$G_1$，即
 \begin{align}\label{eq:08ex01-MacroBRDFG2}
     f_{\mathrm{r}}({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})
-    & =\frac{1}{|{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{i}}||{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{o}}|}
+     & =\frac{1}{|{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{i}}||{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{o}}|}
     \int\limits_{\varOmega}f_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})
-    \max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{i}},0)\nonumber\\
-    & \qquad\qquad\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)
+    \max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{i}},0)\nonumber                                                       \\
+     & \qquad\qquad\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)
     G_2({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})
     D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\, .
 \end{align}
@@ -328,7 +329,8 @@ $G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})$的值域为$[0,1]$，
 所以$f_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})$应
 含有狄拉克$\delta$分布来区分这两种情况。因此我们构造出
 \begin{align}\label{eq:08ex01-FresnelBRDFMicrofacet}
-    f_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})=F_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})\frac{\delta_{{\bm\omega}_{\mathrm{r}}}({\bm\omega}_{\mathrm{i}})}{|{\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{i}}|}\, ,
+    f_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})
+    =F_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})\frac{\delta_{{\bm\omega}_{\mathrm{r}}}({\bm\omega}_{\mathrm{i}})}{|{\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{i}}|}\, ,
 \end{align}
 其中${\bm\omega}_{\mathrm{r}}$是由${\bm\omega}_{\mathrm{h}}$和${\bm\omega}_{\mathrm{o}}$确定的
 满足完美镜面反射的规范化入射方向，即意味着它是
@@ -338,14 +340,14 @@ $G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})$的值域为$[0,1]$，
 联立\refeq{08ex01-MicrosurfaceBRDF}，可得
 \begin{align}\label{eq:08ex01-FresnelBRDFValid}
     L_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})
-    & =\int\limits_{\varOmega}f_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}},{\bm\omega}'_{\mathrm{i}})
+     & =\int\limits_{\varOmega}f_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}},{\bm\omega}'_{\mathrm{i}})
     \max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}'_{\mathrm{i}},0)
-    L_{\mathrm{i}}({\bm\omega}'_{\mathrm{i}})\mathrm{d}{\bm\omega}'_{\mathrm{i}}\nonumber\\
-    & =\int\limits_{\varOmega}F_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})
+    L_{\mathrm{i}}({\bm\omega}'_{\mathrm{i}})\mathrm{d}{\bm\omega}'_{\mathrm{i}}\nonumber                                   \\
+     & =\int\limits_{\varOmega}F_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})
     \delta_{{\bm\omega}_{\mathrm{r}}}({\bm\omega}'_{\mathrm{i}})
-    L_{\mathrm{i}}({\bm\omega}'_{\mathrm{i}})\mathrm{d}{\bm\omega}'_{\mathrm{i}}\nonumber\\
-    & =F_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})L_{\mathrm{i}}({\bm\omega}_{\mathrm{r}})\nonumber\\
-    & =F_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})L_{\mathrm{i}}({\bm\omega}_{\mathrm{i}})\, .
+    L_{\mathrm{i}}({\bm\omega}'_{\mathrm{i}})\mathrm{d}{\bm\omega}'_{\mathrm{i}}\nonumber                                   \\
+     & =F_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})L_{\mathrm{i}}({\bm\omega}_{\mathrm{r}})\nonumber \\
+     & =F_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})L_{\mathrm{i}}({\bm\omega}_{\mathrm{i}})\, .
 \end{align}
 其他情况下，则等价于$L_{\mathrm{i}}({\bm\omega}_{\mathrm{r}})=0$，
 使得$L_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})=0$，即无反射。
@@ -363,20 +365,95 @@ $G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})$的值域为$[0,1]$，
     {\bm P}({\bm\omega}_{\mathrm{h}})={\bm\omega}_{\mathrm{r}}\, .
 \end{align}
 对$\bm P$作一阶近似并利用定理\ref{theorem:7.ex01.symmetry}的结论，可得
-\begin{align}
+\begin{align}\label{eq:08ex01-DeltaChangeVar}
     \delta_{{\bm\omega}_{\mathrm{r}}}({\bm\omega}_{\mathrm{i}})
      & =\delta({\bm\omega}_{\mathrm{i}}-{\bm\omega}_{\mathrm{r}})
     =\delta({\bm P}({\bm\omega}_{\mathrm{m}})-{\bm P}({\bm\omega}_{\mathrm{h}}))
-    =\displaystyle\delta\left(({\bm\omega}_{\mathrm{m}}-{\bm\omega}_{\mathrm{h}})\frac{\partial{\bm P}({\bm\omega}_{\mathrm{m}})}{\partial{\bm\omega}_{\mathrm{m}}}\right)\nonumber\\
-     & =\displaystyle\delta\left(({\bm\omega}_{\mathrm{m}}-{\bm\omega}_{\mathrm{h}})\frac{\partial{\bm\omega}_{\mathrm{i}}}{\partial{\bm\omega}_{\mathrm{m}}}\right)
-    =\delta({\bm\omega}_{\mathrm{m}}-{\bm\omega}_{\mathrm{h}})\left\lVert\frac{\partial{\bm\omega}_{\mathrm{m}}}{\partial{\bm\omega}_{\mathrm{i}}}\right\rVert
-    =\delta_{{\bm\omega}_{\mathrm{m}}}({\bm\omega}_{\mathrm{h}})\left\lVert\frac{\partial{\bm\omega}_{\mathrm{m}}}{\partial{\bm\omega}_{\mathrm{i}}}\right\rVert\, .
+    =\displaystyle\delta\left(({\bm\omega}_{\mathrm{m}}-{\bm\omega}_{\mathrm{h}})
+    \frac{\partial{\bm P}({\bm\omega}_{\mathrm{m}})}{\partial{\bm\omega}_{\mathrm{m}}}\right)\nonumber \\
+     & =\displaystyle\delta\left(({\bm\omega}_{\mathrm{m}}-{\bm\omega}_{\mathrm{h}})
+    \frac{\partial{\bm\omega}_{\mathrm{i}}}{\partial{\bm\omega}_{\mathrm{m}}}\right)
+    =\delta({\bm\omega}_{\mathrm{m}}-{\bm\omega}_{\mathrm{h}})
+    \left\lVert\frac{\partial{\bm\omega}_{\mathrm{m}}}{\partial{\bm\omega}_{\mathrm{i}}}\right\rVert
+    =\delta_{{\bm\omega}_{\mathrm{m}}}({\bm\omega}_{\mathrm{h}})
+    \left\lVert\frac{\partial{\bm\omega}_{\mathrm{m}}}{\partial{\bm\omega}_{\mathrm{i}}}\right\rVert\, .
 \end{align}
 其中$\displaystyle\frac{\partial{\bm\omega}_{\mathrm{m}}}{\partial{\bm\omega}_{\mathrm{i}}}$是
 ${\bm\omega}_{\mathrm{m}}$对${\bm\omega}_{\mathrm{i}}$的\keyindex{雅可比矩阵}{Jacobian matrix}{matrix矩阵}。
 将其套在里面的两层$|\cdot|$表示先求矩阵的\keyindex{行列式}{determinant}{}再取绝对值。
 几何意义上，它表示${\bm\omega}_{\mathrm{m}}$和${\bm\omega}_{\mathrm{i}}$发生扰动时
 两者各自扰动范围对应的立体角大小之比。
+我们在\reffig{08ex01-JacobianRefraction}中考虑求解该比值的方法：
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.6\linewidth]{Pictures/chap08/JacobianRefraction.eps}
+    \caption{镜面反射中的角度扰动关系和相应雅可比矩阵行列式绝对值的计算。}
+    \label{fig:08ex01-JacobianRefraction}
+\end{figure}
+
+将表示入射方向${\bm\omega}_{\mathrm{i}}$和出射方向${\bm\omega}_{\mathrm{o}}$的向量首尾相接。
+在完美镜面反射配置下，两者之和必与曲面法线${\bm\omega}_{\mathrm{m}}$共线，因此我们记
+\begin{align}
+    {\bm\omega}_{\mathrm{M}}=\mathrm{sign}({\bm\omega}_{\mathrm{i}}\cdot{\bm\omega}_{\mathrm{m}})
+    \cdot({\bm\omega}_{\mathrm{i}}+{\bm\omega}_{\mathrm{o}})\, ,
+\end{align}
+其中sign一项是为了将其调整到曲面朝外的方向（和${\bm\omega}_{\mathrm{m}}$同向）；
+于是规范化的${\bm\omega}_{\mathrm{m}}$满足
+\begin{align}
+    {\bm\omega}_{\mathrm{m}}=\frac{{\bm\omega}_{\mathrm{M}}}{|{\bm\omega}_{\mathrm{M}}|}\, .
+\end{align}
+当${\bm\omega}_{\mathrm{i}}$存在立体角大小为$\Delta{\bm\omega}_{\mathrm{i}}$的微小扰动范围时，
+其末端扰动范围的面积是在以${\bm\omega}_{\mathrm{i}}$起点
+为球心的单位球表面计算的，大小也为$\Delta{\bm\omega}_{\mathrm{i}}$.
+同时它也引发了${\bm\omega}_{\mathrm{m}}$的扰动，
+我们即需要计算这块扰动区域对于${\bm\omega}_{\mathrm{m}}$而言是多大的立体角。
+回顾定义\ref{definition:SolidAngle}，考虑到扰动区域法线
+（即${\bm\omega}_{\mathrm{i}}$）和${\bm\omega}_{\mathrm{m}}$存在夹角，
+因此它对${\bm\omega}_{\mathrm{m}}$的起点所成的立体角大小$\Delta{\bm\omega}_{\mathrm{m}}$为
+\begin{align}
+    \Delta{\bm\omega}_{\mathrm{m}}=\frac{|{\bm\omega}_{\mathrm{m}}\cdot{\bm\omega}_{\mathrm{i}}|}
+    {|{\bm\omega}_{\mathrm{M}}|^2}\Delta{\bm\omega}_{\mathrm{i}}\, .
+\end{align}
+同时注意到$|{\bm\omega}_{\mathrm{i}}|=|{\bm\omega}_{\mathrm{o}}|=1$，所以
+\begin{align}
+    |{\bm\omega}_{\mathrm{M}}|=2|{\bm\omega}_{\mathrm{m}}\cdot{\bm\omega}_{\mathrm{i}}|\, .
+\end{align}
+于是
+\begin{align}\label{eq:08ex01-JacobianRefraction}
+    \left\lVert\frac{\partial{\bm\omega}_{\mathrm{m}}}{\partial{\bm\omega}_{\mathrm{i}}}\right\rVert
+    =\lim\limits_{\Delta{\bm\omega}_{\mathrm{i}}\to0}\frac{|\Delta{\bm\omega}_{\mathrm{m}}|}{|\Delta{\bm\omega}_{\mathrm{i}}|}
+    =\frac{|{\bm\omega}_{\mathrm{m}}\cdot{\bm\omega}_{\mathrm{i}}|}{|{\bm\omega}_{\mathrm{M}}|^2}
+    =\frac{1}{4|{\bm\omega}_{\mathrm{m}}\cdot{\bm\omega}_{\mathrm{i}}|}\, .
+\end{align}
+将\refeq{08ex01-DeltaChangeVar}和\refeq{08ex01-JacobianRefraction}代入\refeq{08ex01-FresnelBRDFMicrofacet}，即得
+\begin{align}
+    f_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})
+    =\frac{F_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})
+    \delta_{{\bm\omega}_{\mathrm{m}}}({\bm\omega}_{\mathrm{h}})}
+    {4|{\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{i}}|
+    |{\bm\omega}_{\mathrm{m}}\cdot{\bm\omega}_{\mathrm{i}}|}
+    =\frac{F_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})
+    \delta_{{\bm\omega}_{\mathrm{m}}}({\bm\omega}_{\mathrm{h}})}
+    {4|{\bm\omega}_{\mathrm{m}}\cdot{\bm\omega}_{\mathrm{i}}|^2}\, .
+\end{align}
+将上式代入\refeq{08ex01-MacroBRDFG2}，并注意被积项中因为存在狄拉克$\delta$分布，
+所以其只在完美镜面反射成立时，即${\bm\omega}_{\mathrm{h}}={\bm\omega}_{\mathrm{m}}$时才可能取非零值，
+且此时必有${\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{i}}={\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}}$，
+所以我们最终算出镜面微面模型的BRDF是
+\begin{align}
+    f_{\mathrm{r}}({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})
+     & =\frac{1}{|{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{i}}||{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{o}}|}
+    \int\limits_{\varOmega}\frac{F_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})
+    \delta_{{\bm\omega}_{\mathrm{m}}}({\bm\omega}_{\mathrm{h}})}
+    {4|{\bm\omega}_{\mathrm{m}}\cdot{\bm\omega}_{\mathrm{i}}|^2}
+    \max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{i}},0)\nonumber                                                       \\
+     & \qquad\qquad\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)
+    G_2({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})
+    D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber                                                       \\
+     & =\frac{F_{\mathcal{M}}({\bm\omega}_{\mathrm{m}},{\bm\omega}_{\mathrm{o}})
+    G_2({\bm\omega}_{\mathrm{m}},{\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})D({\bm\omega}_{\mathrm{m}})}
+    {4|{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{i}}||{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{o}}|}\, .
+\end{align}
 
 \subsection{典型微面分布函数的规范性证明}\label{sub:典型微面分布函数的规范性证明}
 本节补充了\refeq{8.10}和\refeq{8.11}所给的

@@ -1,0 +1,36 @@
+on: 
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+jobs:
+  build_latex:
+    runs-on: ubuntu-latest
+    steps:
+      - name: set_up_env
+        run: |
+          sudo apt-get update
+          sudo apt-get install wget
+      - name: checkout_repo
+        uses: actions/checkout@v4
+      - name: download_fonts
+        run: |
+          mkdir fonts
+          cd fonts
+          wget https://raw.githubusercontent.com/silencesmile/Young_WeChart/master/fonts/simkai.ttf
+          wget https://raw.githubusercontent.com/adobe-fonts/source-han-sans/release/OTF/SimplifiedChinese/SourceHanSansSC-Bold.otf
+          wget https://raw.githubusercontent.com/adobe-fonts/source-han-sans/release/OTF/SimplifiedChinese/SourceHanSansSC-Regular.otf
+          wget https://raw.githubusercontent.com/adobe-fonts/source-han-serif/release/OTF/SimplifiedChinese/SourceHanSerifSC-Bold.otf
+          wget https://raw.githubusercontent.com/adobe-fonts/source-han-serif/release/OTF/SimplifiedChinese/SourceHanSerifSC-Regular.otf
+          cd ..
+      - name: compile
+        uses: xu-cheng/texlive-action@v2
+        with:
+          scheme: full
+          run: |
+            tlmgr install boondox
+            ./cp.sh

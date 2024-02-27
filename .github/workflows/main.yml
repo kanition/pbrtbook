@@ -1,0 +1,46 @@
+on: 
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+jobs:
+  build_pdf:
+    runs-on: ubuntu-latest
+    steps:
+      - name: set_up_env
+        run: |
+          sudo apt-get update
+          sudo apt-get install wget
+          sudo apt-get install unzip
+      - name: checkout_repo
+        uses: actions/checkout@v4
+      - name: download_lib
+        run: |
+          mkdir fonts
+          cd fonts
+          wget https://raw.githubusercontent.com/silencesmile/Young_WeChart/master/fonts/simkai.ttf
+          wget https://raw.githubusercontent.com/adobe-fonts/source-han-sans/release/OTF/SimplifiedChinese/SourceHanSansSC-Bold.otf
+          wget https://raw.githubusercontent.com/adobe-fonts/source-han-sans/release/OTF/SimplifiedChinese/SourceHanSansSC-Regular.otf
+          wget https://raw.githubusercontent.com/adobe-fonts/source-han-serif/release/OTF/SimplifiedChinese/SourceHanSerifSC-Bold.otf
+          wget https://raw.githubusercontent.com/adobe-fonts/source-han-serif/release/OTF/SimplifiedChinese/SourceHanSerifSC-Regular.otf
+          cd ..
+          wget https://mirrors.ctan.org/fonts/boondox.zip
+          unzip boondox.zip
+      - name: compile
+        uses: xu-cheng/texlive-action@v2
+        with:
+          scheme: full
+          run: |
+            tlmgr update --self
+            ls ./boondox
+            export TEXINPUTS=./boondox/tex:$TEXINPUTS
+            ./cp.sh
+      - name: upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: upload_pdf
+          path: main.pdf

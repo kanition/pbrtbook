@@ -617,23 +617,19 @@ ${\bm\omega}_{\mathrm{m}}$对${\bm\omega}_{\mathrm{i}}$的\keyindex{雅可比矩
 
 接下来我们考虑斜率分布$P_{xy}({\bm s})$与法线分布
 （即微面分布函数）$D({\bm\omega}_{\mathrm{h}})$之间的关系。
-显然$P_{xy}({\bm s})$应满足规范化约束，
-即它在$x_s\in(-\infty,+\infty),y_s\in(-\infty,+\infty)$范围内非负，且有
-\begin{align}
-    \int_{-\infty}^{+\infty}\int_{-\infty}^{+\infty}
-    P_{xy}(x_s,y_s)\mathrm{d}x_s\mathrm{d}y_s=1\, .
-\end{align}
-将上式和\refeq{08ex01-McrofacetDistributionNormalization}比对，可得
-\begin{align}\label{eq:08-ex01-P2D}
-    P_{xy}(x_s,y_s)\mathrm{d}x_s\mathrm{d}y_s=
-    \cos\theta D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\, .
-\end{align}
-根据三维球面坐标转换公式，有
+法线分布方面，根据三维球面坐标转换
+公式\sidenote{见第\refsec{球体}。}，有
 \begin{align}\label{eq:08-ex01-D_sphere}
     D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}
-    =\sin\theta D({\bm\omega}_{\mathrm{h}})\mathrm{d}\theta\mathrm{d}\varphi\, .
+    =D({\bm\omega}_{\mathrm{h}})\sin\theta\mathrm{d}\theta\mathrm{d}\varphi\, .
 \end{align}
-而斜率坐标对法线的球面坐标的雅可比矩阵为
+斜率分布方面，其积分也有换元关系
+\sidenote{这是微积分中常用的换元方法，此处我们不探究其使用条件，读者可参考相关教材。}
+\begin{align}\label{eq:08-ex01-Pxy-Jacobian}
+    P_{xy}(x_s,y_s)\mathrm{d}x_s\mathrm{d}y_s
+    =P_{xy}(x_s,y_s)|J|\mathrm{d}\theta\mathrm{d}\varphi\, ,
+\end{align}
+其中$J$为$(x_s,y_s)$对参数$(\theta,\varphi)$的雅可比矩阵
 \begin{align}
     J=\displaystyle\frac{\partial(x_s,y_s)}{\partial(\theta,\varphi)}
     =\displaystyle\left[\begin{array}{cc}
@@ -650,19 +646,31 @@ ${\bm\omega}_{\mathrm{m}}$对${\bm\omega}_{\mathrm{i}}$的\keyindex{雅可比矩
         \end{array}\right]\, ,
 \end{align}
 于是雅可比行列式为
-\begin{align}
-    |J|=\frac{\tan\theta}{\cos^2\theta}\, .
+\begin{align}\label{eq:08-ex01-Jacobian-slope-normals}
+    |J|=\left(\frac{\partial x_s}{\partial \theta}\frac{\partial y_s}{\partial \varphi}
+    -\frac{\partial x_s}{\partial \varphi}\frac{\partial y_s}{\partial \theta}\right)
+    =\frac{\tan\theta}{\cos^2\theta}\, .
 \end{align}
-结合\refeq{08-ex01-P2D}和\refeq{08-ex01-D_sphere}得
+注意到$P_{xy}({\bm s})$应满足规范化约束，
+即它在$x_s\in(-\infty,+\infty),y_s\in(-\infty,+\infty)$范围内非负，且有
 \begin{align}
-    P_{xy}(x_s,y_s)\mathrm{d}x_s\mathrm{d}y_s
-    =|J|P_{xy}(x_s,y_s)\mathrm{d}\theta\mathrm{d}\varphi
-    =\sin\theta\cos\theta D({\bm\omega}_{\mathrm{h}})\mathrm{d}\theta\mathrm{d}\varphi\, .
+    \int_{-\infty}^{+\infty}\int_{-\infty}^{+\infty}
+    P_{xy}(x_s,y_s)\mathrm{d}x_s\mathrm{d}y_s=1\, .
 \end{align}
-所以斜率分布与法线分布的关系为
+将上式和\refeq{08ex01-McrofacetDistributionNormalization}比对，可得
+\begin{align}\label{eq:08-ex01-P2D}
+    P_{xy}(x_s,y_s)\mathrm{d}x_s\mathrm{d}y_s=
+    D({\bm\omega}_{\mathrm{h}})\cos\theta\mathrm{d}{\bm\omega}_{\mathrm{h}}\, .
+\end{align}
+联立\refeq{08-ex01-D_sphere}、\refeq{08-ex01-Pxy-Jacobian}和\refeq{08-ex01-P2D}可得
 \begin{align}
-    P_{xy}(x_s,y_s)=\frac{\sin\theta\cos\theta}{|J|}D({\bm\omega}_{\mathrm{h}})
-    =\cos^4\theta D({\bm\omega}_{\mathrm{h}})\, .
+    P_{xy}(x_s,y_s)|J|\mathrm{d}\theta\mathrm{d}\varphi
+    =D({\bm\omega}_{\mathrm{h}})\sin\theta\cos\theta\mathrm{d}\theta\mathrm{d}\varphi\, ,
+\end{align}
+代入\refeq{08-ex01-Jacobian-slope-normals}后可知斜率分布与法线分布的关系为
+\begin{align}
+    P_{xy}(x_s,y_s)=\frac{1}{|J|}D({\bm\omega}_{\mathrm{h}})\sin\theta\cos\theta
+    =D({\bm\omega}_{\mathrm{h}})\cos^4\theta\, .
 \end{align}
 
 \subsection{典型微面分布函数的规范性证明}\label{sub:典型微面分布函数的规范性证明}

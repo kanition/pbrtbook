@@ -568,7 +568,7 @@ ${\bm\omega}_{\mathrm{m}}$对${\bm\omega}_{\mathrm{i}}$的\keyindex{雅可比矩
     D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\, .
 \end{align}
 于是
-\begin{align}
+\begin{align}\label{eq:08-ex01-g1_distance}
     G_1^{\mathrm{d}}({\bm\omega}_{\mathrm{o}})
     =\frac{\cos\theta_{\mathrm{o}}}
     {\displaystyle\int\limits_{\varOmega}\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)
@@ -591,7 +591,9 @@ ${\bm\omega}_{\mathrm{m}}$对${\bm\omega}_{\mathrm{i}}$的\keyindex{雅可比矩
     {\bm\omega}_{\mathrm{h}}=(x_{\mathrm{h}},y_{\mathrm{h}},z_{\mathrm{h}})
     =(\sin\theta\cos\varphi,\sin\theta\sin\varphi,\cos\theta)\, ,
 \end{align}
-则该处附近的面元可以近似为以下平面
+其中$\theta$为天顶角（即${\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}}=\cos\theta$），
+$\varphi$为方位角
+\sidenote{参见\reffig{5.ex01}。}；则该处附近的面元可以近似为以下平面
 \begin{align}
     x_{\mathrm{h}}x+y_{\mathrm{h}}y+z_{\mathrm{h}}z=C\, .
 \end{align}
@@ -611,7 +613,9 @@ ${\bm\omega}_{\mathrm{m}}$对${\bm\omega}_{\mathrm{i}}$的\keyindex{雅可比矩
 \sidenote{原文slope，这里作者想表达的是$z$对$x$和$y$的偏导数，
     它和二维直角坐标系下直线斜率的形式很像，所以借用这个称呼。}。
 反之，也可以根据斜率求出相应法线为
-\begin{align}
+\sidenote{注意到${\bm s}({\bm\omega}_{\mathrm{h}})={\bm s}(-{\bm\omega}_{\mathrm{h}})$，
+所以这里也可以是反向的结果，我们只是取其中一个。}
+\begin{align}\label{eq:08-ex01-normals-by-slope}
     {\bm\omega}_{\mathrm{h}}=\frac{1}{\sqrt{x_s^2+y_s^2+1}}(-x_s,-y_s,1)\, .
 \end{align}
 
@@ -671,6 +675,95 @@ ${\bm\omega}_{\mathrm{m}}$对${\bm\omega}_{\mathrm{i}}$的\keyindex{雅可比矩
 \begin{align}
     P_{xy}(x_s,y_s)=\frac{1}{|J|}D({\bm\omega}_{\mathrm{h}})\sin\theta\cos\theta
     =D({\bm\omega}_{\mathrm{h}})\cos^4\theta\, .
+\end{align}
+
+利用前面的结果，我们尝试将积分域从法线分布空间转化到斜率分布空间。
+首先注意到，因为${\bm\omega}_{\mathrm{g}}=(0,0,1)$，
+所以结合\refeq{08-ex01-normals-by-slope}有
+\begin{align}
+    {\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}}
+    =\frac{1}{\sqrt{x_s^2+y_s^2+1}}\, .
+\end{align}
+类似地，对于出射方向${\bm\omega}_{\mathrm{o}}=(x_{\mathrm{o}},y_{\mathrm{o}},z_{\mathrm{o}})$，则有
+\begin{align}
+    \max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)
+    =\frac{(-x_{\mathrm{o}}x_s-y_{\mathrm{o}}y_s+z_{\mathrm{o}})
+    \chi(-x_{\mathrm{o}}x_s-y_{\mathrm{o}}y_s+z_{\mathrm{o}})}{\sqrt{x_s^2+y_s^2+1}}\, .
+\end{align}
+将上述两式与\refeq{08-ex01-P2D}结合可知
+\begin{align}\label{eq:08-ex01-trans-normal-slope}
+      & \int\limits_{\varOmega}\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)
+    D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber                          \\
+    = & \int\limits_{\varOmega}\frac{\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)}
+    {\cos\theta}D({\bm\omega}_{\mathrm{h}})\cos\theta\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber    \\
+    = & \int_{-\infty}^{+\infty}\int_{-\infty}^{+\infty}
+    \frac{\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)}
+    {{\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}}}
+    P_{xy}(x_s,y_s)\mathrm{d}x_s\mathrm{d}y_s\nonumber                                              \\
+    = & \int_{-\infty}^{+\infty}\int_{-\infty}^{+\infty}
+    (-x_sx_{\mathrm{o}}-y_sy_{\mathrm{o}}+z_{\mathrm{o}})
+    \chi(-x_sx_{\mathrm{o}}-y_sy_{\mathrm{o}}+z_{\mathrm{o}})
+    P_{xy}(x_s,y_s)\mathrm{d}x_s\mathrm{d}y_s\, .
+\end{align}
+为了简化后续推导，这里我们不妨设出射方向${\bm\omega}_{\mathrm{o}}$的方位角$\varphi=0$，于是
+\begin{align}
+    {\bm\omega}_{\mathrm{o}}=(\sin\theta_{\mathrm{o}},0,\cos\theta_{\mathrm{o}})\, .
+\end{align}
+将其代入\refeq{08-ex01-trans-normal-slope}得
+\begin{align}\label{eq:08-ex01-trans-1d-slope}
+      & \int\limits_{\varOmega}\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)
+    D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber                   \\
+    = & \int_{-\infty}^{+\infty}\int_{-\infty}^{+\infty}
+    (-x_s\sin\theta_{\mathrm{o}}+\cos\theta_{\mathrm{o}})
+    \chi(-x_s\sin\theta_{\mathrm{o}}+\cos\theta_{\mathrm{o}})
+    P_{xy}(x_s,y_s)\mathrm{d}x_s\mathrm{d}y_s\nonumber                                       \\
+    = & \displaystyle\int_{-\infty}^{+\infty}
+    (-x_s\sin\theta_{\mathrm{o}}+\cos\theta_{\mathrm{o}})
+    \chi(-x_s\sin\theta_{\mathrm{o}}+\cos\theta_{\mathrm{o}})
+    \left(\int_{-\infty}^{+\infty}P_{xy}(x_s,y_s)\mathrm{d}y_s\right)\mathrm{d}x_s\nonumber  \\
+    = & \displaystyle\int_{-\infty}^{+\infty}
+    (-x_s\sin\theta_{\mathrm{o}}+\cos\theta_{\mathrm{o}})
+    \chi(-x_s\sin\theta_{\mathrm{o}}+\cos\theta_{\mathrm{o}})P_x(x_s)\mathrm{d}x_s\, ,
+\end{align}
+其中
+\begin{align}
+    P_x(x_s)=\int_{-\infty}^{+\infty}P_{xy}(x_s,y_s)\mathrm{d}y_s
+\end{align}
+是斜率沿着出射方向（这里假设方位角为零）的条件分布。
+注意到\refeq{08-ex01-trans-1d-slope}中的示性函数把积分域限定在
+\begin{align}
+    -x_s\sin\theta_{\mathrm{o}}+\cos\theta_{\mathrm{o}}>0\, ,
+\end{align}
+也即
+\begin{align}
+    x_s<\cot\theta_{\mathrm{o}}\, .
+\end{align}
+于是\refeq{08-ex01-trans-1d-slope}可进一步化简为
+\begin{align}
+    \int\limits_{\varOmega}\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)
+    D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}
+    =\int_{-\infty}^{\cot\theta_{\mathrm{o}}}
+    (-x_s\sin\theta_{\mathrm{o}}+\cos\theta_{\mathrm{o}})P_x(x_s)\mathrm{d}x_s\, .
+\end{align}
+将上式代入\refeq{08-ex01-g1_distance}，可得
+\begin{align}
+    \cos\theta_{\mathrm{o}}
+    = & G_1^{\mathrm{d}}({\bm\omega}_{\mathrm{o}})
+    \int\limits_{\varOmega}\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)
+    D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber \\
+    = & G_1^{\mathrm{d}}({\bm\omega}_{\mathrm{o}})
+    \int_{-\infty}^{\cot\theta_{\mathrm{o}}}
+    (-x_s\sin\theta_{\mathrm{o}}+\cos\theta_{\mathrm{o}})P_x(x_s)\mathrm{d}x_s\, .
+\end{align}
+将上式两边同除以$\sin\theta_{\mathrm{o}}$，得到
+\begin{align}
+    \cot\theta_{\mathrm{o}}=G_1^{\mathrm{d}}({\bm\omega}_{\mathrm{o}})
+    \int_{-\infty}^{\cot\theta_{\mathrm{o}}}
+    (-x_s+\cot\theta_{\mathrm{o}})P_x(x_s)\mathrm{d}x_s\, .
+\end{align}
+此外，我们假设微面法线的分布是中心对称的，即任意出射方向上的斜率均值都为零：
+\begin{align}
+    \int_{-\infty}^{+\infty}x_sP_{x}(x_s)\mathrm{d}x_s=0\, ,
 \end{align}
 
 \subsection{典型微面分布函数的规范性证明}\label{sub:典型微面分布函数的规范性证明}

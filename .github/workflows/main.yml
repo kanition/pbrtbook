@@ -28,14 +28,13 @@ jobs:
           wget https://raw.githubusercontent.com/adobe-fonts/source-han-serif/release/OTF/SimplifiedChinese/SourceHanSerifSC-Bold.otf
           wget https://raw.githubusercontent.com/adobe-fonts/source-han-serif/release/OTF/SimplifiedChinese/SourceHanSerifSC-Regular.otf
           cd ..
-          wget https://mirrors.ctan.org/fonts/boondox.zip
+          wget --no-check-certificate https://mirrors.ctan.org/fonts/boondox.zip
           unzip boondox.zip
       - name: compile
         uses: xu-cheng/texlive-action@v2
         with:
           scheme: full
           run: |
-            tlmgr update --self
             ls ./boondox
             export TEXINPUTS=./boondox/tex:$TEXINPUTS
             ./cp.sh

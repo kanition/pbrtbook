@@ -99,6 +99,11 @@
     D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}
     =\int\limits_{\mathcal{G}}\mathrm{d}{\bm p}_{\mathrm{g}}=S\, .
 \end{align}
+注意上式同时给出了一个$D({\bm\omega}_{\mathrm{h}})$应满足的重要约束：
+\begin{align}\label{eq:08ex01-McrofacetDistributionNormalization}
+    \int\limits_{\varOmega}({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}})
+    D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}=1\, .
+\end{align}
 
 接着我们从出射方向${\bm\omega}_{\mathrm{o}}$来观察曲面。此时宏曲面在${\bm\omega}_{\mathrm{o}}$上的投影面积为
 \begin{align}
@@ -241,7 +246,7 @@ $G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})$的值域为$[0,1]$，
     D_{{\bm\omega}_{\mathrm{o}}}({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\, .
 \end{align}
 同时应注意到该定义下$D_{{\bm\omega}_{\mathrm{o}}}({\bm\omega}_{\mathrm{h}})$满足规范化性质：
-\begin{align}
+\begin{align}\label{eq:08ex01-VisibleDistributionNormalization}
     \int\limits_{\varOmega}D_{{\bm\omega}_{\mathrm{o}}}({\bm\omega}_{\mathrm{h}})
     \mathrm{d}{\bm\omega}_{\mathrm{h}}=1\, .
 \end{align}
@@ -295,7 +300,8 @@ $G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})$的值域为$[0,1]$，
 并未考虑到反射的光线可能还会再命中曲面一次甚至多次然后从其他方向射出的情况。
 然而我们在宏观尺度下的BRDF是定义在单次反射的情形下的，所以应排除掉这些光线。
 为此，我们引入\keyindex{遮挡函数}{shadowing function}{}来到达这一效果。
-实际中，我们通常直接使用联合的\keyindex{掩模遮挡函数}{masking-shadowing function}{}$G_2$来代替$G_1$，即
+实际中，我们通常直接使用联合的\keyindex{掩模遮挡函数}{masking-shadowing function}{}$G_2$来代替$G_1$，
+它计入的微面比例要求在${\bm\omega}_{\mathrm{o}}$和${\bm\omega}_{\mathrm{i}}$上双向可见，此时
 \begin{align}\label{eq:08ex01-MacroBRDFG2}
     f_{\mathrm{r}}({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})
      & =\frac{1}{|{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{i}}||{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{o}}|}
@@ -337,16 +343,16 @@ $G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})$的值域为$[0,1]$，
 关于${\bm\omega}_{\mathrm{h}}$和${\bm\omega}_{\mathrm{o}}$的函数。
 我们可以验证这个构造在完美镜面反射成立
 （即${\bm\omega}_{\mathrm{r}}={\bm\omega}_{\mathrm{i}}$）时是符合\refeq{08ex01-FresnelMicrofacet}的：
-联立\refeq{08ex01-MicrosurfaceBRDF}，可得
+联立\refeq{08ex01-MicrosurfaceBRDF}，在有效的入射方向范围${\varOmega}_{\mathrm{i}}$内积分可得
 \begin{align}\label{eq:08ex01-FresnelBRDFValid}
     L_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})
-     & =\int\limits_{\varOmega}f_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}},{\bm\omega}'_{\mathrm{i}})
+     & =\int\limits_{{\varOmega}_{\mathrm{i}}}f_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}},{\bm\omega}'_{\mathrm{i}})
     \max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}'_{\mathrm{i}},0)
-    L_{\mathrm{i}}({\bm\omega}'_{\mathrm{i}})\mathrm{d}{\bm\omega}'_{\mathrm{i}}\nonumber                                   \\
-     & =\int\limits_{\varOmega}F_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})
+    L_{\mathrm{i}}({\bm\omega}'_{\mathrm{i}})\mathrm{d}{\bm\omega}'_{\mathrm{i}}\nonumber                                                  \\
+     & =\int\limits_{{\varOmega}_{\mathrm{i}}}F_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})
     \delta_{{\bm\omega}_{\mathrm{r}}}({\bm\omega}'_{\mathrm{i}})
-    L_{\mathrm{i}}({\bm\omega}'_{\mathrm{i}})\mathrm{d}{\bm\omega}'_{\mathrm{i}}\nonumber                                   \\
-     & =F_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})L_{\mathrm{i}}({\bm\omega}_{\mathrm{r}})\nonumber \\
+    L_{\mathrm{i}}({\bm\omega}'_{\mathrm{i}})\mathrm{d}{\bm\omega}'_{\mathrm{i}}\nonumber                                                  \\
+     & =F_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})L_{\mathrm{i}}({\bm\omega}_{\mathrm{r}})\nonumber                \\
      & =F_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})L_{\mathrm{i}}({\bm\omega}_{\mathrm{i}})\, .
 \end{align}
 其他情况下，则等价于$L_{\mathrm{i}}({\bm\omega}_{\mathrm{r}})=0$，
@@ -383,7 +389,7 @@ ${\bm\omega}_{\mathrm{m}}$对${\bm\omega}_{\mathrm{i}}$的\keyindex{雅可比矩
 将其套在里面的两层$|\cdot|$表示先求矩阵的\keyindex{行列式}{determinant}{}再取绝对值。
 几何意义上，它表示${\bm\omega}_{\mathrm{m}}$和${\bm\omega}_{\mathrm{i}}$发生扰动时
 两者各自扰动范围对应的立体角大小之比。
-我们在\reffig{08ex01-JacobianRefraction}中考虑求解该比值的方法：
+我们在\reffig{08ex01-JacobianRefraction}中推导求解该比值的方法：
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.6\linewidth]{Pictures/chap08/JacobianRefraction.eps}
@@ -397,7 +403,8 @@ ${\bm\omega}_{\mathrm{m}}$对${\bm\omega}_{\mathrm{i}}$的\keyindex{雅可比矩
     {\bm\omega}_{\mathrm{M}}=\mathrm{sign}({\bm\omega}_{\mathrm{i}}\cdot{\bm\omega}_{\mathrm{m}})
     \cdot({\bm\omega}_{\mathrm{i}}+{\bm\omega}_{\mathrm{o}})\, ,
 \end{align}
-其中sign一项是为了将其调整到曲面朝外的方向（和${\bm\omega}_{\mathrm{m}}$同向）；
+其中sign一项是为了将其调整到曲面朝外的方向（和${\bm\omega}_{\mathrm{m}}$同向）
+（sign对正数取1，对负数取-1，对零取0）；
 于是规范化的${\bm\omega}_{\mathrm{m}}$满足
 \begin{align}
     {\bm\omega}_{\mathrm{m}}=\frac{{\bm\omega}_{\mathrm{M}}}{|{\bm\omega}_{\mathrm{M}}|}\, .
@@ -440,7 +447,7 @@ ${\bm\omega}_{\mathrm{m}}$对${\bm\omega}_{\mathrm{i}}$的\keyindex{雅可比矩
 所以其只在完美镜面反射成立时，即${\bm\omega}_{\mathrm{h}}={\bm\omega}_{\mathrm{m}}$时才可能取非零值，
 且此时必有${\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{i}}={\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}}$，
 所以我们最终算出镜面微面模型的BRDF是
-\begin{align}
+\begin{align}\label{eq:08ex01-BRDFMicrofacetFinal}
     f_{\mathrm{r}}({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})
      & =\frac{1}{|{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{i}}||{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{o}}|}
     \int\limits_{\varOmega}\frac{F_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})
@@ -453,6 +460,217 @@ ${\bm\omega}_{\mathrm{m}}$对${\bm\omega}_{\mathrm{i}}$的\keyindex{雅可比矩
      & =\frac{F_{\mathcal{M}}({\bm\omega}_{\mathrm{m}},{\bm\omega}_{\mathrm{o}})
     G_2({\bm\omega}_{\mathrm{m}},{\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})D({\bm\omega}_{\mathrm{m}})}
     {4|{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{i}}||{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{o}}|}\, .
+\end{align}
+
+\subsection{微面模型BRDF的规范化测试}\label{sub:微面模型BRDF的规范化测试}
+本节继承上节的记号。假设某材质不吸收任何入射辐射能量，
+且菲涅尔反射率$F_{\mathcal{M}}({\bm\omega}_{\mathrm{m}},{\bm\omega}_{\mathrm{o}})$恒为1，
+也即完全不透射任何光线，则入射的能量会被无损地反射回去。
+此时对应的BRDF应该满足以下规范化约束：
+\begin{align}\label{eq:08ex-01-WhiteFurnaceTest}
+    \forall {\bm\omega}_{\mathrm{o}}: \quad\int\limits_{{\varOmega}_{\mathrm{i}}}
+    f_{\mathrm{r}}({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})
+    |{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{i}}|\mathrm{d}{\bm\omega}_{\mathrm{i}}=1\, ,
+\end{align}
+上式称作\keyindex{白炉测试}{White Furnace Test}{}等式。
+该式意味着，对于这样的材质，由出射光线反推回去的入射光线，
+会在表面上反射一次或多次，最终全部离开表面，且无能量损失。
+
+然而常见的可解析表达的BRDF都没有考虑多次反射的情况，
+这些多次反射的光线都被遮挡函数滤除了，
+所以此类BRDF在完美镜面微面模型上作参数化时都不满足白炉测试等式。
+因此我们换个角度来分析——我们考虑光线刚发生第一次反射之后、离开曲面之前的情况，
+即把掩模遮挡函数替换为只有掩模函数函数
+（令$G_2({\bm\omega}_{\mathrm{m}},{\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})
+    =G_1({\bm\omega}_{\mathrm{m}},{\bm\omega}_{\mathrm{o}})$），
+则规范化约束应重新成立。此时来自\refeq{08ex01-BRDFMicrofacetFinal}的BRDF变为
+\begin{align}
+    f_{\mathrm{r}}({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})
+    =\frac{G_1({\bm\omega}_{\mathrm{m}},{\bm\omega}_{\mathrm{o}})D({\bm\omega}_{\mathrm{m}})}
+    {4|{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{i}}||{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{o}}|}\, .
+\end{align}
+将其代入白炉测试\refeq{08ex-01-WhiteFurnaceTest}，
+便得到\keyindex{弱白炉测试}{Weak White Furnace Test}{White Furnace Test白炉测试}等式：
+\begin{align}\label{eq:08ex01-WeakWhiteFurnaceTest}
+    \forall {\bm\omega}_{\mathrm{o}}: \quad\int\limits_{{\varOmega}_{\mathrm{i}}}
+    \frac{G_1({\bm\omega}_{\mathrm{m}},{\bm\omega}_{\mathrm{o}})D({\bm\omega}_{\mathrm{m}})}
+    {4|{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{o}}|}\mathrm{d}{\bm\omega}_{\mathrm{i}}=1\, .
+\end{align}
+容易看出，上式的成立其实并不依赖菲涅尔反射率恒为1。
+它给出了镜面微面模型对$G_1$的又一重要约束。
+需要说明的是，弱白炉测试丢弃遮挡函数只是为了
+提供一个便捷的方法来验证BRDF的物理合理性，
+并不是说BRDF在实际使用中也应丢弃遮挡函数。
+
+在实践中，我们经常会面临这样一个问题：
+某个基于镜面微面模型的BRDF是“基于物理的”吗？
+回顾这四个小节的内容，我们虽然不能正面给出答案，
+但却可以给出一些有效的验证方法——
+如果这个BRDF没有同时满足以下四个规范化约束，那它必然不是“基于物理的”：
+\begin{enumerate}
+    \item 微面分布函数$D({\bm\omega}_{\mathrm{h}})$满足\refeq{08ex01-McrofacetDistributionNormalization}；
+    \item 掩模函数$G_1$满足\refeq{08ex01-CosThetaO}；
+    \item 可见法线分布$D_{{\bm\omega}_{\mathrm{o}}}({\bm\omega}_{\mathrm{h}})$满足\refeq{08ex01-VisibleDistributionNormalization}；
+    \item 弱白炉测试\refeq{08ex01-WeakWhiteFurnaceTest}成立。
+\end{enumerate}
+不过这并不意味着那些不能同时满足上述约束的没有“基于物理的”的BRDF就不能使用，
+完全可以根据实际需要做出相应选择，何况以上结论考虑的还是最简单的情况。
+多次反射、多层材料、存在衍射等更复杂的情况还需要进一步探索。
+
+\subsection{常见掩模函数的分析}\label{sub:常见掩模函数的分析}
+本节继承上节的记号。本节将分析Smith和V形槽两种微面配置，推导它们的掩模函数并讨论其性质。
+其他没有相应微面配置因而并非基于物理的常见掩模函数也会有所讨论。
+
+\subsubsection*{Smith微面}
+在Smith微面的配置中，它假设微面是非\keyindex{自相关的}{autocorrelated}{}——
+不论微面上的一点和它的临近点有多近，它们的高度（或法线）之间是没有相关性的。
+这意味着微面上一点的高度和法线是随机变量，整个曲面是微面的随机集合，而不是通常的连续曲面。
+另一方面，法线${\bm\omega}_{\mathrm{h}}$某种意义上是微面的\emph{局部}属性，
+而对该点产生遮挡的别处微面则是一种\emph{远距}属性（但仍是微观尺度上的）。
+在非自相关假设下，局部属性和远距属性应是独立的，所以掩模函数$G_1$可以拆分为两部分：
+\begin{align}\label{eq:08ex01-SeparableMaskingFunction}
+    G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})
+    =G_1^{\mathrm{l}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})
+    G_1^{\mathrm{d}}({\bm\omega}_{\mathrm{o}})\, ,
+\end{align}
+其中局部掩模函数$G_1^{\mathrm{l}}$就简单地滤除背向的微面：
+\begin{align}\label{eq:08ex01-LocalMaskFunction}
+    G_1^{\mathrm{l}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})
+    =\chi({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}})\, .
+\end{align}
+这里示性函数$\chi$的定义为
+\begin{align}
+    \chi(a)=\left\{\begin{array}{l}
+        1,\quad\text{若}a>0, \\
+        0,\quad\text{其他}.
+    \end{array}\right.
+\end{align}
+而远距掩模函数$G_1^{\mathrm{d}}({\bm\omega}_{\mathrm{o}})$表示
+被远处微面遮挡的概率，它独立于局部法线${\bm\omega}_{\mathrm{h}}$.
+
+将\refeq{08ex01-SeparableMaskingFunction}和\refeq{08ex01-LocalMaskFunction}
+代入\refeq{08ex01-CosThetaO}，可得
+\begin{align}
+    \cos\theta_{\mathrm{o}}
+     & =\int\limits_{\varOmega}G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})
+    \max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)
+    D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber                         \\
+     & =\int\limits_{\varOmega}G_1^{\mathrm{l}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})
+    G_1^{\mathrm{d}}({\bm\omega}_{\mathrm{o}})
+    \max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)
+    D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber                         \\
+     & =\int\limits_{\varOmega}\chi({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}})
+    G_1^{\mathrm{d}}({\bm\omega}_{\mathrm{o}})
+    \max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)
+    D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber                         \\
+     & =G_1^{\mathrm{d}}({\bm\omega}_{\mathrm{o}})\int\limits_{\varOmega}
+    \max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)
+    D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\, .
+\end{align}
+于是
+\begin{align}
+    G_1^{\mathrm{d}}({\bm\omega}_{\mathrm{o}})
+    =\frac{\cos\theta_{\mathrm{o}}}
+    {\displaystyle\int\limits_{\varOmega}\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)
+    D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}}\, .
+\end{align}
+所以完整的掩模函数为
+\begin{align}
+    G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})
+    =\frac{\chi({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}})\cos\theta_{\mathrm{o}}}
+    {\displaystyle\int\limits_{\varOmega}\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)
+    D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}}\, .
+\end{align}
+这恰是\citet{10.1145/344779.344814}在法线和遮挡独立性假设下
+得到的掩模函数的精确积分形式。然而其中的积分是在法线分布空间中进行的，
+计算起来并不方便。我们可以将其积分域转化到斜率分布空间以简化它，下面给出具体推导。
+
+对于曲面上某处的法线${\bm\omega}_{\mathrm{h}}$，
+设它在直角坐标系下和球面坐标系下具体的分量为
+\begin{align}
+    {\bm\omega}_{\mathrm{h}}=(x_{\mathrm{h}},y_{\mathrm{h}},z_{\mathrm{h}})
+    =(\sin\theta\cos\varphi,\sin\theta\sin\varphi,\cos\theta)\, ,
+\end{align}
+则该处附近的面元可以近似为以下平面
+\begin{align}
+    x_{\mathrm{h}}x+y_{\mathrm{h}}y+z_{\mathrm{h}}z=C\, .
+\end{align}
+其中$C$为某个常量，于是有
+\begin{align}
+    z=\left(-\frac{x_{\mathrm{h}}}{z_{\mathrm{h}}},
+    -\frac{y_{\mathrm{h}}}{z_{\mathrm{h}}}\right)\cdot(x,y)+C\, ,
+\end{align}
+我们由此定义
+\begin{align}
+    {\bm s}({\bm\omega}_{\mathrm{h}})=(x_s,y_s)
+    =\left(-\frac{x_{\mathrm{h}}}{z_{\mathrm{h}}},
+    -\frac{y_{\mathrm{h}}}{z_{\mathrm{h}}}\right)
+    =-\tan\theta(\cos\varphi,\sin\varphi)
+\end{align}
+为曲面在该处的斜率
+\sidenote{原文slope，这里作者想表达的是$z$对$x$和$y$的偏导数，
+    它和二维直角坐标系下直线斜率的形式很像，所以借用这个称呼。}。
+反之，也可以根据斜率求出相应法线为
+\begin{align}
+    {\bm\omega}_{\mathrm{h}}=\frac{1}{\sqrt{x_s^2+y_s^2+1}}(-x_s,-y_s,1)\, .
+\end{align}
+
+接下来我们考虑斜率分布$P_{xy}({\bm s})$与法线分布
+（即微面分布函数）$D({\bm\omega}_{\mathrm{h}})$之间的关系。
+法线分布方面，根据三维球面坐标转换
+公式\sidenote{见第\refsec{球体}。}，有
+\begin{align}\label{eq:08-ex01-D_sphere}
+    D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}
+    =D({\bm\omega}_{\mathrm{h}})\sin\theta\mathrm{d}\theta\mathrm{d}\varphi\, .
+\end{align}
+斜率分布方面，其积分也有换元关系
+\sidenote{这是微积分中常用的换元方法，此处我们不探究其使用条件，读者可参考相关教材。}
+\begin{align}\label{eq:08-ex01-Pxy-Jacobian}
+    P_{xy}(x_s,y_s)\mathrm{d}x_s\mathrm{d}y_s
+    =P_{xy}(x_s,y_s)|J|\mathrm{d}\theta\mathrm{d}\varphi\, ,
+\end{align}
+其中$J$为$(x_s,y_s)$对参数$(\theta,\varphi)$的雅可比矩阵
+\begin{align}
+    J=\displaystyle\frac{\partial(x_s,y_s)}{\partial(\theta,\varphi)}
+    =\displaystyle\left[\begin{array}{cc}
+            \displaystyle\frac{\partial x_s}{\partial \theta} &
+            \displaystyle\frac{\partial x_s}{\partial \varphi}  \\
+            \displaystyle\frac{\partial y_s}{\partial \theta} &
+            \displaystyle\frac{\partial y_s}{\partial \varphi}
+        \end{array}\right]
+    =\displaystyle\left[\begin{array}{rr}
+            \displaystyle -\frac{\cos\varphi}{\cos^2\theta} &
+            \displaystyle \tan\theta\sin\varphi               \\
+            \displaystyle -\frac{\sin\varphi}{\cos^2\theta} &
+            \displaystyle -\tan\theta\cos\varphi
+        \end{array}\right]\, ,
+\end{align}
+于是雅可比行列式为
+\begin{align}\label{eq:08-ex01-Jacobian-slope-normals}
+    |J|=\left(\frac{\partial x_s}{\partial \theta}\frac{\partial y_s}{\partial \varphi}
+    -\frac{\partial x_s}{\partial \varphi}\frac{\partial y_s}{\partial \theta}\right)
+    =\frac{\tan\theta}{\cos^2\theta}\, .
+\end{align}
+注意到$P_{xy}({\bm s})$应满足规范化约束，
+即它在$x_s\in(-\infty,+\infty),y_s\in(-\infty,+\infty)$范围内非负，且有
+\begin{align}
+    \int_{-\infty}^{+\infty}\int_{-\infty}^{+\infty}
+    P_{xy}(x_s,y_s)\mathrm{d}x_s\mathrm{d}y_s=1\, .
+\end{align}
+将上式和\refeq{08ex01-McrofacetDistributionNormalization}比对，可得
+\begin{align}\label{eq:08-ex01-P2D}
+    P_{xy}(x_s,y_s)\mathrm{d}x_s\mathrm{d}y_s=
+    D({\bm\omega}_{\mathrm{h}})\cos\theta\mathrm{d}{\bm\omega}_{\mathrm{h}}\, .
+\end{align}
+联立\refeq{08-ex01-D_sphere}、\refeq{08-ex01-Pxy-Jacobian}和\refeq{08-ex01-P2D}可得
+\begin{align}
+    P_{xy}(x_s,y_s)|J|\mathrm{d}\theta\mathrm{d}\varphi
+    =D({\bm\omega}_{\mathrm{h}})\sin\theta\cos\theta\mathrm{d}\theta\mathrm{d}\varphi\, ,
+\end{align}
+代入\refeq{08-ex01-Jacobian-slope-normals}后可知斜率分布与法线分布的关系为
+\begin{align}
+    P_{xy}(x_s,y_s)=\frac{1}{|J|}D({\bm\omega}_{\mathrm{h}})\sin\theta\cos\theta
+    =D({\bm\omega}_{\mathrm{h}})\cos^4\theta\, .
 \end{align}
 
 \subsection{典型微面分布函数的规范性证明}\label{sub:典型微面分布函数的规范性证明}

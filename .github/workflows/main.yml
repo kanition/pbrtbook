@@ -35,7 +35,6 @@ jobs:
         with:
           scheme: full
           run: |
-            tlmgr update --self
             ls ./boondox
             export TEXINPUTS=./boondox/tex:$TEXINPUTS
             ./cp.sh

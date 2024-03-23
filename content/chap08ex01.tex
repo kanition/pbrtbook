@@ -167,7 +167,8 @@ $G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})$的值域为$[0,1]$，
 但狄拉克$\delta$分布后面的括号内还有一个记号相同的函数${\bm\omega}_{\mathrm{h}}({\bm p}_{\mathrm{h}})$，
 所以为了区分它们，\refeq{08ex01-StaticMaskFunc}中临时把第一个自变量改写为${\bm\omega}$.
 笔者保留了原论文的这个做法，请读者注意区分。\refeq{08ex01-MicrosurfaceDistribution}、
-\refeq{08ex01-StaticFunc}和\refeq{08ex01-AnotherStaticFunc}也用了类似的临时记号。
+\refeq{08ex01-StaticFunc}、\refeq{08ex01-AnotherStaticFunc}和
+\refeq{08-ex01-masking-g1-int}等也用了类似的临时记号。
 
 第二个是定义的问题。细心的读者可能注意到，
 比对\refeq{08ex01-AreaProjectionsMicrofacetVisible}和\refeq{08ex01-TransferSpaceStatic}，
@@ -575,11 +576,11 @@ ${\bm\omega}_{\mathrm{m}}$对${\bm\omega}_{\mathrm{i}}$的\keyindex{雅可比矩
     D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}}\, .
 \end{align}
 所以完整的掩模函数为
-\begin{align}
+\begin{align}\label{eq:08-ex01-masking-g1-int}
     G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})
     =\frac{\chi({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}})\cos\theta_{\mathrm{o}}}
-    {\displaystyle\int\limits_{\varOmega}\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)
-    D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}}\, .
+    {\displaystyle\int\limits_{\varOmega}\max({\bm\omega}\cdot{\bm\omega}_{\mathrm{o}},0)
+        D({\bm\omega})\mathrm{d}{\bm\omega}}\, .
 \end{align}
 这恰是\citet{10.1145/344779.344814}在法线和遮挡独立性假设下
 得到的掩模函数的精确积分形式。然而其中的积分是在法线分布空间中进行的，
@@ -729,7 +730,7 @@ $\varphi$为方位角
 \begin{align}
     P_x(x_s)=\int_{-\infty}^{+\infty}P_{xy}(x_s,y_s)\mathrm{d}y_s
 \end{align}
-是斜率沿着出射方向（这里假设方位角为零）的条件分布。
+是斜率沿着出射方向（这里假设其方位角为零）的条件分布。
 注意到\refeq{08-ex01-trans-1d-slope}中的示性函数把积分域限定在
 \begin{align}
     -x_s\sin\theta_{\mathrm{o}}+\cos\theta_{\mathrm{o}}>0\, ,
@@ -756,15 +757,77 @@ $\varphi$为方位角
     (-x_s\sin\theta_{\mathrm{o}}+\cos\theta_{\mathrm{o}})P_x(x_s)\mathrm{d}x_s\, .
 \end{align}
 将上式两边同除以$\sin\theta_{\mathrm{o}}$，得到
-\begin{align}
+\begin{align}\label{eq:08-ex01-cot-theta0-g1-distant}
     \cot\theta_{\mathrm{o}}=G_1^{\mathrm{d}}({\bm\omega}_{\mathrm{o}})
     \int_{-\infty}^{\cot\theta_{\mathrm{o}}}
     (-x_s+\cot\theta_{\mathrm{o}})P_x(x_s)\mathrm{d}x_s\, .
 \end{align}
-此外，我们假设微面法线的分布是中心对称的，即任意出射方向上的斜率均值都为零：
+我们接着要从上式中\sidenote{笔者认为这里将积分式移项即可，
+    但原文作者似乎还希望调整里面的正负号，所以有了下面的推导。}
+解出$G_1^{\mathrm{d}}({\bm\omega}_{\mathrm{o}})$.
+假设微面法线的分布是中心对称的，即
 \begin{align}
-    \int_{-\infty}^{+\infty}x_sP_{x}(x_s)\mathrm{d}x_s=0\, ,
+    P_{xy}(x_s,y_s)=P_{xy}(-x_s,-y_s)
 \end{align}
+对任意$x_s$和$y_s$恒成立，则易知条件分布$P_{x}(x_s)$是个偶函数，即
+\begin{align}
+    P_{x}(x_s)=P_{x}(-x_s)
+\end{align}
+对任意$x_s$恒成立，于是任意出射方向上斜率$x_s$的均值都为零：
+\begin{align}\label{eq:08-ex01-mean-slope-conditional}
+    \int_{-\infty}^{+\infty}x_sP_{x}(x_s)\mathrm{d}x_s=0\, .
+\end{align}
+同时我们注意到斜率的条件分布$P_x(x_s)$满足规范化性质
+\begin{align}\label{eq:08-ex01-normal-slope-int}
+    \int_{-\infty}^{+\infty}P_{x}(x_s)\mathrm{d}x_s=1\, .
+\end{align}
+利用\refeq{08-ex01-mean-slope-conditional}和\refeq{08-ex01-normal-slope-int}可以
+代替常数0和1的特点，我们将\refeq{08-ex01-cot-theta0-g1-distant}两边
+同时减去$G_1^{\mathrm{d}}({\bm\omega}_{\mathrm{o}})\cot\theta_{\mathrm{o}}$可得
+\begin{align}
+    (1-G_1^{\mathrm{d}}({\bm\omega}_{\mathrm{o}}))\cot\theta_{\mathrm{o}}
+     & =G_1^{\mathrm{d}}({\bm\omega}_{\mathrm{o}})
+    \int_{-\infty}^{\cot\theta_{\mathrm{o}}}
+    (-x_s+\cot\theta_{\mathrm{o}})P_x(x_s)\mathrm{d}x_s\nonumber                          \\
+     & \qquad -G_1^{\mathrm{d}}({\bm\omega}_{\mathrm{o}})\cot\theta_{\mathrm{o}}
+    \int_{-\infty}^{+\infty}P_{x}(x_s)\mathrm{d}x_s\nonumber                              \\
+     & \qquad +G_1^{\mathrm{d}}({\bm\omega}_{\mathrm{o}})
+    \int_{-\infty}^{+\infty}x_sP_{x}(x_s)\mathrm{d}x_s\nonumber                           \\
+     & \displaystyle =G_1^{\mathrm{d}}({\bm\omega}_{\mathrm{o}})
+    \left(\int_{-\infty}^{+\infty}x_sP_{x}(x_s)\mathrm{d}x_s
+    -\int_{-\infty}^{\cot\theta_{\mathrm{o}}}x_sP_{x}(x_s)\mathrm{d}x_s\right)\nonumber   \\
+     & \qquad\displaystyle +G_1^{\mathrm{d}}({\bm\omega}_{\mathrm{o}})
+    \left(\int_{-\infty}^{\cot\theta_{\mathrm{o}}}P_x(x_s)\cot\theta_{\mathrm{o}}\mathrm{d}x_s
+    -\int_{-\infty}^{+\infty}P_x(x_s)\cot\theta_{\mathrm{o}}\mathrm{d}x_s\right)\nonumber \\
+     & =G_1^{\mathrm{d}}({\bm\omega}_{\mathrm{o}})
+    \int_{\cot\theta_{\mathrm{o}}}^{+\infty}(x_s-\cot\theta_{\mathrm{o}})P_x(x_s)\mathrm{d}x_s\, .
+\end{align}
+整理上式，我们最终得到$G_1^{\mathrm{d}}({\bm\omega}_{\mathrm{o}})$的解析解为
+\begin{align}\label{eq:08-ex01-g1-d-solution}
+    G_1^{\mathrm{d}}({\bm\omega}_{\mathrm{o}})=\frac{1}{1+\Lambda({\bm\omega}_{\mathrm{o}})}\, ,
+\end{align}
+其中
+\begin{align}
+    \Lambda({\bm\omega}_{\mathrm{o}})=\frac{1}{\cot\theta_{\mathrm{o}}}
+    \int_{\cot\theta_{\mathrm{o}}}^{+\infty}(x_s-\cot\theta_{\mathrm{o}})P_x(x_s)\mathrm{d}x_s\, .
+\end{align}
+将\refeq{08-ex01-g1-d-solution}代回\refeq{08ex01-SeparableMaskingFunction}即得
+\begin{align}\label{eq:08-ex01-Smith-masking-function}
+    G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})
+    =\frac{\chi({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}})}
+    {1+\Lambda({\bm\omega}_{\mathrm{o}})}\, .
+\end{align}
+它是对Smith掩模函数的推广，适用于许多随机曲面。
+
+由于前面的推导都不包含近似处理，这说明在非自相关的假设下，Smith掩模函数是准确的。
+在实践中，该模型预测的结果和实测数据非常接近，但仍有偏差，
+这是由描述曲面的统计模型和非自相关假设引起的。
+现实中的连续曲面往往都有范围很宽的自相关函数。
+但\citep{841905}表明忽略自相关性引发的误差仅在观察角度
+满足$\displaystyle\frac{\tan\theta}{\sigma}>\frac{\sqrt{2}}{2}$时
+才足够明显（$\sigma^2$为斜率的方差），所以通常可以认为
+Smith掩模函数可以较为准确地适用于自相关的曲面，
+但具有重复性或结构化纹理的材料（例如布料）则不应在建模时忽视这种自相关性。
 
 \subsection{典型微面分布函数的规范性证明}\label{sub:典型微面分布函数的规范性证明}
 本节补充了\refeq{8.10}和\refeq{8.11}所给的

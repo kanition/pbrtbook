@@ -167,8 +167,8 @@ $G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})$的值域为$[0,1]$，
 但狄拉克$\delta$分布后面的括号内还有一个记号相同的函数${\bm\omega}_{\mathrm{h}}({\bm p}_{\mathrm{h}})$，
 所以为了区分它们，\refeq{08ex01-StaticMaskFunc}中临时把第一个自变量改写为${\bm\omega}$.
 笔者保留了原论文的这个做法，请读者注意区分。\refeq{08ex01-MicrosurfaceDistribution}、
-\refeq{08ex01-StaticFunc}、\refeq{08ex01-AnotherStaticFunc}和
-\refeq{08-ex01-masking-g1-int}等也用了类似的临时记号。
+\refeq{08ex01-StaticFunc}、\refeq{08ex01-AnotherStaticFunc}、\refeq{08-ex01-masking-g1-int}和
+\refeq{08ex01-VCavityScatteringNormalDistribution}等也用了类似的临时记号。
 
 第二个是定义的问题。细心的读者可能注意到，
 比对\refeq{08ex01-AreaProjectionsMicrofacetVisible}和\refeq{08ex01-TransferSpaceStatic}，
@@ -830,7 +830,79 @@ Smith掩模函数可以较为准确地适用于自相关的曲面，
 但具有重复性或结构化纹理的材料（例如布料）则不应在建模时忽视这种自相关性。
 
 \subsubsection*{V形槽微面}
-V形槽微面模型是
+如\reffig{08ex01-V-cavityScatteringModel}，V形槽微面模型也是常用模型之一。
+它不再是对具有特定法线分布的微面的散射情况进行建模，
+而是计算每个独立镜面微面的散射再作平均。每块V形槽都有两个具备对称性的法线，
+即${\bm\omega}_{\mathrm{h}}=(x_{\mathrm{h}},y_{\mathrm{h}},z_{\mathrm{h}})$和
+${\bm\omega}'_{\mathrm{h}}=(-x_{\mathrm{h}},-y_{\mathrm{h}},z_{\mathrm{h}})$，
+它们最后以$\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}},0)D({\bm\omega}_{\mathrm{h}})$
+作为权重合成最终的BRDF.
+根据这些特性，我们构造出相应的微面分布函数
+\begin{align}\label{eq:08ex01-VCavityScatteringNormalDistribution}
+    D({\bm\omega})=\frac{1}{2}\left(
+    \frac{\delta_{{\bm\omega}_{\mathrm{h}}}({\bm\omega})}
+    {{\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}}}
+    +\frac{\delta_{{\bm\omega}'_{\mathrm{h}}}({\bm\omega})}
+    {{\bm\omega}'_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}}}\right)\, .
+\end{align}
+可以验证\refeq{08ex01-VCavityScatteringNormalDistribution}满足
+规范化条件\refeq{08ex01-McrofacetDistributionNormalization}。
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\linewidth]{Pictures/chap08/VCavityScatteringModel.eps}
+    \caption{V形槽微面模型。}
+    \label{fig:08ex01-V-cavityScatteringModel}
+\end{figure}
+
+将\refeq{08ex01-VCavityScatteringNormalDistribution}代入约束条件\refeq{08ex01-CosThetaO}，可得
+\begin{align}\label{eq:08ex01-V-Cavity-configurations}
+    \cos\theta_{\mathrm{o}}=\frac{1}{2}\left(
+    G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})
+    \frac{\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)}
+    {{\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}}}
+    +G_1({\bm\omega}'_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})
+    \frac{\max({\bm\omega}'_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)}
+    {{\bm\omega}'_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}}}\right)\, .
+\end{align}
+如\reffig{08ex01-V-cavityScattering-Mask}，微面的可见性有两种情况。
+一种是其中一个${\bm\omega}'_{\mathrm{h}}$因背向而不可见，
+即$G_1({\bm\omega}'_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})=0$，
+此时\refeq{08ex01-V-Cavity-configurations}可以简化为
+\begin{align}
+    \cos\theta_{\mathrm{o}}=\frac{1}{2}G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})
+    \frac{\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)}
+    {{\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}}}\, .
+\end{align}
+由此得到
+\begin{align}
+    G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})
+    =\frac{2({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}})\cos\theta_{\mathrm{o}}}
+    {\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)}
+    =\frac{2({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}})
+    ({\bm\omega}_{\mathrm{o}}\cdot{\bm\omega}_{\mathrm{g}})}
+    {\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)}\, .
+\end{align}
+另一种情况是${\bm\omega}_{\mathrm{h}}$和${\bm\omega}'_{\mathrm{h}}$均完全可见，
+即$G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})=G_1({\bm\omega}'_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})=1$.
+我们以单个表达式概括上述两种情况：
+\begin{align}\label{eq:08ex01-V-Cavity-MaskingFunction}
+    G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})
+    =\min\left(1, \frac{2({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}})
+    ({\bm\omega}_{\mathrm{o}}\cdot{\bm\omega}_{\mathrm{g}})}
+    {\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)}\right)\, .
+\end{align}
+这便是\citet{10.1145/357290.357293}所用的著名的V形槽掩模函数。
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{Pictures/chap08/VCavityMicrosurfaceMask.eps}
+    \caption{V形槽微面模型的掩模。(a)一个面完全不可见，另一个被部分遮挡；
+        (b)两个面都完全可见，此时掩模函数值为1.}
+    \label{fig:08ex01-V-cavityScattering-Mask}
+\end{figure}
+
+现在我们验证下\refeq{08ex01-V-Cavity-MaskingFunction}是否满足
 
 \subsection{典型微面分布函数的规范性证明}\label{sub:典型微面分布函数的规范性证明}
 本节补充了\refeq{8.10}和\refeq{8.11}所给的

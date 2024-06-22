@@ -423,7 +423,7 @@ ${\bm\omega}_{\mathrm{m}}$对${\bm\omega}_{\mathrm{i}}$的\keyindex{雅可比矩
     {|{\bm\omega}_{\mathrm{M}}|^2}\Delta{\bm\omega}_{\mathrm{i}}\, .
 \end{align}
 同时注意到$|{\bm\omega}_{\mathrm{i}}|=|{\bm\omega}_{\mathrm{o}}|=1$，所以
-\begin{align}
+\begin{align}\label{eq:08ex01-SimpleSymmetry}
     |{\bm\omega}_{\mathrm{M}}|=2|{\bm\omega}_{\mathrm{m}}\cdot{\bm\omega}_{\mathrm{i}}|\, .
 \end{align}
 于是
@@ -836,7 +836,7 @@ Smith掩模函数可以较为准确地适用于自相关的曲面，
 即${\bm\omega}_{\mathrm{h}}=(x_{\mathrm{h}},y_{\mathrm{h}},z_{\mathrm{h}})$和
 ${\bm\omega}'_{\mathrm{h}}=(-x_{\mathrm{h}},-y_{\mathrm{h}},z_{\mathrm{h}})$，
 它们最后以$\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}},0)D({\bm\omega}_{\mathrm{h}})$
-作为权重合成最终的BRDF.
+作为权重合成最终的BRDF。
 根据这些特性，我们构造出相应的微面分布函数
 \begin{align}\label{eq:08ex01-VCavityScatteringNormalDistribution}
     D({\bm\omega})=\frac{1}{2}\left(
@@ -865,6 +865,7 @@ ${\bm\omega}'_{\mathrm{h}}=(-x_{\mathrm{h}},-y_{\mathrm{h}},z_{\mathrm{h}})$，
     \frac{\max({\bm\omega}'_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)}
     {{\bm\omega}'_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}}}\right)\, .
 \end{align}
+
 如\reffig{08ex01-V-cavityScattering-Mask}，微面的可见性有两种情况。
 一种是其中一个${\bm\omega}'_{\mathrm{h}}$因背向而不可见，
 即$G_1({\bm\omega}'_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})=0$，
@@ -883,6 +884,15 @@ ${\bm\omega}'_{\mathrm{h}}=(-x_{\mathrm{h}},-y_{\mathrm{h}},z_{\mathrm{h}})$，
     ({\bm\omega}_{\mathrm{o}}\cdot{\bm\omega}_{\mathrm{g}})}
     {\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)}\, .
 \end{align}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.9\linewidth]{Pictures/chap08/VCavityMicrosurfaceMask.eps}
+    \caption{V形槽微面模型的掩模。(a)一个面完全不可见，另一个被部分遮挡；
+        (b)两个面都完全可见，此时掩模函数值为1.}
+    \label{fig:08ex01-V-cavityScattering-Mask}
+\end{figure}
+
 另一种情况是${\bm\omega}_{\mathrm{h}}$和${\bm\omega}'_{\mathrm{h}}$均完全可见，
 即$G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})=G_1({\bm\omega}'_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})=1$.
 我们以单个表达式概括上述两种情况：
@@ -894,15 +904,88 @@ ${\bm\omega}'_{\mathrm{h}}=(-x_{\mathrm{h}},-y_{\mathrm{h}},z_{\mathrm{h}})$，
 \end{align}
 这便是\citet{10.1145/357290.357293}所用的著名的V形槽掩模函数。
 
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=\linewidth]{Pictures/chap08/VCavityMicrosurfaceMask.eps}
-    \caption{V形槽微面模型的掩模。(a)一个面完全不可见，另一个被部分遮挡；
-        (b)两个面都完全可见，此时掩模函数值为1.}
-    \label{fig:08ex01-V-cavityScattering-Mask}
-\end{figure}
-
 现在我们验证下\refeq{08ex01-V-Cavity-MaskingFunction}是否满足
+可见法线分布的规范化约束即\refeq{08ex01-VisibleDistributionNormalization}。
+先将$G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})$代入\refeq{08ex01-DistributionOfVisibleNormals}得
+\begin{align}
+    D_{{\bm\omega}_{\mathrm{o}}}({\bm\omega}_{\mathrm{h}})
+    =\min\left(1, \frac{2({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}})
+    ({\bm\omega}_{\mathrm{o}}\cdot{\bm\omega}_{\mathrm{g}})}
+    {\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)}\right)
+    \frac{\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)
+        D({\bm\omega}_{\mathrm{h}})}{\cos\theta_{\mathrm{o}}}\, .
+\end{align}
+
+上式中因为含有$\min(1,\cdot)$项，不方便处理，我们分开讨论。
+先考虑V形槽和Smith微面模型的主要差别之处——
+即$\displaystyle\theta_{\mathrm{o}}\approx\frac{\pi}{2}$时的掠角情况。
+此时如\reffig{08ex01-V-cavityScattering-Mask}(a)中所示，V形槽的一个面是背向的，
+如前所述，它对应于$\min(1,\cdot)$项取后者：
+\begin{align}
+    D_{{\bm\omega}_{\mathrm{o}}}({\bm\omega}_{\mathrm{h}})
+    = & \frac{2({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}})
+    ({\bm\omega}_{\mathrm{o}}\cdot{\bm\omega}_{\mathrm{g}})}
+    {\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)}
+    \frac{\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)
+        D({\bm\omega}_{\mathrm{h}})}{\cos\theta_{\mathrm{o}}}\nonumber \\
+    = & 2\chi({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}})
+    ({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}})
+    D({\bm\omega}_{\mathrm{h}})\, .
+\end{align}
+注意到$\displaystyle\theta_{\mathrm{o}}\approx\frac{\pi}{2}$时，
+$\chi({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}})$项在规范化约束积分中
+取1（微面正向）和取0（微面背向）的情况是各占一半的。而如果没有$\chi$项，
+考虑到V形槽微面的对称性即$D({\bm\omega}_{\mathrm{h}})=D({\bm\omega}'_{\mathrm{h}})$，
+正向微面和背向微面各自的积分值会是相等的。
+于是$\chi$项最终的效果相当于让剩余项原本的积分值减半。
+再结合$D({\bm\omega}_{\mathrm{h}})$的规范化性质\refeq{08ex01-McrofacetDistributionNormalization}，
+我们有
+\begin{align}
+      & \int\limits_{\varOmega}D_{{\bm\omega}_{\mathrm{o}}}({\bm\omega}_{\mathrm{h}})
+    \mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber                                                         \\
+    = & \int\limits_{\varOmega}2\chi({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}})
+    ({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}})
+    D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber                              \\
+    = & 2\int\limits_{\varOmega}\chi({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}})
+    ({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}})
+    D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber                              \\
+    = & 2\cdot\frac{1}{2}\int\limits_{\varOmega}({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}})
+    D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber                              \\
+    = & 2\cdot\frac{1}{2}\cdot1=1\, .
+\end{align}
+
+第二种情况是\refeq{08ex01-V-Cavity-MaskingFunction}中$\min(1,\cdot)$项取前者，
+对应于\reffig{08ex01-V-cavityScattering-Mask}(b)中所示，此时V形槽两个微面均可见。
+原论文略过了该情况的证明，笔者这里补充如下。
+利用${\bm\omega}_{\mathrm{h}}$和${\bm\omega}'_{\mathrm{h}}$的对称性，
+类似于\refeq{08ex01-SimpleSymmetry}，我们可以发现
+\begin{align}
+    {\bm\omega}_{\mathrm{h}}+{\bm\omega}'_{\mathrm{h}}
+    =2({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}}){\bm\omega}_{\mathrm{g}}\, .
+\end{align}
+且${\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}}$和
+${\bm\omega}'_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}}$均大于零。于是有
+\begin{align}
+      & \int\limits_{\varOmega}D_{{\bm\omega}_{\mathrm{o}}}({\bm\omega}_{\mathrm{h}})
+    \mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber                                                                                    \\
+    = & \int\limits_{\varOmega}\frac{\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)
+        D({\bm\omega}_{\mathrm{h}})}{\cos\theta_{\mathrm{o}}}\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber                           \\
+    = & \int\limits_{\varOmega}\frac{({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}})
+    D({\bm\omega}_{\mathrm{h}})}{{\bm\omega}_{\mathrm{o}}\cdot{\bm\omega}_{\mathrm{g}}}\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber \\
+    = & \frac{1}{2}\int\limits_{\varOmega}\frac{(({\bm\omega}_{\mathrm{h}}+{\bm\omega}'_{\mathrm{h}})\cdot{\bm\omega}_{\mathrm{o}})
+    D({\bm\omega}_{\mathrm{h}})}{{\bm\omega}_{\mathrm{o}}\cdot{\bm\omega}_{\mathrm{g}}}\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber \\
+    = & \frac{1}{2}\cdot2\int\limits_{\varOmega}\frac{({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}})
+    ({\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{o}})
+    D({\bm\omega}_{\mathrm{h}})}{{\bm\omega}_{\mathrm{o}}\cdot{\bm\omega}_{\mathrm{g}}}\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber \\
+    = & \int\limits_{\varOmega}({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}})
+    D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber                                                         \\
+    = & 1\, .
+\end{align}
+
+由此我们验证了V形槽微面模型对于两种情况都满足可见微面法线分布的规范性要求，满足能量守恒。
+
+然而，该分布在物理上并不能实现，而且尤其在掠角情况下显得不真实。
+这是因为，
 
 \subsection{典型微面分布函数的规范性证明}\label{sub:典型微面分布函数的规范性证明}
 本节补充了\refeq{8.10}和\refeq{8.11}所给的

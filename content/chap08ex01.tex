@@ -167,7 +167,8 @@ $G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})$的值域为$[0,1]$，
 但狄拉克$\delta$分布后面的括号内还有一个记号相同的函数${\bm\omega}_{\mathrm{h}}({\bm p}_{\mathrm{h}})$，
 所以为了区分它们，\refeq{08ex01-StaticMaskFunc}中临时把第一个自变量改写为${\bm\omega}$.
 笔者保留了原论文的这个做法，请读者注意区分。\refeq{08ex01-MicrosurfaceDistribution}、
-\refeq{08ex01-StaticFunc}和\refeq{08ex01-AnotherStaticFunc}也用了类似的临时记号。
+\refeq{08ex01-StaticFunc}、\refeq{08ex01-AnotherStaticFunc}、\refeq{08-ex01-masking-g1-int}和
+\refeq{08ex01-VCavityScatteringNormalDistribution}等也用了类似的临时记号。
 
 第二个是定义的问题。细心的读者可能注意到，
 比对\refeq{08ex01-AreaProjectionsMicrofacetVisible}和\refeq{08ex01-TransferSpaceStatic}，
@@ -422,7 +423,7 @@ ${\bm\omega}_{\mathrm{m}}$对${\bm\omega}_{\mathrm{i}}$的\keyindex{雅可比矩
     {|{\bm\omega}_{\mathrm{M}}|^2}\Delta{\bm\omega}_{\mathrm{i}}\, .
 \end{align}
 同时注意到$|{\bm\omega}_{\mathrm{i}}|=|{\bm\omega}_{\mathrm{o}}|=1$，所以
-\begin{align}
+\begin{align}\label{eq:08ex01-SimpleSymmetry}
     |{\bm\omega}_{\mathrm{M}}|=2|{\bm\omega}_{\mathrm{m}}\cdot{\bm\omega}_{\mathrm{i}}|\, .
 \end{align}
 于是
@@ -568,18 +569,18 @@ ${\bm\omega}_{\mathrm{m}}$对${\bm\omega}_{\mathrm{i}}$的\keyindex{雅可比矩
     D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\, .
 \end{align}
 于是
-\begin{align}
+\begin{align}\label{eq:08-ex01-g1_distance}
     G_1^{\mathrm{d}}({\bm\omega}_{\mathrm{o}})
     =\frac{\cos\theta_{\mathrm{o}}}
     {\displaystyle\int\limits_{\varOmega}\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)
     D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}}\, .
 \end{align}
 所以完整的掩模函数为
-\begin{align}
+\begin{align}\label{eq:08-ex01-masking-g1-int}
     G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})
     =\frac{\chi({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}})\cos\theta_{\mathrm{o}}}
-    {\displaystyle\int\limits_{\varOmega}\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)
-    D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}}\, .
+    {\displaystyle\int\limits_{\varOmega}\max({\bm\omega}\cdot{\bm\omega}_{\mathrm{o}},0)
+        D({\bm\omega})\mathrm{d}{\bm\omega}}\, .
 \end{align}
 这恰是\citet{10.1145/344779.344814}在法线和遮挡独立性假设下
 得到的掩模函数的精确积分形式。然而其中的积分是在法线分布空间中进行的，
@@ -591,7 +592,9 @@ ${\bm\omega}_{\mathrm{m}}$对${\bm\omega}_{\mathrm{i}}$的\keyindex{雅可比矩
     {\bm\omega}_{\mathrm{h}}=(x_{\mathrm{h}},y_{\mathrm{h}},z_{\mathrm{h}})
     =(\sin\theta\cos\varphi,\sin\theta\sin\varphi,\cos\theta)\, ,
 \end{align}
-则该处附近的面元可以近似为以下平面
+其中$\theta$为天顶角（即${\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}}=\cos\theta$），
+$\varphi$为方位角
+\sidenote{参见\reffig{5.ex01}。}；则该处附近的面元可以近似为以下平面
 \begin{align}
     x_{\mathrm{h}}x+y_{\mathrm{h}}y+z_{\mathrm{h}}z=C\, .
 \end{align}
@@ -611,7 +614,9 @@ ${\bm\omega}_{\mathrm{m}}$对${\bm\omega}_{\mathrm{i}}$的\keyindex{雅可比矩
 \sidenote{原文slope，这里作者想表达的是$z$对$x$和$y$的偏导数，
     它和二维直角坐标系下直线斜率的形式很像，所以借用这个称呼。}。
 反之，也可以根据斜率求出相应法线为
-\begin{align}
+\sidenote{注意到${\bm s}({\bm\omega}_{\mathrm{h}})={\bm s}(-{\bm\omega}_{\mathrm{h}})$，
+所以这里也可以是反向的结果，我们只是取其中一个。}
+\begin{align}\label{eq:08-ex01-normals-by-slope}
     {\bm\omega}_{\mathrm{h}}=\frac{1}{\sqrt{x_s^2+y_s^2+1}}(-x_s,-y_s,1)\, .
 \end{align}
 
@@ -672,6 +677,315 @@ ${\bm\omega}_{\mathrm{m}}$对${\bm\omega}_{\mathrm{i}}$的\keyindex{雅可比矩
     P_{xy}(x_s,y_s)=\frac{1}{|J|}D({\bm\omega}_{\mathrm{h}})\sin\theta\cos\theta
     =D({\bm\omega}_{\mathrm{h}})\cos^4\theta\, .
 \end{align}
+
+利用前面的结果，我们尝试将积分域从法线分布空间转化到斜率分布空间。
+首先注意到，因为${\bm\omega}_{\mathrm{g}}=(0,0,1)$，
+所以结合\refeq{08-ex01-normals-by-slope}有
+\begin{align}
+    {\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}}
+    =\frac{1}{\sqrt{x_s^2+y_s^2+1}}\, .
+\end{align}
+类似地，对于出射方向${\bm\omega}_{\mathrm{o}}=(x_{\mathrm{o}},y_{\mathrm{o}},z_{\mathrm{o}})$，则有
+\begin{align}
+    \max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)
+    =\frac{(-x_{\mathrm{o}}x_s-y_{\mathrm{o}}y_s+z_{\mathrm{o}})
+    \chi(-x_{\mathrm{o}}x_s-y_{\mathrm{o}}y_s+z_{\mathrm{o}})}{\sqrt{x_s^2+y_s^2+1}}\, .
+\end{align}
+将上述两式与\refeq{08-ex01-P2D}结合可知
+\begin{align}\label{eq:08-ex01-trans-normal-slope}
+      & \int\limits_{\varOmega}\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)
+    D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber                          \\
+    = & \int\limits_{\varOmega}\frac{\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)}
+    {\cos\theta}D({\bm\omega}_{\mathrm{h}})\cos\theta\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber    \\
+    = & \int_{-\infty}^{+\infty}\int_{-\infty}^{+\infty}
+    \frac{\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)}
+    {{\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}}}
+    P_{xy}(x_s,y_s)\mathrm{d}x_s\mathrm{d}y_s\nonumber                                              \\
+    = & \int_{-\infty}^{+\infty}\int_{-\infty}^{+\infty}
+    (-x_sx_{\mathrm{o}}-y_sy_{\mathrm{o}}+z_{\mathrm{o}})
+    \chi(-x_sx_{\mathrm{o}}-y_sy_{\mathrm{o}}+z_{\mathrm{o}})
+    P_{xy}(x_s,y_s)\mathrm{d}x_s\mathrm{d}y_s\, .
+\end{align}
+为了简化后续推导，这里我们不妨设出射方向${\bm\omega}_{\mathrm{o}}$的方位角$\varphi=0$，于是
+\begin{align}
+    {\bm\omega}_{\mathrm{o}}=(\sin\theta_{\mathrm{o}},0,\cos\theta_{\mathrm{o}})\, .
+\end{align}
+将其代入\refeq{08-ex01-trans-normal-slope}得
+\begin{align}\label{eq:08-ex01-trans-1d-slope}
+      & \int\limits_{\varOmega}\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)
+    D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber                   \\
+    = & \int_{-\infty}^{+\infty}\int_{-\infty}^{+\infty}
+    (-x_s\sin\theta_{\mathrm{o}}+\cos\theta_{\mathrm{o}})
+    \chi(-x_s\sin\theta_{\mathrm{o}}+\cos\theta_{\mathrm{o}})
+    P_{xy}(x_s,y_s)\mathrm{d}x_s\mathrm{d}y_s\nonumber                                       \\
+    = & \displaystyle\int_{-\infty}^{+\infty}
+    (-x_s\sin\theta_{\mathrm{o}}+\cos\theta_{\mathrm{o}})
+    \chi(-x_s\sin\theta_{\mathrm{o}}+\cos\theta_{\mathrm{o}})
+    \left(\int_{-\infty}^{+\infty}P_{xy}(x_s,y_s)\mathrm{d}y_s\right)\mathrm{d}x_s\nonumber  \\
+    = & \displaystyle\int_{-\infty}^{+\infty}
+    (-x_s\sin\theta_{\mathrm{o}}+\cos\theta_{\mathrm{o}})
+    \chi(-x_s\sin\theta_{\mathrm{o}}+\cos\theta_{\mathrm{o}})P_x(x_s)\mathrm{d}x_s\, ,
+\end{align}
+其中
+\begin{align}
+    P_x(x_s)=\int_{-\infty}^{+\infty}P_{xy}(x_s,y_s)\mathrm{d}y_s
+\end{align}
+是斜率沿着出射方向（这里假设其方位角为零）的条件分布。
+注意到\refeq{08-ex01-trans-1d-slope}中的示性函数把积分域限定在
+\begin{align}
+    -x_s\sin\theta_{\mathrm{o}}+\cos\theta_{\mathrm{o}}>0\, ,
+\end{align}
+也即
+\begin{align}
+    x_s<\cot\theta_{\mathrm{o}}\, .
+\end{align}
+于是\refeq{08-ex01-trans-1d-slope}可进一步化简为
+\begin{align}
+    \int\limits_{\varOmega}\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)
+    D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}
+    =\int_{-\infty}^{\cot\theta_{\mathrm{o}}}
+    (-x_s\sin\theta_{\mathrm{o}}+\cos\theta_{\mathrm{o}})P_x(x_s)\mathrm{d}x_s\, .
+\end{align}
+将上式代入\refeq{08-ex01-g1_distance}，可得
+\begin{align}
+    \cos\theta_{\mathrm{o}}
+    = & G_1^{\mathrm{d}}({\bm\omega}_{\mathrm{o}})
+    \int\limits_{\varOmega}\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)
+    D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber \\
+    = & G_1^{\mathrm{d}}({\bm\omega}_{\mathrm{o}})
+    \int_{-\infty}^{\cot\theta_{\mathrm{o}}}
+    (-x_s\sin\theta_{\mathrm{o}}+\cos\theta_{\mathrm{o}})P_x(x_s)\mathrm{d}x_s\, .
+\end{align}
+将上式两边同除以$\sin\theta_{\mathrm{o}}$，得到
+\begin{align}\label{eq:08-ex01-cot-theta0-g1-distant}
+    \cot\theta_{\mathrm{o}}=G_1^{\mathrm{d}}({\bm\omega}_{\mathrm{o}})
+    \int_{-\infty}^{\cot\theta_{\mathrm{o}}}
+    (-x_s+\cot\theta_{\mathrm{o}})P_x(x_s)\mathrm{d}x_s\, .
+\end{align}
+我们接着要从上式中\sidenote{笔者认为这里将积分式移项即可，
+    但原文作者似乎还希望调整里面的正负号，所以有了下面的推导。}
+解出$G_1^{\mathrm{d}}({\bm\omega}_{\mathrm{o}})$.
+假设微面法线的分布是中心对称的，即
+\begin{align}
+    P_{xy}(x_s,y_s)=P_{xy}(-x_s,-y_s)
+\end{align}
+对任意$x_s$和$y_s$恒成立，则易知条件分布$P_{x}(x_s)$是个偶函数，即
+\begin{align}
+    P_{x}(x_s)=P_{x}(-x_s)
+\end{align}
+对任意$x_s$恒成立，于是任意出射方向上斜率$x_s$的均值都为零：
+\begin{align}\label{eq:08-ex01-mean-slope-conditional}
+    \int_{-\infty}^{+\infty}x_sP_{x}(x_s)\mathrm{d}x_s=0\, .
+\end{align}
+同时我们注意到斜率的条件分布$P_x(x_s)$满足规范化性质
+\begin{align}\label{eq:08-ex01-normal-slope-int}
+    \int_{-\infty}^{+\infty}P_{x}(x_s)\mathrm{d}x_s=1\, .
+\end{align}
+利用\refeq{08-ex01-mean-slope-conditional}和\refeq{08-ex01-normal-slope-int}可以
+代替常数0和1的特点，我们将\refeq{08-ex01-cot-theta0-g1-distant}两边
+同时减去$G_1^{\mathrm{d}}({\bm\omega}_{\mathrm{o}})\cot\theta_{\mathrm{o}}$可得
+\begin{align}
+    (1-G_1^{\mathrm{d}}({\bm\omega}_{\mathrm{o}}))\cot\theta_{\mathrm{o}}
+     & =G_1^{\mathrm{d}}({\bm\omega}_{\mathrm{o}})
+    \int_{-\infty}^{\cot\theta_{\mathrm{o}}}
+    (-x_s+\cot\theta_{\mathrm{o}})P_x(x_s)\mathrm{d}x_s\nonumber                          \\
+     & \qquad -G_1^{\mathrm{d}}({\bm\omega}_{\mathrm{o}})\cot\theta_{\mathrm{o}}
+    \int_{-\infty}^{+\infty}P_{x}(x_s)\mathrm{d}x_s\nonumber                              \\
+     & \qquad +G_1^{\mathrm{d}}({\bm\omega}_{\mathrm{o}})
+    \int_{-\infty}^{+\infty}x_sP_{x}(x_s)\mathrm{d}x_s\nonumber                           \\
+     & \displaystyle =G_1^{\mathrm{d}}({\bm\omega}_{\mathrm{o}})
+    \left(\int_{-\infty}^{+\infty}x_sP_{x}(x_s)\mathrm{d}x_s
+    -\int_{-\infty}^{\cot\theta_{\mathrm{o}}}x_sP_{x}(x_s)\mathrm{d}x_s\right)\nonumber   \\
+     & \qquad\displaystyle +G_1^{\mathrm{d}}({\bm\omega}_{\mathrm{o}})
+    \left(\int_{-\infty}^{\cot\theta_{\mathrm{o}}}P_x(x_s)\cot\theta_{\mathrm{o}}\mathrm{d}x_s
+    -\int_{-\infty}^{+\infty}P_x(x_s)\cot\theta_{\mathrm{o}}\mathrm{d}x_s\right)\nonumber \\
+     & =G_1^{\mathrm{d}}({\bm\omega}_{\mathrm{o}})
+    \int_{\cot\theta_{\mathrm{o}}}^{+\infty}(x_s-\cot\theta_{\mathrm{o}})P_x(x_s)\mathrm{d}x_s\, .
+\end{align}
+整理上式，我们最终得到$G_1^{\mathrm{d}}({\bm\omega}_{\mathrm{o}})$的解析解为
+\begin{align}\label{eq:08-ex01-g1-d-solution}
+    G_1^{\mathrm{d}}({\bm\omega}_{\mathrm{o}})=\frac{1}{1+\Lambda({\bm\omega}_{\mathrm{o}})}\, ,
+\end{align}
+其中
+\begin{align}
+    \Lambda({\bm\omega}_{\mathrm{o}})=\frac{1}{\cot\theta_{\mathrm{o}}}
+    \int_{\cot\theta_{\mathrm{o}}}^{+\infty}(x_s-\cot\theta_{\mathrm{o}})P_x(x_s)\mathrm{d}x_s\, .
+\end{align}
+将\refeq{08-ex01-g1-d-solution}代回\refeq{08ex01-SeparableMaskingFunction}即得
+\begin{align}\label{eq:08-ex01-Smith-masking-function}
+    G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})
+    =\frac{\chi({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}})}
+    {1+\Lambda({\bm\omega}_{\mathrm{o}})}\, .
+\end{align}
+它是对Smith掩模函数的推广，适用于许多随机曲面。
+
+由于前面的推导都不包含近似处理，这说明在非自相关的假设下，Smith掩模函数是准确的。
+在实践中，该模型预测的结果和实测数据非常接近，但仍有偏差，
+这是由描述曲面的统计模型和非自相关假设引起的。
+现实中的连续曲面往往都有范围很宽的自相关函数。
+但\citet{841905}表明忽略自相关性引发的误差仅在观察角度
+满足$\tan\theta>\frac{\sqrt{2}}{2}\sigma$时
+才足够明显（$\sigma^2$为斜率的方差），所以通常可以认为
+Smith掩模函数可以较为准确地适用于自相关的曲面，
+但具有重复性或结构化纹理的材料（例如布料）则不应在建模时忽视这种自相关性。
+
+\subsubsection*{V形槽微面}
+如\reffig{08ex01-V-cavityScatteringModel}，V形槽微面模型也是常用模型之一。
+它不再是对具有特定法线分布的微面的散射情况进行建模，
+而是计算每个独立镜面微面的散射再作平均。每块V形槽都有两个具备对称性的法线，
+即${\bm\omega}_{\mathrm{h}}=(x_{\mathrm{h}},y_{\mathrm{h}},z_{\mathrm{h}})$和
+${\bm\omega}'_{\mathrm{h}}=(-x_{\mathrm{h}},-y_{\mathrm{h}},z_{\mathrm{h}})$，
+它们最后以$\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}},0)D({\bm\omega}_{\mathrm{h}})$
+作为权重合成最终的BRDF。
+根据这些特性，我们构造出相应的微面分布函数
+\begin{align}\label{eq:08ex01-VCavityScatteringNormalDistribution}
+    D({\bm\omega})=\frac{1}{2}\left(
+    \frac{\delta_{{\bm\omega}_{\mathrm{h}}}({\bm\omega})}
+    {{\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}}}
+    +\frac{\delta_{{\bm\omega}'_{\mathrm{h}}}({\bm\omega})}
+    {{\bm\omega}'_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}}}\right)\, .
+\end{align}
+可以验证\refeq{08ex01-VCavityScatteringNormalDistribution}满足
+规范化条件\refeq{08ex01-McrofacetDistributionNormalization}。
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\linewidth]{Pictures/chap08/VCavityScatteringModel.eps}
+    \caption{V形槽微面模型。}
+    \label{fig:08ex01-V-cavityScatteringModel}
+\end{figure}
+
+将\refeq{08ex01-VCavityScatteringNormalDistribution}代入约束条件\refeq{08ex01-CosThetaO}，可得
+\begin{align}\label{eq:08ex01-V-Cavity-configurations}
+    \cos\theta_{\mathrm{o}}=\frac{1}{2}\left(
+    G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})
+    \frac{\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)}
+    {{\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}}}
+    +G_1({\bm\omega}'_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})
+    \frac{\max({\bm\omega}'_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)}
+    {{\bm\omega}'_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}}}\right)\, .
+\end{align}
+
+如\reffig{08ex01-V-cavityScattering-Mask}，微面的可见性有两种情况。
+一种是其中一个${\bm\omega}'_{\mathrm{h}}$因背向而不可见，
+即$G_1({\bm\omega}'_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})=0$，
+此时\refeq{08ex01-V-Cavity-configurations}可以简化为
+\begin{align}
+    \cos\theta_{\mathrm{o}}=\frac{1}{2}G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})
+    \frac{\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)}
+    {{\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}}}\, .
+\end{align}
+由此得到
+\begin{align}
+    G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})
+    =\frac{2({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}})\cos\theta_{\mathrm{o}}}
+    {\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)}
+    =\frac{2({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}})
+    ({\bm\omega}_{\mathrm{o}}\cdot{\bm\omega}_{\mathrm{g}})}
+    {\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)}\, .
+\end{align}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.9\linewidth]{Pictures/chap08/VCavityMicrosurfaceMask.eps}
+    \caption{V形槽微面模型的掩模。(a)一个面完全不可见，另一个被部分遮挡；
+        (b)两个面都完全可见，此时掩模函数值为1.}
+    \label{fig:08ex01-V-cavityScattering-Mask}
+\end{figure}
+
+另一种情况是${\bm\omega}_{\mathrm{h}}$和${\bm\omega}'_{\mathrm{h}}$均完全可见，
+即$G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})=G_1({\bm\omega}'_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})=1$.
+我们以单个表达式概括上述两种情况：
+\begin{align}\label{eq:08ex01-V-Cavity-MaskingFunction}
+    G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})
+    =\min\left(1, \frac{2({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}})
+    ({\bm\omega}_{\mathrm{o}}\cdot{\bm\omega}_{\mathrm{g}})}
+    {\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)}\right)\, .
+\end{align}
+这便是\citet{10.1145/357290.357293}所用的著名的V形槽掩模函数。
+
+现在我们验证下\refeq{08ex01-V-Cavity-MaskingFunction}是否满足
+可见法线分布的规范化约束即\refeq{08ex01-VisibleDistributionNormalization}。
+先将$G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})$代入\refeq{08ex01-DistributionOfVisibleNormals}得
+\begin{align}
+    D_{{\bm\omega}_{\mathrm{o}}}({\bm\omega}_{\mathrm{h}})
+    =\min\left(1, \frac{2({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}})
+    ({\bm\omega}_{\mathrm{o}}\cdot{\bm\omega}_{\mathrm{g}})}
+    {\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)}\right)
+    \frac{\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)
+        D({\bm\omega}_{\mathrm{h}})}{\cos\theta_{\mathrm{o}}}\, .
+\end{align}
+
+上式中因为含有$\min(1,\cdot)$项，不方便处理，我们分开讨论。
+先考虑V形槽和Smith微面模型的主要差别之处——
+即$\displaystyle\theta_{\mathrm{o}}\approx\frac{\pi}{2}$时的掠角情况。
+此时如\reffig{08ex01-V-cavityScattering-Mask}(a)中所示，V形槽的一个面是背向的，
+如前所述，它对应于$\min(1,\cdot)$项取后者：
+\begin{align}
+    D_{{\bm\omega}_{\mathrm{o}}}({\bm\omega}_{\mathrm{h}})
+    = & \frac{2({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}})
+    ({\bm\omega}_{\mathrm{o}}\cdot{\bm\omega}_{\mathrm{g}})}
+    {\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)}
+    \frac{\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)
+        D({\bm\omega}_{\mathrm{h}})}{\cos\theta_{\mathrm{o}}}\nonumber \\
+    = & 2\chi({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}})
+    ({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}})
+    D({\bm\omega}_{\mathrm{h}})\, .
+\end{align}
+注意到$\displaystyle\theta_{\mathrm{o}}\approx\frac{\pi}{2}$时，
+$\chi({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}})$项在规范化约束积分中
+取1（微面正向）和取0（微面背向）的情况是各占一半的。而如果没有$\chi$项，
+考虑到V形槽微面的对称性即$D({\bm\omega}_{\mathrm{h}})=D({\bm\omega}'_{\mathrm{h}})$，
+正向微面和背向微面各自的积分值会是相等的。
+于是$\chi$项最终的效果相当于让剩余项原本的积分值减半。
+再结合$D({\bm\omega}_{\mathrm{h}})$的规范化性质\refeq{08ex01-McrofacetDistributionNormalization}，
+我们有
+\begin{align}
+      & \int\limits_{\varOmega}D_{{\bm\omega}_{\mathrm{o}}}({\bm\omega}_{\mathrm{h}})
+    \mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber                                                         \\
+    = & \int\limits_{\varOmega}2\chi({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}})
+    ({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}})
+    D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber                              \\
+    = & 2\int\limits_{\varOmega}\chi({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}})
+    ({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}})
+    D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber                              \\
+    = & 2\cdot\frac{1}{2}\int\limits_{\varOmega}({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}})
+    D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber                              \\
+    = & 2\cdot\frac{1}{2}\cdot1=1\, .
+\end{align}
+
+第二种情况是\refeq{08ex01-V-Cavity-MaskingFunction}中$\min(1,\cdot)$项取前者，
+对应于\reffig{08ex01-V-cavityScattering-Mask}(b)中所示，此时V形槽两个微面均可见。
+原论文略过了该情况的证明，笔者这里补充如下。
+利用${\bm\omega}_{\mathrm{h}}$和${\bm\omega}'_{\mathrm{h}}$的对称性，
+类似于\refeq{08ex01-SimpleSymmetry}，我们可以发现
+\begin{align}
+    {\bm\omega}_{\mathrm{h}}+{\bm\omega}'_{\mathrm{h}}
+    =2({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}}){\bm\omega}_{\mathrm{g}}\, .
+\end{align}
+且${\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}}$和
+${\bm\omega}'_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}}$均大于零。于是有
+\begin{align}
+      & \int\limits_{\varOmega}D_{{\bm\omega}_{\mathrm{o}}}({\bm\omega}_{\mathrm{h}})
+    \mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber                                                                                    \\
+    = & \int\limits_{\varOmega}\frac{\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)
+        D({\bm\omega}_{\mathrm{h}})}{\cos\theta_{\mathrm{o}}}\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber                           \\
+    = & \int\limits_{\varOmega}\frac{({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}})
+    D({\bm\omega}_{\mathrm{h}})}{{\bm\omega}_{\mathrm{o}}\cdot{\bm\omega}_{\mathrm{g}}}\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber \\
+    = & \frac{1}{2}\int\limits_{\varOmega}\frac{(({\bm\omega}_{\mathrm{h}}+{\bm\omega}'_{\mathrm{h}})\cdot{\bm\omega}_{\mathrm{o}})
+    D({\bm\omega}_{\mathrm{h}})}{{\bm\omega}_{\mathrm{o}}\cdot{\bm\omega}_{\mathrm{g}}}\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber \\
+    = & \frac{1}{2}\cdot2\int\limits_{\varOmega}\frac{({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}})
+    ({\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{o}})
+    D({\bm\omega}_{\mathrm{h}})}{{\bm\omega}_{\mathrm{o}}\cdot{\bm\omega}_{\mathrm{g}}}\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber \\
+    = & \int\limits_{\varOmega}({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}})
+    D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber                                                         \\
+    = & 1\, .
+\end{align}
+
+由此我们验证了V形槽微面模型对于两种情况都满足可见微面法线分布的规范性要求，满足能量守恒。
+
+然而，该分布在物理上并不能实现，而且尤其在掠角情况下显得不真实。
+这是因为，
 
 \subsection{典型微面分布函数的规范性证明}\label{sub:典型微面分布函数的规范性证明}
 本节补充了\refeq{8.10}和\refeq{8.11}所给的

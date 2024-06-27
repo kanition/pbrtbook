@@ -61,3 +61,21 @@
 
 ## 许可证
 <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh"><img alt="知识共享许可协议" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />本作品采用<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a>进行许可。
+
+## 耻辱柱
+### 关于本库拒绝刊载于GitCode及其关联网站的声明
+
+鉴于GitCode及其关联网站的过往劣迹，尤其是近来未经授权大量镜像GitHub高流量账号和仓库，故意伪造出原作者在其网站上开设账号和发布内容的假象，并使用AI批量生成质量堪忧的引流推广软文，以此为网站牟取商业利益，本仓库作者Kanition在此声明：
+
+1. 强烈谴责此类网站违背开源精神、扰乱开源社区环境、对开源作者身份实行仿冒并对作品进行偷窃的无耻行径；强调任何行为都应遵守相应的许可协议、通行的开源社区规则与基本的公共社会道德。
+2. 未经本人许可，本仓库拒绝以任何形式被网站官方刊载在GitCode及其关联网站上。所谓“刊载”形式包括但不限于由网站官方（包括其操控的公共账号、下属员工个人账号和伪装成普通用户的机器账号）镜像发布本仓库的源码、编译产物、提交记录、问题与计划列表、讨论区记录等的全部或部分内容，或发布任何提及本仓库的内容。对于已经刊载的内容，本人要求立即无条件作下架与彻底删除处理。
+3. 所谓“GitCode及其关联网站”，包括
+    - 网站GitCode：https://gitcode.com
+    - 与GitCode实际上存在或疑似存在数据共享的网站，或由GitCode实控组织控制的其他网站，包括但不限于：
+        - 网站CSDN：https://www.csdn.net
+        - 网站OSCHINA：https://www.oschina.net
+        - 网站Gitee：https://gitee.com
+        - 网站华为云：https://www.huaweicloud.com
+        - 网站InsCode：https://inscode.csdn.net
+4. 普通个人用户（上述网站员工除外）可以在遵守许可协议的前提下自由地在上述网站发布与本仓库相关的内容而不受前述声明限制。
+5. 呼吁包括上述网站在内的组织和个人共同发扬开源共享精神，维护开源社区良好秩序，推动开源事业高质量发展。

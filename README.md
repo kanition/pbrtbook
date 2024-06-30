@@ -5,7 +5,7 @@
 [![](https://img.shields.io/github/v/release/kanition/pbrtbook?color=orange&include_prereleases&label=最新进度版本&style=flat-square)](https://github.com/kanition/pbrtbook/releases/latest)
 [![](https://img.shields.io/github/release-date-pre/kanition/pbrtbook?color=yellow&label=最新发布时间&style=flat-square)](https://github.com/kanition/pbrtbook/releases/latest)
 [<a rel="license" href="#许可协议"><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1" alt=""><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1" alt=""><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/nc.svg?ref=chooser-v1" alt=""><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/sa.svg?ref=chooser-v1" alt="">](#许可证)
-# [**下载本书**](https://github.com/kanition/pbrtbook/releases) | [翻译进度](https://github.com/users/kanition/projects/4) | [你问我答](https://github.com/kanition/pbrtbook/discussions?discussions_q=) | [我要报错](https://github.com/kanition/pbrtbook/issues/new/choose) | [编译指南](./CONTRIBUTING.md) | [长期求助文献传递](https://github.com/kanition/pbrtbook/discussions/41)
+# [**下载本书**](https://github.com/kanition/pbrtbook/releases) | [翻译进度](https://github.com/users/kanition/projects/4) | [你问我答](https://github.com/kanition/pbrtbook/discussions?discussions_q=) | [我要报错](https://github.com/kanition/pbrtbook/issues/new/choose) | [编译指南](./CONTRIBUTING.md) | [文献求助](https://github.com/kanition/pbrtbook/discussions/41) | [耻辱柱](#耻辱柱)
 
 ![Landscape view-3 @pbrt-v3-scenes/landscape](Pictures/title.png)
 
@@ -88,8 +88,7 @@
         - InsCode：inscode.csdn.net
     - 以上述网站名义在其他网络平台上开办的公共账号空间，包括但不限于微博、微信公众号、
       知乎、抖音、bilibili、小红书、百度百家号、今日头条、简书、YouTube、X（原Twitter）、GitLab、极狐等。
-5. 普通个人用户（上述网站的实控组织机构成员除外）可在遵守许可协议的前提下
-   自由地于上述网站发布本仓库相关内容而不受前述条款限制。
+5. 普通个人用户（上述网站的实控组织机构成员除外）可在遵守[许可协议](#许可协议)的前提下自由地于上述网站发布本仓库相关内容而不受前述条款限制。
 6. 任何用户发布与本仓库相关的内容都不得冒用本人署名“Kanition”，也不得使用极其相似的署名误导用户。
 7. 呼吁上述实体和个人发扬开源共享精神，维护开源社区良好秩序，共同推动开源事业高质量发展。
 8. 本人保留依据事态后续发展作出进一步反应并调整本声明内容的权利。

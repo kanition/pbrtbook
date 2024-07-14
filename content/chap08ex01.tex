@@ -967,25 +967,91 @@ $\chi({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}})$项在规范化约�
 ${\bm\omega}'_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}}$均大于零。于是有
 \begin{align}
       & \int\limits_{\varOmega}D_{{\bm\omega}_{\mathrm{o}}}({\bm\omega}_{\mathrm{h}})
-    \mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber                                                                                    \\
+    \mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber                                                                                     \\
     = & \int\limits_{\varOmega}\frac{\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)
-        D({\bm\omega}_{\mathrm{h}})}{\cos\theta_{\mathrm{o}}}\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber                           \\
+        D({\bm\omega}_{\mathrm{h}})}{\cos\theta_{\mathrm{o}}}\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber                            \\
     = & \int\limits_{\varOmega}\frac{({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}})
-    D({\bm\omega}_{\mathrm{h}})}{{\bm\omega}_{\mathrm{o}}\cdot{\bm\omega}_{\mathrm{g}}}\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber \\
+    D({\bm\omega}_{\mathrm{h}})}{{\bm\omega}_{\mathrm{o}}\cdot{\bm\omega}_{\mathrm{g}}}\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber  \\
     = & \frac{1}{2}\int\limits_{\varOmega}\frac{(({\bm\omega}_{\mathrm{h}}+{\bm\omega}'_{\mathrm{h}})\cdot{\bm\omega}_{\mathrm{o}})
-    D({\bm\omega}_{\mathrm{h}})}{{\bm\omega}_{\mathrm{o}}\cdot{\bm\omega}_{\mathrm{g}}}\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber \\
+    D({\bm\omega}_{\mathrm{h}})}{{\bm\omega}_{\mathrm{o}}\cdot{\bm\omega}_{\mathrm{g}}}\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber  \\
     = & \frac{1}{2}\cdot2\int\limits_{\varOmega}\frac{({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}})
     ({\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{o}})
-    D({\bm\omega}_{\mathrm{h}})}{{\bm\omega}_{\mathrm{o}}\cdot{\bm\omega}_{\mathrm{g}}}\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber \\
+    D({\bm\omega}_{\mathrm{h}})}{{\bm\omega}_{\mathrm{o}}\cdot{\bm\omega}_{\mathrm{g}}}\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber  \\
     = & \int\limits_{\varOmega}({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}})
-    D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber                                                         \\
+    D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber                                                          \\
     = & 1\, .
 \end{align}
 
 由此我们验证了V形槽微面模型对于两种情况都满足可见微面法线分布的规范性要求，满足能量守恒。
 
-然而，该分布在物理上并不能实现，而且尤其在掠角情况下显得不真实。
-这是因为，
+然而，该分布在物理上是无法实现的，而且尤其在掠角情况下显得不真实。
+这是因为，模型中有两类法线，一类是背向的被$\chi$项消掉了，另一类是正向的，
+其辐射贡献值由$({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}})D({\bm\omega}_{\mathrm{h}})$加权。
+注意$({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}})$恰是
+微面面积投影到宏曲面上所用的权重系数。
+该系数让微面仿佛是先被投影到宏曲面上，然后再考虑投影到出射方向的事。
+于是我们等于是在一个微平面上进行模拟，它在几何上不存在，但又能扰乱光的反射。
+如\reffig{08ex01-VCavitySurfacesVSSmithSurfaces}所示，
+这样的模型会显得不够真实——它更像个法线贴图\sidenote{原文：normal map.}而
+不是置换贴图\sidenote{原文：displacement map.}。
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.85\linewidth]{Pictures/chap08/VCavitySurfacesVSSmithSurfaces.eps}
+    \caption{两种微面模型的比较：第一行中，V形槽微面在掠角时表现得像个法线贴图，
+        正向法线的部分和宏曲面有一样的视觉表现。第二行中，当掠角${\bm\omega}_{\mathrm{o}}$相同时，
+        V形槽微面给出的反射方向${\bm\omega}_{\mathrm{i}}$平均上比物理曲面给出的要低得多。}
+    \label{fig:08ex01-VCavitySurfacesVSSmithSurfaces}
+\end{figure}
+
+这种效应是意料之中的。对于单个微面，可见度高的法线按理应该比
+可见度低的法线占据更多投影面积并具有更大贡献。
+但V形槽微面并不是这样的，它不是模拟一整个微面，
+而是将不同法线分开，模拟微面的每一对法线并按照法线分布作加权。
+除了滤除背向法线外，权重就和视角再无关系了。
+这就是它没结合好可见性效应而显得像法线贴图的原因，
+而且在入射角越接近掠角时显得越严重，其结果是BRDF的峰值容易偏低。
+对于现实中的微面，法线朝向出射方向的部分会因其具有更大投影面积而对BRDF有更大贡献，
+因此反射方向会被集束到出射方向。但V形槽微面没有这种效应——
+各处的投影面积都视为一样，显现不出微面的几何特性。
+
+\begin{table}[htbp]
+    \centering
+    \begin{tabular}{ccccc}
+        \toprule
+        粗糙度 &                                                                                               & V形槽BRDF & Smith微面 & 参考BRDF \\
+        \midrule
+        $\alpha=0.1$
+               & \includegraphics[width=0.07\linewidth]{Pictures/chap08/Beckmann-V-cavity-Smith-Table/wo.eps}
+               & \includegraphics[width=0.21\linewidth]{Pictures/chap08/Beckmann-V-cavity-Smith-Table/v01.png}
+               & \includegraphics[width=0.21\linewidth]{Pictures/chap08/Beckmann-V-cavity-Smith-Table/s01.png}
+               & \includegraphics[width=0.21\linewidth]{Pictures/chap08/Beckmann-V-cavity-Smith-Table/r01.png}                                    \\
+        $\alpha=0.4$
+               & \includegraphics[width=0.07\linewidth]{Pictures/chap08/Beckmann-V-cavity-Smith-Table/wo.eps}
+               & \includegraphics[width=0.21\linewidth]{Pictures/chap08/Beckmann-V-cavity-Smith-Table/v04.png}
+               & \includegraphics[width=0.21\linewidth]{Pictures/chap08/Beckmann-V-cavity-Smith-Table/s04.png}
+               & \includegraphics[width=0.21\linewidth]{Pictures/chap08/Beckmann-V-cavity-Smith-Table/r04.png}                                    \\
+        $\alpha=0.7$
+               & \includegraphics[width=0.07\linewidth]{Pictures/chap08/Beckmann-V-cavity-Smith-Table/wo.eps}
+               & \includegraphics[width=0.21\linewidth]{Pictures/chap08/Beckmann-V-cavity-Smith-Table/v07.png}
+               & \includegraphics[width=0.21\linewidth]{Pictures/chap08/Beckmann-V-cavity-Smith-Table/s07.png}
+               & \includegraphics[width=0.21\linewidth]{Pictures/chap08/Beckmann-V-cavity-Smith-Table/r07.png}                                    \\
+        $\alpha=1.0$
+               & \includegraphics[width=0.07\linewidth]{Pictures/chap08/Beckmann-V-cavity-Smith-Table/wo.eps}
+               & \includegraphics[width=0.21\linewidth]{Pictures/chap08/Beckmann-V-cavity-Smith-Table/v10.png}
+               & \includegraphics[width=0.21\linewidth]{Pictures/chap08/Beckmann-V-cavity-Smith-Table/s10.png}
+               & \includegraphics[width=0.21\linewidth]{Pictures/chap08/Beckmann-V-cavity-Smith-Table/r10.png}                                    \\
+        $\alpha=1.3$
+               & \includegraphics[width=0.07\linewidth]{Pictures/chap08/Beckmann-V-cavity-Smith-Table/wo.eps}
+               & \includegraphics[width=0.21\linewidth]{Pictures/chap08/Beckmann-V-cavity-Smith-Table/v13.png}
+               & \includegraphics[width=0.21\linewidth]{Pictures/chap08/Beckmann-V-cavity-Smith-Table/s13.png}
+               & \includegraphics[width=0.21\linewidth]{Pictures/chap08/Beckmann-V-cavity-Smith-Table/r13.png}                                    \\
+        \bottomrule
+    \end{tabular}
+    \caption{当掠角入射（$\theta_{\mathrm{o}}=1.5$）时，各向同性的Beckmann分布搭配不同掩模函数所得的BRDF。
+    其中参考图是在一程序曲面上用蒙特卡罗光线追踪算得的，该曲面的高斯分布用粗糙度参数$\alpha$来参数化。}
+    \label{tab:08ex01-Beckmann-V-cavity-Smith-Table}
+\end{table}
+
 
 \subsection{典型微面分布函数的规范性证明}\label{sub:典型微面分布函数的规范性证明}
 本节补充了\refeq{8.10}和\refeq{8.11}所给的

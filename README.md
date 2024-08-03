@@ -10,19 +10,17 @@
 ![Landscape view-3 @pbrt-v3-scenes/landscape](Pictures/title.png)
 
 ## 作者信息
-- 原著 [Matt Pharr](https://pharr.org/matt), [Wenzel Jakob](https://rgl.epfl.ch/people/wjakob) & Greg Humphreys
+- 原著 [Matt Pharr](https://pharr.org/matt), [Wenzel Jakob](https://rgl.epfl.ch/people/wjakob) & [Greg Humphreys](https://x.com/humper)
 - 翻译 [Kanition](https://github.com/kanition)
 
 ## 本库链接
 - GitHub：[https://github.com/kanition/pbrtbook](https://github.com/kanition/pbrtbook)
 
 ## 友情链接
-### 第三版
-* 原书官网：[https://www.pbr-book.org/](https://www.pbr-book.org/)
-* 原书源码：[https://github.com/mmp/pbrt-v3](https://github.com/mmp/pbrt-v3)
-* 原书代码：[https://github.com/mmp/pbr-book-website](https://github.com/mmp/pbr-book-website)
-### 第四版
-* 原书源码：[https://github.com/mmp/pbrt-v4](https://github.com/mmp/pbrt-v4)
+- 原书官网：[https://www.pbr-book.org/](https://www.pbr-book.org/)
+- 原书代码：[https://github.com/mmp/pbr-book-website](https://github.com/mmp/pbr-book-website)
+- 第三版源码：[https://github.com/mmp/pbrt-v3](https://github.com/mmp/pbrt-v3)
+- 第四版源码：[https://github.com/mmp/pbrt-v4](https://github.com/mmp/pbrt-v4)
 
 **欢迎提出宝贵意见和建议。如果你发现本书存在错误，请一定要告诉我们！**
 
@@ -72,8 +70,8 @@
 1. 强烈谴责这些网站违背开源精神、污染开源社区环境、冒充开源作者身份、窃取开源作品成果、误导广大用户的无耻行径。
    强调任何举措都应遵守相应的许可协议、通行的开源社区准则与基本的社会公共道德。
    敦促有关实体和个人悬崖勒马，立即停止侵权行为。
-2. 未经本人许可，本仓库拒绝以任何形式被网站官方刊载在GitCode及其关联网站上。
-   对于已经刊载的内容，本人要求立即无条件进行下架与彻底删除处理。
+2. **未经本人许可，本仓库拒绝以任何形式被网站官方刊载在GitCode及其关联网站上。
+   对于已经刊载的内容，本人要求立即无条件进行下架与彻底删除处理。**
 3. 本声明中的“刊载”形式包括但不限于由网站官方（包括但不限于其操控的公共账号、
    下属员工个人账号和伪装成普通用户的机器账号）镜像发布本仓库的源码、
    编译产物、提交记录、问题与计划列表、讨论区记录等的全部或部分内容，以及发布任何提及本仓库的内容。

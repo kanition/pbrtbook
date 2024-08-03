@@ -829,6 +829,20 @@ $\varphi$为方位角
 Smith掩模函数可以较为准确地适用于自相关的曲面，
 但具有重复性或结构化纹理的材料（例如布料）则不应在建模时忽视这种自相关性。
 
+\citet{1138991}还在微面的不同量（例如高度和法线）上作平均来推导掩模函数。
+\refeq{08-ex01-Smith-masking-function}中的掩模函数
+就是在微面的高度上作平均的版本，且BRDF必须用到它。
+因为高度独立于BRDF中的法线，所以我们可以这样作平均。
+但法线就不能以同样的方式处理了，因为背向法线是不予考虑的。
+在该BRDF模型中，只有能被观察者观测到的辐射才有意义，即对于观察者可见的部分才有意义。
+如果曲面上的某部分不可见，则它不会被包含在BRDF中。
+Smith推导了其掩模函数的法线平均版，但并未直接解决该问题。
+他想回答“有多少比例的法线被遮挡了”，
+这个问题对于研究其他一些情况（例如波动光学模型）下曲面的固有属性很重要。
+但它对于本文基于几何光学的BRDF来说无关紧要。
+在基于几何微面的BRDF问题中，我们实际上感兴趣的是稍有不同的问题：
+有多少比例的\emph{非背向}法线被遮挡了？
+
 \subsubsection*{V形槽微面}
 如\reffig{08ex01-V-cavityScatteringModel}，V形槽微面模型也是常用模型之一。
 它不再是对具有特定法线分布的微面的散射情况进行建模，
@@ -1014,6 +1028,15 @@ ${\bm\omega}'_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}}$均大于零。于是有
 因此反射方向会被集束到出射方向。但V形槽微面没有这种效应——
 各处的投影面积都视为一样，显现不出微面的几何特性。
 
+\reftab{08ex01-Beckmann-V-cavity-Smith-Table}展示了
+各向同性的Beckmann分布分别结合V形槽和Smith掩模遮挡函数所得的BRDF，
+以及使用与高斯分布匹配的程序化随机微面模型做散射的数值模拟所算出的结果。
+可以看出，用Smith掩模函数时，随着粗糙度增加，分布被集束到出射方向。
+对于极高的粗糙度，BRDF甚至能大部分反向散射。
+这种在实测数据中也存在的效应是我们所期望的，
+因为此时朝向出射方向的法线是最容易看见的。
+相反，V形槽模型不会出现该效应。
+
 \begin{table}[htbp]
     \centering
     \begin{tabular}{ccccc}
@@ -1048,9 +1071,78 @@ ${\bm\omega}'_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}}$均大于零。于是有
         \bottomrule
     \end{tabular}
     \caption{当掠角入射（$\theta_{\mathrm{o}}=1.5$）时，各向同性的Beckmann分布搭配不同掩模函数所得的BRDF。
-    其中参考图是在一程序曲面上用蒙特卡罗光线追踪算得的，该曲面的高斯分布用粗糙度参数$\alpha$来参数化。}
+        其中参考图是在一程序曲面上用蒙特卡罗光线追踪算得的，该曲面的高斯分布用粗糙度参数$\alpha$来参数化。}
     \label{tab:08ex01-Beckmann-V-cavity-Smith-Table}
 \end{table}
+
+\subsubsection*{非基于物理的掩模函数}
+前面我们已经介绍了基于物理的掩模函数。
+它可以从微面模型推导出来或在现实微面上实测出来，
+并总是满足\refsub{微面模型BRDF的规范化测试}所述的规范化约束。
+相反，非基于物理的掩模函数则不能同时满足这些约束，
+也即不能从任何微面模型推导出来或被实测到。
+
+为了简化镜面微面模型的BRDF\refeq{08ex01-BRDFMicrofacetFinal}，许多模型假设掩模遮挡函数和分母
+中的$|{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{i}}||{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{o}}|$约掉了。
+因此其隐式掩模遮挡函数定义为
+\begin{align}
+    G_2({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})
+    =G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{i}})\, ,
+\end{align}
+其中互相独立的掩模函数和遮挡函数分别为
+\begin{align}
+    G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})
+    = & \chi({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}})
+    \max({\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{o}},0)\, , \\
+    G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{i}})
+    = & \chi({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{i}})
+    \max({\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{i}},0)\, .
+\end{align}
+
+该掩模函数是部分合理的，因为当${\bm\omega}_{\mathrm{o}}={\bm\omega}_{\mathrm{g}}$时，
+它满足$G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})=1$，
+并随入射角增至$\displaystyle\frac{\pi}{2}$而
+降到$G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})=0$.
+然而它并不满足投影面积的规范化约束\refeq{08ex01-CosThetaO}。
+
+\citet{10.1111/1467-8659.1330233}也提出了一种Smith掩模函数的近似，
+常称作“Schlick-Smith”掩模函数。但它有三个问题：
+第一，原文在掩模函数和法线分布中所用的粗糙度记号$m$的含义不一致；
+第二，尽管这种不一致性很容易解决，但更重要的问题是，
+他对Smith掩模函数的重新公式化沿用了其参考文献的笔误；
+第三，我们此前已在“Smith微面”一节中说明了在本文的几何光学BRDF模型中
+用的Smith掩模函数是在微面高度上作平均的；
+然而\citeauthor{10.1111/1467-8659.1330233}沿用了其参考文献中
+对高度和法线一起作平均的Smith掩模函数版本，这适用于他们的波动光学模型。
+因为这些错误，无论是\citeauthor{10.1111/1467-8659.1330233}的原始公式
+还是近似拟合都不能匹配正确的Smith掩模函数。
+这意味着“Schlick-Smith”掩模函数是非基于物理的。
+
+\citet{10.2312/egs.20011003}提出了一种简便方法
+替代V形槽模型的掩模遮挡函数和\refeq{08ex01-BRDFMicrofacetFinal}的分母，即作近似
+\begin{align}
+    \frac{G_2({\bm\omega}_{\mathrm{m}},{\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})}
+    {|{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{i}}|
+    |{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{o}}|}
+    =\frac{1}{|{\bm\omega}_{\mathrm{m}}\cdot{\bm\omega}_{\mathrm{i}}|
+    |{\bm\omega}_{\mathrm{m}}\cdot{\bm\omega}_{\mathrm{o}}|}\, ,
+\end{align}
+它等价于把掩模函数和遮挡函数近似为
+\begin{align}
+    G_1({\bm\omega}_{\mathrm{m}},{\bm\omega}_{\mathrm{o}}) & =
+    \frac{|{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{o}}|}
+    {|{\bm\omega}_{\mathrm{m}}\cdot{\bm\omega}_{\mathrm{o}}|}\, , \\
+    G_1({\bm\omega}_{\mathrm{m}},{\bm\omega}_{\mathrm{i}}) & =
+    \frac{|{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{i}}|}
+    {|{\bm\omega}_{\mathrm{m}}\cdot{\bm\omega}_{\mathrm{i}}|}\, .
+\end{align}
+该掩模函数很逼近V形槽，分子$|{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{o}}|$对应于几何宏曲面的投影面积，
+分母$|{\bm\omega}_{\mathrm{m}}\cdot{\bm\omega}_{\mathrm{o}}|$对应去掉了微面的投影面积，
+也即意味着微面的投影面积被替换为几何宏曲面的投影面积，
+所以容易把微曲面模拟得仿佛具有很平坦的微面，就像法线贴图那样。
+Kelemen掩模函数虽然对V形槽掩模函数近似得很好，
+但却不满足规范化约束\refeq{08ex01-CosThetaO}，
+所以它并不是基于物理的。
 
 
 \subsection{典型微面分布函数的规范性证明}\label{sub:典型微面分布函数的规范性证明}

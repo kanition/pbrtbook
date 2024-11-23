@@ -51,7 +51,7 @@
 %----------------------------------------------------------------------------------------
 
 \begin{document}
-
+\frontmatter % 控制序文部分
 %----------------------------------------------------------------------------------------
 %	TITLE PAGE
 %----------------------------------------------------------------------------------------
@@ -78,29 +78,28 @@
 \newpage
 ~\vfill
 \thispagestyle{empty}
-
+\usechapterimagefalse
 \input{content/readme.tex}
+\pagestyle{fancy} % 该风格启用了页眉
 
-\newpage
-\setcounter{page}{1}
-\pagestyle{fancy}
 \input{content/preface.tex}
-\newpage
+
 \input{content/prefaceonline.tex}
-\newpage
+
 \input{content/tanslator.tex}
-\newpage
+
 \input{content/hallofshame.tex}
 
 %----------------------------------------------------------------------------------------
 %	TABLE OF CONTENTS
 %----------------------------------------------------------------------------------------
+\pagestyle{fancy}
 \renewcommand{\contentsname}{目录}
 \renewcommand{\figurename}{图}
 \renewcommand{\tablename}{表}
 
 %\usechapterimagefalse % If you don't want to include a chapter image, use this to toggle images off - it can be enabled later with \usechapterimagetrue
-
+\usechapterimagetrue
 \chapterimage{Pictures/measure-one180-cut1260.png} % Table of contents heading image
 
 \pagestyle{empty} % Disable headers and footers for the following pages
@@ -114,7 +113,8 @@
 %----------------------------------------------------------------------------------------
 %	PART
 %----------------------------------------------------------------------------------------
-
+\setcounter{page}{1}
+\mainmatter % 控制正文部分
 \part{绪论}
 \input{content/chap01.tex}
 

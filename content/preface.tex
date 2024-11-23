@@ -1,5 +1,5 @@
-{\Huge\bfseries 前言}\vspace{30pt}\\
-
+\chapter{前言}\label{chap:前言}
+\setcounter{page}{1}
 渲染是计算机图形学的基础组成部分。
 最抽象地说，渲染是把三维场景描述转换为图像的过程。
 动画算法、几何建模、材质贴图和计算机图形学其他领域
@@ -35,9 +35,9 @@ pbrt和本书内容仅关注{\itshape 逼真渲染}，
 因为计算机生成的图像经常必须和真实世界的镜头无缝结合。
 娱乐应用中所有图像都是合成的，
 逼真感是让观察者忘记所见场景并不实际存在的有效手段。
-最后，逼真感为衡量渲染系统输出质量提供了定义合理的指标。\\
+最后，逼真感为衡量渲染系统输出质量提供了定义合理的指标。
 
-\noindent{\LARGE\bfseries 读者}
+\section*{读者}\label{sec:读者}
 
 本书主要面向三类读者。
 第一类是学习计算机图形学课程的研究生或高年级本科生。
@@ -60,9 +60,9 @@ pbrt源码提供了可用的构建基础（至少可使用一部分源码）。
 pbrt涵盖了大量高级或艰深算法的实现和技术，
 例如细分曲面、蒙特卡罗采样算法、双向路径追踪、Metropolis采样和次表面散射；
 经验丰富的渲染从业者应该会很感兴趣。
-我们希望能激发这些读者去钻研一个完整而典型的渲染系统的兴趣。\\
+我们希望能激发这些读者去钻研一个完整而典型的渲染系统的兴趣。
 
-\noindent{\LARGE\bfseries 概述和目标}
+\section*{概述和目标}\label{sec:概述和目标}
 
 pbrt基于{\itshape 光线追踪}算法。
 光线追踪是一项优雅的技术，起源于镜片制造。
@@ -140,33 +140,33 @@ pbrt的设计对所计算的量和实现的算法使用正确的物理单位。
 我们也会发布勘误、修复bug、新增渲染场景和补充材料。
 遇到网站尚未列出的pbrt中的任何bug或行文错误
 均发送到邮箱\href{mailto:bugs@pbrt.org}{\url{bugs@pbrt.org}}。
-我们非常重视您的反馈\sidenote{译者注：我也欢迎您的反馈！详见扉页更新网址。}！\\
+我们非常重视您的反馈\sidenote{译者注：我也欢迎您的反馈！详见扉页更新网址。}！
 
-\noindent{\LARGE\bfseries 第一版和第二版的区别}
+\section*{第一版和第二版的区别}\label{sec:第一版和第二版的区别}
 
-{\itshape 详见英文原版}\\
+{\itshape 详见英文原版}
 
-\noindent{\LARGE\bfseries 第二版和第三版的区别}
+\section*{第二版和第三版的区别}\label{sec:第二版和第三版的区别}
 
-{\itshape 详见英文原版}\\
+{\itshape 详见英文原版}
 
-\noindent{\LARGE\bfseries 致谢}
+\section*{致谢}\label{sec:致谢}
 
-{\itshape 详见英文原版}\\
+{\itshape 详见英文原版}
 
-\noindent{\LARGE\bfseries 出版}
+\section*{出版}\label{sec:出版}
 
-{\itshape 详见英文原版}\\
+{\itshape 详见英文原版}
 
-\noindent{\LARGE\bfseries 场景和模型}
+\section*{场景和模型}\label{sec:场景和模型}
 
-{\itshape 详见英文原版}\\
+{\itshape 详见英文原版}
 
-\noindent{\LARGE\bfseries 关于封面}
+\section*{关于封面}\label{sec:关于封面}
 
-{\itshape 详见英文原版}\\
+{\itshape 详见英文原版}
 
-\noindent{\LARGE\bfseries 扩展阅读}
+\section*{扩展阅读}\label{sec:扩展阅读0}
 
 \citet{10.1093/comjnl/27.2.97}的论文《\emph{Literate Programming}》
 描述了文学编程背后的主要思想以及他的{\ttfamily web}编程环境\sidenote{译者注：一种计算机编程语言系统。}。

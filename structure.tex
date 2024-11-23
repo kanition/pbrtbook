@@ -6,7 +6,7 @@
 % Original author:
 % Mathias Legrand (legrand.mathias@gmail.com) with modifications by:
 % Vel (vel@latextemplates.com)
-% 
+%
 % This file was downloaded from:
 % http://www.LaTeXTemplates.com
 %
@@ -40,15 +40,15 @@
 
 \usepackage{geometry} % Required for adjusting page dimensions and margins
 \geometry{
-	paper=a4paper, % Paper size, change to letterpaper for US letter size
-	top=3cm, % Top margin
-	bottom=3cm, % Bottom margin
-	inner=3.2cm, % Left margin
-	outer=4.8cm, % Right margin
-	headheight=14pt, % Header height
-	footskip=1.4cm, % Space from the bottom margin to the baseline of the footer
-	headsep=10pt, % Space from the top margin to the baseline of the header
-	%showframe, % Uncomment to show how the type block is set on the page
+    paper=a4paper, % Paper size, change to letterpaper for US letter size
+    top=3cm, % Top margin
+    bottom=3cm, % Bottom margin
+    inner=3.2cm, % Left margin
+    outer=4.8cm, % Right margin
+    headheight=14pt, % Header height
+    footskip=1.4cm, % Space from the bottom margin to the baseline of the footer
+    headsep=10pt, % Space from the top margin to the baseline of the header
+    %showframe, % Uncomment to show how the type block is set on the page
 }
 
 %----------------------------------------------------------------------------------------
@@ -73,9 +73,9 @@
 \usepackage{xparse}
 \let\oldmarginpar\marginpar
 \RenewDocumentCommand{\marginpar}{om}{%
-	\IfNoValueTF{#1}
-	{\oldmarginpar{\mymparsetup #2}}
-	{\oldmarginpar[\mymparsetup #1]{\mymparsetup #2}}}
+    \IfNoValueTF{#1}
+    {\oldmarginpar{\mymparsetup #2}}
+    {\oldmarginpar[\mymparsetup #1]{\mymparsetup #2}}}
 \newcommand{\mymparsetup}{\scriptsize\itshape}
 
 %---------------------------------------------------------------------------------------
@@ -200,8 +200,8 @@
 \usepackage{fancyhdr} % Required for header and footer configuration
 
 \pagestyle{fancy} % Enable the custom headers and footers
-
-\renewcommand{\chaptermark}[1]{\markboth{\sffamily\normalsize\bfseries 第\thechapter 章\ #1}{}} % Styling for the current chapter in the header
+% \ifusechapterimage ... \fi 在main.tex中用\usechapterimagefalse或\usechapterimagetrue控制，该句影响页眉
+\renewcommand{\chaptermark}[1]{\markboth{\sffamily\normalsize\bfseries \ifusechapterimage 第\thechapter 章\fi \ #1}{}} % Styling for the current chapter in the header
 \renewcommand{\sectionmark}[1]{\markright{\sffamily\normalsize\thesection\hspace{5pt}#1}{}} % Styling for the current section in the header
 
 \fancyhf{} % Clear default headers and footers
@@ -213,18 +213,18 @@
 \renewcommand{\headrulewidth}{0.5pt} % Thickness of the rule under the header
 
 \fancypagestyle{plain}{% Style for when a plain pagestyle is specified
-	\fancyhead{}\renewcommand{\headrulewidth}{0pt}%
+    \fancyhead{}\renewcommand{\headrulewidth}{0pt}%
 }
 
 % Removes the header from odd empty pages at the end of chapters
 \makeatletter
 \renewcommand{\cleardoublepage}{
-	\clearpage\ifodd\c@page\else
-		\hbox{}
-		\vspace*{\fill}
-		\thispagestyle{empty}
-		\newpage
-	\fi}
+    \clearpage\ifodd\c@page\else
+        \hbox{}
+        \vspace*{\fill}
+        \thispagestyle{empty}
+        \newpage
+    \fi}
 
 %----------------------------------------------------------------------------------------
 %	THEOREM STYLES
@@ -252,7 +252,7 @@
 {\;}% Punctuation after theorem head
 {0.25em}% Space after theorem head
 {\small\sffamily\color{ocre}\thmname{#1}\nobreakspace\thmnumber{\@ifnotempty{#1}{}\@upn{#2}}% Theorem text (e.g. Theorem 2.1)
-	\thmnote{\nobreakspace\the\thm@notefont\sffamily\bfseries\color{black}---\nobreakspace#3.}} % Optional theorem note
+    \thmnote{\nobreakspace\the\thm@notefont\sffamily\bfseries\color{black}---\nobreakspace#3.}} % Optional theorem note
 
 \newtheoremstyle{blacknumex}% Theorem style name
 {5pt}% Space above
@@ -263,7 +263,7 @@
 {\;}% Punctuation after theorem head
 {0.25em}% Space after theorem head
 {\small\sffamily{\tiny\ensuremath{\blacksquare}}\nobreakspace\thmname{#1}\nobreakspace\thmnumber{\@ifnotempty{#1}{}\@upn{#2}}% Theorem text (e.g. Theorem 2.1)
-	\thmnote{\nobreakspace\the\thm@notefont\sffamily\bfseries---\nobreakspace#3.}}% Optional theorem note
+    \thmnote{\nobreakspace\the\thm@notefont\sffamily\bfseries---\nobreakspace#3.}}% Optional theorem note
 
 \newtheoremstyle{blacknumbox} % Theorem style name
 {0pt}% Space above
@@ -274,7 +274,7 @@
 {\;}% Punctuation after theorem head
 {0.25em}% Space after theorem head
 {\small\sffamily\thmname{#1}\nobreakspace\thmnumber{\@ifnotempty{#1}{}\@upn{#2}}% Theorem text (e.g. Theorem 2.1)
-	\thmnote{\nobreakspace\the\thm@notefont\sffamily\bfseries---\nobreakspace#3.}}% Optional theorem note
+    \thmnote{\nobreakspace\the\thm@notefont\sffamily\bfseries---\nobreakspace#3.}}% Optional theorem note
 
 % Non-boxed/non-framed environments
 \newtheoremstyle{ocrenum}% Theorem style name
@@ -286,7 +286,7 @@
 {\;}% Punctuation after theorem head
 {0.25em}% Space after theorem head
 {\small\sffamily\color{ocre}\thmname{#1}\nobreakspace\thmnumber{\@ifnotempty{#1}{}\@upn{#2}}% Theorem text (e.g. Theorem 2.1)
-	\thmnote{\nobreakspace\the\thm@notefont\sffamily\bfseries\color{black}---\nobreakspace#3.}} % Optional theorem note
+    \thmnote{\nobreakspace\the\thm@notefont\sffamily\bfseries\color{black}---\nobreakspace#3.}} % Optional theorem note
 \makeatother
 
 % Defines the theorem text style for each type of theorem to one of the three styles above
@@ -315,65 +315,65 @@
 
 % Theorem box
 \newmdenv[skipabove=7pt,
-	skipbelow=7pt,
-	backgroundcolor=black!5,
-	linecolor=ocre,
-	innerleftmargin=5pt,
-	innerrightmargin=5pt,
-	innertopmargin=5pt,
-	leftmargin=0cm,
-	rightmargin=0cm,
-	innerbottommargin=5pt]{tBox}
+    skipbelow=7pt,
+    backgroundcolor=black!5,
+    linecolor=ocre,
+    innerleftmargin=5pt,
+    innerrightmargin=5pt,
+    innertopmargin=5pt,
+    leftmargin=0cm,
+    rightmargin=0cm,
+    innerbottommargin=5pt]{tBox}
 
-% Exercise box	  
+% Exercise box
 \newmdenv[skipabove=7pt,
-	skipbelow=7pt,
-	rightline=false,
-	leftline=true,
-	topline=false,
-	bottomline=false,
-	backgroundcolor=ocre!10,
-	linecolor=ocre,
-	innerleftmargin=5pt,
-	innerrightmargin=5pt,
-	innertopmargin=5pt,
-	innerbottommargin=5pt,
-	leftmargin=0cm,
-	rightmargin=0cm,
-	linewidth=4pt]{eBox}
+    skipbelow=7pt,
+    rightline=false,
+    leftline=true,
+    topline=false,
+    bottomline=false,
+    backgroundcolor=ocre!10,
+    linecolor=ocre,
+    innerleftmargin=5pt,
+    innerrightmargin=5pt,
+    innertopmargin=5pt,
+    innerbottommargin=5pt,
+    leftmargin=0cm,
+    rightmargin=0cm,
+    linewidth=4pt]{eBox}
 
 % Definition box
 \newmdenv[skipabove=7pt,
-	skipbelow=7pt,
-	rightline=false,
-	leftline=true,
-	topline=false,
-	bottomline=false,
-	linecolor=ocre,
-	innerleftmargin=5pt,
-	innerrightmargin=5pt,
-	innertopmargin=0pt,
-	leftmargin=0cm,
-	rightmargin=0cm,
-	linewidth=4pt,
-	innerbottommargin=0pt]{dBox}
+    skipbelow=7pt,
+    rightline=false,
+    leftline=true,
+    topline=false,
+    bottomline=false,
+    linecolor=ocre,
+    innerleftmargin=5pt,
+    innerrightmargin=5pt,
+    innertopmargin=0pt,
+    leftmargin=0cm,
+    rightmargin=0cm,
+    linewidth=4pt,
+    innerbottommargin=0pt]{dBox}
 
 % Corollary box
 \newmdenv[skipabove=7pt,
-	skipbelow=7pt,
-	rightline=false,
-	leftline=true,
-	topline=false,
-	bottomline=false,
-	linecolor=gray,
-	backgroundcolor=black!5,
-	innerleftmargin=5pt,
-	innerrightmargin=5pt,
-	innertopmargin=5pt,
-	leftmargin=0cm,
-	rightmargin=0cm,
-	linewidth=4pt,
-	innerbottommargin=5pt]{cBox}
+    skipbelow=7pt,
+    rightline=false,
+    leftline=true,
+    topline=false,
+    bottomline=false,
+    linecolor=gray,
+    backgroundcolor=black!5,
+    innerleftmargin=5pt,
+    innerrightmargin=5pt,
+    innertopmargin=5pt,
+    leftmargin=0cm,
+    rightmargin=0cm,
+    linewidth=4pt,
+    innerbottommargin=5pt]{cBox}
 
 % Creates an environment for each type of theorem and assigns it a theorem text style from the "Theorem Styles" section above and a colored box from above
 \newenvironment{theorem}{\begin{tBox}\begin{theoremeT}}{\end{theoremeT}\end{tBox}}
@@ -387,12 +387,12 @@
 %----------------------------------------------------------------------------------------
 
 \newenvironment{remark}{\par\vspace{10pt}\small % Vertical white space above the remark and smaller font size
-	\begin{list}{}{
-			\leftmargin=35pt % Indentation on the left
-			\rightmargin=25pt}\item\ignorespaces % Indentation on the right
-		      \makebox[-2.5pt]{\begin{tikzpicture}[overlay]
-				      \node[draw=ocre!60,line width=1pt,circle,fill=ocre!25,font=\sffamily\bfseries,inner sep=2pt,outer sep=0pt] at (-15pt,0pt){\textcolor{ocre}{R}};\end{tikzpicture}} % Orange R in a circle
-		      \advance\baselineskip -1pt}{\end{list}\vskip5pt} % Tighter line spacing and white space after remark
+    \begin{list}{}{
+            \leftmargin=35pt % Indentation on the left
+            \rightmargin=25pt}\item\ignorespaces % Indentation on the right
+              \makebox[-2.5pt]{\begin{tikzpicture}[overlay]
+                      \node[draw=ocre!60,line width=1pt,circle,fill=ocre!25,font=\sffamily\bfseries,inner sep=2pt,outer sep=0pt] at (-15pt,0pt){\textcolor{ocre}{R}};\end{tikzpicture}} % Orange R in a circle
+              \advance\baselineskip -1pt}{\end{list}\vskip5pt} % Tighter line spacing and white space after remark
 
 %----------------------------------------------------------------------------------------
 %	SECTION NUMBERING IN THE MARGIN
@@ -401,21 +401,21 @@
 \makeatletter
 \renewcommand{\@seccntformat}[1]{\llap{\textcolor{ocre}{\csname the#1\endcsname}\hspace{1em}}}
 \renewcommand{\section}{\@startsection{section}{1}{\z@}
-	{-4ex \@plus -1ex \@minus -.4ex}
-	{1ex \@plus.2ex }
-	{\normalfont\large\sffamily\bfseries}}
+    {-4ex \@plus -1ex \@minus -.4ex}
+    {1ex \@plus.2ex }
+    {\normalfont\large\sffamily\bfseries}}
 \renewcommand{\subsection}{\@startsection {subsection}{2}{\z@}
-	{-3ex \@plus -0.1ex \@minus -.4ex}
-	{0.5ex \@plus.2ex }
-	{\normalfont\sffamily\bfseries}}
+    {-3ex \@plus -0.1ex \@minus -.4ex}
+    {0.5ex \@plus.2ex }
+    {\normalfont\sffamily\bfseries}}
 \renewcommand{\subsubsection}{\@startsection {subsubsection}{3}{\z@}
-	{-2ex \@plus -0.1ex \@minus -.2ex}
-	{.2ex \@plus.2ex }
-	{\normalfont\small\sffamily\bfseries}}
+    {-2ex \@plus -0.1ex \@minus -.2ex}
+    {.2ex \@plus.2ex }
+    {\normalfont\small\sffamily\bfseries}}
 \renewcommand\paragraph{\@startsection{paragraph}{4}{\z@}
-	{-2ex \@plus-.2ex \@minus .2ex}
-	{.1ex}
-	{\normalfont\small\sffamily\bfseries}}
+    {-2ex \@plus-.2ex \@minus .2ex}
+    {.1ex}
+    {\normalfont\small\sffamily\bfseries}}
 
 %----------------------------------------------------------------------------------------
 %	PART HEADINGS
@@ -423,14 +423,14 @@
 
 % Numbered part in the table of contents
 \newcommand{\@mypartnumtocformat}[2]{%
-	\setlength\fboxsep{0pt}%
-	\noindent\colorbox{ocre!20}{\strut\parbox[c][.7cm]{\ecart}{\color{ocre!70}\Large\sffamily\bfseries\centering#1}}\hskip\esp\colorbox{ocre!40}{\strut\parbox[c][.7cm]{\linewidth-\ecart-\esp}{\Large\sffamily\centering#2}}%
+    \setlength\fboxsep{0pt}%
+    \noindent\colorbox{ocre!20}{\strut\parbox[c][.7cm]{\ecart}{\color{ocre!70}\Large\sffamily\bfseries\centering#1}}\hskip\esp\colorbox{ocre!40}{\strut\parbox[c][.7cm]{\linewidth-\ecart-\esp}{\Large\sffamily\centering#2}}%
 }
 
 % Unnumbered part in the table of contents
 \newcommand{\@myparttocformat}[1]{%
-	\setlength\fboxsep{0pt}%
-	\noindent\colorbox{ocre!40}{\strut\parbox[c][.7cm]{\linewidth}{\Large\sffamily\centering#1}}%
+    \setlength\fboxsep{0pt}%
+    \noindent\colorbox{ocre!40}{\strut\parbox[c][.7cm]{\linewidth}{\Large\sffamily\centering#1}}%
 }
 
 \newlength\esp
@@ -440,97 +440,102 @@
 \newcommand{\thepartimage}{}%
 \newcommand{\partimage}[1]{\renewcommand{\thepartimage}{#1}}%
 \def\@part[#1]#2{%
-	\ifnum \c@secnumdepth >-2\relax%
-		\refstepcounter{part}%
-		\addcontentsline{toc}{part}{\texorpdfstring{\protect\@mypartnumtocformat{\thepart}{#1}}{\partname~\thepart\ ---\ #1}}
-	\else%
-		\addcontentsline{toc}{part}{\texorpdfstring{\protect\@myparttocformat{#1}}{#1}}%
-	\fi%
-	\startcontents%
-	\markboth{}{}%
-	{\thispagestyle{empty}%
-		\begin{tikzpicture}[remember picture,overlay]%
-			\node at (current page.north west){\begin{tikzpicture}[remember picture,overlay]%	
-					\fill[ocre!20](0cm,0cm) rectangle (\paperwidth,-\paperheight);
-					\node[anchor=north] at (4cm,-3.25cm){\color{ocre!40}\fontsize{220}{100}\sffamily\bfseries\thepart};
-					\node[anchor=south east] at (\paperwidth-1cm,-\paperheight+1cm){\parbox[t][][t]{8.5cm}{
-							\printcontents{l}{0}{\setcounter{tocdepth}{1}}% The depth to which the Part mini table of contents displays headings; 0 for chapters only, 1 for chapters and sections and 2 for chapters, sections and subsections
-						}};
-					\node[anchor=north east] at (\paperwidth-1.5cm,-3.25cm){\parbox[t][][t]{15cm}{\strut\raggedleft\color{white}\fontsize{30}{30}\sffamily\bfseries#2}};
-				\end{tikzpicture}};
-		\end{tikzpicture}}%
-	\@endpart}
+    \ifnum \c@secnumdepth >-2\relax%
+        \refstepcounter{part}%
+        \addcontentsline{toc}{part}{\texorpdfstring{\protect\@mypartnumtocformat{\thepart}{#1}}{\partname~\thepart\ ---\ #1}}
+    \else%
+        \addcontentsline{toc}{part}{\texorpdfstring{\protect\@myparttocformat{#1}}{#1}}%
+    \fi%
+    \startcontents%
+    \markboth{}{}%
+    {\thispagestyle{empty}%
+        \begin{tikzpicture}[remember picture,overlay]%
+            \node at (current page.north west){\begin{tikzpicture}[remember picture,overlay]%
+                    \fill[ocre!20](0cm,0cm) rectangle (\paperwidth,-\paperheight);
+                    \node[anchor=north] at (4cm,-3.25cm){\color{ocre!40}\fontsize{220}{100}\sffamily\bfseries\thepart};
+                    \node[anchor=south east] at (\paperwidth-1cm,-\paperheight+1cm){\parbox[t][][t]{8.5cm}{
+                            \printcontents{l}{0}{\setcounter{tocdepth}{1}}% The depth to which the Part mini table of contents displays headings; 0 for chapters only, 1 for chapters and sections and 2 for chapters, sections and subsections
+                        }};
+                    \node[anchor=north east] at (\paperwidth-1.5cm,-3.25cm){\parbox[t][][t]{15cm}{\strut\raggedleft\color{white}\fontsize{30}{30}\sffamily\bfseries#2}};
+                \end{tikzpicture}};
+        \end{tikzpicture}}%
+    \@endpart}
 \def\@spart#1{%
-	\startcontents%
-	\phantomsection
-	{\thispagestyle{empty}%
-		\begin{tikzpicture}[remember picture,overlay]%
-			\node at (current page.north west){\begin{tikzpicture}[remember picture,overlay]%	
-					\fill[ocre!20](0cm,0cm) rectangle (\paperwidth,-\paperheight);
-					\node[anchor=north east] at (\paperwidth-1.5cm,-3.25cm){\parbox[t][][t]{15cm}{\strut\raggedleft\color{white}\fontsize{30}{30}\sffamily\bfseries#1}};
-				\end{tikzpicture}};
-		\end{tikzpicture}}
-	\addcontentsline{toc}{part}{\texorpdfstring{%
-			\setlength\fboxsep{0pt}%
-			\noindent\protect\colorbox{ocre!40}{\strut\protect\parbox[c][.7cm]{\linewidth}{\Large\sffamily\protect\centering #1\quad\mbox{}}}}{#1}}%
-	\@endpart}
+    \startcontents%
+    \phantomsection
+    {\thispagestyle{empty}%
+        \begin{tikzpicture}[remember picture,overlay]%
+            \node at (current page.north west){\begin{tikzpicture}[remember picture,overlay]%
+                    \fill[ocre!20](0cm,0cm) rectangle (\paperwidth,-\paperheight);
+                    \node[anchor=north east] at (\paperwidth-1.5cm,-3.25cm){\parbox[t][][t]{15cm}{\strut\raggedleft\color{white}\fontsize{30}{30}\sffamily\bfseries#1}};
+                \end{tikzpicture}};
+        \end{tikzpicture}}
+    \addcontentsline{toc}{part}{\texorpdfstring{%
+            \setlength\fboxsep{0pt}%
+            \noindent\protect\colorbox{ocre!40}{\strut\protect\parbox[c][.7cm]{\linewidth}{\Large\sffamily\protect\centering #1\quad\mbox{}}}}{#1}}%
+    \@endpart}
 \def\@endpart{\vfil\newpage
-	\if@twoside
-		\if@openright
-			\null
-			\thispagestyle{empty}%
-			\newpage
-		\fi
-	\fi
-	\if@tempswa
-		\twocolumn
-	\fi}
+    \if@twoside
+        \if@openright
+            \null
+            \thispagestyle{empty}%
+            \newpage
+        \fi
+    \fi
+    \if@tempswa
+        \twocolumn
+    \fi}
 
 %----------------------------------------------------------------------------------------
 %	CHAPTER HEADINGS
 %----------------------------------------------------------------------------------------
 
 % A switch to conditionally include a picture, implemented by Christian Hupfer
+% \ifusechapterimage ... \fi 在main.tex中用\usechapterimagefalse或\usechapterimagetrue控制
 \newif\ifusechapterimage
 \usechapterimagetrue
 \newcommand{\thechapterimage}{}%
 \newcommand{\chapterimage}[1]{\ifusechapterimage\renewcommand{\thechapterimage}{#1}\fi}%
 \newcommand{\autodot}{.}
-\def\@makechapterhead#1{%
-	{\parindent \z@ \raggedright \normalfont
-			\ifnum \c@secnumdepth >\m@ne
-				\if@mainmatter
-					\begin{tikzpicture}[remember picture,overlay]
-						\node at (current page.north west)
-						{\begin{tikzpicture}[remember picture,overlay]
-								\node[anchor=north west,inner sep=0pt] at (0,0) {\ifusechapterimage\includegraphics[width=\paperwidth]{\thechapterimage}\fi};
-								\draw[anchor=west] (\Gm@lmargin,-9cm) node [line width=2pt,rounded corners=15pt,draw=ocre,fill=white,fill opacity=0.5,inner sep=15pt]{\strut\makebox[22cm]{}};
-								\draw[anchor=west] (\Gm@lmargin+1.3cm,-9cm) node {\huge\sffamily\bfseries\color{black}\thechapter\autodot~#1\strut};
-							\end{tikzpicture}};
-					\end{tikzpicture}
-				\else
-					\begin{tikzpicture}[remember picture,overlay]
-						\node at (current page.north west)
-						{\begin{tikzpicture}[remember picture,overlay]
-								\node[anchor=north west,inner sep=0pt] at (0,0) {\ifusechapterimage\includegraphics[width=\paperwidth]{\thechapterimage}\fi};
-								\draw[anchor=west] (\Gm@lmargin,-9cm) node [line width=2pt,rounded corners=15pt,draw=ocre,fill=white,fill opacity=0.5,inner sep=15pt]{\strut\makebox[22cm]{}};
-								\draw[anchor=west] (\Gm@lmargin+1.3cm,-9cm) node {\huge\sffamily\bfseries\color{black}#1\strut};
-							\end{tikzpicture}};
-					\end{tikzpicture}
-				\fi\fi\par\vspace*{270\p@}}}
+\def\@makechapterhead#1{ % 影响\chapter命令
+    {\parindent \z@ \raggedright \normalfont
+            \ifnum \c@secnumdepth >\m@ne
+                \if@mainmatter % 影响正文部分，在main.tex中以\mainmatter控制，另有\frontmatter控制序文部分
+                    \begin{tikzpicture}[remember picture,overlay]
+                        \node at (current page.north west)
+                        {\begin{tikzpicture}[remember picture,overlay]
+                                \node[anchor=north west,inner sep=0pt] at (0,0) {\ifusechapterimage\includegraphics[width=\paperwidth]{\thechapterimage}\fi};
+                                \draw[anchor=west] (\Gm@lmargin,-9cm) node [line width=2pt,rounded corners=15pt,draw=ocre,fill=white,fill opacity=0.5,inner sep=15pt]{\strut\makebox[22cm]{}};
+                                \draw[anchor=west] (\Gm@lmargin+1.3cm,-9cm) node {\huge\sffamily\bfseries\color{black}\thechapter\autodot~#1\strut};
+                                % 标题和红框分别距离页顶距离为下移9cm
+                            \end{tikzpicture}};
+                    \end{tikzpicture}
+                    \par\vspace*{270\p@} % 标题下正文间距
+                \else % 影响非正文部分
+                    \begin{tikzpicture}[remember picture,overlay]
+                        \node at (current page.north west)
+                        {\begin{tikzpicture}[remember picture,overlay]
+                                \node[anchor=north west,inner sep=0pt] at (0,0) {\ifusechapterimage\includegraphics[width=\paperwidth]{\thechapterimage}\fi};
+                                \draw[anchor=west] (\Gm@lmargin,-3.5cm) node [line width=2pt,rounded corners=15pt,draw=ocre,fill=white,fill opacity=0.5,inner sep=15pt]{\strut\makebox[22cm]{}};
+                                \draw[anchor=west] (\Gm@lmargin+1.3cm,-3.5cm) node [align=left] {\huge\sffamily\bfseries\color{black}#1\strut};
+                                % 删去了\thechapter\autodot所以可关掉自动编号
+                            \end{tikzpicture}};
+                    \end{tikzpicture}
+                    \par\vspace*{60\p@}
+                \fi\fi}}
 
 %-------------------------------------------
 
-\def\@makeschapterhead#1{%
-	\begin{tikzpicture}[remember picture,overlay]
-		\node at (current page.north west)
-		{\begin{tikzpicture}[remember picture,overlay]
-				\node[anchor=north west,inner sep=0pt] at (0,0) {\ifusechapterimage\includegraphics[width=\paperwidth]{\thechapterimage}\fi};
-				\draw[anchor=west] (\Gm@lmargin,-9cm) node [line width=2pt,rounded corners=15pt,draw=ocre,fill=white,fill opacity=0.5,inner sep=15pt]{\strut\makebox[22cm]{}};
-				\draw[anchor=west] (\Gm@lmargin+1.3cm,-9cm) node {\huge\sffamily\bfseries\color{black}#1\strut};
-			\end{tikzpicture}};
-	\end{tikzpicture}
-	\par\vspace*{270\p@}}
+\def\@makeschapterhead#1{ % 影响\chapter*命令
+    \begin{tikzpicture}[remember picture,overlay]
+        \node at (current page.north west)
+        {\begin{tikzpicture}[remember picture,overlay]
+                \node[anchor=north west,inner sep=0pt] at (0,0) {\ifusechapterimage\includegraphics[width=\paperwidth]{\thechapterimage}\fi};
+                \draw[anchor=west] (\Gm@lmargin,-9cm) node [line width=2pt,rounded corners=15pt,draw=ocre,fill=white,fill opacity=0.5,inner sep=15pt]{\strut\makebox[22cm]{}};
+                \draw[anchor=west] (\Gm@lmargin+1.3cm,-9cm) node {\huge\sffamily\bfseries\color{black}#1\strut};
+            \end{tikzpicture}};
+    \end{tikzpicture}
+    \par\vspace*{270\p@}}
 \makeatother
 
 %----------------------------------------------------------------------------------------
@@ -543,16 +548,16 @@
 
 \usepackage{bookmark}
 \bookmarksetup{
-	open,
-	numbered,
-	addtohook={%
-			\ifnum\bookmarkget{level}=0 % chapter
-				\bookmarksetup{bold}%
-			\fi
-			\ifnum\bookmarkget{level}=-1 % part
-				\bookmarksetup{color=ocre,bold}%
-			\fi
-		}
+    open,
+    numbered,
+    addtohook={%
+            \ifnum\bookmarkget{level}=0 % chapter
+                \bookmarksetup{bold}%
+            \fi
+            \ifnum\bookmarkget{level}=-1 % part
+                \bookmarksetup{color=ocre,bold}%
+            \fi
+        }
 }
 
 
@@ -561,41 +566,41 @@
 %----------------------------------------------------------------------------------------
 \usepackage[ruled,linesnumbered]{algorithm2e}
 \usepackage{listings}
-\lstset{% 
-	language={C++}, %language为，还有{[Visual]C++}{[ISO]C++}
-	alsolanguage=[ANSI]C, %可以添加很多个alsolanguage,如alsolanguage=matlab,alsolanguage=VHDL等
-	tabsize=4, %
-	basicstyle=\ttfamily\footnotesize, % 设置代码的大小
-	keywordstyle=\color[RGB]{0,84,166}\bfseries, %代码关键字
-	stringstyle=\ttfamily\color[RGB]{33,166,86}, % 代码字符串的特殊格式
-	commentstyle=\color[RGB]{115,48,11}\scriptsize\rmfamily, %注释
-	rulecolor=\color[RGB]{243,102,25},%代码边框
-	frame=leftline, %代码框
-	framerule=2pt,
-	showstringspaces=false,%不显示代码字符串中间的空格标记
-	keepspaces=true,
-	breakindent=10pt,
-	numbers=left,%左侧显示行号 往左靠,还可以为right，或none，即不加行号
-	stepnumber=1,%若设置为2，则显示行号为1,3,5，即stepnumber为公差,默认stepnumber=1
-	numberstyle={\color[RGB]{33,166,86}\scriptsize} ,%设置行号的大小，大小有tiny,scriptsize,footnotesize,small,normalsize,large等
-	numbersep=8pt, %设置行号与代码的距离，默认是5pt
-	showspaces=false, %
-	flexiblecolumns=true, %
-	breaklines=true, %对过长的代码自动换行
-	breakautoindent=true,
-	aboveskip=1em, %代码块边框
-	tabsize=2,
-	showstringspaces=false, %不显示字符串中的空格
-	backgroundcolor=\color{black!5}, %代码背景色，或\color[rgb]{0.91,0.91,0.91}
-	escapeinside=``, %在``里显示中文 %% added by http://bbs.ctex.org/viewthread.php?tid=53451
-	fontadjust,
-	captionpos=t,
-	framextopmargin=2pt,framexbottommargin=2pt,abovecaptionskip=-3pt,belowcaptionskip=3pt,
-	xleftmargin=0em,xrightmargin=0em, % 设定listing左右的空白
-	texcl=true, % 设定中文冲突，断行，listing数字的样式
-	extendedchars=false,% 设定中文冲突
-	columns=flexible, % 列模式
-	mathescape=true % 设定数学环境输入
+\lstset{%
+    language={C++}, %language为，还有{[Visual]C++}{[ISO]C++}
+    alsolanguage=[ANSI]C, %可以添加很多个alsolanguage,如alsolanguage=matlab,alsolanguage=VHDL等
+    tabsize=4, %
+    basicstyle=\ttfamily\footnotesize, % 设置代码的大小
+    keywordstyle=\color[RGB]{0,84,166}\bfseries, %代码关键字
+    stringstyle=\ttfamily\color[RGB]{33,166,86}, % 代码字符串的特殊格式
+    commentstyle=\color[RGB]{115,48,11}\scriptsize\rmfamily, %注释
+    rulecolor=\color[RGB]{243,102,25},%代码边框
+    frame=leftline, %代码框
+    framerule=2pt,
+    showstringspaces=false,%不显示代码字符串中间的空格标记
+    keepspaces=true,
+    breakindent=10pt,
+    numbers=left,%左侧显示行号 往左靠,还可以为right，或none，即不加行号
+    stepnumber=1,%若设置为2，则显示行号为1,3,5，即stepnumber为公差,默认stepnumber=1
+    numberstyle={\color[RGB]{33,166,86}\scriptsize} ,%设置行号的大小，大小有tiny,scriptsize,footnotesize,small,normalsize,large等
+    numbersep=8pt, %设置行号与代码的距离，默认是5pt
+    showspaces=false, %
+    flexiblecolumns=true, %
+    breaklines=true, %对过长的代码自动换行
+    breakautoindent=true,
+    aboveskip=1em, %代码块边框
+    tabsize=2,
+    showstringspaces=false, %不显示字符串中的空格
+    backgroundcolor=\color{black!5}, %代码背景色，或\color[rgb]{0.91,0.91,0.91}
+    escapeinside=``, %在``里显示中文 %% added by http://bbs.ctex.org/viewthread.php?tid=53451
+    fontadjust,
+    captionpos=t,
+    framextopmargin=2pt,framexbottommargin=2pt,abovecaptionskip=-3pt,belowcaptionskip=3pt,
+    xleftmargin=0em,xrightmargin=0em, % 设定listing左右的空白
+    texcl=true, % 设定中文冲突，断行，listing数字的样式
+    extendedchars=false,% 设定中文冲突
+    columns=flexible, % 列模式
+    mathescape=true % 设定数学环境输入
 }
 \newcommand\codecolor[0]{\color[RGB]{142,12,242}} %设置格式
 

@@ -661,7 +661,13 @@ dpdv = rayToObject(dpdvPlane);
 \end{lstlisting}
 
 圆柱曲线的向量$\displaystyle\frac{\partial \bm p}{\partial v}$沿轴{\ttfamily dpduPlane}旋转
-使其外观像圆柱体横截面。
+使其外观像圆柱体横截面
+\sidenote{译者注：对于圆柱曲线，在\refcode{Compute v coordinate of curve intersection point}{}中
+计算$v$以及此处计算$\theta$的方法已足够满足实际应用了。
+但这样的线性插值是对“圆柱”特性的近似描述。
+若要精确描述，则应是$v=\frac{1}{2}(1+\sin\theta)$，也即$\theta=\arcsin(2v-1)$（式里$\theta$为弧度制）。
+然而三角函数的计算开销很大，带来的视觉差异又很小，所以得不偿失。
+更多讨论详见\url{https://github.com/mmp/pbrt-v4/issues/200}。}。
 \begin{lstlisting}
 `\initcode{Rotate dpdvPlane to give cylindrical appearance}{=}`
 `\refvar{Float}{}` theta = `\refvar{Lerp}{}`(v, -90., 90.);

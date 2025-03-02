@@ -48,7 +48,7 @@ pbrt使用\keyindex{轴对齐的边界框}{axis-aligned bounding box}{bounding b
     \label{fig:2.8}
 \end{figure}
 
-默认构造函数通过把范围设置为不可用的配置来创建一个空框，
+默认构造函数通过把范围设置为不可用的布局来创建一个空框，
 违反了{\ttfamily pMin.x <= pMax.x}的性质（其他维度也这样）。
 通过初始化具有最大和最小表示数字的两个顶点，
 任何涉及空框的操作（例如\refvar[Union1]{Union}{()}）都会产生正确结果。

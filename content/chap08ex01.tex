@@ -399,7 +399,7 @@ ${\bm\omega}_{\mathrm{m}}$对${\bm\omega}_{\mathrm{i}}$的\keyindex{雅可比矩
 \end{figure}
 
 将表示入射方向${\bm\omega}_{\mathrm{i}}$和出射方向${\bm\omega}_{\mathrm{o}}$的向量首尾相接。
-在完美镜面反射配置下，两者之和必与曲面法线${\bm\omega}_{\mathrm{m}}$共线，因此我们记
+在完美镜面反射布局下，两者之和必与曲面法线${\bm\omega}_{\mathrm{m}}$共线，因此我们记
 \begin{align}
     {\bm\omega}_{\mathrm{M}}=\mathrm{sign}({\bm\omega}_{\mathrm{i}}\cdot{\bm\omega}_{\mathrm{m}})
     \cdot({\bm\omega}_{\mathrm{i}}+{\bm\omega}_{\mathrm{o}})\, ,
@@ -519,11 +519,11 @@ ${\bm\omega}_{\mathrm{m}}$对${\bm\omega}_{\mathrm{i}}$的\keyindex{雅可比矩
 多次反射、多层材料、存在衍射等更复杂的情况还需要进一步探索。
 
 \subsection{常见掩模函数的分析}\label{sub:常见掩模函数的分析}
-本节继承上节的记号。本节将分析Smith和V形槽两种微面配置，推导它们的掩模函数并讨论其性质。
-其他没有相应微面配置因而并非基于物理的常见掩模函数也会有所讨论。
+本节继承上节的记号。本节将分析Smith和V形槽两种微面结构，推导它们的掩模函数并讨论其性质。
+其他没有相应微面结构因而并非基于物理的常见掩模函数也会有所讨论。
 
 \subsubsection*{Smith微面}
-在Smith微面的配置中，它假设微面是非\keyindex{自相关的}{autocorrelated}{}——
+在Smith微面的构造中，它假设微面是非\keyindex{自相关的}{autocorrelated}{}——
 不论微面上的一点和它的临近点有多近，它们的高度（或法线）之间是没有相关性的。
 这意味着微面上一点的高度和法线是随机变量，整个曲面是微面的随机集合，而不是通常的连续曲面。
 另一方面，法线${\bm\omega}_{\mathrm{h}}$某种意义上是微面的\emph{局部}属性，
@@ -1149,7 +1149,19 @@ Kelemen掩模函数虽然对V形槽掩模函数近似得很好，
 所以这更多是在性能与逼真度之间如何抉择的问题。
 
 \subsection{掩模函数的拉伸不变性}\label{sub:掩模函数的拉伸不变性}
-本节继承上节的记号。本节将分析拉伸微面配置时掩模函数和斜率分布的不变性。
+本节继承上节记号，分析拉伸微面结构时掩模函数和斜率分布的不变性。
+
+如\reffig{08ex01-Stretch1D}所示，为了简化，我们在一维情形下考虑拉伸的问题。
+均匀拉伸微面结构（即把微面各处的斜率和出射方向的斜率同时乘以相同常数）后，
+仿佛就是普通地拉伸图片那样，其中的拓扑结构没有本质上的变化，原本的光线遮挡关系也没变。
+这意味掩模函数对这样的拉伸操作具有不变性。斜率分布的宽度则均匀拉伸为倒数倍。
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.95\linewidth]{Pictures/chap08/Stretch1D.eps}
+    \caption{一维微面结构的拉伸}
+    \label{fig:08ex01-Stretch1D}
+\end{figure}
 
 \subsection{典型微面分布函数的规范性证明}\label{sub:典型微面分布函数的规范性证明}
 本节补充了\refeq{8.10}和\refeq{8.11}所给的

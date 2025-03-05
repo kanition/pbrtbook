@@ -604,7 +604,7 @@ $\varphi$为方位角
     -\frac{y_{\mathrm{h}}}{z_{\mathrm{h}}}\right)\cdot(x,y)+C\, ,
 \end{align}
 我们由此定义
-\begin{align}
+\begin{align}\label{eq:08-ex01-slope-of-surface}
     {\bm s}({\bm\omega}_{\mathrm{h}})=(x_s,y_s)
     =\left(-\frac{x_{\mathrm{h}}}{z_{\mathrm{h}}},
     -\frac{y_{\mathrm{h}}}{z_{\mathrm{h}}}\right)
@@ -658,7 +658,7 @@ $\varphi$为方位角
 \end{align}
 注意到$P_{xy}({\bm s})$应满足规范化约束，
 即它在$x_s\in(-\infty,+\infty),y_s\in(-\infty,+\infty)$范围内非负，且有
-\begin{align}
+\begin{align}\label{eq:08-ex01-normal-of-P2D}
     \int_{-\infty}^{+\infty}\int_{-\infty}^{+\infty}
     P_{xy}(x_s,y_s)\mathrm{d}x_s\mathrm{d}y_s=1\, .
 \end{align}
@@ -673,7 +673,7 @@ $\varphi$为方位角
     =D({\bm\omega}_{\mathrm{h}})\sin\theta\cos\theta\mathrm{d}\theta\mathrm{d}\varphi\, ,
 \end{align}
 代入\refeq{08-ex01-Jacobian-slope-normals}后可知斜率分布与法线分布的关系为
-\begin{align}
+\begin{align}\label{eq:08-ex01-relation-P2D-McrofacetDistribution}
     P_{xy}(x_s,y_s)=\frac{1}{|J|}D({\bm\omega}_{\mathrm{h}})\sin\theta\cos\theta
     =D({\bm\omega}_{\mathrm{h}})\cos^4\theta\, .
 \end{align}
@@ -1151,7 +1151,7 @@ Kelemen掩模函数虽然对V形槽掩模函数近似得很好，
 \subsection{掩模函数的拉伸不变性}\label{sub:掩模函数的拉伸不变性}
 本节继承上节记号，分析拉伸微面结构时掩模函数和斜率分布的不变性。
 
-如\reffig{08ex01-Stretch1D}所示，为了简化，我们在一维情形下考虑拉伸的问题。
+如\reffig{08ex01-Stretch1D}所示，为了简化，我们在一维情形下考虑\keyindex{拉伸}{stretch}{}的问题。
 均匀拉伸微面结构（即把微面各处的斜率和出射方向的斜率同时乘以相同常数）后，
 仿佛就是普通地拉伸图片那样，其中的拓扑结构没有本质上的变化，原本的光线遮挡关系也没变。
 这意味掩模函数对这样的拉伸操作具有不变性。斜率分布的宽度则均匀拉伸为倒数倍。
@@ -1162,6 +1162,22 @@ Kelemen掩模函数虽然对V形槽掩模函数近似得很好，
     \caption{一维微面结构的拉伸}
     \label{fig:08ex01-Stretch1D}
 \end{figure}
+
+现在，我们显式地把粗糙度参数$\alpha$（或分别在$x$和$y$方向上的$\alpha_x$、$\alpha_y$）
+引入微面分布函数和斜率分布（实际上它已提前出现在\reftab{08ex01-Beckmann-V-cavity-Smith-Table}中了）。
+回顾上节内容，尤其是\refeq{08-ex01-slope-of-surface}、\refeq{08-ex01-normals-by-slope}、
+\refeq{08-ex01-normal-of-P2D}和\refeq{08-ex01-relation-P2D-McrofacetDistribution}，我们拓展两者的记号：
+对于各向同性分布，分别重新记作$D({\bm\omega}_{\mathrm{h}},\alpha)$和$P_{xy}(x_s,y_s,\alpha)$；
+对于各向异性分布，分别重新记作$D({\bm\omega}_{\mathrm{h}},\alpha_x,\alpha_y)$和$P_{xy}(x_s,y_s,\alpha_x,\alpha_y)$.
+
+\subsubsection*{各向同性斜率分布的形状不变性}
+典型的各向同性参数化斜率分布依赖粗糙度参数$\alpha$，改变$\alpha$等价于拉伸分布而不改变其形状。
+这种情形下，斜率分布只决定于斜率大小$\displaystyle\tan\theta=\sqrt{x_s^2+y_s^2}$（也即
+法线天顶角正切值）与$\alpha$的比例$\displaystyle\frac{\tan\theta}{\alpha}$：
+\begin{align}
+    P_{xy}(x_s,y_s,\alpha)=\frac{1}{\alpha^2}f\left(\frac{\sqrt{x_s^2+y_s^2}}{\alpha}\right)=\frac{1}{\alpha^2}f\left(\frac{\tan\theta}{\alpha}\right)\, ,
+\end{align}
+其中$f$是定义分布形状的一维函数。这样的斜率分布具有\keyindex{形状不变性}{shape invariant}{}，
 
 \subsection{典型微面分布函数的规范性证明}\label{sub:典型微面分布函数的规范性证明}
 本节补充了\refeq{8.10}和\refeq{8.11}所给的

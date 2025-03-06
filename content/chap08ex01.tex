@@ -727,7 +727,7 @@ $\varphi$为方位角
     \chi(-x_s\sin\theta_{\mathrm{o}}+\cos\theta_{\mathrm{o}})P_x(x_s)\mathrm{d}x_s\, ,
 \end{align}
 其中
-\begin{align}
+\begin{align}\label{eq:08-ex01-condition-1d-slope}
     P_x(x_s)=\int_{-\infty}^{+\infty}P_{xy}(x_s,y_s)\mathrm{d}y_s
 \end{align}
 是斜率沿着出射方向（这里假设其方位角为零）的条件分布。
@@ -807,7 +807,7 @@ $\varphi$为方位角
     G_1^{\mathrm{d}}({\bm\omega}_{\mathrm{o}})=\frac{1}{1+\Lambda({\bm\omega}_{\mathrm{o}})}\, ,
 \end{align}
 其中
-\begin{align}
+\begin{align}\label{eq:08-ex01-Lambda-function}
     \Lambda({\bm\omega}_{\mathrm{o}})=\frac{1}{\cot\theta_{\mathrm{o}}}
     \int_{\cot\theta_{\mathrm{o}}}^{+\infty}(x_s-\cot\theta_{\mathrm{o}})P_x(x_s)\mathrm{d}x_s\, .
 \end{align}
@@ -1158,7 +1158,7 @@ Kelemen掩模函数虽然对V形槽掩模函数近似得很好，
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.95\linewidth]{Pictures/chap08/Stretch1D.eps}
+    \includegraphics[width=\linewidth]{Pictures/chap08/Stretch1D.eps}
     \caption{一维微面结构的拉伸}
     \label{fig:08ex01-Stretch1D}
 \end{figure}
@@ -1173,12 +1173,62 @@ Kelemen掩模函数虽然对V形槽掩模函数近似得很好，
 \subsubsection*{各向同性斜率分布的形状不变性}
 典型的各向同性参数化斜率分布依赖粗糙度参数$\alpha$，改变$\alpha$等价于拉伸分布而不改变其形状。
 这种情形下，斜率分布只决定于斜率大小$\displaystyle\tan\theta=\sqrt{x_s^2+y_s^2}$（也即
-法线天顶角正切值）与$\alpha$的比例$\displaystyle\frac{\tan\theta}{\alpha}$：
+微面法线天顶角正切值）与$\alpha$的比例$\displaystyle\frac{\tan\theta}{\alpha}$：
 \begin{align}
     P_{xy}(x_s,y_s,\alpha)=\frac{1}{\alpha^2}f\left(\frac{\sqrt{x_s^2+y_s^2}}{\alpha}\right)=\frac{1}{\alpha^2}f\left(\frac{\tan\theta}{\alpha}\right)\, ,
 \end{align}
-其中$f$是定义分布形状的一维函数。这样的斜率分布具有\keyindex{形状不变性}{shape invariant}{}，
+其中$f$是定义分布形状的一维函数。这样的斜率分布具有\keyindex{形状不变性}{shape invariant}{}：对于任意系数$\lambda>0$，
+\begin{align}
+    P_{xy}(x_s,y_s,\alpha)=\frac{1}{\lambda^2}P_{xy}(\frac{x_s}{\lambda},\frac{y_s}{\lambda},\frac{\alpha}{\lambda})
+\end{align}
+恒成立。这意味着它总是具有同样的形状$f$，只由粗糙度参数拉伸和缩放，
+且不改变规范性\sidenote{读者可以推导一下。}。
 
+从\reffig{08ex01-Stretch1D}中我们还能看出，因为拉伸操作等价于
+把粗糙度参数$\alpha$和出射方向斜率$\displaystyle\frac{1}{\tan\theta_{\mathrm{o}}}$乘以相同系数，
+且不会改变光线遮挡关系，所以掩模函数只决定于二者的比值
+即$\displaystyle a=\frac{1}{\alpha\tan\theta_{\mathrm{o}}}$.
+这也是为什么具有形状不变性的Beckmann-Spizzichino模型和GGX模型各自对应的函数$\Lambda$都只依赖于$a$的原因。
+具体而言，对于Beckmann-Spizzichino模型，其斜率分布为
+\begin{align}
+    P_{xy}(x_s,y_s,\alpha)=\frac{1}{\pi\alpha^2}\exp\left(-\frac{x_s^2+y_s^2}{\alpha^2}\right)\, .
+\end{align}
+将其带入\refeq{08-ex01-relation-P2D-McrofacetDistribution}，
+并取正向的法线\sidenote{回顾\refeq{08-ex01-normals-by-slope}的批注。}，可得
+\begin{align}
+    D({\bm\omega}_{\mathrm{h}},\alpha)=\frac{\chi({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}})}
+    {\pi\alpha^2\cos^4\theta}\exp\left(-\frac{\tan^2\theta}{\alpha^2}\right)\, .
+\end{align}
+最后结合\refeq{08-ex01-condition-1d-slope}和\refeq{08-ex01-Lambda-function}，得到
+\begin{align}
+    \Lambda({\bm\omega}_{\mathrm{o}},\alpha)= &\frac{1}{\cot\theta_{\mathrm{o}}}
+    \int_{\cot\theta_{\mathrm{o}}}^{+\infty}(x_s-\cot\theta_{\mathrm{o}})P_x(x_s)\mathrm{d}x_s\nonumber \\
+    =&\frac{1}{\cot\theta_{\mathrm{o}}}\int_{\cot\theta_{\mathrm{o}}}^{+\infty}
+    (x_s-\cot\theta_{\mathrm{o}})\left(\int_{-\infty}^{+\infty}P_{xy}(x_s,y_s)\mathrm{d}y_s\right)\mathrm{d}x_s\nonumber \\
+    =&\frac{1}{\cot\theta_{\mathrm{o}}}\int_{\cot\theta_{\mathrm{o}}}^{+\infty}
+    (x_s-\cot\theta_{\mathrm{o}})\left(\int_{-\infty}^{+\infty}\frac{1}{\pi\alpha^2}
+    \exp\left(-\frac{x_s^2+y_s^2}{\alpha^2}\right)\mathrm{d}y_s\right)\mathrm{d}x_s\nonumber \\
+    =&\frac{1}{\pi\cot\theta_{\mathrm{o}}}\int_{\cot\theta_{\mathrm{o}}}^{+\infty}
+    (x_s-\cot\theta_{\mathrm{o}})\exp\left(-\left(\frac{x_s}{\alpha}\right)^2\right)
+    \left(\int_{-\infty}^{+\infty}\exp\left(-\left(\frac{y_s}{\alpha}\right)^2\right)
+    \mathrm{d}\frac{y_s}{\alpha}\right)\mathrm{d}\frac{x_s}{\alpha}\nonumber\\
+    =&\frac{1}{\pi\cot\theta_{\mathrm{o}}}\int_{\cot\theta_{\mathrm{o}}}^{+\infty}
+    \sqrt{\pi}(x_s-\cot\theta_{\mathrm{o}})\exp\left(-\left(\frac{x_s}{\alpha}\right)^2\right)
+    \mathrm{d}\frac{x_s}{\alpha}\nonumber\\
+    \xlongequal{\text{令}x=\frac{x_s}{\alpha}}&\frac{1}{\sqrt{\pi}\cot\theta_{\mathrm{o}}}
+    \int_{\frac{1}{\alpha\tan\theta_{\mathrm{o}}}}^{+\infty}
+    (\alpha x-\cot\theta_{\mathrm{o}})\mathrm{e}^{-x^2}\mathrm{d}x\nonumber\\
+    \xlongequal{\text{令}a=\frac{1}{\alpha\tan\theta_{\mathrm{o}}}}&\frac{1}{\sqrt{\pi}a}
+    \int_{a}^{+\infty}x\mathrm{e}^{-x^2}\mathrm{d}x
+    -\frac{1}{\sqrt{\pi}}\int_{a}^{+\infty}\mathrm{e}^{-x^2}\mathrm{d}x\nonumber\\
+    =&\frac{1}{\sqrt{\pi}a}\int_{a}^{+\infty}\frac{-1}{2}\mathrm{d}\mathrm{e}^{-x^2}
+    -\frac{1}{\sqrt{\pi}}\left(\int_{0}^{+\infty}\mathrm{e}^{-x^2}\mathrm{d}x
+    -\int_{0}^{a}\mathrm{e}^{-x^2}\mathrm{d}x\right)\nonumber\\
+    =&\frac{1}{2\sqrt{\pi}a}\mathrm{e}^{-a^2}-\frac{1}{\sqrt{\pi}}
+    \left(\frac{\sqrt{\pi}}{2}-\frac{\sqrt{\pi}}{2}\mathrm{erf}(a)\right)\nonumber\\
+    =&\frac{1}{2}\left(\mathrm{erf}(a)-1+\frac{\mathrm{e}^{-a^2}}{\sqrt{\pi}a}\right)\, ,
+\end{align}
+其中误差函数$\displaystyle\mathrm{erf}(a)=\frac{2}{\sqrt{\pi}}\int_{0}^{a}\mathrm{e}^{-x^2}\mathrm{d}x$.
 \subsection{典型微面分布函数的规范性证明}\label{sub:典型微面分布函数的规范性证明}
 本节补充了\refeq{8.10}和\refeq{8.11}所给的
 微面分布函数$D({\bm\omega}_{\mathrm{h}})$满足规范性要求的证明，即证明

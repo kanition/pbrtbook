@@ -169,7 +169,9 @@ protected:
 };
 \end{lstlisting}
 
-微面曲面的一个重要特性由分布函数$D({\bm\omega}_{\mathrm{h}})$表示，
+微面曲面的一个重要特性由分布函数$D({\bm\omega}_{\mathrm{h}})$表示
+\sidenote{译者注：微面模型涉及的数学推导较为复杂，因此原书直接介绍了一些理论结果（例如公式）。
+如果读者想进一步了解其原理细节，可以参考笔者补充的\refsec{译者补充：微面模型相关推导}。}，
 它给出了曲面法线为${\bm\omega}_{\mathrm{h}}$的微面的微分面积
 （回想\reffig{8.12}展示了曲面的粗糙度是怎样和微面法线分布函数相联系的）。
 在pbrt中，微面分布函数和\refvar{BxDF}{}在相同的BSDF坐标系下定义；
@@ -233,8 +235,6 @@ Beckmann-Spizzichino模型的传统定义是
 而$y$轴的为$\alpha_y$，则中间朝向的$\alpha$值可用通过这些值构造的椭圆来插值。
 
 对应的各向异性微面分布函数为
-\sidenote{译者注：\refsec{译者补充：微面模型相关推导}，
-    给出了本节微面分布模型满足规范性的证明。}
 \begin{align}\label{eq:8.10}
     D({\bm\omega}_{\mathrm{h}})=\frac{\mathrm{e}^{-\left(\frac{\cos^2\varphi_{\mathrm{h}}}{\alpha_x^2}+\frac{\sin^2\varphi_{\mathrm{h}}}{\alpha_y^2}\right)\tan^2\theta_{\mathrm{h}}}}{\pi\alpha_x\alpha_y\cos^4\theta_{\mathrm{h}}}\, .
 \end{align}

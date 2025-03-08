@@ -1174,7 +1174,7 @@ Kelemen掩模函数虽然对V形槽掩模函数近似得很好，
 典型的各向同性参数化斜率分布依赖粗糙度参数$\alpha$，改变$\alpha$等价于拉伸分布而不改变其形状。
 这种情形下，斜率分布只决定于斜率大小$\displaystyle\tan\theta_{\mathrm{h}}=\sqrt{x_s^2+y_s^2}$（也即
 微面法线天顶角正切值）与$\alpha$的比例$\displaystyle\frac{\tan\theta_{\mathrm{h}}}{\alpha}$：
-\begin{align}
+\begin{align}\label{eq:08-ex01-isotropic-shape-invariant}
     P_{xy}(x_s,y_s,\alpha)=\frac{1}{\alpha^2}f\left(\frac{\sqrt{x_s^2+y_s^2}}{\alpha}\right)=\frac{1}{\alpha^2}f\left(\frac{\tan\theta_{\mathrm{h}}}{\alpha}\right)\, ,
 \end{align}
 其中$f$是定义分布形状的一维函数。这样的斜率分布具有\keyindex{形状不变性}{shape invariant}{}：对于任意系数$\lambda>0$，
@@ -1253,9 +1253,59 @@ Kelemen掩模函数虽然对V形槽掩模函数近似得很好，
     \Lambda({\bm\omega}_{\mathrm{o}},\alpha)=&\frac{1}{\cot\theta_{\mathrm{o}}}\int_{\cot\theta_{\mathrm{o}}}^{+\infty}
     (x_s-\cot\theta_{\mathrm{o}})\left(\int_{-\infty}^{+\infty}
     \frac{1}{\displaystyle\pi\alpha^2\left(1+\frac{x_s^2+y_s^2}{\alpha^2}\right)^2}\mathrm{d}y_s\right)\mathrm{d}x_s\nonumber \\
-    =&\frac{1}{\cot\theta_{\mathrm{o}}}\int_{\cot\theta_{\mathrm{o}}}^{+\infty}
-    (x_s-\cot\theta_{\mathrm{o}})
+    =&\frac{\alpha^2}{\pi\cot\theta_{\mathrm{o}}}\int_{\cot\theta_{\mathrm{o}}}^{+\infty}
+    (x_s-\cot\theta_{\mathrm{o}})\left(\int_{-\infty}^{+\infty}
+    \frac{1}{\displaystyle\left(\alpha^2+x_s^2+y_s^2\right)^2}\mathrm{d}y_s\right)\mathrm{d}x_s\nonumber\\
+    =&\frac{\alpha^2}{\pi\cot\theta_{\mathrm{o}}}\int_{\cot\theta_{\mathrm{o}}}^{+\infty}
+    (x_s-\cot\theta_{\mathrm{o}})\left(\int_{-\infty}^{+\infty}\frac{1}{\displaystyle
+    \left((\alpha^2+x_s^2)\left(1+\frac{y_s^2}{\alpha^2+x_s^2}\right)\right)^2}\mathrm{d}y_s\right)\mathrm{d}x_s\nonumber\\
+    =&\frac{\alpha^2}{\pi\cot\theta_{\mathrm{o}}}\int_{\cot\theta_{\mathrm{o}}}^{+\infty}
+    \frac{x_s-\cot\theta_{\mathrm{o}}}{(\alpha^2+x_s^2)^\frac{3}{2}}\left(\int_{-\infty}^{+\infty}
+    \frac{\displaystyle\mathrm{d}\frac{y_s}{\sqrt{\alpha^2+x_s^2}}}
+    {\displaystyle\left(1+\left(\frac{y_s}{\sqrt{\alpha^2+x_s^2}}\right)^2\right)^2}\right)\mathrm{d}x_s\nonumber\\
+    \xlongequal{\text{令}t=\frac{y_s}{\sqrt{\alpha^2+x_s^2}}}&\frac{\alpha^2}{\pi\cot\theta_{\mathrm{o}}}
+    \int_{\cot\theta_{\mathrm{o}}}^{+\infty}\frac{x_s-\cot\theta_{\mathrm{o}}}{(\alpha^2+x_s^2)^\frac{3}{2}}
+    \left(\int_{-\infty}^{+\infty}\frac{\mathrm{d}t}{(1+t^2)^2}\right)\mathrm{d}x_s\nonumber\\
+    =&\frac{\alpha^2}{\pi\cot\theta_{\mathrm{o}}}\int_{\cot\theta_{\mathrm{o}}}^{+\infty}
+    \frac{x_s-\cot\theta_{\mathrm{o}}}{(\alpha^2+x_s^2)^\frac{3}{2}}\left(\int_{-\infty}^{+\infty}
+    \left(\frac{1}{1+t^2}-\frac{t^2}{(1+t^2)^2}\right)\mathrm{d}t\right)\mathrm{d}x_s\nonumber\\
+    =&\frac{\alpha^2}{\pi\cot\theta_{\mathrm{o}}}\int_{\cot\theta_{\mathrm{o}}}^{+\infty}
+    \frac{x_s-\cot\theta_{\mathrm{o}}}{(\alpha^2+x_s^2)^\frac{3}{2}}\left(\arctan t\bigg|_{t=-\infty}^{+\infty}-
+    \int_{-\infty}^{+\infty}\frac{t}{2(1+t^2)^2}\mathrm{d}(1+t^2)\right)\mathrm{d}x_s\nonumber\\
+    =&\frac{\alpha^2}{\pi\cot\theta_{\mathrm{o}}}\int_{\cot\theta_{\mathrm{o}}}^{+\infty}
+    \frac{x_s-\cot\theta_{\mathrm{o}}}{(\alpha^2+x_s^2)^\frac{3}{2}}\left(\pi+
+    \int_{-\infty}^{+\infty}\frac{t}{2}\mathrm{d}(1+t^2)^{-1}\right)\mathrm{d}x_s\nonumber\\
+    =&\frac{\alpha^2}{\pi\cot\theta_{\mathrm{o}}}\int_{\cot\theta_{\mathrm{o}}}^{+\infty}
+    \frac{x_s-\cot\theta_{\mathrm{o}}}{(\alpha^2+x_s^2)^\frac{3}{2}}\left(\pi+\frac{t}{2(1+t^2)}\bigg|_{t=-\infty}^{+\infty}
+    -\int_{-\infty}^{+\infty}\frac{1}{2(1+t^2)}\mathrm{d}t\right)\mathrm{d}x_s\nonumber\\
+    =&\frac{\alpha^2}{\pi\cot\theta_{\mathrm{o}}}\int_{\cot\theta_{\mathrm{o}}}^{+\infty}
+    \frac{x_s-\cot\theta_{\mathrm{o}}}{(\alpha^2+x_s^2)^\frac{3}{2}}\left(\pi+0-
+    \frac{\arctan t}{2}\bigg|_{t=-\infty}^{+\infty}\right)\mathrm{d}x_s\nonumber\\
+    =&\frac{\alpha^2}{\pi\cot\theta_{\mathrm{o}}}\int_{\cot\theta_{\mathrm{o}}}^{+\infty}
+    \frac{x_s-\cot\theta_{\mathrm{o}}}{(\alpha^2+x_s^2)^\frac{3}{2}}\cdot\frac{\pi}{2}\mathrm{d}x_s\nonumber\\
+    =&\frac{\alpha^2}{2\cot\theta_{\mathrm{o}}}\int_{\cot\theta_{\mathrm{o}}}^{+\infty}
+    \frac{x_s\mathrm{d}x_s}{(\alpha^2+x_s^2)^\frac{3}{2}}-\frac{1}{2}\int_{\cot\theta_{\mathrm{o}}}^{+\infty}
+    \frac{\alpha^2\mathrm{d}x_s}{(\alpha^2+x_s^2)^\frac{3}{2}}\nonumber\\
+    =&-\frac{\alpha^2}{2\cot\theta_{\mathrm{o}}}\int_{\cot\theta_{\mathrm{o}}}^{+\infty}
+    \mathrm{d}(\alpha^2+x_s^2)^{-\frac{1}{2}}-\frac{1}{2}\int_{\cot\theta_{\mathrm{o}}}^{+\infty}
+    \frac{\sqrt{\alpha^2+x_s^2}\mathrm{d}x_s-x_s\mathrm{d}\sqrt{\alpha^2+x_s^2}}{(\sqrt{\alpha^2+x_s^2})^2}\nonumber\\
+    =&-\frac{\alpha^2}{2\cot\theta_{\mathrm{o}}\sqrt{\alpha^2+x_s^2}}\bigg|_{x_s=\cot\theta_{\mathrm{o}}}^{+\infty}
+    -\frac{1}{2}\int_{\cot\theta_{\mathrm{o}}}^{+\infty}\mathrm{d}\frac{x_s}{\sqrt{\alpha^2+x_s^2}}\nonumber\\
+    =&\frac{\alpha^2}{2\cot\theta_{\mathrm{o}}\sqrt{\alpha^2+\cot^2\theta_{\mathrm{o}}}}
+    -\frac{1}{2}\frac{x_s}{\sqrt{\alpha^2+x_s^2}}\bigg|_{x_s=\cot\theta_{\mathrm{o}}}^{+\infty}\nonumber\\
+    =&\frac{\alpha^2}{2\cot\theta_{\mathrm{o}}\sqrt{\alpha^2+\cot^2\theta_{\mathrm{o}}}}
+    -\frac{1}{2}\left(1-\frac{\cot\theta_{\mathrm{o}}}{\sqrt{\alpha^2+\cot^2\theta_{\mathrm{o}}}}\right)\nonumber\\
+    =&\frac{\alpha^2-\cot\theta_{\mathrm{o}}\sqrt{\alpha^2+\cot^2\theta_{\mathrm{o}}}+
+    \cot^2\theta_{\mathrm{o}}}{2\cot\theta_{\mathrm{o}}\sqrt{\alpha^2+\cot^2\theta_{\mathrm{o}}}}\nonumber\\
+    \xlongequal{\text{令}a=\frac{1}{\alpha\tan\theta_{\mathrm{o}}}}&\frac{\alpha^2-
+    a\alpha\sqrt{\alpha^2+a^2\alpha^2}+a^2\alpha^2}{2a\alpha\sqrt{\alpha^2+a^2\alpha^2}}\nonumber\\
+    =&\frac{1}{2}(\sqrt{1+a^{-2}}-1)\, .
 \end{align}
+
+可以看到，以上两种模型的斜率分布都可以表示为\refeq{08-ex01-isotropic-shape-invariant}的形式，
+所以它们具有形状不变性。但要注意的是，不是所有分布都具有形状不变性。
+
+\subsubsection*{各向异性斜率分布的形状不变性}
 
 \subsection{典型微面分布函数的规范性证明}\label{sub:典型微面分布函数的规范性证明}
 本节补充了\refeq{8.10}和\refeq{8.11}所给的

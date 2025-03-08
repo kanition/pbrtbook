@@ -344,8 +344,7 @@ bool `\initvar{hasRotation}{}`;
 \end{align}
 其中$\bm M$是给定变换，$\bm T$是平移，$\bm R$是旋转，$\bm S$是缩放。
 $\bm S$实际上是一种表示在\emph{某些}坐标系下的通用缩放
-（Shoemake和Duff称之为拉伸\sidenote{译者注：原文stretch。}），
-而不一定在是当前坐标系下。
+（Shoemake和Duff称之为拉伸），而不一定在是当前坐标系下。
 不论哪种情况，它都仍然可以按分量正确地线性插值。
 给定\refvar{Matrix4x4}{}，方法\refvar{Decompose}{()}计算其分解。
 \begin{lstlisting}

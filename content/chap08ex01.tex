@@ -1178,7 +1178,7 @@ Kelemen掩模函数虽然对V形槽掩模函数近似得很好，
     P_{xy}(x_s,y_s,\alpha)=\frac{1}{\alpha^2}f\left(\frac{\sqrt{x_s^2+y_s^2}}{\alpha}\right)=\frac{1}{\alpha^2}f\left(\frac{\tan\theta_{\mathrm{h}}}{\alpha}\right)\, ,
 \end{align}
 其中$f$是定义分布形状的一维函数。这样的斜率分布具有\keyindex{形状不变性}{shape invariant}{}：对于任意系数$\lambda>0$，
-\begin{align}
+\begin{align}\label{eq:08-ex01-any-coef-invariant}
     P_{xy}(x_s,y_s,\alpha)=\frac{1}{\lambda^2}P_{xy}(\frac{x_s}{\lambda},\frac{y_s}{\lambda},\frac{\alpha}{\lambda})
 \end{align}
 恒成立。这意味着它总是具有同样的形状$f$，只由粗糙度参数拉伸和缩放，
@@ -1232,7 +1232,7 @@ Kelemen掩模函数虽然对V形槽掩模函数近似得很好，
 由于该模型计算开销大，\citet{10.5555/2383847.2383874}提出了对其
 掩模函数$G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})$进行简化近似计算的方法，
 代入\refeq{08-ex01-Smith-masking-function}后相当于取
-\begin{align}
+\begin{align}\label{eq:08-ex01-approximation-Beckmann}
     \Lambda({\bm\omega}_{\mathrm{o}},\alpha)\approx\left\{\begin{array}{l}
         \displaystyle\frac{1-1.259a+0.396a^2}{3.535a+2.181a^2},\quad\text{若}a>1.6, \\
         0,\quad\text{其他}.
@@ -1306,6 +1306,81 @@ Kelemen掩模函数虽然对V形槽掩模函数近似得很好，
 所以它们具有形状不变性。但要注意的是，不是所有分布都具有形状不变性。
 
 \subsubsection*{各向异性斜率分布的形状不变性}
+如果我们按照类似于上小节的方法，改成用与方位相关的参数去拉伸形状，就会得到各向异性版的形状不变性分布。
+具体来说，\refeq{08-ex01-isotropic-shape-invariant}将替换为
+\begin{align}
+    P_{xy}(x_s,y_s,\alpha_x,\alpha_y)=\frac{1}{\alpha_x\alpha_y}f\displaystyle
+    \left(\sqrt{\frac{x_s^2}{\alpha_x^2}+\frac{y_s^2}{\alpha_y^2}}\right)
+    =\frac{1}{\alpha_x\alpha_y}f\left(\tan\theta_{\mathrm{h}}\sqrt{\frac{\cos^2\varphi_{\mathrm{h}}}{\alpha_x^2}
+    +\frac{\sin^2\varphi_{\mathrm{h}}}{\alpha_y^2}}\right)\, ,
+\end{align}
+其中$\alpha_x$和$\alpha_y$是分布分别在$x$和$y$轴方向上的拉伸系数。
+而各向同性版本是它在$\alpha_x=\alpha_y$时的特例。
+\refeq{08-ex01-any-coef-invariant}也相应拓展为
+\begin{align}
+    P_{xy}(x_s,y_s,\alpha_x,\alpha_y)=\frac{1}{\lambda_x\lambda_y}P_{xy}(\frac{x_s}{\lambda_x},\frac{y_s}{\lambda_y},\frac{\alpha_x}{\lambda_x},\frac{\alpha_y}{\lambda_y})
+\end{align}
+对任意$\alpha_x,\alpha_y>0$恒成立，其规范性也仍然成立。
+
+\reffig{08ex01-2D-Anisotropic-Stretch}展示了一个具有形状不变性的分布是如何通过拉伸
+在各向同性和各向异性之间互相转化的。下面我们借助该特性推导各向异性分布的掩模函数。
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\linewidth]{Pictures/chap08/Anisotropic-Shape-Invariant-Distributions-of-Slopes.eps}
+    \caption{二维微面结构通过拉伸在各向同性和各向异性间转化。}
+    \label{fig:08ex01-2D-Anisotropic-Stretch}
+\end{figure}
+
+对于具有参数$\alpha_x$和$\alpha_y$的各向异性形状不变分布和某
+出射方向${\bm\omega}_{\mathrm{o}}=(x_{\mathrm{o}},y_{\mathrm{o}},z_{\mathrm{o}})$，
+我们在$x$轴方向上对其拉伸$\displaystyle\frac{\alpha_x}{\alpha_y}$倍，使其变回各向同性版本，
+得到新的粗糙度参数、出射向量和斜率分别为
+\begin{align}
+    \alpha'_x=&\alpha_x\frac{\alpha_y}{\alpha_x}=\alpha_y\, ,\\
+    \alpha'_y=&\alpha_y\, ,\\
+    {\bm\omega}'_{\mathrm{o}}=&(\frac{\alpha_x}{\alpha_y}x_{\mathrm{o}},y_{\mathrm{o}},z_{\mathrm{o}})
+    =(\frac{\alpha_x}{\alpha_y}\cos\varphi_{\mathrm{o}}\sin\theta_{\mathrm{o}},
+    \sin\varphi_{\mathrm{o}}\sin\theta_{\mathrm{o}},\cos\theta_{\mathrm{o}})\, ,\\
+    \frac{1}{\tan\theta'_{\mathrm{o}}}=&\frac{z_{\mathrm{o}}}
+    {\sqrt{\displaystyle\frac{\alpha_x^2}{\alpha_y^2}x_{\mathrm{o}}^2+y_{\mathrm{o}}^2}}
+    =\frac{1}{\tan\theta_{\mathrm{o}}\sqrt{\displaystyle\frac{\alpha_x^2}{\alpha_y^2}\cos^2\varphi_{\mathrm{o}}+\sin^2\varphi_{\mathrm{o}}}}\, .
+\end{align}
+对于拉伸后的各向同性分布，对应的新比率参数为
+\begin{align}
+    a'=&\frac{1}{\alpha'_y\tan\theta'_{\mathrm{o}}}\nonumber\\
+      =&\frac{1}{\alpha_y\tan\theta_{\mathrm{o}}\sqrt{\displaystyle\frac{\alpha_x^2}{\alpha_y^2}\cos^2\varphi_{\mathrm{o}}+\sin^2\varphi_{\mathrm{o}}}}\nonumber\\
+      =&\frac{1}{\tan\theta_{\mathrm{o}}\sqrt{\alpha_x^2\cos^2\varphi_{\mathrm{o}}+\alpha_y^2\sin^2\varphi_{\mathrm{o}}}}\nonumber\\
+      =&\frac{1}{\alpha_{\mathrm{o}}\tan\theta_{\mathrm{o}}}\, ,
+\end{align}
+其中
+\begin{align}
+    \alpha_{\mathrm{o}}=\sqrt{\alpha_x^2\cos^2\varphi_{\mathrm{o}}+\alpha_y^2\sin^2\varphi_{\mathrm{o}}}
+\end{align}
+定义为投影到出射方向的粗糙度。这说明各向异性的形状不变斜率分布的掩模函数和各向同性的有相同本质，
+唯一的区别在于前者由各向异性曲面投影到出射方向上的粗糙度来进行参数化。
+利用该性质，我们可以给出以下两个各向异性模型的掩模函数：
+
+对于Beckmann-Spizzichino模型，其各向异性分布为
+\begin{align}
+    P_{xy}(x_s,y_s,\alpha_x,\alpha_y)=&\frac{1}{\pi\alpha_x\alpha_y}\exp\left(-\frac{x_s^2}{\alpha_x^2}-\frac{y_s^2}{\alpha_y^2}\right)\, ,\\
+    D({\bm\omega}_{\mathrm{h}},\alpha_x,\alpha_y)=&\frac{\chi({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}})}
+    {\pi\alpha_x\alpha_y\cos^4\theta_{\mathrm{h}}}\exp\left(-\left(\frac{\cos^2\varphi_{\mathrm{h}}}{\alpha_x^2}
+    +\frac{\sin^2\varphi_{\mathrm{h}}}{\alpha_y^2}\right)\tan^2\theta_{\mathrm{h}}\right)\, ,\\
+    \Lambda({\bm\omega}_{\mathrm{o}},\alpha_x,\alpha_y)=&\frac{1}{2}\left(\mathrm{erf}(a)-1
+    +\frac{\mathrm{e}^{-a^2}}{\sqrt{\pi}a}\right)\, .
+\end{align}
+且\refeq{08-ex01-approximation-Beckmann}的近似计算方法仍然适用。
+
+对于Trowbridge-Reitz模型，其各向异性分布为
+\begin{align}
+    P_{xy}(x_s,y_s,\alpha_x,\alpha_y)=&\frac{1}{\displaystyle\pi\alpha_x\alpha_y\left(1
+    +\frac{x_s^2}{\alpha_x^2}+\frac{y_s^2}{\alpha_y^2}\right)^2}\, ,\\
+    D({\bm\omega}_{\mathrm{h}},\alpha_x,\alpha_y)=&\frac{\chi({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}})}
+    {\displaystyle\pi\alpha_x\alpha_y\left(1+\left(\frac{\cos^2\varphi_{\mathrm{h}}}{\alpha_x^2}
+    +\frac{\sin^2\varphi_{\mathrm{h}}}{\alpha_y^2}\right)\tan^2\theta_{\mathrm{h}}\right)^2\cos^4\theta_{\mathrm{h}}}\, ,\\
+    \Lambda({\bm\omega}_{\mathrm{o}},\alpha_x,\alpha_y)=&\frac{1}{2}(\sqrt{1+a^{-2}}-1)\, .
+\end{align}
+以上两个模型中均有$a=\displaystyle\frac{1}{\alpha_{\mathrm{o}}\tan\theta_{\mathrm{o}}}$.
 
 \subsection{典型微面分布函数的规范性证明}\label{sub:典型微面分布函数的规范性证明}
 本节补充了\refeq{8.10}和\refeq{8.11}所给的

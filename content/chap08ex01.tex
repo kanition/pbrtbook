@@ -501,7 +501,17 @@ ${\bm\omega}_{\mathrm{m}}$对${\bm\omega}_{\mathrm{i}}$的\keyindex{雅可比矩
 它给出了镜面微面模型对$G_1$的又一重要约束。
 需要说明的是，弱白炉测试丢弃遮挡函数只是为了
 提供一个便捷的方法来验证BRDF的物理合理性，
-并不是说BRDF在实际使用中也应丢弃遮挡函数。
+并不是说BRDF在实际使用中也应丢弃遮挡函数（\reffig{08ex01-CompleteWhiteFurnaceTest}）。
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{Pictures/chap08/CompleteWhiteFurnaceTest.eps}
+    \caption{基于镜面微面模型的BRDF的规范性：反推光路时，(a)令出射光线照在微面上；
+    (b)若光线从不被遮挡（也即只考虑首次反射），则能量总量不变，反射光线满足规范性；
+    (c)若BRDF剔除了被遮挡的光线（黑虚线），则能成功反射的能量变少，规范性被打破；
+    (d)但实际上被遮挡的光线会多反射几次后射出（蓝绿线），完整的BRDF把这种多次散射的情况纳入考虑后，规范性应重新成立。}
+    \label{fig:08ex01-CompleteWhiteFurnaceTest}
+\end{figure}
 
 在实践中，我们经常会面临这样一个问题：
 某个基于镜面微面模型的BRDF是“基于物理的”吗？
@@ -514,9 +524,9 @@ ${\bm\omega}_{\mathrm{m}}$对${\bm\omega}_{\mathrm{i}}$的\keyindex{雅可比矩
     \item 可见法线分布$D_{{\bm\omega}_{\mathrm{o}}}({\bm\omega}_{\mathrm{h}})$满足\refeq{08ex01-VisibleDistributionNormalization}；
     \item 弱白炉测试\refeq{08ex01-WeakWhiteFurnaceTest}成立。
 \end{enumerate}
-不过这并不意味着那些不能同时满足上述约束的没有“基于物理的”的BRDF就不能使用，
+但这并不意味着不能使用那些无法同时满足上述约束的非“基于物理的”BRDF，
 完全可以根据实际需要做出相应选择，何况以上结论考虑的还是最简单的情况。
-多次反射、多层材料、存在衍射等更复杂的情况还需要进一步探索。
+多次反射、多层材料、存在衍射等更复杂的情况还需进一步探索。
 
 \subsection{常见掩模函数的分析}\label{sub:常见掩模函数的分析}
 本节继承上节的记号。本节将分析Smith和V形槽两种微面结构，推导它们的掩模函数并讨论其性质。
@@ -1209,11 +1219,11 @@ Kelemen掩模函数虽然对V形槽掩模函数近似得很好，
     (x_s-\cot\theta_{\mathrm{o}})\left(\int_{-\infty}^{+\infty}\frac{1}{\pi\alpha^2}
     \exp\left(-\frac{x_s^2+y_s^2}{\alpha^2}\right)\mathrm{d}y_s\right)\mathrm{d}x_s\nonumber \\
     =&\frac{1}{\pi\cot\theta_{\mathrm{o}}}\int_{\cot\theta_{\mathrm{o}}}^{+\infty}
-    (x_s-\cot\theta_{\mathrm{o}})\exp\left(-\left(\frac{x_s}{\alpha}\right)^2\right)
-    \left(\int_{-\infty}^{+\infty}\exp\left(-\left(\frac{y_s}{\alpha}\right)^2\right)
+    (x_s-\cot\theta_{\mathrm{o}})\mathrm{e}^{-\frac{x_s^2}{\alpha^2}}
+    \left(\int_{-\infty}^{+\infty}\mathrm{e}^{-\frac{y_s^2}{\alpha^2}}
     \mathrm{d}\frac{y_s}{\alpha}\right)\mathrm{d}\frac{x_s}{\alpha}\nonumber\\
     =&\frac{1}{\pi\cot\theta_{\mathrm{o}}}\int_{\cot\theta_{\mathrm{o}}}^{+\infty}
-    \sqrt{\pi}(x_s-\cot\theta_{\mathrm{o}})\exp\left(-\left(\frac{x_s}{\alpha}\right)^2\right)
+    \sqrt{\pi}(x_s-\cot\theta_{\mathrm{o}})\mathrm{e}^{-\frac{x_s^2}{\alpha^2}}
     \mathrm{d}\frac{x_s}{\alpha}\nonumber\\
     \xlongequal{\text{令}x=\frac{x_s}{\alpha}}&\frac{1}{\sqrt{\pi}\cot\theta_{\mathrm{o}}}
     \int_{\frac{1}{\alpha\tan\theta_{\mathrm{o}}}}^{+\infty}
@@ -1267,31 +1277,13 @@ Kelemen掩模函数虽然对V形槽掩模函数近似得很好，
     \int_{\cot\theta_{\mathrm{o}}}^{+\infty}\frac{x_s-\cot\theta_{\mathrm{o}}}{(\alpha^2+x_s^2)^\frac{3}{2}}
     \left(\int_{-\infty}^{+\infty}\frac{\mathrm{d}t}{(1+t^2)^2}\right)\mathrm{d}x_s\nonumber\\
     =&\frac{\alpha^2}{\pi\cot\theta_{\mathrm{o}}}\int_{\cot\theta_{\mathrm{o}}}^{+\infty}
-    \frac{x_s-\cot\theta_{\mathrm{o}}}{(\alpha^2+x_s^2)^\frac{3}{2}}\left(\int_{-\infty}^{+\infty}
-    \left(\frac{1}{1+t^2}-\frac{t^2}{(1+t^2)^2}\right)\mathrm{d}t\right)\mathrm{d}x_s\nonumber\\
-    =&\frac{\alpha^2}{\pi\cot\theta_{\mathrm{o}}}\int_{\cot\theta_{\mathrm{o}}}^{+\infty}
-    \frac{x_s-\cot\theta_{\mathrm{o}}}{(\alpha^2+x_s^2)^\frac{3}{2}}\left(\arctan t\bigg|_{t=-\infty}^{+\infty}-
-    \int_{-\infty}^{+\infty}\frac{t}{2(1+t^2)^2}\mathrm{d}(1+t^2)\right)\mathrm{d}x_s\nonumber\\
-    =&\frac{\alpha^2}{\pi\cot\theta_{\mathrm{o}}}\int_{\cot\theta_{\mathrm{o}}}^{+\infty}
-    \frac{x_s-\cot\theta_{\mathrm{o}}}{(\alpha^2+x_s^2)^\frac{3}{2}}\left(\pi+
-    \int_{-\infty}^{+\infty}\frac{t}{2}\mathrm{d}(1+t^2)^{-1}\right)\mathrm{d}x_s\nonumber\\
-    =&\frac{\alpha^2}{\pi\cot\theta_{\mathrm{o}}}\int_{\cot\theta_{\mathrm{o}}}^{+\infty}
-    \frac{x_s-\cot\theta_{\mathrm{o}}}{(\alpha^2+x_s^2)^\frac{3}{2}}\left(\pi+\frac{t}{2(1+t^2)}\bigg|_{t=-\infty}^{+\infty}
-    -\int_{-\infty}^{+\infty}\frac{1}{2(1+t^2)}\mathrm{d}t\right)\mathrm{d}x_s\nonumber\\
-    =&\frac{\alpha^2}{\pi\cot\theta_{\mathrm{o}}}\int_{\cot\theta_{\mathrm{o}}}^{+\infty}
-    \frac{x_s-\cot\theta_{\mathrm{o}}}{(\alpha^2+x_s^2)^\frac{3}{2}}\left(\pi+0-
-    \frac{\arctan t}{2}\bigg|_{t=-\infty}^{+\infty}\right)\mathrm{d}x_s\nonumber\\
-    =&\frac{\alpha^2}{\pi\cot\theta_{\mathrm{o}}}\int_{\cot\theta_{\mathrm{o}}}^{+\infty}
     \frac{x_s-\cot\theta_{\mathrm{o}}}{(\alpha^2+x_s^2)^\frac{3}{2}}\cdot\frac{\pi}{2}\mathrm{d}x_s\nonumber\\
     =&\frac{\alpha^2}{2\cot\theta_{\mathrm{o}}}\int_{\cot\theta_{\mathrm{o}}}^{+\infty}
     \frac{x_s\mathrm{d}x_s}{(\alpha^2+x_s^2)^\frac{3}{2}}-\frac{1}{2}\int_{\cot\theta_{\mathrm{o}}}^{+\infty}
     \frac{\alpha^2\mathrm{d}x_s}{(\alpha^2+x_s^2)^\frac{3}{2}}\nonumber\\
-    =&-\frac{\alpha^2}{2\cot\theta_{\mathrm{o}}}\int_{\cot\theta_{\mathrm{o}}}^{+\infty}
-    \mathrm{d}(\alpha^2+x_s^2)^{-\frac{1}{2}}-\frac{1}{2}\int_{\cot\theta_{\mathrm{o}}}^{+\infty}
-    \frac{\sqrt{\alpha^2+x_s^2}\mathrm{d}x_s-x_s\mathrm{d}\sqrt{\alpha^2+x_s^2}}{(\sqrt{\alpha^2+x_s^2})^2}\nonumber\\
-    =&-\frac{\alpha^2}{2\cot\theta_{\mathrm{o}}\sqrt{\alpha^2+x_s^2}}\bigg|_{x_s=\cot\theta_{\mathrm{o}}}^{+\infty}
+    =&-\frac{\alpha^2}{2\cot\theta_{\mathrm{o}}}\int_{\cot\theta_{\mathrm{o}}}^{+\infty}\mathrm{d}(\alpha^2+x_s^2)^{-\frac{1}{2}}
     -\frac{1}{2}\int_{\cot\theta_{\mathrm{o}}}^{+\infty}\mathrm{d}\frac{x_s}{\sqrt{\alpha^2+x_s^2}}\nonumber\\
-    =&\frac{\alpha^2}{2\cot\theta_{\mathrm{o}}\sqrt{\alpha^2+\cot^2\theta_{\mathrm{o}}}}
+    =&-\frac{\alpha^2}{2\cot\theta_{\mathrm{o}}\sqrt{\alpha^2+x_s^2}}\bigg|_{x_s=\cot\theta_{\mathrm{o}}}^{+\infty}
     -\frac{1}{2}\frac{x_s}{\sqrt{\alpha^2+x_s^2}}\bigg|_{x_s=\cot\theta_{\mathrm{o}}}^{+\infty}\nonumber\\
     =&\frac{\alpha^2}{2\cot\theta_{\mathrm{o}}\sqrt{\alpha^2+\cot^2\theta_{\mathrm{o}}}}
     -\frac{1}{2}\left(1-\frac{\cot\theta_{\mathrm{o}}}{\sqrt{\alpha^2+\cot^2\theta_{\mathrm{o}}}}\right)\nonumber\\
@@ -1357,7 +1349,8 @@ Kelemen掩模函数虽然对V形槽掩模函数近似得很好，
     \alpha_{\mathrm{o}}=\sqrt{\alpha_x^2\cos^2\varphi_{\mathrm{o}}+\alpha_y^2\sin^2\varphi_{\mathrm{o}}}
 \end{align}
 定义为投影到出射方向的粗糙度。这说明各向异性的形状不变斜率分布的掩模函数和各向同性的有相同本质，
-唯一的区别在于前者由各向异性曲面投影到出射方向上的粗糙度来进行参数化。
+唯一的区别在于前者由各向异性曲面投影到出射方向上的粗糙度来进行参数化
+\sidenote{理解这句话才能理解为什么各向异性版的$\Lambda$形式几乎不变。}。
 利用该性质，我们可以给出以下两个各向异性模型的掩模函数：
 
 对于Beckmann-Spizzichino模型，其各向异性分布为
@@ -1367,7 +1360,8 @@ Kelemen掩模函数虽然对V形槽掩模函数近似得很好，
     {\pi\alpha_x\alpha_y\cos^4\theta_{\mathrm{h}}}\exp\left(-\left(\frac{\cos^2\varphi_{\mathrm{h}}}{\alpha_x^2}
     +\frac{\sin^2\varphi_{\mathrm{h}}}{\alpha_y^2}\right)\tan^2\theta_{\mathrm{h}}\right)\, ,\\
     \Lambda({\bm\omega}_{\mathrm{o}},\alpha_x,\alpha_y)=&\frac{1}{2}\left(\mathrm{erf}(a)-1
-    +\frac{\mathrm{e}^{-a^2}}{\sqrt{\pi}a}\right)\, .
+    +\frac{\mathrm{e}^{-a^2}}{\sqrt{\pi}a}\right),
+    \quad\text{其中}a=\displaystyle\frac{1}{\alpha_{\mathrm{o}}\tan\theta_{\mathrm{o}}}\, .
 \end{align}
 且\refeq{08-ex01-approximation-Beckmann}的近似计算方法仍然适用。
 
@@ -1378,67 +1372,31 @@ Kelemen掩模函数虽然对V形槽掩模函数近似得很好，
     D({\bm\omega}_{\mathrm{h}},\alpha_x,\alpha_y)=&\frac{\chi({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}})}
     {\displaystyle\pi\alpha_x\alpha_y\left(1+\left(\frac{\cos^2\varphi_{\mathrm{h}}}{\alpha_x^2}
     +\frac{\sin^2\varphi_{\mathrm{h}}}{\alpha_y^2}\right)\tan^2\theta_{\mathrm{h}}\right)^2\cos^4\theta_{\mathrm{h}}}\, ,\\
-    \Lambda({\bm\omega}_{\mathrm{o}},\alpha_x,\alpha_y)=&\frac{1}{2}(\sqrt{1+a^{-2}}-1)\, .
-\end{align}
-以上两个模型中均有$a=\displaystyle\frac{1}{\alpha_{\mathrm{o}}\tan\theta_{\mathrm{o}}}$.
-
-\subsection{典型微面分布函数的规范性证明}\label{sub:典型微面分布函数的规范性证明}
-本节补充了\refeq{8.10}和\refeq{8.11}所给的
-微面分布函数$D({\bm\omega}_{\mathrm{h}})$满足规范性要求的证明，即证明
-\begin{align}\label{eq:8.ex-01}
-    \int\limits_{H^2({\bm n})}D({\bm\omega}_{\mathrm{h}})\cos\theta_{\mathrm{h}}\mathrm{d}{\bm\omega}_{\mathrm{h}}=1\, .
+    \Lambda({\bm\omega}_{\mathrm{o}},\alpha_x,\alpha_y)=&\frac{1}{2}(\sqrt{1+a^{-2}}-1),
+    \quad\text{其中}a=\displaystyle\frac{1}{\alpha_{\mathrm{o}}\tan\theta_{\mathrm{o}}}\, .
 \end{align}
 
-为了简化证明过程，我们先证明以下积分式（其中$\alpha_x,\alpha_y>0$）：
-\begin{align}\label{eq:8.ex-02}
-    \int_{\varphi_{\mathrm{h}}=0}^{2\pi}\frac{1}{2\pi\alpha_x\alpha_y\left(\frac{\cos^2\varphi_{\mathrm{h}}}{\alpha_x^2}+\frac{\sin^2\varphi_{\mathrm{h}}}{\alpha_y^2}\right)}\mathrm{d}\varphi_{\mathrm{h}}=1\, .
+我们还可以分别验证下以上两个模型是否满足规范性即\refeq{08-ex01-normal-of-P2D}，对于Beckmann-Spizzichino模型有：
+\begin{align}
+    &\int_{-\infty}^{+\infty}\int_{-\infty}^{+\infty}\frac{1}{\pi\alpha_x\alpha_y}\exp\left(-\frac{x_s^2}{\alpha_x^2}-\frac{y_s^2}{\alpha_y^2}\right)\mathrm{d}x_s\mathrm{d}y_s\nonumber\\
+    =&\frac{1}{\pi}\left(\int_{-\infty}^{+\infty}\mathrm{e}^{-\frac{x_s^2}{\alpha_x^2}}\frac{\mathrm{d}x_s}{\alpha_x}\right)\left(\int_{-\infty}^{+\infty}\mathrm{e}^{-\frac{y_s^2}{\alpha_y^2}}\frac{\mathrm{d}y_s}{\alpha_y}\right)\nonumber\\
+    =&\frac{1}{\pi}\cdot\sqrt{\pi}\cdot\sqrt{\pi}=1\, .
 \end{align}
-\begin{prove}
-    \begin{align}
-                                                         & \int_{\varphi_{\mathrm{h}}=0}^{2\pi}\frac{1}{2\pi\alpha_x\alpha_y\left(\frac{\cos^2\varphi_{\mathrm{h}}}{\alpha_x^2}+\frac{\sin^2\varphi_{\mathrm{h}}}{\alpha_y^2}\right)}\mathrm{d}\varphi_{\mathrm{h}}\nonumber \\
-        =                                                & \int_{\varphi_{\mathrm{h}}=0}^{2\pi}\frac{\alpha_x\alpha_y}{2\pi(\alpha_x^2\sin^2\varphi_{\mathrm{h}}+\alpha_y^2\cos^2\varphi_{\mathrm{h}})}\mathrm{d}\varphi_{\mathrm{h}}\nonumber                               \\
-        =                                                & \frac{\alpha_x\alpha_y}{2\pi}\int_{\varphi_{\mathrm{h}}=0}^{2\pi}\frac{1}{(\alpha_x^2\tan^2\varphi_{\mathrm{h}}+\alpha_y^2)\cos^2\varphi_{\mathrm{h}}}\mathrm{d}\varphi_{\mathrm{h}}\nonumber                     \\
-        =                                                & \frac{\alpha_x\alpha_y}{\pi}\int_{\varphi_{\mathrm{h}}=0}^{\pi}\frac{1}{\alpha_x^2\tan^2\varphi_{\mathrm{h}}+\alpha_y^2}\mathrm{d}\tan\varphi_{\mathrm{h}}\nonumber                                               \\
-        =                                                & \frac{\alpha_x\alpha_y}{\pi}\int_{\varphi_{\mathrm{h}}=-\frac{\pi}{2}}^{\frac{\pi}{2}}\frac{1}{\alpha_x^2\tan^2\varphi_{\mathrm{h}}+\alpha_y^2}\mathrm{d}\tan\varphi_{\mathrm{h}}\nonumber                        \\
-        \xlongequal{\text{令}t=\tan\varphi_{\mathrm{h}}} & \frac{\alpha_x\alpha_y}{\pi}\int_{t=-\infty}^{+\infty}\frac{1}{\alpha_x^2t^2+\alpha_y^2}\mathrm{d}t\nonumber                                                                                                      \\
-        =                                                & \frac{1}{\pi}\int_{t=-\infty}^{+\infty}\frac{1}{\left(\frac{\alpha_xt}{\alpha_y}\right)^2+1}\mathrm{d}\frac{\alpha_xt}{\alpha_y}\nonumber                                                                         \\
-        =                                                & \frac{1}{\pi}\arctan\frac{\alpha_xt}{\alpha_y}\bigg|_{t=-\infty}^{+\infty}\nonumber                                                                                                                               \\
-        =                                                & 1\, .
-    \end{align}
-\end{prove}
-
-接下来证明各向异性的Beckmann-Spizzichino模型即\refeq{8.10}满足规范性。
-\begin{prove}
-    设
-    \begin{align}\label{eq:8.ex-03}
-        \beta=\frac{\cos^2\varphi_{\mathrm{h}}}{\alpha_x^2}+\frac{\sin^2\varphi_{\mathrm{h}}}{\alpha_y^2}>0\quad(\alpha_x,\alpha_y>0)\, .
-    \end{align}
-    利用上述变量简化积分并结合\refeq{8.ex-02}，可得
-    \begin{align}
-          & \int\limits_{H^2({\bm n})}D({\bm\omega}_{\mathrm{h}})\cos\theta_{\mathrm{h}}\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber                                                                                                                                                                                                                                                         \\
-        = & \int\limits_{H^2({\bm n})}\frac{\mathrm{e}^{-\left(\frac{\cos^2\varphi_{\mathrm{h}}}{\alpha_x^2}+\frac{\sin^2\varphi_{\mathrm{h}}}{\alpha_y^2}\right)\tan^2\theta_{\mathrm{h}}}}{\pi\alpha_x\alpha_y\cos^4\theta_{\mathrm{h}}}\cos\theta_{\mathrm{h}}\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber                                                                                \\
-        = & \int_{\varphi_{\mathrm{h}}=0}^{2\pi}\int_{\theta_{\mathrm{h}}=0}^{\frac{\pi}{2}}\frac{\mathrm{e}^{-\left(\frac{\cos^2\varphi_{\mathrm{h}}}{\alpha_x^2}+\frac{\sin^2\varphi_{\mathrm{h}}}{\alpha_y^2}\right)\tan^2\theta_{\mathrm{h}}}}{\pi\alpha_x\alpha_y\cos^3\theta_{\mathrm{h}}}\sin\theta_{\mathrm{h}}\mathrm{d}\theta_{\mathrm{h}}\mathrm{d}\varphi_{\mathrm{h}}\nonumber \\
-        = & \int_{\varphi_{\mathrm{h}}=0}^{2\pi}\int_{\theta_{\mathrm{h}}=0}^{\frac{\pi}{2}}\frac{\tan\theta_{\mathrm{h}}}{\pi\alpha_x\alpha_y\cos^2\theta_{\mathrm{h}}}\mathrm{e}^{-\beta \tan^2\theta_{\mathrm{h}}}\mathrm{d}\theta_{\mathrm{h}}\mathrm{d}\varphi_{\mathrm{h}}\nonumber                                                                                                   \\
-        = & \int_{\varphi_{\mathrm{h}}=0}^{2\pi}\int_{\theta_{\mathrm{h}}=0}^{\frac{\pi}{2}}\frac{-1}{2\pi\alpha_x\alpha_y\beta}\mathrm{d}\mathrm{e}^{-\beta \tan^2\theta_{\mathrm{h}}}\mathrm{d}\varphi_{\mathrm{h}}\nonumber                                                                                                                                                              \\
-        = & \int_{\varphi_{\mathrm{h}}=0}^{2\pi}\frac{-1}{2\pi\alpha_x\alpha_y\beta}\left(\mathrm{e}^{-\beta \tan^2\theta_{\mathrm{h}}}\bigg|_{\theta_{\mathrm{h}}=0}^{\frac{\pi}{2}}\right)\mathrm{d}\varphi_{\mathrm{h}}\nonumber                                                                                                                                                         \\
-        = & \int_{\varphi_{\mathrm{h}}=0}^{2\pi}\frac{1}{2\pi\alpha_x\alpha_y\beta}\mathrm{d}\varphi_{\mathrm{h}}\nonumber                                                                                                                                                                                                                                                                  \\
-        = & 1\, .
-    \end{align}
-\end{prove}
-
-Trowbridge-Reitz模型即\refeq{8.11}的证明是类似的。
-\begin{prove}
-    同样按\refeq{8.ex-03}设好$\beta$，结合\refeq{8.ex-02}，可得
-    \begin{align}
-                                                                 & \int\limits_{H^2({\bm n})}D({\bm\omega}_{\mathrm{h}})\cos\theta_{\mathrm{h}}\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber                                                                                                                                                                                                                                                            \\
-        =                                                        & \int\limits_{H^2({\bm n})}\frac{1}{\pi\alpha_x\alpha_y\left(1+\left(\frac{\cos^2\varphi_{\mathrm{h}}}{\alpha_x^2}+\frac{\sin^2\varphi_{\mathrm{h}}}{\alpha_y^2}\right)\tan^2\theta_{\mathrm{h}}\right)^2\cos^4\theta_{\mathrm{h}}}\cos\theta_{\mathrm{h}}\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber                                                                               \\
-        =                                                        & \int_{\varphi_{\mathrm{h}}=0}^{2\pi}\int_{\theta_{\mathrm{h}}=0}^{\frac{\pi}{2}}\frac{\sin\theta_{\mathrm{h}}}{\pi\alpha_x\alpha_y\left(1+\left(\frac{\cos^2\varphi_{\mathrm{h}}}{\alpha_x^2}+\frac{\sin^2\varphi_{\mathrm{h}}}{\alpha_y^2}\right)\tan^2\theta_{\mathrm{h}}\right)^2\cos^3\theta_{\mathrm{h}}}\mathrm{d}\theta_{\mathrm{h}}\mathrm{d}\varphi_{\mathrm{h}}\nonumber \\
-        =                                                        & \int_{\varphi_{\mathrm{h}}=0}^{2\pi}\int_{\theta_{\mathrm{h}}=0}^{\frac{\pi}{2}}\frac{\tan\theta_{\mathrm{h}}}{\pi\alpha_x\alpha_y(1+\beta\tan^2\theta_{\mathrm{h}})^2\cos^2\theta_{\mathrm{h}}}\mathrm{d}\theta_{\mathrm{h}}\mathrm{d}\varphi_{\mathrm{h}}\nonumber                                                                                                               \\
-        =                                                        & \int_{\varphi_{\mathrm{h}}=0}^{2\pi}\int_{\theta_{\mathrm{h}}=0}^{\frac{\pi}{2}}\frac{1}{2\pi\alpha_x\alpha_y\beta(1+\beta\tan^2\theta_{\mathrm{h}})^2}\mathrm{d}(\beta\tan^2\theta_{\mathrm{h}})\mathrm{d}\varphi_{\mathrm{h}}\nonumber                                                                                                                                           \\
-        \xlongequal{\text{令}u=1+\beta\tan^2\theta_{\mathrm{h}}} & \int_{\varphi_{\mathrm{h}}=0}^{2\pi}\int_{u=1}^{+\infty}\frac{1}{2\pi\alpha_x\alpha_y\beta u^2}\mathrm{d}u\mathrm{d}\varphi_{\mathrm{h}}\nonumber                                                                                                                                                                                                                                  \\
-        =                                                        & \int_{\varphi_{\mathrm{h}}=0}^{2\pi}\int_{u=1}^{+\infty}\frac{-1}{2\pi\alpha_x\alpha_y\beta}\mathrm{d}u^{-1}\mathrm{d}\varphi_{\mathrm{h}}\nonumber                                                                                                                                                                                                                                \\
-        =                                                        & \int_{\varphi_{\mathrm{h}}=0}^{2\pi}\frac{-1}{2\pi\alpha_x\alpha_y\beta}\left(\frac{1}{u}\bigg|_{u=1}^{+\infty}\right)\mathrm{d}\varphi_{\mathrm{h}}\nonumber                                                                                                                                                                                                                      \\
-        =                                                        & \int_{\varphi_{\mathrm{h}}=0}^{2\pi}\frac{1}{2\pi\alpha_x\alpha_y\beta}\mathrm{d}\varphi_{\mathrm{h}}\nonumber                                                                                                                                                                                                                                                                     \\
-        =                                                        & 1\, .
-    \end{align}
-\end{prove}
+对于Trowbridge-Reitz模型，注意到积分式
+\begin{align}
+    \int\frac{\mathrm{d}x}{(b^2+x^2)^2}=\frac{x}{2b^2(b^2+x^2)}+\frac{1}{2b^3}\arctan\frac{x}{b}+C\, ,
+\end{align}
+于是有
+\begin{align}
+    &\int_{-\infty}^{+\infty}\int_{-\infty}^{+\infty}\frac{1}{\displaystyle\pi\alpha_x\alpha_y\left(1
+    +\frac{x_s^2}{\alpha_x^2}+\frac{y_s^2}{\alpha_y^2}\right)^2}\mathrm{d}x_s\mathrm{d}y_s\nonumber\\
+    \xlongequal{\text{令}x=\frac{x_s}{\alpha_x},y=\frac{y_s}{\alpha_y}}&\int_{-\infty}^{+\infty}\int_{-\infty}^{+\infty}
+    \frac{1}{\pi\left(1+x^2+y^2\right)^2}\mathrm{d}x\mathrm{d}y\nonumber\\
+    =&\frac{1}{\pi}\int_{-\infty}^{+\infty}\left(\frac{x}{2(1+y^2)(1+x^2+y^2)}
+    +\frac{1}{2(1+y^2)^{\frac{3}{2}}}\arctan\frac{x}{\sqrt{1+y^2}}\right)
+    \bigg|_{x=-\infty}^{+\infty}\mathrm{d}y\nonumber\\
+    =&\frac{1}{\pi}\int_{-\infty}^{+\infty}\frac{\pi}{2(1+y^2)^{\frac{3}{2}}}\mathrm{d}y\nonumber\\
+    =&\frac{1}{2}\int_{-\infty}^{+\infty}\mathrm{d}\frac{y}{\sqrt{1+y^2}}\nonumber\\
+    =&\frac{1}{2}\frac{y}{\sqrt{1+y^2}}\bigg|_{y=-\infty}^{+\infty}=1\, .
+\end{align}
+由此它们的$D({\bm\omega}_{\mathrm{h}},\alpha_x,\alpha_y)$也满足规范性。

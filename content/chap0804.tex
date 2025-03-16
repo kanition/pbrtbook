@@ -437,7 +437,7 @@ pbrt对Beckmann-Spizzichino的$\Lambda({\bm\omega})$函数的计算则基于对\
 
 各向异性分布的掩模遮挡函数最简单的计算方法是利用它们对应的各向同性函数
 并根据$\alpha_x$和$\alpha_y$值拉伸原本的微曲面。
-等价地，也可在感兴趣的方向上算出插值的$\alpha$再代入各向同性函数；
+等价地，也可在感兴趣的方向上插值算出$\alpha$再代入各向同性函数；
 更多细节参见本章末“扩展阅读”一节。
 \begin{lstlisting}
 `\initcode{Compute alpha for direction w}{=}`
@@ -474,7 +474,7 @@ Trowbridge-Reitz分布则非常简单：
 
 与微面分布的几何性质有关的最后一个很有用的函数是$G_1({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})$，
 它给出在微分区域中从方向${\bm\omega}_{\mathrm{o}}$和${\bm\omega}_{\mathrm{i}}$都可见的微面比例。
-定义$G_1$需要一些额外假设\sidenote{译者注：原文行文中有时会简称$G$，为避免误解，笔者改回为$G_1$，下同。}。
+定义$G_1$需要一些额外假设\sidenote{译者注：原文中有时会简称$G$，为避免混淆，笔者改回为$G_1$，下同。}。
 对于初学者，我们知道$G_1({\bm\omega}_{\mathrm{o}})$给出
 从方向${\bm\omega}_{\mathrm{o}}$可见的微面比例，
 而$G_1({\bm\omega}_{\mathrm{i}})$则给出从${\bm\omega}_{\mathrm{i}}$可见的比例就行。
@@ -494,7 +494,7 @@ Trowbridge-Reitz分布则非常简单：
 \begin{align*}
     G_1({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})=\frac{1}{1+\Lambda({\bm\omega}_{\mathrm{o}})+\Lambda({\bm\omega}_{\mathrm{i}})}\, .
 \end{align*}
-实践中该近似是相当准确的，也是我们在pbrt中要用的。
+该近似在实践中相当准确，也是我们在pbrt中要用的。
 详见本章末“扩展阅读”一节关于该函数的推导与更多定义
 函数$G_1({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})$的复杂方法的信息指南。
 \begin{lstlisting}

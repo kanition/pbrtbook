@@ -688,6 +688,126 @@ $\varphi_{\mathrm{h}}$为方位角
     =D({\bm\omega}_{\mathrm{h}})\cos^4\theta_{\mathrm{h}}\, .
 \end{align}
 
+除了$P_{xy}(x_s,y_s)$，我们还需要另一个分布才能完整描述微面，
+即描述微曲面相对于宏曲面的高度差值$h$的分布$P_H(h)$，它可以是任意合适的分布。
+此外，我们记球坐标下出射方向的表示为
+\begin{align}
+    {\bm\omega}_{\mathrm{o}}=(\sin\theta_{\mathrm{o}}\cos\varphi_{\mathrm{o}},\sin\theta_{\mathrm{o}}\sin\varphi_{\mathrm{o}},\cos\theta_{\mathrm{o}})\, .
+\end{align}
+同时注意到${\bm\omega}_{\mathrm{g}}=(0,0,1)$，我们在
+由${\bm\omega}_{\mathrm{o}}$和${\bm\omega}_{\mathrm{g}}$共同所在的平面（以下简称“截平面”）内
+继续考虑该问题（见\reffig{08ex01-G1Geometry}）：
+用截平面去截取微曲面，设对应的一维斜率分布为$P_1(q)$，
+则$P_1(q)$就是$P_{xy}(x_s,y_s)$在该平面法向方向上的投影，
+即$P_{xy}(x_s,y_s)$沿着曲线$C:x_s\cos\varphi_{\mathrm{o}}+y_s\sin\varphi_{\mathrm{o}}=q$的积分：
+\begin{align}
+    P_1(q)=\int\limits_{C}P_{xy}(x_s,y_s)\mathrm{d}{\bm s}\, .
+\end{align}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.85\linewidth]{Pictures/chap08/GeometryForSmithShadowingMasking.eps}
+    \caption{}
+    \label{fig:08ex01-G1Geometry}
+\end{figure}
+
+在微曲面上随机取一点，我们把该点高度为$h_0$且从${\bm\omega}_{\mathrm{o}}$方向
+可见的概率记作$V(h_0,\mu)$，其中$\mu=\cot\theta_{\mathrm{o}}$即出射方向斜率。
+如\reffig{08ex01-G1Geometry}，我们用投影到宏曲面上的距离参数$t$来参数化表示该方向的观察光线。
+则在位置$t$处，光线的高度为$h_0+\mu t$.
+对于某一个极小区间$[t,t+\Delta t]$，我们用$g(t)\Delta t$来表示
+在$t$之前没有被微曲面遮挡的光线中有多大概率会在该区间内发生首次遮挡（也即与微曲面相交）。
+则光线可见的概率$V(h_0,\mu)$就是它在每个这样的小区间上
+都不会发生遮挡的概率之积，并取$\Delta t\to 0$下的极限：
+\begin{align}
+    V(h_0,\mu)=&\lim\limits_{\Delta t\to 0}\prod\limits_{k=0}^{\infty}(1-g(k\Delta t)\Delta t)\nonumber\\
+    =&\exp\left(\lim\limits_{\Delta t\to 0}\sum\limits_{k=0}^{\infty}\ln(1-g(k\Delta t)\Delta t)\right)\nonumber\\
+    =&\exp\left(-\lim\limits_{\Delta t\to 0}\sum\limits_{k=0}^{\infty}g(k\Delta t)\Delta t\right)\nonumber\\
+    =&\exp\left(-\int_{0}^{+\infty}g(t)\mathrm{d}t\right)\, .
+\end{align}
+
+为了计算$g(t)$，我们假设微曲面高度和斜率分布是互相独立的，
+这样就可以近似考虑为：在区间$[t,t+\Delta t]$内，有多少比例的光线
+进入时在微曲面之上，而离开时在微曲面之下（这样就会发生遮挡）？
+设$t$处的微曲面高度为$h$，斜率为$q$，我们先考虑进入区间时的情况：
+显然只要$t$处的微曲面高度$h$低于光线高度$h_0+\mu t$即可
+\begin{align}
+    h_0+\mu t>h\, ,
+\end{align}
+根据高度场概率分布，相应的概率为
+\begin{align}
+    \int_{-\infty}^{h_0+\mu t}P_H(h)\mathrm{d}h\, .
+\end{align}
+而光线离开时在微曲面之下意味着$t+\Delta t$处的微曲面高度高于光线高度，即
+\begin{align}
+    h_0+\mu(t+\Delta t)<h+q\Delta t\, ,
+\end{align}
+整理得
+\begin{align}
+    h>h_0+\mu t-(q-\mu)\Delta t\, .
+\end{align}
+注意根据上面的条件还可推出$q>\mu$.
+所以在该区间内离开时光线在微曲面之下的概率为
+\begin{align}
+    \int_{\mu}^{+\infty}\int_{h_0+\mu t-(q-\mu)\Delta t}^{h_0+\mu t}P_H(h)P_1(q)\mathrm{d}h\mathrm{d}q\, .
+\end{align}
+于是可得$g(t)\Delta t$为
+\begin{align}
+    g(t)\Delta t=\frac{\displaystyle\int_{\mu}^{+\infty}\int_{h_0+\mu t-(q-\mu)\Delta t}^{h_0+\mu t}P_H(h)P_1(q)\mathrm{d}h\mathrm{d}q}{\displaystyle\int_{-\infty}^{h_0+\mu t}P_H(h)\mathrm{d}h}\, ,
+\end{align}
+整理化简有
+\begin{align}
+    g(t)=&\lim\limits_{\Delta t\to 0}\frac{\displaystyle\int_{\mu}^{+\infty}\int_{h_0+\mu t-(q-\mu)\Delta t}^{h_0+\mu t}P_H(h)P_1(q)\mathrm{d}h\mathrm{d}q}{\Delta t\displaystyle\int_{-\infty}^{h_0+\mu t}P_H(h)\mathrm{d}h}\nonumber\\
+    =&\frac{\displaystyle\int_{\mu}^{+\infty}(q-\mu)P_1(q)\lim\limits_{\Delta t\to 0}\left(\frac{1}{(q-\mu)\Delta t}\int_{h_0+\mu t-(q-\mu)\Delta t}^{h_0+\mu t}P_H(h)\mathrm{d}h\right)\mathrm{d}q}{\displaystyle\int_{-\infty}^{h_0+\mu t}P_H(h)\mathrm{d}h}\nonumber\\
+    =&\frac{\displaystyle\int_{\mu}^{+\infty}(q-\mu)P_1(q)P_H(h_0+\mu t)\mathrm{d}q}{\displaystyle\int_{-\infty}^{h_0+\mu t}P_H(h)\mathrm{d}h}\nonumber\\
+    =&\Lambda(\mu)\frac{\mu P_H(h_0+\mu t)}{F_H(h_0+\mu t)}\, ,
+\end{align}
+其中$F_H$是$P_H$相应的累积分布函数
+\begin{align}
+    F_H(h)=\int_{-\infty}^{h}P_H(h)\mathrm{d}h\, ,
+\end{align}
+而$\Lambda$定义为
+\begin{align}
+    \Lambda(\mu)=\frac{1}{\mu}\int_{\mu}^{+\infty}(q-\mu)P_1(q)\mathrm{d}q\, .
+\end{align}
+注意到
+\begin{align}
+    \frac{\partial F_H(h_0+\mu t)}{\partial t}=\mu P_H(h_0+\mu t)\, ,
+\end{align}
+于是有
+\begin{align}
+    V(h_0,\mu)=&\exp\left(-\int_{0}^{+\infty}g(t)\mathrm{d}t\right)\nonumber\\
+    =&\exp\left(-\int_{0}^{+\infty}\Lambda(\mu)\frac{\mu P_H(h_0+\mu t)}{F_H(h_0+\mu t)}\mathrm{d}t\right)\nonumber\\
+    =&\exp\left(-\Lambda(\mu)\int_{0}^{+\infty}\mathrm{d}\ln F_H(h_0+\mu t)\right)\nonumber\\
+    =&\exp\left(-\Lambda(\mu)(\ln 1 - \ln F_H(h_0))\right)\nonumber\\
+    =&F_H^{\Lambda(\mu)}(h_0)\, .
+\end{align}
+我们在所有起始高度$h_0$上积分，得到整个微曲面上对该光线的平均可见概率为
+\begin{align}
+    V(\mu)&=\int_{-\infty}^{+\infty}V(h_0,\mu)P_H(h_0)\mathrm{d}h_0\nonumber\\
+    =&\int_{-\infty}^{+\infty}F_H^{\Lambda(\mu)}(h_0)P_H(h_0)\mathrm{d}h_0\nonumber\\
+    =&\int_{-\infty}^{+\infty}F_H^{\Lambda(\mu)}(h_0)\mathrm{d}F_H(h_0)\nonumber\\
+    =&\frac{1}{1+\Lambda(\mu)}F_H^{1+\Lambda(\mu)}(h_0)\bigg|_{h_0=-\infty}^{+\infty}\nonumber\\
+    =&\frac{1}{1+\Lambda(\mu)}\, .
+\end{align}
+最后，我们加上示性函数来保证排除掉背向光线，
+并把$\Lambda(\mu)$重新记作$\Lambda({\bm\omega}_{\mathrm{o}})$，终于得到
+\begin{align}
+    G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})
+    =\chi({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}})V(\mu)
+    =\frac{\chi({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}})}
+    {1+\Lambda({\bm\omega}_{\mathrm{o}})}\, .
+\end{align}
+特别地，当$\varphi_{\mathrm{o}}=0$时，有
+\begin{align}
+    \Lambda({\bm\omega}_{\mathrm{o}})=\frac{1}{\cot\theta_{\mathrm{o}}}
+    \int_{\cot\theta_{\mathrm{o}}}^{+\infty}(x_s-\cot\theta_{\mathrm{o}})P_x(x_s)\mathrm{d}x_s\, ,
+\end{align}
+其中
+\begin{align}
+    P_x(x_s)=\int_{-\infty}^{+\infty}P_{xy}(x_s,y_s)\mathrm{d}y_s\, .
+\end{align}
+
 利用前面的结果，我们尝试将积分域从法线分布空间转化到斜率分布空间。
 首先注意到，因为${\bm\omega}_{\mathrm{g}}=(0,0,1)$，
 所以结合\refeq{08-ex01-normals-by-slope}有

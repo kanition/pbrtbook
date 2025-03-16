@@ -170,7 +170,7 @@ protected:
 \end{lstlisting}
 
 微面曲面的一个重要特性由分布函数$D({\bm\omega}_{\mathrm{h}})$表示
-\sidenote{译者注：微面模型涉及的数学推导较为复杂，因此原书直接介绍了一些理论结果（例如公式）。
+\sidenote{译者注：微面模型涉及的数学推导较为复杂，因此原书直接引用了很多理论结果（例如公式）。
 如果读者想进一步了解其原理细节，可以参考笔者补充的\refsec{译者补充：微面模型相关推导}。}，
 它给出了曲面法线为${\bm\omega}_{\mathrm{h}}$的微面的微分面积
 （回想\reffig{8.12}展示了曲面的粗糙度是怎样和微面法线分布函数相联系的）。
@@ -410,7 +410,7 @@ virtual `\refvar{Float}{}` `\initvar[MicrofacetDistribution::Lambda]{Lambda}{}`(
 从实际表面测量到的情况相比已经很精确了。
 
 在邻近点高度无关的假设下，各向同性的Beckmann-Spizzichino分布的$\Lambda({\bm\omega})$是
-\begin{align}
+\begin{align}\label{eq:8.14}
     \Lambda({\bm\omega})=\frac{1}{2}\left(\mathrm{erf}(a)-1+\frac{\mathrm{e}^{-a^2}}{a\sqrt{\pi}}\right)\, ,
 \end{align}
 其中$a=\displaystyle\frac{1}{\alpha\tan\theta}$，
@@ -418,3 +418,91 @@ virtual `\refvar{Float}{}` `\initvar[MicrofacetDistribution::Lambda]{Lambda}{}`(
 \sidenote{译者注：为了减少理解障碍，这里笔者把函数$\mathrm{erf}$的
 自变量改回成了$\Lambda({\bm\omega})$中所用的$a$.}，
 $\displaystyle\mathrm{erf}(a)=\frac{2}{\sqrt{\pi}}\int_0^a\mathrm{e}^{-x^2}\mathrm{d}x$.
+
+pbrt对Beckmann-Spizzichino的$\Lambda({\bm\omega})$函数的计算则基于对\refeq{8.14}的合理多项式近似，
+它因为避免调用求值开销极大的{\ttfamily std::erf()}和{\ttfamily std::exp()}而容易计算得多。
+\begin{lstlisting}
+`\refcode{MicrofacetDistribution Method Definitions}{+=}\lastnext{MicrofacetDistributionMethodDefinitions}`
+`\refvar{Float}{}` `\refvar{BeckmannDistribution}{}`::`\initvar[BeckmannDistribution::Lambda]{Lambda}{}`(const `\refvar{Vector3f}{}` \&w) const {
+    `\refvar{Float}{}` absTanTheta = std::abs(`\refvar{TanTheta}{}`(w));
+    if (std::isinf(absTanTheta)) return 0.;
+    `\refcode{Compute alpha for direction w}{}`
+    `\refvar{Float}{}` a = 1 / (alpha * absTanTheta);
+    if (a >= 1.6f)
+        return 0;
+    return (1 - 1.259f * a + 0.396f * a * a) /
+           (3.535f * a + 2.181f * a * a);
+}
+\end{lstlisting}
+
+各向异性分布的掩模遮挡函数最简单的计算方法是利用它们对应的各向同性函数
+并根据$\alpha_x$和$\alpha_y$值拉伸原本的微曲面。
+等价地，也可在感兴趣的方向上算出插值的$\alpha$再代入各向同性函数；
+更多细节参见本章末“扩展阅读”一节。
+\begin{lstlisting}
+`\initcode{Compute alpha for direction w}{=}`
+`\refvar{Float}{}` alpha = std::sqrt(`\refvar{Cos2Phi}{}`(w) * `\refvar[BeckmannDistribution::alphax]{alphax}{}` * `\refvar[BeckmannDistribution::alphax]{alphax}{}` +
+                        `\refvar{Sin2Phi}{}`(w) * `\refvar[BeckmannDistribution::alphay]{alphay}{}` * `\refvar[BeckmannDistribution::alphay]{alphay}{}`);
+\end{lstlisting}
+
+在非相关高度假设下\sidenote{译者注：指微面上任意两点位置的高度和它们之间的距离无关。}，
+Trowbridge-Reitz分布则非常简单：
+\begin{align*}
+    \Lambda({\bm\omega})=\frac{-1+\sqrt{1+\alpha^2\tan^2\theta}}{2}\, .
+\end{align*}
+\begin{lstlisting}
+`\refcode{MicrofacetDistribution Method Definitions}{+=}\lastnext{MicrofacetDistributionMethodDefinitions}`
+`\refvar{Float}{}` `\refvar{TrowbridgeReitzDistribution}{}`::`\initvar[TrowbridgeReitzDistribution::Lambda]{Lambda}{}`(const `\refvar{Vector3f}{}` &w) const {
+    `\refvar{Float}{}` absTanTheta = std::abs(`\refvar{TanTheta}{}`(w));
+    if (std::isinf(absTanTheta)) return 0.;
+    `\refcode{Compute alpha for direction w}{}`
+    `\refvar{Float}{}` alpha2Tan2Theta = (alpha * absTanTheta) * (alpha * absTanTheta);
+    return (-1 + std::sqrt(1.f + alpha2Tan2Theta)) / 2;
+}
+\end{lstlisting}
+
+\reffig{8.18}展示了一些$\alpha$取值下Trowbridge-Reitz的$G_1({\bm\omega})$函数图像。
+注意该函数在大部分定义域上都接近1但在掠角处降到0。
+还注意增加曲面粗糙度（也就是$\alpha$值更高）会让函数下降得更快。
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.75\linewidth]{Pictures/chap08/tr-g1-vs-alpha.eps}
+    \caption{Trowbridge-Reitz分布的掩模遮挡函数$G_1({\bm\omega})$.
+    增加曲面粗糙度（更高的$\alpha$值）让函数更快地降到零。}
+    \label{fig:8.18}
+\end{figure}
+
+与微面分布的几何性质有关的最后一个很有用的函数是$G_1({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})$，
+它给出在微分区域中从方向${\bm\omega}_{\mathrm{o}}$和${\bm\omega}_{\mathrm{i}}$都可见的微面比例。
+定义$G_1$需要一些额外假设\sidenote{译者注：原文行文中有时会简称$G$，为避免误解，笔者改回为$G_1$，下同。}。
+对于初学者，我们知道$G_1({\bm\omega}_{\mathrm{o}})$给出
+从方向${\bm\omega}_{\mathrm{o}}$可见的微面比例，
+而$G_1({\bm\omega}_{\mathrm{i}})$则给出从${\bm\omega}_{\mathrm{i}}$可见的比例就行。
+如果我们假设微面从这两个方向均可见的概率就是独立地从每个方向可见的概率，则我们有
+\begin{align*}
+    G_1({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})=G_1({\bm\omega}_{\mathrm{o}})G_1({\bm\omega}_{\mathrm{i}})\, .
+\end{align*}
+然而实践中，这些概率并不独立，该公式低估了$G_1$.
+为了理解为什么这样，考虑${\bm\omega}_{\mathrm{o}}={\bm\omega}_{\mathrm{i}}$的情况；
+该情况下任意从${\bm\omega}_{\mathrm{o}}$可见的微面也会从${\bm\omega}_{\mathrm{i}}$可见，
+所以$G_1({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})=G_1({\bm\omega}_{\mathrm{o}})=G_1({\bm\omega}_{\mathrm{i}})$.
+因为$G_1({\bm\omega})\le 1$，所以该情况下它们的乘积会造成$G_1({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})$太小
+（除非$G_1({\bm\omega})=1$，但这通常只在${\bm\omega}=(0,0,1)$时成立）。
+更普遍的是，两个方向越接近，$G_1({\bm\omega}_{\mathrm{o}})$和$G_1({\bm\omega}_{\mathrm{i}})$之间越相关。
+
+假设微面上的给定点越高，微面就越可能可见，则可以推导出更精确的模型。该假设导出的模型是
+\begin{align*}
+    G_1({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})=\frac{1}{1+\Lambda({\bm\omega}_{\mathrm{o}})+\Lambda({\bm\omega}_{\mathrm{i}})}\, .
+\end{align*}
+实践中该近似是相当准确的，也是我们在pbrt中要用的。
+详见本章末“扩展阅读”一节关于该函数的推导与更多定义
+函数$G_1({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})$的复杂方法的信息指南。
+\begin{lstlisting}
+`\refcode{MicrofacetDistribution Public Methods}{+=}\lastnext{MicrofacetDistributionPublicMethods}`
+`\refvar{Float}{}` G(const `\refvar{Vector3f}{}` &wo, const `\refvar{Vector3f}{}` &wi) const {
+    return 1 / (1 + `\refvar[MicrofacetDistribution::Lambda]{Lambda}{}`(wo) + `\refvar[MicrofacetDistribution::Lambda]{Lambda}{}`(wi));
+}
+\end{lstlisting}
+
+\subsection{Torrance-Sparrow模型}\label{sub:Torrance-Sparrow模型}
+\citet{Torrance:67}开发了一个早期微面模型来对金属曲面建模。

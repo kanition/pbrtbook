@@ -1,6 +1,7 @@
 \section{译者补充：微面模型相关推导}\label{sec:译者补充：微面模型相关推导}
 \begin{remark}
-    本节内容不是原书内容，而是译者根据\citet{heitz:hal-01024289}和\citet{10.5555/2383847.2383874}整理
+    本节内容不是原书内容，而是译者根据\citet{heitz:hal-01024289}、
+    \citet{1138991}、\cite{1142437}和\citet{10.5555/2383847.2383874}整理
     并推导后补充的，请酌情参考和斧正。
 \end{remark}
 \subsection{微面分布函数的定义与性质}\label{sub:微面分布函数的定义与性质}
@@ -502,7 +503,6 @@ ${\bm\omega}_{\mathrm{m}}$对${\bm\omega}_{\mathrm{i}}$的\keyindex{雅可比矩
 需要说明的是，弱白炉测试丢弃遮挡函数只是为了
 提供一个便捷的方法来验证BRDF的物理合理性，
 并不是说BRDF在实际使用中也应丢弃遮挡函数（\reffig{08ex01-CompleteWhiteFurnaceTest}）。
-
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=\linewidth]{Pictures/chap08/CompleteWhiteFurnaceTest.eps}
@@ -688,268 +688,208 @@ $\varphi_{\mathrm{h}}$为方位角
     =D({\bm\omega}_{\mathrm{h}})\cos^4\theta_{\mathrm{h}}\, .
 \end{align}
 
-除了$P_{xy}(x_s,y_s)$，我们还需要另一个分布才能完整描述微面，
-即描述微曲面相对于宏曲面的高度差值$h$的分布$P_H(h)$，它可以是任意合适的分布。
-此外，我们记球坐标下出射方向的表示为
+只有$P_{xy}(x_s,y_s)$还不足以推导出掩模遮挡函数。
+我们可以把微曲面$\mathcal{M}$看作是在光滑的宏曲面$\mathcal{G}$上
+通过平稳的随机过程叠加上或正或负的高度波动得到的。在如\reffig{08ex01-G1Geometry}所示，
+我们继续分析一个微观区域：仍把宏曲面视作平面且就是$z=0$，宏曲面法线为${\bm\omega}_{\mathrm{g}}=(0,0,1)$。
+而微曲面上每一点在$Z$方向到宏曲面上的高度$h$（包含正负号）由连续概率分布$P_H(h)$描述，
+且通常$P_H(h)$均值为零。同时我们写出光线出射方向${\bm\omega}_{\mathrm{o}}$的球坐标表示：
 \begin{align}
     {\bm\omega}_{\mathrm{o}}=(\sin\theta_{\mathrm{o}}\cos\varphi_{\mathrm{o}},\sin\theta_{\mathrm{o}}\sin\varphi_{\mathrm{o}},\cos\theta_{\mathrm{o}})\, .
 \end{align}
-同时注意到${\bm\omega}_{\mathrm{g}}=(0,0,1)$，我们在
-由${\bm\omega}_{\mathrm{o}}$和${\bm\omega}_{\mathrm{g}}$共同所在的平面（以下简称“截平面”）内
-继续考虑该问题（见\reffig{08ex01-G1Geometry}）：
-用截平面去截取微曲面，设对应的一维斜率分布为$P_1(q)$，
-则$P_1(q)$就是$P_{xy}(x_s,y_s)$在该平面法向方向上的投影，
-即$P_{xy}(x_s,y_s)$沿着曲线$C:x_s\cos\varphi_{\mathrm{o}}+y_s\sin\varphi_{\mathrm{o}}=q$的积分：
+其中出射角$\theta_{\mathrm{o}}$即${\bm\omega}_{\mathrm{o}}$与${\bm\omega}_{\mathrm{g}}$的夹角。
+
+接下来我们考虑这样一个问题：在微曲面$\mathcal{M}$上随机取一点$A$，
+则点$A$具有高度$h_A$，且该点处的微面斜率$(x_s,y_s)$取值为$(u_A,v_A)$，
+还能从${\bm\omega}_{\mathrm{o}}$方向可见的概率是多少？
+
+我们把这个概率记作$W(h_A,u_A,v_A,{\bm\omega}_{\mathrm{o}})$.
+为了方便考虑该问题，我们在由${\bm\omega}_{\mathrm{o}}$和${\bm\omega}_{\mathrm{g}}$确定的平面
+（以下简称“截平面”）内推导：在如\reffig{08ex01-G1Geometry}所示直角坐标系下，
+我们把原点$O$取在点$A$正下方的宏曲面上，把$OA$定为纵轴$Z$，${\bm\omega}_{\mathrm{g}}$和$Z$轴同向；
+横轴$T$垂直于纵轴$Z$且与${\bm\omega}_{\mathrm{o}}$、${\bm\omega}_{\mathrm{g}}$共面（也即在截平面内），
+并和${\bm\omega}_{\mathrm{o}}$朝着同一边。
+这样我们就能借鉴之前的光线参数化表示法——微曲面上任意一点的位置都可以
+用它在宏曲面（也即横轴$T$）上的投影坐标$t$来表示。
+此外，我们图示中考虑的出射方向大致向右，所以不失一般性，我们假定只有点$A$右边的微曲面才有可能挡住出射光线。
+所以$W(h_A,u_A,v_A,{\bm\omega}_{\mathrm{o}})$就是点$A$右侧的微面不会与出射光线相交的概率。
+
+为了简化后文记号，我们以$A$来代替$h_A,u_A,v_A$这整组关于点$A$的变量，
+把$W(h_A,u_A,v_A,{\bm\omega}_{\mathrm{o}})$简记为$W(A,{\bm\omega}_{\mathrm{o}})$，
+并进一步定义$W(A,{\bm\omega}_{\mathrm{o}},t)$为区间$[0,t]$内的微面都不与光线相交的概率，于是有
+\begin{align}\label{eq:08ex01-W-definition}
+    W(A,{\bm\omega}_{\mathrm{o}})=\lim\limits_{t\to +\infty}W(A,{\bm\omega}_{\mathrm{o}},t)\, .
+\end{align}
+
+根据$W(A,{\bm\omega}_{\mathrm{o}},t)$的定义，它应当满足如下微分性质：
+\begin{align}\label{eq:08ex01-VisiblePointProbability}
+    W(A,{\bm\omega}_{\mathrm{o}},t+\Delta t)
+    =W(A,{\bm\omega}_{\mathrm{o}},t)
+    Q(\Delta t|A,{\bm\omega}_{\mathrm{o}},t)\, ,
+\end{align}
+其中$Q(\Delta t|A,{\bm\omega}_{\mathrm{o}},t)$是微面与光线没有
+在区间$[0,t]$内相交的前提下，在极小区间$[t,t+\Delta t]$内
+（对应图中微曲面上$C$、$D$两点之间）也不相交的条件概率。
+进一步略去符号$A$和${\bm\omega}_{\mathrm{o}}$，我们反过来用$g(t)\Delta t$表示
+在区间$[t,t+\Delta t]$内要发生相交（并设交点为$B$）的条件概率
+（意味着$g(t)$本身是个概率密度函数），即
 \begin{align}
-    P_1(q)=\int\limits_{C}P_{xy}(x_s,y_s)\mathrm{d}{\bm s}\, .
+    Q(\Delta t|A,{\bm\omega}_{\mathrm{o}},t)=1-g(t)\Delta t\, ,
+\end{align}
+代回\refeq{08ex01-VisiblePointProbability}，得到
+\begin{align}
+    W(t+\Delta t)=W(t)(1-g(t)\Delta t)\, .
+\end{align}
+利用上式取极限，可得微分方程
+\begin{align}
+    \frac{\mathrm{d}}{\mathrm{d}t}W(t)=\lim\limits_{\Delta t\to 0}\frac{W(t+\Delta t)-W(t)}{\Delta t}=-W(t)g(t)\, ,
+\end{align}
+并求得解为
+\begin{align}\label{eq:08ex01-WtSolution}
+    W(t)=W(0)\exp\left(-\int_{0}^{t}g(\tau)\mathrm{d}\tau\right)\, .
+\end{align}
+其中$\tau$为临时积分变量。
+
+在关注$W(0)$的取值前，我们先插入点$A$的斜率问题。
+前面已经设了点$A$处的微面斜率在$x$和$y$方向的取值为$(u_A,v_A)$，
+那微曲面经过截平面的截取后，点$A$处在被截出的曲线上的一维斜率$q_A$
+（也即纵轴$Z$方向的高度相对于横轴$T$方向的变化率）是多少？
+显然就是微面在出射方向上的方向导数
+\begin{align}
+    q_A=u_A\cos\varphi_{\mathrm{o}}+v_A\sin\varphi_{\mathrm{o}}\, .
+\end{align}
+更一般地，把截平面内微曲面上任意一点的一维斜率$q$满足的概率分布记作$P_s(q)$，
+那么$P_s(q)$就是二维斜率分布$P_{xy}(x_s,y_s)$积分坍缩到截平面内的结果：
+\begin{align}
+    P_s(q)=\int_{-\infty}^{+\infty}P_{xy}(q\cos\varphi_{\mathrm{o}}-p\sin\varphi_{\mathrm{o}},
+    q\sin\varphi_{\mathrm{o}}+p\cos\varphi_{\mathrm{o}})\mathrm{d}p\, ,
+\end{align}
+其中$p$为临时积分变量。后文将会介绍到，$P_{xy}(x_s,y_s)$常常满足
+各向同性形状不变性，也即意味着$\varphi_{\mathrm{o}}$取任意值
+都不改变上式$P_s(q)$的结果。所以不妨设$\varphi_{\mathrm{o}}=0$，
+此时$P_s(q)$就是$P_{xy}(x_s,y_s)$的边缘分布$P_x(x_s)$：
+\begin{align}\label{eq:08-ex01-condition-1d-slope}
+    P_s(q)=P_x(q)=\int_{-\infty}^{+\infty}P_{xy}(q,y_s)\mathrm{d}y_s\, .
+\end{align}
+
+回到\refeq{08ex01-WtSolution}中，根据定义，$W(0)$应该这样取值：
+若点$A$的一维斜率$q_A$高于光线的斜率$\mu=\cot\theta_{\mathrm{o}}$，
+则光线立即被遮挡，该取值0，否则该取1，于是
+\begin{align}
+    W(0)=\chi(\mu-q_A)\, ,
+\end{align}
+所以有
+\begin{align}\label{eq:08ex01-Wt-gt-int}
+    W(t)=\chi(\mu-q_A)\exp\left(-\int_{0}^{t}g(\tau)\mathrm{d}\tau\right)\, .
 \end{align}
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.85\linewidth]{Pictures/chap08/GeometryForSmithShadowingMasking.eps}
-    \caption{}
+    \includegraphics[width=0.8\linewidth]{Pictures/chap08/GeometryForSmithShadowingMasking.eps}
+    \caption{要求得微曲面上点$A$能从${\bm\omega}_{\mathrm{o}}$方向观察到的概率，
+    可以先求对应光线在极小区间$[t,t+\Delta t]$内与微曲面相交的条件概率，再作转化。}
     \label{fig:08ex01-G1Geometry}
 \end{figure}
 
-在微曲面上随机取一点，我们把该点高度为$h_0$且从${\bm\omega}_{\mathrm{o}}$方向
-可见的概率记作$V(h_0,\mu)$，其中$\mu=\cot\theta_{\mathrm{o}}$即出射方向斜率。
-如\reffig{08ex01-G1Geometry}，我们用投影到宏曲面上的距离参数$t$来参数化表示该方向的观察光线。
-则在位置$t$处，光线的高度为$h_0+\mu t$.
-对于某一个极小区间$[t,t+\Delta t]$，我们用$g(t)\Delta t$来表示
-在$t$之前没有被微曲面遮挡的光线中有多大概率会在该区间内发生首次遮挡（也即与微曲面相交）。
-则光线可见的概率$V(h_0,\mu)$就是它在每个这样的小区间上
-都不会发生遮挡的概率之积，并取$\Delta t\to 0$下的极限：
+接下来的问题关键是怎么求出上式关于$g(t)$的积分。
+为了避免去考虑区间内微曲面上无穷个点的相关性，
+我们把这个问题简化近似为：在点$A$发出的光线没有被$t$之前的微面遮挡的条件下，
+光线在区间$[t,t+\Delta t]$内会被遮挡的条件概率。
+先考虑区间起点：设$t$处的微曲面（也即点$C$）的高度为$h$，一维斜率为$q$，
+显然只要微曲面高度$h$低于光线高度$h_A+\mu t$即可：
 \begin{align}
-    V(h_0,\mu)=&\lim\limits_{\Delta t\to 0}\prod\limits_{k=0}^{\infty}(1-g(k\Delta t)\Delta t)\nonumber\\
-    =&\exp\left(\lim\limits_{\Delta t\to 0}\sum\limits_{k=0}^{\infty}\ln(1-g(k\Delta t)\Delta t)\right)\nonumber\\
-    =&\exp\left(-\lim\limits_{\Delta t\to 0}\sum\limits_{k=0}^{\infty}g(k\Delta t)\Delta t\right)\nonumber\\
-    =&\exp\left(-\int_{0}^{+\infty}g(t)\mathrm{d}t\right)\, .
+    h<h_A+\mu t\, ,
 \end{align}
-
-为了计算$g(t)$，我们假设微曲面高度和斜率分布是互相独立的，
-这样就可以近似考虑为：在区间$[t,t+\Delta t]$内，有多少比例的光线
-进入时在微曲面之上，而离开时在微曲面之下（这样就会发生遮挡）？
-设$t$处的微曲面高度为$h$，斜率为$q$，我们先考虑进入区间时的情况：
-显然只要$t$处的微曲面高度$h$低于光线高度$h_0+\mu t$即可
+我们把这一事件记作$X$，利用高度概率分布$P_H(h)$算出相应的概率为
 \begin{align}
-    h_0+\mu t>h\, ,
+    P(X)=\int_{-\infty}^{h_A+\mu t}P_H(h)\mathrm{d}h\, .
 \end{align}
-根据高度场概率分布，相应的概率为
+接着考虑区间终点：要发生遮挡，则光线离开区间时应在微曲面之下，
+即意味着$t+\Delta t$处（也即点$D$）的微曲面高度应高于光线高度。
+因为区间极小，我们近似认为整个区间内微曲面足够平滑，各点一维斜率仍为$q$，于是有
 \begin{align}
-    \int_{-\infty}^{h_0+\mu t}P_H(h)\mathrm{d}h\, .
-\end{align}
-而光线离开时在微曲面之下意味着$t+\Delta t$处的微曲面高度高于光线高度，即
-\begin{align}
-    h_0+\mu(t+\Delta t)<h+q\Delta t\, ,
+    h+q\Delta t>h_A+\mu(t+\Delta t)\, ,
 \end{align}
 整理得
 \begin{align}
-    h>h_0+\mu t-(q-\mu)\Delta t\, .
+    h>h_A+\mu t-(q-\mu)\Delta t\, ,
 \end{align}
-注意根据上面的条件还可推出$q>\mu$.
-所以在该区间内离开时光线在微曲面之下的概率为
+我们把上述条件成立记作事件$Y$。
+注意当事件$X$和$Y$同时发生时，还可推出$q>\mu$.
+事件$X$和$Y$同时发生的概率为
 \begin{align}
-    \int_{\mu}^{+\infty}\int_{h_0+\mu t-(q-\mu)\Delta t}^{h_0+\mu t}P_H(h)P_1(q)\mathrm{d}h\mathrm{d}q\, .
+    P(X,Y)=\int_{q=\mu}^{+\infty}\int_{h=h_A+\mu t-(q-\mu)\Delta t}^{h_A+\mu t}
+    P_{\mathcal{M}}(h,q|A,t)\mathrm{d}h\mathrm{d}q\, ,
 \end{align}
-于是可得$g(t)\Delta t$为
+其中$P_{\mathcal{M}}(h,q|A,t)$是给定点$A$和位置$t$的前提下，
+微曲面上$t$处的高度$h$和一维斜率$q$的联合概率密度函数。
+通常我们假设高度$h$和一维斜率$q$作为随机变量是相互独立的，即
 \begin{align}
-    g(t)\Delta t=\frac{\displaystyle\int_{\mu}^{+\infty}\int_{h_0+\mu t-(q-\mu)\Delta t}^{h_0+\mu t}P_H(h)P_1(q)\mathrm{d}h\mathrm{d}q}{\displaystyle\int_{-\infty}^{h_0+\mu t}P_H(h)\mathrm{d}h}\, ,
+    P_{\mathcal{M}}(h,q|A,t)=P_H(h)P_s(q)\, .
+\end{align}
+于是$g(t)\Delta t$就是事件$Y$对事件$X$的条件概率
+\begin{align}
+    g(t)\Delta t=P(Y|X)=\frac{P(X,Y)}{P(X)}\, .
 \end{align}
 整理化简有
-\begin{align}
-    g(t)=&\lim\limits_{\Delta t\to 0}\frac{\displaystyle\int_{\mu}^{+\infty}\int_{h_0+\mu t-(q-\mu)\Delta t}^{h_0+\mu t}P_H(h)P_1(q)\mathrm{d}h\mathrm{d}q}{\Delta t\displaystyle\int_{-\infty}^{h_0+\mu t}P_H(h)\mathrm{d}h}\nonumber\\
-    =&\frac{\displaystyle\int_{\mu}^{+\infty}(q-\mu)P_1(q)\lim\limits_{\Delta t\to 0}\left(\frac{1}{(q-\mu)\Delta t}\int_{h_0+\mu t-(q-\mu)\Delta t}^{h_0+\mu t}P_H(h)\mathrm{d}h\right)\mathrm{d}q}{\displaystyle\int_{-\infty}^{h_0+\mu t}P_H(h)\mathrm{d}h}\nonumber\\
-    =&\frac{\displaystyle\int_{\mu}^{+\infty}(q-\mu)P_1(q)P_H(h_0+\mu t)\mathrm{d}q}{\displaystyle\int_{-\infty}^{h_0+\mu t}P_H(h)\mathrm{d}h}\nonumber\\
-    =&\Lambda(\mu)\frac{\mu P_H(h_0+\mu t)}{F_H(h_0+\mu t)}\, ,
+\begin{align}\label{eq:08ex01-gt-expression}
+    g(t)=&\lim\limits_{\Delta t\to 0}\frac{P(X,Y)}{\Delta tP(X)}
+    =\lim\limits_{\Delta t\to 0}\frac{\displaystyle\int_{q=\mu}^{+\infty}\int_{h=h_A+\mu t-(q-\mu)\Delta t}^{h_A+\mu t}
+    P_{\mathcal{M}}(h,q|A,t)\mathrm{d}h\mathrm{d}q}{\Delta t\displaystyle\int_{-\infty}^{h_A+\mu t}P_H(h)\mathrm{d}h}\nonumber\\
+    =&\frac{\displaystyle\int_{q=\mu}^{+\infty}(q-\mu)P_s(q)\lim\limits_{\Delta t\to 0}
+    \left(\frac{1}{(q-\mu)\Delta t}\int_{h=h_A+\mu t-(q-\mu)\Delta t}^{h_A+\mu t}P_H(h)\mathrm{d}h\right)\mathrm{d}q}
+    {\displaystyle\int_{-\infty}^{h_A+\mu t}P_H(h)\mathrm{d}h}\nonumber\\
+    =&\frac{\displaystyle\int_{\mu}^{+\infty}(q-\mu)P_s(q)P_H(h_A+\mu t)\mathrm{d}q}
+    {\displaystyle\int_{-\infty}^{h_A+\mu t}P_H(h)\mathrm{d}h}\nonumber\\
+    =&\Lambda(\mu)\frac{\mu P_H(h_A+\mu t)}{F_H(h_A+\mu t)}\, ,
 \end{align}
 其中$F_H$是$P_H$相应的累积分布函数
 \begin{align}
     F_H(h)=\int_{-\infty}^{h}P_H(h)\mathrm{d}h\, ,
 \end{align}
-而$\Lambda$定义为
+而$\Lambda(\mu)$定义为
 \begin{align}
-    \Lambda(\mu)=\frac{1}{\mu}\int_{\mu}^{+\infty}(q-\mu)P_1(q)\mathrm{d}q\, .
+    \Lambda(\mu)=\frac{1}{\mu}\int_{\mu}^{+\infty}(q-\mu)P_s(q)\mathrm{d}q\, .
 \end{align}
 注意到
 \begin{align}
-    \frac{\partial F_H(h_0+\mu t)}{\partial t}=\mu P_H(h_0+\mu t)\, ,
+    \frac{\partial F_H(h_A+\mu t)}{\partial t}=\mu P_H(h_A+\mu t)\, ,
 \end{align}
-于是有
+再联立\refeq{08ex01-W-definition}、\refeq{08ex01-Wt-gt-int}和\refeq{08ex01-gt-expression}，得到
 \begin{align}
-    V(h_0,\mu)=&\exp\left(-\int_{0}^{+\infty}g(t)\mathrm{d}t\right)\nonumber\\
-    =&\exp\left(-\int_{0}^{+\infty}\Lambda(\mu)\frac{\mu P_H(h_0+\mu t)}{F_H(h_0+\mu t)}\mathrm{d}t\right)\nonumber\\
-    =&\exp\left(-\Lambda(\mu)\int_{0}^{+\infty}\mathrm{d}\ln F_H(h_0+\mu t)\right)\nonumber\\
-    =&\exp\left(-\Lambda(\mu)(\ln 1 - \ln F_H(h_0))\right)\nonumber\\
-    =&F_H^{\Lambda(\mu)}(h_0)\, .
+    W(A,{\bm\omega}_{\mathrm{o}})=&\chi(\mu-q_A)\exp\left(-\int_{0}^{+\infty}g(t)\mathrm{d}t\right)\nonumber\\
+    =&\chi(\mu-q_A)\exp\left(-\int_{0}^{+\infty}\Lambda(\mu)\frac{\mu P_H(h_A+\mu t)}{F_H(h_A+\mu t)}\mathrm{d}t\right)\nonumber\\
+    =&\chi(\mu-q_A)\exp\left(-\Lambda(\mu)\int_{0}^{+\infty}\mathrm{d}\ln F_H(h_A+\mu t)\right)\nonumber\\
+    =&\chi(\mu-q_A)\exp\left(-\Lambda(\mu)(\ln 1 - \ln F_H(h_A))\right)\nonumber\\
+    =&\chi(\mu-q_A)F_H^{\Lambda(\mu)}(h_A)\, .
 \end{align}
-我们在所有起始高度$h_0$上积分，得到整个微曲面上对该光线的平均可见概率为
+我们在所有被观察点$A$的高度$h_A$上积分，并再次利用$F_H$和$P_H$之间的微分关系，
+就得到整个微曲面上对该光线的平均可见概率为
 \begin{align}
-    V(\mu)&=\int_{-\infty}^{+\infty}V(h_0,\mu)P_H(h_0)\mathrm{d}h_0\nonumber\\
-    =&\int_{-\infty}^{+\infty}F_H^{\Lambda(\mu)}(h_0)P_H(h_0)\mathrm{d}h_0\nonumber\\
-    =&\int_{-\infty}^{+\infty}F_H^{\Lambda(\mu)}(h_0)\mathrm{d}F_H(h_0)\nonumber\\
-    =&\frac{1}{1+\Lambda(\mu)}F_H^{1+\Lambda(\mu)}(h_0)\bigg|_{h_0=-\infty}^{+\infty}\nonumber\\
-    =&\frac{1}{1+\Lambda(\mu)}\, .
+    W(u_A,v_A,{\bm\omega}_{\mathrm{o}})&=\int_{-\infty}^{+\infty}W(A,{\bm\omega}_{\mathrm{o}})P_H(h_A)\mathrm{d}h_A\nonumber\\
+    =&\chi(\mu-q_A)\int_{-\infty}^{+\infty}F_H^{\Lambda(\mu)}(h_A)P_H(h_A)\mathrm{d}h_A\nonumber\\
+    =&\chi(\mu-q_A)\int_{-\infty}^{+\infty}F_H^{\Lambda(\mu)}(h_A)\mathrm{d}F_H(h_A)\nonumber\\
+    =&\frac{\chi(\mu-q_A)}{1+\Lambda(\mu)}F_H^{1+\Lambda(\mu)}(h_A)\bigg|_{h_A=-\infty}^{+\infty}\nonumber\\
+    =&\frac{\chi(\mu-q_A)}{1+\Lambda(\mu)}\, .
 \end{align}
-最后，我们加上示性函数来保证排除掉背向光线，
-并把$\Lambda(\mu)$重新记作$\Lambda({\bm\omega}_{\mathrm{o}})$，终于得到
-\begin{align}
-    G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})
-    =\chi({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}})V(\mu)
-    =\frac{\chi({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}})}
-    {1+\Lambda({\bm\omega}_{\mathrm{o}})}\, .
-\end{align}
-特别地，当$\varphi_{\mathrm{o}}=0$时，有
-\begin{align}
-    \Lambda({\bm\omega}_{\mathrm{o}})=\frac{1}{\cot\theta_{\mathrm{o}}}
-    \int_{\cot\theta_{\mathrm{o}}}^{+\infty}(x_s-\cot\theta_{\mathrm{o}})P_x(x_s)\mathrm{d}x_s\, ,
-\end{align}
-其中
-\begin{align}
-    P_x(x_s)=\int_{-\infty}^{+\infty}P_{xy}(x_s,y_s)\mathrm{d}y_s\, .
-\end{align}
-
-利用前面的结果，我们尝试将积分域从法线分布空间转化到斜率分布空间。
-首先注意到，因为${\bm\omega}_{\mathrm{g}}=(0,0,1)$，
-所以结合\refeq{08-ex01-normals-by-slope}有
-\begin{align}
-    {\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}}
-    =\frac{1}{\sqrt{x_s^2+y_s^2+1}}\, .
-\end{align}
-类似地，对于出射方向${\bm\omega}_{\mathrm{o}}=(x_{\mathrm{o}},y_{\mathrm{o}},z_{\mathrm{o}})$，则有
-\begin{align}
-    \max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)
-    =\frac{(-x_{\mathrm{o}}x_s-y_{\mathrm{o}}y_s+z_{\mathrm{o}})
-    \chi(-x_{\mathrm{o}}x_s-y_{\mathrm{o}}y_s+z_{\mathrm{o}})}{\sqrt{x_s^2+y_s^2+1}}\, .
-\end{align}
-将上述两式与\refeq{08-ex01-P2D}结合可知
-\begin{align}\label{eq:08-ex01-trans-normal-slope}
-      & \int\limits_{\varOmega}\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)
-    D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber                          \\
-    = & \int\limits_{\varOmega}\frac{\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)}
-    {\cos\theta_{\mathrm{h}}}D({\bm\omega}_{\mathrm{h}})\cos\theta_{\mathrm{h}}\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber    \\
-    = & \int_{-\infty}^{+\infty}\int_{-\infty}^{+\infty}
-    \frac{\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)}
-    {{\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}}}
-    P_{xy}(x_s,y_s)\mathrm{d}x_s\mathrm{d}y_s\nonumber                                              \\
-    = & \int_{-\infty}^{+\infty}\int_{-\infty}^{+\infty}
-    (-x_sx_{\mathrm{o}}-y_sy_{\mathrm{o}}+z_{\mathrm{o}})
-    \chi(-x_sx_{\mathrm{o}}-y_sy_{\mathrm{o}}+z_{\mathrm{o}})
-    P_{xy}(x_s,y_s)\mathrm{d}x_s\mathrm{d}y_s\, .
-\end{align}
-为了简化后续推导，这里我们不妨设出射方向${\bm\omega}_{\mathrm{o}}$的方位角$\varphi_{\mathrm{o}}=0$，于是
-\begin{align}
-    {\bm\omega}_{\mathrm{o}}=(\sin\theta_{\mathrm{o}},0,\cos\theta_{\mathrm{o}})\, .
-\end{align}
-将其代入\refeq{08-ex01-trans-normal-slope}得
-\begin{align}\label{eq:08-ex01-trans-1d-slope}
-      & \int\limits_{\varOmega}\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)
-    D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber                   \\
-    = & \int_{-\infty}^{+\infty}\int_{-\infty}^{+\infty}
-    (-x_s\sin\theta_{\mathrm{o}}+\cos\theta_{\mathrm{o}})
-    \chi(-x_s\sin\theta_{\mathrm{o}}+\cos\theta_{\mathrm{o}})
-    P_{xy}(x_s,y_s)\mathrm{d}x_s\mathrm{d}y_s\nonumber                                       \\
-    = & \displaystyle\int_{-\infty}^{+\infty}
-    (-x_s\sin\theta_{\mathrm{o}}+\cos\theta_{\mathrm{o}})
-    \chi(-x_s\sin\theta_{\mathrm{o}}+\cos\theta_{\mathrm{o}})
-    \left(\int_{-\infty}^{+\infty}P_{xy}(x_s,y_s)\mathrm{d}y_s\right)\mathrm{d}x_s\nonumber  \\
-    = & \displaystyle\int_{-\infty}^{+\infty}
-    (-x_s\sin\theta_{\mathrm{o}}+\cos\theta_{\mathrm{o}})
-    \chi(-x_s\sin\theta_{\mathrm{o}}+\cos\theta_{\mathrm{o}})P_x(x_s)\mathrm{d}x_s\, ,
-\end{align}
-其中
-\begin{align}\label{eq:08-ex01-condition-1d-slope}
-    P_x(x_s)=\int_{-\infty}^{+\infty}P_{xy}(x_s,y_s)\mathrm{d}y_s
-\end{align}
-是斜率沿着出射方向（这里假设其方位角为零）的条件分布。
-注意到\refeq{08-ex01-trans-1d-slope}中的示性函数把积分域限定在
-\begin{align}
-    -x_s\sin\theta_{\mathrm{o}}+\cos\theta_{\mathrm{o}}>0\, ,
-\end{align}
-也即
-\begin{align}
-    x_s<\cot\theta_{\mathrm{o}}\, .
-\end{align}
-于是\refeq{08-ex01-trans-1d-slope}可进一步化简为
-\begin{align}
-    \int\limits_{\varOmega}\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)
-    D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}
-    =\int_{-\infty}^{\cot\theta_{\mathrm{o}}}
-    (-x_s\sin\theta_{\mathrm{o}}+\cos\theta_{\mathrm{o}})P_x(x_s)\mathrm{d}x_s\, .
-\end{align}
-将上式代入\refeq{08-ex01-g1_distance}，可得
-\begin{align}
-    \cos\theta_{\mathrm{o}}
-    = & G_1^{\mathrm{d}}({\bm\omega}_{\mathrm{o}})
-    \int\limits_{\varOmega}\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)
-    D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber \\
-    = & G_1^{\mathrm{d}}({\bm\omega}_{\mathrm{o}})
-    \int_{-\infty}^{\cot\theta_{\mathrm{o}}}
-    (-x_s\sin\theta_{\mathrm{o}}+\cos\theta_{\mathrm{o}})P_x(x_s)\mathrm{d}x_s\, .
-\end{align}
-将上式两边同除以$\sin\theta_{\mathrm{o}}$，得到
-\begin{align}\label{eq:08-ex01-cot-theta0-g1-distant}
-    \cot\theta_{\mathrm{o}}=G_1^{\mathrm{d}}({\bm\omega}_{\mathrm{o}})
-    \int_{-\infty}^{\cot\theta_{\mathrm{o}}}
-    (-x_s+\cot\theta_{\mathrm{o}})P_x(x_s)\mathrm{d}x_s\, .
-\end{align}
-我们接着要从上式中\sidenote{笔者认为这里将积分式移项即可，
-    但原文作者似乎还希望调整里面的正负号，所以有了下面的推导。}
-解出$G_1^{\mathrm{d}}({\bm\omega}_{\mathrm{o}})$.
-假设微面法线的分布是中心对称的，即
-\begin{align}
-    P_{xy}(x_s,y_s)=P_{xy}(-x_s,-y_s)
-\end{align}
-对任意$x_s$和$y_s$恒成立，则易知条件分布$P_{x}(x_s)$是个偶函数，即
-\begin{align}
-    P_{x}(x_s)=P_{x}(-x_s)
-\end{align}
-对任意$x_s$恒成立，于是任意出射方向上斜率$x_s$的均值都为零：
-\begin{align}\label{eq:08-ex01-mean-slope-conditional}
-    \int_{-\infty}^{+\infty}x_sP_{x}(x_s)\mathrm{d}x_s=0\, .
-\end{align}
-同时我们注意到斜率的条件分布$P_x(x_s)$满足规范化性质
-\begin{align}\label{eq:08-ex01-normal-slope-int}
-    \int_{-\infty}^{+\infty}P_{x}(x_s)\mathrm{d}x_s=1\, .
-\end{align}
-利用\refeq{08-ex01-mean-slope-conditional}和\refeq{08-ex01-normal-slope-int}可以
-代替常数0和1的特点，我们将\refeq{08-ex01-cot-theta0-g1-distant}两边
-同时减去$G_1^{\mathrm{d}}({\bm\omega}_{\mathrm{o}})\cot\theta_{\mathrm{o}}$可得
-\begin{align}
-    (1-G_1^{\mathrm{d}}({\bm\omega}_{\mathrm{o}}))\cot\theta_{\mathrm{o}}
-     & =G_1^{\mathrm{d}}({\bm\omega}_{\mathrm{o}})
-    \int_{-\infty}^{\cot\theta_{\mathrm{o}}}
-    (-x_s+\cot\theta_{\mathrm{o}})P_x(x_s)\mathrm{d}x_s\nonumber                          \\
-     & \qquad -G_1^{\mathrm{d}}({\bm\omega}_{\mathrm{o}})\cot\theta_{\mathrm{o}}
-    \int_{-\infty}^{+\infty}P_{x}(x_s)\mathrm{d}x_s\nonumber                              \\
-     & \qquad +G_1^{\mathrm{d}}({\bm\omega}_{\mathrm{o}})
-    \int_{-\infty}^{+\infty}x_sP_{x}(x_s)\mathrm{d}x_s\nonumber                           \\
-     & \displaystyle =G_1^{\mathrm{d}}({\bm\omega}_{\mathrm{o}})
-    \left(\int_{-\infty}^{+\infty}x_sP_{x}(x_s)\mathrm{d}x_s
-    -\int_{-\infty}^{\cot\theta_{\mathrm{o}}}x_sP_{x}(x_s)\mathrm{d}x_s\right)\nonumber   \\
-     & \qquad\displaystyle +G_1^{\mathrm{d}}({\bm\omega}_{\mathrm{o}})
-    \left(\int_{-\infty}^{\cot\theta_{\mathrm{o}}}P_x(x_s)\cot\theta_{\mathrm{o}}\mathrm{d}x_s
-    -\int_{-\infty}^{+\infty}P_x(x_s)\cot\theta_{\mathrm{o}}\mathrm{d}x_s\right)\nonumber \\
-     & =G_1^{\mathrm{d}}({\bm\omega}_{\mathrm{o}})
-    \int_{\cot\theta_{\mathrm{o}}}^{+\infty}(x_s-\cot\theta_{\mathrm{o}})P_x(x_s)\mathrm{d}x_s\, .
-\end{align}
-整理上式，我们最终得到$G_1^{\mathrm{d}}({\bm\omega}_{\mathrm{o}})$的解析解为
-\begin{align}\label{eq:08-ex01-g1-d-solution}
-    G_1^{\mathrm{d}}({\bm\omega}_{\mathrm{o}})=\frac{1}{1+\Lambda({\bm\omega}_{\mathrm{o}})}\, ,
-\end{align}
-其中
-\begin{align}\label{eq:08-ex01-Lambda-function}
-    \Lambda({\bm\omega}_{\mathrm{o}})=\frac{1}{\cot\theta_{\mathrm{o}}}
-    \int_{\cot\theta_{\mathrm{o}}}^{+\infty}(x_s-\cot\theta_{\mathrm{o}})P_x(x_s)\mathrm{d}x_s\, .
-\end{align}
-将\refeq{08-ex01-g1-d-solution}代回\refeq{08ex01-SeparableMaskingFunction}即得
+考虑到$\chi(\mu-q_A)$就是表示滤除背向光线的意思，
+它可以等价替换为$\chi({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}})$；
+$\Lambda(\mu)$中$\mu$也由${\bm\omega}_{\mathrm{o}}$决定，
+可重新记作$\Lambda({\bm\omega}_{\mathrm{o}})$；
+而$W(u_A,v_A,{\bm\omega}_{\mathrm{o}})$就是我们想求得的掩模遮挡函数，于是最终得到
 \begin{align}\label{eq:08-ex01-Smith-masking-function}
     G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})
     =\frac{\chi({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}})}
     {1+\Lambda({\bm\omega}_{\mathrm{o}})}\, .
 \end{align}
 它是对Smith掩模函数的推广，适用于许多随机曲面。
+特别地，当$\varphi_{\mathrm{o}}=0$时：
+\begin{align}\label{eq:08-ex01-Lambda-function}
+    \Lambda({\bm\omega}_{\mathrm{o}})=\frac{1}{\cot\theta_{\mathrm{o}}}
+    \int_{\cot\theta_{\mathrm{o}}}^{+\infty}(x_s-\cot\theta_{\mathrm{o}})P_x(x_s)\mathrm{d}x_s\, .
+\end{align}
 
-由于前面的推导都不包含近似处理，这说明在非自相关的假设下，Smith掩模函数是准确的。
+由于前面的推导都是严格等式，没有近似项，这说明在非自相关的假设下，Smith掩模函数是准确的。
 在实践中，该模型预测的结果和实测数据非常接近，但仍有偏差，
 这是由描述曲面的统计模型和非自相关假设引起的。
 现实中的连续曲面往往都有范围很宽的自相关函数。

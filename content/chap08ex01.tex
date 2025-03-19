@@ -1,7 +1,7 @@
 \section{译者补充：微面模型相关推导}\label{sec:译者补充：微面模型相关推导}
 \begin{remark}
     本节内容不是原书内容，而是译者根据\citet{heitz:hal-01024289}、
-    \citet{1138991}、\cite{1142437}和\citet{10.5555/2383847.2383874}整理
+    \citet{1138991}、\citet{1142437}和\citet{10.5555/2383847.2383874}整理
     并推导后补充的，请酌情参考和斧正。
 \end{remark}
 \subsection{微面分布函数的定义与性质}\label{sub:微面分布函数的定义与性质}
@@ -690,8 +690,8 @@ $\varphi_{\mathrm{h}}$为方位角
 
 只有$P_{xy}(x_s,y_s)$还不足以推导出掩模遮挡函数。
 我们可以把微曲面$\mathcal{M}$看作是在光滑的宏曲面$\mathcal{G}$上
-通过平稳的随机过程叠加上或正或负的高度波动得到的。在如\reffig{08ex01-G1Geometry}所示，
-我们继续分析一个微观区域：仍把宏曲面视作平面且就是$z=0$，宏曲面法线为${\bm\omega}_{\mathrm{g}}=(0,0,1)$。
+通过平稳的随机过程叠加上或正或负的高度波动得到的。如\reffig{08ex01-G1Geometry}所示，
+我们继续分析一个微观区域：仍把宏曲面视作平面，也即$z=0$，宏曲面法线为${\bm\omega}_{\mathrm{g}}=(0,0,1)$。
 而微曲面上每一点在$Z$方向到宏曲面上的高度$h$（包含正负号）由连续概率分布$P_H(h)$描述，
 且通常$P_H(h)$均值为零。同时我们写出光线出射方向${\bm\omega}_{\mathrm{o}}$的球坐标表示：
 \begin{align}
@@ -711,7 +711,7 @@ $\varphi_{\mathrm{h}}$为方位角
 并和${\bm\omega}_{\mathrm{o}}$朝着同一边。
 这样我们就能借鉴之前的光线参数化表示法——微曲面上任意一点的位置都可以
 用它在宏曲面（也即横轴$T$）上的投影坐标$t$来表示。
-此外，我们图示中考虑的出射方向大致向右，所以不失一般性，我们假定只有点$A$右边的微曲面才有可能挡住出射光线。
+此外，我们在图示中考虑的出射方向大致向右，所以不失一般性，我们假定只有点$A$右边的微曲面才有可能挡住出射光线。
 所以$W(h_A,u_A,v_A,{\bm\omega}_{\mathrm{o}})$就是点$A$右侧的微面不会与出射光线相交的概率。
 
 为了简化后文记号，我们以$A$来代替$h_A,u_A,v_A$这整组关于点$A$的变量，
@@ -752,7 +752,7 @@ $\varphi_{\mathrm{h}}$为方位角
 
 在关注$W(0)$的取值前，我们先插入点$A$的斜率问题。
 前面已经设了点$A$处的微面斜率在$x$和$y$方向的取值为$(u_A,v_A)$，
-那微曲面经过截平面的截取后，点$A$处在被截出的曲线上的一维斜率$q_A$
+那微曲面被截平面截取后，在被截出的曲线上点$A$处的一维斜率$q_A$
 （也即纵轴$Z$方向的高度相对于横轴$T$方向的变化率）是多少？
 显然就是微面在出射方向上的方向导数
 \begin{align}
@@ -786,24 +786,28 @@ $\varphi_{\mathrm{h}}$为方位角
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.8\linewidth]{Pictures/chap08/GeometryForSmithShadowingMasking.eps}
-    \caption{要求得微曲面上点$A$能从${\bm\omega}_{\mathrm{o}}$方向观察到的概率，
+    \caption{求微曲面上点$A$能从${\bm\omega}_{\mathrm{o}}$方向观察到的概率，
     可以先求对应光线在极小区间$[t,t+\Delta t]$内与微曲面相交的条件概率，再作转化。}
     \label{fig:08ex01-G1Geometry}
 \end{figure}
 
-接下来的问题关键是怎么求出上式关于$g(t)$的积分。
+接下来的关键是怎么求出上式关于$g(t)$的积分。
 为了避免去考虑区间内微曲面上无穷个点的相关性，
 我们把这个问题简化近似为：在点$A$发出的光线没有被$t$之前的微面遮挡的条件下，
 光线在区间$[t,t+\Delta t]$内会被遮挡的条件概率。
 先考虑区间起点：设$t$处的微曲面（也即点$C$）的高度为$h$，一维斜率为$q$，
-显然只要微曲面高度$h$低于光线高度$h_A+\mu t$即可：
+显然只要微曲面高度$h$低于光线高度$h_A+\mu t$即可，斜率不限：
 \begin{align}
     h<h_A+\mu t\, ,
 \end{align}
-我们把这一事件记作$X$，利用高度概率分布$P_H(h)$算出相应的概率为
+我们把这一事件记作$X$，算出相应的概率为
 \begin{align}
-    P(X)=\int_{-\infty}^{h_A+\mu t}P_H(h)\mathrm{d}h\, .
+    P(X)=\int_{-\infty}^{+\infty}\int_{-\infty}^{h_A+\mu t}
+    P_{\mathcal{M}}(h,q|A,t)\mathrm{d}h\mathrm{d}q\, ,
 \end{align}
+其中$P_{\mathcal{M}}(h,q|A,t)$是给定点$A$和区间位置$t$的前提下，
+微曲面上$t$处的高度$h$和一维斜率$q$的联合概率密度函数。
+
 接着考虑区间终点：要发生遮挡，则光线离开区间时应在微曲面之下，
 即意味着$t+\Delta t$处（也即点$D$）的微曲面高度应高于光线高度。
 因为区间极小，我们近似认为整个区间内微曲面足够平滑，各点一维斜率仍为$q$，于是有
@@ -816,28 +820,27 @@ $\varphi_{\mathrm{h}}$为方位角
 \end{align}
 我们把上述条件成立记作事件$Y$。
 注意当事件$X$和$Y$同时发生时，还可推出$q>\mu$.
-事件$X$和$Y$同时发生的概率为
+所以事件$X$和$Y$同时发生的概率为
 \begin{align}
-    P(X,Y)=\int_{q=\mu}^{+\infty}\int_{h=h_A+\mu t-(q-\mu)\Delta t}^{h_A+\mu t}
-    P_{\mathcal{M}}(h,q|A,t)\mathrm{d}h\mathrm{d}q\, ,
+    P(X,Y)=\int_{\mu}^{+\infty}\int_{h_A+\mu t-(q-\mu)\Delta t}^{h_A+\mu t}
+    P_{\mathcal{M}}(h,q|A,t)\mathrm{d}h\mathrm{d}q\, .
 \end{align}
-其中$P_{\mathcal{M}}(h,q|A,t)$是给定点$A$和位置$t$的前提下，
-微曲面上$t$处的高度$h$和一维斜率$q$的联合概率密度函数。
-通常我们假设高度$h$和一维斜率$q$作为随机变量是相互独立的，即
+通常我们假设高度$h$和一维斜率$q$作为随机变量是相互独立的，再加上非自相关的假设，于是有
 \begin{align}
     P_{\mathcal{M}}(h,q|A,t)=P_H(h)P_s(q)\, .
 \end{align}
-于是$g(t)\Delta t$就是事件$Y$对事件$X$的条件概率
+而$g(t)\Delta t$就是事件$Y$对事件$X$的条件概率
 \begin{align}
     g(t)\Delta t=P(Y|X)=\frac{P(X,Y)}{P(X)}\, .
 \end{align}
-整理化简有
+利用中值定理，整理化简得
 \begin{align}\label{eq:08ex01-gt-expression}
     g(t)=&\lim\limits_{\Delta t\to 0}\frac{P(X,Y)}{\Delta tP(X)}
-    =\lim\limits_{\Delta t\to 0}\frac{\displaystyle\int_{q=\mu}^{+\infty}\int_{h=h_A+\mu t-(q-\mu)\Delta t}^{h_A+\mu t}
-    P_{\mathcal{M}}(h,q|A,t)\mathrm{d}h\mathrm{d}q}{\Delta t\displaystyle\int_{-\infty}^{h_A+\mu t}P_H(h)\mathrm{d}h}\nonumber\\
-    =&\frac{\displaystyle\int_{q=\mu}^{+\infty}(q-\mu)P_s(q)\lim\limits_{\Delta t\to 0}
-    \left(\frac{1}{(q-\mu)\Delta t}\int_{h=h_A+\mu t-(q-\mu)\Delta t}^{h_A+\mu t}P_H(h)\mathrm{d}h\right)\mathrm{d}q}
+    =\lim\limits_{\Delta t\to 0}\frac{\displaystyle\int_{\mu}^{+\infty}\int_{h_A+\mu t-(q-\mu)\Delta t}^{h_A+\mu t}
+    P_{\mathcal{M}}(h,q|A,t)\mathrm{d}h\mathrm{d}q}{\Delta t\displaystyle\int_{-\infty}^{+\infty}
+    \int_{-\infty}^{h_A+\mu t}P_{\mathcal{M}}(h,q|A,t)\mathrm{d}h\mathrm{d}q}\nonumber\\
+    =&\frac{\displaystyle\int_{\mu}^{+\infty}(q-\mu)P_s(q)\lim\limits_{\Delta t\to 0}
+    \left(\frac{1}{(q-\mu)\Delta t}\int_{h_A+\mu t-(q-\mu)\Delta t}^{h_A+\mu t}P_H(h)\mathrm{d}h\right)\mathrm{d}q}
     {\displaystyle\int_{-\infty}^{h_A+\mu t}P_H(h)\mathrm{d}h}\nonumber\\
     =&\frac{\displaystyle\int_{\mu}^{+\infty}(q-\mu)P_s(q)P_H(h_A+\mu t)\mathrm{d}q}
     {\displaystyle\int_{-\infty}^{h_A+\mu t}P_H(h)\mathrm{d}h}\nonumber\\
@@ -845,9 +848,9 @@ $\varphi_{\mathrm{h}}$为方位角
 \end{align}
 其中$F_H$是$P_H$相应的累积分布函数
 \begin{align}
-    F_H(h)=\int_{-\infty}^{h}P_H(h)\mathrm{d}h\, ,
+    F_H(h)=\int_{-\infty}^{h}P_H(\xi)\mathrm{d}\xi\, ,
 \end{align}
-而$\Lambda(\mu)$定义为
+其中$\xi$为临时积分变量，而$\Lambda(\mu)$则定义为
 \begin{align}
     \Lambda(\mu)=\frac{1}{\mu}\int_{\mu}^{+\infty}(q-\mu)P_s(q)\mathrm{d}q\, .
 \end{align}
@@ -863,13 +866,13 @@ $\varphi_{\mathrm{h}}$为方位角
     =&\chi(\mu-q_A)\exp\left(-\Lambda(\mu)(\ln 1 - \ln F_H(h_A))\right)\nonumber\\
     =&\chi(\mu-q_A)F_H^{\Lambda(\mu)}(h_A)\, .
 \end{align}
-我们在所有被观察点$A$的高度$h_A$上积分，并再次利用$F_H$和$P_H$之间的微分关系，
-就得到整个微曲面上对该光线的平均可见概率为
-\begin{align}
+我们在被观察点$A$的所有高度$h_A$上积分，并再次利用$F_H$和$P_H$之间的微分关系，
+就得到该光线对微曲面上点$A$所有可能的情况的可见概率均值为
+\begin{align}\label{eq:08ex01-AverageVisibleProbability}
     W(u_A,v_A,{\bm\omega}_{\mathrm{o}})&=\int_{-\infty}^{+\infty}W(A,{\bm\omega}_{\mathrm{o}})P_H(h_A)\mathrm{d}h_A\nonumber\\
-    =&\chi(\mu-q_A)\int_{-\infty}^{+\infty}F_H^{\Lambda(\mu)}(h_A)P_H(h_A)\mathrm{d}h_A\nonumber\\
+    =&\int_{-\infty}^{+\infty}\chi(\mu-q_A)F_H^{\Lambda(\mu)}(h_A)P_H(h_A)\mathrm{d}h_A\nonumber\\
     =&\chi(\mu-q_A)\int_{-\infty}^{+\infty}F_H^{\Lambda(\mu)}(h_A)\mathrm{d}F_H(h_A)\nonumber\\
-    =&\frac{\chi(\mu-q_A)}{1+\Lambda(\mu)}F_H^{1+\Lambda(\mu)}(h_A)\bigg|_{h_A=-\infty}^{+\infty}\nonumber\\
+    =&\chi(\mu-q_A)\frac{F_H^{1+\Lambda(\mu)}(h_A)}{1+\Lambda(\mu)}\bigg|_{h_A=-\infty}^{+\infty}\nonumber\\
     =&\frac{\chi(\mu-q_A)}{1+\Lambda(\mu)}\, .
 \end{align}
 考虑到$\chi(\mu-q_A)$就是表示滤除背向光线的意思，
@@ -882,16 +885,16 @@ $\Lambda(\mu)$中$\mu$也由${\bm\omega}_{\mathrm{o}}$决定，
     =\frac{\chi({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}})}
     {1+\Lambda({\bm\omega}_{\mathrm{o}})}\, .
 \end{align}
-它是对Smith掩模函数的推广，适用于许多随机曲面。
 特别地，当$\varphi_{\mathrm{o}}=0$时：
 \begin{align}\label{eq:08-ex01-Lambda-function}
     \Lambda({\bm\omega}_{\mathrm{o}})=\frac{1}{\cot\theta_{\mathrm{o}}}
     \int_{\cot\theta_{\mathrm{o}}}^{+\infty}(x_s-\cot\theta_{\mathrm{o}})P_x(x_s)\mathrm{d}x_s\, .
 \end{align}
 
-由于前面的推导都是严格等式，没有近似项，这说明在非自相关的假设下，Smith掩模函数是准确的。
+由于前面的推导都是严格等式，没有近似项，这说明在非自相关的假设下，
+Smith掩模函数是准确的。此外也有变量代换为主的推导方法，可以得出一样的结果。
 在实践中，该模型预测的结果和实测数据非常接近，但仍有偏差，
-这是由描述曲面的统计模型和非自相关假设引起的。
+这是由描述曲面的统计模型（高度和斜率分布函数）和非自相关假设引起的。
 现实中的连续曲面往往都有范围很宽的自相关函数。
 但\citet{841905}表明忽略自相关性引发的误差仅在观察角度
 满足$\tan\theta_{\mathrm{o}}>\frac{\sqrt{2}}{2}\sigma$时
@@ -899,19 +902,12 @@ $\Lambda(\mu)$中$\mu$也由${\bm\omega}_{\mathrm{o}}$决定，
 Smith掩模函数可以较为准确地适用于自相关的曲面，
 但具有重复性或结构化纹理的材料（例如布料）则不应在建模时忽视这种自相关性。
 
-\citet{1138991}还在微面的不同量（例如高度和法线）上作平均来推导掩模函数。
-\refeq{08-ex01-Smith-masking-function}中的掩模函数
-就是在微面的高度上作平均的版本，且BRDF必须用到它。
+注意\refeq{08ex01-AverageVisibleProbability}和\refeq{08-ex01-Smith-masking-function}是
+在微面的高度上作平均来推导掩模函数它。
 因为高度独立于BRDF中的法线，所以我们可以这样作平均。
-但法线就不能以同样的方式处理了，因为背向法线是不予考虑的。
-在该BRDF模型中，只有能被观察者观测到的辐射才有意义，即对于观察者可见的部分才有意义。
-如果曲面上的某部分不可见，则它不会被包含在BRDF中。
-Smith推导了其掩模函数的法线平均版，但并未直接解决该问题。
-他想回答“有多少比例的法线被遮挡了”，
-这个问题对于研究其他一些情况（例如波动光学模型）下曲面的固有属性很重要。
-但它对于本文基于几何光学的BRDF来说无关紧要。
-在基于几何微面的BRDF问题中，我们实际上感兴趣的是稍有不同的问题：
-有多少比例的\emph{非背向}法线被遮挡了？
+此外也有对法线作平均的方法，但它对于本文基于几何光学的BRDF来说无关紧要，
+而且难以处理，所以此处不再赘述。
+
 
 \subsubsection*{V形槽微面}
 如\reffig{08ex01-V-cavityScatteringModel}，V形槽微面模型也是常用模型之一。

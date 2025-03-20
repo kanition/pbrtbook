@@ -506,3 +506,75 @@ Trowbridge-Reitz分布则非常简单：
 
 \subsection{Torrance-Sparrow模型}\label{sub:Torrance-Sparrow模型}
 \citet{Torrance:67}开发了一个早期微面模型来对金属曲面建模。
+他们把曲面建模为完全光滑的镜像微面集合。
+因为微面是完美镜面反射的，所以只有法线等于\keyindex{半角向量}{half-angle vector}{vector向量}
+\sidenote{译者注：符号$\widehat{}$表示规范化为单位向量。}
+\begin{align*}
+    {\bm\omega}_{\mathrm{h}}=\widehat{{\bm\omega}_{\mathrm{i}}+{\bm\omega}_{\mathrm{o}}}
+\end{align*}
+的微面可以产生从${\bm\omega}_{\mathrm{i}}$到${\bm\omega}_{\mathrm{o}}$的
+完美镜面反射（\reffig{8.19}）。
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.5\linewidth]{Pictures/chap08/SpecularMicrofacetReflection.eps}
+    \caption{对于完美镜面微面与给定的一对方向${\bm\omega}_{\mathrm{i}}$和${\bm\omega}_{\mathrm{o}}$，
+    只有法线为${\bm\omega}_{\mathrm{h}}=\widehat{{\bm\omega}_{\mathrm{i}}+{\bm\omega}_{\mathrm{o}}}$的
+    微面会把光线从${\bm\omega}_{\mathrm{i}}$反射到${\bm\omega}_{\mathrm{o}}$。}
+    \label{fig:8.19}
+\end{figure}
+
+推导Torrance-Sparrow模型有许多有趣的步骤；我们将在这里详细介绍它。
+首先，考虑微分通量$\mathrm{d}\varPhi_{\mathrm{h}}$入射到
+朝向${\bm\omega}_{\mathrm{i}}$和${\bm\omega}_{\mathrm{o}}$的
+半角${\bm\omega}_{\mathrm{h}}$方向的微面上。
+根据辐射亮度的定义\refeq{5.2}，它即
+\sidenote{译者注：原文该式漏掉了${\bm\omega}_{\mathrm{i}}$的下标$\mathrm{i}$，此处已修正。}
+\begin{align*}
+    \mathrm{d}\varPhi_{\mathrm{h}}=L_{\mathrm{i}}({\bm\omega}_{\mathrm{i}})
+    \mathrm{d}{\bm\omega}_{\mathrm{i}}\mathrm{d}A^{\perp}({\bm\omega}_{\mathrm{h}})
+    =L_{\mathrm{i}}({\bm\omega}_{\mathrm{i}})\mathrm{d}{\bm\omega}_{\mathrm{i}}
+    \cos\theta_{\mathrm{h}}\mathrm{d}A({\bm\omega}_{\mathrm{h}})\, ,
+\end{align*}
+其中我们把朝向为${\bm\omega}_{\mathrm{h}}$的微面面积记作$\mathrm{d}A({\bm\omega}_{\mathrm{h}})$，
+把${\bm\omega}_{\mathrm{i}}$和${\bm\omega}_{\mathrm{h}}$间夹角的余弦记作$\cos\theta_{\mathrm{h}}$（\reffig{8.20}）。
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.35\linewidth]{Pictures/chap08/TorranceSparrowSetting.eps}
+    \caption{推导Torrance-Sparrow模型的情形。
+    对于方向${\bm\omega}_{\mathrm{i}}$和${\bm\omega}_{\mathrm{o}}$，
+    只有法线为${\bm\omega}_{\mathrm{h}}$的微面会反射光线。
+    ${\bm\omega}_{\mathrm{h}}$和$\bm n$之间的角度记作$\theta$，
+    ${\bm\omega}_{\mathrm{h}}$和${\bm\omega}_{\mathrm{o}}$间的夹角记作$\theta_{\mathrm{h}}$
+    （${\bm\omega}_{\mathrm{h}}$和${\bm\omega}_{\mathrm{i}}$间的夹角也必然是$\theta_{\mathrm{h}}$）。}
+    \label{fig:8.20}
+\end{figure}
+
+朝向为${\bm\omega}_{\mathrm{h}}$的微面的微分面积为
+\begin{align*}
+    \mathrm{d}A({\bm\omega}_{\mathrm{h}})=D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\mathrm{d}A\, .
+\end{align*}
+该乘积的前两项描述了每单位面积上具有正确朝向的微面的微分面积，
+而$\mathrm{d}A$项将其转化为微分面积。因此
+\sidenote{译者注：原文该式漏掉了${\bm\omega}_{\mathrm{i}}$的下标$\mathrm{i}$，此处已修正。}
+\begin{align}\label{eq:8.15}
+    \mathrm{d}\varPhi_{\mathrm{h}}=L_{\mathrm{i}}({\bm\omega}_{\mathrm{i}})
+    \mathrm{d}{\bm\omega}_{\mathrm{i}}\cos\theta_{\mathrm{h}}
+    D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\mathrm{d}A\, .
+\end{align}
+如果我们假设微面各自根据菲涅耳定律反射光线，则出射通量为
+\begin{align}\label{eq:8.16}
+    \mathrm{d}\varPhi_{\mathrm{o}}=F_{\mathrm{r}}({\bm\omega}_{\mathrm{o}})\mathrm{d}\varPhi_{\mathrm{h}}\, .
+\end{align}
+再次利用辐射亮度的定义，反射的出射亮度为
+\begin{align*}
+    L({\bm\omega}_{\mathrm{o}})=\frac{\mathrm{d}\varPhi_{\mathrm{o}}}
+    {\cos\theta_{\mathrm{o}}\mathrm{d}{\bm\omega}_{\mathrm{o}}\mathrm{d}A}\, .
+\end{align*}
+如果我们把\refeq{8.16}代入上式，再把\refeq{8.15}代入其结果，则有
+\begin{align*}
+    L({\bm\omega}_{\mathrm{o}})=\frac{F_{\mathrm{r}}({\bm\omega}_{\mathrm{o}})
+    L_{\mathrm{i}}({\bm\omega}_{\mathrm{i}})\mathrm{d}{\bm\omega}_{\mathrm{i}}\cos\theta_{\mathrm{h}}
+    D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\mathrm{d}A}
+    {\cos\theta_{\mathrm{o}}\mathrm{d}{\bm\omega}_{\mathrm{o}}\mathrm{d}A}\, .
+\end{align*}

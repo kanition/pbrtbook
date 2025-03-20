@@ -326,7 +326,7 @@ $G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})$的值域为$[0,1]$，
 即\refeq{08ex01-MacroBRDFG1}或\refeq{08ex01-MacroBRDFG2}，
 我们需要知道微面尺度下的BRDF即$f_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})$的具体形式。
 本小节假设微面都遵循完美镜面反射，由此给出具体推导。
-设微面镜面的菲涅尔反射率为$F_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})$，
+设微面镜面的菲涅耳反射率为$F_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})$，
 这意味着微面的入射和出射辐亮度满足约束
 \begin{align}\label{eq:08ex01-FresnelMicrofacet}
     L_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})=F_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})L_{\mathrm{i}}({\bm\omega}_{\mathrm{i}})\, .
@@ -466,7 +466,7 @@ ${\bm\omega}_{\mathrm{m}}$对${\bm\omega}_{\mathrm{i}}$的\keyindex{雅可比矩
 
 \subsection{微面模型BRDF的规范化测试}\label{sub:微面模型BRDF的规范化测试}
 本节继承上节的记号。假设某材质不吸收任何入射辐射能量，
-且菲涅尔反射率$F_{\mathcal{M}}({\bm\omega}_{\mathrm{m}},{\bm\omega}_{\mathrm{o}})$恒为1，
+且菲涅耳反射率$F_{\mathcal{M}}({\bm\omega}_{\mathrm{m}},{\bm\omega}_{\mathrm{o}})$恒为1，
 也即完全不透射任何光线，则入射的能量会被无损地反射回去。
 此时对应的BRDF应该满足以下规范化约束：
 \begin{align}\label{eq:08ex-01-WhiteFurnaceTest}
@@ -498,7 +498,7 @@ ${\bm\omega}_{\mathrm{m}}$对${\bm\omega}_{\mathrm{i}}$的\keyindex{雅可比矩
     \frac{G_1({\bm\omega}_{\mathrm{m}},{\bm\omega}_{\mathrm{o}})D({\bm\omega}_{\mathrm{m}})}
     {4|{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{o}}|}\mathrm{d}{\bm\omega}_{\mathrm{i}}=1\, .
 \end{align}
-容易看出，上式的成立其实并不依赖菲涅尔反射率恒为1。
+容易看出，上式的成立其实并不依赖菲涅耳反射率恒为1。
 它给出了镜面微面模型对$G_1$的又一重要约束。
 需要说明的是，弱白炉测试丢弃遮挡函数只是为了
 提供一个便捷的方法来验证BRDF的物理合理性，
@@ -905,6 +905,7 @@ Smith掩模函数可以较为准确地适用于自相关的曲面，
 注意\refeq{08ex01-AverageVisibleProbability}和\refeq{08-ex01-Smith-masking-function}是
 在微面的高度上作平均来推导掩模函数它。
 因为高度独立于BRDF中的法线，所以我们可以这样作平均。
+而且还注意到其结果不依赖特定的高度分布$P_H(h)$.
 此外也有对法线作平均的方法，但它对于本文基于几何光学的BRDF来说无关紧要，
 而且难以处理，所以此处不再赘述。
 

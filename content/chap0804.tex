@@ -499,7 +499,7 @@ Trowbridge-Reitz分布则非常简单：
 函数$G_1({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})$的复杂方法的信息指南。
 \begin{lstlisting}
 `\refcode{MicrofacetDistribution Public Methods}{+=}\lastnext{MicrofacetDistributionPublicMethods}`
-`\refvar{Float}{}` G(const `\refvar{Vector3f}{}` &wo, const `\refvar{Vector3f}{}` &wi) const {
+`\refvar{Float}{}` `\initvar[MicrofacetDistribution::G]{G}{}`(const `\refvar{Vector3f}{}` &wo, const `\refvar{Vector3f}{}` &wi) const {
     return 1 / (1 + `\refvar[MicrofacetDistribution::Lambda]{Lambda}{}`(wo) + `\refvar[MicrofacetDistribution::Lambda]{Lambda}{}`(wi));
 }
 \end{lstlisting}
@@ -578,3 +578,184 @@ Trowbridge-Reitz分布则非常简单：
     D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\mathrm{d}A}
     {\cos\theta_{\mathrm{o}}\mathrm{d}{\bm\omega}_{\mathrm{o}}\mathrm{d}A}\, .
 \end{align*}
+
+在\refsub{微面BxDF}中，我们将在镜面反射条件下推导出$\mathrm{d}{\bm\omega}_{\mathrm{h}}$与$\mathrm{d}{\bm\omega}_{\mathrm{o}}$的重要关系：
+\begin{align}\label{eq:8.17}
+    \mathrm{d}{\bm\omega}_{\mathrm{h}}=\frac{\mathrm{d}{\bm\omega}_{\mathrm{o}}}{4\cos\theta_{\mathrm{h}}}\, .
+\end{align}
+我们可以把该关系代入到之前的方程并化简，得到
+\begin{align*}
+    L({\bm\omega}_{\mathrm{o}})=\frac{F_{\mathrm{r}}({\bm\omega}_{\mathrm{o}})
+    L_{\mathrm{i}}({\bm\omega}_{\mathrm{i}})D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{i}}}
+    {4\cos\theta_{\mathrm{o}}}\, .
+\end{align*}
+我们现在可以运用BRDF的定义\refeq{5.8}并添加几何衰减项$G({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})$，
+得到Torrance-Sparrow的BRDF：
+\begin{align}\label{eq:8.18}
+    f_{\mathrm{r}}({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})=
+    \frac{D({\bm\omega}_{\mathrm{h}})G({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})
+    F_{\mathrm{r}}({\bm\omega}_{\mathrm{o}})}{4\cos\theta_{\mathrm{o}}\cos\theta_{\mathrm{i}}}\, .
+\end{align}
+
+Torrance-Sparrow模型的一个优点是其推导不依赖于所用的特定微面分布。
+此外，它也不依赖特定的菲涅耳函数，所以导体和介电质都可以它。
+然而，推导中用的$\mathrm{d}{\bm\omega}_{\mathrm{h}}$与$\mathrm{d}{\bm\omega}_{\mathrm{o}}$的关系
+要依赖微面的镜面反射假设。
+
+\refvar{MicrofacetReflection}{}用Torrance-Sparrow模型实现通用的基于微面的BRDF。
+\begin{lstlisting}
+`\refcode{BxDF Declarations}{+=}\lastnext{BxDFDeclarations}`
+class `\initvar{MicrofacetReflection}{}` : public `\refvar{BxDF}{}` {
+public:
+    `\refcode{MicrofacetReflection Public Methods}{}`
+private:
+    `\refcode{MicrofacetReflection Private Data}{}`
+};
+\end{lstlisting}
+它的构造函数接收反射率，即指向一个\refvar{MicrofacetDistribution}{}实现的指针，以及一个菲涅耳函数。
+\begin{lstlisting}
+`\initcode{MicrofacetReflection Public Methods}{=}`
+`\refvar{MicrofacetReflection}{}`(const `\refvar{Spectrum}{}` &R,
+        `\refvar{MicrofacetDistribution}{}` *distribution, `\refvar{Fresnel}{}` *fresnel)
+    : `\refvar{BxDF}{}`(`\refvar{BxDFType}{}`(`\refvar[BSDFREFLECTION]{BSDF\_REFLECTION}{}` | `\refvar{BSDFGLOSSY}{BSDF\_GLOSSY}`)), `\refvar[MicrofacetReflection::R]{R}{}`(R),
+      `\refvar[MicrofacetReflection::distribution]{distribution}{}`(distribution), `\refvar[MicrofacetReflection::fresnel]{fresnel}{}`(fresnel) { }
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{MicrofacetReflection Private Data}{=}`
+const `\refvar{Spectrum}{}` `\initvar[MicrofacetReflection::R]{R}{}`;
+const `\refvar{MicrofacetDistribution}{}` *`\initvar[MicrofacetReflection::distribution]{distribution}{}`;
+const `\refvar{Fresnel}{}` *`\initvar[MicrofacetReflection::fresnel]{fresnel}{}`;
+\end{lstlisting}
+
+求Torrance-Sparrow的BRDF的各项值很简单。
+对于菲涅耳项，回想在给定镜面反射下，${\bm\omega}_{\mathrm{h}}$与${\bm\omega}_{\mathrm{i}}$和${\bm\omega}_{\mathrm{o}}$之间的
+角度均为$\theta_{\mathrm{h}}$，所以我们用哪个向量来计算$\theta_{\mathrm{h}}$的余弦都没关系。
+我们就选${\bm\omega}_{\mathrm{i}}$.
+\begin{lstlisting}
+`\refcode{BxDF Method Definitions}{+=}\lastnext{BxDFMethodDefinitions}`
+`\refvar{Spectrum}{}` `\refvar{MicrofacetReflection}{}`::`\initvar[MicrofacetReflection::f]{f}{}`(const `\refvar{Vector3f}{}` &wo,
+        const `\refvar{Vector3f}{}` &wi) const {
+    `\refvar{Float}{}` cosThetaO = `\refvar{AbsCosTheta}{}`(wo), cosThetaI = `\refvar{AbsCosTheta}{}`(wi);
+    `\refvar{Vector3f}{}` wh = wi + wo;
+    `\refcode{Handle degenerate cases for microfacet reflection}{}`
+    wh = `\refvar{Normalize}{}`(wh);
+    `\refvar{Spectrum}{}` F = `\refvar[MicrofacetReflection::fresnel]{fresnel}{}`->`\refvar[Fresnel::Evaluate]{Evaluate}{}`(`\refvar{Dot}{}`(wi, wh));
+    return `\refvar[MicrofacetReflection::R]{R}{}` * `\refvar[MicrofacetReflection::distribution]{distribution}{}`->`\refvar[MicrofacetDistribution::D]{D}{}`(wh) * `\refvar[MicrofacetReflection::distribution]{distribution}{}`->`\refvar[MicrofacetDistribution::G]{G}{}`(wo, wi) * F /
+           (4 * cosThetaI * cosThetaO);
+}
+\end{lstlisting}
+还需要专门处理入射和出射方向处于掠角时的两种边界情况
+以避免求BRDF值时生成NaN值。
+\begin{lstlisting}
+`\initcode{Handle degenerate cases for microfacet reflection}{=}`
+if (cosThetaI == 0 || cosThetaO == 0) return `\refvar{Spectrum}{}`(0.);
+if (wh.x == 0 && wh.y == 0 && wh.z == 0) return `\refvar{Spectrum}{}`(0.);
+\end{lstlisting}
+
+也可为表现为完美镜面透射的微面定义透射它时的BTDF。
+该情形下，从折射率为$\eta_{\mathrm{i}}$的介质
+透射到折射率为$\eta_{\mathrm{o}}$的介质
+\sidenote{译者注：原文误写为$\eta_{\mathrm{t}}$，已修正。}，
+则$\mathrm{d}{\bm\omega}_{\mathrm{h}}$与$\mathrm{d}{\bm\omega}_{\mathrm{o}}$的关系为
+\sidenote{译者注：前文透射时的出射方向${\bm\omega}_{\mathrm{t}}$在这里也用${\bm\omega}_{\mathrm{o}}$统一表示了。}：
+\begin{align*}
+    \mathrm{d}{\bm\omega}_{\mathrm{h}}=\frac{\eta^2_{\mathrm{o}}
+    |{\bm\omega}_{\mathrm{o}}\cdot{\bm\omega}_{\mathrm{h}}|\mathrm{d}{\bm\omega}_{\mathrm{o}}}
+    {(\eta_{\mathrm{i}}({\bm\omega}_{\mathrm{i}}\cdot{\bm\omega}_{\mathrm{h}})
+    +\eta_{\mathrm{o}}({\bm\omega}_{\mathrm{o}}\cdot{\bm\omega}_{\mathrm{h}}))^2}\, .
+\end{align*}
+
+在推导Torrance-Sparrow的BRDF时可以用该关系替代\refeq{8.17}。结果为
+\begin{align}\label{eq:8.19}
+    f_{\mathrm{r}}({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})=
+    \frac{D({\bm\omega}_{\mathrm{h}})G({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})
+    (1-F_{\mathrm{r}}({\bm\omega}_{\mathrm{o}}))}{(({\bm\omega}_{\mathrm{o}}\cdot{\bm\omega}_{\mathrm{h}})
+    +\eta({\bm\omega}_{\mathrm{i}}\cdot{\bm\omega}_{\mathrm{h}}))^2}
+    \frac{|{\bm\omega}_{\mathrm{i}}\cdot{\bm\omega}_{\mathrm{h}}|
+    |{\bm\omega}_{\mathrm{o}}\cdot{\bm\omega}_{\mathrm{h}}|}
+    {\cos\theta_{\mathrm{o}}\cos\theta_{\mathrm{i}}}\, ,
+\end{align}
+其中$\displaystyle\eta=\frac{\eta_{\mathrm{i}}}{\eta_{\mathrm{o}}}$.
+对于镜面透射，半角向量为
+\begin{align*}
+    {\bm\omega}_{\mathrm{h}}={\bm\omega}_{\mathrm{o}}+\eta{\bm\omega}_{\mathrm{i}}\, .
+\end{align*}
+（你可能想通过\refeq{8.8}验证该向量规范化后能让方向${\bm\omega}_{\mathrm{o}}$折射到${\bm\omega}_{\mathrm{i}}$.）
+
+类\refvar{MicrofacetTransmission}{}实现该BTDF。
+\begin{lstlisting}
+`\refcode{BxDF Declarations}{+=}\lastnext{BxDFDeclarations}`
+class `\initvar{MicrofacetTransmission}{}` : public `\refvar{BxDF}{}` {
+public:
+    `\refcode{MicrofacetTransmission Public Methods}{}`
+private:
+    `\refcode{MicrofacetTransmission Private Data}{}`
+};
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{MicrofacetTransmission Public Methods}{=}\initnext{MicrofacetTransmissionPublicMethods}`
+`\refvar{MicrofacetTransmission}{}`(const `\refvar{Spectrum}{}` &T,
+        `\refvar{MicrofacetDistribution}{}` *distribution, `\refvar{Float}{}` etaA, `\refvar{Float}{}` etaB,
+        `\refvar{TransportMode}{}` mode)
+    : `\refvar{BxDF}{}`(`\refvar{BxDFType}{}`(`\refvar[BSDFTRANSMISSION]{BSDF\_TRANSMISSION}{}` | `\refvar[BSDFGLOSSY]{BSDF\_GLOSSY}{}`)),
+      `\refvar[MicrofacetTransmission::T]{T}{}`(T), `\refvar[MicrofacetTransmission::distribution]{distribution}{}`(distribution), `\refvar[MicrofacetTransmission::etaA]{etaA}{}`(etaA), `\refvar[MicrofacetTransmission::etaB]{etaB}{}`(etaB),
+      `\refvar[MicrofacetTransmission::fresnel]{fresnel}{}`(etaA, etaB), `\refvar[MicrofacetTransmission::mode]{mode}{}`(mode) { }
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{MicrofacetTransmission Private Data}{=}`
+const `\refvar{Spectrum}{}` `\initvar[MicrofacetTransmission::T]{T}{}`;
+const `\refvar{MicrofacetDistribution}{}` *`\initvar[MicrofacetTransmission::distribution]{distribution}{}`;
+const `\refvar{Float}{}` `\initvar[MicrofacetTransmission::etaA]{etaA}{}`, `\initvar[MicrofacetTransmission::etaB]{etaB}{}`;
+const `\refvar{FresnelDielectric}{}` `\initvar[MicrofacetTransmission::fresnel]{fresnel}{}`;
+const `\refvar{TransportMode}{}` `\initvar[MicrofacetTransmission::mode]{mode}{}`;
+\end{lstlisting}
+
+它的方法\refvar[MicrofacetTransmission::f]{f}{()}直接誊写自\refeq{8.19}。
+它的实现这里就不列出了\sidenote{译者注：笔者把它摘录回来了。}。
+\begin{lstlisting}
+`\refcode{MicrofacetTransmission Public Methods}{+=}\lastcode{MicrofacetTransmissionPublicMethods}`
+`\refvar{Spectrum}{}` `\initvar[MicrofacetTransmission::f]{f}{}`(const `\refvar{Vector3f}{}` &wo, const `\refvar{Vector3f}{}` &wi) const {
+    if (`\refvar{SameHemisphere}{}`(wo, wi)) return 0;  // transmission only
+
+    `\refvar{Float}{}` cosThetaO = `\refvar{CosTheta}{}`(wo);
+    `\refvar{Float}{}` cosThetaI = `\refvar{CosTheta}{}`(wi);
+    if (cosThetaI == 0 || cosThetaO == 0) return `\refvar{Spectrum}{}`(0);
+
+    // Compute ${\bm\omega}_{\mathrm{h}}$ from ${\bm\omega}_{\mathrm{o}}$ and ${\bm\omega}_{\mathrm{i}}$ for microfacet transmission
+    `\refvar{Float}{}` eta = `\refvar{CosTheta}{}`(wo) > 0 ? (`\refvar[MicrofacetTransmission::etaB]{etaB}{}` / `\refvar[MicrofacetTransmission::etaA]{etaA}{}`) : (`\refvar[MicrofacetTransmission::etaA]{etaA}{}` / `\refvar[MicrofacetTransmission::etaB]{etaB}{}`);
+    `\refvar{Vector3f}{}` wh = `\refvar{Normalize}{}`(wo + wi * eta);
+    if (wh.z < 0) wh = -wh;
+
+    // Same side?
+    if (`\refvar{Dot}{}`(wo, wh) * `\refvar{Dot}{}`(wi, wh) > 0) return `\refvar{Spectrum}{}`(0);
+
+    `\refvar{Spectrum}{}` F = `\refvar[MicrofacetTransmission::fresnel]{fresnel}{}`.`\refvar[Fresnel::Evaluate]{Evaluate}{}`(`\refvar{Dot}{}`(wo, wh));
+
+    `\refvar{Float}{}` sqrtDenom = `\refvar{Dot}{}`(wo, wh) + eta * `\refvar{Dot}{}`(wi, wh);
+    `\refvar{Float}{}` factor = (mode == `\refvar{TransportMode}{}`::`\refvar{Radiance}{}`) ? (1 / eta) : 1;
+
+    return (`\refvar{Spectrum}{}`(1.f) - F) * `\refvar[MicrofacetTransmission::T]{T}{}` *
+        std::abs(`\refvar[MicrofacetTransmission::distribution]{distribution}{}`->`\refvar[MicrofacetDistribution::D]{D}{}`(wh) * `\refvar[MicrofacetTransmission::distribution]{distribution}{}`->`\refvar[MicrofacetDistribution::G]{G}{}`(wo, wi) * eta * eta *
+                    `\refvar{AbsDot}{}`(wi, wh) * `\refvar{AbsDot}{}`(wo, wh) * factor * factor /
+                    (cosThetaI * cosThetaO * sqrtDenom * sqrtDenom));
+}
+\end{lstlisting}
+
+\reffig{8.21}展示了用反射和透射Torrance-Sparrow模型渲染的龙。
+\begin{figure}[htbp]
+    \centering
+    \subfloat[微面反射]{\includegraphics[width=0.75\linewidth]{chap08/dragon-mf-reflect.png}\label{fig:8.21.1}}\\
+    \subfloat[微面折射]{\includegraphics[width=0.75\linewidth]{chap08/dragon-mf-transmit.png}\label{fig:8.21.2}}
+    \caption{用(a)反射和(b)透射特化的Torrance-Sparrow微面模型渲染的龙模型（感谢Christian Schüller提供模型）。}
+    \label{fig:8.21}
+\end{figure}
+
+\reffig{8.22}比较了被光源模拟的远处环境照亮的两个分别具有各向同性和各项异性微面模型的球体外观。
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{chap08/spheres-aniso.png}
+    \caption{用各向同性微面分布（左）和各向异性分布（右）渲染的球体。
+    注意各向异性模型下不同的镜面高光形状。我们这里用球体代替龙是因为
+    像这样的各向异性模型依赖于曲面上切向量全局一致的分布以便按合理方式确定各向异性朝向。}
+    \label{fig:8.22}
+\end{figure}

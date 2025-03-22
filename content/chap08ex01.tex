@@ -600,10 +600,10 @@ ${\bm\omega}_{\mathrm{m}}$对${\bm\omega}_{\mathrm{i}}$的\keyindex{雅可比矩
 设它在直角坐标系下和球面坐标系下具体的分量为
 \begin{align}
     {\bm\omega}_{\mathrm{h}}=(x_{\mathrm{h}},y_{\mathrm{h}},z_{\mathrm{h}})
-    =(\sin\theta_{\mathrm{h}}\cos\varphi_{\mathrm{h}},\sin\theta_{\mathrm{h}}\sin\varphi_{\mathrm{h}},\cos\theta_{\mathrm{h}})\, ,
+    =(\sin\theta\cos\varphi,\sin\theta\sin\varphi,\cos\theta)\, ,
 \end{align}
-其中$\theta_{\mathrm{h}}$为天顶角（即${\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}}=\cos\theta_{\mathrm{h}}$），
-$\varphi_{\mathrm{h}}$为方位角
+其中$\theta$为天顶角（即${\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}}=\cos\theta$），
+$\varphi$为方位角
 \sidenote{参见\reffig{5.ex01}。}；则该处附近的面元可以近似为以下平面
 \begin{align}
     x_{\mathrm{h}}x+y_{\mathrm{h}}y+z_{\mathrm{h}}z=C\, .
@@ -618,7 +618,7 @@ $\varphi_{\mathrm{h}}$为方位角
     {\bm s}({\bm\omega}_{\mathrm{h}})=(x_s,y_s)
     =\left(-\frac{x_{\mathrm{h}}}{z_{\mathrm{h}}},
     -\frac{y_{\mathrm{h}}}{z_{\mathrm{h}}}\right)
-    =-\tan\theta_{\mathrm{h}}(\cos\varphi_{\mathrm{h}},\sin\varphi_{\mathrm{h}})
+    =-\tan\theta(\cos\varphi,\sin\varphi)
 \end{align}
 为曲面在该处的斜率
 \sidenote{原文slope，这里作者想表达的是$z$对$x$和$y$的偏导数，
@@ -636,35 +636,35 @@ $\varphi_{\mathrm{h}}$为方位角
 公式\sidenote{见第\refsec{球体}。}，有
 \begin{align}\label{eq:08-ex01-D_sphere}
     D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}
-    =D({\bm\omega}_{\mathrm{h}})\sin\theta_{\mathrm{h}}\mathrm{d}\theta_{\mathrm{h}}\mathrm{d}\varphi_{\mathrm{h}}\, .
+    =D({\bm\omega}_{\mathrm{h}})\sin\theta\mathrm{d}\theta\mathrm{d}\varphi\, .
 \end{align}
 斜率分布方面，其积分也有换元关系
 \sidenote{这是微积分中常用的换元方法，此处我们不探究其使用条件，读者可参考相关教材。}
 \begin{align}\label{eq:08-ex01-Pxy-Jacobian}
     P_{xy}(x_s,y_s)\mathrm{d}x_s\mathrm{d}y_s
-    =P_{xy}(x_s,y_s)|J|\mathrm{d}\theta_{\mathrm{h}}\mathrm{d}\varphi_{\mathrm{h}}\, ,
+    =P_{xy}(x_s,y_s)|J|\mathrm{d}\theta\mathrm{d}\varphi\, ,
 \end{align}
-其中$J$为$(x_s,y_s)$对参数$(\theta_{\mathrm{h}},\varphi_{\mathrm{h}})$的雅可比矩阵
+其中$J$为$(x_s,y_s)$对参数$(\theta,\varphi)$的雅可比矩阵
 \begin{align}
-    J=\displaystyle\frac{\partial(x_s,y_s)}{\partial(\theta_{\mathrm{h}},\varphi_{\mathrm{h}})}
+    J=\displaystyle\frac{\partial(x_s,y_s)}{\partial(\theta,\varphi)}
     =\displaystyle\left[\begin{array}{cc}
-            \displaystyle\frac{\partial x_s}{\partial \theta_{\mathrm{h}}} &
-            \displaystyle\frac{\partial x_s}{\partial \varphi_{\mathrm{h}}}  \\
-            \displaystyle\frac{\partial y_s}{\partial \theta_{\mathrm{h}}} &
-            \displaystyle\frac{\partial y_s}{\partial \varphi_{\mathrm{h}}}
+            \displaystyle\frac{\partial x_s}{\partial \theta} &
+            \displaystyle\frac{\partial x_s}{\partial \varphi}  \\
+            \displaystyle\frac{\partial y_s}{\partial \theta} &
+            \displaystyle\frac{\partial y_s}{\partial \varphi}
         \end{array}\right]
     =\displaystyle\left[\begin{array}{rr}
-            \displaystyle -\frac{\cos\varphi_{\mathrm{h}}}{\cos^2\theta_{\mathrm{h}}} &
-            \displaystyle \tan\theta_{\mathrm{h}}\sin\varphi_{\mathrm{h}}               \\
-            \displaystyle -\frac{\sin\varphi_{\mathrm{h}}}{\cos^2\theta_{\mathrm{h}}} &
-            \displaystyle -\tan\theta_{\mathrm{h}}\cos\varphi_{\mathrm{h}}
+            \displaystyle -\frac{\cos\varphi}{\cos^2\theta} &
+            \displaystyle \tan\theta\sin\varphi               \\
+            \displaystyle -\frac{\sin\varphi}{\cos^2\theta} &
+            \displaystyle -\tan\theta\cos\varphi
         \end{array}\right]\, ,
 \end{align}
 于是雅可比行列式为
 \begin{align}\label{eq:08-ex01-Jacobian-slope-normals}
-    |J|=\left(\frac{\partial x_s}{\partial \theta_{\mathrm{h}}}\frac{\partial y_s}{\partial \varphi_{\mathrm{h}}}
-    -\frac{\partial x_s}{\partial \varphi_{\mathrm{h}}}\frac{\partial y_s}{\partial \theta_{\mathrm{h}}}\right)
-    =\frac{\tan\theta_{\mathrm{h}}}{\cos^2\theta_{\mathrm{h}}}\, .
+    |J|=\left(\frac{\partial x_s}{\partial \theta}\frac{\partial y_s}{\partial \varphi}
+    -\frac{\partial x_s}{\partial \varphi}\frac{\partial y_s}{\partial \theta}\right)
+    =\frac{\tan\theta}{\cos^2\theta}\, .
 \end{align}
 注意到$P_{xy}({\bm s})$应满足规范化约束，
 即它在$x_s\in(-\infty,+\infty),y_s\in(-\infty,+\infty)$范围内非负，且有
@@ -675,17 +675,17 @@ $\varphi_{\mathrm{h}}$为方位角
 将上式和\refeq{08ex01-McrofacetDistributionNormalization}比对，可得
 \begin{align}\label{eq:08-ex01-P2D}
     P_{xy}(x_s,y_s)\mathrm{d}x_s\mathrm{d}y_s=
-    D({\bm\omega}_{\mathrm{h}})\cos\theta_{\mathrm{h}}\mathrm{d}{\bm\omega}_{\mathrm{h}}\, .
+    D({\bm\omega}_{\mathrm{h}})\cos\theta\mathrm{d}{\bm\omega}_{\mathrm{h}}\, .
 \end{align}
 联立\refeq{08-ex01-D_sphere}、\refeq{08-ex01-Pxy-Jacobian}和\refeq{08-ex01-P2D}可得
 \begin{align}
-    P_{xy}(x_s,y_s)|J|\mathrm{d}\theta_{\mathrm{h}}\mathrm{d}\varphi_{\mathrm{h}}
-    =D({\bm\omega}_{\mathrm{h}})\sin\theta_{\mathrm{h}}\cos\theta_{\mathrm{h}}\mathrm{d}\theta_{\mathrm{h}}\mathrm{d}\varphi_{\mathrm{h}}\, ,
+    P_{xy}(x_s,y_s)|J|\mathrm{d}\theta\mathrm{d}\varphi
+    =D({\bm\omega}_{\mathrm{h}})\sin\theta\cos\theta\mathrm{d}\theta\mathrm{d}\varphi\, ,
 \end{align}
 代入\refeq{08-ex01-Jacobian-slope-normals}后可知斜率分布与法线分布的关系为
 \begin{align}\label{eq:08-ex01-relation-P2D-McrofacetDistribution}
-    P_{xy}(x_s,y_s)=\frac{1}{|J|}D({\bm\omega}_{\mathrm{h}})\sin\theta_{\mathrm{h}}\cos\theta_{\mathrm{h}}
-    =D({\bm\omega}_{\mathrm{h}})\cos^4\theta_{\mathrm{h}}\, .
+    P_{xy}(x_s,y_s)=\frac{1}{|J|}D({\bm\omega}_{\mathrm{h}})\sin\theta\cos\theta
+    =D({\bm\omega}_{\mathrm{h}})\cos^4\theta\, .
 \end{align}
 
 只有$P_{xy}(x_s,y_s)$还不足以推导出掩模遮挡函数。
@@ -1239,10 +1239,10 @@ Kelemen掩模函数虽然对V形槽掩模函数近似得很好，
 
 \subsubsection*{各向同性斜率分布的形状不变性}
 典型的各向同性参数化斜率分布依赖粗糙度参数$\alpha$，改变$\alpha$等价于拉伸分布而不改变其形状。
-这种情形下，斜率分布只决定于斜率大小$\displaystyle\tan\theta_{\mathrm{h}}=\sqrt{x_s^2+y_s^2}$（也即
-微面法线天顶角正切值）与$\alpha$的比例$\displaystyle\frac{\tan\theta_{\mathrm{h}}}{\alpha}$：
+这种情形下，斜率分布只决定于斜率大小$\displaystyle\tan\theta=\sqrt{x_s^2+y_s^2}$（也即
+微面法线天顶角正切值）与$\alpha$的比例$\displaystyle\frac{\tan\theta}{\alpha}$：
 \begin{align}\label{eq:08-ex01-isotropic-shape-invariant}
-    P_{xy}(x_s,y_s,\alpha)=\frac{1}{\alpha^2}f\left(\frac{\sqrt{x_s^2+y_s^2}}{\alpha}\right)=\frac{1}{\alpha^2}f\left(\frac{\tan\theta_{\mathrm{h}}}{\alpha}\right)\, ,
+    P_{xy}(x_s,y_s,\alpha)=\frac{1}{\alpha^2}f\left(\frac{\sqrt{x_s^2+y_s^2}}{\alpha}\right)=\frac{1}{\alpha^2}f\left(\frac{\tan\theta}{\alpha}\right)\, ,
 \end{align}
 其中$f$是定义分布形状的一维函数。这样的斜率分布具有\keyindex{形状不变性}{shape invariant}{}：对于任意系数$\lambda>0$，
 \begin{align}\label{eq:08-ex01-any-coef-invariant}
@@ -1264,7 +1264,7 @@ Kelemen掩模函数虽然对V形槽掩模函数近似得很好，
 并取正向的法线\sidenote{回顾\refeq{08-ex01-normals-by-slope}的批注。}，可得
 \begin{align}
     D({\bm\omega}_{\mathrm{h}},\alpha)=\frac{\chi({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}})}
-    {\pi\alpha^2\cos^4\theta_{\mathrm{h}}}\exp\left(-\frac{\tan^2\theta_{\mathrm{h}}}{\alpha^2}\right)\, .
+    {\pi\alpha^2\cos^4\theta}\exp\left(-\frac{\tan^2\theta}{\alpha^2}\right)\, .
 \end{align}
 最后结合\refeq{08-ex01-condition-1d-slope}和\refeq{08-ex01-Lambda-function}，得到
 \begin{align}\label{eq:08-ex01-Beckmann-Lambda}
@@ -1313,7 +1313,7 @@ Kelemen掩模函数虽然对V形槽掩模函数近似得很好，
 \begin{align}
     P_{xy}(x_s,y_s,\alpha)=&\frac{1}{\displaystyle\pi\alpha^2\left(1+\frac{x_s^2+y_s^2}{\alpha^2}\right)^2}\, ,\\
     D({\bm\omega}_{\mathrm{h}},\alpha)=&\frac{\chi({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}})}
-    {\displaystyle\pi\alpha^2\left(1+\frac{\tan^2\theta_{\mathrm{h}}}{\alpha^2}\right)^2\cos^4\theta_{\mathrm{h}}}\, .
+    {\displaystyle\pi\alpha^2\left(1+\frac{\tan^2\theta}{\alpha^2}\right)^2\cos^4\theta}\, .
 \end{align}
 仿照\refeq{08-ex01-Beckmann-Lambda}的推导，可得
 \begin{align}\displaystyle
@@ -1360,8 +1360,8 @@ Kelemen掩模函数虽然对V形槽掩模函数近似得很好，
 \begin{align}
     P_{xy}(x_s,y_s,\alpha_x,\alpha_y)=\frac{1}{\alpha_x\alpha_y}f\displaystyle
     \left(\sqrt{\frac{x_s^2}{\alpha_x^2}+\frac{y_s^2}{\alpha_y^2}}\right)
-    =\frac{1}{\alpha_x\alpha_y}f\left(\tan\theta_{\mathrm{h}}\sqrt{\frac{\cos^2\varphi_{\mathrm{h}}}{\alpha_x^2}
-    +\frac{\sin^2\varphi_{\mathrm{h}}}{\alpha_y^2}}\right)\, ,
+    =\frac{1}{\alpha_x\alpha_y}f\left(\tan\theta\sqrt{\frac{\cos^2\varphi}{\alpha_x^2}
+    +\frac{\sin^2\varphi}{\alpha_y^2}}\right)\, ,
 \end{align}
 其中$\alpha_x$和$\alpha_y$是分布分别在$x$和$y$轴方向上的拉伸系数。
 而各向同性版本是它在$\alpha_x=\alpha_y$时的特例。
@@ -1414,8 +1414,8 @@ Kelemen掩模函数虽然对V形槽掩模函数近似得很好，
 \begin{align}
     P_{xy}(x_s,y_s,\alpha_x,\alpha_y)=&\frac{1}{\pi\alpha_x\alpha_y}\exp\left(-\frac{x_s^2}{\alpha_x^2}-\frac{y_s^2}{\alpha_y^2}\right)\, ,\\
     D({\bm\omega}_{\mathrm{h}},\alpha_x,\alpha_y)=&\frac{\chi({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}})}
-    {\pi\alpha_x\alpha_y\cos^4\theta_{\mathrm{h}}}\exp\left(-\left(\frac{\cos^2\varphi_{\mathrm{h}}}{\alpha_x^2}
-    +\frac{\sin^2\varphi_{\mathrm{h}}}{\alpha_y^2}\right)\tan^2\theta_{\mathrm{h}}\right)\, ,\\
+    {\pi\alpha_x\alpha_y\cos^4\theta}\exp\left(-\left(\frac{\cos^2\varphi}{\alpha_x^2}
+    +\frac{\sin^2\varphi}{\alpha_y^2}\right)\tan^2\theta\right)\, ,\\
     \Lambda({\bm\omega}_{\mathrm{o}},\alpha_x,\alpha_y)=&\frac{1}{2}\left(\mathrm{erf}(a)-1
     +\frac{\mathrm{e}^{-a^2}}{\sqrt{\pi}a}\right),
     \quad\text{其中}a=\displaystyle\frac{1}{\alpha_{\mathrm{o}}\tan\theta_{\mathrm{o}}}\, .
@@ -1427,8 +1427,8 @@ Kelemen掩模函数虽然对V形槽掩模函数近似得很好，
     P_{xy}(x_s,y_s,\alpha_x,\alpha_y)=&\frac{1}{\displaystyle\pi\alpha_x\alpha_y\left(1
     +\frac{x_s^2}{\alpha_x^2}+\frac{y_s^2}{\alpha_y^2}\right)^2}\, ,\\
     D({\bm\omega}_{\mathrm{h}},\alpha_x,\alpha_y)=&\frac{\chi({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}})}
-    {\displaystyle\pi\alpha_x\alpha_y\left(1+\left(\frac{\cos^2\varphi_{\mathrm{h}}}{\alpha_x^2}
-    +\frac{\sin^2\varphi_{\mathrm{h}}}{\alpha_y^2}\right)\tan^2\theta_{\mathrm{h}}\right)^2\cos^4\theta_{\mathrm{h}}}\, ,\\
+    {\displaystyle\pi\alpha_x\alpha_y\left(1+\left(\frac{\cos^2\varphi}{\alpha_x^2}
+    +\frac{\sin^2\varphi}{\alpha_y^2}\right)\tan^2\theta\right)^2\cos^4\theta}\, ,\\
     \Lambda({\bm\omega}_{\mathrm{o}},\alpha_x,\alpha_y)=&\frac{1}{2}(\sqrt{1+a^{-2}}-1),
     \quad\text{其中}a=\displaystyle\frac{1}{\alpha_{\mathrm{o}}\tan\theta_{\mathrm{o}}}\, .
 \end{align}

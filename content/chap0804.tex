@@ -39,8 +39,8 @@
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=\linewidth]{Pictures/chap08/Maskingshadowinginterreflection.eps}
-    \caption{微面反射模型要考虑的三种重要几何效应。(a)遮掩(masking)：
-        考虑的微面因为另一微面的遮挡而对观察者不可见。(b)阴影(shadowing)：
+    \caption{微面反射模型要考虑的三种重要几何效应。(a)掩模(masking)：
+        考虑的微面因为另一微面的遮挡而对观察者不可见。(b)遮挡(shadowing)：
         类似地，光无法到达微面。(3)互反射：光在到达
         观察者之前于微面之间反弹。}
     \label{fig:8.13}
@@ -250,7 +250,7 @@ Beckmann-Spizzichino模型的传统定义是
 const `\refvar{Float}{}` `\initvar[BeckmannDistribution::alphax]{alphax}{}`, `\initvar[BeckmannDistribution::alphay]{alphay}{}`;
 \end{lstlisting}
 
-方法\refvar{BeckmannDistribution::D}{()}直接翻译了\refeq{8.10}。
+方法\refvar{BeckmannDistribution::D}{()}直接誊写了\refeq{8.10}。
 仅有的额外实现细节是必须特殊处理$\tan^2\theta$的无限值。
 该情况实际上是有效的——它在完全扫掠的方向上发生。
 该情况下，下面的代码最终企图计算$\displaystyle\frac{0}{0}$，
@@ -528,9 +528,10 @@ Trowbridge-Reitz分布则非常简单：
 朝向${\bm\omega}_{\mathrm{i}}$和${\bm\omega}_{\mathrm{o}}$的
 半角${\bm\omega}_{\mathrm{h}}$方向的微面上。
 根据辐射亮度的定义\refeq{5.2}，它即
-\sidenote{译者注：原文该式漏掉了${\bm\omega}_{\mathrm{i}}$的下标$\mathrm{i}$，此处已修正。}
+\sidenote{译者注：原文该式漏掉了${\bm\omega}_{\mathrm{i}}$的下标$\mathrm{i}$，此处已修正；
+原文对通量的微分记作一阶，笔者改为了二阶。}
 \begin{align*}
-    \mathrm{d}\varPhi_{\mathrm{h}}=L_{\mathrm{i}}({\bm\omega}_{\mathrm{i}})
+    \mathrm{d}^2\varPhi_{\mathrm{h}}=L_{\mathrm{i}}({\bm\omega}_{\mathrm{i}})
     \mathrm{d}{\bm\omega}_{\mathrm{i}}\mathrm{d}A^{\perp}({\bm\omega}_{\mathrm{h}})
     =L_{\mathrm{i}}({\bm\omega}_{\mathrm{i}})\mathrm{d}{\bm\omega}_{\mathrm{i}}
     \cos\theta_{\mathrm{h}}\mathrm{d}A({\bm\omega}_{\mathrm{h}})\, ,
@@ -556,19 +557,20 @@ Trowbridge-Reitz分布则非常简单：
 \end{align*}
 该乘积的前两项描述了每单位面积上具有正确朝向的微面的微分面积，
 而$\mathrm{d}A$项将其转化为微分面积。因此
-\sidenote{译者注：原文该式漏掉了${\bm\omega}_{\mathrm{i}}$的下标$\mathrm{i}$，此处已修正。}
+\sidenote{译者注：原文该式漏掉了${\bm\omega}_{\mathrm{i}}$的下标$\mathrm{i}$，此处已修正；
+原文对通量的微分记作一阶，笔者改为了二阶。}
 \begin{align}\label{eq:8.15}
-    \mathrm{d}\varPhi_{\mathrm{h}}=L_{\mathrm{i}}({\bm\omega}_{\mathrm{i}})
+    \mathrm{d}^2\varPhi_{\mathrm{h}}=L_{\mathrm{i}}({\bm\omega}_{\mathrm{i}})
     \mathrm{d}{\bm\omega}_{\mathrm{i}}\cos\theta_{\mathrm{h}}
     D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\mathrm{d}A\, .
 \end{align}
 如果我们假设微面各自根据菲涅耳定律反射光线，则出射通量为
 \begin{align}\label{eq:8.16}
-    \mathrm{d}\varPhi_{\mathrm{o}}=F_{\mathrm{r}}({\bm\omega}_{\mathrm{o}})\mathrm{d}\varPhi_{\mathrm{h}}\, .
+    \mathrm{d}^2\varPhi_{\mathrm{o}}=F_{\mathrm{r}}({\bm\omega}_{\mathrm{o}})\mathrm{d}^2\varPhi_{\mathrm{h}}\, .
 \end{align}
 再次利用辐射亮度的定义，反射的出射亮度为
 \begin{align*}
-    L({\bm\omega}_{\mathrm{o}})=\frac{\mathrm{d}\varPhi_{\mathrm{o}}}
+    L({\bm\omega}_{\mathrm{o}})=\frac{\mathrm{d}^2\varPhi_{\mathrm{o}}}
     {\cos\theta_{\mathrm{o}}\mathrm{d}{\bm\omega}_{\mathrm{o}}\mathrm{d}A}\, .
 \end{align*}
 如果我们把\refeq{8.16}代入上式，再把\refeq{8.15}代入其结果，则有
@@ -579,7 +581,19 @@ Trowbridge-Reitz分布则非常简单：
     {\cos\theta_{\mathrm{o}}\mathrm{d}{\bm\omega}_{\mathrm{o}}\mathrm{d}A}\, .
 \end{align*}
 
-在\refsub{微面BxDF}中，我们将在镜面反射条件下推导出$\mathrm{d}{\bm\omega}_{\mathrm{h}}$与$\mathrm{d}{\bm\omega}_{\mathrm{o}}$的重要关系：
+在\refsub{微面BxDF}中，我们将在镜面反射条件下推导
+出$\mathrm{d}{\bm\omega}_{\mathrm{h}}$与$\mathrm{d}{\bm\omega}_{\mathrm{o}}$的重要关系
+\sidenote{译者注：尽管最后\refeq{8.18}是正确的，但笔者认为这里的推导可能包含了某些错误。
+作者在\refsub{镜面反射}中专门强调了$f_\mathrm{r}({\bm p},{\bm \omega}_\mathrm{o},{\bm \omega}_\mathrm{i})$的形式
+必须遵循该节第一个等式表达的约束，此时里面含有
+项$\delta_{\mathrm{r}}({\bm\omega}_{\mathrm{i}}-{\bm\omega}_{\mathrm{r}})$，
+该项在推导中必然导致需要处理$\mathrm{d}{\bm\omega}_{\mathrm{h}}$对$\mathrm{d}{\bm\omega}_{\mathrm{i}}$的变化关系，
+而不是这里的$\mathrm{d}{\bm\omega}_{\mathrm{h}}$对$\mathrm{d}{\bm\omega}_{\mathrm{o}}$的关系。
+此外这里的反射光比例用的记号也从之前的$F_{\mathrm{r}}({\bm\omega}_{\mathrm{i}})$改
+为$F_{\mathrm{r}}({\bm\omega}_{\mathrm{o}})$，与前文不一致。
+不过反射模型有很好的对称性，这种错误被抵消了。
+同样的错误也出现在后文的BTDF推导中。详见\refeq{8.19}附近的旁注。
+这种错误在这一段内容附近是系统性的，同时牵涉正文和代码，所以笔者不作修改，只做提示。}：
 \begin{align}\label{eq:8.17}
     \mathrm{d}{\bm\omega}_{\mathrm{h}}=\frac{\mathrm{d}{\bm\omega}_{\mathrm{o}}}{4\cos\theta_{\mathrm{h}}}\, .
 \end{align}
@@ -666,6 +680,16 @@ if (wh.x == 0 && wh.y == 0 && wh.z == 0) return `\refvar{Spectrum}{}`(0.);
 \end{align*}
 
 在推导Torrance-Sparrow的BRDF时可以用该关系替代\refeq{8.17}。结果为
+\sidenote{译者注：和前面BRDF的情况类似，笔者认为\refeq{8.19}的推导存在错误，
+应该是利用$\mathrm{d}{\bm\omega}_{\mathrm{h}}$对$\mathrm{d}{\bm\omega}_{\mathrm{i}}$的关系进行推导才对。
+新书第4版9.7节中确实按这种方式改了，得到了与这里\refeq{8.19}不一样的结果，这可能意味着原作者也发现了这一错误。
+笔者怀疑这些错误可能是原作者从\citet{10.5555/2383847.2383874}的论文继承来。
+该论文的推导没有大问题，但唯独其中假设微面BSDF形式的第9式和本文\refsub{镜面反射}的说法冲突。
+本文\refsub{镜面反射}已经说明了其中的$\delta$项关键变量应该包含${\bm\omega}_{\mathrm{i}}$，
+但论文第9式却用的${\bm\omega}_{\mathrm{o}}$，意外对调了入射和出射关系。
+原作者可能没有注意到这个细节，直接取用了论文最后的结果，引入了矛盾。
+因为这些错误牵涉较多，笔者没有修正，仅作提示。
+重新整理的推导可以参见笔者补充的\refsec{译者补充：微面模型相关推导}。}
 \begin{align}\label{eq:8.19}
     f_{\mathrm{r}}({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})=
     \frac{D({\bm\omega}_{\mathrm{h}})G({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})

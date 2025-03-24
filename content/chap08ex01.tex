@@ -293,7 +293,7 @@ $G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})$的值域为$[0,1]$，
     |{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{o}}|}
     \int\limits_{\varOmega}f_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})
     \max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{i}},0)\nonumber                            \\
-     & \qquad\qquad\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)
+     & \qquad\qquad\cdot\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)
     G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})
     D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\, .
 \end{align}
@@ -309,7 +309,7 @@ $G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})$的值域为$[0,1]$，
      & =\frac{1}{|{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{i}}||{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{o}}|}
     \int\limits_{\varOmega}f_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})
     \max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{i}},0)\nonumber                                                       \\
-     & \qquad\qquad\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)
+     & \qquad\qquad\cdot\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)
     G_2({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})
     D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\, .
 \end{align}
@@ -456,7 +456,7 @@ ${\bm\omega}_{\mathrm{m}}$对${\bm\omega}_{\mathrm{i}}$的\keyindex{雅可比矩
     \delta_{{\bm\omega}_{\mathrm{m}}}({\bm\omega}_{\mathrm{h}})}
     {4|{\bm\omega}_{\mathrm{m}}\cdot{\bm\omega}_{\mathrm{i}}|^2}
     \max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{i}},0)\nonumber                                                       \\
-     & \qquad\qquad\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)
+     & \qquad\qquad\cdot\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)
     G_2({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})
     D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber                                                       \\
      & =\frac{F_{\mathcal{M}}({\bm\omega}_{\mathrm{m}},{\bm\omega}_{\mathrm{o}})
@@ -469,7 +469,19 @@ ${\bm\omega}_{\mathrm{m}}$对${\bm\omega}_{\mathrm{i}}$的\keyindex{雅可比矩
 同样假设微面遵循完美镜面透射，不吸收入射光能量。
 并设${\bm\omega}_{\mathrm{m}}$是遵循折射定律\ref{theorem:0607-LawOfRefraction}下
 由入射方向${\bm\omega}_{\mathrm{i}}$和出射方向${\bm\omega}_{\mathrm{o}}$确定的
-满足完美镜面透射的规范化微面法线方向，
+满足完美镜面透射的规范化微面法线方向，而${\bm\omega}_{\mathrm{M}}$是对应未规范化的法线。
+设入射介质折射率$\eta_{\mathrm{i}}$小于出射介质折射率$\eta_{\mathrm{o}}$，
+相对折射率为$\displaystyle\eta=\frac{\eta_{\mathrm{i}}}{\eta_{\mathrm{o}}}$.
+结合\reffig{8.11}的分析，不妨取
+\begin{align}
+    {\bm\omega}_{\mathrm{M}}=&-(\eta_{\mathrm{i}}{\bm\omega}_{\mathrm{i}}+\eta_{\mathrm{o}}{\bm\omega}_{\mathrm{o}})\, ,\\
+    {\bm\omega}_{\mathrm{m}}=&\frac{{\bm\omega}_{\mathrm{M}}}{|{\bm\omega}_{\mathrm{M}}|}\, .
+\end{align}
+并且根据折射定律，${\bm\omega}_{\mathrm{M}}$只存在竖直方向的分量，于是其模为
+\begin{align}
+    |{\bm\omega}_{\mathrm{M}}|=|\eta_{\mathrm{i}}({\bm\omega}_{\mathrm{i}}\cdot{\bm\omega}_{\mathrm{m}})
+    +\eta_{\mathrm{o}}({\bm\omega}_{\mathrm{o}}\cdot{\bm\omega}_{\mathrm{m}})|\, .
+\end{align}
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.6\linewidth]{Pictures/chap08/GeometryForIdealRefraction.eps}
@@ -477,6 +489,64 @@ ${\bm\omega}_{\mathrm{m}}$对${\bm\omega}_{\mathrm{i}}$的\keyindex{雅可比矩
     \label{fig:08ex01-GeometryForIdealRefraction}
 \end{figure}
 
+如\reffig{08ex01-GeometryForIdealRefraction}所示，和上节类似，
+我们根据立体角的定义以及上式的几何含义画出扰动时的情况：
+当${\bm\omega}_{\mathrm{i}}$发生扰动$\Delta{\bm\omega}_{\mathrm{i}}$时，
+向量$-\eta_{\mathrm{i}}{\bm\omega}_{\mathrm{i}}$末端扰动面积
+为$\eta^2_{\mathrm{i}}\Delta{\bm\omega}_{\mathrm{i}}$，
+用它在${\bm\omega}_{\mathrm{m}}$方向的投影面积
+除以${\bm\omega}_{\mathrm{M}}$模的平方即可得到对应的立体角扰动量，
+取绝对值后得
+\begin{align}
+    \left\lVert\frac{\partial{\bm\omega}_{\mathrm{m}}}{\partial{\bm\omega}_{\mathrm{i}}}\right\rVert
+    =&\lim\limits_{\Delta{\bm\omega}_{\mathrm{i}}\to0}\frac{|\Delta{\bm\omega}_{\mathrm{m}}|}{|\Delta{\bm\omega}_{\mathrm{i}}|}
+    =\frac{|\eta^2_{\mathrm{i}}\Delta{\bm\omega}_{\mathrm{i}}|
+    \cdot|{\bm\omega}_{\mathrm{i}}\cdot{\bm\omega}_{\mathrm{m}}|}
+    {|\Delta{\bm\omega}_{\mathrm{i}}|\cdot|{\bm\omega}_{\mathrm{M}}|^2}\nonumber\\
+    =&\frac{\eta^2_{\mathrm{i}}\cdot|{\bm\omega}_{\mathrm{i}}\cdot{\bm\omega}_{\mathrm{m}}|}
+    {(\eta_{\mathrm{i}}({\bm\omega}_{\mathrm{i}}\cdot{\bm\omega}_{\mathrm{m}})
+    +\eta_{\mathrm{o}}({\bm\omega}_{\mathrm{o}}\cdot{\bm\omega}_{\mathrm{m}}))^2}\nonumber\\
+    =&\frac{|{\bm\omega}_{\mathrm{i}}\cdot{\bm\omega}_{\mathrm{m}}|}
+    {\displaystyle(({\bm\omega}_{\mathrm{i}}\cdot{\bm\omega}_{\mathrm{m}})
+    +\frac{1}{\eta}({\bm\omega}_{\mathrm{o}}\cdot{\bm\omega}_{\mathrm{m}}))^2}\, .
+\end{align}
+将上式和\refeq{08ex01-DeltaChangeVar}代入\refeq{08ex01-FresnelBRDFMicrofacet}，
+并注意对于折射的情况应该把$F_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})$替换
+为$(1-F_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}}))$，即得微曲面上的微观BTDF为
+\begin{align}
+    f_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})
+    =\frac{(1-F_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}}))
+    \delta_{{\bm\omega}_{\mathrm{m}}}({\bm\omega}_{\mathrm{h}})
+    |{\bm\omega}_{\mathrm{i}}\cdot{\bm\omega}_{\mathrm{m}}|}
+    {|{\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{i}}|
+    \displaystyle(({\bm\omega}_{\mathrm{i}}\cdot{\bm\omega}_{\mathrm{m}})
+    +\frac{1}{\eta}({\bm\omega}_{\mathrm{o}}\cdot{\bm\omega}_{\mathrm{m}}))^2}\, .
+\end{align}
+
+将上式代入\refeq{08ex01-MacroBRDFG2}且把$\max$项替换为取绝对值。
+注意被积项中因为存在狄拉克$\delta$分布，所以其只在完美镜面折射成立时，
+即${\bm\omega}_{\mathrm{h}}={\bm\omega}_{\mathrm{m}}$时才可能取非零值。
+所以最终镜面微面模型的BTDF是
+\begin{align}\label{eq:08ex01-BTDFMicrofacetFinal}
+    f_{\mathrm{t}}({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})
+     & =\frac{1}{|{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{i}}||{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{o}}|}
+    \int\limits_{\varOmega}\frac{(1-F_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}}))
+    \delta_{{\bm\omega}_{\mathrm{m}}}({\bm\omega}_{\mathrm{h}})
+    |{\bm\omega}_{\mathrm{i}}\cdot{\bm\omega}_{\mathrm{m}}|}
+    {|{\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{i}}|
+    \displaystyle(({\bm\omega}_{\mathrm{i}}\cdot{\bm\omega}_{\mathrm{m}})
+    +\frac{1}{\eta}({\bm\omega}_{\mathrm{o}}\cdot{\bm\omega}_{\mathrm{m}}))^2}\nonumber\\
+     & \qquad\qquad\cdot|{\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{i}}|
+     |{\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}}|
+    G_2({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})
+    D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber\\
+     & =\frac{D({\bm\omega}_{\mathrm{m}})G_2({\bm\omega}_{\mathrm{m}},{\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})
+        (1-F_{\mathcal{M}}({\bm\omega}_{\mathrm{m}},{\bm\omega}_{\mathrm{o}}))
+        |{\bm\omega}_{\mathrm{m}}\cdot{\bm\omega}_{\mathrm{i}}||{\bm\omega}_{\mathrm{m}}\cdot{\bm\omega}_{\mathrm{o}}|}
+     {|{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{i}}||{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{o}}|
+     \displaystyle(({\bm\omega}_{\mathrm{i}}\cdot{\bm\omega}_{\mathrm{m}})
+    +\frac{1}{\eta}({\bm\omega}_{\mathrm{o}}\cdot{\bm\omega}_{\mathrm{m}}))^2}\, .
+\end{align}
 
 \subsection{微面模型BRDF的规范化测试}\label{sub:微面模型BRDF的规范化测试}
 本节继承上节的记号。假设某材质不吸收任何入射辐射能量，
@@ -857,8 +927,8 @@ $\varphi$为方位角
     \left(\frac{1}{(q-\mu)\Delta t}\int_{h_A+\mu t-(q-\mu)\Delta t}^{h_A+\mu t}P_H(h)\mathrm{d}h\right)\mathrm{d}q}
     {\displaystyle\int_{-\infty}^{h_A+\mu t}P_H(h)\mathrm{d}h}\nonumber\\
     =&\frac{\displaystyle\int_{\mu}^{+\infty}(q-\mu)P_s(q)P_H(h_A+\mu t)\mathrm{d}q}
-    {\displaystyle\int_{-\infty}^{h_A+\mu t}P_H(h)\mathrm{d}h}\nonumber\\
-    =&\Lambda(\mu)\frac{\mu P_H(h_A+\mu t)}{F_H(h_A+\mu t)}\, ,
+    {\displaystyle\int_{-\infty}^{h_A+\mu t}P_H(h)\mathrm{d}h}
+    =\Lambda(\mu)\frac{\mu P_H(h_A+\mu t)}{F_H(h_A+\mu t)}\, ,
 \end{align}
 其中$F_H$是$P_H$相应的累积分布函数
 \begin{align}
@@ -1036,8 +1106,8 @@ $\chi({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}})$项在规范化约�
 再结合$D({\bm\omega}_{\mathrm{h}})$的规范化性质\refeq{08ex01-McrofacetDistributionNormalization}，
 我们有
 \begin{align}
-      & \int\limits_{\varOmega}D_{{\bm\omega}_{\mathrm{o}}}({\bm\omega}_{\mathrm{h}})
-    \mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber                                                         \\
+    \int\limits_{\varOmega}D_{{\bm\omega}_{\mathrm{o}}}({\bm\omega}_{\mathrm{h}})
+    \mathrm{d}{\bm\omega}_{\mathrm{h}}
     = & \int\limits_{\varOmega}2\chi({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}})
     ({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}})
     D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber                              \\
@@ -1045,8 +1115,7 @@ $\chi({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}})$项在规范化约�
     ({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}})
     D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber                              \\
     = & 2\cdot\frac{1}{2}\int\limits_{\varOmega}({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}})
-    D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber                              \\
-    = & 2\cdot\frac{1}{2}\cdot1=1\, .
+    D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}=2\cdot\frac{1}{2}\cdot1=1\, .
 \end{align}
 
 第二种情况是\refeq{08ex01-V-Cavity-MaskingFunction}中$\min(1,\cdot)$项取前者，
@@ -1061,8 +1130,8 @@ $\chi({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}})$项在规范化约�
 且${\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}}$和
 ${\bm\omega}'_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}}$均大于零。于是有
 \begin{align}
-      & \int\limits_{\varOmega}D_{{\bm\omega}_{\mathrm{o}}}({\bm\omega}_{\mathrm{h}})
-    \mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber                                                                                     \\
+    \int\limits_{\varOmega}D_{{\bm\omega}_{\mathrm{o}}}({\bm\omega}_{\mathrm{h}})
+    \mathrm{d}{\bm\omega}_{\mathrm{h}}
     = & \int\limits_{\varOmega}\frac{\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)
         D({\bm\omega}_{\mathrm{h}})}{\cos\theta_{\mathrm{o}}}\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber                            \\
     = & \int\limits_{\varOmega}\frac{({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}})
@@ -1073,8 +1142,7 @@ ${\bm\omega}'_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}}$均大于零。于是有
     ({\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{o}})
     D({\bm\omega}_{\mathrm{h}})}{{\bm\omega}_{\mathrm{o}}\cdot{\bm\omega}_{\mathrm{g}}}\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber  \\
     = & \int\limits_{\varOmega}({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}})
-    D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber                                                          \\
-    = & 1\, .
+    D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}=1\, .
 \end{align}
 
 由此我们验证了V形槽微面模型对于两种情况都满足可见微面法线分布的规范性要求，满足能量守恒。

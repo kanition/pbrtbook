@@ -293,7 +293,7 @@ $G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})$的值域为$[0,1]$，
     |{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{o}}|}
     \int\limits_{\varOmega}f_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})
     \max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{i}},0)\nonumber                            \\
-     & \qquad\qquad\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)
+     & \qquad\qquad\cdot\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)
     G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})
     D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\, .
 \end{align}
@@ -309,7 +309,7 @@ $G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})$的值域为$[0,1]$，
      & =\frac{1}{|{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{i}}||{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{o}}|}
     \int\limits_{\varOmega}f_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})
     \max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{i}},0)\nonumber                                                       \\
-     & \qquad\qquad\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)
+     & \qquad\qquad\cdot\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)
     G_2({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})
     D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\, .
 \end{align}
@@ -326,7 +326,7 @@ $G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})$的值域为$[0,1]$，
 即\refeq{08ex01-MacroBRDFG1}或\refeq{08ex01-MacroBRDFG2}，
 我们需要知道微面尺度下的BRDF即$f_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})$的具体形式。
 本小节假设微面都遵循完美镜面反射，由此给出具体推导。
-设微面镜面的菲涅尔反射率为$F_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})$，
+设微面镜面的菲涅耳反射率为$F_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})$，
 这意味着微面的入射和出射辐亮度满足约束
 \begin{align}\label{eq:08ex01-FresnelMicrofacet}
     L_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})=F_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})L_{\mathrm{i}}({\bm\omega}_{\mathrm{i}})\, .
@@ -456,7 +456,7 @@ ${\bm\omega}_{\mathrm{m}}$对${\bm\omega}_{\mathrm{i}}$的\keyindex{雅可比矩
     \delta_{{\bm\omega}_{\mathrm{m}}}({\bm\omega}_{\mathrm{h}})}
     {4|{\bm\omega}_{\mathrm{m}}\cdot{\bm\omega}_{\mathrm{i}}|^2}
     \max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{i}},0)\nonumber                                                       \\
-     & \qquad\qquad\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)
+     & \qquad\qquad\cdot\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)
     G_2({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})
     D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber                                                       \\
      & =\frac{F_{\mathcal{M}}({\bm\omega}_{\mathrm{m}},{\bm\omega}_{\mathrm{o}})
@@ -464,9 +464,93 @@ ${\bm\omega}_{\mathrm{m}}$对${\bm\omega}_{\mathrm{i}}$的\keyindex{雅可比矩
     {4|{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{i}}||{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{o}}|}\, .
 \end{align}
 
+\subsection{镜面微面模型的BTDF}\label{sub:镜面微面模型的BTDF}
+因为内容与上节相似，本节继承上节的记号和假设，插入镜面微面模型的BTDF推导。
+同样假设微面遵循完美镜面透射，不吸收入射光能量。
+并设${\bm\omega}_{\mathrm{m}}$是遵循折射定律\ref{theorem:0607-LawOfRefraction}下
+由入射方向${\bm\omega}_{\mathrm{i}}$和出射方向${\bm\omega}_{\mathrm{o}}$确定的
+满足完美镜面透射的规范化微面法线方向，而${\bm\omega}_{\mathrm{M}}$是对应未规范化的法线。
+设入射介质折射率$\eta_{\mathrm{i}}$小于出射介质折射率$\eta_{\mathrm{o}}$，
+相对折射率为$\displaystyle\eta=\frac{\eta_{\mathrm{i}}}{\eta_{\mathrm{o}}}$.
+结合\reffig{8.11}的分析，不妨取
+\begin{align}
+    {\bm\omega}_{\mathrm{M}}=&-(\eta_{\mathrm{i}}{\bm\omega}_{\mathrm{i}}+\eta_{\mathrm{o}}{\bm\omega}_{\mathrm{o}})\, ,\\
+    {\bm\omega}_{\mathrm{m}}=&\frac{{\bm\omega}_{\mathrm{M}}}{|{\bm\omega}_{\mathrm{M}}|}\, .
+\end{align}
+并且根据折射定律，${\bm\omega}_{\mathrm{M}}$只存在竖直方向的分量，于是其模为
+\begin{align}
+    |{\bm\omega}_{\mathrm{M}}|=|\eta_{\mathrm{i}}({\bm\omega}_{\mathrm{i}}\cdot{\bm\omega}_{\mathrm{m}})
+    +\eta_{\mathrm{o}}({\bm\omega}_{\mathrm{o}}\cdot{\bm\omega}_{\mathrm{m}})|\, .
+\end{align}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.6\linewidth]{Pictures/chap08/GeometryForIdealRefraction.eps}
+    \caption{镜面折射中的角度扰动关系和相应雅可比矩阵行列式绝对值的计算。}
+    \label{fig:08ex01-GeometryForIdealRefraction}
+\end{figure}
+
+如\reffig{08ex01-GeometryForIdealRefraction}所示，和上节类似，
+我们根据立体角的定义以及上式的几何含义画出扰动时的情况：
+当${\bm\omega}_{\mathrm{i}}$发生扰动$\Delta{\bm\omega}_{\mathrm{i}}$时，
+向量$-\eta_{\mathrm{i}}{\bm\omega}_{\mathrm{i}}$末端扰动面积
+为$\eta^2_{\mathrm{i}}\Delta{\bm\omega}_{\mathrm{i}}$，
+用它在${\bm\omega}_{\mathrm{m}}$方向的投影面积
+除以${\bm\omega}_{\mathrm{M}}$模的平方即可得到对应的立体角扰动量，
+取绝对值后得
+\begin{align}
+    \left\lVert\frac{\partial{\bm\omega}_{\mathrm{m}}}{\partial{\bm\omega}_{\mathrm{i}}}\right\rVert
+    =&\lim\limits_{\Delta{\bm\omega}_{\mathrm{i}}\to0}\frac{|\Delta{\bm\omega}_{\mathrm{m}}|}{|\Delta{\bm\omega}_{\mathrm{i}}|}
+    =\frac{|\eta^2_{\mathrm{i}}\Delta{\bm\omega}_{\mathrm{i}}|
+    \cdot|{\bm\omega}_{\mathrm{i}}\cdot{\bm\omega}_{\mathrm{m}}|}
+    {|\Delta{\bm\omega}_{\mathrm{i}}|\cdot|{\bm\omega}_{\mathrm{M}}|^2}\nonumber\\
+    =&\frac{\eta^2_{\mathrm{i}}\cdot|{\bm\omega}_{\mathrm{i}}\cdot{\bm\omega}_{\mathrm{m}}|}
+    {(\eta_{\mathrm{i}}({\bm\omega}_{\mathrm{i}}\cdot{\bm\omega}_{\mathrm{m}})
+    +\eta_{\mathrm{o}}({\bm\omega}_{\mathrm{o}}\cdot{\bm\omega}_{\mathrm{m}}))^2}\nonumber\\
+    =&\frac{|{\bm\omega}_{\mathrm{i}}\cdot{\bm\omega}_{\mathrm{m}}|}
+    {\displaystyle(({\bm\omega}_{\mathrm{i}}\cdot{\bm\omega}_{\mathrm{m}})
+    +\frac{1}{\eta}({\bm\omega}_{\mathrm{o}}\cdot{\bm\omega}_{\mathrm{m}}))^2}\, .
+\end{align}
+将上式和\refeq{08ex01-DeltaChangeVar}代入\refeq{08ex01-FresnelBRDFMicrofacet}，
+并注意对于折射的情况应该把$F_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})$替换
+为$(1-F_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}}))$，即得微曲面上的微观BTDF为
+\begin{align}
+    f_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})
+    =\frac{(1-F_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}}))
+    \delta_{{\bm\omega}_{\mathrm{m}}}({\bm\omega}_{\mathrm{h}})
+    |{\bm\omega}_{\mathrm{i}}\cdot{\bm\omega}_{\mathrm{m}}|}
+    {|{\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{i}}|
+    \displaystyle(({\bm\omega}_{\mathrm{i}}\cdot{\bm\omega}_{\mathrm{m}})
+    +\frac{1}{\eta}({\bm\omega}_{\mathrm{o}}\cdot{\bm\omega}_{\mathrm{m}}))^2}\, .
+\end{align}
+
+将上式代入\refeq{08ex01-MacroBRDFG2}且把$\max$项替换为取绝对值。
+注意被积项中因为存在狄拉克$\delta$分布，所以其只在完美镜面折射成立时，
+即${\bm\omega}_{\mathrm{h}}={\bm\omega}_{\mathrm{m}}$时才可能取非零值。
+所以最终镜面微面模型的BTDF是
+\begin{align}\label{eq:08ex01-BTDFMicrofacetFinal}
+    f_{\mathrm{t}}({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})
+     & =\frac{1}{|{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{i}}||{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{o}}|}
+    \int\limits_{\varOmega}\frac{(1-F_{\mathcal{M}}({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}}))
+    \delta_{{\bm\omega}_{\mathrm{m}}}({\bm\omega}_{\mathrm{h}})
+    |{\bm\omega}_{\mathrm{i}}\cdot{\bm\omega}_{\mathrm{m}}|}
+    {|{\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{i}}|
+    \displaystyle(({\bm\omega}_{\mathrm{i}}\cdot{\bm\omega}_{\mathrm{m}})
+    +\frac{1}{\eta}({\bm\omega}_{\mathrm{o}}\cdot{\bm\omega}_{\mathrm{m}}))^2}\nonumber\\
+     & \qquad\qquad\cdot|{\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{i}}|
+     |{\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}}|
+    G_2({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})
+    D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber\\
+     & =\frac{D({\bm\omega}_{\mathrm{m}})G_2({\bm\omega}_{\mathrm{m}},{\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})
+        (1-F_{\mathcal{M}}({\bm\omega}_{\mathrm{m}},{\bm\omega}_{\mathrm{o}}))
+        |{\bm\omega}_{\mathrm{m}}\cdot{\bm\omega}_{\mathrm{i}}||{\bm\omega}_{\mathrm{m}}\cdot{\bm\omega}_{\mathrm{o}}|}
+     {|{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{i}}||{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{o}}|
+     \displaystyle(({\bm\omega}_{\mathrm{i}}\cdot{\bm\omega}_{\mathrm{m}})
+    +\frac{1}{\eta}({\bm\omega}_{\mathrm{o}}\cdot{\bm\omega}_{\mathrm{m}}))^2}\, .
+\end{align}
+
 \subsection{微面模型BRDF的规范化测试}\label{sub:微面模型BRDF的规范化测试}
 本节继承上节的记号。假设某材质不吸收任何入射辐射能量，
-且菲涅尔反射率$F_{\mathcal{M}}({\bm\omega}_{\mathrm{m}},{\bm\omega}_{\mathrm{o}})$恒为1，
+且菲涅耳反射率$F_{\mathcal{M}}({\bm\omega}_{\mathrm{m}},{\bm\omega}_{\mathrm{o}})$恒为1，
 也即完全不透射任何光线，则入射的能量会被无损地反射回去。
 此时对应的BRDF应该满足以下规范化约束：
 \begin{align}\label{eq:08ex-01-WhiteFurnaceTest}
@@ -498,7 +582,7 @@ ${\bm\omega}_{\mathrm{m}}$对${\bm\omega}_{\mathrm{i}}$的\keyindex{雅可比矩
     \frac{G_1({\bm\omega}_{\mathrm{m}},{\bm\omega}_{\mathrm{o}})D({\bm\omega}_{\mathrm{m}})}
     {4|{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{o}}|}\mathrm{d}{\bm\omega}_{\mathrm{i}}=1\, .
 \end{align}
-容易看出，上式的成立其实并不依赖菲涅尔反射率恒为1。
+容易看出，上式的成立其实并不依赖菲涅耳反射率恒为1。
 它给出了镜面微面模型对$G_1$的又一重要约束。
 需要说明的是，弱白炉测试丢弃遮挡函数只是为了
 提供一个便捷的方法来验证BRDF的物理合理性，
@@ -600,10 +684,10 @@ ${\bm\omega}_{\mathrm{m}}$对${\bm\omega}_{\mathrm{i}}$的\keyindex{雅可比矩
 设它在直角坐标系下和球面坐标系下具体的分量为
 \begin{align}
     {\bm\omega}_{\mathrm{h}}=(x_{\mathrm{h}},y_{\mathrm{h}},z_{\mathrm{h}})
-    =(\sin\theta_{\mathrm{h}}\cos\varphi_{\mathrm{h}},\sin\theta_{\mathrm{h}}\sin\varphi_{\mathrm{h}},\cos\theta_{\mathrm{h}})\, ,
+    =(\sin\theta\cos\varphi,\sin\theta\sin\varphi,\cos\theta)\, ,
 \end{align}
-其中$\theta_{\mathrm{h}}$为天顶角（即${\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}}=\cos\theta_{\mathrm{h}}$），
-$\varphi_{\mathrm{h}}$为方位角
+其中$\theta$为天顶角（即${\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}}=\cos\theta$），
+$\varphi$为方位角
 \sidenote{参见\reffig{5.ex01}。}；则该处附近的面元可以近似为以下平面
 \begin{align}
     x_{\mathrm{h}}x+y_{\mathrm{h}}y+z_{\mathrm{h}}z=C\, .
@@ -618,7 +702,7 @@ $\varphi_{\mathrm{h}}$为方位角
     {\bm s}({\bm\omega}_{\mathrm{h}})=(x_s,y_s)
     =\left(-\frac{x_{\mathrm{h}}}{z_{\mathrm{h}}},
     -\frac{y_{\mathrm{h}}}{z_{\mathrm{h}}}\right)
-    =-\tan\theta_{\mathrm{h}}(\cos\varphi_{\mathrm{h}},\sin\varphi_{\mathrm{h}})
+    =-\tan\theta(\cos\varphi,\sin\varphi)
 \end{align}
 为曲面在该处的斜率
 \sidenote{原文slope，这里作者想表达的是$z$对$x$和$y$的偏导数，
@@ -636,35 +720,35 @@ $\varphi_{\mathrm{h}}$为方位角
 公式\sidenote{见第\refsec{球体}。}，有
 \begin{align}\label{eq:08-ex01-D_sphere}
     D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}
-    =D({\bm\omega}_{\mathrm{h}})\sin\theta_{\mathrm{h}}\mathrm{d}\theta_{\mathrm{h}}\mathrm{d}\varphi_{\mathrm{h}}\, .
+    =D({\bm\omega}_{\mathrm{h}})\sin\theta\mathrm{d}\theta\mathrm{d}\varphi\, .
 \end{align}
 斜率分布方面，其积分也有换元关系
 \sidenote{这是微积分中常用的换元方法，此处我们不探究其使用条件，读者可参考相关教材。}
 \begin{align}\label{eq:08-ex01-Pxy-Jacobian}
     P_{xy}(x_s,y_s)\mathrm{d}x_s\mathrm{d}y_s
-    =P_{xy}(x_s,y_s)|J|\mathrm{d}\theta_{\mathrm{h}}\mathrm{d}\varphi_{\mathrm{h}}\, ,
+    =P_{xy}(x_s,y_s)|J|\mathrm{d}\theta\mathrm{d}\varphi\, ,
 \end{align}
-其中$J$为$(x_s,y_s)$对参数$(\theta_{\mathrm{h}},\varphi_{\mathrm{h}})$的雅可比矩阵
+其中$J$为$(x_s,y_s)$对参数$(\theta,\varphi)$的雅可比矩阵
 \begin{align}
-    J=\displaystyle\frac{\partial(x_s,y_s)}{\partial(\theta_{\mathrm{h}},\varphi_{\mathrm{h}})}
+    J=\displaystyle\frac{\partial(x_s,y_s)}{\partial(\theta,\varphi)}
     =\displaystyle\left[\begin{array}{cc}
-            \displaystyle\frac{\partial x_s}{\partial \theta_{\mathrm{h}}} &
-            \displaystyle\frac{\partial x_s}{\partial \varphi_{\mathrm{h}}}  \\
-            \displaystyle\frac{\partial y_s}{\partial \theta_{\mathrm{h}}} &
-            \displaystyle\frac{\partial y_s}{\partial \varphi_{\mathrm{h}}}
+            \displaystyle\frac{\partial x_s}{\partial \theta} &
+            \displaystyle\frac{\partial x_s}{\partial \varphi}  \\
+            \displaystyle\frac{\partial y_s}{\partial \theta} &
+            \displaystyle\frac{\partial y_s}{\partial \varphi}
         \end{array}\right]
     =\displaystyle\left[\begin{array}{rr}
-            \displaystyle -\frac{\cos\varphi_{\mathrm{h}}}{\cos^2\theta_{\mathrm{h}}} &
-            \displaystyle \tan\theta_{\mathrm{h}}\sin\varphi_{\mathrm{h}}               \\
-            \displaystyle -\frac{\sin\varphi_{\mathrm{h}}}{\cos^2\theta_{\mathrm{h}}} &
-            \displaystyle -\tan\theta_{\mathrm{h}}\cos\varphi_{\mathrm{h}}
+            \displaystyle -\frac{\cos\varphi}{\cos^2\theta} &
+            \displaystyle \tan\theta\sin\varphi               \\
+            \displaystyle -\frac{\sin\varphi}{\cos^2\theta} &
+            \displaystyle -\tan\theta\cos\varphi
         \end{array}\right]\, ,
 \end{align}
 于是雅可比行列式为
 \begin{align}\label{eq:08-ex01-Jacobian-slope-normals}
-    |J|=\left(\frac{\partial x_s}{\partial \theta_{\mathrm{h}}}\frac{\partial y_s}{\partial \varphi_{\mathrm{h}}}
-    -\frac{\partial x_s}{\partial \varphi_{\mathrm{h}}}\frac{\partial y_s}{\partial \theta_{\mathrm{h}}}\right)
-    =\frac{\tan\theta_{\mathrm{h}}}{\cos^2\theta_{\mathrm{h}}}\, .
+    |J|=\left(\frac{\partial x_s}{\partial \theta}\frac{\partial y_s}{\partial \varphi}
+    -\frac{\partial x_s}{\partial \varphi}\frac{\partial y_s}{\partial \theta}\right)
+    =\frac{\tan\theta}{\cos^2\theta}\, .
 \end{align}
 注意到$P_{xy}({\bm s})$应满足规范化约束，
 即它在$x_s\in(-\infty,+\infty),y_s\in(-\infty,+\infty)$范围内非负，且有
@@ -675,17 +759,17 @@ $\varphi_{\mathrm{h}}$为方位角
 将上式和\refeq{08ex01-McrofacetDistributionNormalization}比对，可得
 \begin{align}\label{eq:08-ex01-P2D}
     P_{xy}(x_s,y_s)\mathrm{d}x_s\mathrm{d}y_s=
-    D({\bm\omega}_{\mathrm{h}})\cos\theta_{\mathrm{h}}\mathrm{d}{\bm\omega}_{\mathrm{h}}\, .
+    D({\bm\omega}_{\mathrm{h}})\cos\theta\mathrm{d}{\bm\omega}_{\mathrm{h}}\, .
 \end{align}
 联立\refeq{08-ex01-D_sphere}、\refeq{08-ex01-Pxy-Jacobian}和\refeq{08-ex01-P2D}可得
 \begin{align}
-    P_{xy}(x_s,y_s)|J|\mathrm{d}\theta_{\mathrm{h}}\mathrm{d}\varphi_{\mathrm{h}}
-    =D({\bm\omega}_{\mathrm{h}})\sin\theta_{\mathrm{h}}\cos\theta_{\mathrm{h}}\mathrm{d}\theta_{\mathrm{h}}\mathrm{d}\varphi_{\mathrm{h}}\, ,
+    P_{xy}(x_s,y_s)|J|\mathrm{d}\theta\mathrm{d}\varphi
+    =D({\bm\omega}_{\mathrm{h}})\sin\theta\cos\theta\mathrm{d}\theta\mathrm{d}\varphi\, ,
 \end{align}
 代入\refeq{08-ex01-Jacobian-slope-normals}后可知斜率分布与法线分布的关系为
 \begin{align}\label{eq:08-ex01-relation-P2D-McrofacetDistribution}
-    P_{xy}(x_s,y_s)=\frac{1}{|J|}D({\bm\omega}_{\mathrm{h}})\sin\theta_{\mathrm{h}}\cos\theta_{\mathrm{h}}
-    =D({\bm\omega}_{\mathrm{h}})\cos^4\theta_{\mathrm{h}}\, .
+    P_{xy}(x_s,y_s)=\frac{1}{|J|}D({\bm\omega}_{\mathrm{h}})\sin\theta\cos\theta
+    =D({\bm\omega}_{\mathrm{h}})\cos^4\theta\, .
 \end{align}
 
 只有$P_{xy}(x_s,y_s)$还不足以推导出掩模遮挡函数。
@@ -843,8 +927,8 @@ $\varphi_{\mathrm{h}}$为方位角
     \left(\frac{1}{(q-\mu)\Delta t}\int_{h_A+\mu t-(q-\mu)\Delta t}^{h_A+\mu t}P_H(h)\mathrm{d}h\right)\mathrm{d}q}
     {\displaystyle\int_{-\infty}^{h_A+\mu t}P_H(h)\mathrm{d}h}\nonumber\\
     =&\frac{\displaystyle\int_{\mu}^{+\infty}(q-\mu)P_s(q)P_H(h_A+\mu t)\mathrm{d}q}
-    {\displaystyle\int_{-\infty}^{h_A+\mu t}P_H(h)\mathrm{d}h}\nonumber\\
-    =&\Lambda(\mu)\frac{\mu P_H(h_A+\mu t)}{F_H(h_A+\mu t)}\, ,
+    {\displaystyle\int_{-\infty}^{h_A+\mu t}P_H(h)\mathrm{d}h}
+    =\Lambda(\mu)\frac{\mu P_H(h_A+\mu t)}{F_H(h_A+\mu t)}\, ,
 \end{align}
 其中$F_H$是$P_H$相应的累积分布函数
 \begin{align}
@@ -905,6 +989,7 @@ Smith掩模函数可以较为准确地适用于自相关的曲面，
 注意\refeq{08ex01-AverageVisibleProbability}和\refeq{08-ex01-Smith-masking-function}是
 在微面的高度上作平均来推导掩模函数它。
 因为高度独立于BRDF中的法线，所以我们可以这样作平均。
+而且还注意到其结果不依赖特定的高度分布$P_H(h)$.
 此外也有对法线作平均的方法，但它对于本文基于几何光学的BRDF来说无关紧要，
 而且难以处理，所以此处不再赘述。
 
@@ -1021,8 +1106,8 @@ $\chi({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}})$项在规范化约�
 再结合$D({\bm\omega}_{\mathrm{h}})$的规范化性质\refeq{08ex01-McrofacetDistributionNormalization}，
 我们有
 \begin{align}
-      & \int\limits_{\varOmega}D_{{\bm\omega}_{\mathrm{o}}}({\bm\omega}_{\mathrm{h}})
-    \mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber                                                         \\
+    \int\limits_{\varOmega}D_{{\bm\omega}_{\mathrm{o}}}({\bm\omega}_{\mathrm{h}})
+    \mathrm{d}{\bm\omega}_{\mathrm{h}}
     = & \int\limits_{\varOmega}2\chi({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}})
     ({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}})
     D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber                              \\
@@ -1030,8 +1115,7 @@ $\chi({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}})$项在规范化约�
     ({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}})
     D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber                              \\
     = & 2\cdot\frac{1}{2}\int\limits_{\varOmega}({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}})
-    D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber                              \\
-    = & 2\cdot\frac{1}{2}\cdot1=1\, .
+    D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}=2\cdot\frac{1}{2}\cdot1=1\, .
 \end{align}
 
 第二种情况是\refeq{08ex01-V-Cavity-MaskingFunction}中$\min(1,\cdot)$项取前者，
@@ -1046,20 +1130,19 @@ $\chi({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}})$项在规范化约�
 且${\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}}$和
 ${\bm\omega}'_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}}$均大于零。于是有
 \begin{align}
-      & \int\limits_{\varOmega}D_{{\bm\omega}_{\mathrm{o}}}({\bm\omega}_{\mathrm{h}})
-    \mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber                                                                                     \\
+    \int\limits_{\varOmega}D_{{\bm\omega}_{\mathrm{o}}}({\bm\omega}_{\mathrm{h}})
+    \mathrm{d}{\bm\omega}_{\mathrm{h}}
     = & \int\limits_{\varOmega}\frac{\max({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}},0)
-        D({\bm\omega}_{\mathrm{h}})}{\cos\theta_{\mathrm{o}}}\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber                            \\
-    = & \int\limits_{\varOmega}\frac{({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}})
+        D({\bm\omega}_{\mathrm{h}})}{\cos\theta_{\mathrm{o}}}\mathrm{d}{\bm\omega}_{\mathrm{h}}
+    =\int\limits_{\varOmega}\frac{({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}})
     D({\bm\omega}_{\mathrm{h}})}{{\bm\omega}_{\mathrm{o}}\cdot{\bm\omega}_{\mathrm{g}}}\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber  \\
     = & \frac{1}{2}\int\limits_{\varOmega}\frac{(({\bm\omega}_{\mathrm{h}}+{\bm\omega}'_{\mathrm{h}})\cdot{\bm\omega}_{\mathrm{o}})
-    D({\bm\omega}_{\mathrm{h}})}{{\bm\omega}_{\mathrm{o}}\cdot{\bm\omega}_{\mathrm{g}}}\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber  \\
-    = & \frac{1}{2}\cdot2\int\limits_{\varOmega}\frac{({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}})
+    D({\bm\omega}_{\mathrm{h}})}{{\bm\omega}_{\mathrm{o}}\cdot{\bm\omega}_{\mathrm{g}}}\mathrm{d}{\bm\omega}_{\mathrm{h}}
+    =\int\limits_{\varOmega}\frac{({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}})
     ({\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{o}})
     D({\bm\omega}_{\mathrm{h}})}{{\bm\omega}_{\mathrm{o}}\cdot{\bm\omega}_{\mathrm{g}}}\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber  \\
     = & \int\limits_{\varOmega}({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}})
-    D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}\nonumber                                                          \\
-    = & 1\, .
+    D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{h}}=1\, .
 \end{align}
 
 由此我们验证了V形槽微面模型对于两种情况都满足可见微面法线分布的规范性要求，满足能量守恒。
@@ -1238,10 +1321,10 @@ Kelemen掩模函数虽然对V形槽掩模函数近似得很好，
 
 \subsubsection*{各向同性斜率分布的形状不变性}
 典型的各向同性参数化斜率分布依赖粗糙度参数$\alpha$，改变$\alpha$等价于拉伸分布而不改变其形状。
-这种情形下，斜率分布只决定于斜率大小$\displaystyle\tan\theta_{\mathrm{h}}=\sqrt{x_s^2+y_s^2}$（也即
-微面法线天顶角正切值）与$\alpha$的比例$\displaystyle\frac{\tan\theta_{\mathrm{h}}}{\alpha}$：
+这种情形下，斜率分布只决定于斜率大小$\displaystyle\tan\theta=\sqrt{x_s^2+y_s^2}$（也即
+微面法线天顶角正切值）与$\alpha$的比例$\displaystyle\frac{\tan\theta}{\alpha}$：
 \begin{align}\label{eq:08-ex01-isotropic-shape-invariant}
-    P_{xy}(x_s,y_s,\alpha)=\frac{1}{\alpha^2}f\left(\frac{\sqrt{x_s^2+y_s^2}}{\alpha}\right)=\frac{1}{\alpha^2}f\left(\frac{\tan\theta_{\mathrm{h}}}{\alpha}\right)\, ,
+    P_{xy}(x_s,y_s,\alpha)=\frac{1}{\alpha^2}f\left(\frac{\sqrt{x_s^2+y_s^2}}{\alpha}\right)=\frac{1}{\alpha^2}f\left(\frac{\tan\theta}{\alpha}\right)\, ,
 \end{align}
 其中$f$是定义分布形状的一维函数。这样的斜率分布具有\keyindex{形状不变性}{shape invariant}{}：对于任意系数$\lambda>0$，
 \begin{align}\label{eq:08-ex01-any-coef-invariant}
@@ -1263,7 +1346,7 @@ Kelemen掩模函数虽然对V形槽掩模函数近似得很好，
 并取正向的法线\sidenote{回顾\refeq{08-ex01-normals-by-slope}的批注。}，可得
 \begin{align}
     D({\bm\omega}_{\mathrm{h}},\alpha)=\frac{\chi({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}})}
-    {\pi\alpha^2\cos^4\theta_{\mathrm{h}}}\exp\left(-\frac{\tan^2\theta_{\mathrm{h}}}{\alpha^2}\right)\, .
+    {\pi\alpha^2\cos^4\theta}\exp\left(-\frac{\tan^2\theta}{\alpha^2}\right)\, .
 \end{align}
 最后结合\refeq{08-ex01-condition-1d-slope}和\refeq{08-ex01-Lambda-function}，得到
 \begin{align}\label{eq:08-ex01-Beckmann-Lambda}
@@ -1312,7 +1395,7 @@ Kelemen掩模函数虽然对V形槽掩模函数近似得很好，
 \begin{align}
     P_{xy}(x_s,y_s,\alpha)=&\frac{1}{\displaystyle\pi\alpha^2\left(1+\frac{x_s^2+y_s^2}{\alpha^2}\right)^2}\, ,\\
     D({\bm\omega}_{\mathrm{h}},\alpha)=&\frac{\chi({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}})}
-    {\displaystyle\pi\alpha^2\left(1+\frac{\tan^2\theta_{\mathrm{h}}}{\alpha^2}\right)^2\cos^4\theta_{\mathrm{h}}}\, .
+    {\displaystyle\pi\alpha^2\left(1+\frac{\tan^2\theta}{\alpha^2}\right)^2\cos^4\theta}\, .
 \end{align}
 仿照\refeq{08-ex01-Beckmann-Lambda}的推导，可得
 \begin{align}\displaystyle
@@ -1359,8 +1442,8 @@ Kelemen掩模函数虽然对V形槽掩模函数近似得很好，
 \begin{align}
     P_{xy}(x_s,y_s,\alpha_x,\alpha_y)=\frac{1}{\alpha_x\alpha_y}f\displaystyle
     \left(\sqrt{\frac{x_s^2}{\alpha_x^2}+\frac{y_s^2}{\alpha_y^2}}\right)
-    =\frac{1}{\alpha_x\alpha_y}f\left(\tan\theta_{\mathrm{h}}\sqrt{\frac{\cos^2\varphi_{\mathrm{h}}}{\alpha_x^2}
-    +\frac{\sin^2\varphi_{\mathrm{h}}}{\alpha_y^2}}\right)\, ,
+    =\frac{1}{\alpha_x\alpha_y}f\left(\tan\theta\sqrt{\frac{\cos^2\varphi}{\alpha_x^2}
+    +\frac{\sin^2\varphi}{\alpha_y^2}}\right)\, ,
 \end{align}
 其中$\alpha_x$和$\alpha_y$是分布分别在$x$和$y$轴方向上的拉伸系数。
 而各向同性版本是它在$\alpha_x=\alpha_y$时的特例。
@@ -1413,8 +1496,8 @@ Kelemen掩模函数虽然对V形槽掩模函数近似得很好，
 \begin{align}
     P_{xy}(x_s,y_s,\alpha_x,\alpha_y)=&\frac{1}{\pi\alpha_x\alpha_y}\exp\left(-\frac{x_s^2}{\alpha_x^2}-\frac{y_s^2}{\alpha_y^2}\right)\, ,\\
     D({\bm\omega}_{\mathrm{h}},\alpha_x,\alpha_y)=&\frac{\chi({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}})}
-    {\pi\alpha_x\alpha_y\cos^4\theta_{\mathrm{h}}}\exp\left(-\left(\frac{\cos^2\varphi_{\mathrm{h}}}{\alpha_x^2}
-    +\frac{\sin^2\varphi_{\mathrm{h}}}{\alpha_y^2}\right)\tan^2\theta_{\mathrm{h}}\right)\, ,\\
+    {\pi\alpha_x\alpha_y\cos^4\theta}\exp\left(-\left(\frac{\cos^2\varphi}{\alpha_x^2}
+    +\frac{\sin^2\varphi}{\alpha_y^2}\right)\tan^2\theta\right)\, ,\\
     \Lambda({\bm\omega}_{\mathrm{o}},\alpha_x,\alpha_y)=&\frac{1}{2}\left(\mathrm{erf}(a)-1
     +\frac{\mathrm{e}^{-a^2}}{\sqrt{\pi}a}\right),
     \quad\text{其中}a=\displaystyle\frac{1}{\alpha_{\mathrm{o}}\tan\theta_{\mathrm{o}}}\, .
@@ -1426,8 +1509,8 @@ Kelemen掩模函数虽然对V形槽掩模函数近似得很好，
     P_{xy}(x_s,y_s,\alpha_x,\alpha_y)=&\frac{1}{\displaystyle\pi\alpha_x\alpha_y\left(1
     +\frac{x_s^2}{\alpha_x^2}+\frac{y_s^2}{\alpha_y^2}\right)^2}\, ,\\
     D({\bm\omega}_{\mathrm{h}},\alpha_x,\alpha_y)=&\frac{\chi({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{g}})}
-    {\displaystyle\pi\alpha_x\alpha_y\left(1+\left(\frac{\cos^2\varphi_{\mathrm{h}}}{\alpha_x^2}
-    +\frac{\sin^2\varphi_{\mathrm{h}}}{\alpha_y^2}\right)\tan^2\theta_{\mathrm{h}}\right)^2\cos^4\theta_{\mathrm{h}}}\, ,\\
+    {\displaystyle\pi\alpha_x\alpha_y\left(1+\left(\frac{\cos^2\varphi}{\alpha_x^2}
+    +\frac{\sin^2\varphi}{\alpha_y^2}\right)\tan^2\theta\right)^2\cos^4\theta}\, ,\\
     \Lambda({\bm\omega}_{\mathrm{o}},\alpha_x,\alpha_y)=&\frac{1}{2}(\sqrt{1+a^{-2}}-1),
     \quad\text{其中}a=\displaystyle\frac{1}{\alpha_{\mathrm{o}}\tan\theta_{\mathrm{o}}}\, .
 \end{align}

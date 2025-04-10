@@ -56,8 +56,10 @@ const `\refvar{Spectrum}{}` `\initvar[FresnelBlend::Rd]{Rd}{}`, `\initvar[Fresne
 菲涅耳反射率。注意它和Torrance-Sparrow模型非常像。
 \citeauthor{AshikhminPhong}的模型的关键是推导出仍然遵循互易性和
 能量守恒的漫反射项。其推导依赖于\citet{Schlick1993}给出的对菲涅耳反射方程的近似，即
+\sidenote{译者注：原文以$\theta$来表示代入的角度变量，但可能引起歧义，
+实际上该论文代入的角度是半角大小$\theta_{\mathrm{h}}$，译文已修改。}
 \begin{align*}
-    F_{\mathrm{r}}(\cos\theta)=R+(1-R)(1-\cos\theta)^5\, ,
+    F_{\mathrm{r}}(\cos\theta_{\mathrm{h}})=R+(1-R)(1-\cos\theta_{\mathrm{h}})^5\, ,
 \end{align*}
 其中$R$是按法线入射时的曲面反射率。
 

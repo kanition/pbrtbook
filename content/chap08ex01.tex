@@ -500,7 +500,7 @@ ${\bm\omega}_{\mathrm{m}}$对${\bm\omega}_{\mathrm{i}}$的\keyindex{雅可比矩
 \begin{align}
     \left\lVert\frac{\partial{\bm\omega}_{\mathrm{m}}}{\partial{\bm\omega}_{\mathrm{i}}}\right\rVert
     =&\lim\limits_{\Delta{\bm\omega}_{\mathrm{i}}\to0}\frac{|\Delta{\bm\omega}_{\mathrm{m}}|}{|\Delta{\bm\omega}_{\mathrm{i}}|}
-    =\frac{|\eta^2_{\mathrm{i}}\Delta{\bm\omega}_{\mathrm{i}}|
+    =\lim\limits_{\Delta{\bm\omega}_{\mathrm{i}}\to0}\frac{|\eta^2_{\mathrm{i}}\Delta{\bm\omega}_{\mathrm{i}}|
     \cdot|{\bm\omega}_{\mathrm{i}}\cdot{\bm\omega}_{\mathrm{m}}|}
     {|\Delta{\bm\omega}_{\mathrm{i}}|\cdot|{\bm\omega}_{\mathrm{M}}|^2}\nonumber\\
     =&\frac{\eta^2_{\mathrm{i}}\cdot|{\bm\omega}_{\mathrm{i}}\cdot{\bm\omega}_{\mathrm{m}}|}
@@ -1521,7 +1521,7 @@ Kelemen掩模函数虽然对V形槽掩模函数近似得很好，
     =&\frac{1}{\pi}\left(\int_{-\infty}^{+\infty}\mathrm{e}^{-\frac{x_s^2}{\alpha_x^2}}\frac{\mathrm{d}x_s}{\alpha_x}\right)\left(\int_{-\infty}^{+\infty}\mathrm{e}^{-\frac{y_s^2}{\alpha_y^2}}\frac{\mathrm{d}y_s}{\alpha_y}\right)\nonumber\\
     =&\frac{1}{\pi}\cdot\sqrt{\pi}\cdot\sqrt{\pi}=1\, .
 \end{align}
-对于Trowbridge-Reitz模型，注意到积分式
+对于Trowbridge-Reitz模型，注意到积分式（这里$b>0$，而$C$为积分常数）
 \begin{align}
     \int\frac{\mathrm{d}x}{(b^2+x^2)^2}=\frac{x}{2b^2(b^2+x^2)}+\frac{1}{2b^3}\arctan\frac{x}{b}+C\, ,
 \end{align}

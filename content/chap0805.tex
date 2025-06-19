@@ -63,7 +63,10 @@ const `\refvar{Spectrum}{}` `\initvar[FresnelBlend::Rd]{Rd}{}`, `\initvar[Fresne
 \end{align*}
 其中$R$是按法线入射时的曲面反射率。
 
-有了该菲涅耳项，下式的漫反射项就能以物理上较合理的方式成功刻画基于菲涅耳衰减的漫反射。
+有了该菲涅耳项，下式
+\sidenote{译者注：$R_{\mathrm{d}}$和$R_{\mathrm{s}}$的
+下标即分别取自“漫反射”和“镜面”的英语首字母并与之对应。}
+的漫反射项就能以物理上较合理的方式成功刻画基于菲涅耳衰减的漫反射。
 \begin{align*}
     f_{\mathrm{r}}({\bm p},{\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})
     =\frac{28R_{\mathrm{d}}}{23\pi}(1-R_{\mathrm{s}})

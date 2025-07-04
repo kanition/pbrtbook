@@ -334,10 +334,13 @@ const `\refvar{Float}{}` `\initvar[TrowbridgeReitzDistribution::alphax]{alphax}{
     但是在中文里这种做法就显得不太合适，以“遮挡”“遮盖”“遮蔽”之类的近义词作区分
     并不能帮助读者意识到它们的差别，反而更容易引起混淆。
     权衡之下，笔者选用“mask”的另一种翻译——“掩模”（也可作“掩膜”）来增强和“遮挡”的区别感。
-    因为该词在图像处理中常常指规定取用哪些像素的布尔量集合，与本文中“遮挡”的作用十分类似。
+    因为该词在信号处理中常常指规定取用哪些元素的布尔量或权重集合，与本文中“遮挡”的作用十分类似。
     读者不必对该词感到奇怪和陌生，只需理解为遮挡的别名即可。}。
 Smith的\keyindex{掩模遮挡函数}{masking-shadowing function}{}
-$G_1({\bm\omega},{\bm\omega}_{\mathrm{h}})$考虑了这些效应，
+$G_1({\bm\omega},{\bm\omega}_{\mathrm{h}})$考虑了这些效应
+\sidenote{译者注：$G_1$的下标1表示单向，后文还将有双向版本，
+因此$G_1$实际上是掩模函数或遮挡函数中的一种，被原作者合并称呼了。
+在译者补充章节中，多数情况下笔者会恢复为更准确的称呼。}，
 给出了从方向$\bm\omega$可见且法线为${\bm\omega}_{\mathrm{h}}$的微面比例
 （注意$0\le G_1({\bm\omega},{\bm\omega}_{\mathrm{h}})\le 1$）。
 通常情况下微面可见的概率独立于其朝向${\bm\omega}_{\mathrm{h}}$，
@@ -410,6 +413,7 @@ virtual `\refvar{Float}{}` `\initvar[MicrofacetDistribution::Lambda]{Lambda}{}`(
 从实际表面测量到的情况相比已经很精确了。
 
 在邻近点高度无关的假设下，各向同性的Beckmann-Spizzichino分布的$\Lambda({\bm\omega})$是
+\sidenote{译者注：对推导感兴趣的读者详见译者补充的\refsec{译者补充：微面模型相关推导}。}
 \begin{align}\label{eq:8.14}
     \Lambda({\bm\omega})=\frac{1}{2}\left(\mathrm{erf}(a)-1+\frac{\mathrm{e}^{-a^2}}{a\sqrt{\pi}}\right)\, ,
 \end{align}
@@ -423,7 +427,7 @@ pbrt对Beckmann-Spizzichino的$\Lambda({\bm\omega})$函数的计算则基于对\
 它因为避免调用求值开销极大的{\ttfamily std::erf()}和{\ttfamily std::exp()}而容易计算得多。
 \begin{lstlisting}
 `\refcode{MicrofacetDistribution Method Definitions}{+=}\lastnext{MicrofacetDistributionMethodDefinitions}`
-`\refvar{Float}{}` `\refvar{BeckmannDistribution}{}`::`\initvar[BeckmannDistribution::Lambda]{Lambda}{}`(const `\refvar{Vector3f}{}` \&w) const {
+`\refvar{Float}{}` `\refvar{BeckmannDistribution}{}`::`\initvar[BeckmannDistribution::Lambda]{Lambda}{}`(const `\refvar{Vector3f}{}` &w) const {
     `\refvar{Float}{}` absTanTheta = std::abs(`\refvar{TanTheta}{}`(w));
     if (std::isinf(absTanTheta)) return 0.;
     `\refcode{Compute alpha for direction w}{}`
@@ -446,7 +450,8 @@ pbrt对Beckmann-Spizzichino的$\Lambda({\bm\omega})$函数的计算则基于对\
 \end{lstlisting}
 
 在非相关高度假设下\sidenote{译者注：指微面上任意两点位置的高度和它们之间的距离无关。}，
-Trowbridge-Reitz分布则非常简单：
+Trowbridge-Reitz分布则非常简单
+\sidenote{译者注：对推导感兴趣的读者详见译者补充的\refsec{译者补充：微面模型相关推导}。}：
 \begin{align*}
     \Lambda({\bm\omega})=\frac{-1+\sqrt{1+\alpha^2\tan^2\theta}}{2}\, .
 \end{align*}
@@ -473,31 +478,32 @@ Trowbridge-Reitz分布则非常简单：
     \label{fig:8.18}
 \end{figure}
 
-与微面分布的几何性质有关的最后一个很有用的函数是$G_1({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})$，
+与微面分布的几何性质有关的最后一个很有用的函数是$G_2({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})$，
 它给出在微分区域中从方向${\bm\omega}_{\mathrm{o}}$和${\bm\omega}_{\mathrm{i}}$都可见的微面比例。
-定义$G_1$需要一些额外假设\sidenote{译者注：原文中有时会简称$G$，为避免混淆，笔者改回为$G_1$，下同。}。
+定义$G_2$需要一些额外假设\sidenote{译者注：原书中有时记作$G_1$，有时记作$G$，
+但相关论文都常以2为下标记作$G_2$以强调其双向特性，笔者遵循此习惯将后文记号统一改为$G_2$.}。
 对于初学者，我们知道$G_1({\bm\omega}_{\mathrm{o}})$给出
 从方向${\bm\omega}_{\mathrm{o}}$可见的微面比例，
 而$G_1({\bm\omega}_{\mathrm{i}})$则给出从${\bm\omega}_{\mathrm{i}}$可见的比例就行。
 如果我们假设微面从这两个方向均可见的概率就是独立地从每个方向可见的概率，则我们有
 \begin{align*}
-    G_1({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})=G_1({\bm\omega}_{\mathrm{o}})G_1({\bm\omega}_{\mathrm{i}})\, .
+    G_2({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})=G_1({\bm\omega}_{\mathrm{o}})G_1({\bm\omega}_{\mathrm{i}})\, .
 \end{align*}
-然而实践中，这些概率并不独立，该公式低估了$G_1$.
-为了理解为什么这样，考虑${\bm\omega}_{\mathrm{o}}={\bm\omega}_{\mathrm{i}}$的情况；
+然而实践中，这些概率并不独立，该公式低估了$G_2$. 为了理解为什么这样，
+考虑${\bm\omega}_{\mathrm{o}}={\bm\omega}_{\mathrm{i}}$的情况；
 该情况下任意从${\bm\omega}_{\mathrm{o}}$可见的微面也会从${\bm\omega}_{\mathrm{i}}$可见，
-所以$G_1({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})=G_1({\bm\omega}_{\mathrm{o}})=G_1({\bm\omega}_{\mathrm{i}})$.
-因为$G_1({\bm\omega})\le 1$，所以该情况下它们的乘积会造成$G_1({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})$太小
+所以$G_2({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})=G_1({\bm\omega}_{\mathrm{o}})=G_1({\bm\omega}_{\mathrm{i}})$.
+因为$G_1({\bm\omega})\le 1$，所以该情况下它们的乘积会造成$G_2({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})$太小
 （除非$G_1({\bm\omega})=1$，但这通常只在${\bm\omega}=(0,0,1)$时成立）。
 更普遍的是，两个方向越接近，$G_1({\bm\omega}_{\mathrm{o}})$和$G_1({\bm\omega}_{\mathrm{i}})$之间越相关。
 
 假设微面上的给定点越高，微面就越可能可见，则可以推导出更精确的模型。该假设导出的模型是
 \begin{align*}
-    G_1({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})=\frac{1}{1+\Lambda({\bm\omega}_{\mathrm{o}})+\Lambda({\bm\omega}_{\mathrm{i}})}\, .
+    G_2({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})=\frac{1}{1+\Lambda({\bm\omega}_{\mathrm{o}})+\Lambda({\bm\omega}_{\mathrm{i}})}\, .
 \end{align*}
-该近似在实践中相当准确，也是我们在pbrt中要用的。
+该近似在实践中相当准确，也是我们在pbrt中所用的。
 详见本章末“扩展阅读”一节关于该函数的推导与更多定义
-函数$G_1({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})$的复杂方法的信息指南。
+函数$G_2({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})$的复杂方法的信息指南。
 \begin{lstlisting}
 `\refcode{MicrofacetDistribution Public Methods}{+=}\lastnext{MicrofacetDistributionPublicMethods}`
 `\refvar{Float}{}` `\initvar[MicrofacetDistribution::G]{G}{}`(const `\refvar{Vector3f}{}` &wo, const `\refvar{Vector3f}{}` &wi) const {
@@ -604,11 +610,11 @@ Trowbridge-Reitz分布则非常简单：
     L_{\mathrm{i}}({\bm\omega}_{\mathrm{i}})D({\bm\omega}_{\mathrm{h}})\mathrm{d}{\bm\omega}_{\mathrm{i}}}
     {4\cos\theta_{\mathrm{o}}}\, .
 \end{align*}
-我们现在可以运用BRDF的定义\refeq{5.8}并添加几何衰减项$G({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})$，
+我们现在可以运用BRDF的定义\refeq{5.8}并添加几何衰减项$G_2({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})$，
 得到Torrance-Sparrow的BRDF：
 \begin{align}\label{eq:8.18}
     f_{\mathrm{r}}({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})=
-    \frac{D({\bm\omega}_{\mathrm{h}})G({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})
+    \frac{D({\bm\omega}_{\mathrm{h}})G_2({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})
     F_{\mathrm{r}}({\bm\omega}_{\mathrm{o}})}{4\cos\theta_{\mathrm{o}}\cos\theta_{\mathrm{i}}}\, .
 \end{align}
 
@@ -693,7 +699,7 @@ if (wh.x == 0 && wh.y == 0 && wh.z == 0) return `\refvar{Spectrum}{}`(0.);
 重新整理的推导可以参见笔者补充的\refsec{译者补充：微面模型相关推导}。}
 \begin{align}\label{eq:8.19}
     f_{\mathrm{r}}({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})=
-    \frac{D({\bm\omega}_{\mathrm{h}})G({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})
+    \frac{D({\bm\omega}_{\mathrm{h}})G_2({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})
     (1-F_{\mathrm{r}}({\bm\omega}_{\mathrm{o}}))}{(({\bm\omega}_{\mathrm{o}}\cdot{\bm\omega}_{\mathrm{h}})
     +\eta({\bm\omega}_{\mathrm{i}}\cdot{\bm\omega}_{\mathrm{h}}))^2}
     \frac{|{\bm\omega}_{\mathrm{i}}\cdot{\bm\omega}_{\mathrm{h}}|

@@ -500,7 +500,7 @@ ${\bm\omega}_{\mathrm{m}}$对${\bm\omega}_{\mathrm{i}}$的\keyindex{雅可比矩
 \begin{align}
     \left\lVert\frac{\partial{\bm\omega}_{\mathrm{m}}}{\partial{\bm\omega}_{\mathrm{i}}}\right\rVert
     =&\lim\limits_{\Delta{\bm\omega}_{\mathrm{i}}\to0}\frac{|\Delta{\bm\omega}_{\mathrm{m}}|}{|\Delta{\bm\omega}_{\mathrm{i}}|}
-    =\frac{|\eta^2_{\mathrm{i}}\Delta{\bm\omega}_{\mathrm{i}}|
+    =\lim\limits_{\Delta{\bm\omega}_{\mathrm{i}}\to0}\frac{|\eta^2_{\mathrm{i}}\Delta{\bm\omega}_{\mathrm{i}}|
     \cdot|{\bm\omega}_{\mathrm{i}}\cdot{\bm\omega}_{\mathrm{m}}|}
     {|\Delta{\bm\omega}_{\mathrm{i}}|\cdot|{\bm\omega}_{\mathrm{M}}|^2}\nonumber\\
     =&\frac{\eta^2_{\mathrm{i}}\cdot|{\bm\omega}_{\mathrm{i}}\cdot{\bm\omega}_{\mathrm{m}}|}
@@ -772,7 +772,7 @@ $\varphi$为方位角
     =D({\bm\omega}_{\mathrm{h}})\cos^4\theta\, .
 \end{align}
 
-只有$P_{xy}(x_s,y_s)$还不足以推导出掩模遮挡函数。
+只有$P_{xy}(x_s,y_s)$还不足以推导出掩模函数。
 我们可以把微曲面$\mathcal{M}$看作是在光滑的宏曲面$\mathcal{G}$上
 通过平稳的随机过程叠加上或正或负的高度波动得到的。如\reffig{08ex01-G1Geometry}所示，
 我们继续分析一个微观区域：仍把宏曲面视作平面，也即$z=0$，宏曲面法线为${\bm\omega}_{\mathrm{g}}=(0,0,1)$。
@@ -902,7 +902,7 @@ $\varphi$为方位角
 \begin{align}
     h>h_A+\mu t-(q-\mu)\Delta t\, ,
 \end{align}
-我们把上述条件成立记作事件$Y$。
+我们把上述条件成立记作事件$Y$.
 注意当事件$X$和$Y$同时发生时，还可推出$q>\mu$.
 所以事件$X$和$Y$同时发生的概率为
 \begin{align}
@@ -963,7 +963,7 @@ $\varphi$为方位角
 它可以等价替换为$\chi({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}})$；
 $\Lambda(\mu)$中$\mu$也由${\bm\omega}_{\mathrm{o}}$决定，
 可重新记作$\Lambda({\bm\omega}_{\mathrm{o}})$；
-而$W(u_A,v_A,{\bm\omega}_{\mathrm{o}})$就是我们想求得的掩模遮挡函数，于是最终得到
+而$W(u_A,v_A,{\bm\omega}_{\mathrm{o}})$就是我们想求得的掩模函数，于是最终得到
 \begin{align}\label{eq:08-ex01-Smith-masking-function}
     G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})
     =\frac{\chi({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}})}
@@ -993,6 +993,66 @@ Smith掩模函数可以较为准确地适用于自相关的曲面，
 此外也有对法线作平均的方法，但它对于本文基于几何光学的BRDF来说无关紧要，
 而且难以处理，所以此处不再赘述。
 
+\subsection*{Smith联合掩模遮挡函数}
+当我们同时考虑掩模和遮挡效应时，就对应得到具有双向特性的（联合）掩模遮挡
+函数$G_2({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})$.
+其中最简单而常见的是\citet{10.5555/2383847.2383874}提出的可分离形式：
+\begin{align*}
+    G_2({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})
+    =G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{i}})
+    =\frac{\chi({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}})}
+    {1+\Lambda({\bm\omega}_{\mathrm{o}})}\cdot
+    \frac{\chi({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{i}})}
+    {1+\Lambda({\bm\omega}_{\mathrm{i}})}\, .
+\end{align*}
+上述形式没有考虑掩模和遮挡之间的关联性，所以可能会高估了遮挡作用。
+
+\citet{Ross:10.1364/JOSAA.22.002442}利用微面的高度对这种关联性建模，
+提出了更精确的形式：直观上理解就是，若微面的高度越是超出宏曲面，
+则它同时不被掩模和遮挡的概率就越大。
+仿照\refeq{08ex01-AverageVisibleProbability}和\refeq{08-ex01-Smith-masking-function}，
+我们对出射与入射方向需要区分的变量添加下标$\mathrm{o}$和$\mathrm{i}$，
+得到双向联合掩模遮挡函数为
+\begin{align}
+    &G_2({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})\nonumber\\
+    =&W(u_A,v_A,{\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})\nonumber\\
+    =&\int_{-\infty}^{+\infty}W(A,{\bm\omega}_{\mathrm{o}})W(A,{\bm\omega}_{\mathrm{i}})P_H(h_A)\mathrm{d}h_A\nonumber\\
+    =&\int_{-\infty}^{+\infty}\chi(\mu_{\mathrm{o}}-q_{A\mathrm{o}})F_H^{\Lambda(\mu_{\mathrm{o}})}(h_A)
+    \chi(\mu_{\mathrm{i}}-q_{A\mathrm{i}})F_H^{\Lambda(\mu_{\mathrm{i}})}(h_A)P_H(h_A)\mathrm{d}h_A\nonumber\\
+    =&\chi(\mu_{\mathrm{o}}-q_{A\mathrm{o}})\chi(\mu_{\mathrm{i}}-q_{A\mathrm{i}})
+    \int_{-\infty}^{+\infty}F_H^{\Lambda(\mu_{\mathrm{o}})+\Lambda(\mu_{\mathrm{i}})}(h_A)\mathrm{d}F_H(h_A)\nonumber\\
+    =&\chi({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}})\chi({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{i}})
+    \frac{F_H^{1+\Lambda(\mu_{\mathrm{o}})+\Lambda(\mu_{\mathrm{i}})}(h_A)}
+    {1+\Lambda(\mu_{\mathrm{o}})+\Lambda(\mu_{\mathrm{i}})}\bigg|_{h_A=-\infty}^{+\infty}\nonumber\\
+    =&\frac{\chi({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}})\chi({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{i}})}
+    {1+\Lambda({\bm\omega}_{\mathrm{o}})+\Lambda({\bm\omega}_{\mathrm{i}})}\, .
+\end{align}
+当出射和入射方向互相足够远离时，该形式非常准确；当二者接近时，该形式会高估遮挡作用。
+综合考虑计算量和准确性，推荐读者在实践中使用该形式。
+
+也有研究者进一步修正出射和入射方向接近时面临的误差。
+\citet{10.1145/344779.344814}考虑到二者的方位角之差$\varphi$可以
+反映其关联程度$\lambda$，将全相关形式（即出射和入射方向相同时的退化形式）
+与前文的可分离形式结合起来，得到方向相关的掩模遮挡函数：
+\begin{align}
+    G_2({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})
+    &=\lambda(\varphi)G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{i}})\nonumber\\
+    &\quad +(1-\lambda(\varphi))\min(G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}}),G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{i}}))\, ,
+\end{align}
+其中\citet{vanGinneken:98}提出的$\lambda$经验式独立于曲面粗糙度：
+\begin{align}
+    \lambda(\varphi)=\frac{4.41\varphi}{1+4.41\varphi}\, .
+\end{align}
+
+也有更复杂的高度-方向相关的掩模遮挡函数：
+\begin{align}
+    G_2({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})
+    =\frac{\chi({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{o}})\chi({\bm\omega}_{\mathrm{h}}\cdot{\bm\omega}_{\mathrm{i}})}
+    {1+\max(\Lambda(\mu_{\mathrm{o}}),\Lambda(\mu_{\mathrm{i}}))
+    +\lambda({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})
+    \min(\Lambda(\mu_{\mathrm{o}}),\Lambda(\mu_{\mathrm{i}}))}\, .
+\end{align}
+这里$\lambda$的表达式也可以更细致，例如\citet{Heitz01082013}考虑了曲面粗糙度。
 
 \subsubsection*{V形槽微面}
 如\reffig{08ex01-V-cavityScatteringModel}，V形槽微面模型也是常用模型之一。
@@ -1521,7 +1581,7 @@ Kelemen掩模函数虽然对V形槽掩模函数近似得很好，
     =&\frac{1}{\pi}\left(\int_{-\infty}^{+\infty}\mathrm{e}^{-\frac{x_s^2}{\alpha_x^2}}\frac{\mathrm{d}x_s}{\alpha_x}\right)\left(\int_{-\infty}^{+\infty}\mathrm{e}^{-\frac{y_s^2}{\alpha_y^2}}\frac{\mathrm{d}y_s}{\alpha_y}\right)\nonumber\\
     =&\frac{1}{\pi}\cdot\sqrt{\pi}\cdot\sqrt{\pi}=1\, .
 \end{align}
-对于Trowbridge-Reitz模型，注意到积分式
+对于Trowbridge-Reitz模型，注意到积分式（这里$b>0$，而$C$为积分常数）
 \begin{align}
     \int\frac{\mathrm{d}x}{(b^2+x^2)^2}=\frac{x}{2b^2(b^2+x^2)}+\frac{1}{2b^3}\arctan\frac{x}{b}+C\, ,
 \end{align}

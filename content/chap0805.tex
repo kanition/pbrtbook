@@ -56,12 +56,17 @@ const `\refvar{Spectrum}{}` `\initvar[FresnelBlend::Rd]{Rd}{}`, `\initvar[Fresne
 菲涅耳反射率。注意它和Torrance-Sparrow模型非常像。
 \citeauthor{AshikhminPhong}的模型的关键是推导出仍然遵循互易性和
 能量守恒的漫反射项。其推导依赖于\citet{Schlick1993}给出的对菲涅耳反射方程的近似，即
+\sidenote{译者注：原文以$\theta$来表示代入的角度变量，但可能引起歧义，
+实际上该论文代入的角度是半角大小$\theta_{\mathrm{h}}$，译文已修改。}
 \begin{align*}
-    F_{\mathrm{r}}(\cos\theta)=R+(1-R)(1-\cos\theta)^5\, ,
+    F_{\mathrm{r}}(\cos\theta_{\mathrm{h}})=R+(1-R)(1-\cos\theta_{\mathrm{h}})^5\, ,
 \end{align*}
 其中$R$是按法线入射时的曲面反射率。
 
-有了该菲涅耳项，下式的漫反射项就能以物理上较合理的方式成功刻画基于菲涅耳衰减的漫反射。
+有了该菲涅耳项，下式
+\sidenote{译者注：$R_{\mathrm{d}}$和$R_{\mathrm{s}}$的
+下标分别取自“漫反射”和“镜面”的英语首字母并与之对应。}
+的漫反射项就能以物理上较合理的方式成功刻画基于菲涅耳衰减的漫反射。
 \begin{align*}
     f_{\mathrm{r}}({\bm p},{\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})
     =\frac{28R_{\mathrm{d}}}{23\pi}(1-R_{\mathrm{s}})

@@ -1,1 +1,25 @@
 \section{傅里叶基BSDF}\label{sec:傅里叶基BSDF}
+尽管像Torrance-Sparrow和Oren-Nayar这样的模型可以准确地表示许多材料，
+但一些材料所拥有的BRDF形态并不能很好地匹配这些模型
+（例如带有光滑或粗糙涂料或面料的金属等分层材料，它们通常是部分反光的）。
+针对这类材料的一个办法是把它们的BSDF值存进一个
+巨大的3D或4D\keyindex{查找表}{lookup table}{}，
+但是该方法需要难以接受的存储量——例如，
+如果${\bm\omega}_{\mathrm{i}}$和${\bm\omega}_{\mathrm{o}}$都按1度间隔
+在球面角内采样，则以4D查找表的形式表示相应各向异性BSDF需要超过十亿个样本点。
+
+因此，我们很需要有一个更紧凑的方式来依然准确表示BSDF。
+本节介绍的\refvar{FourierBSDF}{}利用傅里叶基，
+以缩放的余弦项之和表示BSDF。该表示既准确又节约空间，并能与蒙特卡罗积分很好地配合
+（见\refsub{傅里叶BSDF}）。\reffig{8.24}展示了用这种表示渲染的两个龙模型的例子。
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{Pictures/chap08/dragons-fourier.png}
+    \caption{用\refvar{FourierBSDF}{}模型渲染的龙模型。
+    左边龙表面的BSDF建模了粗糙黄金的外观；右边的则是镀铜（感谢Christian Schüller提供模型）。}
+    \label{fig:8.24}
+\end{figure}
+
+这里我们不会讨论BSDF是如何转换成这种表示的，但我们会关注它在渲染中的应用。
+详见本章末的“扩展阅读”一节了解这些问题的更多细节以及
+pbrt发行中路径\href{https://pbrt.org/scenes-v3}{\ttfamily bsdfs}下各种以此格式表示的BSDF。

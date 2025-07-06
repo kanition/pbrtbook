@@ -16,10 +16,225 @@
     \centering
     \includegraphics[width=\linewidth]{Pictures/chap08/dragons-fourier.png}
     \caption{用\refvar{FourierBSDF}{}模型渲染的龙模型。
-    左边龙表面的BSDF建模了粗糙黄金的外观；右边的则是镀铜（感谢Christian Schüller提供模型）。}
+        左边龙表面的BSDF建模了粗糙黄金的外观；右边的则是镀铜（感谢Christian Schüller提供模型）。}
     \label{fig:8.24}
 \end{figure}
 
 这里我们不会讨论BSDF是如何转换成这种表示的，但我们会关注它在渲染中的应用。
 详见本章末的“扩展阅读”一节了解这些问题的更多细节以及
 pbrt发行中路径\href{https://pbrt.org/scenes-v3}{\ttfamily bsdfs}下各种以此格式表示的BSDF。
+
+\refvar{FourierBSDF}{}用一对入射和出射方向的球面坐标对BSDF进行参数化来表示各向同性的BSDF，
+其中$\mu_{\mathrm{i}}$和$\mu_{\mathrm{o}}$分别表示入射和出射天顶角的余弦，
+$\varphi_{\mathrm{i}}$和$\varphi_{\mathrm{o}}$是方位角：
+\begin{align*}
+    f({\bm\omega}_{\mathrm{i}},{\bm\omega}_{\mathrm{o}})
+    =f(\mu_{\mathrm{i}},\varphi_{\mathrm{i}},\mu_{\mathrm{o}},\varphi_{\mathrm{o}})\, .
+\end{align*}
+各向同性的假设意味着该函数可以重写为更简单的依赖于天顶角余弦
+和方位角之差$\varphi=\varphi_{\mathrm{i}}-\varphi_{\mathrm{o}}$的形式：
+\begin{align*}
+    f({\bm\omega}_{\mathrm{i}},{\bm\omega}_{\mathrm{o}})
+    =f(\mu_{\mathrm{i}},\mu_{\mathrm{o}},\varphi_{\mathrm{i}}-\varphi_{\mathrm{o}})
+    =f(\mu_{\mathrm{i}},\mu_{\mathrm{o}},\varphi)\, .
+\end{align*}
+各向同性BSDF通常也是关于方位角的偶函数，即：
+\begin{align}\label{eq:8.20}
+    f(\mu_{\mathrm{i}},\mu_{\mathrm{o}},\varphi)=f(\mu_{\mathrm{i}},\mu_{\mathrm{o}},-\varphi)\, .
+\end{align}
+有了这些性质，BSDF和余弦衰减的乘积就可以表示为关于方位角之差的傅里叶级数：
+\begin{align}\label{eq:8.21}
+    f(\mu_{\mathrm{i}},\mu_{\mathrm{o}},\varphi_{\mathrm{i}}-\varphi_{\mathrm{o}})|\mu_{\mathrm{i}}|
+    =\sum\limits_{k=0}^{m-1}a_k(\mu_{\mathrm{i}},\mu_{\mathrm{o}})\cos(k(\varphi_{\mathrm{i}}-\varphi_{\mathrm{o}}))\, .
+\end{align}
+
+注意为什么\refeq{8.21}只需余弦项而不用正弦项。
+函数值$a_0(\mu_{\mathrm{i}},\mu_{\mathrm{o}}),\dots,a_{m-1}(\mu_{\mathrm{i}},\mu_{\mathrm{o}})$表示
+一对特定天顶角余弦值的傅里叶系数。
+
+接着，函数$a_k$在其输入参数上进行离散化。我们选一个天顶角余弦值
+集合$\bar{\mu}=\{\mu_0,\dots,\mu_{n-1}\}$并为每对$0\le i,j<n$存储$a_k(\mu_i,\mu_j)$的值。
+因此，我们可以把每个$a_k$看作一个$n\times n$矩阵，
+而整个BRDF表示就是$m$个这样的矩阵的集合构成的。
+每一个都描述了材料对入射光照的响应中不同的方位振荡频率。
+
+计算\refeq{8.21}至满意的精度所需的最高阶数$m$是不同的：
+它取决于特定的天顶角，所以对于给定的一对方向依据BSDF的复杂度来调整系数$a_k$的数量是值得的。
+这种做法对于压缩该表示是非常重要的。
+
+为了看出可以调整系数数量的价值，考虑几乎完美的镜面反射：
+当$\mu_{\mathrm{i}}\approx\mu_{\mathrm{o}}$时，需要许多系数以精确表示镜面瓣，
+它对于几乎所有的方位角之差$\varphi=\varphi_{\mathrm{i}}-\varphi_{\mathrm{o}}$都是零，
+但对$\varphi\approx\pi$附近的一小部分方向集合取值非常大，此时入射和出射方向几乎相反。
+然而，当$\mu_{\mathrm{i}}$和$\mu_{\mathrm{o}}$没有对齐时，
+只需要一项来表示BSDF取零（或者有可忽略的值）
+\footnote{\citet{10.1145/2601097.2601139}展示了这种自适应性能够
+用51MiB以1\%的$L^2$相对误差表示Beckmann粗糙度$\alpha=0.01$的光洁镜面，
+而给所有方向对中的任何一对方向都用所需的最大阶数$m$时则需要28GiB才能达到相同的误差。}。
+对于更平滑的BSDF，大部分或所有的$\mu_{\mathrm{i}}$与$\mu_{\mathrm{o}}$角度对都需要
+多个系数$a_k$来精确表示它们的$\varphi$分布，但它们的平滑性意味着对于每个$a_k$通常不需要太多的系数。
+\refvar{FourierBSDF}{}表示利用了该性质并只存储达到期望的精度所需的系数稀疏集。
+因此，对于现实BSDF数据的大部分类型，\refeq{8.21}的表示都足够紧凑；典型的只要几兆字节。
+
+\refvar{FourierBSDFTable}{}是一个辅助结构体，用于存放按该方式表达的BSDF的所有数据。
+它几乎就是一个简单的{\ttfamily struct}以存放可被调用代码直接获取的数据，但它还提供一些实用方法。
+\begin{lstlisting}
+`\refcode{BSDF Declarations}{+=}\lastnext{BSDFDeclarations}`
+struct `\initvar{FourierBSDFTable}{}` {
+    `\refcode{FourierBSDFTable Public Data}{}`
+    `\refcode{FourierBSDFTable Public Methods}{}`
+};
+\end{lstlisting}
+
+方法\refvar[FourierBSDFTable::Read]{Read}{()}为存储在给定文件中的BSDF初始化结构体。
+它成功时返回{\ttfamily true}或在读取文件遇到错误时返回{\ttfamily false}。
+\begin{lstlisting}
+`\initcode{FourierBSDFTable Public Methods}{=}\initnext{FourierBSDFTablePublicMethods}`
+static bool `\initvar[FourierBSDFTable::Read]{Read}{}`(const std::string &filename, `\refvar{FourierBSDFTable}{}` *table);
+\end{lstlisting}
+
+如果BSDF表示两种不同介质间边界处的散射，则\refvar{FourierBSDFTable::eta}{}
+成员变量给出曲面边界上的相对折射率（\refsub{镜面透射}），\refvar[FourierBSDFTable::mMax]{mMax}{}给出对
+任意一对方向$\mu_{\mathrm{i}},\mu_{\mathrm{o}}$的最大阶数$m$；
+例如在申请临时缓存保存系数$a_k$时，该上限很有用。
+\begin{lstlisting}
+`\initcode{FourierBSDFTable Public Data}{=}\initnext{FourierBSDFTablePublicData}`
+`\refvar{Float}{}` `\initvar[FourierBSDFTable::eta]{eta}{}`;
+int `\initvar[FourierBSDFTable::mMax]{mMax}{}`;
+\end{lstlisting}
+
+\refvar[FourierBSDFTable::nChannels]{nChannels}{}给出了可用的光谱通道数目。
+在本实现中，它要么是1表示单色BSDF，要么是3表示RGB颜色的BSDF。
+这里，三通道版本实际上存储着光亮度、红色、蓝色，
+而不是红色、绿色、蓝色——直接表示光亮度对于\refsub{傅里叶BSDF}定义的
+蒙特卡罗采样过程会变得很有用，因为它提供了关于所有颜色通道上的函数的聚合信息。
+不久我们就会看到对应的绿色可以很容易从光照度、红色与蓝色中算出。
+\begin{lstlisting}
+`\refcode{FourierBSDFTable Public Data}{+=}\lastnext{FourierBSDFTablePublicData}`
+int `\initvar[FourierBSDFTable::nChannels]{nChannels}{}`;
+\end{lstlisting}
+
+天顶角被离散化为\refvar[FourierBSDFTable::nMu]{nMu}{}个方向，
+它保存于数组\refvar[FourierBSDFTable::mu]{mu}{}中。
+\refvar[FourierBSDFTable::mu]{mu}{}按从低到高保存，
+所以可以用二分查找来求得最接近给定角度$\mu_{\mathrm{i}}$或$\mu_{\mathrm{o}}$的项。
+\begin{lstlisting}
+`\refcode{FourierBSDFTable Public Data}{+=}\lastnext{FourierBSDFTablePublicData}`
+int `\initvar[FourierBSDFTable::nMu]{nMu}{}`;
+`\refvar{Float}{}` *`\initvar[FourierBSDFTable::mu]{mu}{}`;
+\end{lstlisting}
+
+为了计算\refeq{8.21}，我们需要知道对应于方向${\bm\omega}_{\mathrm{i}}$和${\bm\omega}_{\mathrm{o}}$的
+目标傅里叶阶数$m$与所有系数$a_0,\dots,a_{m-1}$.
+现在简单起见，我们将基本思路表达成在小于或等于$\mu_{\mathrm{i}}$和$\mu_{\mathrm{o}}$时，
+仿佛只有最接近的方向\refvar[FourierBSDFTable::mu]{mu}{}的系数才会被使用，
+但其实后面的实现是在方向附近的多个\refvar[FourierBSDFTable::mu]{mu}{}值的系数之间插值。
+
+傅里叶表示的阶数$m$总是受限于\refvar[FourierBSDFTable::mMax]{mMax}{}但
+会随着入射和出射天顶角余弦$\mu_{\mathrm{i}}$和$\mu_{\mathrm{o}}$而变化：
+需要多大阶数可通过查询一个\refvar[FourierBSDFTable::nMu]{nMu}{}$\times$\refvar[FourierBSDFTable::nMu]{nMu}{}整数
+矩阵\refvar[FourierBSDFTable::m]{m}{}来确定。
+\begin{lstlisting}
+`\refcode{FourierBSDFTable Public Data}{+=}\lastnext{FourierBSDFTablePublicData}`
+int *`\initvar[FourierBSDFTable::m]{m}{}`;
+\end{lstlisting}
+
+为了给特定角度集求得$m$，我们先在离散化方向\refvar[FourierBSDFTable::mu]{mu}{}中
+进行二分查找以给出偏移量{\ttfamily oi}和{\ttfamily oo}使得
+\begin{align*}
+    \text{{\ttfamily mu}}[\text{\ttfamily oi}]\le&\mu_{\mathrm{i}}<\text{{\ttfamily mu}}[\text{\ttfamily oi}+1]\, ,\\
+    \text{{\ttfamily mu}}[\text{\ttfamily oo}]\le&\mu_{\mathrm{o}}<\text{{\ttfamily mu}}[\text{\ttfamily oo}+1]\, .
+\end{align*}
+利用这些索引，所需的阶数可以从{\ttfamily\refvar[FourierBSDFTable::m]{m}{}[oo * \refvar[FourierBSDFTable::nMu]{nMu}{} + oi]}获取。
+
+所有离散方向对\refvar[FourierBSDFTable::mu]{mu}{}的全部系数$a_k$都打包进数组\refvar[FourierBSDFTable::a]{a}{}。
+因为最大阶数（由此以及系数数量）会变化，甚至对于一给定方向对按照BSDF的特性会取零，
+所以寻找数组\refvar[FourierBSDFTable::a]{a}{}中的偏移量是个两步过程：
+\begin{enumerate}
+    \item 首先，偏移量{\ttfamily oi}和{\ttfamily oo}用于
+    在数组\refvar[FourierBSDFTable::aOffset]{aOffset}{}内索引以获取
+    对\refvar[FourierBSDFTable::a]{a}{}的偏移量：
+    {\ttfamily offset = \refvar[FourierBSDFTable::aOffset]{aOffset}{}[oo * \refvar[FourierBSDFTable::nMu]{nMu}{} + oi]}
+    （因此数组\refvar[FourierBSDFTable::aOffset]{aOffset}{}共有\refvar[FourierBSDFTable::nMu]{nMu}{}*\refvar[FourierBSDFTable::nMu]{nMu}{}项）。
+    \item 接着，从\refvar[FourierBSDFTable::a]{a}{}{\ttfamily [offset]}开始的$m$个系数
+    为对应的方向对给出了$a_k$的值。对于三颜色通道的情况，\refvar[FourierBSDFTable::a]{a}{}{\ttfamily [offset]}后的
+    前$m$个系数编码了光亮度的系数，接着的$m$个对应红色通道，之后是蓝色的。
+\end{enumerate}
+\begin{lstlisting}
+`\refcode{FourierBSDFTable Public Data}{+=}\lastnext{FourierBSDFTablePublicData}`
+int *`\initvar[FourierBSDFTable::aOffset]{aOffset}{}`;
+`\refvar{Float}{}` *`\initvar[FourierBSDFTable::a]{a}{}`;
+\end{lstlisting}
+
+\refvar[FourierBSDFTable::GetAk]{GetAk}{()}是个小巧的便利方法，
+为入射和出射方向余弦给定对数组\refvar[FourierBSDFTable::mu]{mu}{}的偏移量，
+则为该方向返回系数的阶数$m$和指向这些系数的指针。
+\begin{lstlisting}
+`\refcode{FourierBSDFTable Public Methods}{+=}\lastcode{FourierBSDFTablePublicMethods}`
+const `\refvar{Float}{}` *`\initvar[FourierBSDFTable::GetAk]{GetAk}{}`(int offsetI, int offsetO, int *mptr) const {
+    *mptr = `\refvar[FourierBSDFTable::m]{m}{}`[offsetO * `\refvar[FourierBSDFTable::nMu]{nMu}{}` + offsetI];
+    return `\refvar[FourierBSDFTable::a]{a}{}` + `\refvar[FourierBSDFTable::aOffset]{aOffset}{}`[offsetO * `\refvar[FourierBSDFTable::nMu]{nMu}{}` + offsetI];
+}
+\end{lstlisting}
+
+类\refvar{FourierBSDF}{}提供了\refvar{FourierBSDFTable}{}表示和\refvar{BxDF}{}接口间的桥梁。
+该类的实例由类\refvar{FourierMaterial}{}创建。
+\begin{lstlisting}
+`\refcode{BxDF Declarations}{+=}\lastcode{BxDFDeclarations}`
+class `\initvar{FourierBSDF}{}` : public `\refvar{BxDF}{}` {
+public:
+    `\refcode{FourierBSDF Public Methods}{}`
+private:
+    `\refcode{FourierBSDF Private Data}{}`
+};
+\end{lstlisting}
+\begin{lstlisting}
+`\initcode{FourierBSDF Public Methods}{=}`
+`\refvar{FourierBSDF}{}`(const `\refvar{FourierBSDFTable}{}` &bsdfTable, `\refvar{TransportMode}{}` mode)
+    : `\refvar{BxDF}{}`(`\refvar{BxDFType}{}`(`\refvar[BSDFREFLECTION]{BSDF\_REFLECTION}{}` | `\refvar[BSDFTRANSMISSION]{BSDF\_TRANSMISSION}{}` | `\refvar[BSDFGLOSSY]{BSDF\_GLOSSY}{}`)),
+      `\refvar[FourierBSDF::bsdfTable]{bsdfTable}{}`(bsdfTable), `\refvar[FourierBSDF::mode]{mode}{}`(mode) { }
+\end{lstlisting}
+
+类\refvar{FourierBSDF}{}只存储了指向表的{\ttfamily const}引用；
+该表巨大以至于我们完全不想再为每个\refvar{FourierBSDF}{}实例复制一份单独的副本。
+这里只需要读取权限，所以该方法不会造成任何问题
+（\refvar{FourierMaterial}{}负责\refvar{FourierBSDFTable}{}的存储）。
+\begin{lstlisting}
+`\initcode{FourierBSDF Private Data}{=}`
+const `\refvar{FourierBSDFTable}{}` &`\initvar[FourierBSDF::bsdfTable]{bsdfTable}{}`;
+const `\refvar{TransportMode}{}` `\initvar[FourierBSDF::mode]{mode}{}`;
+\end{lstlisting}
+
+求BSDF的值就是计算余弦$\mu_{\mathrm{i}}$和$\mu_{\mathrm{o}}$、
+寻找对应的系数$a_k$和最大阶数，然后求\refeq{8.21}的值的事了。
+\begin{lstlisting}
+`\refcode{BxDF Method Definitions}{+=}\lastnext{BxDFMethodDefinitions}`
+`\refvar{Spectrum}{}` `\refvar{FourierBSDF}{}`::`\initvar[FourierBSDF::f]{f}{}`(const `\refvar{Vector3f}{}` &wo, const `\refvar{Vector3f}{}` &wi) const { 
+    `\refcode{Find the zenith angle cosines and azimuth difference angle}{}`
+    `\refcode{Compute Fourier coefficients $a_k$ for ($\mu$i,$\mu$o)}{}`
+    `\refcode{Evaluate Fourier expansion for angle $\varphi$}{}`
+}
+\end{lstlisting}
+
+\refvar{FourierBSDF}{}中如何表示方向有一个重要的习惯差异：
+入射方向${\bm\omega}_{\mathrm{i}}$相比于pbrt中的一般方法是取了反的。
+当执行其他计算例如用该表示为分层材料计算BSDF时这个差异很有帮助
+\footnote{例如，这种习惯暗含着，对于不变地穿过某介质的光线，
+如果我们把$a_k(\mu_{\mathrm{i}},\mu_{\mathrm{o}})$看作矩阵，
+则我们会有一个对角矩阵，其非零项是对应于$\delta$分布的傅里叶系数，
+该分布对于所有$\varphi\ne0$都取零。该性质反过来让这些计算排序的表示更容易处理。}。
+\begin{lstlisting}
+`\initcode{Find the zenith angle cosines and azimuth difference angle}{=}`
+`\refvar{Float}{}` muI = `\refvar{CosTheta}{}`(-wi), muO = `\refvar{CosTheta}{}`(wo);
+`\refvar{Float}{}` cosPhi = `\refvar{CosDPhi}{}`(-wi, wo);
+\end{lstlisting}
+这样重建的BSDF就非常平滑，这里的实现在分别紧邻$\mu_{\mathrm{i}}$和$\mu_{\mathrm{o}}$的
+四个量化方向\refvar[FourierBSDFTable::mu]{mu}{}的乘积的系数$a_k$上进行插值。
+插值是用\keyindex{张量积}{tensor-product}{}样条执行的，
+被采样函数值的权重对于每个参数是独立计算的，然后乘在一起。
+因此每个最终的傅里叶系数$a_k$算得为
+\begin{align}\label{8.22}
+    a_k=\sum\limits_{a=0}^{3}\sum\limits_{b=0}^{3}a_k(o_{\mathrm{i}}+a,o_{\mathrm{o}}+b)w_{\mathrm{i}}(a)w_{\mathrm{o}}(b)\, ,
+\end{align}
+其中$a_k(i,j)$为量化方向$\mu_{\mathrm{i}},\mu_{\mathrm{o}}$给出了第$k$个傅里叶系数，
+$w_{\mathrm{i}}$和$w_{\mathrm{o}}$则是样条权重。

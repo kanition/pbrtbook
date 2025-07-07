@@ -19,3 +19,13 @@ pMax /= pMax.z;
 `\initcode{TransportMode Declarations}{=}`
 enum class `\initvar{TransportMode}{}` { `\initvar{Radiance}{}`, `\initvar{Importance}{}` };
 \end{lstlisting}
+
+
+\subsection{折射引起的非对称性}\label{sub:折射引起的非对称性}
+\begin{lstlisting}
+`\initcode{Update scale to account for adjoint light transport}{=}`
+if (`\refvar[FourierBSDF::mode]{mode}{}` == `\refvar{TransportMode}{}`::`\refvar{Radiance}{}` && muI * muO > 0) {
+    float eta = muI > 0 ? 1 / `\refvar[FourierBSDF::bsdfTable]{bsdfTable}{}`.`\refvar[FourierBSDFTable::eta]{eta}{}` : `\refvar[FourierBSDF::bsdfTable]{bsdfTable}{}`.`\refvar[FourierBSDFTable::eta]{eta}{}`;
+    scale *= eta * eta;
+}
+\end{lstlisting}

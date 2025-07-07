@@ -233,8 +233,130 @@ const `\refvar{TransportMode}{}` `\initvar[FourierBSDF::mode]{mode}{}`;
 插值是用\keyindex{张量积}{tensor-product}{}样条执行的，
 被采样函数值的权重对于每个参数是独立计算的，然后乘在一起。
 因此每个最终的傅里叶系数$a_k$算得为
-\begin{align}\label{8.22}
+\begin{align}\label{eq:8.22}
     a_k=\sum\limits_{a=0}^{3}\sum\limits_{b=0}^{3}a_k(o_{\mathrm{i}}+a,o_{\mathrm{o}}+b)w_{\mathrm{i}}(a)w_{\mathrm{o}}(b)\, ,
 \end{align}
 其中$a_k(i,j)$为量化方向$\mu_{\mathrm{i}},\mu_{\mathrm{o}}$给出了第$k$个傅里叶系数，
 $w_{\mathrm{i}}$和$w_{\mathrm{o}}$则是样条权重。
+即使方向$\mu_{\mathrm{i}}$的离散化相对粗糙，该插值也能保证足够的平滑性；
+如何计算这些权重的细节会在接下来的几页介绍。
+\begin{lstlisting}
+`\initcode{Compute Fourier coefficients $a_k$ for ($\mu$i,$\mu$o)}{=}`
+`\refcode{Determine offsets and weights for $\mu$i and $\mu$o}{}`
+`\refcode{Allocate storage to accumulate $a_k$ coefficients}{}`
+`\refcode{Accumulate weighted sums of nearby $a_k$ coefficients}{}`
+\end{lstlisting}
+
+对于每个方向$\mu_{\mathrm{i}}$和$\mu_{\mathrm{o}}$，
+\refvar[FourierBSDFTable::GetWeightsAndOffset]{GetWeightsAndOffset}{()}
+给出了要插值的前四个\refvar[FourierBSDFTable::mu]{mu}{}值的偏移量
+以及含有四个浮点权重的数组。
+\begin{lstlisting}
+`\initcode{Determine offsets and weights for $\mu$i and $\mu$o}{=}`
+int offsetI, offsetO;
+`\refvar{Float}{}` weightsI[4], weightsO[4];
+if (!`\refvar[FourierBSDF::bsdfTable]{bsdfTable}{}`.`\refvar[FourierBSDFTable::GetWeightsAndOffset]{GetWeightsAndOffset}{}`(muI, &offsetI, weightsI) ||
+    !`\refvar[FourierBSDF::bsdfTable]{bsdfTable}{}`.`\refvar[FourierBSDFTable::GetWeightsAndOffset]{GetWeightsAndOffset}{}`(muO, &offsetO, weightsO))
+    return `\refvar{Spectrum}{}`(0.f);
+\end{lstlisting}
+
+不同的向量$a_k$在被插值的$4\times4$个方向范围内可能有不同的阶数$m$.
+因此，这里的实现为$a_k$值申请存储时用最大可能的阶数$m$乘以通道数作为大小。
+对于多通道的情况，这里申请的数组{\ttfamily ak}的
+前\refvar[FourierBSDF::bsdfTable]{bsdfTable}{}{\ttfamily .}\refvar[FourierBSDFTable::mMax]{mMax}{}个项
+会用于第一个通道，接下来的\refvar[FourierBSDFTable::mMax]{mMax}{}个项用于第二个通道，以此类推
+（因此在十六个方向上的最大阶数小于\refvar[FourierBSDFTable::mMax]{mMax}{}的常见情况下，
+通常数组{\ttfamily ak}中会有一些没用到的空间）。
+所有这些存储都初始化为零，所以后续代码可以直接把\refeq{8.22}的项加到{\ttfamily ak}的对应项中。
+\begin{lstlisting}
+`\initcode{Allocate storage to accumulate $a_k$ coefficients}{=}`
+`\refvar{Float}{}` *ak = `\refvar{ALLOCA}{}`(`\refvar{Float}{}`, `\refvar[FourierBSDF::bsdfTable]{bsdfTable}{}`.`\refvar[FourierBSDFTable::mMax]{mMax}{}` * `\refvar[FourierBSDF::bsdfTable]{bsdfTable}{}`.`\refvar[FourierBSDFTable::nChannels]{nChannels}{}`);
+memset(ak, 0, `\refvar[FourierBSDF::bsdfTable]{bsdfTable}{}`.`\refvar[FourierBSDFTable::mMax]{mMax}{}` * `\refvar[FourierBSDF::bsdfTable]{bsdfTable}{}`.`\refvar[FourierBSDFTable::nChannels]{nChannels}{}` * sizeof(`\refvar{Float}{}`));
+\end{lstlisting}
+
+有了结果的权重、偏移量和存储，现在可以执行插值了。
+\begin{lstlisting}
+`\initcode{Accumulate weighted sums of nearby $a_k$ coefficients}{=}`
+int mMax = 0;
+for (int b = 0; b < 4; ++b) {
+    for (int a = 0; a < 4; ++a) {
+        `\refcode{Add contribution of (a, b) to $a_k$ values}{}`
+    }
+}
+\end{lstlisting}
+
+有了权重和起始偏移量，把\refeq{8.22}求和中每一项加起来就是按偏移量
+从表中取出对应的系数并把它们加到{\ttfamily ak}的累积之和中。
+\begin{lstlisting}
+`\initcode{Add contribution of (a, b) to $a_k$ values}{=}`
+`\refvar{Float}{}` weight = weightsI[a] * weightsO[b];
+if (weight != 0) {
+    int m;
+    const `\refvar{Float}{}` *ap = `\refvar[FourierBSDF::bsdfTable]{bsdfTable}{}`.`\refvar[FourierBSDFTable::GetAk]{GetAk}{}`(offsetI + a, offsetO + b, &m);
+    mMax = std::max(mMax, m);
+    for (int c = 0; c < `\refvar[FourierBSDF::bsdfTable]{bsdfTable}{}`.`\refvar[FourierBSDFTable::nChannels]{nChannels}{}`; ++c)
+        for (int k = 0; k < m; ++k)
+            ak[c * `\refvar[FourierBSDF::bsdfTable]{bsdfTable}{}`.`\refvar[FourierBSDFTable::mMax]{mMax}{}` + k] += weight * ap[c * m + k];
+}
+\end{lstlisting}
+
+有了{\ttfamily ak}中的最终加权系数，调用一次\refvar{Fourier}{()}就为首个颜色通道计算出BSDF值。
+傅里叶重建中的误差可以让它自己变成负值，所以返回的值必须被截断到零。
+
+回想\refeq{8.21}中系数$a_k$表示余弦加权的BSDF。
+该余弦因子必须从方法\refvar[FourierBSDF::f]{f}{()}返回的值中去掉；
+项{\ttfamily scale}编码了这一因子。
+\begin{lstlisting}
+`\initcode{Evaluate Fourier expansion for angle $\varphi$}{=}`
+`\refvar{Float}{}` Y = std::max((`\refvar{Float}{}`)0, `\refvar{Fourier}{}`(ak, mMax, cosPhi));
+`\refvar{Float}{}` scale = muI != 0 ? (1 / std::abs(muI)) : (`\refvar{Float}{}`)0;
+`\refcode{Update scale to account for adjoint light transport}{}`
+if (`\refvar[FourierBSDF::bsdfTable]{bsdfTable}{}`.`\refvar[FourierBSDFTable::nChannels]{nChannels}{}` == 1)
+    return `\refvar{Spectrum}{}`(Y * scale);
+else {
+    `\refcode{Compute and return RGB colors for tabulated BSDF}{}`
+}
+\end{lstlisting}
+
+就像镜面透射那样，辐射从某折射率的介质穿射到另一种时会被缩减，
+但这种缩减并不适用于起始于相机的光线。\refsec{路径-空间测量方程}将提供处理这种调整的
+代码片\refcode{Update scale to account for adjoint light transport}{}的定义和讨论。
+
+如前所述，当有三个颜色通道时，首个通道编码光照度，接下来两个分别是红色和蓝色。
+为了理解如何计算绿色通道值，考虑函数\refvar{RGBToXYZ}{()}的实现，
+它假设基色来自sRGB标准，用下面的式子从红、绿、蓝颜色分量中算出$y_{\lambda}$：
+\begin{align*}
+    y_{\lambda}=0.212671r+0.715160g+0.072169b\, .
+\end{align*}
+现在的情况下，我们知道$y_{\lambda}$、$r$和$b$. 求解$g$，我们可以得到：
+\begin{align*}
+    g=1.39829y_{\lambda}-0.100913b-0.297375r\, .
+\end{align*}
+像之前那样，任何因为傅里叶重建误差造成的颜色系数负值都必须截断到零。
+\begin{lstlisting}
+`\initcode{Compute and return RGB colors for tabulated BSDF}{=}`
+`\refvar{Float}{}` R = `\refvar{Fourier}{}`(ak + 1 * `\refvar[FourierBSDF::bsdfTable]{bsdfTable}{}`.`\refvar[FourierBSDFTable::mMax]{mMax}{}`, mMax, cosPhi);
+`\refvar{Float}{}` B = `\refvar{Fourier}{}`(ak + 2 * `\refvar[FourierBSDF::bsdfTable]{bsdfTable}{}`.`\refvar[FourierBSDFTable::mMax]{mMax}{}`, mMax, cosPhi);
+`\refvar{Float}{}` G = 1.39829f * Y - 0.100913f * B - 0.297375f * R;
+`\refvar{Float}{}` rgb[3] = { R * scale, G * scale, B * scale };
+return `\refvar{Spectrum}{}`::`\refvar[RGBSpectrum::FromRGB]{FromRGB}{}`(rgb).`\refvar[CoefficientSpectrum::Clamp]{Clamp}{}`();
+\end{lstlisting}
+
+我们现在将定义函数\refvar{Fourier}{()}，它接收系数数组$a_k$、
+最大阶数$m$以及角度$\varphi$的余弦。它计算\refeq{8.21}中
+余弦的加权和，且可以利用现在已知的$a_k$写成更简单的形式：
+\begin{align}\label{eq:8.23}
+    f(\varphi)=\sum\limits_{k=0}^{m-1}a_k\cos(k\varphi)\, .
+\end{align}
+该函数的实现在求和时对求和项用了双精度以最小化浮点舍入误差的影响。
+\begin{lstlisting}
+`\initcode{Fourier Interpolation Definitions}{=}\initnext{FourierInterpolationDefinitions}`
+`\refvar{Float}{}` `\initvar{Fourier}{}`(const `\refvar{Float}{}` *a, int m, double cosPhi) {
+    double value = 0.0;
+    `\refcode{Initialize cosine iterates}{}`
+    for (int k = 0; k < m; ++k) {
+        `\refcode{Add the current summand and update the cosine iterates}{}`
+    }
+    return value;
+}
+\end{lstlisting}

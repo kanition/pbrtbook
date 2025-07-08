@@ -263,11 +263,11 @@ if (!`\refvar[FourierBSDF::bsdfTable]{bsdfTable}{}`.`\refvar[FourierBSDFTable::G
 不同的向量$a_k$在被插值的$4\times4$个方向范围内可能有不同的阶数$m$.
 因此，这里的实现为$a_k$值申请存储时用最大可能的阶数$m$乘以通道数作为大小。
 对于多通道的情况，这里申请的数组{\ttfamily ak}的
-前\refvar[FourierBSDF::bsdfTable]{bsdfTable}{}{\ttfamily .}\refvar[FourierBSDFTable::mMax]{mMax}{}个项
-会用于第一个通道，接下来的\refvar[FourierBSDFTable::mMax]{mMax}{}个项用于第二个通道，以此类推
+前\refvar[FourierBSDF::bsdfTable]{bsdfTable}{}{\ttfamily .}\refvar[FourierBSDFTable::mMax]{mMax}{}项
+会用于首个通道，接下来的\refvar[FourierBSDFTable::mMax]{mMax}{}项用于第二个通道，以此类推
 （因此在十六个方向上的最大阶数小于\refvar[FourierBSDFTable::mMax]{mMax}{}的常见情况下，
-通常数组{\ttfamily ak}中会有一些没用到的空间）。
-所有这些存储都初始化为零，所以后续代码可以直接把\refeq{8.22}的项加到{\ttfamily ak}的对应项中。
+通常数组{\ttfamily ak}中会有些没用到的空间）。
+所有这些存储都初始化为零，所以后续代码可直接把\refeq{8.22}的项加到{\ttfamily ak}的对应项中。
 \begin{lstlisting}
 `\initcode{Allocate storage to accumulate $a_k$ coefficients}{=}`
 `\refvar{Float}{}` *ak = `\refvar{ALLOCA}{}`(`\refvar{Float}{}`, `\refvar[FourierBSDF::bsdfTable]{bsdfTable}{}`.`\refvar[FourierBSDFTable::mMax]{mMax}{}` * `\refvar[FourierBSDF::bsdfTable]{bsdfTable}{}`.`\refvar[FourierBSDFTable::nChannels]{nChannels}{}`);
@@ -360,3 +360,124 @@ return `\refvar{Spectrum}{}`::`\refvar[RGBSpectrum::FromRGB]{FromRGB}{}`(rgb).`\
     return value;
 }
 \end{lstlisting}
+
+随着系数数量增加，\refeq{8.23}的朴素计算方法会涉及对三角函数的大量调用。
+这会导致严重的性能问题：当前CPU架构调用一次{\ttfamily std::cos()}就要几百个处理器周期。
+因此，为余弦使用\keyindex{倍角公式}{multiple angle formula}{}是值得的
+\sidenote{译者注：将$k\varphi$拆为$(k-1)\varphi+\varphi$，
+$(k-2)\varphi$拆为$(k-1)\varphi-\varphi$，再利用和角差角公式即可得证。}：
+\begin{align}\label{eq:8.24}
+    \cos(k\varphi)=2\cos\varphi\cos((k-1)\varphi)-\cos((k-2)\varphi)\, .
+\end{align}
+该式把\refeq{8.23}中加数$k$的余弦用加数$k-1$和$k-2$的形式表达。
+
+实现从当下和之前两个余弦变量的声明开始，对应索引$k=-1$和$k=0$的值。
+这里重要的是还用双精度计算$\cos(k\varphi)$的值；
+否则在用倍角公式时，一旦{\ttfamily m}有上千的值，
+用32位{\ttfamily float}累积的浮点舍入误差就会变得明显。
+\begin{lstlisting}
+`\initcode{Initialize cosine iterates}{=}`
+double cosKMinusOnePhi = cosPhi;
+double cosKPhi = 1;
+\end{lstlisting}
+然后循环体把当前系数与余弦值的积加到累积和中并计算下次迭代的余弦值。
+\begin{lstlisting}
+`\initcode{Add the current summand and update the cosine iterates}{=}`
+value += a[k] * cosKPhi;
+double cosKPlusOnePhi = 2 * cosPhi * cosKPhi - cosKMinusOnePhi;
+cosKMinusOnePhi = cosKPhi;
+cosKPhi = cosKPlusOnePhi;
+\end{lstlisting}
+
+\subsection{样条插值}\label{sub:样条插值}
+最后要解释的细节是用于重建系数$a_k$的基于样条的插值是如何起作用的。
+这里的实现使用\keyindex{Catmull-Rom样条}{Catmull-Rom spline}{spline样条}，
+它在一维上可以表示为四个控制点的加权和，
+所用的权重和特定控制点取决于计算它的值时在曲线路径上的参数化位置。
+样条会穿过给定控制点并沿路径走出相当光滑的曲线。
+
+为了理解如何计算这些权重，我们首先假设有一个
+在位置$x_0,x_1,\dots,x_k$上的函数值集$f$及其导数$f'$.
+对于每个区间$[x_i,x_{i+1}]$，我们想用三次多项式
+\begin{align}\label{eq:8.25}
+    p_i(x)=ax^3+bx^2+cx+d\, ,
+\end{align}
+来逼近该函数，且使其在采样处匹配该函数及其导数，
+即$p_i(x_i)=f(x_i),\,p_i(x_{i+1})=f(x_{i+1}),\,p'_i(x_i)=f'(x_i)$且$p'_i(x_{i+1})=f'(x_{i+1})$.
+简单起见，让我们先关注第一个区间并进一步假设$[x_0,x_1]=[0,1]$.
+求解系数$a,b,c$和$d$得\sidenote{译者注：读者不妨推导一下。}
+\begin{align*}
+    a&=f'(x_0)+f'(x_1)+2f(x_0)-2f(x_1)\, ,\\
+    b&=3f(x_1)-3f(x_0)-2f'(x_0)-f'(x_1)\, ,\\
+    c&=f'(x_0)\, ,\\
+    d&=f(x_0)\, .
+\end{align*}
+注意所有系数都是函数值和导数的线性组合，这能让我们把\refeq{8.25}重写为
+\begin{align}\label{eq:8.26}
+    p(x)=&(2x^3-3x^2+1)f(x_0)\nonumber\\
+    &+(-2x^3+3x^2)f(x_1)\nonumber\\
+    &+(x^3-2x^2+x)f'(x_0)\nonumber\\
+    &+(x^3-x^2)f'(x_1)\, .
+\end{align}
+这种插值很方便但不幸的是它仍然限制太多，因为我们
+通常不能指望能获取到导数信息：反射模型可解析的导数一般都很繁琐，
+而测量的数据则完全无法提供这些。因此我们基于两个相邻的
+函数值$f(x_{i-1})$和$f(x_{i+1})$利用中心差分估计每个$f(x_i)$处的导数。
+于是估计的导数为
+\begin{align*}
+    f'(x_0)\approx\frac{f(x_1)-f(x_{-1})}{x_1-x_{-1}}=\frac{f(x_1)-f(x_{-1})}{1-x_{-1}}\, .
+\end{align*}
+类似地，$f(x_1)$处的导数可用两个相邻函数值估计为
+\begin{align*}
+    f'(x_1)\approx\frac{f(x_2)-f(x_0)}{x_2-x_0}=\frac{f(x_2)-f(x_0)}{x_2}\, .
+\end{align*}
+如果把这两个表达式代入\refeq{8.26}再按$f$的项整理，我们将有
+\begin{align*}
+    p(x)=&\frac{x^3-2x^2+x}{x_{-1}-1}f(x_{-1})\\
+    &+\left(2x^3-3x^2+1-\frac{x^3-x^2}{x_2}\right)f(x_0)\\
+    &+\left(-2x^3+3x^2+\frac{x^3-2x^2+x}{1-x_{-1}}\right)f(x_1)\\
+    &+\frac{x^3-x^2}{x_2}f(x_2)\, ,
+\end{align*}
+注意这些权重独立于函数值：因此我们也能把该插值表达为
+\begin{align}\label{eq:8.27}
+    p(x)=w_0f(x_{-1})+w_1f(x_0)+w_2f(x_1)+w_3f(x_2)\, ,
+\end{align}
+其中
+\begin{align}\label{eq:8.28}
+    w_0&=\frac{x^3-2x^2+x}{x_{-1}-1}\, ,\nonumber\\
+    w_1&=2x^3-3x^2+1-\frac{x^3-x^2}{x_2}=(2x^3-3x^2+1)-w_3\, ,\nonumber\\
+    w_2&=-2x^3+3x^2+\frac{x^3-2x^2+x}{1-x_{-1}}=(-2x^3+3x^2)-w_0\, ,\nonumber\\
+    w_3&=\frac{x^3-x^2}{x_2}\, .
+\end{align}
+
+函数\refvar{CatmullRomWeights}{()}接收变量{\ttfamily x}和
+插值节点数量以及它们的位置作为参数。它不以任何方式使用函数值
+而是计算索引{\ttfamily offset}以及对应于\refeq{8.28}中四个权重的数组。
+
+计算这些权重的代码在BSDF重建任务之外也很有用，
+因此它定义在文件\href{https://github.com/mmp/pbrt-v3/blob/master/src/core/interpolation.h}{\ttfamily core/interpolation.h}
+与\href{https://github.com/mmp/pbrt-v3/blob/master/src/core/interpolation.cpp}{\ttfamily core/interpolation.cpp}中。
+\begin{lstlisting}
+`\initcode{Spline Interpolation Definitions}{=}\initnext{SplineInterpolationDefinitions}`
+bool `\initvar{CatmullRomWeights}{}`(int size, const `\refvar{Float}{}` *nodes, `\refvar{Float}{}` x,
+                       int *offset, `\refvar{Float}{}` *weights) {
+    `\refcode{Return false if x is out of bounds}{}`
+    `\refcode{Search for the interval idx containing x}{}`
+    `\refcode{Compute the $t$ parameter and powers}{}`
+    `\refcode{Compute initial node weights $w_1$ and $w_2$}{}`
+    `\refcode{Compute first node weight $w_0$}{}`
+    `\refcode{Compute last node weight $w_3$}{}`
+    return true;
+}
+\end{lstlisting}
+当{\ttfamily x}超出函数定义域时第一条语句返回错误。
+注意到把条件逻辑用否定形式书写似乎有点奇怪：但这样做我们还能捕获NaN参数，
+按惯例它让比较操作的值为{\ttfamily false}。
+\begin{lstlisting}
+`\initcode{Return false if x is out of bounds}{=}`
+if (!(x >= nodes[0] && x <= nodes[size-1]))
+    return false;
+\end{lstlisting}
+
+辅助函数\refvar{FindInterval}{()}通过二分搜索高效地定位包含{\ttfamily x}的区间。
+有了这一结果，我们现在可以

@@ -81,8 +81,8 @@
    编译产物、提交记录、问题与计划列表、讨论区记录等的全部或部分内容，以及发布任何提及本仓库的内容。
 4. 本声明中的“GitCode及其关联网站”包括：
     - GitCode：gitcode.com
-    - 与GitCode实际上存在或疑似存在用户数据共享的网站，
-      或由GitCode的实控组织机构或个人开办的其他网站，包括但不限于：
+    - 与GitCode实际或疑似存在用户数据共享的网站或应用，
+      或由其实控组织机构或个人开办的其他网站或应用，包括但不限于：
         - CSDN：csdn.net
         - OSCHINA：oschina.net
         - Gitee：gitee.com

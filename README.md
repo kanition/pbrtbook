@@ -56,7 +56,7 @@
 | 6.7    | 几何光学                   |
 | 7.12   | 傅里叶变换                 |
 | 7.13   | 初等数论基础               |
-| 8.7    | 微面模型相关推导（进行中） |
+| 8.8    | 微面模型相关推导（进行中） |
 
 ## 许可协议
 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans"><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1" alt=""><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1" alt=""><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/nc.svg?ref=chooser-v1" alt=""><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/sa.svg?ref=chooser-v1" alt=""></a><br />本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans">知识共享署名—非商业性使用—相同方式共享4.0国际公共许可协议</a>进行许可。
@@ -81,8 +81,8 @@
    编译产物、提交记录、问题与计划列表、讨论区记录等的全部或部分内容，以及发布任何提及本仓库的内容。
 4. 本声明中的“GitCode及其关联网站”包括：
     - GitCode：gitcode.com
-    - 与GitCode实际上存在或疑似存在用户数据共享的网站，
-      或由GitCode的实控组织机构或个人开办的其他网站，包括但不限于：
+    - 与GitCode实际或疑似存在用户数据共享的网站或应用，
+      或由其实控组织机构或个人开办的其他网站或应用，包括但不限于：
         - CSDN：csdn.net
         - OSCHINA：oschina.net
         - Gitee：gitee.com

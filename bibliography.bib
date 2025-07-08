@@ -5769,14 +5769,6 @@
   note   = {[Online; accessed 02-July-2022]}
 }
 
- @misc{wiki:eye,
-  author = {维基百科},
-  title  = {眼 --- 维基百科{,} 自由的百科全书},
-  year   = {2021},
-  url    = {https://zh.wikipedia.org/w/index.php?title=%E7%9C%BC&oldid=67642524},
-  note   = {[Online; accessed 19-December-2021]}
-}
-
 # 8.4
 @inproceedings{10.1145/192161.192213,
   author    = {Oren, Michael and Nayar, Shree K.},
@@ -5883,23 +5875,27 @@
   isbn      = {1017-4656}
 }
 
-# 08.ex01
-@inproceedings{10.1145/344779.344814,
-  author    = {Ashikmin, Michael and Premo\v{z}e, Simon and Shirley, Peter},
-  title     = {A microfacet-based {BRDF} generator},
-  year      = {2000},
-  isbn      = {1581132085},
-  publisher = {ACM Press/Addison-Wesley Publishing Co.},
-  address   = {USA},
-  doi       = {10.1145/344779.344814},
-  abstract  = {A method is presented that takes as an input a 2D microfacet orientation distribution and produces a 4D bidirectional reflectance distribution function (BRDF). This method differs from previous microfacet-based BRDF models in that it uses a simple shadowing term which allows it to handle very general microfacet distributions while maintaining reciprocity and energy conservation. The generator is shown on a variety of material types.},
-  booktitle = {Proceedings of the 27th Annual Conference on Computer Graphics and Interactive Techniques},
-  pages     = {65-74},
-  numpages  = {10},
-  keywords  = {reflectance \& shading models, rendering},
-  series    = {SIGGRAPH '00}
+# 8.6
+@article{10.1145/2601097.2601139,
+  author     = {Jakob, Wenzel and d'Eon, Eugene and Jakob, Otto and Marschner, Steve},
+  title      = {A comprehensive framework for rendering layered materials},
+  year       = {2014},
+  issue_date = {July 2014},
+  publisher  = {Association for Computing Machinery},
+  address    = {New York, NY, USA},
+  volume     = {33},
+  number     = {4},
+  issn       = {0730-0301},
+  doi        = {10.1145/2601097.2601139},
+  abstract   = {We present a general and practical method for computing BSDFs of layered materials. Its ingredients are transport-theoretical models of isotropic or anisotropic scattering layers and smooth or rough boundaries of conductors and dielectrics. Following expansion into a directional basis that supports arbitrary composition, we are able to efficiently and accurately synthesize BSDFs for a great variety of layered structures.Reflectance models created by our system correctly account for multiple scattering within and between layers, and in the context of a rendering system they are efficient to evaluate and support texturing and exact importance sampling. Although our approach essentially involves tabulating reflectance functions in a Fourier basis, the generated models are compact to store due to the inherent sparsity of our representation, and are accurate even for narrowly peaked functions. While methods for rendering general layered surfaces have been investigated in the past, ours is the first system that supports arbitrary layer structures while remaining both efficient and accurate.We validate our model by comparing to measurements of real-world examples of layered materials, and we demonstrate an interactive visual design tool that enables easy exploration of the space of layered materials. We provide a fully practical, high-performance implementation in an open-source rendering system.},
+  journal    = {ACM Trans. Graph.},
+  month      = {7},
+  articleno  = {118},
+  numpages   = {14},
+  keywords   = {linear transport theory, layered materials, importance sampling, albedo problem, BSDF, BRDF}
 }
 
+# 08.ex01
 @article{841905,
   author   = {Bourlier, Christophe and Saillard, Joseph and Berginc, Gérard},
   journal  = {IEEE Transactions on Antennas and Propagation},

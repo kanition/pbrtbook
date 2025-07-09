@@ -143,7 +143,7 @@ private:
 
 \subsection{基本运算}\label{sub:基本运算}
 当创建新的\refvar{Transform}{}时，
-它默认为\keyindex{恒等变换}{identity transformation}{transformation变换}——
+它默认为\keyindex{恒等变换}{identity transformation}{transformation\ 变换}——
 将每个点和向量映射为它自己的变换。
 该变换由\keyindex{单位矩阵}{identity matrix}{}表示：
 \begin{align*}
@@ -216,7 +216,7 @@ friend `\refvar{Transform}{}` `\initvar[Transform::Transpose]{Transpose}{}`(cons
 \refvar{Transform}{}也提供了方法{\initvar{IsIdentity}{()}}检查变换是否是恒等的。
 
 \subsection{平移}\label{sub:平移}
-最简单的变换之一就是\keyindex{平移变换}{translation transformation}{transformation变换}，
+最简单的变换之一就是\keyindex{平移变换}{translation transformation}{transformation\ 变换}，
 $\bm T(\Delta x,\Delta y, \Delta z)$.
 当施加到一点$\bm p$上时，它将$\bm p$的坐标平移$\Delta x,\Delta y$和$\Delta z$，
 如\reffig{2.10}所示。例如，
@@ -311,7 +311,7 @@ $\bm T(\Delta x,\Delta y, \Delta z)$.
 \end{lstlisting}
 
 \subsection{缩放}\label{sub:缩放}
-另一个基本变换是\keyindex{缩放变换}{scale transformation}{transformation变换}，$\bm S(s_x,s_y,s_z)$.
+另一个基本变换是\keyindex{缩放变换}{scale transformation}{transformation\ 变换}，$\bm S(s_x,s_y,s_z)$.
 它对点和向量起作用并用缩放因子乘以其$x,y$和$z$分量：$\bm S(2,2,1)(x,y,z)=(2x,2y,z)$.
 它有如下基本性质：
 \begin{align*}
@@ -367,7 +367,7 @@ bool `\initvar{HasScale}{}`() const {
 \end{lstlisting}
 
 \subsection{x,y和z轴旋转}\label{sub:x,y和z轴旋转}
-另一个有用的变换类型是\keyindex{旋转变换}{rotation transformation}{transformation变换}，$\bm R$.
+另一个有用的变换类型是\keyindex{旋转变换}{rotation transformation}{transformation\ 变换}，$\bm R$.
 通常，我们可以定义从原点到任意方向的任意轴再绕轴旋转给定角度。
 这类最常见的是绕$x,y$和$z$坐标轴旋转。
 我们把这类旋转写作$\bm R_x(\theta)$、$\bm R_y(\theta)$等。
@@ -541,7 +541,7 @@ m.m[2][3] = 0;
 \sidenote{译者注：笔者补充回来了。}。
 
 \subsection{注视变换}\label{sub:注视变换}
-\keyindex{注视变换}{look-at transformation}{transformation变换}对于
+\keyindex{注视变换}{look-at transformation}{transformation\ 变换}对于
 在场景中放置相机尤为有用。
 调用者指定要求的相机位置、相机要注视的点以及
 让沿这两个参数确定的观察方向的相机定向的“向上”向量。

@@ -621,7 +621,7 @@ LBVH是通过用每个空间区域中点处的划分平面
 因为它基于上述的莫顿编码性质，所以划分非常高效。
 
 仅仅以不同方式复现\refvar{Middle}{}并不有趣，所以这里的实现中我们将
-构建\keyindex{分层线性包围盒层次}{hierarchical linear bounding volume hierarchy}{linear bounding volume hierarchy线性包围盒层次}(HLBVH)。
+构建\keyindex{分层线性包围盒层次}{hierarchical linear bounding volume hierarchy}{linear bounding volume hierarchy\ 线性包围盒层次}(HLBVH)。
 通过该方法首先用基于莫顿曲线的聚类为低层级构建树（以下称“小树”\sidenote{译者注：原文treelet。}），
 然后用表面积启发法创建高层级树。
 方法\refvar{HLBVHBuild}{()}实现了该方法并返回所得树的根节点。

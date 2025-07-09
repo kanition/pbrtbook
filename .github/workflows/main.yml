@@ -37,6 +37,7 @@ jobs:
           run: |
             ls ./boondox
             export TEXINPUTS=./boondox/tex:$TEXINPUTS
+            git config --global --add safe.directory /home/runner/work/pbrtbook/pbrtbook
             ./cp.sh
       - name: upload
         uses: actions/upload-artifact@v4

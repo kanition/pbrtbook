@@ -58,7 +58,7 @@ $\displaystyle\left(\frac{1}{8},\frac{1}{2}\right)$的矩形中也只有一个�
 （考虑代码片\refcode{Compute base-2 radical inverse}{}和模板函数\refvar{RadicalInverseSpecialized}{()}间的差别）。
 
 假设不以2为底的计算有很高开销，自然要尝试开发完全用2进制运算的样本生成算法。
-一个这样高效的方法是用\keyindex{生成矩阵}{generator matrix}{}，
+一个这样高效的方法是用\keyindex{生成矩阵}{generator matrix}{matrix\ 矩阵}，
 它允许在相同基中完成所有计算。不像Halton采样器那样在每个维度使用不同基，
 它在每个维度使用不同生成矩阵。为每个采样维度精选好矩阵，
 就能生成非常好的低偏差分布点。例如，$(0,2)$序列可用两个特定的2进制生成矩阵定义。

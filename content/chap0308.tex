@@ -4,13 +4,13 @@
 \end{remark}
 
 本章我们要定义的最后一个形状表示
-实现了\keyindex{细分曲面}{subdivision surface}{surface曲面}，
+实现了\keyindex{细分曲面}{subdivision surface}{surface\ 曲面}，
 该表示尤其适合描述复杂光滑形状。
 特定网格的细分曲面定义为将网格面反复细分为更小面
 然后用旧顶点位置的加权组合求新顶点位置。
 
 对于适当选择的细分规则，当细分步数趋于无穷时，
-该过程会收敛到给出一个光滑的\keyindex{极限曲面}{limit surface}{surface曲面}。
+该过程会收敛到给出一个光滑的\keyindex{极限曲面}{limit surface}{surface\ 曲面}。
 实践中，只需少量级别的细分通常就足以得到极限曲面的良好近似。
 \reffig{3.24}展示了一个细分的简单例子，
 其中四面体被细分了零次、一次、两次和六次。
@@ -59,7 +59,7 @@
     \label{fig:3.26}
 \end{figure}
 
-这里，我们将介绍\keyindex{Loop细分曲面}{Loop subdivision surface}{surface曲面}
+这里，我们将介绍\keyindex{Loop细分曲面}{Loop subdivision surface}{surface\ 曲面}
 \footnote{以所用的细分规则发明者Charles Loop的名字命名。}的一种实现。
 Loop细分规则基于控制网格中的三角形面；
 开始时具有超过三个顶点的面被三角剖分。
@@ -127,8 +127,8 @@ for (int i = 0; i < nFaces; ++i)
 Loop细分方案像多数其他细分方案那样，
 假设控制网格是\keyindex{流形}{manifold}{}——
 共享任意给定边的面不超过两个。
-这样的网格可能是闭合的或开放的：\keyindex{闭合网格}{closed mesh}{mesh网格}没有
-边界且所有面的每条边都有邻接面。\keyindex{开放网格}{open mesh}{mesh网格}有
+这样的网格可能是闭合的或开放的：\keyindex{闭合网格}{closed mesh}{mesh\ 网格}没有
+边界且所有面的每条边都有邻接面。\keyindex{开放网格}{open mesh}{mesh\ 网格}有
 一些面没有全部三个邻居。
 这里的实现同时支持闭合和开放网格。
 
@@ -137,7 +137,7 @@ Loop细分方案像多数其他细分方案那样，
 在开放网格的边界上，大多数顶点与三个面和四个顶点相邻。
 与一个顶点直接相邻的顶点数称为该顶点的\keyindex{价}{valence}{}。
 价不是六的内部顶点或价不是四的边界顶点
-称为\keyindex{非凡顶点}{extraordinary vertex}{vertex顶点}；
+称为\keyindex{非凡顶点}{extraordinary vertex}{vertex\ 顶点}；
 否则称为\keyindex{正则的}{regular}{}\footnote{这些术语常用于建模文献中，
     尽管“irregular”对“regular”或者“extraordinary”对“ordinary”更符合直觉。}。
 Loop细分曲面在除非凡顶点外的任意处都是光滑的。
@@ -207,7 +207,7 @@ struct `\initvar{SDFace}{}` {
 
 除了需要流形网格外，细分代码希望用户指定的控制网格
 是\keyindex{相容次序}{consistently ordered}{}的——
-网格中每条\keyindex{有向边}{directed edge}{edge边}只出现一次。
+网格中每条\keyindex{有向边}{directed edge}{edge\ 边}只出现一次。
 两个面的公共边须由每个面指定为不同方向。
 考虑两个顶点$\bm v_0$和$\bm v_1$与连接它们的边。
 我们希望拥有该边的三角形面指定其三个顶点时$\bm v_0$在$\bm v_1$之前，
@@ -565,8 +565,8 @@ for (`\refvar{SDFace}{}` *face : f) {
 \subsubsection*{计算新顶点的位置}
 在担心细分网格的拓扑初始化之前，细化方法先为网格中的所有顶点计算位置。
 首先，它考虑所有已经出现于网格中的顶点的更新位置计算问题；
-这些顶点称为\keyindex{偶顶点}{even vertex}{vertex顶点}。
-然后它计算分割边上的新顶点，称为\keyindex{奇顶点}{odd vertex}{vertex顶点}。
+这些顶点称为\keyindex{偶顶点}{even vertex}{vertex\ 顶点}。
+然后它计算分割边上的新顶点，称为\keyindex{奇顶点}{odd vertex}{vertex\ 顶点}。
 \begin{lstlisting}
 `\initcode{Update vertex positions and create new edge vertices}{=}`
 `\refcode{Update vertex positions for even vertices}{}`
@@ -1031,13 +1031,13 @@ for (int j = 0; j < valence; ++j) {
     \label{fig:3.38}
 \end{figure}
 
-第一条切线叫\keyindex{跨越切线}{across tangent}{tangent line切线}，
+第一条切线叫\keyindex{跨越切线}{across tangent}{tangent line\ 切线}，
 由两相邻边界顶点间的向量给出：
 \begin{align*}
     \bm s=\bm v_{n-1}-\bm v_0\, .
 \end{align*}
 
-第二条切线叫\keyindex{横断切线}{transverse tangent}{tangent line切线}，
+第二条切线叫\keyindex{横断切线}{transverse tangent}{tangent line\ 切线}，
 基于顶点的价算得。
 中心顶点赋权$w_{\mathrm{c}}$，一环顶点赋权指定为向量$(w_0,w_1,\ldots,w_{n-1})$.
 我们的横断切线规则是

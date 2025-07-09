@@ -2,11 +2,11 @@
 
 三维计算机图形学中的一个基本问题是{\itshape 3D视见问题}：
 如何将三维场景投影到二维图像上进行显示。
-大多数经典方法都可以用$4\times4$的\keyindex{投影变换}{projective transformation}{transformation变换}矩阵来表达。
+大多数经典方法都可以用$4\times4$的\keyindex{投影变换}{projective transformation}{transformation\ 变换}矩阵来表达。
 因此，我们将引入一个投影矩阵相机类\refvar{ProjectiveCamera}{}，
 然后在此基础上定义两个相机模型。
-第一个实现了\keyindex{正交投影}{orthographic projection}{projection投影}，
-另一个实现了\keyindex{透视投影}{perspective projection}{projection投影}——
+第一个实现了\keyindex{正交投影}{orthographic projection}{projection\ 投影}，
+另一个实现了\keyindex{透视投影}{perspective projection}{projection\ 投影}——
 两种经典且广泛使用的\keyindex{投影}{projection}{}。
 \begin{lstlisting}
 `\initcode{Camera Declarations}{+=}\lastcode{CameraDeclarations}`
@@ -119,7 +119,7 @@ private:
 \end{lstlisting}
 
 定义在文件\href{https://github.com/mmp/pbrt-v3/blob/master/src/cameras/orthographic.h}{\ttfamily cameras/orthographic.h}和
-\href{https://github.com/mmp/pbrt-v3/tree/master/src/cameras/orthographic.cpp}{\ttfamily cameras/orthographic.cpp}中的\keyindex{正交相机}{orthographic camera}{camera相机}，
+\href{https://github.com/mmp/pbrt-v3/tree/master/src/cameras/orthographic.cpp}{\ttfamily cameras/orthographic.cpp}中的\keyindex{正交相机}{orthographic camera}{camera\ 相机}，
 是基于正交投影变换的。
 正交变换取场景中的一块矩形区域并将其投影到定义该区域之框的前方一面。
 它不具有\keyindex{前缩}{foreshortening}{}效应——当物体远离时它们在成像平面上变小——

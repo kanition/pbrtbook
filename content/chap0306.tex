@@ -11,7 +11,7 @@
 
 尽管自然的表示是用{\ttfamily Triangle}形状实现，
 每个三角形都存储其三个\keyindex{顶点}{vertex}{}的位置，
-但内存更高效的表示是用顶点位置数组分开存储整个\keyindex{三角网格}{triangle mesh}{mesh网格}，
+但内存更高效的表示是用顶点位置数组分开存储整个\keyindex{三角网格}{triangle mesh}{mesh\ 网格}，
 每个独立三角形只存储其三个顶点对该数组的三个偏移量。
 
 为了理解该做法，考虑著名的\keyindex{欧拉-庞加莱公式}{Euler-Poincaré formula}{}，
@@ -466,7 +466,7 @@ if (det == 0)
 
 因为光线从原点出发，有单位长度，且沿$+z$轴，交点的$z$坐标值等于相交处的参数$t$值。
 为了计算该$z$值，我们先要继续对三角形顶点的$z$坐标施加错切变换。
-有了这些值后，三角形中交点的\keyindex{重心坐标}{barycentric coordinate}{coordinate坐标}可
+有了这些值后，三角形中交点的\keyindex{重心坐标}{barycentric coordinate}{coordinate\ 坐标}可
 用于在三角形间对其插值。它们由每个边函数值除以边函数值之和得到
 \sidenote{译者注：提示：$b_i$表示了原点接近$\bm p_i$的程度。
     利用向量知识可以证明，2D中对于包围了点$O$（不在边缘上）的$\triangle P_0P_1P_2$，
@@ -733,7 +733,7 @@ else
     ss = `\refvar{Normalize}{}`(isect->`\refvar[SurfaceInteraction::dpdu]{dpdu}{}`);
 \end{lstlisting}
 
-用{\ttfamily ns}和{\ttfamily ss}的叉积求\keyindex{双切向量}{bitangent vector}{}{\ttfamily ts}，
+用{\ttfamily ns}和{\ttfamily ss}的叉积求\keyindex{双切向量}{bitangent vector}{vector\ 向量}{\ttfamily ts}，
 即得到一个正交于它俩的向量。
 接下来，{\ttfamily ss}被{\ttfamily ts}和{\ttfamily ns}的叉积覆写；
 这保证{\ttfamily ss}和{\ttfamily ts}的叉积是{\ttfamily ns}。

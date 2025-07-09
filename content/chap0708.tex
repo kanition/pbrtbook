@@ -131,7 +131,7 @@ virtual `\refvar{Float}{}` `\initvar[Filter::Evaluate]{Evaluate}{}`(const `\refv
 \end{lstlisting}
 
 \subsubsection*{矩形滤波器}
-图形学中最常用的滤波器之一是\keyindex{矩形滤波器}{box filter}{filter滤波器}
+图形学中最常用的滤波器之一是\keyindex{矩形滤波器}{box filter}{filter\ 滤波器}
 （且实际上当没有明确解决滤波和重建时，矩形滤波器就是\emph{事实上}的结果）。
 矩形滤波器对图像的一个方形区域内的所有样本等值赋权。
 尽管计算很高效，但它可能是最差的滤波器。
@@ -182,7 +182,7 @@ public:
 \end{lstlisting}
 
 \subsubsection*{三角滤波器}
-\keyindex{三角滤波器}{triangle filter}{filter滤波器}给出了比矩形稍好的结果：在滤波器的方形范围上权重从滤波器中心起线性下降。
+\keyindex{三角滤波器}{triangle filter}{filter\ 滤波器}给出了比矩形稍好的结果：在滤波器的方形范围上权重从滤波器中心起线性下降。
 参见\reffig{7.41}(b)的三角滤波器图示。
 \begin{lstlisting}
 `\initcode{TriangleFilter Declarations}{=}`
@@ -203,7 +203,7 @@ public:
 \end{lstlisting}
 
 \subsubsection*{高斯滤波器}
-不像矩形和三角滤波器那样，\keyindex{高斯滤波器}{Gaussian filter}{filter滤波器}在实践中给出了较好的结果。
+不像矩形和三角滤波器那样，\keyindex{高斯滤波器}{Gaussian filter}{filter\ 滤波器}在实践中给出了较好的结果。
 该滤波器应用了中心在像素处且绕其径向对称的高斯凸块。
 高斯从滤波器值中减去了它在范围末端的值，
 好让滤波器在其界限处变为0（\reffig{7.43}）。

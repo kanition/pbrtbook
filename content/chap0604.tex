@@ -4,11 +4,11 @@
 \end{remark}
 
 薄透镜模型使得能渲染因景深而模糊的图像，
-但它只是对多个\keyindex{透镜元件}{lens element}{lens透镜}构成的
+但它只是对多个\keyindex{透镜元件}{lens element}{lens\ 透镜}构成的
 真实相机透镜系统非常粗糙的近似，而每个透镜元件都会改变穿过它的辐射分布
 （\reffig{6.15}展示了具有8个元件的22mm焦距\keyindex{广角}{wide-angle}{}镜头横截面）。
 即使基本的手机相机也趋于有五个左右独立的透镜元件，
-而\keyindex{数码单镜头反光相机}{digital single-lens reflex camera}{camera相机}
+而\keyindex{数码单镜头反光相机}{digital single-lens reflex camera}{camera\ 相机}
 (数码单反相机，DSLR)镜头可能有十个或更多。
 通常，具备更大数量透镜元件的更复杂透镜系统能
 比更简单的透镜系统创建更高质量的图像。
@@ -364,7 +364,7 @@ rLens.`\refvar[Ray::o]{o}{}` = pHit;
 处于同一种介质中则这种效应会抵消掉——这里都是空气）。
 函数\refvar{Refract}{()}定义在\refsub{镜面透射}；
 注意它预设入射方向指向远离曲面的方向，所以传入前要对光线方向取反。
-该函数在出现\keyindex{全内反射}{total internal reflection}{reflection反射}时
+该函数在出现\keyindex{全内反射}{total internal reflection}{reflection\ 反射}时
 返回{\ttfamily false}，该情况下光路终止。
 否则在{\ttfamily w}中返回折射方向。
 
@@ -416,7 +416,7 @@ bool `\initvar{TraceLensesFromScene}{}`(const `\refvar{Ray}{}` &rCamera, `\refva
 如果经由一个理想透镜系统追踪平行于光轴的光线，
 则所有这些光线将会交于光轴上同一点——这就是焦点
 （实际中，真实透镜系统并不绝对理想，不同高度的入射光线
-与光轴将相交于一个$z$值小范围——这就是\keyindex{球面像差}{spherical aberration}{aberration像差}）。
+与光轴将相交于一个$z$值小范围——这就是\keyindex{球面像差}{spherical aberration}{aberration\ 像差}）。
 有了特定的透镜系统，我们就能从每一侧追踪穿过它且与光轴平行的光线，
 并计算它们与$z$轴的相交处以找到焦点（见\reffig{6.20}）。
 \begin{figure}[htbp]
@@ -563,9 +563,9 @@ rFilm = `\refvar{Ray}{}`(`\refvar{Point3f}{}`(x, 0, `\refvar{LensRearZ}{}`() - 1
 不是所有从胶片平面上给定点起始朝向尾部透镜元件的光线都能成功射出透镜系统；
 一些会被光圈阻挡或者与透镜系统外壳相交。
 反过来，尾部透镜元件上不是所有点都能把辐射传输到胶片上的点。
-尾部元件上确实能带着光通过透镜系统的点集称为\keyindex{出射光瞳}{exit pupil}{pupil光瞳}；
+尾部元件上确实能带着光通过透镜系统的点集称为\keyindex{出射光瞳}{exit pupil}{pupil\ 光瞳}；
 它的尺寸和位置随着胶片平面上的视点变化
-（类似地，\keyindex{入射光瞳}{entrance pupil}{pupil光瞳}是场景中给定点起始
+（类似地，\keyindex{入射光瞳}{entrance pupil}{pupil\ 光瞳}是场景中给定点起始
 且能到达胶片的光线所穿过的前端透镜元件区域）
 \sidenote{译者注：这和后文补充材料\refsub{光圈}中对出射光瞳与入射光瞳的定义有一些出入，请读者酌情采信。}。
 

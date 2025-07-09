@@ -39,7 +39,7 @@
             以及再辐射\sidenote{译者注：原文reradiated。}（或散射\sidenote{译者注：原文scattered。}）光的性质。
             表面散射模型是典型的参数化模型，
             因此可以模拟各种外观。
-      \item \keyindex{间接光传输}{indirect light transport}{light transport光传输}\sidenote{译者注：这里把transport译作“传输”是为了
+      \item \keyindex{间接光传输}{indirect light transport}{light transport\ 光传输}\sidenote{译者注：这里把transport译作“传输”是为了
                   与下一段propagation译作“传播”区分开，但个人理解似乎就是“传播”的意思。}：因为
             光在一个物体上反射或折射后可能遇到另一个物体，
             所以通常有必要追踪从表面发出的额外光线来捕捉这种效应。
@@ -61,7 +61,7 @@
 几乎每个人都用过\keyindex{相机}{camera}{}，熟悉它的基本功能：
 你想用一张图像记下世界（通常是按按钮或点击屏幕），
 然后图像就被记录到\keyindex{胶片}{film}{}或电子传感器上。
-\keyindex{针孔相机}{pinhole camera}{camera相机}是最简单的拍照设备之一。
+\keyindex{针孔相机}{pinhole camera}{camera\ 相机}是最简单的拍照设备之一。
 它由一端打有小孔的遮光盒组成（\reffig{1.1}）。
 当针孔未被遮挡时，光射进针孔落到固定在盒子另一端的相纸上。
 虽然它很简单，但这种相机至今仍在使用，常用于艺术目的。
@@ -103,9 +103,9 @@
 
 因此，相机仿真器的重要任务是取图像上一点
 并生成\keyindex{射线}{ray}{}，
-沿这些射线的\keyindex{入射光}{incident light}{light光}可作用于该图像位置。
-因为射线由一个\keyindex{端点}{origin point}{point点}和
-一个\keyindex{方向向量}{direction vector}{vector向量}组成，
+沿这些射线的\keyindex{入射光}{incident light}{light\ 光}可作用于该图像位置。
+因为射线由一个\keyindex{端点}{origin point}{point\ 点}和
+一个\keyindex{方向向量}{direction vector}{vector\ 向量}组成，
 所以该任务对\reffig{1.2}的针孔相机而言很简单：
 它把针孔作为端点，
 把从针孔到像平面\sidenote{译者注：原文near plane，按
@@ -121,7 +121,7 @@
 相机每次生成射线时，
 渲染器第一个任务就是确定
 如果有的话，哪个物体和该射线最先在哪里\keyindex{相交}{intersect}{}。
-该\keyindex{交点}{intersection point}{point点}是沿射线可见的，
+该\keyindex{交点}{intersection point}{point\ 点}是沿射线可见的，
 我们想要模拟光在该点与物体的相互作用。
 为了找到相交处，我们必须把场景中的所有物体拿来和该射线测试，
 并选出与该射线首先相交的那个。
@@ -133,10 +133,10 @@
 我们可以通过指定参数$t$的值并代入上式求得射线上的一点。
 
 通常很容易寻找射线${\bm r}$和由隐函数$F(x,y,z)=0$定义的\keyindex{曲面}{surface}{}的交点。
-首先把射线方程代入\keyindex{隐式方程}{implicit equation}{equation方程}，
+首先把射线方程代入\keyindex{隐式方程}{implicit equation}{equation\ 方程}，
 得到只含有参数$t$的新方程。
 然后从中解出$t$并把最小正根代入射线方程得到所需的点。
-例如，以\keyindex{原点}{origin}{point点}为球心，$r$为\keyindex{半径}{radius}{}的\keyindex{球}{sphere}{}的隐式方程是
+例如，以\keyindex{原点}{origin}{point\ 点}为球心，$r$为\keyindex{半径}{radius}{}的\keyindex{球}{sphere}{}的隐式方程是
 \begin{align*}
       x^2+y^2+z^2-r^2=0\, .
 \end{align*}
@@ -156,7 +156,7 @@
 例如，曲面\keyindex{法线}{normal}{}${\bm n}$是必需的。
 虽然许多光线追踪器只对${\bm n}$操作，
 但像pbrt这类更复杂的渲染系统还需要更多信息，
-比如位置的各个\keyindex{偏导数}{partial derivative}{derivative导数}以及
+比如位置的各个\keyindex{偏导数}{partial derivative}{derivative\ 导数}以及
 关于曲面局部参数化的曲面法线。
 
 当然，绝大多数场景含有多个物体。
@@ -189,11 +189,11 @@ pbrt为各种形状实现的几何接口将在第\refchap{形状}介绍，
 回想我们的最终目标是找出从该点出发朝相机方向传播的光量。
 为此需要知道有多少光\emph{到达}了该点。
 这同时涉及到场景中光的\emph{几何}和\emph{辐射}分布。
-对于非常简单的光源（例如\keyindex{点光源}{point light}{light source光源}），
-光的\keyindex{几何分布}{geometric distribution}{distribution分布}只需
+对于非常简单的光源（例如\keyindex{点光源}{point light}{light source\ 光源}），
+光的\keyindex{几何分布}{geometric distribution}{distribution\ 分布}只需
 知道光源位置即可。
 然而真实世界并不存在点光源，
-所以基于物理的光照常基于\keyindex{面光源}{area light source}{light source光源}。
+所以基于物理的光照常基于\keyindex{面光源}{area light source}{light source\ 光源}。
 这意味着光源和表面发光的几何体关联。
 但本节我们用点光源说明光分布的构成；
 光度量和分布的严格讨论是第\refchap{颜色和辐射度学}和第\refchap{光源}的主题。
@@ -258,7 +258,7 @@ $\mathrm{d}E$为
 幸运的是，在光线追踪器中很容易确定光对于着色点是否可见。
 我们简单构造一条新射线，
 其端点是表面上的点，方向指向光源。
-这种特殊射线称为\keyindex{阴影射线}{shadow ray}{ray射线}。
+这种特殊射线称为\keyindex{阴影射线}{shadow ray}{ray\ 射线}。
 如果追踪这些射线穿过环境，
 我们就能检查在射线原点与光源之间能否找到相交处，
 方法是沿射线方向比较相交处和光源位置的相应参数值$t$.
@@ -297,7 +297,7 @@ for each light:
 在光度量中它用的单位和前面的$\mathrm{d}E$有一点不同。
 $L$即\keyindex{辐射亮度}{radiance}{}，是后文经常见到的光度量指标。
 
-很容易从BRDF的表示推广到\keyindex{透射光}{transmitted light}{light光}
+很容易从BRDF的表示推广到\keyindex{透射光}{transmitted light}{light\ 光}
 （得到BTDF），或者得到到达表面任意一侧的光的一般散射。
 描述一般散射的函数称作\keyindex{双向散射分布函数}{bidirectional scattering distribution function}{}(BSDF)。
 pbrt支持各种BSDF模型；它们将于第\refchap{反射模型}介绍。
@@ -309,7 +309,7 @@ BSSRDF将在\refsub{BSSRDF}、\refsec{BSSRDF}和\refsec{使用扩散方程的次
 
 \citet{10.1145/358876.358882}在关于光线追踪
 的原文中强调了其递归性质
-是在渲染图像中引入间接\keyindex{镜面反射}{specular reflection}{reflection反射}与\keyindex{透射}{transmission}{}的关键。
+是在渲染图像中引入间接\keyindex{镜面反射}{specular reflection}{reflection\ 反射}与\keyindex{透射}{transmission}{}的关键。
 例如，如果来自相机的射线命中像镜子那样光滑的物体，
 我们可以在交点处以曲面法线为对称轴反射该射线，
 递归调用光线追踪程序找到到达镜面上该点的的光，
@@ -334,8 +334,8 @@ BSSRDF将在\refsub{BSSRDF}、\refsec{BSSRDF}和\refsec{使用扩散方程的次
 通常，从物体上一点到达相机的光量
 \sidenote{译者注：此处指辐亮度。}
 由物体的发光量（如果它自己就是光源）与反射光量之和决定。
-它被形式化为\keyindex{光传输方程}{light transport equation}{light transport光传输}
-（也称作\keyindex{渲染方程}{rendering equation}{render渲染}），
+它被形式化为\keyindex{光传输方程}{light transport equation}{light transport\ 光传输}
+（也称作\keyindex{渲染方程}{rendering equation}{render\ 渲染}），
 表示从点$\bm p$沿方向${\bm \omega}_\mathrm{o}$的
 出射辐亮度$L_{\mathrm{o}}({\bm p},{\bm \omega}_\mathrm{o})$等于
 该点沿该方向的发光亮度加上
@@ -358,15 +358,15 @@ Whitted算法通过忽略绝大多数方向的入射光来简化积分，
 换句话说，它把积分变为少量方向上的求和。
 
 Whitted的方法可以扩展到实现镜面和玻璃外的更多效果。
-例如，追踪许多贴近\keyindex{镜面反射}{mirror reflection}{reflection反射}方向
+例如，追踪许多贴近\keyindex{镜面反射}{mirror reflection}{reflection\ 反射}方向
 的递归光线并平均它们的作用，
-可以近似得到\keyindex{光泽反射}{glossy reflection}{reflection反射}。
+可以近似得到\keyindex{光泽反射}{glossy reflection}{reflection\ 反射}。
 事实上只要命中物体我们就\emph{一直}递归地追踪光线。
 例如，随机选取反射方向${\bm \omega}_\mathrm{i}$并
 计算BRDF$f_{\mathrm{r}}({\bm p},{\bm \omega}_\mathrm{o},{\bm \omega}_\mathrm{i})$对
 这条新建光线赋权。
 这个简单有效的办法可以得到非常逼真的图像，
-因为它考虑了物体间的光所有的\keyindex{互反射}{interreflection}{reflection反射}。
+因为它考虑了物体间的光所有的\keyindex{互反射}{interreflection}{reflection\ 反射}。
 当然，我们需要知道何时停止递归，
 何况完全随机选取方向会让渲染算法收敛到合理结果的速度变慢。
 但是这些问题是可以解决的；
@@ -416,7 +416,7 @@ Whitted的方法可以扩展到实现镜面和玻璃外的更多效果。
 
 介质也可以沿路线增强光。
 在介质发光（例如火焰）或从其他方向把光散射回该射线时可发生该现象（\reffig{1.10}）。
-可以通过数值计算\keyindex{体积光传输方程}{volume light transport equation}{light transport光传输}来寻求该量，
+可以通过数值计算\keyindex{体积光传输方程}{volume light transport equation}{light transport\ 光传输}来寻求该量，
 该方法还能计算光传输方程求得从表面反射回的光量。
 介质的描述和体积渲染会留到第\refchap{体积散射}和\refchap{光传输II：体积渲染}。
 现在我们就能计算介质效应并将其合并到光线所含的光量中了。

@@ -25,7 +25,7 @@
     \citet{GLASSNER1995}的第3章很好地处理了非理想显示设备
     及其对图像采样和重建过程的影响。}。
 
-因为采样和重建过程涉及估值，所以它引入了称作\keyindex{混叠}{aliasing}{alias混叠}的误差，
+因为采样和重建过程涉及估值，所以它引入了称作\keyindex{混叠}{aliasing}{alias\ 混叠}的误差，
 并会以许多方式表现出来，包括锯齿状边缘或动画中的闪烁。
 产生这些误差的原因是采样过程不能捕获来自连续定义的图像函数的全部信息。
 
@@ -315,7 +315,7 @@ shah函数$III_T(x)$定义为
 当该新频谱乘以矩形函数后，结果是相似但不等于原始$F(\omega)$的频谱：
 原始信号的高频细节渗入到重建信号频谱的低频区域。
 这些新的低频伪影称作\keyindex{混叠}{alias}{}（因为高频“伪装”成低频），
-得到的信号被称是\keyindex{混叠的}{aliased}{alias混叠}。
+得到的信号被称是\keyindex{混叠的}{aliased}{alias\ 混叠}。
 \begin{figure}
     \centering
     \subfloat[]{\includegraphics[width=0.4\linewidth]{chap07/freq-space-overlap.eps}}\,
@@ -340,7 +340,7 @@ shah函数$III_T(x)$定义为
 直到频谱的副本隔得足够远而不再重叠，进而完全消除混叠。
 事实上，\keyindex{采样定理}{sampling theorem}{}准确告诉我们所需的采样率。
 该定理说只要均匀样本点的频率$\omega_s$大于信号中出现的最大频率$\omega_0$的两倍，
-就能从样本中完美重建原始信号。该最小采样频率称为\keyindex{奈奎斯特频率}{Nyquist frequency}{frequency频率}
+就能从样本中完美重建原始信号。该最小采样频率称为\keyindex{奈奎斯特频率}{Nyquist frequency}{frequency\ 频率}
 \sidenote{译者注：哈里·奈奎斯特（Harry Nyquist），19至20世纪瑞典裔美国著名物理学家，通讯理论的奠基者之一。}。
 
 对于非带限信号（$\omega_0=\infty$），不可能以足够高的采样率执行完美重建。
@@ -352,8 +352,8 @@ shah函数$III_T(x)$定义为
 
 \subsection{抗锯齿技术}\label{sub:抗锯齿技术}
 如果不仔细对待采样和重建，则最终图像中可能出现大量伪影。
-有时区分采样伪影与重建伪影很有用；确切地说，我们会称采样伪影为\keyindex{预混叠}{prealiasing}{alias混叠}，
-称重建伪影为\keyindex{后混叠}{postaliasing}{alias混叠}。任意想要修正这些误差的尝试都
+有时区分采样伪影与重建伪影很有用；确切地说，我们会称采样伪影为\keyindex{预混叠}{prealiasing}{alias\ 混叠}，
+称重建伪影为\keyindex{后混叠}{postaliasing}{alias\ 混叠}。任意想要修正这些误差的尝试都
 大体划分为\keyindex{抗锯齿}{antialiasing}{}\sidenote{译者注：也称反混叠。}。
 本节将回顾除了只增加采样率外的大量抗锯齿技术。
 
@@ -466,7 +466,7 @@ shah函数$III_T(x)$定义为
 
 混叠的另一个来源可能来自物体上的纹理和材质。没有被正确滤波的纹理贴图
 （解决该问题是第\refchap{纹理}的主要内容）或光泽表面的小高光
-可能造成\keyindex{着色混叠}{shading aliasing}{alias混叠}。
+可能造成\keyindex{着色混叠}{shading aliasing}{alias\ 混叠}。
 如果采样率没有高到足以充分采样这些特征，则会导致混叠。
 此外，一个物体投射的尖锐阴影会在最终图像中引入另一个阶跃函数。
 尽管有可能从图像平面上的几何边来辨别阶跃函数的位置，

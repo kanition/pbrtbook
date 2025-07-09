@@ -7,14 +7,14 @@
 但为了更高效地渲染这类物体，拥有专门的\refvar{Shape}{}是值得的，
 因为经常出现它们的许多实例。
 本节介绍的\refvar{Curve}{}形状即表示
-用\keyindex{三次贝塞尔样条}{cubic Bézier spline}{spline样条}建模的细小几何体，
+用\keyindex{三次贝塞尔样条}{cubic Bézier spline}{spline\ 样条}建模的细小几何体，
 它由四个控制点$\bm p_0,\bm p_1,\bm p_2$和$\bm p_3$定义。
 贝塞尔样条穿过第一个和最后一个控制点；
 中间点由多项式给出（见\reffig{3.15}）
 \begin{align}\label{eq:3.3}
     \bm p(u)=(1-u)^3\bm p_0+3(1-u)^2u\bm p_1+3(1-u)u^2\bm p_2+u^3\bm p_3\, .
 \end{align}
-给定在其他三次基中指定的曲线，例如\keyindex{Hermite样条}{Hermite spline}{spline样条}
+给定在其他三次基中指定的曲线，例如\keyindex{Hermite样条}{Hermite spline}{spline\ 样条}
 \sidenote{译者注：三次Hermite样条
     形如$\bm p(u)=(2u^3-3u^2+1)\bm p_0+(u^3-2u^2+t)\bm m_0+(-2u^3+3u^2)\bm p_1+(u^3-u^2)\bm m_1$，
     其中$\bm p_i$是起点和终点，$\bm m_i$是起点和终点处的切向量，$u\in[0,1]$.}，
@@ -154,7 +154,7 @@ struct `\initvar{CurveCommon}{}` {
 };
 \end{lstlisting}
 
-\refvar{Curve}{}的边界框可通过利用\keyindex{凸包性质}{convex hull property}{convex hull凸包}计算，
+\refvar{Curve}{}的边界框可通过利用\keyindex{凸包性质}{convex hull property}{convex hull\ 凸包}计算，
 这是贝塞尔曲线的性质，即它们一定位于其控制点的\keyindex{凸包}{convex hull}{}内
 \sidenote{译者注：在实数向量空间中，对于给定集合$X$，
 所有包含$X$的凸集的交集$S$称为$X$的凸包，

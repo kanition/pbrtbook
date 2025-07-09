@@ -390,8 +390,8 @@ cosKPhi = cosKPlusOnePhi;
 \end{lstlisting}
 
 \subsection{样条插值}\label{sub:样条插值}
-最后要解释的细节是用于重建系数$a_k$的基于样条的插值是如何起作用的。
-这里的实现使用\keyindex{Catmull-Rom样条}{Catmull-Rom spline}{spline样条}，
+最后要解释的细节是用于重建系数$a_k$的\keyindex{基于样条的插值}{spline-based interpolation}{interpolation\ 插值}是如何起作用的。
+这里的实现使用\keyindex{Catmull-Rom样条}{Catmull-Rom spline}{spline\ 样条}，
 它在一维上可以表示为四个控制点的加权和，
 所用的权重和特定控制点取决于计算它的值时在曲线路径上的参数化位置。
 样条会穿过给定控制点并沿路径走出相当光滑的曲线。
@@ -480,4 +480,82 @@ if (!(x >= nodes[0] && x <= nodes[size-1]))
 \end{lstlisting}
 
 辅助函数\refvar{FindInterval}{()}通过二分搜索高效地定位包含{\ttfamily x}的区间。
-有了这一结果，我们现在可以
+有了这一结果，我们现在可以把{\ttfamily *offset}返回值设为节点$x_{i-1}$的索引
+并设定变量{\ttfamily x0}和{\ttfamily x1}以划分相应样条段的定义域范围。
+
+注意计算\refeq{8.27}时该偏移量可能造成数组访问出界
+（具体来说，在偏移量处在数组{\ttfamily nodes}的起始点之前的情况下，
+当{\ttfamily idx == 0}时，或者当{\ttfamily idx}等于数组大小减一时）。
+这些情况下，对于任何出界项，对应的插值权重都将永远设为零。
+因此pbrt中使用这些权重的代码都是仔细写成的，对于任何权重为零的索引都绝不会去访问函数值数组。
+\begin{lstlisting}
+`\initcode{Search for the interval idx containing x}{=}`
+int idx = `\refvar{FindInterval}{}`(size, [&](int i) { return nodes[i] <= x; });
+*offset = idx - 1;
+`\refvar{Float}{}` x0 = nodes[idx], x1 = nodes[idx+1];
+\end{lstlisting}
+
+因为我们对样条的推导假设了单位区间，所以这里的代码中我们将定义$[0,1]$内的缩放变量{\ttfamily t}。
+预先计算{\ttfamily t}的一些整数次幂也会有用。
+\begin{lstlisting}
+`\initcode{Compute the $t$ parameter and powers}{=}`
+`\refvar{Float}{}` t = (x - x0) / (x1 - x0), t2 = t * t, t3 = t2 * t;
+\end{lstlisting}
+实现开始于用\refeq{8.28}的结果初始化第二个和第三个权重$w_1$和$w_2$.
+一开始只包含括号里面的项。
+\begin{lstlisting}
+`\initcode{Compute initial node weights $w_1$ and $w_2$}{=}`
+weights[1] =  2 * t3 - 3 * t2 + 1;
+weights[2] = -2 * t3 + 3 * t2;
+\end{lstlisting}
+
+由\refeq{8.28}计算权重$w_0$和$w_3$含有两个重要的细节。
+首先，我们需要引入缩放因子{\ttfamily x1-x0}，
+当我们实际上想要对函数原始参数求导时，
+该因子校正了这里代码所用的值{\ttfamily t}包含了对单位区间的重新缩放的事实。
+
+其次，有必要处理边界条件：通常情况是{\ttfamily idx > 0}且存在上一个邻居；
+这种情况下，{\ttfamily weights[0]}可被直接初始化，
+项$w_0$可以被加到{\ttfamily weights[2]}以完成初始化。
+如果没有上一个邻居，则导数$f'(x_0)$换成用前向差分$f(x_1)-f(x_0)$来估计。
+这种情况下，可以像\refeq{8.28}中求取权重那样遵循相似的代数处理；这里使用其结果。
+\begin{lstlisting}
+`\initcode{Compute first node weight $w_0$}{=}`
+if (idx > 0) {
+    `\refvar{Float}{}` w0 = (t3 - 2 * t2 + t) * (x1 - x0) / (x1 - nodes[idx - 1]);
+    weights[0]  = -w0;
+    weights[2] +=  w0;
+} else {
+    `\refvar{Float}{}` w0 = t3 - 2 * t2 + t;
+    weights[0]  = 0;
+    weights[1] -= w0;
+    weights[2] += w0;
+}
+\end{lstlisting}
+
+$w_3$的计算步骤类似，所以这里不再介绍实现函数该部分的代码片\refcode{Compute last node weight $w_3$}{}了
+\sidenote{译者注：笔者补充回来了。}。
+\begin{lstlisting}
+`\initcode{Compute last node weight $w_3$}{=}`
+if (idx+2 < size) {
+    `\refvar{Float}{}` w3 = (t3 - t2) * (x1 - x0) / (nodes[idx+2] - x0);
+    weights[1] -= w3;
+    weights[3] = w3;
+} else {
+    `\refvar{Float}{}` w3 = t3 - t2;
+    weights[1] -= w3;
+    weights[2] += w3; 
+    weights[3]  = 0;
+}
+\end{lstlisting}
+
+有了该机制，我们现在可以定义方法\refvar{FourierBSDFTable::GetWeightsAndOffset}{()}
+的实现了\sidenote{译者注：原书此处方法名有拼写错误，已修正。}，
+它只需调用\refvar{CatmullRomWeights}{()}，传入采样的数组\refvar[FourierBSDFTable::mu]{mu}{}。
+\begin{lstlisting}
+`\refcode{BxDF Method Definitions}{+=}\lastnext{BxDFMethodDefinitions}`
+bool `\refvar{FourierBSDFTable}{}`::`\initvar[FourierBSDFTable::GetWeightsAndOffset]{GetWeightsAndOffset}{}`(`\refvar{Float}{}` cosTheta, int *offset,
+                                           `\refvar{Float}{}` weights[4]) const {
+    return `\refvar{CatmullRomWeights}{}`(`\refvar[FourierBSDFTable::nMu]{nMu}{}`, `\refvar[FourierBSDFTable::mu]{mu}{}`, cosTheta, offset, weights);
+}
+\end{lstlisting}

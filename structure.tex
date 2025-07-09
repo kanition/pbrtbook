@@ -105,9 +105,10 @@
 \DefineBibliographyStrings{english}{andothers={\ifcitation{等}{ et al.}}}
 \usepackage{calc} % For simpler calculation - used for spacing the index letter headings correctly
 \usepackage{makeidx} % Required to make an index
+\usepackage[columns=1]{idxlayout} % Set one column for makeindex
 \makeindex % Tells LaTeX to create the files required for indexing
 \usepackage{xifthen} % provides \isempty test
-\newcommand\keyindex[3]{\ifthenelse{\isempty{#1}}{}{\ifthenelse{\isempty{#2}}{\ifthenelse{\isempty{#3}}{{\sffamily#1}}{{\sffamily#1}\index{#3!#1}}}{\ifthenelse{\isempty{#3}}{{\sffamily#1}(#2)\index{#2#1}}{{\sffamily#1}(#2)\index{#3!#2#1}}}}}
+\newcommand\keyindex[3]{\ifthenelse{\isempty{#1}}{}{\ifthenelse{\isempty{#2}}{\ifthenelse{\isempty{#3}}{{\sffamily#1}}{{\sffamily#1}\index{#3!#1}}}{\ifthenelse{\isempty{#3}}{{\sffamily#1}(#2)\index{#2\ #1}}{{\sffamily#1}(#2)\index{#3!#2\ #1}}}}}
 
 %----------------------------------------------------------------------------------------
 %	MAIN TABLE OF CONTENTS

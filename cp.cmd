@@ -1,4 +1,5 @@
 echo branch: > ./ver_info.txt
+git describe --tags --abbrev=0
 git rev-parse --abbrev-ref HEAD >> ./ver_info.txt
 echo \quad commit: >> ./ver_info.txt
 git rev-parse HEAD >> ./ver_info.txt

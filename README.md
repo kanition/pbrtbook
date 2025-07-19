@@ -6,7 +6,7 @@
 [![](https://img.shields.io/github/release-date-pre/kanition/pbrtbook?color=yellow&label=最新发布时间&style=flat-square)](https://github.com/kanition/pbrtbook/releases/latest)
 [<a rel="license" href="#许可协议"><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1" alt=""><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1" alt=""><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/nc.svg?ref=chooser-v1" alt=""><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/sa.svg?ref=chooser-v1" alt="">](#许可证)
 [![Contributor Covenant Badge](https://img.shields.io/badge/%E8%B4%A1%E7%8C%AE%E8%80%85%E5%85%AC%E7%BA%A6-5E0D73?logo=contributorcovenant&logoColor=fff&style=flat-square)](CODE_OF_CONDUCT.md)
-# [**下载本书**](https://github.com/kanition/pbrtbook/releases) | [翻译进度](https://github.com/users/kanition/projects/4) | [你问我答](https://github.com/kanition/pbrtbook/discussions?discussions_q=) | [我要报错](https://github.com/kanition/pbrtbook/issues/new/choose) | [编译指南](./CONTRIBUTING.md) | [文献求助](https://github.com/kanition/pbrtbook/discussions/41) | [耻辱柱](#耻辱柱)
+# [**下载本书**](https://github.com/kanition/pbrtbook/releases/download/v0.7.2/pbrtbook-v0.7.2.pdf) | [翻译进度](https://github.com/users/kanition/projects/4) | [更新日志](https://github.com/kanition/pbrtbook/releases) | [你问我答](https://github.com/kanition/pbrtbook/discussions?discussions_q=) | [我要报错](https://github.com/kanition/pbrtbook/issues/new/choose) | [编译指南](./CONTRIBUTING.md) | [文献求助](https://github.com/kanition/pbrtbook/discussions/41) | [耻辱柱](#耻辱柱)
 
 ![Landscape view-3 @pbrt-v3-scenes/landscape](Pictures/title.png)
 
@@ -56,7 +56,7 @@
 | 6.7    | 几何光学                   |
 | 7.12   | 傅里叶变换                 |
 | 7.13   | 初等数论基础               |
-| 8.8    | 微面模型相关推导（进行中） |
+| 8.9    | 微面模型相关推导（进行中） |
 
 ## 许可协议
 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans"><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1" alt=""><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1" alt=""><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/nc.svg?ref=chooser-v1" alt=""><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/sa.svg?ref=chooser-v1" alt=""></a><br />本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans">知识共享署名—非商业性使用—相同方式共享4.0国际公共许可协议</a>进行许可。

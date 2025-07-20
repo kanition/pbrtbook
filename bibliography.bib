@@ -6323,6 +6323,198 @@
   numpages   = {10},
   keywords   = {appearance modeling, cloth, volume rendering}
 }
+
+@inproceedings{10.1007/978-3-7091-6453-2_2,
+  author    = {Rusinkiewicz, Szymon M.},
+  editor    = {Drettakis, George and Max, Nelson},
+  title     = {A New Change of Variables for Efficient BRDF Representation},
+  booktitle = {Eurographics Workshop on Rendering},
+  year      = {1998},
+  publisher = {Springer Vienna},
+  address   = {Vienna},
+  pages     = {11-22},
+  abstract  = {We describe an idea for making decomposition of Bidirectional Reflectance Distribution Functions into basis functions more efficient, by performing a change-of-variables transformation on the BRDFs. In particular, we propose a reparameterization of the BRDF as a function of the halfangle (i.e. the angle halfway between the directions of incidence and reflection) and a difference angle instead of the usual parameterization in terms of angles of incidence and reflection. Because features in common BRDFs, including specular and retroreflective peaks, are aligned with the transformed coordinate axes, the change of basis reduces storage requirements for a large class of BRDFs. We present results derived from analytic BRDFs and measured data.},
+  isbn      = {978-3-7091-6453-2},
+  url       = {https://www.cs.princeton.edu/~smr/papers/brdf_change_of_variables/}
+}
+
+@article{1388224,
+  author   = {Stark, Michael M. and Arvo, James and Smits, Brian},
+  journal  = {IEEE Transactions on Visualization and Computer Graphics},
+  title    = {Barycentric parameterizations for isotropic BRDFs},
+  year     = {2005},
+  volume   = {11},
+  number   = {2},
+  pages    = {126-138},
+  keywords = {Optical reflection;Bidirectional control;Coordinate measuring machines;Image generation;Solids;Distribution functions;Approximation error;Analytical models;Performance evaluation;Data visualization;Index Terms- Computer graphics;picture/image generation;display algorithms;color;shading;shadowing;and texture;reflectance.},
+  doi      = {10.1109/TVCG.2005.26}
+}
+
+@phdthesis{Marschner1998,
+  author = {Marschner, Stephen Robert},
+  school = {Cornell University},
+  title  = {Inverse rendering for computer graphics},
+  year   = {1998},
+  month  = {8},
+  url    = {https://www.cs.cornell.edu/~srm/thesis}
+}
+
+@inproceedings{ngan:brdfanalysis:egsr2005,
+  author    = {Addy Ngan and Fr\'edo Durand and Wojciech Matusik},
+  title     = {Experimental Analysis of BRDF Models},
+  booktitle = {Proceedings of the Eurographics Symposium on Rendering},
+  year      = {2005},
+  location  = {Konstanz, Germany},
+  publisher = {Eurographics Association},
+  pages     = {117-226},
+  url       = {https://people.csail.mit.edu/addy/research/brdf/index.html}
+}
+
+@article{10.1145/1122501.1122502,
+  author     = {Edwards, Dave and Boulos, Solomon and Johnson, Jared and Shirley, Peter and Ashikhmin, Michael and Stark, Michael and Wyman, Chris},
+  title      = {The halfway vector disk for BRDF modeling},
+  year       = {2006},
+  issue_date = {January 2006},
+  publisher  = {Association for Computing Machinery},
+  address    = {New York, NY, USA},
+  volume     = {25},
+  number     = {1},
+  issn       = {0730-0301},
+  doi        = {10.1145/1122501.1122502},
+  abstract   = {We present a mathematical framework for enforcing energy conservation in a bidirectional reflectance distribution function (BRDF) by specifying halfway vector distributions in simple two-dimensional domains. Energy-conserving BRDFs can produce plausible rendered images with accurate reflectance behavior, especially near grazing angles. Using our framework, we create an empirical BRDF that allows easy specification of diffuse, specular, and retroreflective materials. We also present a second BRDF model that is useful for data fitting; although it does not preserve energy, it uses the same halfway vector domain as the first model. We show that this data-fitting BRDF can be used to match measured data extremely well using only a small set of parameters. We believe that this is an improvement over table-based lookups and factored versions of BRDF data.},
+  journal    = {ACM Trans. Graph.},
+  month      = {1},
+  pages      = {1-18},
+  numpages   = {18},
+  keywords   = {global illumination, Monte Carlo, BRDF}
+}
+
+@inproceedings{10.5555/2383654.2383690,
+  author    = {Zickler, Todd and Enrique, Sebastian and Ramamoorthi, Ravi and Belhumeur, Peter},
+  title     = {Reflectance sharing: image-based rendering from a sparse set of images},
+  year      = {2005},
+  publisher = {Eurographics Association},
+  abstract  = {When the shape of an object is known, its appearance is determined by the spatially-varying reflectance function defined on its surface. Image-based rendering methods that use geometry seek to estimate this function from image data. Most existing methods recover a unique angular reflectance function (e.g., BRDF) at each surface point and provide reflectance estimates with high spatial resolution. Their angular accuracy is limited by the number of available images, and as a result, most of these methods focus on capturing parametric or low-frequency angular reflectance effects, or allowing only one of lighting or viewpoint variation. We present an alternative approach that enables an increase in the angular accuracy of a spatially-varying reflectance function in exchange for a decrease in spatial resolution. By framing the problem as scattered-data interpolation in a mixed spatial and angular domain, reflectance information is shared across the surface, exploiting the high spatial resolution that images provide to fill the holes between sparsely observed view and lighting directions. Since the BRDF typically varies slowly from point to point over much of an object's surface, this method enables image-based rendering from a sparse set of images without assuming a parametric reflectance model. In fact, the method can even be applied in the limiting case of a single input image.},
+  booktitle = {Proceedings of the Eurographics Symposium on Rendering},
+  pages     = {253-264},
+  numpages  = {12},
+  location  = {Konstanz, Germany},
+  series    = {EGSR '05},
+  url       = {https://www.eecs.harvard.edu/~zickler/papers/ReflectanceSharing_egsr2005.pdf}
+}
+
+@inproceedings{weistroffer2007efficient,
+  title     = {Efficient basis decomposition for scattered reflectance data},
+  author    = {Weistroffer, Richard Peter and Walcott, Kristen R and Humphreys, Greg and Lawrence, Jason},
+  booktitle = {Proceedings of the Eurographics Symposium on Rendering},
+  pages     = {207-218},
+  year      = {2007},
+  url       = {https://jasonlawrence.info/assets/pdf/efficient_basis_decomp.pdf}
+}
+
+@inproceedings{10.1145/1399504.1360640,
+  author    = {Wang, Jiaping and Zhao, Shuang and Tong, Xin and Snyder, John and Guo, Baining},
+  title     = {Modeling anisotropic surface reflectance with example-based microfacet synthesis},
+  year      = {2008},
+  isbn      = {9781450301121},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  doi       = {10.1145/1399504.1360640},
+  abstract  = {We present a new technique for the visual modeling of spatiallyvarying anisotropic reflectance using data captured from a single view. Reflectance is represented using a microfacet-based BRDF which tabulates the facets' normal distribution (NDF) as a function of surface location. Data from a single view provides a 2D slice of the 4D BRDF at each surface point from which we fit a partial NDF. The fitted NDF is partial because the single view direction coupled with the set of light directions covers only a portion of the "half-angle" hemisphere. We complete the NDF at each point by applying a novel variant of texture synthesis using similar, overlapping partial NDFs from other points. Our similarity measure allows azimuthal rotation of partial NDFs, under the assumption that reflectance is spatially redundant but the local frame may be arbitrarily oriented. Our system includes a simple acquisition device that collects images over a 2D set of light directions by scanning a linear array of LEDs over a flat sample. Results demonstrate that our approach preserves spatial and directional BRDF details and generates a visually compelling match to measured materials.},
+  booktitle = {ACM SIGGRAPH 2008 Papers},
+  articleno = {41},
+  numpages  = {9},
+  location  = {Los Angeles, California},
+  series    = {SIGGRAPH '08}
+}
+
+@article{6165276,
+  author   = {Pacanowski, Romain and Salazar Celis, Oliver and Schlick, Christophe and Granier, Xavier and Poulin, Pierre and Cuyt, Annie},
+  journal  = {IEEE Transactions on Visualization and Computer Graphics},
+  title    = {Rational BRDF},
+  year     = {2012},
+  volume   = {18},
+  number   = {11},
+  pages    = {1824-1835},
+  keywords = {Monte Carlo methods;Materials;Polynomials;Rendering (computer graphics);Quadratic programming;Mathematical model;BRDF;fitting;importance sampling;Monte-Carlo rendering},
+  doi      = {10.1109/TVCG.2012.73}
+}
+
+@article{10.1111/j.1467-8659.2012.03147.x,
+  author   = {Bagher, Mahdi M. and Soler, Cyril and Holzschuch, Nicolas},
+  title    = {Accurate fitting of measured reflectances using a Shifted Gamma micro-facet distribution},
+  journal  = {Computer Graphics Forum},
+  volume   = {31},
+  number   = {4},
+  pages    = {1509-1518},
+  keywords = {http://www.acm.org/class/1998/ I.3.7 Computer Graphics: Three-Dimensional Graphics and Realism—Color, shading, shadowing, and texture},
+  doi      = {10.1111/j.1467-8659.2012.03147.x},
+  abstract = {Abstract Material models are essential to the production of photo-realistic images. Measured BRDFs provide accurate representation with complex visual appearance, but have larger storage cost. Analytical BRDFs such as Cook-Torrance provide a compact representation but fail to represent the effects we observe with measured appearance. Accurately fitting an analytical BRDF to measured data remains a challenging problem. In this paper we introduce the SGD micro-facet distribution for Cook-Torrance BRDF. This distribution accurately models the behavior of most materials. As a consequence, we accurately represent all measured BRDFs using a single lobe. Our fitting procedure is stable and robust, and does not require manual tweaking of the parameters.},
+  year     = {2012}
+}
+
+@article{10.1145/2601097.2601193,
+  author     = {Brady, Adam and Lawrence, Jason and Peers, Pieter and Weimer, Westley},
+  title      = {genBRDF: discovering new analytic BRDFs with genetic programming},
+  year       = {2014},
+  issue_date = {July 2014},
+  publisher  = {Association for Computing Machinery},
+  address    = {New York, NY, USA},
+  volume     = {33},
+  number     = {4},
+  issn       = {0730-0301},
+  doi        = {10.1145/2601097.2601193},
+  abstract   = {We present a framework for learning new analytic BRDF models through Genetic Programming that we call genBRDF. This approach to reflectance modeling can be seen as an extension of traditional methods that rely either on a phenomenological or empirical process. Our technique augments the human effort involved in deriving mathematical expressions that accurately characterize complex high-dimensional reflectance functions through a large-scale optimization. We present a number of analysis tools and data visualization techniques that are crucial to sifting through the large result sets produced by genBRDF in order to identify fruitful expressions. Additionally, we highlight several new models found by genBRDF that have not previously appeared in the BRDF literature. These new BRDF models are compact and more accurate than current state-of-the-art alternatives.},
+  journal    = {ACM Trans. Graph.},
+  month      = {7},
+  articleno  = {114},
+  numpages   = {11},
+  keywords   = {isotropic, genetic programming, analytic, BRDF}
+}
+
+@article{10.1111/cgf.12675,
+  author   = {Dupuy, Jonathan and Heitz, Eric and Iehl, Jean-Claude and Poulin, Pierre and Ostromoukhov, Victor},
+  title    = {Extracting Microfacet-based BRDF Parameters from Arbitrary Materials with Power Iterations},
+  journal  = {Computer Graphics Forum},
+  volume   = {34},
+  number   = {4},
+  pages    = {21-30},
+  keywords = {Categories and Subject Descriptors (according to ACM CCS), I.3.3 Computer Graphics: Picture/Image Generation—Antialiasing, I.3.7 Computer Graphics: Three-Dimensional Graphics and Realism—Color, shading, shadowing, and texture},
+  doi      = {10.1111/cgf.12675},
+  abstract = {Abstract We introduce a novel fitting procedure that takes as input an arbitrary material, possibly anisotropic, and automatically converts it to a microfacet BRDF. Our algorithm is based on the property that the distribution of microfacets may be retrieved by solving an eigenvector problem that is built solely from backscattering samples. We show that the eigenvector associated to the largest eigenvalue is always the only solution to this problem, and compute it using the power iteration method. This approach is straightforward to implement, much faster to compute, and considerably more robust than solutions based on nonlinear optimizations. In addition, we provide simple conversion procedures of our fits into both Beckmann and GGX roughness parameters, and discuss the advantages of microfacet slope space to make our fits editable. We apply our method to measured materials from two large databases that include anisotropic materials, and demonstrate the benefits of spatially varying roughness on texture mapped geometric models.},
+  year     = {2015}
+}
+
+@inproceedings{10.1145/192161.192246,
+  author    = {Banks, David C.},
+  title     = {Illumination in diverse codimensions},
+  year      = {1994},
+  isbn      = {0897916670},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  doi       = {10.1145/192161.192246},
+  abstract  = {This paper considers an idealized subclass of surface reflectivities; namely a simple superposition of ideal diffuse and ideal specular, restricted to point light sources. The paper derives a model of diffuse and specular illumination in arbitrarily large dimensions, based on a few characteristics of material and light in 3-space. It describes how to adjust for the anomaly of excess brightness in large codimensions. If a surface is grooved or furry, it can be illuminated with a hybrid model that incorporates both the ID geometry (the grooves or fur) and the 2D geometry (the surface).},
+  booktitle = {Proceedings of the 21st Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {327-334},
+  numpages  = {8},
+  keywords  = {manifold, hair, fur, anisotropic reflection},
+  series    = {SIGGRAPH '94}
+}
+
+@inproceedings{10.1145/258734.258807,
+  author    = {Goldman, Dan B.},
+  title     = {Fake fur rendering},
+  year      = {1997},
+  isbn      = {0897918967},
+  publisher = {ACM Press/Addison-Wesley Publishing Co.},
+  address   = {USA},
+  doi       = {10.1145/258734.258807},
+  booktitle = {Proceedings of the 24th Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {127-134},
+  numpages  = {8},
+  keywords  = {animals, anisotropic shading, fur, natural phenomena},
+  series    = {SIGGRAPH '97}
+}
 # 08.ex01
 @article{841905,
   author   = {Bourlier, Christophe and Saillard, Joseph and Berginc, Gérard},

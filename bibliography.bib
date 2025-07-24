@@ -6515,6 +6515,211 @@
   keywords  = {animals, anisotropic shading, fur, natural phenomena},
   series    = {SIGGRAPH '97}
 }
+
+@article{10.1145/882262.882345,
+  author     = {Marschner, Stephen R. and Jensen, Henrik Wann and Cammarano, Mike and Worley, Steve and Hanrahan, Pat},
+  title      = {Light scattering from human hair fibers},
+  year       = {2003},
+  issue_date = {July 2003},
+  publisher  = {Association for Computing Machinery},
+  address    = {New York, NY, USA},
+  volume     = {22},
+  number     = {3},
+  issn       = {0730-0301},
+  doi        = {10.1145/882262.882345},
+  abstract   = {Light scattering from hair is normally simulated in computer graphics using Kajiya and Kay's classic phenomenological model. We have made new measurements of scattering from individual hair fibers that exhibit visually significant effects not predicted by Kajiya and Kay's model. Our measurements go beyond previous hair measurements by examining out-of-plane scattering, and together with this previous work they show a multiple specular highlight and variation in scattering with rotation about the fiber axis. We explain the sources of these effects using a model of a hair fiber as a transparent elliptical cylinder with an absorbing interior and a surface covered with tilted scales. Based on an analytical scattering function for a circular cylinder, we propose a practical shading model for hair that qualitatively matches the scattering behavior shown in the measurements. In a comparison between a photograph and rendered images, we demonstrate the new model's ability to match the appearance of real hair.},
+  journal    = {ACM Trans. Graph.},
+  month      = {7},
+  pages      = {780-791},
+  numpages   = {12},
+  keywords   = {rendering, optical scattering, hair, fibers}
+}
+
+@article{10.1145/1778765.1778793,
+  author     = {Sadeghi, Iman and Pritchett, Heather and Jensen, Henrik Wann and Tamstorf, Rasmus},
+  title      = {An artist friendly hair shading system},
+  year       = {2010},
+  issue_date = {July 2010},
+  publisher  = {Association for Computing Machinery},
+  address    = {New York, NY, USA},
+  volume     = {29},
+  number     = {4},
+  issn       = {0730-0301},
+  doi        = {10.1145/1778765.1778793},
+  abstract   = {Rendering hair in motion pictures is an important and challenging task. Despite much research on physically based hair rendering, it is currently difficult to benefit from this work because physically based shading models do not offer artist friendly controls. As a consequence much production work so far has used ad hoc shaders that are easier to control, but often lack the richness seen in real hair. We show that physically based shading models fail to provide intuitive artist controls and we introduce a novel approach for creating an art-directable hair shading model from existing physically based models. Through an informal user study we show that this system is easier to use compared to existing systems. Our shader has been integrated into the production pipeline at the Walt Disney Animation Studios and is being used in the production of the upcoming animated feature film Tangled.},
+  journal    = {ACM Trans. Graph.},
+  month      = {7},
+  articleno  = {56},
+  numpages   = {10},
+  keywords   = {single scattering, multiple scattering, hair shading, artist control}
+}
+
+@article{10.1111/j.1467-8659.2011.01976.x,
+  author   = {d'Eon, Eugene and Francois, Guillaume and Hill, Martin and Letteri, Joe and Aubry, Jean-Marie},
+  title    = {An Energy-Conserving Hair Reflectance Model},
+  journal  = {Computer Graphics Forum},
+  volume   = {30},
+  number   = {4},
+  pages    = {1181-1187},
+  keywords = {I.3.7 Computer Graphics: Three-Dimensional Graphics and Realism—Shading},
+  doi      = {10.1111/j.1467-8659.2011.01976.x},
+  abstract = {Abstract We present a reflectance model for dielectric cylinders with rough surfaces such as human hair fibers. Our model is energy conserving and can evaluate arbitrarily many orders of internal reflection. Accounting for compression and contraction of specular cones produces a new longitudinal scattering function which is non-Gaussian and includes an off-specular peak. Accounting for roughness in the azimuthal direction leads to an integral across the hair fiber which is efficiently evaluated using a Gaussian quadrature. Solving cubic equations is avoided, caustics are included in the model in a consistent fashion, and more accurate colors are predicted by considering many internal pathways.},
+  year     = {2011}
+}
+
+@article{4069232,
+  author   = {Ward, Kelly and Bertails, Florence and Kim, Tae-yong and Marschner, Stephen R. and Cani, Marie-paule and Lin, Ming C.},
+  journal  = {IEEE Transactions on Visualization and Computer Graphics},
+  title    = {A Survey on Hair Modeling: Styling, Simulation, and Rendering},
+  year     = {2007},
+  volume   = {13},
+  number   = {2},
+  pages    = {213-234},
+  keywords = {Hair;Computational modeling;Rendering (computer graphics);Humans;Computer graphics;Light scattering;Application software;Solid modeling;Computer simulation;Hardware;Hair modeling;physically-based simulation;hardware rendering;light scattering;user interaction;collision handling.},
+  doi      = {10.1109/TVCG.2007.30}
+}
+
+@inproceedings{10.1145/1186822.1073254,
+  author    = {Marschner, Stephen R. and Westin, Stephen H. and Arbree, Adam and Moon, Jonathan T.},
+  title     = {Measuring and modeling the appearance of finished wood},
+  year      = {2005},
+  isbn      = {9781450378253},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  doi       = {10.1145/1186822.1073254},
+  abstract  = {Wood coated with transparent finish has a beautiful and distinctive appearance that is familiar to everyone. Woods with unusual grain patterns. such as tiger, burl, and birdseye figures, have a strikingly unusual directional reflectance that is prized for decorative applications. With new, high resolution measurements of spatially varying BRDFs. we show that this distinctive appearance is due to light scattering that does not conform to the usual notion of anisotropic surface reflection. The behavior can be explained by scattering from the matrix of wood fibers below the surface, resulting in a subsurface highlight that occurs on a cone with an out-of-plane axis. We propose a new shading model component to handle reflection from subsurface fibers, which is combined with the standard diffuse and specular components to make a complete shading model. Rendered results from fits of our model to the measurement data demonstrate that this new model captures the distinctive appearance of wood.},
+  booktitle = {ACM SIGGRAPH 2005 Papers},
+  pages     = {727-734},
+  numpages  = {8},
+  keywords  = {anisotropic reflection, fibers, optical scattering, rendering, wood},
+  location  = {Los Angeles, California},
+  series    = {SIGGRAPH '05}
+}
+
+@inproceedings{guenther:05:carpaint,
+  author    = {Johannes G{\"u}nther and Tongbo Chen and Michael Goesele and Ingo Wald and Hans-Peter Seidel},
+  title     = {Efficient Acquisition and Realistic Rendering of Car Paint},
+  editor    = {G{\"u}nther Greiner and Joachim Hornegger and Heinrich Niemann and Marc Stamminger},
+  booktitle = {Proceedings of 10th International Fall Workshop - Vision, Modeling, and Visualization (VMV) 2005},
+  year      = {2005},
+  pages     = {487-494},
+  month     = {11},
+  publisher = {Akademische Verlagsgesellschaft Aka GmbH},
+  location  = {Erlangen, Germany},
+  isbn      = {3-89838-068-8},
+  url       = {https://www.johannes-guenther.net/carpaint}
+}
+
+@article{10.1111/cgf.12420,
+  author   = {Papas, Marios and de Mesa, Krystle and Jensen, Henrik Wann},
+  title    = {A Physically-Based BSDF for Modeling the Appearance of Paper},
+  journal  = {Computer Graphics Forum},
+  volume   = {33},
+  number   = {4},
+  pages    = {133-142},
+  keywords = {Categories and Subject Descriptors (according to ACM CCS), I.3.7 Computer Graphics: Three-Dimensional Graphics and Realism—Color, shading, shadowing, and texture},
+  doi      = {10.1111/cgf.12420},
+  abstract = {Abstract We present a novel appearance model for paper. Based on our appearance measurements for matte and glossy paper, we find that paper exhibits a combination of subsurface scattering, specular reflection, retroreflection, and surface sheen. Classic microfacet and simple diffuse reflection models cannot simulate the double-sided appearance of a thin layer. Our novel BSDF model matches our measurements for paper and accounts for both reflection and transmission properties. At the core of the BSDF model is a method for converting a multi-layer subsurface scattering model (BSSRDF) into a BSDF, which allows us to retain physically-based absorption and scattering parameters obtained from the measurements. We also introduce a method for computing the amount of light available for subsurface scattering due to transmission through a rough dielectric surface. Our final model accounts for multiple scattering, single scattering, and surface reflection and is capable of rendering paper with varying levels of roughness and glossiness on both sides.},
+  year     = {2014}
+}
+
+@inproceedings{2003_sattler_egsr,
+  author    = {Mirko Sattler and Ralf Sarlette and Reinhard Klein},
+  title     = {Efficient and realistic visualization of cloth},
+  booktitle = {EGSR '03: Proceedings of the 14th Eurographics Symposium on Rendering},
+  year      = {2003},
+  isbn      = {3-905673-03-7},
+  pages     = {167-177},
+  location  = {Leuven, Belgium},
+  publisher = {Eurographics Association},
+  address   = {Aire-la-Ville, Switzerland, Switzerland},
+  url       = {http://mirkosattler.de/publications/2003_sattler_egsr.pdf}
+}
+
+@phdthesis{hdl.handle.net/1813/8331,
+  author  = {Irawan, Piti},
+  advisor = {Marschner, Stephen R.},
+  school  = {Cornell University},
+  title   = {Appearance of Woven Cloth},
+  year    = {2008},
+  month   = {1},
+  url     = {https://hdl.handle.net/1813/8331}
+}
+
+@article{10.1111/j.1467-8659.2011.01987.x,
+  author      = {Schr{\" o}der, Kai and Klein, Reinhard and Zinke, Arno},
+  title       = {A Volumetric Approach to Predictive Rendering of Fabrics},
+  journal     = {Computer Graphics Forum},
+  volume      = {30},
+  number      = {4},
+  pages       = {1277-1286},
+  doi         = {10.1111/j.1467-8659.2011.01987.x},
+  abstract    = {Abstract Efficient physically accurate modeling and rendering of woven cloth at a yarn level is an inherently complicated task due to the underlying geometrical and optical complexity. In this paper, a novel and general approach to physically accurate cloth rendering is presented. By using a statistical volumetric model approximating the distribution of yarn fibers, a prohibitively costly explicit geometrical representation is avoided. As a result, accurate rendering of even large pieces of fabrics containing orders of magnitudes more fibers becomes practical without sacrifying much generality compared to fiber-based techniques. By employing the concept of local visibility and introducing the effective fiber density, limitations of existing volumetric approaches regarding self-shadowing and fiber density estimation are greatly reduced.},
+  year        = {2011},
+  location    = {Prague, Czech Republic},
+  series      = {EGSR '11},
+  booktitle   = {Proceedings of the Twenty-Second Eurographics Conference on Rendering},
+  address     = {Goslar, DEU},
+  publisher   = {Eurographics Association},
+  institution = {Universit{\" a}t Bonn}
+}
+
+@article{10.1145/2077341.2077352,
+  author     = {Irawan, Piti and Marschner, Steve},
+  title      = {Specular reflection from woven cloth},
+  year       = {2012},
+  issue_date = {January 2012},
+  publisher  = {Association for Computing Machinery},
+  address    = {New York, NY, USA},
+  volume     = {31},
+  number     = {1},
+  issn       = {0730-0301},
+  doi        = {10.1145/2077341.2077352},
+  abstract   = {The appearance of a particular fabric is produced by variations in both large-scale reflectance and small-scale texture as the viewing and illumination angles change across the surface. This article presents a study of the reflectance and texture of woven cloth that aims to identify and model important optical features of cloth appearance. New measurements are reported for a range of fabrics including natural and synthetic fibers as well as staple and filament yarns. A new scattering model for woven cloth is introduced that describes the reflectance and the texture based on an analysis of specular reflection from the fibers. Unlike data-based models, our procedural model doesn't require image data. It can handle a wide range of fabrics using a small set of physically meaningful parameters that describe the characteristics of the fibers, the geometry of the yarns, and the pattern of the weave. The model is validated against the measurements and evaluated by comparisons to high-resolution video of the real fabrics and to BTF models of two of the fabrics.},
+  journal    = {ACM Trans. Graph.},
+  month      = {2},
+  articleno  = {11},
+  numpages   = {20},
+  keywords   = {Cloth, measurement, realism, reflection, texture}
+}
+
+@article{10.1145/2185520.2185571,
+  author     = {Zhao, Shuang and Jakob, Wenzel and Marschner, Steve and Bala, Kavita},
+  title      = {Structure-aware synthesis for predictive woven fabric appearance},
+  year       = {2012},
+  issue_date = {July 2012},
+  publisher  = {Association for Computing Machinery},
+  address    = {New York, NY, USA},
+  volume     = {31},
+  number     = {4},
+  issn       = {0730-0301},
+  doi        = {10.1145/2185520.2185571},
+  abstract   = {Woven fabrics have a wide range of appearance determined by their small-scale 3D structure. Accurately modeling this structural detail can produce highly realistic renderings of fabrics and is critical for predictive rendering of fabric appearance. But building these yarn-level volumetric models is challenging. Procedural techniques are manually intensive, and fail to capture the naturally arising irregularities which contribute significantly to the overall appearance of cloth. Techniques that acquire the detailed 3D structure of real fabric samples are constrained only to model the scanned samples and cannot represent different fabric designs.This paper presents a new approach to creating volumetric models of woven cloth, which starts with user-specified fabric designs and produces models that correctly capture the yarn-level structural details of cloth. We create a small database of volumetric exemplars by scanning fabric samples with simple weave structures. To build an output model, our method synthesizes a new volume by copying data from the exemplars at each yarn crossing to match a weave pattern that specifies the desired output structure. Our results demonstrate that our approach generalizes well to complex designs and can produce highly realistic results at both large and small scales.},
+  journal    = {ACM Trans. Graph.},
+  month      = {7},
+  articleno  = {75},
+  numpages   = {10},
+  keywords   = {volume rendering, textiles, appearance modeling}
+}
+
+@article{10.1145/2451236.2451240,
+  author     = {Sadeghi, Iman and Bisker, Oleg and De Deken, Joachim and Jensen, Henrik Wann},
+  title      = {A practical microcylinder appearance model for cloth rendering},
+  year       = {2013},
+  issue_date = {April 2013},
+  publisher  = {Association for Computing Machinery},
+  address    = {New York, NY, USA},
+  volume     = {32},
+  number     = {2},
+  issn       = {0730-0301},
+  doi        = {10.1145/2451236.2451240},
+  abstract   = {This article introduces a practical shading model for cloth that can simulate both anisotropic highlights as well as the complex color shifts seen in cloth made of different colored threads. Our model is based on extensive Bidirectional Reflectance Distribution Function (BRDF) measurements of several cloth samples. We have also measured the scattering profile of several different individual cloth threads. Based on these measurements, we derived an empirical shading model capable of predicting the light scattering profile of a variety of threads. From individual threads, we synthesized a woven cloth model, which provides an intuitive description of the layout of the constituent threads as well as their tangent directions. Our model is physically plausible, accounting for shadowing and masking by the threads. We validate our model by comparing predicted and measured light scattering values and show how it can reproduce the appearance of many cloth and thread types, including silk, velvet, linen, and polyester. The model is robust, easy to use, and can simulate the appearance of complex highlights and color shifts that cannot be fully handled by existing models.},
+  journal    = {ACM Trans. Graph.},
+  month      = {4},
+  articleno  = {14},
+  numpages   = {12},
+  keywords   = {Cloth rendering, anisotropic BRDF, appearance modeling, microcylinders, weaving pattern}
+}
 % 08.ex01
 @article{841905,
   author   = {Bourlier, Christophe and Saillard, Joseph and Berginc, Gérard},

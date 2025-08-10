@@ -6720,6 +6720,144 @@
   numpages   = {12},
   keywords   = {Cloth rendering, anisotropic BRDF, appearance modeling, microcylinders, weaving pattern}
 }
+
+@article{85654,
+  author   = {Nayar, Shree K. and Ikeuchi, Katsushi and Kanade, Takeo},
+  journal  = {IEEE Transactions on Pattern Analysis and Machine Intelligence},
+  title    = {Surface reflection: physical and geometrical perspectives},
+  year     = {1991},
+  volume   = {13},
+  number   = {7},
+  pages    = {611-634},
+  keywords = {Reflectivity;Solid modeling;Brain modeling;Physical optics;Geometrical optics;Surface fitting;Optical reflection;Predictive models;Rough surfaces;Surface roughness},
+  doi      = {10.1109/34.85654}
+}
+
+@inproceedings{10.1145/192161.192204,
+  author    = {Tannenbaum, David C. and Tannenbaum, Peter and Wozny, Michael J.},
+  title     = {Polarization and birefringency considerations in rendering},
+  year      = {1994},
+  isbn      = {0897916670},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  doi       = {10.1145/192161.192204},
+  abstract  = {In this work we render non-opaque anisotropic media.  A mathematical formalism is described in which polarization effects resulting from light/material interactions are represented as transformation matrices.When applying the matrices a skewing is performed to ensure that like reference coordinates are used. The intensity and direction of an extraordinary ray is computed.},
+  booktitle = {Proceedings of the 21st Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {221-222},
+  numpages  = {2},
+  keywords  = {polarization, birefringency},
+  series    = {SIGGRAPH '94}
+}
+
+@inproceedings{10.1007/978-3-642-87825-1_5,
+  author    = {Glassner, Andrew S.},
+  editor    = {Sakas, Georgios and M{\"u}ller, Stefan and Shirley, Peter},
+  title     = {A Model for Fluorescence and Phosphorescence},
+  booktitle = {Photorealistic Rendering Techniques},
+  year      = {1995},
+  publisher = {Springer Berlin Heidelberg},
+  address   = {Berlin, Heidelberg},
+  pages     = {60-70},
+  abstract  = {If you are indoors and reading this document on paper, then the page may be lit by a fluorescent light bulb. The gases inside the bulb absorb high-energy electrons, and then fluoresce, or re-radiate that absorbed energy at a different frequency. The particular gases in common fluorescent bulbs are chosen to be efficient at re-radiating this energy in the visible wavelengths. If you are reading this document on-line, then you're probably reading it on a cathode-ray tube (CRT). The face of the CRT is lined with phosphors, which absorb the high-energy electrons directed at them, and gradually release that energy over time in the visible band. The two phenomena of fluorescence and phosphorescence are not as common as simple reflection and transmission, but do have an important part to play in the complete description of macroscopic physical behavior that should be modeled by image synthesis programs. This paper presents a mathematical model for global energy balancing which includes these phenomena.},
+  isbn      = {978-3-642-87825-1}
+}
+
+@inproceedings{10.1145/1174429.1174484,
+  author    = {Wilkie, Alexander and Weidlich, Andrea and Larboulette, Caroline and Purgathofer, Werner},
+  title     = {A reflectance model for diffuse fluorescent surfaces},
+  year      = {2006},
+  isbn      = {1595935649},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  doi       = {10.1145/1174429.1174484},
+  abstract  = {Fluorescence is an interesting and visually prominent effect, which has not been fully covered by Computer Graphics research so far.While the physical phenomenon of fluorescence has been addressed in isolation, the actual reflection behaviour of real fluorescent surfaces has never been documented, and no analytical BRDF models for such surfaces have been published yet.This paper aims to illustrate the reflection properties typical for diffuse fluorescent surfaces, and provides a BRDF model based on a layered microfacet approach that mimics them.},
+  booktitle = {Proceedings of the 4th International Conference on Computer Graphics and Interactive Techniques in Australasia and Southeast Asia},
+  pages     = {321-331},
+  numpages  = {11},
+  keywords  = {analytical BRDF models, fluorescence},
+  location  = {Kuala Lumpur, Malaysia},
+  series    = {GRAPHITE '06}
+}
+
+@inproceedings{10.1145/800224.806817,
+  author    = {Moravec, Hans P.},
+  title     = {3D graphics and the wave theory},
+  year      = {1981},
+  isbn      = {0897910451},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  doi       = {10.1145/800224.806817},
+  abstract  = {A continuing trend in computer representation of three dimensional synthetic scenes is the ever more accurate modelling of complex illumination effects. Such effects provide cues necessary for a convincing illusion of reality. The best current methods simulate multiple specular reflections and refractions, but handle at most one scattering bounce per light ray. They cannot accurately simulate diffuse light sources, nor indirect lighting via scattering media, without prohibitive increases in the already very large computing costs.Conventional methods depend implicitly on a particle model; light propagates in straight and conceptually infinitely thin rays. This paper argues that a wave model has important computational advantages for the complex situations. In this approach, light is represented by wave fronts which are stored as two dimensional arrays of complex numbers.The propagation of such a front can be simulated by a linear transformation. Several advantages accrue. Propagations in a direction orthogonal to the plane of a front are convolutions which can be done by FFT in O(n log n) time rather than the n 2 time for a similar operation using rays. A typical speedup is about 10,000. The wavelength of the illumination sets a resolution limit which prevents unnecessary computation of elements smaller than will be visible. The generated wavefronts contain multiplicities of views of the scene, which can be individually extracted by passing them through different simulated lenses. Lastly the wavefront calculations are ideally suited for implementation on available array processors, which provide more cost effective calculation for this task than general purpose computers.The wave method eliminates the aliasing problem; the wavefronts are inherently spatially filtered, but substitutes diffraction effects and depth of focus limitations in its stead.},
+  booktitle = {Proceedings of the 8th Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {289-296},
+  numpages  = {8},
+  location  = {Dallas, Texas, USA},
+  series    = {SIGGRAPH '81}
+}
+
+@article{BaharChakrabarti1987,
+  author    = {Bahar, Ezekiel and Chakrabarti, Swapan},
+  journal   = {IEEE Computer Graphics and Applications},
+  title     = {Full-Wave Theory Applied to Computer-Aided Graphics for 3D Objects},
+  year      = {1987},
+  volume    = {7},
+  number    = {07},
+  issn      = {1558-1756},
+  pages     = {46-60},
+  doi       = {10.1109/MCG.1987.277013},
+  publisher = {IEEE Computer Society},
+  address   = {Los Alamitos, CA, USA},
+  month     = {7}
+}
+
+@inproceedings{10.1145/311535.311546,
+  author    = {Stam, Jos},
+  title     = {Diffraction shaders},
+  year      = {1999},
+  isbn      = {0201485605},
+  publisher = {ACM Press/Addison-Wesley Publishing Co.},
+  address   = {USA},
+  doi       = {10.1145/311535.311546},
+  booktitle = {Proceedings of the 26th Annual Conference on Computer Graphics and Interactive Techniques},
+  pages     = {101-110},
+  numpages  = {10},
+  keywords  = {Fourier transform, Kirchoff theory, diffraction, random processes, rough surface scattering, shading models},
+  series    = {SIGGRAPH '99}
+}
+
+@article{10.1145/2231816.2231820,
+  author     = {Cuypers, Tom and Haber, Tom and Bekaert, Philippe and Oh, Se Baek and Raskar, Ramesh},
+  title      = {Reflectance model for diffraction},
+  year       = {2012},
+  issue_date = {August 2012},
+  publisher  = {Association for Computing Machinery},
+  address    = {New York, NY, USA},
+  volume     = {31},
+  number     = {5},
+  issn       = {0730-0301},
+  doi        = {10.1145/2231816.2231820},
+  abstract   = {We present a novel method of simulating wave effects in graphics using ray-based renderers with a new function: the Wave BSDF (Bidirectional Scattering Distribution Function). Reflections from neighboring surface patches represented by local BSDFs are mutually independent. However, in many surfaces with wavelength-scale microstructures, interference and diffraction requires a joint analysis of reflected wavefronts from neighboring patches. We demonstrate a simple method to compute the BSDF for the entire microstructure, which can be used independently for each patch. This allows us to use traditional ray-based rendering pipelines to synthesize wave effects. We exploit the Wigner Distribution Function (WDF) to create transmissive, reflective, and emissive BSDFs for various diffraction phenomena in a physically accurate way. In contrast to previous methods for computing interference, we circumvent the need to explicitly keep track of the phase of the wave by using BSDFs that include positive as well as negative coefficients. We describe and compare the theory in relation to well-understood concepts in rendering and demonstrate a straightforward implementation. In conjunction with standard raytracers, such as PBRT, we demonstrate wave effects for a range of scenarios such as multibounce diffraction materials, holograms, and reflection of high-frequency surfaces.},
+  journal    = {ACM Trans. Graph.},
+  month      = {9},
+  articleno  = {122},
+  numpages   = {11},
+  keywords   = {wave optics, wave effects, interference, diffraction, Wigner distribution function, Simulating natural phenomena}
+}
+
+@article{10.1111/cgf.12012,
+  author   = {Musbach, Avery A. and Meyer, Gary W. and Reitich, Fernando and Oh, Sang-Hyun},
+  title    = {Full Wave Modelling of Light Propagation and Reflection},
+  journal  = {Computer Graphics Forum},
+  volume   = {32},
+  number   = {6},
+  pages    = {24-37},
+  keywords = {rendering, FDTD, shader, diffraction, interference, structural colour, iridescence, thin film, Newton's colours, optics, electromagnetic wave, I.3.7 Computer Graphics: Three-Dimensional Graphics and Realism colour, shading, shadowing and texture},
+  doi      = {10.1111/cgf.12012},
+  abstract = {Abstract The propagation and reflection of electromagnetic waves in a three-dimensional environment is simulated, and realistic images are produced using the resulting light distributions and reflectance functions. A finite difference time domain method is employed to advance the electric and magnetic fields in a scene. Surfaces containing wavelength scaled structures are created, the interaction of the electromagnetic waves with these nano-structured materials is calculated, and the sub-surface interference and diffraction effects are modelled. The result is a reflectance function with wavelength composition and spatial distribution properties that could not have been predicted using classic computer graphic ray tracing approaches. The techniques are employed to reproduce demonstrations of simple interference and diffraction effects, and to create computer-generated pictures of a Morpho butterfly.},
+  year     = {2013}
+}
+
+
 % 08.ex01
 @article{841905,
   author   = {Bourlier, Christophe and Saillard, Joseph and Berginc, Gérard},

@@ -18,6 +18,8 @@ jobs:
           sudo apt-get install unzip
       - name: checkout_repo
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: download_lib
         run: |
           mkdir fonts

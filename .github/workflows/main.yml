@@ -41,8 +41,10 @@ jobs:
             export TEXINPUTS=./boondox/tex:$TEXINPUTS
             git config --global --add safe.directory /home/runner/work/pbrtbook/pbrtbook
             ./cp.sh
+            export BOOK_PATH="$(git describe --tags --abbrev=0)-$(git rev-parse --short HEAD).pdf"
+            mv main.pdf ${BOOK_PATH}
       - name: upload
         uses: actions/upload-artifact@v4
         with:
           name: upload_pdf
-          path: main.pdf
+          path: ${BOOK_PATH}

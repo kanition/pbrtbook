@@ -55,7 +55,7 @@
 | 6.7    | 几何光学                   |
 | 7.12   | 傅里叶变换                 |
 | 7.13   | 初等数论基础               |
-| 8.9    | 微面模型相关推导（进行中） |
+| 8.9    | 微面模型相关推导            |
 
 ## 许可协议
 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans"><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1" alt=""><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1" alt=""><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/nc.svg?ref=chooser-v1" alt=""><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/sa.svg?ref=chooser-v1" alt=""></a><br />本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans">知识共享署名—非商业性使用—相同方式共享4.0国际公共许可协议</a>进行许可。
@@ -78,15 +78,12 @@
 3. 本声明中的“刊载”形式包括但不限于由网站官方（包括但不限于其操控的公共账号、
    下属员工个人账号和伪装成普通用户的机器账号）镜像发布本仓库的源码、
    编译产物、提交记录、问题与计划列表、讨论区记录等的全部或部分内容，以及发布任何提及本仓库的内容。
-4. 本声明中的“GitCode及其关联网站”包括：
-    - GitCode：gitcode.com
-    - 与GitCode实际或疑似存在用户数据共享的网站或应用，
-      或由其实控组织机构或个人开办的其他网站或应用，包括但不限于：
-        - CSDN：csdn.net
-        - OSCHINA：oschina.net
-        - Gitee：gitee.com
-        - 华为云：huaweicloud.com
-        - InsCode：inscode.csdn.net
+4. 本声明中的“GitCode及其关联网站”指GitCode以及与GitCode实际或疑似存在用户数据共享的网站
+   或应用或由其实控组织机构或个人开办的其他网站或应用，包括但不限于：
+    - 重庆开源共创科技有限公司（GitCode）：gitcode.com
+    - 北京创新乐知网络技术有限公司（CSDN软件开发网）：csdn.net
+    - 北京创新乐知网络技术有限公司（InsCode）：inscode.net
+    - 华为云计算技术有限公司（华为云服务）：huaweicloud.com
     - 以上述网站名义在其他网络平台上开办的公共账号空间，包括但不限于微博、微信公众号、
       知乎、抖音、bilibili、小红书、百度百家号、今日头条、简书、YouTube、X（原Twitter）、GitLab、极狐等。
 5. 普通个人用户（上述网站的实控组织机构成员除外）可在遵守[许可协议](#许可协议)的前提下自由地于上述网站发布本仓库相关内容而不受前述条款限制。

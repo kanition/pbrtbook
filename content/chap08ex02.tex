@@ -170,12 +170,10 @@ $kx$这个整体是无量纲的。$\psi(x)$的最大值$A>0$称作波的\keyinde
 \end{align}
 这对应了正弦函数自变量改变$\pm2\pi$，由于$k>0,\ \lambda>0$，所以
 \begin{align}
-    k=\frac{2\pi}{\lambda}\, .
+    \lambda=\frac{2\pi}{k}\, .
 \end{align}
-此外，正弦函数的自变量也称作\keyindex{相位}{phase}{}，记作$\varphi$，
-即有$\psi(x)=A\sin\varphi$.
 
-类似得，$\psi$的\keyindex{时间周期}{temporal period}{period\ 周期}记作$\tau$，
+类似地，$\psi$的\keyindex{时间周期}{temporal period}{period\ 周期}记作$\tau$，
 可简称\keyindex{周期}{period}{}，即一个完整的波经过一静止观察者的时间。
 它对应了波在时间上的重复行为：
 \begin{align}
@@ -194,7 +192,7 @@ $kx$这个整体是无量纲的。$\psi(x)$的最大值$A>0$称作波的\keyinde
 可简称\keyindex{频率}{frequency}{}，记作$\nu$，即单位时间里波的个数
 \sidenote{注意$\nu$是希腊字母。}：
 \begin{align}
-    \nu\equiv\frac{1}{\tau}\, ,
+    \nu=\frac{1}{\tau}\, ,
 \end{align}
 其单位为\keyindex{赫兹}{Hertz}{}（简写为Hz），即每秒周数。
 结合前述定义，不难发现\keyindex{波速}{speed}{}$v$满足
@@ -204,15 +202,142 @@ $kx$这个整体是无量纲的。$\psi(x)$的最大值$A>0$称作波的\keyinde
 
 此外我们还定义\keyindex{时间角频率}{angular temporal frequency}{frequency\ 频率}为
 \begin{align}
-    \omega\equiv\frac{2\pi}{\tau}=2\pi\nu\, ,
+    \omega=\frac{2\pi}{\tau}=2\pi\nu=kv\, ,
 \end{align}
 可简称为角频率，单位为弧度每秒（rad/s）。
 
 此外，\keyindex{空间频率}{spatial frequency}{frequency\ 频率}，
 也称\keyindex{波数}{wavenumber}{}，定义为
 \begin{align}
-    \kappa\equiv\frac{1}{\lambda}\, ,
+    \kappa=\frac{1}{\lambda}\, ,
 \end{align}
 即单位长度中波的数目，单位为$\mathrm{m}^{-1}$.
 
-以上所有概念也适用于非谐波，只要它是单个剖面元规则重复构成的。
+以上所有概念也适用于非谐波，只要它是由单个剖面元规则重复构成的。
+
+利用以上定义，我们可以写出以下常见而等价的谐波表达式：
+\begin{align}
+    \psi= & A\sin k(x\mp vt)\, ,                                          \\
+    \psi= & A\sin (kx\mp\omega t)\, ,                                     \\
+    \psi= & A\sin 2\pi\left(\frac{x}{\lambda}\mp\frac{t}{\tau}\right)\, , \\
+    \psi= & A\sin 2\pi(\kappa x\mp\nu t)\, ,                              \\
+    \psi= & A\sin 2\pi\nu\left(\frac{x}{v}\mp t\right)\, ,
+\end{align}
+其中前两个最为常用，你甚至可以改用余弦函数来表示（后文就有）。
+注意到这些理想化波的$x$和$t$没有取值范围限制，
+又具有单一恒定频率，所以称作是\keyindex{单色的}{monochromatic}{}
+或\keyindex{单能量的}{monoenergetic}{}。
+但真实的波无法无限回溯到$t=-\infty$，所以不会是严格的单色波，而是含有一个频率范围。
+若这个频段很窄，则称该波是\keyindex{准单色的}{quasimonochromatic}{}。
+
+\subsubsection*{相位与相速度}
+考察任一谐波，如
+\begin{align}
+    \psi(x,t)= & A\sin (kx-\omega t)\, ,
+\end{align}
+称正弦函数的整个输入值为波的\keyindex{相位}{phase}{}，记作
+\begin{align}
+    \varphi=kx-\omega t\, .
+\end{align}
+更普遍地，对于谐波
+\begin{align}
+    \psi(x,t)= & A\sin (kx-\omega t+\varepsilon)\, ,
+\end{align}
+其相位为
+\begin{align}
+    \varphi=kx-\omega t+\varepsilon\, ,
+\end{align}
+其中$t=0$且$x=0$时的相位$\varepsilon$称作\keyindex{初相}{initial phase}{}。
+
+根据相位定义，可知当$x$恒定时，相位对时间的变化率为
+\begin{align}
+    \left|\left(\frac{\partial\varphi}{\partial t}\right)_x\right|=\omega\, .
+\end{align}
+当$t$恒定时，相位对距离的变化率为
+\begin{align}
+    \left|\left(\frac{\partial\varphi}{\partial x}\right)_t\right|=k\, .
+\end{align}
+利用链式法则等微分知识，可推得
+\begin{align}
+    \left(\frac{\partial x}{\partial t}\right)_{\varphi}
+    =-\displaystyle\frac{\left(\frac{\partial\varphi}{\partial t}\right)_x}
+    {\left(\frac{\partial\varphi}{\partial x}\right)_t}
+    =\pm\frac{\omega}{k}=\pm v\, .
+\end{align}
+上式最左边表示相位恒定状态的传播速度，称作波的\keyindex{相速度}{phase velocity}{}。
+这里$v>0$，当波朝着正$x$方向运动时，则相速度取正号，反之则取负号。
+
+\subsubsection*{叠加原理}
+波动微分方程揭示了波一个明显区别于经典粒子流的性质：
+\begin{theorem}[\keyindex{叠加原理}{Superposition Principle}{}]
+    若$\psi_1$和$\psi_2$是同一波动方程的两个不同的解，
+    则叠加它们的$\psi_1+\psi_2$也是一个解。
+\end{theorem}
+这意味着两个波到达同一片空间时会发生重叠，
+简单地与另一方相加（相减），而不会永久瓦解其中某个波。
+重叠区域内每一点的合扰动是该位置上单个成分波的代数之和。
+在穿过共存区域后，每个波会继续前进离开，不受这次干扰。
+注意这里我们讨论的是最为广泛的波的线性叠加，
+暂不考虑极端情况下波的振幅大到以非线性方式驱动介质。
+
+\begin{figure}[htb]
+    \centering\includegraphics[width=0.9\linewidth]{Pictures/chap08/SuperpositionOfTwoSinusoids.eps}
+    \caption{两个正弦波$\psi_1$和$\psi_2$的叠加，振幅分别为$A_1=1.0$和$A_2=0.9$.
+        (a)$\psi_1$和$\psi_2$同相。(b)$\psi_1$领先$\psi_2$相角$\displaystyle\frac{\pi}{3}$.
+        (c)$\psi_1$领先$\psi_2$相角$\displaystyle\frac{2\pi}{3}$.
+        (d)$\psi_1$和$\psi_2$相位相差$\pi$，几乎要相互抵消。}
+    \label{fig:08ex02.0216}
+\end{figure}
+\reffig{08ex02.0216}展示了两个振幅十分接近的波叠加后的结果与它们之间相位差的关系。
+\reffig{08ex02.0216}(a)中两个波相位差为零，称为\keyindex{同相}{in-phase}{}。
+它们互相加强，振幅增大，频率和波长不变。随着相位差增大，合成波振幅减小，
+直到\reffig{08ex02.0216}(d)中相位差达到$\pi$，合成波几乎消失，
+此时称两个波\keyindex{异相}{out-of-phase}{}$180^\circ$.
+异相波倾向于互相抵消的现象使得这整类现象被称作\keyindex{干涉}{interference}{}。
+
+\subsubsection*{波的复数表示}
+谐波所含的三角函数不便于数学处理，因此我们引入更方便的复数表示方法。
+\keyindex{复数}{complex number}{}
+$\widetilde{z}$形如
+\begin{align}
+    \widetilde{z}=x+\mathrm{i}y=r(\cos\theta+\mathrm{i}\sin\theta)=r\mathrm{e}^{\mathrm{i}\theta}\, ,
+\end{align}
+其中\keyindex{虚数单位}{imaginary unit}{}
+$\mathrm{i}=\sqrt{-1}$.
+实数$x$和$y$分别为$\widetilde{z}$的\keyindex{实部}{real part}{complex number\ 复数}
+和\keyindex{虚部}{imaginary part}{complex number\ 复数}；
+实数$r\ge0$和$\theta$分别为$\widetilde{z}$的\keyindex{长度}{magnitude}{complex number\ 复数}
+和\keyindex{相角}{phase angle}{complex number\ 复数}；
+长度也常记作$|\widetilde{z}|$，称为复数的\keyindex{模}{modulus}{complex number\ 复数}
+或\keyindex{绝对值}{absolute value}{complex number\ 复数}。
+
+本节中，复数的\keyindex{复共轭}{complex conjugate}{}用星号表示，即
+\begin{align}
+    \widetilde{z}^*=(x+\mathrm{i}y)^*=x-\mathrm{i}y
+    =r(\cos\theta-\mathrm{i}\sin\theta)=r\mathrm{e}^{-\mathrm{i}\theta}\, .
+\end{align}
+于是复数的实部和虚部可以表示为
+\begin{align}
+    \mathrm{Re}(\widetilde{z})=&\frac{1}{2}(\widetilde{z}+\widetilde{z}^*)=&r\cos\theta\, ,\\
+    \mathrm{Im}(\widetilde{z})=&\frac{1}{2\mathrm{i}}(\widetilde{z}-\widetilde{z}^*)=&r\sin\theta\, .
+\end{align}
+我们习惯上选用实部来描述谐波，即
+\begin{align}
+    \psi(x,t)=\mathrm{Re}[A\mathrm{e}^{\mathrm{i}(\omega t-kx+\varepsilon)}]\, ,
+\end{align}
+它等价于
+\begin{align}
+    \psi(x,t)=A\cos(\omega t-kx+\varepsilon)\, .
+\end{align}
+于是为了方便，在后文中我们略去实部记号把波函数简写为
+\begin{align}
+    \psi(x,t)=A\mathrm{e}^{\mathrm{i}(\omega t-kx+\varepsilon)}=A\mathrm{e}^{\mathrm{i}\varphi}\, ,
+\end{align}
+并借助复数运算法则（尤其是复指数乘除法的简便性）来进行计算，
+只在要表示实际波时才取回实部。
+
+要注意的是，波被表示为复数函数后，若参与了运算，
+则只有当这些运算仅限于加减法、乘或除以一个实数，
+或对一个实数变量进行微分或积分，才能恢复其实部，否则结果是错误的。
+
+\subsubsection*{相矢量与波的相加}

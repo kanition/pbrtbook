@@ -230,8 +230,8 @@ const `\refvar{TransportMode}{}` `\initvar[FourierBSDF::mode]{mode}{}`;
 \end{lstlisting}
 这样重建的BSDF就非常平滑，这里的实现在分别紧邻$\mu_{\mathrm{i}}$和$\mu_{\mathrm{o}}$的
 四个量化方向\refvar[FourierBSDFTable::mu]{mu}{}的乘积的系数$a_k$上进行插值。
-插值是用\keyindex{张量积}{tensor-product}{}样条执行的，
-被采样函数值的权重对于每个参数是独立计算的，然后乘在一起。
+插值是用\keyindex{张量积}{tensor-product}{}
+样条执行的，被采样函数值的权重对于每个参数是独立计算的，然后乘在一起。
 因此每个最终的傅里叶系数$a_k$算得为
 \begin{align}\label{eq:8.22}
     a_k=\sum\limits_{a=0}^{3}\sum\limits_{b=0}^{3}a_k(o_{\mathrm{i}}+a,o_{\mathrm{o}}+b)w_{\mathrm{i}}(a)w_{\mathrm{o}}(b)\, ,

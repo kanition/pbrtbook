@@ -56,8 +56,8 @@ protected:
 
 除了基类\refvar{Camera}{}要求的参数外，\refvar{ProjectiveCamera}{}还接收投影变换矩阵、
 图像的屏幕空间范围以及与景深有关的额外参数。
-\keyindex{景深}{depth of field}{}将在本节末尾介绍和实现，
-它模拟了真实透镜系统中出现的失焦物体的模糊性。
+\keyindex{景深}{depth of field}{}
+将在本节末尾介绍和实现，它模拟了真实透镜系统中出现的失焦物体的模糊性。
 \begin{lstlisting}
 `\initcode{ProjectiveCamera Public Methods}{=}`
 `\refvar{ProjectiveCamera}{}`(const `\refvar{AnimatedTransform}{}` &CameraToWorld, 
@@ -161,9 +161,9 @@ private:
 正交视角变换保持$x$和$y$坐标不变但将近处平面的$z$值映射为0而远处平面的$z$值映射为1.
 为此，场景先沿$z$轴平移使得近处平面对齐到$z=0$.
 然后，场景按$z$缩放使得远处平面映射为$z=1$.
-这两个变换合成得到整个变换。（对于像pbrt那样的光线追踪器，
+这两个变换合成得到整个变换（对于像pbrt那样的光线追踪器，
 我们想让近处平面位于0处，这样光线就会从穿过相机位置的平面上发出；
-远处平面偏移量不是很重要。）
+远处平面偏移量不是很重要）。
 \begin{lstlisting}
 `\refcode{Transform Method Definitions}{+=}\lastnext{TransformMethodDefinitions}`
 `\refvar{Transform}{}` `\initvar{Orthographic}{}`(`\refvar{Float}{}` zNear, `\refvar{Float}{}` zFar) {

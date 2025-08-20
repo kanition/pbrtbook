@@ -260,8 +260,8 @@ $kx$这个整体是无量纲的。$\psi(x)$的最大值$A>0$称作波的\keyinde
 利用链式法则等微分知识，可推得
 \begin{align}
     \left(\frac{\partial x}{\partial t}\right)_{\varphi}
-    =-\displaystyle\frac{\left(\frac{\partial\varphi}{\partial t}\right)_x}
-    {\left(\frac{\partial\varphi}{\partial x}\right)_t}
+    =-\displaystyle\frac{(\partial\varphi/\partial t)_x}
+    {(\partial\varphi/\partial x)_t}
     =\pm\frac{\omega}{k}=\pm v\, .
 \end{align}
 上式最左边表示相位恒定状态的传播速度，称作波的\keyindex{相速度}{phase velocity}{}。
@@ -292,7 +292,8 @@ $kx$这个整体是无量纲的。$\psi(x)$的最大值$A>0$称作波的\keyinde
 \reffig{08ex02.0216}(a)中两个波相位差为零，称为\keyindex{同相}{in-phase}{}。
 它们互相加强，振幅增大，频率和波长不变。随着相位差增大，合成波振幅减小，
 直到\reffig{08ex02.0216}(d)中相位差达到$\pi$，合成波几乎消失，
-此时称两个波\keyindex{异相}{out-of-phase}{}$180^\circ$.
+此时称两个波\keyindex{异相}{out-of-phase}{}
+$180^\circ$.
 异相波倾向于互相抵消的现象使得这整类现象被称作\keyindex{干涉}{interference}{}。
 
 \subsubsection*{波的复数表示}
@@ -318,8 +319,8 @@ $\mathrm{i}=\sqrt{-1}$.
 \end{align}
 于是复数的实部和虚部可以表示为
 \begin{align}
-    \mathrm{Re}(\widetilde{z})=&\frac{1}{2}(\widetilde{z}+\widetilde{z}^*)=&r\cos\theta\, ,\\
-    \mathrm{Im}(\widetilde{z})=&\frac{1}{2\mathrm{i}}(\widetilde{z}-\widetilde{z}^*)=&r\sin\theta\, .
+    \mathrm{Re}(\widetilde{z})&=\frac{1}{2}(\widetilde{z}+\widetilde{z}^*)=r\cos\theta\, ,\\
+    \mathrm{Im}(\widetilde{z})&=\frac{1}{2\mathrm{i}}(\widetilde{z}-\widetilde{z}^*)=r\sin\theta\, .
 \end{align}
 我们习惯上选用实部来描述谐波，即
 \begin{align}
@@ -340,4 +341,83 @@ $\mathrm{i}=\sqrt{-1}$.
 则只有当这些运算仅限于加减法、乘或除以一个实数，
 或对一个实数变量进行微分或积分，才能恢复其实部，否则结果是错误的。
 
-\subsubsection*{相矢量与波的相加}
+\subsubsection*{平面波}
+给定时刻的光波可以用其频率、振幅、传播方向等描述，
+但这并没有告诉我们光扰动在一片延伸的空间内的更多信息。
+为此我们已经在定义\ref{definition:wavefront}中
+引入了\keyindex{波阵面}{wavefront}{}
+的概念。本节将研究理想的平面波的数学表达
+\sidenote{本节向量等数学符号暂时遵循参考文献的记法。}。
+
+\begin{figure}[htbp]
+    \centering\includegraphics[width=\linewidth]{Pictures/chap08/CartesianUnitBasisVectors.eps}
+    \caption{(a)直角坐标系单位基向量。(b)沿着$\vec{\mathbf{k}}$方向运动的平面波。}
+    \label{fig:08ex02.0221}
+\end{figure}
+\keyindex{平面波}{plane wave}{wave\ 波}
+是最简单的三维波了，其扰动的一切等相面构成一组平面，
+且一般都垂直于传播方向。为此我们先给出平面的数学表达式：
+如\reffig{08ex02.0221}(a)所示，对于直角坐标系中
+的位置向量$\vec{\mathbf{r}}$，我们用三个坐标轴上的单位基向量来表示为
+\begin{align}
+    \vec{\mathbf{r}}=x\hat{\text{\sffamily\bfseries i}}+y\hat{\text{\sffamily\bfseries j}}+z\hat{\text{\sffamily\bfseries k}}\, .
+\end{align}
+它始于某个任意的原点$O$，止于点$(x,y,z)$，该点可以是空间中的任意位置。
+类似地如\reffig{08ex02.0221}(b)所示，有
+\begin{align}
+    \vec{\mathbf{r}}-\vec{\mathbf{r}}_0
+    =(x-x_0)\hat{\text{\sffamily\bfseries i}}+(y-y_0)\hat{\text{\sffamily\bfseries j}}+(z-z_0)\hat{\text{\sffamily\bfseries k}}\, .
+\end{align}
+我们令
+\begin{align}
+    (\vec{\mathbf{r}}-\vec{\mathbf{r}}_0)\cdot\vec{\mathbf{k}}=0\, ,
+\end{align}
+使得向量$\vec{\mathbf{r}}-\vec{\mathbf{r}}_0$扫过
+一个垂直于$\vec{\mathbf{k}}$的平面，其端点$(x,y,z)$取一切允许的值。
+设$\vec{\mathbf{k}}$为
+\begin{align}
+    \vec{\mathbf{k}}=k_x\hat{\text{\sffamily\bfseries i}}+k_y\hat{\text{\sffamily\bfseries j}}+k_z\hat{\text{\sffamily\bfseries k}}\, ,
+\end{align}
+则有
+\begin{align}
+    k_x(x-x_0)+k_y(y-y_0)+k_z(z-z_0)=0\, ,
+\end{align}
+即
+\begin{align}
+    k_xx+k_yy+k_zz=a\, ,
+\end{align}
+其中
+\begin{align}
+    a=k_xx_0+k_yy_0+k_zz_0=\text{常数}\, .
+\end{align}
+于是垂直于$\vec{\mathbf{k}}$的平面方程最简洁的表达形式为
+\begin{align}
+    \vec{\mathbf{k}}\cdot\vec{\mathbf{r}}=\text{常数}\, .
+\end{align}
+位置向量在$\vec{\mathbf{k}}$方向上的投影相同的所有点构成的轨迹即该平面。
+
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.5\linewidth]{Pictures/chap08/WavefrontsHarmonicPlaneWave.eps}
+    \caption{平面简谐波的波阵面。}
+    \label{fig:08ex02.0222}
+\end{figure}
+如\reffig{08ex02.0222}，现在我们构建一组平面，
+其上的$\psi(\vec{\mathbf{r}})$于空间中正弦地变化，即
+\begin{align}
+    \psi(\vec{\mathbf{r}})=&A\sin(\vec{\mathbf{k}}\cdot\vec{\mathbf{r}})\, ,\\
+    \psi(\vec{\mathbf{r}})=&A\cos(\vec{\mathbf{k}}\cdot\vec{\mathbf{r}})\, ,\\
+    \psi(\vec{\mathbf{r}})=&A\mathrm{e}^{\mathrm{i}\vec{\mathbf{k}}\cdot\vec{\mathbf{r}}}\, .
+\end{align}
+显然上面三个式子中，$\psi(\vec{\mathbf{r}})$都在
+由$\vec{\mathbf{k}}\cdot\vec{\mathbf{r}}$取常数定义的每个平面上保持恒定。
+沿着$\vec{\mathbf{k}}$方向位移$\lambda$后，$\psi$应当在空间中重复。
+注意\reffig{08ex02.0222}中只画了无数平面中的若干个，
+而平面本身也应无穷延伸，因为扰动充满整个空间。
+当平面波在其波阵面上任意处均有相同“强度”时，
+我们称其为\keyindex{均匀波}{homogeneous wave}{wave\ 波}。
+
+总之，$\psi$在空间中的周期性可以表示为
+\begin{align}
+    \psi(\vec{\mathbf{r}})=\psi\left(\vec{\mathbf{r}}+\frac{\lambda\vec{\mathbf{k}}}{k}\right)\, ,
+\end{align}
+其中$k$是$\vec{\mathbf{k}}$的大小，

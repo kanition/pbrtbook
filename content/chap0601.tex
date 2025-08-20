@@ -58,14 +58,14 @@ virtual `\refvar{Float}{}` `\initvar{GenerateRay}{}`(const `\refvar{CameraSample
 给出了携带辐射的生成光线对应的胶片上的点。
 （对于包含镜头概念的相机）光线穿过的镜头上的点在\refvar{pLens}{}中，
 \refvar{CameraSample::time}{}给出了光线应该对场景进行采样的时间；
-实现应该用该值在\refvar{shutterOpen}{}-\refvar{shutterClose}{}时间范围内进行线性插值。
-（仔细选择这些各种样本值可以极大地提高最终图像的质量；这是第\refchap{采样与重构}的主要内容。）
+实现应该用该值在\refvar{shutterOpen}{}-\refvar{shutterClose}{}时间范围内进行线性插值
+（仔细选择这些各种样本值可以极大地提高最终图像的质量；这是第\refchap{采样与重构}的主要内容）。
 
 \refvar{GenerateRay}{()}也会返回一个浮点值，
 该值会影响沿生成的光线到达胶片平面的辐射对最终图像的贡献程度。
 简单的相机模型可以直接返回1，但是像\refsec{逼真相机}中模拟真实物理透镜系统的相机
-会根据其光学特性设置该值以表示光线携带了多少光量穿过透镜。
-（参见\refsub{相机测量方程}和\refsub{采样相机1}以了解更多关于如何计算和使用该权重的信息。）
+会根据其光学特性设置该值以表示光线携带了多少光量穿过透镜
+（参见\refsub{相机测量方程}和\refsub{采样相机1}以了解更多关于如何计算和使用该权重的信息）。
 \begin{lstlisting}
 `\refcode{Camera Declarations}{+=}\lastnext{CameraDeclarations}`
 struct `\initvar{CameraSample}{}` {

@@ -749,10 +749,12 @@ inline uint32_t `\initvar{EncodeMorton3}{}`(const `\refvar{Vector3f}{}` &v) {
 }
 \end{lstlisting}
 
-一旦计算了莫顿索引，我们将用\keyindex{基数排序}{radix sort}{}按莫顿索引值对
-\newline{\ttfamily mortonPrims}排序。
-我们已经发现对于BVH的构建，我们的基数排序实现明显快于使用我们系统标准库的{\ttfamily std::sort()}
-（它是\keyindex{快速排序}{quicksort}{}和\keyindex{插入排序}{insertion sort}{}的混合）。
+一旦计算了莫顿索引，我们将用\keyindex{基数排序}{radix sort}{}
+按莫顿索引值对\newline{\ttfamily mortonPrims}排序。
+我们已经发现对于BVH的构建，我们的基数排序实现
+明显快于使用我们系统标准库的{\ttfamily std::sort()}
+（它是\keyindex{快速排序}{quicksort}{}
+和\keyindex{插入排序}{insertion sort}{}的混合）。
 \begin{lstlisting}
 `\initcode{Radix sort primitive Morton indices}{=}`
 `\refvar{RadixSort}{}`(&mortonPrims);

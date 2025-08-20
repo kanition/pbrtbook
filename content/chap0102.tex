@@ -333,9 +333,9 @@ BSSRDF将在\refsub{BSSRDF}、\refsec{BSSRDF}和\refsec{使用扩散方程的次
 
 通常，从物体上一点到达相机的光量
 \sidenote{译者注：此处指辐亮度。}
-由物体的发光量（如果它自己就是光源）与反射光量之和决定。
-它被形式化为\keyindex{光传输方程}{light transport equation}{light transport\ 光传输}
-（也称作\keyindex{渲染方程}{rendering equation}{render\ 渲染}），
+由物体的发光量（若它自己就是光源）与反射光量之和决定。
+它被形式化为\keyindex{光传输方程}{light transport equation}{light transport\ 光传输}，
+也称作\keyindex{渲染方程}{rendering equation}{render\ 渲染}，
 表示从点$\bm p$沿方向${\bm \omega}_\mathrm{o}$的
 出射辐亮度$L_{\mathrm{o}}({\bm p},{\bm \omega}_\mathrm{o})$等于
 该点沿该方向的发光亮度加上
@@ -410,14 +410,13 @@ Whitted的方法可以扩展到实现镜面和玻璃外的更多效果。
 介质影响光沿路线传播的方式有两种。
 第一种是介质可以通过吸收或沿不同方向散射
 来\keyindex{熄灭}{extinguish}{}（或\keyindex{衰减}{attenuate}{}）光。
-可以通过计算射线端点与交点之间的\keyindex{透射率}{transmittance}{}$T$来
-实现这一效果。
-透射率表示交点处散射的光有多少成功到达射线端点。
+可以通过计算射线端点与交点之间的\keyindex{透射率}{transmittance}{}
+$T$来实现这一效果。透射率表示交点处散射的光有多少成功到达射线端点。
 
 介质也可以沿路线增强光。
 在介质发光（例如火焰）或从其他方向把光散射回该射线时可发生该现象（\reffig{1.10}）。
-可以通过数值计算\keyindex{体积光传输方程}{volume light transport equation}{light transport\ 光传输}来寻求该量，
-该方法还能计算光传输方程求得从表面反射回的光量。
+可以通过数值计算\keyindex{体积光传输方程}{volume light transport equation}{light transport\ 光传输}
+来寻求该量，该方法还能计算光传输方程求得从表面反射回的光量。
 介质的描述和体积渲染会留到第\refchap{体积散射}和\refchap{光传输II：体积渲染}。
 现在我们就能计算介质效应并将其合并到光线所含的光量中了。
 \begin{figure}[htbp]

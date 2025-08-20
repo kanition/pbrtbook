@@ -213,9 +213,9 @@ static `\refvar{Float}{}` `\initvar{RadicalInverseSpecialized}{}`(uint64_t a) {
 动机是在现代CPU上整数除法非常地慢，利用编译时常数除法的方法则能高效得多。
 
 例如，32位值除以3的整数除法可以通过用该值乘以2863311531得到64位中间值
-然后将结果右移33位算得；这俩都是非常高效的运算。
+然后将结果右移33位算得；这俩都是非常高效的运算
 （64位值除以3可以用类似方法，但这个神奇常数大得多；
-见\citet{10.5555/2462741}\sidenote{译者注：此处引用改为了新版。}了解关于该技术的更多内容。）
+见\citet{10.5555/2462741}\sidenote{译者注：此处引用改为了新版。}了解关于该技术的更多内容）。
 因此这里用模板函数允许编译器意识到在{\ttfamily while}循环中计算{\ttfamily next}值的除法时
 实际上是除以常数并给它应用该优化的机会。在2015年代笔记本上用了该优化的代码比
 基于整数除法指令的实现运行起来快至5.9倍。
@@ -247,8 +247,9 @@ template <int base> inline uint64_t
 }
 \end{lstlisting}
 
-Hammersley和Halton序列的缺点是随着基$b$的增加，样本值会展现出惊人的规律模式。
-该问题可以用\keyindex{置乱}{scrambled}{}Halton和Hammersley序列解决，
+Hammersley和Halton序列的缺点是随着基$b$增加，样本值会展现出惊人的规律模式。
+该问题可以用\keyindex{置乱}{scrambled}{}
+Halton和Hammersley序列解决，
 其计算倒根时对数字施加了重排。
 \begin{align}
     \label{eq:7.8}

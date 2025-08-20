@@ -429,8 +429,8 @@ p2t.y += Sy * p2t.z;
 \end{lstlisting}
 
 在任一边函数值恰好为零的罕见情况下，
-不可能确定光线是否命中了三角形，则用双精度浮点算术重新计算边方程。
-（\refsub{稳定的三角形相交}更详细地讨论了对这步的需求。）
+不可能确定光线是否命中了三角形，则用双精度浮点算术重新计算边方程
+（\refsub{稳定的三角形相交}更详细地讨论了对这步的需求）。
 实现该计算的代码片\refcode{Fall back to double-precision test at triangle edges}{}只是
 用{\ttfamily double}再次实现\refcode{Compute edge function coefficients e0, e1, and e2}{}。
 \begin{lstlisting}
@@ -466,8 +466,8 @@ if (det == 0)
 
 因为光线从原点出发，有单位长度，且沿$+z$轴，交点的$z$坐标值等于相交处的参数$t$值。
 为了计算该$z$值，我们先要继续对三角形顶点的$z$坐标施加错切变换。
-有了这些值后，三角形中交点的\keyindex{重心坐标}{barycentric coordinate}{coordinate\ 坐标}可
-用于在三角形间对其插值。它们由每个边函数值除以边函数值之和得到
+有了这些值后，三角形中交点的\keyindex{重心坐标}{barycentric coordinate}{coordinate\ 坐标}
+可用于在三角形间对其插值。它们由每个边函数值除以边函数值之和得到
 \sidenote{译者注：提示：$b_i$表示了原点接近$\bm p_i$的程度。
     利用向量知识可以证明，2D中对于包围了点$O$（不在边缘上）的$\triangle P_0P_1P_2$，
     存在比例固定的非零系数$e_i$使得$e_0\overrightarrow{OP_0}+e_1\overrightarrow{OP_1}+e_2\overrightarrow{OP_2}=\bm 0$，
@@ -637,8 +637,8 @@ void `\initvar{GetUVs}{}`(`\refvar{Point2f}{}` uv[3]) const {
 在报告成功相交前，如果形状被赋值了$\alpha$掩模纹理，则用它测试交点。
 该纹理可看作在三角形曲面上的1D函数，
 在任何取值为零的点处都忽略相交，
-高效地将三角形上的点当做不存在。
-（第\refchap{纹理}更详细地定义了纹理接口和实现。）
+高效地将三角形上的点当做不存在
+（第\refchap{纹理}更详细地定义了纹理接口和实现）。
 $\alpha$掩模对于表示像叶子那样的物体很有用：
 一片叶子可以建模为单个三角形，
 $\alpha$掩模“裁去”边缘使之保留叶子形状。
@@ -733,8 +733,8 @@ else
     ss = `\refvar{Normalize}{}`(isect->`\refvar[SurfaceInteraction::dpdu]{dpdu}{}`);
 \end{lstlisting}
 
-用{\ttfamily ns}和{\ttfamily ss}的叉积求\keyindex{双切向量}{bitangent vector}{vector\ 向量}{\ttfamily ts}，
-即得到一个正交于它俩的向量。
+用{\ttfamily ns}和{\ttfamily ss}的叉积求\keyindex{双切向量}{bitangent vector}{vector\ 向量}
+{\ttfamily ts}，即得到一个正交于它俩的向量。
 接下来，{\ttfamily ss}被{\ttfamily ts}和{\ttfamily ns}的叉积覆写；
 这保证{\ttfamily ss}和{\ttfamily ts}的叉积是{\ttfamily ns}。
 因此，如果提供了每个顶点的$\bm n$和$\bm s$值

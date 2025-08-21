@@ -319,8 +319,8 @@ $\mathrm{i}=\sqrt{-1}$.
 \end{align}
 于是复数的实部和虚部可以表示为
 \begin{align}
-    \mathrm{Re}(\widetilde{z})&=\frac{1}{2}(\widetilde{z}+\widetilde{z}^*)=r\cos\theta\, ,\\
-    \mathrm{Im}(\widetilde{z})&=\frac{1}{2\mathrm{i}}(\widetilde{z}-\widetilde{z}^*)=r\sin\theta\, .
+    \mathrm{Re}(\widetilde{z}) & =\frac{1}{2}(\widetilde{z}+\widetilde{z}^*)=r\cos\theta\, ,           \\
+    \mathrm{Im}(\widetilde{z}) & =\frac{1}{2\mathrm{i}}(\widetilde{z}-\widetilde{z}^*)=r\sin\theta\, .
 \end{align}
 我们习惯上选用实部来描述谐波，即
 \begin{align}
@@ -372,8 +372,8 @@ $\mathrm{i}=\sqrt{-1}$.
 \begin{align}
     (\vec{\mathbf{r}}-\vec{\mathbf{r}}_0)\cdot\vec{\mathbf{k}}=0\, ,
 \end{align}
-使得向量$\vec{\mathbf{r}}-\vec{\mathbf{r}}_0$扫过
-一个垂直于$\vec{\mathbf{k}}$的平面，其端点$(x,y,z)$取一切允许的值。
+使向量$\vec{\mathbf{r}}-\vec{\mathbf{r}}_0$扫过
+一垂直于$\vec{\mathbf{k}}$的平面，其端点$(x,y,z)$取一切允许的值。
 设$\vec{\mathbf{k}}$为
 \begin{align}
     \vec{\mathbf{k}}=k_x\hat{\text{\sffamily\bfseries i}}+k_y\hat{\text{\sffamily\bfseries j}}+k_z\hat{\text{\sffamily\bfseries k}}\, ,
@@ -404,9 +404,9 @@ $\mathrm{i}=\sqrt{-1}$.
 如\reffig{08ex02.0222}，现在我们构建一组平面，
 其上的$\psi(\vec{\mathbf{r}})$于空间中正弦地变化，即
 \begin{align}
-    \psi(\vec{\mathbf{r}})=&A\sin(\vec{\mathbf{k}}\cdot\vec{\mathbf{r}})\, ,\\
-    \psi(\vec{\mathbf{r}})=&A\cos(\vec{\mathbf{k}}\cdot\vec{\mathbf{r}})\, ,\\
-    \psi(\vec{\mathbf{r}})=&A\mathrm{e}^{\mathrm{i}\vec{\mathbf{k}}\cdot\vec{\mathbf{r}}}\, .
+    \psi(\vec{\mathbf{r}})= & A\sin(\vec{\mathbf{k}}\cdot\vec{\mathbf{r}})\, ,                  \\
+    \psi(\vec{\mathbf{r}})= & A\cos(\vec{\mathbf{k}}\cdot\vec{\mathbf{r}})\, ,                  \\
+    \psi(\vec{\mathbf{r}})= & A\mathrm{e}^{\mathrm{i}\vec{\mathbf{k}}\cdot\vec{\mathbf{r}}}\, .
 \end{align}
 显然上面三个式子中，$\psi(\vec{\mathbf{r}})$都在
 由$\vec{\mathbf{k}}\cdot\vec{\mathbf{r}}$取常数定义的每个平面上保持恒定。
@@ -418,6 +418,80 @@ $\mathrm{i}=\sqrt{-1}$.
 
 总之，$\psi$在空间中的周期性可以表示为
 \begin{align}
-    \psi(\vec{\mathbf{r}})=\psi\left(\vec{\mathbf{r}}+\frac{\lambda\vec{\mathbf{k}}}{k}\right)\, ,
+    \psi(\vec{\mathbf{r}})=\psi\left(\vec{\mathbf{r}}+\frac{\lambda}{k}\vec{\mathbf{k}}\right)\, ,
 \end{align}
-其中$k$是$\vec{\mathbf{k}}$的大小，
+这里$\vec{\mathbf{k}}$也称作\keyindex{传播向量}{propagation vector}{vector\ 向量}，
+其大小$k$就是传播数。接着，为了使波运动起来，我们引入时间等变量，最终便得到
+\begin{align}\label{eq:08ex02.DirectionCosines}
+    \psi(\vec{\mathbf{r}},t)=A\mathrm{e}^{\mathrm{i}(\vec{\mathbf{k}}\cdot\vec{\mathbf{r}}\mp\omega t)}\, .
+\end{align}
+若$\alpha,\beta$和$\gamma$是$\vec{\mathbf{k}}$在直角坐标系下的方向余弦，则上式还可以写作
+\begin{align}
+    \psi(x,y,z,t)=A\mathrm{e}^{\mathrm{i}(k(\alpha x+\beta y+\gamma z)\mp\omega t)}
+    =A\mathrm{e}^{\mathrm{i}k(\alpha x+\beta y+\gamma z\mp vt)}\, ,
+\end{align}
+注意
+\begin{align}
+    \alpha^2+\beta^2+\gamma^2=1\, .
+\end{align}
+
+\subsubsection*{三维波动微分方程}
+像前文推导一维波动微分方程那样，我们可以
+类似地用\refeq{08ex02.DirectionCosines}推导出
+\begin{definition}[\keyindex{三维波动微分方程}{three-dimensional differential wave equation}{equation\ 方程}]
+    \begin{align}\label{eq:08ex02.3d-differential-wave}
+        \frac{\partial^2 \psi}{\partial x^2}+\frac{\partial^2 \psi}{\partial y^2}
+        +\frac{\partial^2 \psi}{\partial z^2}=\frac{1}{v^2}\frac{\partial^2 \psi}{\partial t^2}\, .
+    \end{align}
+\end{definition}
+注意上式中$x,y$和$z$是对称出现的。引入\keyindex{拉普拉斯算符}{Laplacian operator}{}
+\begin{align}
+    \nabla^2\equiv\frac{\partial^2}{\partial x^2}
+    +\frac{\partial^2}{\partial y^2}+\frac{\partial^2}{\partial z^2}\, ,
+\end{align}
+则\refeq{08ex02.3d-differential-wave}简化为
+\begin{align}
+    \nabla^2\psi=\frac{1}{v^2}\frac{\partial^2 \psi}{\partial t^2}\, .
+\end{align}
+可以证明
+\begin{align}
+    \psi(\vec{\mathbf{r}},t)=C_1f\left(\frac{1}{k}\vec{\mathbf{k}}\cdot\vec{\mathbf{r}}-vt\right)
+    +C_2g\left(\frac{1}{k}\vec{\mathbf{k}}\cdot\vec{\mathbf{r}}+vt\right)
+\end{align}
+均是上述波动微分方程的平面波解，其中$f$和$g$是二阶可微的任意函数
+（不一定为简谐函数），$C_1$和$C_2$是常数。
+
+\subsection{电磁理论}\label{sub:电磁理论}
+在\keyindex{经典电动力学}{classical electrodynamics}{}
+的图像中，电磁波是连续传递能量的。但更现代的\keyindex{量子电动力学}{quantum electrodynamics}{}
+则用一种质量为零的基本“粒子”来描述电磁相互作用和能量传递，这种粒子称作\keyindex{光子}{photon}{}。
+光以波的形式在空间中传播，但在发射和吸收时又显出粒子性，即二象性。
+平均而言，我们可以把大量光子流的平均作用看作是经典电磁波，
+但要清楚电磁波的表观连续性只是宏观世界的假象，事情并不简单。
+
+\subsubsection*{电磁理论基本定律}
+实验显示，即使是在真空中分开的\keyindex{电荷}{charge}{}
+也仍受彼此的相互作用。我们想象每个电荷都被称作电场
+的东西包围着，并假设每个电荷与它所沉浸于其中的电场直接相互作用。
+若一个点电荷$q$受到一个力$\vec{\mathbf{F}}_E$，
+则它所在位置上的\keyindex{电场}{electric field}{}
+强度$\vec{\mathbf{E}}$就由$\vec{\mathbf{F}}_E=q\cdot\vec{\mathbf{E}}$定义，
+单位\sidenote{\keyindex{伏特}{volt}{}
+（伏）是电压和电势单位，得名于18至19世纪意大利物理学家
+亚历山德罗·朱塞佩·安东尼奥·阿纳斯塔西奥·伏特
+(Alessandro Giuseppe Antonio Anastasio Volta)；
+\keyindex{库仑}{coulomb}{}
+（库）是电荷量单位，得名于18至19世纪法国物理学家夏尔·奥古斯丁·德·库仑
+(Charles-Augustin de Coulomb)。}
+为伏特/米(V/m)或牛顿/库仑(N/C)。
+
+此外我们还能观察到，一个运动的电荷还会受到另一个力$\vec{\mathbf{F}}_M$，
+它与运动电荷的速度$\vec{\mathbf{v}}$成正比。
+为此我们定义另一个场，即\keyindex{磁感应}{magnetic induction}{}
+强度，或称\keyindex{磁场}{magnetic field}{}
+$\vec{\mathbf{B}}$，使得$\vec{\mathbf{F}}_M=q\cdot\vec{\mathbf{v}}\times\vec{\mathbf{B}}$，
+单位\sidenote{特斯拉得名于19至20世纪塞尔维亚裔美国物理学家
+尼古拉·特斯拉(Nikola Tesla)。}为\keyindex{特斯拉}{tesla}{}
+(T)。如果电荷是在既有电场又有磁场的空间区域内运动，
+则会同时受到$\vec{\mathbf{F}}_E$和$\vec{\mathbf{F}}_M$两个力，
+合力为$\vec{\mathbf{F}}=q\cdot\vec{\mathbf{E}}+q\cdot\vec{\mathbf{v}}\times\vec{\mathbf{B}}$.

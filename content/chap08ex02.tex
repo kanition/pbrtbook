@@ -22,15 +22,10 @@
 \keyindex{机械波}{mechanical wave}{wave\ 波}是
 我们最熟悉的波，例如琴弦上的波、液体表面的波以及
 空气中的\keyindex{声波}{sound wave}{wave\ 波}。
-\begin{definition}[\keyindex{纵波}{longitudinal wave}{wave\ 波}]
-    介质在波动方向上位移。
-\end{definition}
-\begin{definition}[\keyindex{横波}{transverse wave}{wave\ 波}]
-    介质位移的方向垂直于波动方向。
-\end{definition}
-\begin{example}
-    声波是纵波；琴弦上的波、电磁波是横波。
-\end{example}
+波还有纵波、横波之分。介质在波动方向上位移的是\keyindex{纵波}{longitudinal wave}{wave\ 波}。
+介质位移的方向垂直于波动方向的是\keyindex{横波}{transverse wave}{wave\ 波}。
+例如，声波是纵波；琴弦上的波、电磁波是横波。
+
 波区别于粒子流的几个关键特征之一是，
 扰动在前进，但实物介质并不前进。
 就像风吹起滚滚麦浪，但麦穗只是原地摇摆。
@@ -55,7 +50,7 @@
     \psi(x,t)\bigg|_{t=0}=f(x,0)=f(x)
 \end{align}
 表示0时刻波的剖面。
-\begin{figure}[htbp]
+\begin{figure}[htb]
     \centering
     \includegraphics[width=0.5\linewidth]{Pictures/chap08/MovingReferenceFrame.eps}
     \caption{运动参考系。}
@@ -189,13 +184,13 @@ $kx$这个整体是无量纲的。$\psi(x)$的最大值$A>0$称作波的\keyinde
 \end{align}
 
 周期的倒数称作\keyindex{时间频率}{temporal frequency}{frequency\ 频率}，
-可简称\keyindex{频率}{frequency}{}，记作$\nu$，即单位时间里波的个数
-\sidenote{注意$\nu$是希腊字母。}：
+可简称\keyindex{频率}{frequency}{}，记作$\nu$，即单位时间里波的个数：
 \begin{align}
     \nu=\frac{1}{\tau}\, ,
 \end{align}
 其单位为\keyindex{赫兹}{Hertz}{}（简写为Hz），即每秒周数。
 结合前述定义，不难发现\keyindex{波速}{speed}{}$v$满足
+\sidenote{注意$v$是英语字母，$\nu$是希腊字母。}
 \begin{align}
     v=\nu\lambda\, .
 \end{align}
@@ -421,7 +416,9 @@ $\mathrm{i}=\sqrt{-1}$.
     \psi(\vec{\mathbf{r}})=\psi\left(\vec{\mathbf{r}}+\frac{\lambda}{k}\vec{\mathbf{k}}\right)\, ,
 \end{align}
 这里$\vec{\mathbf{k}}$也称作\keyindex{传播向量}{propagation vector}{vector\ 向量}，
-其大小$k$就是传播数。接着，为了使波运动起来，我们引入时间等变量，最终便得到
+其大小$k$就是传播数\sidenote{类似地，在后文的记号中，如果我们主要想强调一个向量的大小，
+则可能会记作同一字母的标量形式。读者联系上下文即可理解。}。
+接着，为了使波运动起来，我们引入时间等变量，最终便得到
 \begin{align}\label{eq:08ex02.DirectionCosines}
     \psi(\vec{\mathbf{r}},t)=A\mathrm{e}^{\mathrm{i}(\vec{\mathbf{k}}\cdot\vec{\mathbf{r}}\mp\omega t)}\, .
 \end{align}
@@ -473,25 +470,129 @@ $\mathrm{i}=\sqrt{-1}$.
 实验显示，即使是在真空中分开的\keyindex{电荷}{charge}{}
 也仍受彼此的相互作用。我们想象每个电荷都被称作电场
 的东西包围着，并假设每个电荷与它所沉浸于其中的电场直接相互作用。
-若一个点电荷$q$受到一个力$\vec{\mathbf{F}}_E$，
-则它所在位置上的\keyindex{电场}{electric field}{}
-强度$\vec{\mathbf{E}}$就由$\vec{\mathbf{F}}_E=q\cdot\vec{\mathbf{E}}$定义，
-单位\sidenote{\keyindex{伏特}{volt}{}
-（伏）是电压和电势单位，得名于18至19世纪意大利物理学家
-亚历山德罗·朱塞佩·安东尼奥·阿纳斯塔西奥·伏特
-(Alessandro Giuseppe Antonio Anastasio Volta)；
-\keyindex{库仑}{coulomb}{}
-（库）是电荷量单位，得名于18至19世纪法国物理学家夏尔·奥古斯丁·德·库仑
-(Charles-Augustin de Coulomb)。}
-为伏特/米(V/m)或牛顿/库仑(N/C)。
+\begin{definition}[\keyindex{电场}{electric field}{}]
+    若一个点电荷$q$受到电场的力$\vec{\mathbf{F}}_E$，
+    则它所在位置上的电场$\vec{\mathbf{E}}$就由
+    \begin{align}
+        \vec{\mathbf{F}}_E=q\cdot\vec{\mathbf{E}}
+    \end{align}
+    定义，电场强度单位为伏特/米(V/m)或牛顿/库仑(N/C)。
+\end{definition}
+
+\begin{remark}
+    \keyindex{伏特}{volt}{}
+    （伏）是电压和电势单位，得名于18至19世纪意大利物理学家
+    亚历山德罗·朱塞佩·安东尼奥·阿纳斯塔西奥·伏特
+    (Alessandro Giuseppe Antonio Anastasio Volta)；
+    \keyindex{库仑}{coulomb}{}
+    （库）是电荷量单位，得名于18至19世纪法国物理学家夏尔·奥古斯丁·德·库仑
+    (Charles-Augustin de Coulomb)。
+\end{remark}
 
 此外我们还能观察到，一个运动的电荷还会受到另一个力$\vec{\mathbf{F}}_M$，
 它与运动电荷的速度$\vec{\mathbf{v}}$成正比。
-为此我们定义另一个场，即\keyindex{磁感应}{magnetic induction}{}
-强度，或称\keyindex{磁场}{magnetic field}{}
-$\vec{\mathbf{B}}$，使得$\vec{\mathbf{F}}_M=q\cdot\vec{\mathbf{v}}\times\vec{\mathbf{B}}$，
-单位\sidenote{特斯拉得名于19至20世纪塞尔维亚裔美国物理学家
-尼古拉·特斯拉(Nikola Tesla)。}为\keyindex{特斯拉}{tesla}{}
-(T)。如果电荷是在既有电场又有磁场的空间区域内运动，
+为此我们定义另一个场$\vec{\mathbf{B}}$：
+\begin{definition}[\keyindex{磁场}{magnetic field}{}]
+    它使得
+    \begin{align}
+        \vec{\mathbf{F}}_M=q\cdot\vec{\mathbf{v}}\times\vec{\mathbf{B}}\, .
+    \end{align}
+    $\vec{\mathbf{B}}$的大小称作\keyindex{磁感应}{magnetic induction}{}
+    强度，单位为\keyindex{特斯拉}{tesla}{}
+    (T)。
+\end{definition}
+
+\begin{remark}
+    磁感应强度单位得名于19至20世纪塞尔维亚裔美国物理学家
+    尼古拉·特斯拉(Nikola Tesla)。
+\end{remark}
+
+若电荷在既有电场又有磁场的空间区域内运动，
 则会同时受到$\vec{\mathbf{F}}_E$和$\vec{\mathbf{F}}_M$两个力，
 合力为$\vec{\mathbf{F}}=q\cdot\vec{\mathbf{E}}+q\cdot\vec{\mathbf{v}}\times\vec{\mathbf{B}}$.
+后文我们将看到，随时间变化的磁场会产生电场，随时间变化的电场会产生磁场，
+两者的互相依赖性是描述光的关键。
+
+\subsubsection*{法拉第感应定律}
+法拉第（迈克尔·法拉第(Michael Faraday)，18至19世纪英国物理学家）
+在线圈实验中发现了\keyindex{电磁感应}{electromagnetic induction}{}
+现象，而“变化”是其最实质性的因素。
+
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.4\linewidth]{Pictures/chap08/largerLoopGreaterEmf.eps}
+    \caption{更大的环路通过更大的时变磁通量而产生更大的emf。}
+    \label{fig:08ex02.0302}
+\end{figure}
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.75\linewidth]{Pictures/chap08/emfProportionalPerpendicularArea.eps}
+    \caption{(a)感生电动势正比于磁场垂直穿过的面积。(b)垂直于磁场的面积随$\cos\theta$变化。}
+    \label{fig:08ex02.0303}
+\end{figure}
+
+将一根磁铁插进线圈时，
+线圈两端会有电压，称作\keyindex{感生电动势}{induced electromotive force}{}
+(emf)\sidenote{作者强调，尽管英文中感生电动势被称作“force”，
+但它并不是力，而是电压，所以会尽量用简称emf来避免误解。}。
+该电动势的振幅依赖于磁铁运动速度，或者说依赖于穿过线圈的$B$的变化率，而不是$B$本身。
+\reffig{08ex02.0302}中，同一变化的$B$场穿过两个不同导线环路，
+大的环路两端有更大的感生电动势，即它正比于$B$场垂直穿过的环路面积$A$.
+而\reffig{08ex02.0303}中，当环路变倾斜，则垂直于磁场的面积$A_{\perp}$
+按$A\cos\theta$变化，其中$\theta$为倾角。当$\theta=90^\circ$时，
+没有$B$场穿过环路，感生电动势为零。反之，当磁场恒定时，
+感生电动势正比于磁场垂直穿过环路面积的变化率，此外它还正比于$B$.
+
+总之，当$A_{\perp}$恒定时，$\mathrm{emf}\propto A_{\perp}\displaystyle\frac{\Delta B}{\Delta t}$；
+当$B$恒定时，$\mathrm{emf}\propto B\displaystyle\frac{\Delta A_{\perp}}{\Delta t}$.
+因此，感生电动势依赖于$A_{\perp}$与$B$乘积的变化率。
+我们定义穿过导线环路的\keyindex{磁场通量}{flux of the magnetic field}{flux\ 通量}
+为
+\begin{align}
+    \varPhi_M=B_{\perp}A=BA_{\perp}=BA\cos\theta\, .
+\end{align}
+
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.5\linewidth]{Pictures/chap08/openAreaBoundedByClosedCurve.eps}
+    \caption{$\vec{\mathbf{B}}$场穿过以闭合曲线$C$为边界的非闭合曲面$A$.}
+    \label{fig:08ex02.0304}
+\end{figure}
+
+如\reffig{08ex02.0304}，更一般地，$\vec{\mathbf{B}}$场可能在空间中变化。
+穿过导电环路包围的任意非闭合曲面$A$的磁场通量为
+\begin{align}
+    \varPhi_M=\iint\limits_A\vec{\mathbf{B}}\cdot\mathrm{d}\vec{\mathbf{S}}\, ,
+\end{align}
+其中$\mathrm{d}\vec{\mathbf{S}}$垂直于曲面朝外。环路上的感生电动势则为
+\begin{align}
+    \mathrm{emf}=-\frac{\mathrm{d}\varPhi_M}{\mathrm{d}t}\, ,
+\end{align}
+其中负号说明，感生电动势想要驱动感生电流，以产生感生磁场，进而反抗原先引发它的通量变化，
+即\keyindex{楞次定律}{Lenz's law}{}。
+
+任何一个场中沿着一条闭合曲线的路径积分叫做
+该场的\keyindex{环量}{circulation}{}。
+电动势也是一种电势差，即单位电荷的电势能之差，
+也对应着对单位电荷做的功，或者说对应着电场乘以距离。
+电动势只随电场出现：
+\begin{align}
+    \mathrm{emf}=\oint\limits_C\vec{\mathbf{E}}\cdot\mathrm{d}\vec{\mathbf{\ell}}\, ,
+\end{align}
+其中积分沿着对应于环路的闭合曲线$C$进行。
+联立以上三式可得
+\begin{theorem}[\keyindex{法拉第电磁感应定律}{Faraday's law of induction}{}]
+    \begin{align}
+        \oint\limits_C\vec{\mathbf{E}}\cdot\mathrm{d}\vec{\mathbf{\ell}}
+        =-\frac{\mathrm{d}}{\mathrm{d}t}\iint\limits_A\vec{\mathbf{B}}\cdot\mathrm{d}\vec{\mathbf{S}}\, .
+    \end{align}
+\end{theorem}
+上式除了积分路径$C$外就别无其他物理环路了。
+$C$对于是否选在导体内外或附近也没有任何要求。
+该式中的电场仅由时变的磁场产生，没有电荷作为电场的\keyindex{源}{source}{}
+或\keyindex{汇}{sink}{}，所以电场线均自身闭合形成环。
+
+当我们感兴趣的是没有导线回路的空间中传播的电磁波时，
+磁通量的变化是完全由$\vec{\mathbf{B}}$引起的，这时感应定律可重写为
+\begin{align}
+    \oint\limits_C\vec{\mathbf{E}}\cdot\mathrm{d}\vec{\mathbf{\ell}}
+    =-\iint\limits_A\frac{\partial \vec{\mathbf{B}}}{\partial t}\cdot\mathrm{d}\vec{\mathbf{S}}\, .
+\end{align}
+上式表明一个随时间变化的磁场伴随有一个电场。

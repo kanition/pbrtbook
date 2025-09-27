@@ -189,8 +189,8 @@ $kx$这个整体是无量纲的。$\psi(x)$的最大值$A>0$称作波的\keyinde
     \nu=\frac{1}{\tau}\, ,
 \end{align}
 其单位为\keyindex{赫兹}{Hertz}{}（简写为Hz），即每秒周数。
-结合前述定义，不难发现\keyindex{波速}{speed}{}$v$满足
-\sidenote{注意$v$是英语字母，$\nu$是希腊字母。}
+结合前述定义，不难发现\keyindex{波速}{speed}{}
+$v$满足\sidenote{注意$v$是英语字母，$\nu$是希腊字母。}
 \begin{align}
     v=\nu\lambda\, .
 \end{align}
@@ -199,7 +199,7 @@ $kx$这个整体是无量纲的。$\psi(x)$的最大值$A>0$称作波的\keyinde
 \begin{align}
     \omega=\frac{2\pi}{\tau}=2\pi\nu=kv\, ,
 \end{align}
-可简称为角频率，单位为弧度每秒（rad/s）。
+可简称为\keyindex{角频率}{angular frequency}{frequency\ 频率}，单位为弧度每秒（rad/s）。
 
 此外，\keyindex{空间频率}{spatial frequency}{frequency\ 频率}，
 也称\keyindex{波数}{wavenumber}{}，定义为
@@ -292,7 +292,8 @@ $180^\circ$.
 异相波倾向于互相抵消的现象使得这整类现象被称作\keyindex{干涉}{interference}{}。
 
 \subsubsection*{波的复数表示}
-谐波所含的三角函数不便于数学处理，因此我们引入更方便的复数表示方法。
+谐波所含的三角函数不便于数学处理，因此我们引入更方便的复数表示方法
+\sidenote{本节复数等数学符号暂时遵循参考文献的记法。}。
 \keyindex{复数}{complex number}{}
 $\widetilde{z}$形如
 \begin{align}
@@ -467,7 +468,7 @@ $\mathrm{i}=\sqrt{-1}$.
 但要清楚电磁波的表观连续性只是宏观世界的假象，事情并不简单。
 
 \subsubsection*{电磁理论基本定律}
-实验显示，即使是在真空中分开的\keyindex{电荷}{charge}{}
+实验显示，即使是在真空中分开的\keyindex{电荷}{electric charge}{}
 也仍受彼此的相互作用。我们想象每个电荷都被称作电场
 的东西包围着，并假设每个电荷与它所沉浸于其中的电场直接相互作用。
 \begin{definition}[\keyindex{电场}{electric field}{}]
@@ -489,7 +490,27 @@ $\mathrm{i}=\sqrt{-1}$.
     (Charles-Augustin de Coulomb)。
 \end{remark}
 
-此外我们还能观察到，一个运动的电荷还会受到另一个力$\vec{\mathbf{F}}_M$，
+\begin{theorem}[\keyindex{库仑定律}{Coulomb's law}{}]
+    真空中两个静止点电荷之间的相互作用力，
+    称作\keyindex{静电力}{electrostatic force}{}
+    或\keyindex{库仑力}{Coulomb force}{}，
+    其大小$F$与它们的电荷量$q_1$、$q_2$的乘积成正比，
+    与它们的距离$r$的平方成反比，作用力的方向在
+    它们的连线上；同性电荷相斥，异性电荷相吸。
+    该定律的标量形式为
+    \begin{align}
+        F=k_e\frac{q_1q_2}{r^2}\,
+    \end{align}
+    其中比例系数$k_e$称作\keyindex{静电力常量}{electrostatic force constant}{}
+    或\keyindex{库仑常量}{Coulomb's constant}{}，取值为
+    \begin{align}
+        k_e=\frac{1}{4\pi\epsilon_0}=8.9875517862\times10^9\text{N}\cdot \text{m}^2/\text{C}^2\, ,
+    \end{align}
+    其中$\epsilon_0$为真空电容率。
+\end{theorem}
+
+此外，一个运动的电荷还会受到另一个力$\vec{\mathbf{F}}_M$，
+称作\keyindex{洛伦兹力}{Lorentz force}{}，
 它与运动电荷的速度$\vec{\mathbf{v}}$成正比。
 为此我们定义另一个场$\vec{\mathbf{B}}$：
 \begin{definition}[\keyindex{磁场}{magnetic field}{}]
@@ -547,8 +568,10 @@ $\mathrm{i}=\sqrt{-1}$.
 我们定义穿过导线环路的\keyindex{磁场通量}{flux of the magnetic field}{flux\ 通量}
 为
 \begin{align}
-    \varPhi_M=B_{\perp}A=BA_{\perp}=BA\cos\theta\, .
+    \varPhi_M=B_{\perp}A=BA_{\perp}=BA\cos\theta\, ,
 \end{align}
+其单位为\keyindex{韦伯}{weber}{}
+(Wb)\sidenote{得名于19世纪德国物理学家威廉·爱德华·韦伯(Wilhelm Eduard Weber)。}。
 
 \begin{figure}[htbp]
     \centering\includegraphics[width=0.5\linewidth]{Pictures/chap08/openAreaBoundedByClosedCurve.eps}
@@ -565,8 +588,10 @@ $\mathrm{i}=\sqrt{-1}$.
 \begin{align}
     \mathrm{emf}=-\frac{\mathrm{d}\varPhi_M}{\mathrm{d}t}\, ,
 \end{align}
-其中负号说明，感生电动势想要驱动感生电流，以产生感生磁场，进而反抗原先引发它的通量变化，
-即\keyindex{楞次定律}{Lenz's law}{}。
+其中负号说明
+\begin{theorem}[\keyindex{楞次定律}{Lenz's law}{}]
+    感生电动势想要驱动的感生电流，其对应的感生磁场总是想阻碍原先引发它的磁通量的变化。
+\end{theorem}
 
 任何一个场中沿着一条闭合曲线的路径积分叫做
 该场的\keyindex{环量}{circulation}{}。
@@ -578,7 +603,7 @@ $\mathrm{i}=\sqrt{-1}$.
 \end{align}
 其中积分沿着对应于环路的闭合曲线$C$进行。
 联立以上三式可得
-\begin{theorem}[\keyindex{法拉第电磁感应定律}{Faraday's law of induction}{}]
+\begin{theorem}[\keyindex{法拉第电磁感应定律}{Faraday's law of electromagnetic induction}{}]
     \begin{align}
         \oint\limits_C\vec{\mathbf{E}}\cdot\mathrm{d}\vec{\mathbf{\ell}}
         =-\frac{\mathrm{d}}{\mathrm{d}t}\iint\limits_A\vec{\mathbf{B}}\cdot\mathrm{d}\vec{\mathbf{S}}\, .
@@ -596,3 +621,86 @@ $C$对于是否选在导体内外或附近也没有任何要求。
     =-\iint\limits_A\frac{\partial \vec{\mathbf{B}}}{\partial t}\cdot\mathrm{d}\vec{\mathbf{S}}\, .
 \end{align}
 上式表明一个随时间变化的磁场伴随有一个电场。
+
+\subsubsection*{高斯定律}
+电场的另一基本定律得名于18-19世纪德国数学家卡尔·弗里德里希·高斯(Carl Friedrich Gauss)。
+高斯定律描述了电场通量和电荷之间的关系。
+场和通量的概念都是从流体动力学引入的。
+想象一个闭合曲面隔离出一团运动的流体，例如管道中充盈流动的水，
+显然穿过它两个端面的体积流量大小相等，即单位时间内流进来和流出去的量相同。
+此时全部表面上相加的流体净流量为零。
+但如果有细针插进其中注入或吸走流体，即存在源或汇，则净流量将不为零。
+
+这种概念同样适用于电场。如\reffig{08ex02.0307}所示，
+考虑任意某电场中想象的封闭曲面$A$，则穿过$A$的
+\keyindex{电场通量}{flux of the electric field}{flux\ 通量}
+为
+\begin{align}
+    \varPhi_E=\oiint\limits_A\vec{\mathbf{E}}\cdot\mathrm{d}\vec{\mathbf{S}}\, ,
+\end{align}
+其中带圈的二重积分号强调积分曲面是封闭的，$\mathrm{d}\vec{\mathbf{S}}$垂直于曲面朝外。
+当封闭曲面包围的区域内没有电场的源或汇时，电场通量等于零。
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.5\linewidth]{Pictures/chap08/GausssLawElectric.eps}
+    \caption{穿过封闭区域$A$的电场$\vec{\mathbf{E}}$.}
+    \label{fig:08ex02.0307}
+\end{figure}
+
+当区域内存在源或汇时，考虑任意以正电荷$q$为球心、半径为$r$的球面。
+根据库仑定律，该正电荷的电场$\vec{\mathbf{E}}$在球面表面任意处的大小均为
+\begin{align}
+    E=\frac{1}{4\pi\epsilon_0}\frac{q}{r^2}\, ,
+\end{align}
+且都沿径向向外垂直于球面表面，即$\vec{\mathbf{E}}=\vec{\mathbf{E}}_\perp$.
+于是
+\begin{align}
+    \varPhi_E=\oiint\limits_A\vec{\mathbf{E}}\cdot\mathrm{d}\vec{\mathbf{S}}
+    =\oiint\limits_A E_\perp\mathrm{d}S
+    =E\oiint\limits_A\mathrm{d}S=4\pi r^2E=\frac{q}{\epsilon_0}\, .
+\end{align}
+推广到区域内的多个电荷时，将上式累加即可：
+\begin{align}
+    \varPhi_E=\frac{1}{\epsilon_0}\sum q\, .
+\end{align}
+把电荷分布近似为连续分布，在$A$所包围的体积$V$内，
+记电荷分布密度为$\rho$，则我们最终得到
+\begin{theorem}[电场的\keyindex{高斯定律}{Gauss's Law}{}]
+    穿过任意封闭曲面的净电场通量正比于它包围的净电荷量。
+    \begin{align}\label{eq:08ex02.GausssLawElectric}
+        \oiint\limits_A\vec{\mathbf{E}}\cdot\mathrm{d}\vec{\mathbf{S}}
+        =\frac{1}{\epsilon_0}\iiint_V\rho\mathrm{d}V\, .
+    \end{align}
+\end{theorem}
+
+真空中，自由空间的电容率为$\epsilon_0=8.85418782\times10^{-12}\text{C}^2/\text{N}\cdot\text{m}^2$，
+这个值取决于其定义和相关物理量的单位选择，并不反映真空的本质属性。
+若电荷嵌在某种实物介质中，则须用该介质的
+电容率$\epsilon$替代\refeq{08ex02.GausssLawElectric}中的$\epsilon_0$；
+然而电容率又是描述平行板电容器的的基础概念，单位制的差异
+引发了$\epsilon$的取值问题。为了避免这些麻烦，
+我们定义一个与单位制无关的新物理量，即\keyindex{相对电容率}{relative permittivity}{permittivity\ 电容率}
+$K_E$，旧称\keyindex{相对介电常数}{relative dielectric constant}{}：
+\begin{align}
+    K_E=\frac{\epsilon}{\epsilon_0}\, ,
+\end{align}
+显然真空的$K_E$为1，它是无量纲的。
+
+目前物理界尚未发现与电荷对应的“磁荷”存在，没有发现过孤立的磁极（磁单极）。
+磁场$\vec{\mathbf{B}}$的磁力线总是连续和闭合的。因此对于磁场中的任何封闭曲面，
+由于其中不存在任何磁单极，所以进入和离开的磁力线数目保持相等（如\reffig{08ex02.0308}），
+穿过该曲面的磁通量$\varPhi_M$为零。于是我们得到
+\begin{theorem}[磁场的高斯定律]
+    磁场中的任何封闭曲面的净磁通量为零。
+    \begin{align}
+        \oiint\limits_A\vec{\mathbf{B}}\cdot\mathrm{d}\vec{\mathbf{S}}=0\, .
+    \end{align}
+\end{theorem}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.5\linewidth]{Pictures/chap08/GausssLawMagnetic.eps}
+    \caption{穿过封闭区域$A$的磁场$\vec{\mathbf{B}}$.}
+    \label{fig:08ex02.0308}
+\end{figure}
+
+\subsubsection*{安培环路定律}

@@ -1,6 +1,7 @@
 \section{法线}\label{sec:法线}
 
-\keyindex{曲面法线}{surface normal}{}（或简称\keyindex{法线}{normal}{}）
+\keyindex{曲面法线}{surface normal}{}，
+或简称\keyindex{法线}{normal}{}，
 是在某一位置垂直于曲面的向量。
 它可定义为与曲面上某点相切的任意两个非平行向量的叉积。
 尽管法线看似和向量相似，但两者有重要区别：
@@ -64,9 +65,9 @@ template <typename T> inline
 一个要实现的新方法源自经常需要翻转曲面法线
 使其和给定向量位于同一半球的事实——
 例如常常需要曲面法线和出射光线位于同一半球。实用函数
-\refvar{Faceforward}{()}封装了这步小型计算。
+\refvar{Faceforward}{()}封装了这步小型计算
 （pbrt也为\refvar{Vector3}{}和\refvar{Normal3}{}作为参数的
-其他三种组合提供了该函数的变种。）
+其他三种组合提供了该函数的变种）。
 但是在使用其他实例时要谨慎：
 例如当使用接收两个\refvar{Vector3}{}的版本时，
 确保第一个参数是要被返回的那个（可能被翻转了）

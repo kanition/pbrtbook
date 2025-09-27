@@ -29,13 +29,14 @@
 
 本章还介绍类\refvar{Aggregate}{}，
 它表示可以容纳许多\refvar{Primitive}{}的容器。
-pbrt用该类作为\keyindex{加速结构}{acceleration structure}{}的基础——
-帮助减少测试射线与场景中所有$n$个物体相交本来的复杂度$O(n)$.
+pbrt用该类作为\keyindex{加速结构}{acceleration structure}{}
+的基础——帮助减少测试射线与场景中所有$n$个物体相交本来的复杂度$O(n)$.
 大多数射线只与少量图元相交而与剩下的错开很大距离。
 如果相交加速算法能一次拒绝整组图元，
 比起简单地依次测试每条射线与每个图元，性能会有巨大的提升。
 对这些加速结构复用\refvar{Primitive}{}接口的一个好处是
-让支持一种\keyindex{加速器}{accelerator}{}包含另一种加速器的混合方法更容易。
+让支持一种\keyindex{加速器}{accelerator}{}
+包含另一种加速器的混合方法更容易。
 
 本章描述了两个加速器的实现，
 第一个\refvar{BVHAccel}{}基于构建场景中围绕物体的边界框的层级，

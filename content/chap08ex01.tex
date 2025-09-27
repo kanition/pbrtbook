@@ -301,9 +301,9 @@ $G_1({\bm\omega}_{\mathrm{h}},{\bm\omega}_{\mathrm{o}})$的值域为$[0,1]$，
 我们应注意到，上式考虑的其实是入射光在曲面上经历第一次反射后刚刚离开的情形，
 并未考虑到反射的光线可能还会再命中曲面一次甚至多次然后从其他方向射出的情况。
 然而我们在宏观尺度下的BRDF是定义在单次反射的情形下的，所以应排除掉这些光线。
-为此，我们引入\keyindex{遮挡函数}{shadowing function}{}来到达这一效果。
-实际中，我们通常直接使用联合的\keyindex{掩模遮挡函数}{masking-shadowing function}{}$G_2$来代替$G_1$，
-它计入的微面比例要求在${\bm\omega}_{\mathrm{o}}$和${\bm\omega}_{\mathrm{i}}$上双向可见，此时
+为此，我们引入\keyindex{遮挡函数}{shadowing function}{}
+来到达这一效果。实际中，我们通常直接使用联合的\keyindex{掩模遮挡函数}{masking-shadowing function}{}
+$G_2$来代替$G_1$，它计入的微面比例要求在${\bm\omega}_{\mathrm{o}}$和${\bm\omega}_{\mathrm{i}}$上双向可见，此时
 \begin{align}\label{eq:08ex01-MacroBRDFG2}
     f_{\mathrm{r}}({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})
      & =\frac{1}{|{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{i}}||{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{o}}|}

@@ -73,8 +73,8 @@
 pbrt中的所有滤波器实现都从抽象类\refvar{Filter}{}派生，
 它为滤波中用的函数$f(x,y)$提供了接口；见\refeq{7.12}。
 （\refsec{胶片与成像管道}描述的）类\refvar{Film}{}存有指向\refvar{Filter}{}的指针
-并在把图像样本的贡献累加到最终图像时对其滤波。
-（\reffig{7.39}展示比较了用本节各种滤波器来重建像素值而渲染出的图像放大区域。）
+并在把图像样本的贡献累加到最终图像时对其滤波
+（\reffig{7.39}展示比较了用本节各种滤波器来重建像素值而渲染出的图像放大区域）。
 基类\refvar{Filter}{}定义在文件\href{https://github.com/mmp/pbrt-v3/blob/master/src/core/filter.h}{\ttfamily core/filter.h}
 和\href{https://github.com/mmp/pbrt-v3/blob/master/src/core/filter.cpp}{\ttfamily core/filter.cpp}中。
 \begin{figure}[htbp]

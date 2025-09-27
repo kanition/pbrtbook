@@ -75,7 +75,8 @@ bool `\refvar{recursiveIntersect}{}`(const `\refvar{Ray}{}` &r, `\refvar{Float}{
     \item {\sffamily 圆柱}：对于在屏幕上张开几像素的曲线（如不远处看到的意大利面），
           \refvar{Curve}{}形状可以计算着色法线使得曲线看起来实际是圆柱体。
     \item \keyindex{丝带}{ribbon}{}：这个变体对于建模实际没有
-          圆柱\keyindex{横截面}{cross section}{}的形状（例如一片草）很有用。
+          圆柱\keyindex{横截面}{cross section}{}
+          的形状（例如一片草）很有用。
 \end{itemize}
 \begin{figure}[htbp]
     \centering\includegraphics[width=0.5\linewidth]{chap03/threecurves.png}
@@ -97,10 +98,10 @@ enum class `\initvar{CurveType}{}` { `\initvar{Flat}{}`, `\initvar[CurveType::Cy
 \end{lstlisting}
 
 给定在pbrt场景描述文件中指定的曲线，
-值得将其分为若干段，每段包含曲线的一部分参数$u$范围。
+值得将其分为若干段，每段包含曲线的一部分参数$u$范围
 （这样做的一个原因是轴对齐边界框不能紧致地包围起伏的曲线，
 但把贝塞尔样条分开会使其不那么弯——
-多项式样条的\keyindex{变差缩减性}{variation diminishing property}{}。）
+多项式样条的\keyindex{变差缩减性}{variation diminishing property}{}）。
 因此，\refvar{Curve}{}构造函数同时
 接收$u$值的参数范围$[u_{\min},u_{\max}]$以及
 指向结构体\refvar{CurveCommon}{}的指针，
@@ -180,8 +181,8 @@ struct `\initvar{CurveCommon}{}` {
 类\refvar{CurveCommon}{}存储了整条曲线的控制点，
 但\refvar{Curve}{}实例通常需要对应其$u$范围的
 表示贝塞尔曲线的四个控制点。
-这些控制点用称为\keyindex{开花}{blossoming}{}的技术计算。
-三次贝塞尔样条簇
+这些控制点用称为\keyindex{开花}{blossoming}{}
+的技术计算。三次贝塞尔样条簇
 \sidenote{译者注：原文blossom。
 通过繁琐但没有技巧性的多项式代换可以证明：
 对于由控制点集$A=\{\bm p_i\}_{i=0}^3$定义的
@@ -443,9 +444,9 @@ return true;
 
 \refeq{3.3}的微分说明曲线在第一个控制点$\bm p_0$处的切线为$3(\bm p_1-\bm p_0)$.
 缩放因子在这里无关紧要，所以我们这里用$\bm t=\bm p_1-\bm p_0$.
-在2D中计算垂直于切线的向量很容易：只需要交换$x$和$y$坐标并让其中一个取相反数。
-（为了理解为什么这样可行，考虑点积$(x,y)\cdot(y,-x)=xy+(-yx)=0$.
-因为两个向量夹角的余弦为零，它们一定垂直。）
+在2D中计算垂直于切线的向量很容易：只需要交换$x$和$y$坐标并让其中一个取相反数
+（为了理解为什么这样可行，考虑点积$(x,y)\cdot(y,-x)=xy+(-yx)=0$，
+因为两个向量夹角的余弦为零，它们一定垂直）。
 因此，边上的第二个点为
 \begin{align*}
     \bm p_0+(p_{1y}-p_{0y},-(p_{1x}-p_{0x}))=\bm p_0+(p_{1y}-p_{0y},p_{0x}-p_{1x})\, .

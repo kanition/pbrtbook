@@ -445,8 +445,8 @@ C++标准库例程{\ttfamily sort()}要求被排序的结构要定义顺序；
 这用值\refvar{BoundEdge::t}{}
 来完成。然而，一个细微之处是如果值\refvar{BoundEdge::t}{}相同，
 则需要通过比较节点类型来打破平局；
-这是必要的，因为{\ttfamily sort()}所取决的事实是
-{\ttfamily a < b}和{\ttfamily b < a}都为{\ttfamily false}的唯一时刻是{\ttfamily a == b}。
+这是必要的，因为{\ttfamily sort()}决定了事实上{\ttfamily a < b}和
+{\ttfamily b < a}都取{\ttfamily false}的唯一时刻是{\ttfamily a == b}。
 \begin{lstlisting}
 `\initcode{Sort edges for axis}{=}`
 std::sort(&edges[axis][0], &edges[axis][2*nPrimitives],

@@ -1,8 +1,10 @@
 \section{射线}\label{sec:射线}
 
-\keyindex{射线}{ray}{}是由\keyindex{端点}{origin}{}和\keyindex{方向}{direction}{}指定的半无限直线。
-pbrt用\refvar{Point3f}{}作为端点、
-\refvar{Vector3f}{}作为方向表示\refvar{Ray}{}。
+\keyindex{射线}{ray}{}
+是由\keyindex{端点}{origin}{}
+和\keyindex{方向}{direction}{}
+指定的半无限直线。pbrt用
+\refvar{Point3f}{}作为端点、\refvar{Vector3f}{}作为方向表示\refvar{Ray}{}。
 我们只需要端点和方向是浮点的射线，
 所以\refvar{Ray}{}没有像点、向量和法线那样被任意类型的模板类参数化。
 射线记为$\bm r$；它有端点$\bm o$和方向$\bm d$，如\reffig{2.7}所示。

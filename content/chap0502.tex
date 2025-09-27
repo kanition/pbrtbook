@@ -397,8 +397,8 @@ void `\initvar[SampledSpectrum::ToRGB]{ToRGB}{}`(`\refvar{Float}{}` rgb[3]) cons
 有许多我们希望转换函数具有的准则：
 \begin{itemize}
     \item 如果所有RGB系数有相同的值，则结果SPD应该为常数。
-    \item 一般而言，希望算出的SPD是光滑的。大多数真实世界物体都有相对光滑的光谱。
-          （尖锐光谱的主要源头是光源，特别是荧光灯。幸运的是，对于光源实际的光谱数据比反射率更常见。）
+    \item 一般而言，希望算出的SPD是光滑的。大多数真实世界物体都有相对光滑的光谱
+          （尖锐光谱的主要源头是光源，特别是荧光灯。幸运的是，对于光源实际的光谱数据比反射率更常见）。
 \end{itemize}
 
 光滑目标是为什么把SPD构建为显示器的$R(\lambda),G(\lambda)$和$B(\lambda)$SPD的加权和不是好办法的原因：

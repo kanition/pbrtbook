@@ -9,8 +9,10 @@
 \subsection{光学背景知识}\label{sub:光学背景知识}
 光是人眼可见频段的电磁波，可在真空与介质中传播。
 光在真空中的传播速度最大，在介质中的传播速度与介质类型有关。
-\begin{definition}
-    三维中的\keyindex{波阵面}{wavefront}{}是某一时刻波\keyindex{相位}{phase}{}相同的点构成的面。
+\begin{definition}\label{definition:wavefront}
+    三维空间中的\keyindex{波阵面}{wavefront}{}
+    是某一时刻波\keyindex{相位}{phase}{}
+    相同的点构成的曲面。
 \end{definition}
 \begin{definition}
     电磁波在真空中的传播速率$c$与在介质中的传播速率$v$的比值
@@ -79,8 +81,8 @@
 \end{align}
 相对于空间路程$\sum\limits_{j=1}^{m}{s_j}$，
 我们定义上式中的$\sum\limits_{j=1}^{m}{n_js_j}$
-为\keyindex{光程长度}{optical path length}{}(OPL)。
-更一般地，在非均匀介质中折射率是位置的函数，因此有
+为\keyindex{光程长度}{optical path length}{}
+(OPL)。更一般地，在非均匀介质中折射率是位置的函数，因此有
 \begin{align}
     OPL=\int_S^P {n(s)\mathrm{d}s}\, .
 \end{align}
@@ -234,8 +236,9 @@
 一阶、傍轴或\keyindex{高斯光学}{Gaussian optics}{optics\ 光学}。
 
 如\reffig{6.32.1}，当光轴上点$F_o$的像在无穷远时，$s_i=\infty$，此时的物距$s_o$称为
-\keyindex{第一焦距}{first focal length}{focal length\ 焦距}或
-\keyindex{物方焦距}{object focal length}{focal length\ 焦距}$f_o$，即
+\keyindex{第一焦距}{first focal length}{focal length\ 焦距}
+或\keyindex{物方焦距}{object focal length}{focal length\ 焦距}
+$f_o$，即
 \begin{align}
     f_o=\frac{n_1}{n_2-n_1}R\, .
 \end{align}
@@ -589,11 +592,13 @@ $P_1$则是第二个透镜的实像，也是整个复合透镜的像。
 \subsubsection{孔径光阑与视场光阑}
 透镜的大小是有限的，这限制了能进入光学系统的光线范围。
 此时透镜的有效直径就充当了\keyindex{光圈}{aperture}{}\sidenote{也可称作孔径或光阑。}。
-如\reffig{6.48}，我们称像这样决定成像光量的透镜边缘或单独的快门等为\keyindex{孔径光阑}{aperture stop}{aperture\ 光圈}(A.S.)。
-光学系统的孔径光阑是物理实体，它限制了从光轴上的物点发出且能进入系统的光束范围。
+如\reffig{6.48}，我们称像这样决定成像光量的透镜边缘或单独的快门等为
+\keyindex{孔径光阑}{aperture stop}{aperture\ 光圈}
+(A.S.)。光学系统的孔径光阑是物理实体，它限制了从光轴上的物点发出且能进入系统的光束范围。
 复杂相机中位于一部分元件后的可调叶片式快门通常就是孔径光阑（\reffig{6.52}），它决定了整组透镜聚集光线的能力。
-限制系统所能成像的物体尺寸或角度范围的元件则称为\keyindex{视场光阑}{field stop}{aperture\ 光圈}(F.S.)，
-它决定了视场范围（\reffig{6.48}）。相机中一般由胶片或CCD传感器充当视场光阑来限制成像平面。
+限制系统所能成像的物体尺寸或角度范围的元件则称为
+\keyindex{视场光阑}{field stop}{aperture\ 光圈}
+(F.S.)，它决定了视场范围（\reffig{6.48}）。相机中一般由胶片或CCD传感器充当视场光阑来限制成像平面。
 因此孔径光阑控制从物点到共轭像点的光量，而视场光阑则决定是否彻底阻挡光线。
 调大孔径光阑可以增加进光能量使得像的每一点都有更大辐照度，
 而调大视场光阑则使原来被挡住的物体也能成像了。
@@ -676,7 +681,8 @@ $P_1$则是第二个透镜的实像，也是整个复合透镜的像。
 而成像面积则是横向维度的平方，故正比于焦距的平方。
 因此成像平面的辐照度正比于$\displaystyle\left(\frac{D}{f}\right)^2$.
 我们称$\displaystyle\frac{D}{f}$为\keyindex{相对孔径}{relative aperture}{aperture\ 光圈}，
-称其倒数为\keyindex{$f$数}{$f$-number}{}或\keyindex{焦比}{focal ratio}{}，记作$f/\#$，即
+称其倒数为\keyindex{$f$数}{$f$-number}{}
+或\keyindex{焦比}{focal ratio}{}，记作$f/\#$，即
 \begin{align}
     f/\#=\frac{f}{D}\, .
 \end{align}

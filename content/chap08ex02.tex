@@ -681,7 +681,7 @@ $C$对于是否选在导体内外或附近也没有任何要求。
 引发了$\epsilon$的取值问题。为了避免这些麻烦，
 我们定义一个与单位制无关的新物理量，即\keyindex{相对电容率}{relative permittivity}{permittivity\ 电容率}
 $K_E$，旧称\keyindex{相对介电常数}{relative dielectric constant}{}：
-\begin{align}
+\begin{align}\label{eq:08ex02-relativepermittivity}
     K_E=\frac{\epsilon}{\epsilon_0}\, ,
 \end{align}
 显然真空的$K_E$为1，它是无量纲的。
@@ -704,3 +704,121 @@ $K_E$，旧称\keyindex{相对介电常数}{relative dielectric constant}{}：
 \end{figure}
 
 \subsubsection*{安培环路定律}
+如\reffig{08ex02.0309}所示，一根电流为$i$的载流直导线形成了环绕它的磁场$\vec{\mathbf{B}}$，
+实验表明磁场大小为
+\begin{align}\label{eq:08ex02-BfieldCurrentWire}
+    B=\frac{\mu_0i}{2\pi r}\, ,
+\end{align}
+其中常数$\mu_0$的含义稍后介绍，$r$为半径大小。
+
+在19世纪时，物理学界认为磁荷是存在的，于是我们定义单级磁荷$q_m$，
+它在磁场$\vec{\mathbf{B}}$中受到的力等于$q_m\vec{\mathbf{B}}$，
+方向在$\vec{\mathbf{B}}$的方向上，就像电场$\vec{\mathbf{E}}$中的
+电荷$q_e$所受的力$q_e\vec{\mathbf{E}}$那样。
+假设该磁荷指北，并被放到一条以载流直导线为圆心且垂直于导线的闭合圆形轨道上，
+围绕着导线运动，我们考察该过程磁场所做的功。
+注意到\refeq{08ex02-BfieldCurrentWire}，
+因为轨道上任意一点到圆心的距离恒定，所以磁场大小相等，
+且方向处处与轨道相切，即$B_{\parallel}=B$。
+任取一小段轨道$\Delta\ell$，则该段内磁场做功为$\Delta W=q_mB_{\parallel}\Delta\ell$，将每一小段求和得
+\begin{align}
+    q_m\sum B_{\parallel}\Delta\ell=q_mB\sum\Delta\ell=q_m\frac{\mu_0i}{2\pi r}\cdot2\pi r=q_m\mu_0i\, .
+\end{align}
+注意到上式中半径$r$被抵消了，即做的功和具体在哪条圆形轨道上无关；
+若磁荷沿着半径方向运动，则因垂直于$\vec{\mathbf{B}}$而不做功。
+于是我们在磁荷绕圈时将它从一个圆周上搬运到另一个圆周上，做的功必定相同。
+也就是说，功与路径完全无关，在围绕电流的任何闭合路径上做的功都相同。
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.3\linewidth]{Pictures/chap08/BfieldCurrent-carryingWire.eps}
+    \caption{磁场$\vec{\mathbf{B}}$环绕着载流直导线。}
+    \label{fig:08ex02.0309}
+\end{figure}
+
+约去磁荷$q_m$，我们得到求和式：
+\begin{align}
+    \sum B_{\parallel}\Delta\ell=\mu_0i\, .
+\end{align}
+它对围绕电流的任意闭合路径都成立。
+注意这个式子的成立不依赖于假设的单极磁荷，
+我们不需要借助磁荷这个假想概念了。
+它还可以推广到闭合路径包围的载流导线不止一根的情形——
+各个电流的磁场会叠加起来形成总磁场，而上式对总磁场也成立，即
+\begin{align}
+    \sum B_{\parallel}\Delta\ell=\mu_0\sum i\, ,
+\end{align}
+令$\Delta\ell\rightarrow0$，则上式化为积分
+\begin{align}
+    \oint\limits_C\vec{\mathbf{B}}\cdot\mathrm{d}\vec{\mathbf{\ell}}=\mu_0\sum i\, ,
+\end{align}
+这就是安培定律。它将$\vec{\mathbf{B}}$沿着闭合曲线$C$切向的线积分
+与$C$包围区域内的电流联系起来。当电流不均匀地流过截面时，
+安培定律右边可以改写成\keyindex{电流密度}{current density}{}
+$\vec{\mathbf{J}}$在截面面积上的积分
+\begin{align}
+    \oint\limits_C\vec{\mathbf{B}}\cdot\mathrm{d}\vec{\mathbf{\ell}}
+    =\mu_0\iint\limits_A\vec{\mathbf{J}}\cdot\mathrm{d}\vec{\mathbf{S}}\, ,
+\end{align}
+其中非封闭区域$A$以$C$为边界（如\reffig{08ex02.0310}），
+常数$\mu_0$称作\keyindex{自由空间的磁导率}{permeability of free space}{permeability\ 磁导率}，
+它的定义值为$4\pi\times10^{-7}\text{N}\cdot\text{s}^2/\text{C}^2$；
+若在实物介质中，则换成对应介质的\keyindex{磁导率}{permeability}{} $\mu$.
+类似于\refeq{08ex02-relativepermittivity}，我们定义无量纲的
+\keyindex{相对磁导率}{relative permeability}{permeability\ 磁导率}
+为
+\begin{align}
+    K_M=\frac{\mu}{\mu_0}\, .
+\end{align}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.4\linewidth]{Pictures/chap08/CurrentDensityThroughArea.eps}
+    \caption{通过非封闭区域$A$的电流密度。}
+    \label{fig:08ex02.0310}
+\end{figure}
+
+安培定律并没有具体规定区域$A$，而只需要它以$C$为边界即可。
+在电容器充电的例子中，这会产生新的问题。如\reffig{08ex02.0311}(a)，
+若选择面$A_1$，则有净电流$i$穿过它，因而存在沿着曲线$C$的磁场；
+若选择面$A_2$，则没有净电流流过，磁场必须为零；显然这里出现了矛盾。
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\linewidth]{Pictures/chap08/AmperesLawCapacitor.eps}
+    \caption{(a)安培定律不在乎以$C$为边界的区域是$A_1$还是$A_2$，
+    但电流只穿过$A_1$没穿过$A_2$，引发了矛盾；
+    (b)在电容器极板之间，$\vec{\mathbf{B}}$场伴随着时变的$\vec{\mathbf{E}}$场出现。}
+    \label{fig:08ex02.0311}
+\end{figure}
+
+并不是只有运动电荷才能产生磁场。如\reffig{08ex02.0311}(b)，
+当给电容器充电或放电时，虽然没有实际电流流过电容器，
+但其极板间也可以测量到磁场，且和引线周围的磁场无法区分。
+设每块极板的面积为$A$，电荷量为$Q$，则电场强度为
+\begin{align}
+    E=\frac{Q}{\varepsilon A}\, .
+\end{align}
+当电荷量变化时，电场也随之变化，上式两边对时间$t$求导并整理后得
+\begin{align}
+    \varepsilon\frac{\partial E}{\partial t}=\frac{i}{A}\, ,
+\end{align}
+这说明$\displaystyle\varepsilon\frac{\partial E}{\partial t}$等效于电流密度。
+麦克斯韦\sidenote{詹姆斯·克拉克·麦克斯韦(James Clerk Maxwell)，
+19世纪英国物理学家。}假设存在这样的机制，
+并称作\keyindex{位移电流密度}{displacement current density}{current density\ 电流密度}，
+定义为
+\begin{align}
+    \vec{\mathbf{J}}_D=\varepsilon\frac{\partial\vec{\mathbf{E}}}{\partial t}\, .
+\end{align}
+于是我们将以上结论重新表述为
+\begin{theorem}[\keyindex{Ampère's Circuital Law}{安培环路定律}{}]
+    对于以闭合路径$C$为边界的任意非封闭曲面$A$，有
+    \begin{align}
+        \oint\limits_C\vec{\mathbf{B}}\cdot\mathrm{d}\vec{\mathbf{\ell}}
+        =\mu\iint\limits_A\left(\vec{\mathbf{J}}
+        +\varepsilon\frac{\partial\vec{\mathbf{E}}}{\partial t}\right)
+        \cdot\mathrm{d}\vec{\mathbf{S}}\, ,
+    \end{align}
+\end{theorem}
+这是麦克斯韦最伟大的贡献之一，表明了即使$\vec{\mathbf{J}}$为零，
+一个时变的电场$\vec{\mathbf{E}}$也会伴随一个磁场$\vec{\mathbf{B}}$.
+
+\subsubsection*{麦克斯韦方程组}

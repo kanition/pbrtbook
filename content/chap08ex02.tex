@@ -1,7 +1,8 @@
 \section{译者补充：经典电磁理论下的光学基础}\label{sec:译者补充：经典电磁理论下的光学基础}
 \begin{remark}
-    本节内容不是原书内容，而是译者根据《Optics》\citep{hecht2016optics}
-    补充并参考\citet{OpticsChinese}翻译的，请酌情参考和斧正。
+    本节内容不是原书内容，而是译者根据《\citetitle{hecht2016optics}》\citep{hecht2016optics}、
+    《\citetitle{hass2023}》 \citep{hass2023}
+    补充并参考《\citetitle{OpticsChinese}》 \citep{OpticsChinese}翻译的，请酌情参考和斧正。
     本节内容只简要介绍相关基础概念和结论，
     并不像正式的物理和光学教材那样严谨，请读者批判性地看待本节内容。
     本节要求读者具备较好的微积分与电磁理论知识储备。
@@ -10,10 +11,8 @@
 \end{remark}
 
 \subsection{波动}\label{sub:波动}
-光的本质是什么？光是波动现象还是粒子现象？
-这个问题非常复杂。早在二十世纪，物理学家们就已经发现，
-光的电磁理论的经典结论在微观层级上完全不成立。
-然而当我们站在通常的大尺度视角下，电磁波及其经典理论已经够用了。
+光的本质是什么？光是波动现象还是粒子现象？这个问题非常复杂。
+然而当我们站在通常的大尺度视角下时，电磁波及其经典理论已经够用了。
 为了打好基础，我们从波的数学描述说起，它也适用于一切物理波。
 
 \subsubsection*{一维波}
@@ -264,7 +263,7 @@ $v$满足\sidenote{注意$v$是英语字母，$\nu$是希腊字母。}
 
 \subsubsection*{叠加原理}
 波动微分方程揭示了波一个明显区别于经典粒子流的性质：
-\begin{theorem}[\keyindex{叠加原理}{Superposition Principle}{}]
+\begin{theorem}[\keyindex{叠加原理}{superposition principle}{}]
     若$\psi_1$和$\psi_2$是同一波动方程的两个不同的解，
     则叠加它们的$\psi_1+\psi_2$也是一个解。
 \end{theorem}
@@ -418,7 +417,7 @@ $\mathrm{i}=\sqrt{-1}$.
 \end{align}
 这里$\vec{\mathbf{k}}$也称作\keyindex{传播向量}{propagation vector}{vector\ 向量}，
 其大小$k$就是传播数\sidenote{类似地，在后文的记号中，如果我们主要想强调一个向量的大小，
-则可能会记作同一字母的标量形式。读者联系上下文即可理解。}。
+    则可能会记作同一字母的标量形式。读者联系上下文即可理解。}。
 接着，为了使波运动起来，我们引入时间等变量，最终便得到
 \begin{align}\label{eq:08ex02.DirectionCosines}
     \psi(\vec{\mathbf{r}},t)=A\mathrm{e}^{\mathrm{i}(\vec{\mathbf{k}}\cdot\vec{\mathbf{r}}\mp\omega t)}\, .
@@ -448,7 +447,7 @@ $\mathrm{i}=\sqrt{-1}$.
     +\frac{\partial^2}{\partial y^2}+\frac{\partial^2}{\partial z^2}\, ,
 \end{align}
 则\refeq{08ex02.3d-differential-wave}简化为
-\begin{align}
+\begin{align}\label{eq:08ex02-WaveEquation}
     \nabla^2\psi=\frac{1}{v^2}\frac{\partial^2 \psi}{\partial t^2}\, .
 \end{align}
 可以证明
@@ -482,12 +481,12 @@ $\mathrm{i}=\sqrt{-1}$.
 
 \begin{remark}
     \keyindex{伏特}{volt}{}
-    （伏）是电压和电势单位，得名于18至19世纪意大利物理学家
+    （伏）是电压和电势单位，得名于意大利物理学家
     亚历山德罗·朱塞佩·安东尼奥·阿纳斯塔西奥·伏特
-    (Alessandro Giuseppe Antonio Anastasio Volta)；
+    (Alessandro Giuseppe Antonio Anastasio Volta, 1745-1827)；
     \keyindex{库仑}{coulomb}{}
-    （库）是电荷量单位，得名于18至19世纪法国物理学家夏尔·奥古斯丁·德·库仑
-    (Charles-Augustin de Coulomb)。
+    （库）是电荷量单位，得名于法国物理学家夏尔·奥古斯丁·德·库仑
+    (Charles-Augustin de Coulomb, 1736-1806)。
 \end{remark}
 
 \begin{theorem}[\keyindex{库仑定律}{Coulomb's law}{}]
@@ -524,8 +523,8 @@ $\mathrm{i}=\sqrt{-1}$.
 \end{definition}
 
 \begin{remark}
-    磁感应强度单位得名于19至20世纪塞尔维亚裔美国物理学家
-    尼古拉·特斯拉(Nikola Tesla)。
+    磁感应强度单位得名于塞尔维亚裔美国物理学家
+    尼古拉·特斯拉(Nikola Tesla, 1856-1943)。
 \end{remark}
 
 若电荷在既有电场又有磁场的空间区域内运动，
@@ -535,7 +534,7 @@ $\mathrm{i}=\sqrt{-1}$.
 两者的互相依赖性是描述光的关键。
 
 \subsubsection*{法拉第感应定律}
-法拉第（迈克尔·法拉第(Michael Faraday)，18至19世纪英国物理学家）
+英国物理学家迈克尔·法拉第(Michael Faraday, 1791-1867)，
 在线圈实验中发现了\keyindex{电磁感应}{electromagnetic induction}{}
 现象，而“变化”是其最实质性的因素。
 
@@ -553,7 +552,7 @@ $\mathrm{i}=\sqrt{-1}$.
 将一根磁铁插进线圈时，
 线圈两端会有电压，称作\keyindex{感生电动势}{induced electromotive force}{}
 (emf)\sidenote{作者强调，尽管英文中感生电动势被称作“force”，
-但它并不是力，而是电压，所以会尽量用简称emf来避免误解。}。
+    但它并不是力，而是电压，所以会尽量用简称emf来避免误解。}。
 该电动势的振幅依赖于磁铁运动速度，或者说依赖于穿过线圈的$B$的变化率，而不是$B$本身。
 \reffig{08ex02.0302}中，同一变化的$B$场穿过两个不同导线环路，
 大的环路两端有更大的感生电动势，即它正比于$B$场垂直穿过的环路面积$A$.
@@ -571,7 +570,7 @@ $\mathrm{i}=\sqrt{-1}$.
     \varPhi_M=B_{\perp}A=BA_{\perp}=BA\cos\theta\, ,
 \end{align}
 其单位为\keyindex{韦伯}{weber}{}
-(Wb)\sidenote{得名于19世纪德国物理学家威廉·爱德华·韦伯(Wilhelm Eduard Weber)。}。
+(Wb)\sidenote{得名于德国物理学家威廉·爱德华·韦伯(Wilhelm Eduard Weber, 1804-1891)。}。
 
 \begin{figure}[htbp]
     \centering\includegraphics[width=0.5\linewidth]{Pictures/chap08/openAreaBoundedByClosedCurve.eps}
@@ -604,7 +603,7 @@ $\mathrm{i}=\sqrt{-1}$.
 其中积分沿着对应于环路的闭合曲线$C$进行。
 联立以上三式可得
 \begin{theorem}[\keyindex{法拉第电磁感应定律}{Faraday's law of electromagnetic induction}{}]
-    \begin{align}
+    \begin{align}\label{eq:08ex02-FaradayLaw}
         \oint\limits_C\vec{\mathbf{E}}\cdot\mathrm{d}\vec{\mathbf{\ell}}
         =-\frac{\mathrm{d}}{\mathrm{d}t}\iint\limits_A\vec{\mathbf{B}}\cdot\mathrm{d}\vec{\mathbf{S}}\, .
     \end{align}
@@ -616,14 +615,14 @@ $C$对于是否选在导体内外或附近也没有任何要求。
 
 当我们感兴趣的是没有导线回路的空间中传播的电磁波时，
 磁通量的变化是完全由$\vec{\mathbf{B}}$引起的，这时感应定律可重写为
-\begin{align}
+\begin{align}\label{eq:08ex02-ElectromagneticInduction}
     \oint\limits_C\vec{\mathbf{E}}\cdot\mathrm{d}\vec{\mathbf{\ell}}
     =-\iint\limits_A\frac{\partial \vec{\mathbf{B}}}{\partial t}\cdot\mathrm{d}\vec{\mathbf{S}}\, .
 \end{align}
 上式表明一个随时间变化的磁场伴随有一个电场。
 
 \subsubsection*{高斯定律}
-电场的另一基本定律得名于18-19世纪德国数学家卡尔·弗里德里希·高斯(Carl Friedrich Gauss)。
+电场的另一基本定律得名于德国数学家卡尔·弗里德里希·高斯(Carl Friedrich Gauss, 1777-1855)。
 高斯定律描述了电场通量和电荷之间的关系。
 场和通量的概念都是从流体动力学引入的。
 想象一个闭合曲面隔离出一团运动的流体，例如管道中充盈流动的水，
@@ -669,7 +668,7 @@ $C$对于是否选在导体内外或附近也没有任何要求。
     穿过任意封闭曲面的净电场通量正比于它包围的净电荷量。
     \begin{align}\label{eq:08ex02.GausssLawElectric}
         \oiint\limits_A\vec{\mathbf{E}}\cdot\mathrm{d}\vec{\mathbf{S}}
-        =\frac{1}{\epsilon_0}\iiint_V\rho\mathrm{d}V\, .
+        =\frac{1}{\epsilon_0}\iiint\limits_V\rho\mathrm{d}V\, .
     \end{align}
 \end{theorem}
 
@@ -681,7 +680,7 @@ $C$对于是否选在导体内外或附近也没有任何要求。
 引发了$\epsilon$的取值问题。为了避免这些麻烦，
 我们定义一个与单位制无关的新物理量，即\keyindex{相对电容率}{relative permittivity}{permittivity\ 电容率}
 $K_E$，旧称\keyindex{相对介电常数}{relative dielectric constant}{}：
-\begin{align}
+\begin{align}\label{eq:08ex02-relativepermittivity}
     K_E=\frac{\epsilon}{\epsilon_0}\, ,
 \end{align}
 显然真空的$K_E$为1，它是无量纲的。
@@ -692,7 +691,7 @@ $K_E$，旧称\keyindex{相对介电常数}{relative dielectric constant}{}：
 穿过该曲面的磁通量$\varPhi_M$为零。于是我们得到
 \begin{theorem}[磁场的高斯定律]
     磁场中的任何封闭曲面的净磁通量为零。
-    \begin{align}
+    \begin{align}\label{eq:08ex02-GausssLawMagnetic}
         \oiint\limits_A\vec{\mathbf{B}}\cdot\mathrm{d}\vec{\mathbf{S}}=0\, .
     \end{align}
 \end{theorem}
@@ -704,3 +703,373 @@ $K_E$，旧称\keyindex{相对介电常数}{relative dielectric constant}{}：
 \end{figure}
 
 \subsubsection*{安培环路定律}
+如\reffig{08ex02.0309}所示，一根电流为$i$的载流直导线形成了环绕它的磁场$\vec{\mathbf{B}}$，
+实验表明磁场大小为
+\begin{align}\label{eq:08ex02-BfieldCurrentWire}
+    B=\frac{\mu_0i}{2\pi r}\, ,
+\end{align}
+其中常数$\mu_0$的含义稍后介绍，$r$为半径大小。
+
+在19世纪时，物理学界认为磁荷是存在的，于是我们定义单级磁荷$q_m$，
+它在磁场$\vec{\mathbf{B}}$中受到的力等于$q_m\vec{\mathbf{B}}$，
+方向在$\vec{\mathbf{B}}$的方向上，就像电场$\vec{\mathbf{E}}$中的
+电荷$q_e$所受的力$q_e\vec{\mathbf{E}}$那样。
+假设该磁荷指北，并被放到一条以载流直导线为圆心且垂直于导线的闭合圆形轨道上，
+围绕着导线运动，我们考察该过程磁场所做的功。
+注意到\refeq{08ex02-BfieldCurrentWire}，
+因为轨道上任意一点到圆心的距离恒定，所以磁场大小相等，
+且方向处处与轨道相切，即磁感应强度沿轨道切向的分量大小为$B_{\parallel}=B$.
+任取一小段轨道$\Delta\ell$，则该段内磁场做功为$\Delta W=q_mB_{\parallel}\Delta\ell$，将每一小段求和得
+\begin{align}
+    \sum q_mB_{\parallel}\Delta\ell=q_mB\sum\Delta\ell=q_m\frac{\mu_0i}{2\pi r}\cdot2\pi r=q_m\mu_0i\, .
+\end{align}
+注意到上式中半径$r$被抵消了，即做的功和具体在哪条圆形轨道上无关；
+若磁荷沿着半径方向运动，则因位移垂直于$\vec{\mathbf{B}}$而不做功。
+于是我们在磁荷绕圈时将它从一个圆周上搬运到另一个圆周上，做的功必定相同。
+也就是说，功与路径完全无关，在围绕电流的任何闭合路径上做的功都相同。
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.3\linewidth]{Pictures/chap08/BfieldCurrent-carryingWire.eps}
+    \caption{磁场$\vec{\mathbf{B}}$环绕着载流直导线。}
+    \label{fig:08ex02.0309}
+\end{figure}
+
+约去磁荷$q_m$，我们得到求和式：
+\begin{align}
+    \sum B_{\parallel}\Delta\ell=\mu_0i\, .
+\end{align}
+它对围绕电流的任意闭合路径都成立。
+注意这个式子的成立不依赖于假设的单极磁荷，
+我们不需要借助磁荷这个假想概念了。
+它还可以推广到闭合路径包围的载流导线不止一根的情形——
+各个电流的磁场会叠加起来形成总磁场，而上式对总磁场也成立，即
+\begin{align}
+    \sum B_{\parallel}\Delta\ell=\mu_0\sum i\, ,
+\end{align}
+令$\Delta\ell\rightarrow0$，则上式化为积分
+\begin{align}
+    \oint\limits_C\vec{\mathbf{B}}\cdot\mathrm{d}\vec{\mathbf{\ell}}=\mu_0\sum i\, ,
+\end{align}
+这就是安培定律。它将$\vec{\mathbf{B}}$沿着闭合曲线$C$切向的线积分
+与$C$包围区域内的电流联系起来。当电流不均匀地流过截面时，
+安培定律右边可以改写成\keyindex{电流密度}{current density}{}
+$\vec{\mathbf{J}}$在截面面积上的积分：
+\begin{align}
+    \oint\limits_C\vec{\mathbf{B}}\cdot\mathrm{d}\vec{\mathbf{\ell}}
+    =\mu_0\iint\limits_A\vec{\mathbf{J}}\cdot\mathrm{d}\vec{\mathbf{S}}\, ,
+\end{align}
+其中非封闭区域$A$以$C$为边界（如\reffig{08ex02.0310}），
+常数$\mu_0$称作\keyindex{自由空间的磁导率}{permeability of free space}{permeability\ 磁导率}，
+它的定义值为$4\pi\times10^{-7}\text{N}\cdot\text{s}^2/\text{C}^2$；
+若在实物介质中，则换成对应介质的\keyindex{磁导率}{permeability}{} $\mu$.
+类似于\refeq{08ex02-relativepermittivity}，我们定义无量纲的
+\keyindex{相对磁导率}{relative permeability}{permeability\ 磁导率}
+为
+\begin{align}
+    K_M=\frac{\mu}{\mu_0}\, .
+\end{align}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.4\linewidth]{Pictures/chap08/CurrentDensityThroughArea.eps}
+    \caption{通过非封闭区域$A$的电流密度。}
+    \label{fig:08ex02.0310}
+\end{figure}
+
+安培定律并没有具体规定区域$A$，而只需要它以$C$为边界即可。
+在电容器充电的例子中，这会产生新的问题。如\reffig{08ex02.0311}(a)，
+若选择面$A_1$，则有净电流$i$穿过它，因而存在沿着曲线$C$的磁场；
+若选择面$A_2$，则没有净电流流过，沿$C$的磁场必须为零；显然这里出现了矛盾。
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\linewidth]{Pictures/chap08/AmperesLawCapacitor.eps}
+    \caption{(a)安培定律不在乎以$C$为边界的区域是$A_1$还是$A_2$，
+        但电流只穿过$A_1$没穿过$A_2$，引发了矛盾；
+        (b)在电容器极板之间，$\vec{\mathbf{B}}$场伴随着时变的$\vec{\mathbf{E}}$场出现。}
+    \label{fig:08ex02.0311}
+\end{figure}
+
+并不是只有运动电荷才能产生磁场。如\reffig{08ex02.0311}(b)，
+当给电容器充电或放电时，虽然没有实际电流流过电容器，
+但其极板间也可以测量到磁场，且和引线周围的磁场无法区分。
+设每块极板的面积为$A$，电荷量为$Q$，则电场强度为
+\begin{align}
+    E=\frac{Q}{\epsilon A}\, .
+\end{align}
+当电荷量变化时，电场也随之变化，上式两边对时间$t$求导并整理后得
+\begin{align}
+    \epsilon\frac{\partial E}{\partial t}=\frac{i}{A}\, ,
+\end{align}
+这说明$\displaystyle\epsilon\frac{\partial E}{\partial t}$等效于电流密度。
+英国物理学家詹姆斯·克拉克·麦克斯韦(James Clerk Maxwell, 1831-1879)提出这一概念，
+并称作\keyindex{位移电流密度}{displacement current density}{current density\ 电流密度}，
+定义为
+\begin{align}
+    \vec{\mathbf{J}}_D=\epsilon\frac{\partial\vec{\mathbf{E}}}{\partial t}\, .
+\end{align}
+于是我们将以上结论重新表述为
+\begin{theorem}[\keyindex{Ampère's Circuital Law}{安培环路定律}{}]
+    对于以闭合路径$C$为边界的任意非封闭曲面$A$，有
+    \begin{align}\label{eq:08ex02-AmpereLaw}
+        \oint\limits_C\vec{\mathbf{B}}\cdot\mathrm{d}\vec{\mathbf{\ell}}
+        =\mu\iint\limits_A\left(\vec{\mathbf{J}}
+        +\epsilon\frac{\partial\vec{\mathbf{E}}}{\partial t}\right)
+        \cdot\mathrm{d}\vec{\mathbf{S}}\, ,
+    \end{align}
+\end{theorem}
+这是麦克斯韦最伟大的贡献之一，表明了即使$\vec{\mathbf{J}}$为零，
+一个时变的电场$\vec{\mathbf{E}}$也会伴随一个磁场$\vec{\mathbf{B}}$（\reffig{08ex02.0312}）。
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.5\linewidth]{Pictures/chap08/time-varyingE-field.eps}
+    \caption{时变的电场$\vec{\mathbf{E}}$. 磁场$\vec{\mathbf{B}}$围绕
+        着$\varPhi_E$变化的每一点形成闭环。向上增加的电场等效于向上的位移电流。
+        根据右手定则，感生磁场$\vec{\mathbf{B}}$在从上往下看时逆时针旋转。}
+    \label{fig:08ex02.0312}
+\end{figure}
+
+\subsubsection*{麦克斯韦方程组}
+\refeq{08ex02-ElectromagneticInduction}、\refeq{08ex02.GausssLawElectric}、
+\refeq{08ex02-GausssLawMagnetic}与\refeq{08ex02-AmpereLaw}给出的式子
+称作积分形式的麦克斯韦方程组，它们是对实验结果的概括。
+自由空间中的电场和磁场行为对应于麦克斯韦方程组的最简形式：
+当$\epsilon=\epsilon_0$且$\mu=\mu_0$时，
+假设没有电流，附近也无电荷，即$\rho$和$\vec{\mathbf{J}}$都为零，则此时有
+\begin{align}
+    \oint\limits_C\vec{\mathbf{E}}\cdot\mathrm{d}\vec{\mathbf{\ell}}
+                                                                   & =-\iint\limits_A\frac{\partial \vec{\mathbf{B}}}{\partial t}\cdot\mathrm{d}\vec{\mathbf{S}}\, , \\
+    \oint\limits_C\vec{\mathbf{B}}\cdot\mathrm{d}\vec{\mathbf{\ell}}
+                                                                   & =\mu_0\epsilon_0\iint\limits_A\frac{\partial\vec{\mathbf{E}}}{\partial t}
+    \cdot\mathrm{d}\vec{\mathbf{S}}\, ,                                                                                                                              \\
+    \oiint\limits_A\vec{\mathbf{B}}\cdot\mathrm{d}\vec{\mathbf{S}} & =0\, ,                                                                                          \\
+    \oiint\limits_A\vec{\mathbf{E}}\cdot\mathrm{d}\vec{\mathbf{S}} & =0\, .
+\end{align}
+从中可以看到，除了相乘的标量因子外，电场和磁场在上面的方程中具有明显的对称性。
+电场怎样影响磁场，磁场也怎样反过来影响电场。
+
+在介绍后续内容前，我们回忆一些数学知识。
+
+\keyindex{向量场}{vector field}{}，也称\keyindex{矢量场}{}{}，
+是给其定义域内的每个点都赋有一个向量的函数。
+直角坐标系下，一个三维空间上的向量场通常形如
+\begin{align}
+    \vec{\mathbf{F}}(x,y,z)=
+    M(x,y,z)\hat{\text{\sffamily\bfseries i}}+
+    N(x,y,z)\hat{\text{\sffamily\bfseries j}}+
+    P(x,y,z)\hat{\text{\sffamily\bfseries k}}\, ,
+\end{align}
+其中$M$、$N$和$P$为分量函数；当所有分量函数都连续、可微时，
+我们对应称向量场连续、可微。电场和磁场都是向量场。
+
+可微标量函数的梯度给出了该函数在给定点处函数值增长最快的方向，
+即每个点都有一个向量与之对应，于是我们定义
+\begin{definition}
+    可微标量函数$f(x,y,z)$的\keyindex{梯度场}{gradient field}{}
+    即为梯度向量构成的场：
+    \begin{align}
+        \vec{\nabla} f=\frac{\partial f}{\partial x}\hat{\text{\sffamily\bfseries i}}
+        +\frac{\partial f}{\partial y}\hat{\text{\sffamily\bfseries j}}
+        +\frac{\partial f}{\partial z}\hat{\text{\sffamily\bfseries k}}\, ,
+    \end{align}
+    其中$\vec{\nabla}$表示向量微分算符，读作“del”，直角坐标系下为
+    \begin{align}
+        \vec{\nabla}=\hat{\text{\sffamily\bfseries i}}\frac{\partial }{\partial x}
+        +\hat{\text{\sffamily\bfseries j}}\frac{\partial }{\partial y}
+        +\hat{\text{\sffamily\bfseries k}}\frac{\partial }{\partial z}\, .
+    \end{align}
+\end{definition}
+$\vec{\nabla}$算符能让我们后续的表示更加方便。
+
+\begin{definition}
+    向量场$\vec{\mathbf{F}}(x,y,z)=M(x,y,z)\hat{\text{\sffamily\bfseries i}}+N(x,y,z)\hat{\text{\sffamily\bfseries j}}+P(x,y,z)\hat{\text{\sffamily\bfseries k}}$的
+    \keyindex{散度}{divergence}{}
+    是标量函数
+    \begin{align}
+        \text{div}\ \vec{\mathbf{F}}=\vec{\nabla}\cdot\vec{\mathbf{F}}
+        =\frac{\partial M}{\partial x}+\frac{\partial N}{\partial y}+\frac{\partial P}{\partial z}\, ,
+    \end{align}
+\end{definition}
+形式上看，散度像是$\vec{\nabla}$算符与向量场点乘得到的。
+
+\begin{definition}
+    向量场$\vec{\mathbf{F}}(x,y,z)=M(x,y,z)\hat{\text{\sffamily\bfseries i}}+N(x,y,z)\hat{\text{\sffamily\bfseries j}}+P(x,y,z)\hat{\text{\sffamily\bfseries k}}$的
+    \keyindex{旋度}{curl}{}
+    向量为
+    \begin{align}
+        \text{curl}\ \vec{\mathbf{F}}
+         & =\vec{\nabla}\times\vec{\mathbf{F}}\nonumber                                                                          \\
+         & =\left|
+        \begin{array}{ccc}
+            \hat{\text{\sffamily\bfseries i}}         & \hat{\text{\sffamily\bfseries j}}         & \hat{\text{\sffamily\bfseries k}}         \\
+            \displaystyle\frac{\partial }{\partial x} & \displaystyle\frac{\partial }{\partial y} & \displaystyle\frac{\partial }{\partial z} \\
+            M                                         & N                                         & P
+        \end{array}
+        \right|                                                                                                        \nonumber \\
+         & =\left(\frac{\partial P}{\partial y}-\frac{\partial N}{\partial z}\right)\hat{\text{\sffamily\bfseries i}}+
+        \left(\frac{\partial M}{\partial z}-\frac{\partial P}{\partial x}\right)\hat{\text{\sffamily\bfseries j}}+
+        \left(\frac{\partial N}{\partial x}-\frac{\partial M}{\partial y}\right)\hat{\text{\sffamily\bfseries k}}\, .
+    \end{align}
+\end{definition}
+形式上看，旋度像是$\vec{\nabla}$算符与向量场叉乘得到的。
+
+关于散度和旋度，有以下两个重要定理。
+\begin{theorem}[\keyindex{散度定理}{divergence theorem}{}]
+    设向量场$\vec{\mathbf{F}}$的各分量均有连续一阶偏导数，
+    $S$为有向分片光滑封闭曲面；则$\vec{\mathbf{F}}$沿着$S$曲面上
+    朝外的单位法向量场的方向通过曲面的通量等于
+    散度$\vec{\nabla}\cdot\vec{\mathbf{F}}$在曲面包围的实区域$D$内的三重积分：
+    \begin{align}
+        \oiint\limits_S\vec{\mathbf{F}}\cdot\mathrm{d}\vec{\mathbf{S}}
+        =\iiint\limits_D\vec{\nabla}\cdot\vec{\mathbf{F}}\mathrm{d}V\, .
+    \end{align}
+\end{theorem}
+
+\begin{theorem}[\keyindex{斯托克斯定理}{Stokes' theorem}{}]
+    设$S$为有向分片光滑曲面，且有分段光滑边界曲线$C$，向量场$\vec{\mathbf{F}}$的各分量
+    在一包含$S$的开区域内有连续一阶偏导数；则$\vec{\mathbf{F}}$沿着
+    关于曲面单位法向量逆时针的方向绕$C$的环路积分
+    等于旋度向量场$\vec{\nabla}\times\vec{\mathbf{F}}$在$S$上的积分：
+    \begin{align}
+        \oint\limits_C\vec{\mathbf{F}}\cdot\mathrm{d}\vec{\mathbf{\ell}}
+        =\iint\limits_A(\vec{\nabla}\times\vec{\mathbf{F}})\cdot\mathrm{d}\vec{\mathbf{S}}\, .
+    \end{align}
+\end{theorem}
+
+\begin{corollary}
+    梯度场的散度恒为零，即
+    \begin{align}
+        \text{curl}\ \text{grad}\ f=\vec{\nabla}\times\vec{\nabla}f=\vec{0}\, .
+    \end{align}
+\end{corollary}
+\begin{corollary}
+    若向量场$\vec{\mathbf{F}}$有连续二阶偏导数，则旋度场的散度恒为零，即
+    \begin{align}
+        \text{div}\ (\text{curl}\ \vec{\mathbf{F}})=\vec{\nabla}\cdot(\vec{\nabla}\times\vec{\mathbf{F}})=0\, .
+    \end{align}
+\end{corollary}
+
+利用散度定理和斯托克斯定理，我们可以把麦克斯韦方程组重新写为微分形式：
+\begin{theorem}[\keyindex{麦克斯韦方程组}{Maxwell's equations}{}]
+    \begin{align}
+        \label{eq:08ex02-MaxwellFaraday}\text{法拉第电磁感应定律：} &  & \vec{\nabla}\times\vec{\mathbf{E}} & =-\frac{\partial \vec{\mathbf{B}}}{\partial t}\, ,                                             \\
+        \label{eq:08ex02-MaxwellAmpere}\text{安培环路定律：}        &  & \vec{\nabla}\times\vec{\mathbf{B}} & =\mu_0\left(\vec{\mathbf{J}}+\epsilon_0\frac{\partial \vec{\mathbf{E}}}{\partial t}\right)\, , \\
+        \label{eq:08ex02-MaxwellGaussE}\text{电场的高斯定律：}      &  & \vec{\nabla}\cdot\vec{\mathbf{E}}  & =\frac{\rho}{\epsilon_0}\, ,                                                                   \\
+        \label{eq:08ex02-MaxwellGaussB}\text{磁场的高斯定律：}      &  & \vec{\nabla}\cdot\vec{\mathbf{B}}  & =0\, .
+    \end{align}
+\end{theorem}
+
+有了以上知识，我们就能理解电磁波的传播了。
+在该过程中，电场和磁场不可分割地耦合在一起并相互维持，
+作为一个整体在空间中传播，不依赖电荷、电流、实物介质或以太。
+
+\subsubsection*{电磁波}
+我们已经知道，时变的电场产生磁场，磁场处处垂直于电场变化的方向；
+时变的磁场产生电场，电场处处垂直于磁场变化的方向。
+考虑一个从静止状态加速运动的电荷，电荷附近的电场发生变化，
+该变化以某个有限速度向外传播；因为电荷的运动是加速的，
+电场随时间的变化率不是常数，所以感生的磁场也是时变的，
+于是又产生一个电场……这个过程继续下去，电场和磁场耦合为一个脉冲，
+互相不断变化产生，在空间中传播。
+
+我们可以把电场和磁场看成是单一的物理现象——\keyindex{电磁场}{electromagnetic field}{}
+的两个方面，它的源是运动电荷。一旦电磁场中有扰动生成，
+就成为不受约束的波，脱离波源独立运动，即\keyindex{电磁波}{electromagnetic wave}{wave\ 波}。
+可以证明，自由空间的麦克斯韦方程组可以推导出以下两个表达式：
+\begin{align}
+    \label{eq:08ex02-WaveElectric}
+    \nabla^2\vec{\mathbf{E}} & =\epsilon_0\mu_0\frac{\partial^2\vec{\mathbf{E}}}{\partial t^2}\, , \\
+    \nabla^2\vec{\mathbf{B}} & =\epsilon_0\mu_0\frac{\partial^2\vec{\mathbf{B}}}{\partial t^2}\, .
+\end{align}
+其中$\nabla^2$是拉普拉斯算符，这里它作用于向量场表示分别作用于其每个分量；
+偏微分算符同理（所以上面两式总共可以拆分为六个分量方程）。
+注意与\refeq{08ex02-WaveEquation}比较，
+可以发现电磁场服从波动方程，同时还预言了自由空间里所有电磁波的波速为
+\begin{align}\label{eq:08ex02-speedOfLight}
+    v=\frac{1}{\sqrt{\epsilon_0\mu_0}}\approx3\times10^8\text{m}/\text{s}\, .
+\end{align}
+这个理论值和法国物理学家阿尔芒·伊波利特·路易·斐索 (Armand Hippolyte Louis Fizeau, 1819-1896)
+用旋转齿轮法测到的光速值（315300km/s）符合得很好。麦克斯韦由此断定：光就是一种电磁波！
+这是物理学上划时代的卓越发现！
+
+现在习惯上用$c$表示真空中的光速，它取自拉丁文“celer”，意思是“快”。
+1983年在巴黎召开的第17届国际计量大会
+\sidenote{the 17th Conférence Générale des Poids et Mesures}采用了长度单位“米”的新定义，
+由此将真空中的光速精确设定为
+\begin{align}
+    c=2.99792458\times10^8\text{m}/\text{s}\, .
+\end{align}
+注意\refeq{08ex02-speedOfLight}给出的光速与光源和观察者的运动无关，
+这很不平常，但却没人注意，直到1905年爱因斯坦提出狭义相对论。
+
+下面我们利用电磁理论解释实验证实的光的横波特性。
+考虑真空中朝正$x$方向传播的平面波这一简单情形，
+电场$\vec{\mathbf{E}}=E_x\hat{\text{\sffamily\bfseries i}}+E_y\hat{\text{\sffamily\bfseries j}}+E_z\hat{\text{\sffamily\bfseries k}}$是\refeq{08ex02-WaveElectric}的解，
+且因为是平面波，所以在垂直于$x$轴的任意平面上$\vec{\mathbf{E}}$是恒定的。
+因此它只是$x$和时间$t$的函数，即$\vec{\mathbf{E}}=\vec{\mathbf{E}}(x,t)$，
+于是有$\displaystyle\frac{\partial E_y}{\partial y}=\frac{\partial E_z}{\partial z}=0$恒成立。
+代入麦克斯韦方程组的\refeq{08ex02-MaxwellGaussE}（这里$\rho=0$），可得
+\begin{align}
+    \displaystyle\frac{\partial E_x}{\partial x}=0\, .
+\end{align}
+若$E_x$是非零值，则意味着电场在传播的$x$方向上有分量，且不随$x$变化。
+于是在任一给定时刻，所有$x$上的$E_x$都相等，可这就意味着不存在沿$x$方向传播的行波，矛盾！
+故$E_x$只能是零，在其传播方向上没有电场分量，只能是横波。
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.5\linewidth]{Pictures/chap08/planeHarmonicElectromagneticWave.eps}
+    \caption{真空中传播的平面简谐电磁波。}
+    \label{fig:08ex02.0313}
+\end{figure}
+
+电场是横波意味着，我们如果要完备描述电磁波，就须规定各个时刻$\vec{\mathbf{E}}$的方向，
+这对应了光的\keyindex{偏振}{polarization}{}。不失一般性地，
+这里主要讨论平面波或线偏振波\sidenote{原文：linearly polarized wave。}，
+此时$\vec{\mathbf{E}}$的震动方向是固定的。
+我们不妨取定坐标轴方向使得电场平行于$y$轴（如\reffig{08ex02.0313}），于是
+\begin{align}
+    \vec{\mathbf{E}}=\hat{\text{\sffamily\bfseries j}}E_y(x,t)\, ,
+\end{align}
+代入麦克斯韦方程组的\refeq{08ex02-MaxwellFaraday}，
+注意$E_x=E_z=0$且$E_y$与$x$和$z$无关，得
+\begin{align}\label{eq:08ex02-EyBz}
+    \frac{\partial E_y}{\partial x}=-\frac{\partial B_z}{\partial t}\, .
+\end{align}
+而$B_x$和$B_y$是恒定的，这里我们不关心它。
+于是依赖于时间$t$的磁场$\vec{\mathbf{B}}$只能有一个$z$方向的分量。
+所以，在自由空间里，平面电磁波是横波。除了正入射外，
+在真实实物介质中传播的这种波有时不是横波，这种复杂情况
+可能是介质是耗散的或含有自由电荷引发的。
+这里我们暂时只讨论均匀、各向同性、线性且稳定的介电质（即不导电），
+此时平面电磁波是横波。
+
+除了假设扰动是平面波外，我们没有规定其具体形式，
+所以结论是具有普遍性的，脉冲和连续波都适用。
+因为任意波形都能分解为正弦波，所以我们就限于讨论简谐波，不妨取
+\begin{align}\label{eq:08ex02-Eyxt}
+    E_y(x,t)=E_{0y}\cos\left(\omega\left(t-\frac{x}{c}\right)+\varepsilon\right)\, ,
+\end{align}
+其传播速度为$c$，代入\refeq{08ex02-EyBz}得
+\begin{align}
+    B_z(x,t)=-\int\frac{\partial E_y}{\partial x}\mathrm{d}t
+    =\frac{1}{c}E_{0y}\cos\left(\omega\left(t-\frac{x}{c}\right)+\varepsilon\right)\, ,
+\end{align}
+这里舍去了表示与时间无关的场的积分常数。与\refeq{08ex02-Eyxt}比较可知，在真空中有
+\begin{align}\label{eq:08ex02-EycBz}
+    E_y=cB_z\, .
+\end{align}
+因为$E_y$和$B_z$只差一个标量因子，所以具有相同的时间依赖关系，
+$\vec{\mathbf{E}}$和$\vec{\mathbf{B}}$在空间中所有位置上同相。
+此外，$\vec{\mathbf{E}}=\hat{\text{\sffamily\bfseries j}}E_y(x,t)$和$\vec{\mathbf{B}}=\hat{\text{\sffamily\bfseries k}}B_z(x,t)$互相垂直，
+它们的叉乘$\vec{\mathbf{E}}\times\vec{\mathbf{B}}$指向传播方向$\hat{\text{\sffamily\bfseries i}}$
+（如\reffig{08ex02.0314}）。
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.75\linewidth]{Pictures/chap08/OrthogonalHarmonicPlaneEBField.eps}
+    \caption{(a)平面偏振波中正交的简谐电场与磁场；(b)波在$\vec{\mathbf{E}}\times\vec{\mathbf{B}}$方向上传播。}
+    \label{fig:08ex02.0314}
+\end{figure}
+一般的介电质材料是不导电和非磁性的，此时\refeq{08ex02-EycBz}可推广为
+\begin{align}
+     E=vB\, ,
+\end{align}
+其中$\displaystyle v=\frac{1}{\sqrt{\epsilon\mu}}$是波在介质中的传播速度。
+此外应注意，平面波并不是麦克斯韦方程组的唯一解，也有许多其他形式的解。

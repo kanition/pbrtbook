@@ -254,7 +254,7 @@
 {\;}% Punctuation after theorem head
 {0.25em}% Space after theorem head
 {\small\sffamily\color{ocre}\thmname{#1}\nobreakspace\thmnumber{\@ifnotempty{#1}{}\@upn{#2}}% Theorem text (e.g. Theorem 2.1)
-    \thmnote{\nobreakspace\the\thm@notefont\sffamily\bfseries\color{black}---\nobreakspace#3.}} % Optional theorem note
+    \thmnote{\nobreakspace\the\thm@notefont\sffamily\bfseries\color{black}\,\nobreakspace#3.}} % Optional theorem note
 
 \newtheoremstyle{blacknumex}% Theorem style name
 {5pt}% Space above
@@ -265,7 +265,7 @@
 {\;}% Punctuation after theorem head
 {0.25em}% Space after theorem head
 {\small\sffamily{\tiny\ensuremath{\blacksquare}}\nobreakspace\thmname{#1}\nobreakspace\thmnumber{\@ifnotempty{#1}{}\@upn{#2}}% Theorem text (e.g. Theorem 2.1)
-    \thmnote{\nobreakspace\the\thm@notefont\sffamily\bfseries---\nobreakspace#3.}}% Optional theorem note
+    \thmnote{\nobreakspace\the\thm@notefont\sffamily\bfseries\,\nobreakspace#3.}}% Optional theorem note
 
 \newtheoremstyle{blacknumbox} % Theorem style name
 {0pt}% Space above
@@ -276,7 +276,7 @@
 {\;}% Punctuation after theorem head
 {0.25em}% Space after theorem head
 {\small\sffamily\thmname{#1}\nobreakspace\thmnumber{\@ifnotempty{#1}{}\@upn{#2}}% Theorem text (e.g. Theorem 2.1)
-    \thmnote{\nobreakspace\the\thm@notefont\sffamily\bfseries---\nobreakspace#3.}}% Optional theorem note
+    \thmnote{\nobreakspace\the\thm@notefont\sffamily\bfseries\,\nobreakspace#3.}}% Optional theorem note
 
 % Non-boxed/non-framed environments
 \newtheoremstyle{ocrenum}% Theorem style name
@@ -288,7 +288,7 @@
 {\;}% Punctuation after theorem head
 {0.25em}% Space after theorem head
 {\small\sffamily\color{ocre}\thmname{#1}\nobreakspace\thmnumber{\@ifnotempty{#1}{}\@upn{#2}}% Theorem text (e.g. Theorem 2.1)
-    \thmnote{\nobreakspace\the\thm@notefont\sffamily\bfseries\color{black}---\nobreakspace#3.}} % Optional theorem note
+    \thmnote{\nobreakspace\the\thm@notefont\sffamily\bfseries\color{black}\,\nobreakspace#3.}} % Optional theorem note
 \makeatother
 
 % Defines the theorem text style for each type of theorem to one of the three styles above

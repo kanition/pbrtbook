@@ -793,18 +793,18 @@ $\vec{\mathbf{J}}$在截面面积上的积分：
 但其极板间也可以测量到磁场，且和引线周围的磁场无法区分。
 设每块极板的面积为$A$，电荷量为$Q$，则电场强度为
 \begin{align}
-    E=\frac{Q}{\varepsilon A}\, .
+    E=\frac{Q}{\epsilon A}\, .
 \end{align}
 当电荷量变化时，电场也随之变化，上式两边对时间$t$求导并整理后得
 \begin{align}
-    \varepsilon\frac{\partial E}{\partial t}=\frac{i}{A}\, ,
+    \epsilon\frac{\partial E}{\partial t}=\frac{i}{A}\, ,
 \end{align}
-这说明$\displaystyle\varepsilon\frac{\partial E}{\partial t}$等效于电流密度。
+这说明$\displaystyle\epsilon\frac{\partial E}{\partial t}$等效于电流密度。
 英国物理学家詹姆斯·克拉克·麦克斯韦(James Clerk Maxwell, 1831-1879)提出这一概念，
 并称作\keyindex{位移电流密度}{displacement current density}{current density\ 电流密度}，
 定义为
 \begin{align}
-    \vec{\mathbf{J}}_D=\varepsilon\frac{\partial\vec{\mathbf{E}}}{\partial t}\, .
+    \vec{\mathbf{J}}_D=\epsilon\frac{\partial\vec{\mathbf{E}}}{\partial t}\, .
 \end{align}
 于是我们将以上结论重新表述为
 \begin{theorem}[\keyindex{Ampère's Circuital Law}{安培环路定律}{}]
@@ -812,7 +812,7 @@ $\vec{\mathbf{J}}$在截面面积上的积分：
     \begin{align}\label{eq:08ex02-AmpereLaw}
         \oint\limits_C\vec{\mathbf{B}}\cdot\mathrm{d}\vec{\mathbf{\ell}}
         =\mu\iint\limits_A\left(\vec{\mathbf{J}}
-        +\varepsilon\frac{\partial\vec{\mathbf{E}}}{\partial t}\right)
+        +\epsilon\frac{\partial\vec{\mathbf{E}}}{\partial t}\right)
         \cdot\mathrm{d}\vec{\mathbf{S}}\, ,
     \end{align}
 \end{theorem}
@@ -832,13 +832,13 @@ $\vec{\mathbf{J}}$在截面面积上的积分：
 \refeq{08ex02-GausssLawMagnetic}与\refeq{08ex02-AmpereLaw}给出的式子
 称作积分形式的麦克斯韦方程组，它们是对实验结果的概括。
 自由空间中的电场和磁场行为对应于麦克斯韦方程组的最简形式：
-当$\varepsilon=\varepsilon_0$且$\mu=\mu_0$时，
+当$\epsilon=\epsilon_0$且$\mu=\mu_0$时，
 假设没有电流，附近也无电荷，即$\rho$和$\vec{\mathbf{J}}$都为零，则此时有
 \begin{align}
     \oint\limits_C\vec{\mathbf{E}}\cdot\mathrm{d}\vec{\mathbf{\ell}}
                                                                    & =-\iint\limits_A\frac{\partial \vec{\mathbf{B}}}{\partial t}\cdot\mathrm{d}\vec{\mathbf{S}}\, , \\
     \oint\limits_C\vec{\mathbf{B}}\cdot\mathrm{d}\vec{\mathbf{\ell}}
-                                                                   & =\mu_0\varepsilon_0\iint\limits_A\frac{\partial\vec{\mathbf{E}}}{\partial t}
+                                                                   & =\mu_0\epsilon_0\iint\limits_A\frac{\partial\vec{\mathbf{E}}}{\partial t}
     \cdot\mathrm{d}\vec{\mathbf{S}}\, ,                                                                                                                              \\
     \oiint\limits_A\vec{\mathbf{B}}\cdot\mathrm{d}\vec{\mathbf{S}} & =0\, ,                                                                                          \\
     \oiint\limits_A\vec{\mathbf{E}}\cdot\mathrm{d}\vec{\mathbf{S}} & =0\, .
@@ -950,10 +950,10 @@ $\vec{\nabla}$算符能让我们后续的表示更加方便。
 利用散度定理和斯托克斯定理，我们可以把麦克斯韦方程组重新写为微分形式：
 \begin{theorem}[\keyindex{麦克斯韦方程组}{Maxwell's equations}{}]
     \begin{align}
-        \text{法拉第电磁感应定律：} &  & \vec{\nabla}\times\vec{\mathbf{E}} & =-\frac{\partial \vec{\mathbf{B}}}{\partial t}\, ,                                                \\
-        \text{安培环路定律：}       &  & \vec{\nabla}\times\vec{\mathbf{B}} & =\mu_0\left(\vec{\mathbf{J}}+\varepsilon_0\frac{\partial \vec{\mathbf{E}}}{\partial t}\right)\, , \\
-        \text{电场的高斯定律：}     &  & \vec{\nabla}\cdot\vec{\mathbf{E}}  & =\frac{\rho}{\varepsilon_0}\, ,                                                                   \\
-        \text{磁场的高斯定律：}     &  & \vec{\nabla}\cdot\vec{\mathbf{B}}  & =0\, .
+        \label{eq:08ex02-MaxwellFaraday}\text{法拉第电磁感应定律：} &  & \vec{\nabla}\times\vec{\mathbf{E}} & =-\frac{\partial \vec{\mathbf{B}}}{\partial t}\, ,                                             \\
+        \label{eq:08ex02-MaxwellAmpere}\text{安培环路定律：}        &  & \vec{\nabla}\times\vec{\mathbf{B}} & =\mu_0\left(\vec{\mathbf{J}}+\epsilon_0\frac{\partial \vec{\mathbf{E}}}{\partial t}\right)\, , \\
+        \label{eq:08ex02-MaxwellGaussE}\text{电场的高斯定律：}      &  & \vec{\nabla}\cdot\vec{\mathbf{E}}  & =\frac{\rho}{\epsilon_0}\, ,                                                                   \\
+        \label{eq:08ex02-MaxwellGaussB}\text{磁场的高斯定律：}      &  & \vec{\nabla}\cdot\vec{\mathbf{B}}  & =0\, .
     \end{align}
 \end{theorem}
 
@@ -975,20 +975,24 @@ $\vec{\nabla}$算符能让我们后续的表示更加方便。
 就成为不受约束的波，脱离波源独立运动，即\keyindex{电磁波}{electromagnetic wave}{wave\ 波}。
 可以证明，自由空间的麦克斯韦方程组可以推导出以下两个表达式：
 \begin{align}
-    \nabla^2\vec{\mathbf{E}} & =\varepsilon_0\mu_0\frac{\partial^2\vec{\mathbf{E}}}{\partial t^2}\, , \\
-    \nabla^2\vec{\mathbf{B}} & =\varepsilon_0\mu_0\frac{\partial^2\vec{\mathbf{B}}}{\partial t^2}\, .
+    \label{eq:08ex02-WaveElectric}
+    \nabla^2\vec{\mathbf{E}} & =\epsilon_0\mu_0\frac{\partial^2\vec{\mathbf{E}}}{\partial t^2}\, , \\
+    \nabla^2\vec{\mathbf{B}} & =\epsilon_0\mu_0\frac{\partial^2\vec{\mathbf{B}}}{\partial t^2}\, .
 \end{align}
-其中$\nabla^2$是拉普拉斯算符。注意与\refeq{08ex02-WaveEquation}比较，
+其中$\nabla^2$是拉普拉斯算符，这里它作用于向量场表示分别作用于其每个分量；
+偏微分算符同理（所以上面两式总共可以拆分为六个分量方程）。
+注意与\refeq{08ex02-WaveEquation}比较，
 可以发现电磁场服从波动方程，同时还预言了自由空间里所有电磁波的波速为
 \begin{align}\label{eq:08ex02-speedOfLight}
-    v=\frac{1}{\sqrt{\varepsilon_0\mu_0}}\approx3\times10^8\text{m}/\text{s}\, .
+    v=\frac{1}{\sqrt{\epsilon_0\mu_0}}\approx3\times10^8\text{m}/\text{s}\, .
 \end{align}
 这个理论值和法国物理学家阿尔芒·伊波利特·路易·斐索 (Armand Hippolyte Louis Fizeau, 1819-1896)
 用旋转齿轮法测到的光速值（315300km/s）符合得很好。麦克斯韦由此断定：光就是一种电磁波！
 这是物理学上划时代的卓越发现！
 
-习惯上用$c$表示真空中的光速，它取自拉丁文“celer”，意思是“快”。
-1983年在巴黎召开的第17届国际计量大会采用了长度单位“米”的新定义，
+现在习惯上用$c$表示真空中的光速，它取自拉丁文“celer”，意思是“快”。
+1983年在巴黎召开的第17届国际计量大会
+\sidenote{the 17th Conférence Générale des Poids et Mesures}采用了长度单位“米”的新定义，
 由此将真空中的光速精确设定为
 \begin{align}
     c=2.99792458\times10^8\text{m}/\text{s}\, .
@@ -997,3 +1001,75 @@ $\vec{\nabla}$算符能让我们后续的表示更加方便。
 这很不平常，但却没人注意，直到1905年爱因斯坦提出狭义相对论。
 
 下面我们利用电磁理论解释实验证实的光的横波特性。
+考虑真空中朝正$x$方向传播的平面波这一简单情形，
+电场$\vec{\mathbf{E}}=E_x\hat{\text{\sffamily\bfseries i}}+E_y\hat{\text{\sffamily\bfseries j}}+E_z\hat{\text{\sffamily\bfseries k}}$是\refeq{08ex02-WaveElectric}的解，
+且因为是平面波，所以在垂直于$x$轴的任意平面上$\vec{\mathbf{E}}$是恒定的。
+因此它只是$x$和时间$t$的函数，即$\vec{\mathbf{E}}=\vec{\mathbf{E}}(x,t)$，
+于是有$\displaystyle\frac{\partial E_y}{\partial y}=\frac{\partial E_z}{\partial z}=0$恒成立。
+代入麦克斯韦方程组的\refeq{08ex02-MaxwellGaussE}（这里$\rho=0$），可得
+\begin{align}
+    \displaystyle\frac{\partial E_x}{\partial x}=0\, .
+\end{align}
+若$E_x$是非零值，则意味着电场在传播的$x$方向上有分量，且不随$x$变化。
+于是在任一给定时刻，所有$x$上的$E_x$都相等，可这就意味着不存在沿$x$方向传播的行波，矛盾！
+故$E_x$只能是零，在其传播方向上没有电场分量，只能是横波。
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.5\linewidth]{Pictures/chap08/planeHarmonicElectromagneticWave.eps}
+    \caption{真空中传播的平面简谐电磁波。}
+    \label{fig:08ex02.0313}
+\end{figure}
+
+电场是横波意味着，我们如果要完备描述电磁波，就须规定各个时刻$\vec{\mathbf{E}}$的方向，
+这对应了光的\keyindex{偏振}{polarization}{}。不失一般性地，
+这里主要讨论平面波或线偏振波\sidenote{原文：linearly polarized wave。}，
+此时$\vec{\mathbf{E}}$的震动方向是固定的。
+我们不妨取定坐标轴方向使得电场平行于$y$轴（如\reffig{08ex02.0313}），于是
+\begin{align}
+    \vec{\mathbf{E}}=\hat{\text{\sffamily\bfseries j}}E_y(x,t)\, ,
+\end{align}
+代入麦克斯韦方程组的\refeq{08ex02-MaxwellFaraday}，
+注意$E_x=E_z=0$且$E_y$与$x$和$z$无关，得
+\begin{align}\label{eq:08ex02-EyBz}
+    \frac{\partial E_y}{\partial x}=-\frac{\partial B_z}{\partial t}\, .
+\end{align}
+而$B_x$和$B_y$是恒定的，这里我们不关心它。
+于是依赖于时间$t$的磁场$\vec{\mathbf{B}}$只能有一个$z$方向的分量。
+所以，在自由空间里，平面电磁波是横波。除了正入射外，
+在真实实物介质中传播的这种波有时不是横波，这种复杂情况
+可能是介质是耗散的或含有自由电荷引发的。
+这里我们暂时只讨论均匀、各向同性、线性且稳定的介电质（即不导电），
+此时平面电磁波是横波。
+
+除了假设扰动是平面波外，我们没有规定其具体形式，
+所以结论是具有普遍性的，脉冲和连续波都适用。
+因为任意波形都能分解为正弦波，所以我们就限于讨论简谐波，不妨取
+\begin{align}\label{eq:08ex02-Eyxt}
+    E_y(x,t)=E_{0y}\cos\left(\omega\left(t-\frac{x}{c}\right)+\varepsilon\right)\, ,
+\end{align}
+其传播速度为$c$，代入\refeq{08ex02-EyBz}得
+\begin{align}
+    B_z(x,t)=-\int\frac{\partial E_y}{\partial x}\mathrm{d}t
+    =\frac{1}{c}E_{0y}\cos\left(\omega\left(t-\frac{x}{c}\right)+\varepsilon\right)\, ,
+\end{align}
+这里舍去了表示与时间无关的场的积分常数。与\refeq{08ex02-Eyxt}比较可知，在真空中有
+\begin{align}\label{eq:08ex02-EycBz}
+    E_y=cB_z\, .
+\end{align}
+因为$E_y$和$B_z$只差一个标量因子，所以具有相同的时间依赖关系，
+$\vec{\mathbf{E}}$和$\vec{\mathbf{B}}$在空间中所有位置上同相。
+此外，$\vec{\mathbf{E}}=\hat{\text{\sffamily\bfseries j}}E_y(x,t)$和$\vec{\mathbf{B}}=\hat{\text{\sffamily\bfseries k}}B_z(x,t)$互相垂直，
+它们的叉乘$\vec{\mathbf{E}}\times\vec{\mathbf{B}}$指向传播方向$\hat{\text{\sffamily\bfseries i}}$
+（如\reffig{08ex02.0314}）。
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.75\linewidth]{Pictures/chap08/OrthogonalHarmonicPlaneEBField.eps}
+    \caption{(a)平面偏振波中正交的简谐电场与磁场；(b)波在$\vec{\mathbf{E}}\times\vec{\mathbf{B}}$方向上传播。}
+    \label{fig:08ex02.0314}
+\end{figure}
+一般的介电质材料是不导电和非磁性的，此时\refeq{08ex02-EycBz}可推广为
+\begin{align}
+     E=vB\, ,
+\end{align}
+其中$\displaystyle v=\frac{1}{\sqrt{\epsilon\mu}}$是波在介质中的传播速度。
+此外应注意，平面波并不是麦克斯韦方程组的唯一解，也有许多其他形式的解。

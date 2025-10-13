@@ -51,18 +51,3 @@ copy %windir%\Fonts\simkai.ttf .\fonts\
 chmod +x cp.sh
 ./cp.sh
 ```
-Linux下若遇到以下报错：
-```
-! LaTeX Error: File `boondox-calo.sty` not found.
-```
-可以前往[https://ctan.org/pkg/boondox](https://ctan.org/pkg/boondox)下载boondox包并解压，然后将所需文件所在路径加入环境变量，
-注意保留末尾冒号，例如：
-```bash
-export TEXINPUTS=somewhere/boondox/tex:
-```
-然后重新尝试编译。
-如果上述命令打错造成搜索路径设置错误，
-使得本仓库源文件目录不在`TEXINPUTS`中，则可能遇到以下报错：
-```
-! I can't find file `main`
-```

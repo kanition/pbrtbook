@@ -79,9 +79,9 @@ pbrt中的所有滤波器实现都从抽象类\refvar{Filter}{}派生，
 和\href{https://github.com/mmp/pbrt-v3/blob/master/src/core/filter.cpp}{\ttfamily core/filter.cpp}中。
 \begin{figure}[htbp]
     \centering
-    \subfloat[矩形滤波器]{\includegraphics[width=0.65\linewidth]{chap07/crown-box.png}\label{fig:7.39.1}}\\
-    \subfloat[高斯滤波器]{\includegraphics[width=0.65\linewidth]{chap07/crown-gaussian.png}\label{fig:7.39.2}}\\
-    \subfloat[Mitchell-Netravali滤波器]{\includegraphics[width=0.65\linewidth]{chap07/crown-mitchell.png}\label{fig:7.39.3}}\\
+    \subfloat[矩形滤波器]{\includegraphics[width=0.63\linewidth]{chap07/crown-box.png}\label{fig:7.39.1}}\\
+    \subfloat[高斯滤波器]{\includegraphics[width=0.63\linewidth]{chap07/crown-gaussian.png}\label{fig:7.39.2}}\\
+    \subfloat[Mitchell-Netravali滤波器]{\includegraphics[width=0.63\linewidth]{chap07/crown-mitchell.png}\label{fig:7.39.3}}\\
     \caption{用来将图像样本转化为像素值的像素重建滤波器对最终图像的质量有明显的影响。
         这里我们看到用(a)矩形滤波器、(b)高斯以及(c) Mitchell-Netravali滤波器滤波的皇冠模型放大区域。
         注意Mitchell滤波器给出了最清晰的图像，而高斯则模糊了它。

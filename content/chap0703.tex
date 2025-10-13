@@ -76,19 +76,19 @@
 并展示了扰动的样本位置怎样将混叠伪影转化为不那么讨厌的噪声。
 \begin{figure}[htbp]
     \centering
-    \subfloat[参考]{\includegraphics[width=0.8\linewidth]{chap07/checkerboard-ref.png}\label{fig:7.19.1}}\\
-    \subfloat[1个均匀样本]{\includegraphics[width=0.8\linewidth]{chap07/checkerboard-unif-1spp.png}\label{fig:7.19.2}}\\
-    \subfloat[1个扰动样本]{\includegraphics[width=0.8\linewidth]{chap07/checkerboard-jitter-1spp.png}\label{fig:7.19.3}}\\
-    \subfloat[4个扰动样本]{\includegraphics[width=0.8\linewidth]{chap07/checkerboard-jitter-4spp.png}\label{fig:7.19.4}}
+    \subfloat[参考]{\includegraphics[width=0.78\linewidth]{chap07/checkerboard-ref.png}\label{fig:7.19.1}}\\
+    \subfloat[1个均匀样本]{\includegraphics[width=0.78\linewidth]{chap07/checkerboard-unif-1spp.png}\label{fig:7.19.2}}\\
+    \subfloat[1个扰动样本]{\includegraphics[width=0.78\linewidth]{chap07/checkerboard-jitter-1spp.png}\label{fig:7.19.3}}\\
+    \subfloat[4个扰动样本]{\includegraphics[width=0.78\linewidth]{chap07/checkerboard-jitter-4spp.png}\label{fig:7.19.4}}
     \caption{用棋盘纹理比较图像采样方法。这是幅很难渲染好的图像，
         因为当我们接近地平线时棋盘格关于像素间隔的频率趋于无穷。
         (a)参考图像，每个像素用256个样本渲染，展示了接近理想结果的样子。
         (b)每个像素只用一个样本渲染的图像，没有扰动。注意前景中格子边缘的锯齿伪影。
         还注意棋盘格函数在样本之间经历了许多周期的距离处的伪影；
         如之前介绍过的信号处理理论所料，细节错误地重复表现为低频混叠。
-        (c)扰动图像样本的结果，每个像素还是只有一个样本。
-        第二幅图像规则的混叠已经被替换为不那么讨厌的噪声伪影。
-        (d)每个像素用四个扰动样本的结果仍然不如参考图像，但明显优于之前的结果。}
+        (c)扰动图像样本的结果，每个像素还是仅一个样本。
+        第二幅图像规则的混叠已被替换为不那么讨厌的噪声伪影。
+        (d)每个像素用四个扰动样本的结果仍不如参考图像，但明显优于之前的结果。}
     \label{fig:7.19}
 \end{figure}
 

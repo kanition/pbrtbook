@@ -25,6 +25,7 @@ jobs:
           mkdir fonts
           cd fonts
           wget https://raw.githubusercontent.com/silencesmile/Young_WeChart/master/fonts/simkai.ttf
+          wget https://raw.githubusercontent.com/mauripetersen/FTR/master/assets/fonts/Cambria/cambria.ttc
           wget https://raw.githubusercontent.com/adobe-fonts/source-han-sans/release/OTF/SimplifiedChinese/SourceHanSansSC-Bold.otf
           wget https://raw.githubusercontent.com/adobe-fonts/source-han-sans/release/OTF/SimplifiedChinese/SourceHanSansSC-Regular.otf
           wget https://raw.githubusercontent.com/adobe-fonts/source-han-serif/release/OTF/SimplifiedChinese/SourceHanSerifSC-Bold.otf

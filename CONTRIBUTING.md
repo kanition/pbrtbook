@@ -15,7 +15,7 @@ Git：编译脚本含有Git命令，所以必须安装[Git](https://git-scm.com)
 git clone https://github.com/kanition/pbrtbook.git
 ```
 ### 3. 字体
-为了方便管理以及降低仓库大小，本书的字体并不包含在仓库中。在成功拉取仓库后请创建一个名为`fonts`的新文件夹并将以下**5种**字体添加进`fonts`内。注意保留字体的原有文件名。
+为了方便管理以及降低仓库大小，本书的字体并不包含在仓库中。在成功拉取仓库后请创建一个名为`fonts`的新文件夹并将以下**6种**字体添加进`fonts`内。注意保留字体的原有文件名。
 
 ```cmd
 cd .\pbrtbook
@@ -31,11 +31,12 @@ mkdir .\fonts
 - https://raw.githubusercontent.com/adobe-fonts/source-han-serif/release/OTF/SimplifiedChinese/SourceHanSerifSC-Regular.otf
 
 #### 楷体
-除此之外，本书还使用了Windows上自带的中易楷体(SimKai)。
+除此之外，本书还使用了Windows上自带的中易楷体(SimKai)和Cambria。
 
 中文版Windows用户：执行如下命令将其复制到fonts文件夹下；
 ```cmd
 copy %windir%\Fonts\simkai.ttf .\fonts\
+copy %windir%\Fonts\cambria.ttc .\fonts\
 ```
 其他用户：需要自行搜索并下载到fonts文件夹下。
 

@@ -19,14 +19,14 @@
 它满足$\displaystyle\int\limits_{\varOmega}\delta({\bm\omega})\mathrm{d}{\bm\omega}=1$.
 并记$\delta_{\bm\omega}({\bm\omega}')=\delta({\bm\omega}'-{\bm\omega})$.
 由此定义\keyindex{微面分布函数}{microfacet distribution function}{distribution\ 分布}为
-\sidenote{原论文全文假定$S=1$来讨论，不用除以面积，这里笔者的处理有所不同。}
 \begin{align}\label{eq:08ex01-MicrosurfaceDistribution}
     D({\bm\omega})=\displaystyle\frac{1}{S}\int\limits_{\mathcal{M}}
     \delta_{\bm\omega}({\bm\omega}_{\mathrm{h}}({\bm p}_{\mathrm{h}}))
     \mathrm{d}{\bm p}_{\mathrm{h}}\, ,
 \end{align}
 其中狄拉克$\delta$分布和$D({\bm\omega}_{\mathrm{h}})$的量纲均为
-球面度的倒数即$\displaystyle\frac{1}{\text{sr}}$，也相当于无量纲。
+球面度的倒数$\displaystyle\frac{1}{\text{sr}}$，
+也相当于无量纲\sidenote{原论文全文假定$S=1$来讨论，不用除以面积，这里笔者的处理有所不同。}。
 
 \begin{figure}[htbp]
     \centering
@@ -558,8 +558,8 @@ ${\bm\omega}_{\mathrm{m}}$对${\bm\omega}_{\mathrm{i}}$的\keyindex{雅可比矩
     f_{\mathrm{r}}({\bm\omega}_{\mathrm{o}},{\bm\omega}_{\mathrm{i}})
     |{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{i}}|\mathrm{d}{\bm\omega}_{\mathrm{i}}=1\, ,
 \end{align}
-上式称作\keyindex{白炉测试}{White Furnace Test}{}等式。
-该式意味着，对于这样的材质，由出射光线反推回去的入射光线，
+上式称作\keyindex{白炉测试}{White Furnace Test}{}
+等式。该式意味着，对于这样的材质，由出射光线反推回去的入射光线，
 会在表面上反射一次或多次，最终全部离开表面，且无能量损失。
 
 然而常见的可解析表达的BRDF都没有考虑多次反射的情况，
@@ -575,8 +575,9 @@ ${\bm\omega}_{\mathrm{m}}$对${\bm\omega}_{\mathrm{i}}$的\keyindex{雅可比矩
     =\frac{G_1({\bm\omega}_{\mathrm{m}},{\bm\omega}_{\mathrm{o}})D({\bm\omega}_{\mathrm{m}})}
     {4|{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{i}}||{\bm\omega}_{\mathrm{g}}\cdot{\bm\omega}_{\mathrm{o}}|}\, .
 \end{align}
-将其代入白炉测试\refeq{08ex-01-WhiteFurnaceTest}，
-便得到\keyindex{弱白炉测试}{Weak White Furnace Test}{White Furnace Test\ 白炉测试}等式：
+代入白炉测试\refeq{08ex-01-WhiteFurnaceTest}，
+便得到\keyindex{弱白炉测试}{Weak White Furnace Test}{White Furnace Test\ 白炉测试}
+等式：
 \begin{align}\label{eq:08ex01-WeakWhiteFurnaceTest}
     \forall {\bm\omega}_{\mathrm{o}}: \quad\int\limits_{{\varOmega}_{\mathrm{i}}}
     \frac{G_1({\bm\omega}_{\mathrm{m}},{\bm\omega}_{\mathrm{o}})D({\bm\omega}_{\mathrm{m}})}
@@ -617,8 +618,8 @@ ${\bm\omega}_{\mathrm{m}}$对${\bm\omega}_{\mathrm{i}}$的\keyindex{雅可比矩
 其他没有相应微面结构因而并非基于物理的常见掩模函数也会有所讨论。
 
 \subsubsection*{Smith微面}
-在Smith微面的构造中，它假设微面是非\keyindex{自相关的}{autocorrelated}{}——
-不论微面上的一点和它的临近点有多近，它们的高度（或法线）之间是没有相关性的。
+在Smith微面的构造中，它假设微面是非\keyindex{自相关的}{autocorrelated}{}
+——不论微面上的一点和它的临近点有多近，它们的高度（或法线）之间是没有相关性的。
 这意味着微面上一点的高度和法线是随机变量，整个曲面是微面的随机集合，而不是通常的连续曲面。
 另一方面，法线${\bm\omega}_{\mathrm{h}}$某种意义上是微面的\emph{局部}属性，
 而对该点产生遮挡的别处微面则是一种\emph{远距}属性（但仍是微观尺度上的）。

@@ -79,10 +79,12 @@ $f(x')$的值称为\keyindex{样本值}{sample value}{}。
 \end{figure}
 
 许多函数可以分解为平移过的正弦曲线的加权和。
-约瑟夫·傅里叶\sidenote{译者注：得名于法国数学与物理学家
+约瑟夫·傅里叶\begin{marginfigure}
+    \includegraphics[width=\linewidth]{chap07/FourierRestoration.jpg}
+\end{marginfigure}\sidenote{译者注：法国数学与物理学家
     让·巴蒂斯特·约瑟夫·傅里叶(Jean-Baptiste Joseph Fourier, 1768-1830)。
-    其中文译名还常作“傅立叶”。}
-首先描述了这一奇特事实，傅里叶变换即将函数转换为该表示。
+    其中文译名也作“傅立叶”。}首先描述了这一奇特事实，
+傅里叶变换即将函数转换为该表示。
 函数的频率空间表示便于深入了解其一些特点——正弦函数的频率分布对应于原函数的频率分布。
 使用该形式后，就能用傅里叶分析深入了解采样和重建过程引入的误差以及如何降低该误差带来的感知影响。
 
@@ -342,7 +344,9 @@ shah函数$III_T(x)$定义为
 事实上，\keyindex{采样定理}{sampling theorem}{}准确告诉我们所需的采样率。
 该定理说只要均匀样本点的频率$\omega_s$大于信号中出现的最大频率$\omega_0$的两倍，
 就能从样本中完美重建原始信号。该最小采样频率称为\keyindex{奈奎斯特频率}{Nyquist frequency}{frequency\ 频率}
-\sidenote{译者注：得名于瑞典裔美国物理学家哈里·奈奎斯特(Harry Nyquist, 1889-1976)。}。
+\begin{marginfigure}
+    \includegraphics[width=\linewidth]{chap07/HarryNyquist.jpg}
+\end{marginfigure}\sidenote{译者注：瑞典裔美国物理学家哈里·奈奎斯特(Harry Nyquist, 1889-1976)。}。
 
 对于非带限信号（$\omega_0=\infty$），不可能以足够高的采样率执行完美重建。
 非带限信号有无限支撑的频谱，所以无论其频谱副本隔得多远（即无论我们用多高的采样率），

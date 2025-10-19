@@ -1272,19 +1272,65 @@ $\hbar$为\keyindex{约化普朗克常数}{reduced Planck constant}{}
 \begin{align}
     \hbar=\frac{h}{2\pi}\, .
 \end{align}
-狭义相对论把一个粒子的质量$m$、能量$\mathcal{E}$和动量$p$联系起来：
+狭义相对论把一个粒子的静止质量$m_0$、能量$\mathcal{E}$和动量$p$联系起来：
 \begin{align}
-    \mathcal{E}^2=(cp)^2+(mc^2)^2\, ,
+    \mathcal{E}^2=(pc)^2+(m_0c^2)^2\, ,
 \end{align}
-对于光子$m=0$，有$\mathcal{E}=cp$，前面的结果与狭义相对论符合得很好。
+对于光子$m_0=0$，有$\mathcal{E}=pc$，前面的结果与狭义相对论符合得很好。
 这些量子力学观点已经被1923年实验中的\keyindex{康普顿效应}{Compton effect}{}
 证实\begin{marginfigure}
     \includegraphics[width=\linewidth]{chap08/ArthurCompton1927.jpg}
 \end{marginfigure}\sidenote{美国物理学家阿瑟·霍利·康普顿 (Arthur Holly Compton, 1892-1962)。}
-——单个X射线光子与电子相互作用时将能量转给了电子，且总动量守恒。
+——单个X射线光子与电子相互作用时将能量转给了电子并发生频移，且总动量守恒。
 
 太阳垂直入射到紧贴地球大气层的面上的平均辐射照度约为$1400\text{W}/\text{m}^2$，
 若被完全吸收，则产生的压强约$4.7\times10^{-6}\text{N}/\text{m}^2$，
 对整个地球的压力总共约为10吨。这与大气压强约$10^5\text{N}/\text{m}^2$相比几乎可以忽略不计。
 早在1901年，光压就被俄国实验物理学家彼得·尼古拉耶维奇·列别捷夫
 (Pyotr Nikolaevich Lebedev, 1866-1912)测量到了。
+
+\subsubsection*{电偶极辐射}
+若一个电荷进行变速运动，它就会辐射。
+在垂直于引起辐射的加速度方向上，辐射能量最强。
+辐射的能量是某个外部动力对电荷做功使其变速运动而供给的。
+最简单直观的电磁波产生机制是振荡的\keyindex{电偶极子}{electric dipole}{}，
+它由一正一负两个电荷组成，沿直线做往复运动。
+实物系统辐射能量虽然是量子力学过程，但可以用经典的振荡电偶极子来设想其能量发射速率。
+\reffig{08ex02.0332}示意地画出了一个电偶极子的电场分布，
+其中一个负电荷在一个静止且大小相等的正电荷旁做直线简谐运动。
+若振动的角频率为$\omega$，则关于时间$t$的\keyindex{偶极矩}{dipole moment}{}
+有标量形式
+\begin{align}
+    \srcp(t)=\srcp_0\cos(\omega t)\, ,
+\end{align}
+这里$\srcp(t)$可以代表原子尺度上振荡电荷分布的总体偶极矩，
+也甚至可以代表直线电视天线中的振荡电流。
+如\reffig{08ex02.0332}(a)，在$t=0$时，$\srcp=\srcp_0=qd$，
+其中$d$是两个电荷中心间的初始最大间距。偶极矩实际上是一个向量，
+方向是从$-q$指向$+q$；随着时间推移，偶极矩减小直到零然后反向，如此循环。
+当两个电荷重合时，$\srcp=0$，电场线自身必定闭合。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=\linewidth]{Pictures/chap08/OscillatingElectricDipole.eps}
+    \caption{振荡的电偶极子的电场$\vec{\mathbf{E}}$.}
+    \label{fig:08ex02.0332}
+\end{figure}
+
+在靠近偶极子的地方，电场的形状接近静止的电偶极子电场；
+而在稍微远离的地方形成的闭环区域内，则没有明确的波长，其构成项非常复杂；
+而更加远离的地方则称为波区或辐射区，那里场的构型则简单了许多，建立起固定的波长。
+如\reffig{08ex02.0333}，电场和磁场都是横波且相互正交同相，
+磁力线是一些同心圆，圆心在偶极子轴上，圆所在平面垂直于偶极子轴。
+坡印廷矢量则总是沿径向$\vec{\mathbf{r}}$向外。电场具体形式为
+\begin{align}
+    E=\frac{\srcp_0k^2\sin\theta\cos(kr-\omega t)}{4\pi\epsilon_0r}\, ,
+\end{align}
+其中$\theta$为径向与偶极子轴的夹角，从源向外的径向辐射的辐射照度为
+\begin{align}
+    \langle S\rangle_T(\theta)=\frac{\srcp_0^2\omega^4\sin^2\theta}{32\pi^2c^3\epsilon_0r^2}\, .
+\end{align}
+注意其中的$\omega^4$项，说明频率越高，辐射越强；而$r^2$项说明其对距离遵循平方反比定律。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.4\linewidth]{Pictures/chap08/FieldOrientationsElectricDipole.eps}
+    \caption{振荡的电偶极子中场的朝向。}
+    \label{fig:08ex02.0333}
+\end{figure}

@@ -1,8 +1,8 @@
 \section{译者补充：经典电磁理论下的光学基础}\label{sec:译者补充：经典电磁理论下的光学基础}
 \begin{remark}
     本节内容不是原书内容，而是译者根据《\citetitle{hecht2016optics}》\citep{hecht2016optics}、
-    《\citetitle{hass2023}》 \citep{hass2023}
-    补充并参考《\citetitle{OpticsChinese}》 \citep{OpticsChinese}翻译的，请酌情参考和斧正。
+    \citet{hass2023}、\citet{0471680575}、\citet{9780199573363}和\citet{0-486-64290-9}
+    补充并参考《\citetitle{OpticsChinese}》\citep{OpticsChinese}翻译的，请酌情参考和斧正。
     本节内容只简要介绍相关基础概念和结论，
     并不像正式的物理和光学教材那样严谨，请读者批判性地看待本节内容。
     本节要求读者具备较好的微积分与电磁理论知识储备。
@@ -25,7 +25,6 @@
 波还有纵波、横波之分。介质在波动方向上位移的是\keyindex{纵波}{longitudinal wave}{wave\ 波}。
 介质位移的方向垂直于波动方向的是\keyindex{横波}{transverse wave}{wave\ 波}。
 例如，声波是纵波；琴弦上的波、电磁波是横波。
-
 波区别于粒子流的几个关键特征之一是，
 扰动在前进，但实物介质并不前进。
 就像风吹起滚滚麦浪，但麦穗只是原地摇摆。
@@ -188,8 +187,11 @@ $kx$这个整体是无量纲的。$\psi(x)$的最大值$A>0$称作波的\keyinde
 \begin{align}
     \nu=\frac{1}{\tau}\, ,
 \end{align}
-其单位为\keyindex{赫兹}{Hertz}{}（简写为Hz），即每秒周数。
-结合前述定义，不难发现\keyindex{波速}{speed}{}
+其单位为\keyindex{赫兹}{Hertz}{}
+(Hz)\begin{marginfigure}
+    \includegraphics[width=\linewidth]{chap08/HEINRICH_HERTZ.jpg}
+\end{marginfigure}\sidenote{德国物理学家海因里希·鲁道夫·赫兹 (Heinrich Rudolf Hertz, 1857-1894)。}，
+即每秒周数。结合前述定义，不难发现\keyindex{波速}{speed}{}
 $v$满足\sidenote{注意$v$是英语字母，$\nu$是希腊字母。}
 \begin{align}
     v=\nu\lambda\, .
@@ -470,27 +472,14 @@ $\mathrm{i}=\sqrt{-1}$.
 但要清楚电磁波的表观连续性只是宏观世界的假象，事情并不简单。
 
 \subsubsection*{电磁理论基本定律}
-实验显示，即使是在真空中分开的\keyindex{电荷}{electric charge}{}
-也仍受彼此的相互作用。我们想象每个电荷都被称作电场
-的东西包围着，并假设每个电荷与它所沉浸于其中的电场直接相互作用。
-\begin{definition}[\keyindex{电场}{electric field}{}]
-    若一个点电荷$q$受到电场的力$\vec{\mathbf{F}}_E$，
-    则它所在位置上的电场$\vec{\mathbf{E}}$就由
-    \begin{align}
-        \vec{\mathbf{F}}_E=q\cdot\vec{\mathbf{E}}
-    \end{align}
-    定义，电场强度单位为伏特/米(V/m)或牛顿/库仑(N/C)。
-\end{definition}
-\keyindex{伏特}{volt}{} （伏）是电压和电势单位\begin{marginfigure}
-    \includegraphics[width=\linewidth]{chap08/AlessandroVolta.jpg}
-\end{marginfigure}\sidenote{意大利物理学家
-    亚历山德罗·朱塞佩·安东尼奥·阿纳斯塔西奥·伏特
-    (Alessandro Giuseppe Antonio Anastasio Volta, 1745-1827)。}；
-\keyindex{库仑}{coulomb}{} （库）是电荷量单位\begin{marginfigure}
+\keyindex{电荷}{electric charge}{}
+是构成物质的基本粒子的一种物理属性，
+其单位为\keyindex{库仑}{coulomb}{}
+(库，C)\begin{marginfigure}
     \includegraphics[width=\linewidth]{chap08/CharlesDeCoulomb.jpg}
 \end{marginfigure}\sidenote{法国物理学家夏尔·奥古斯丁·德·库仑
     (Charles-Augustin de Coulomb, 1736-1806)。}。
-
+电荷之间会对彼此施加作用力，哪怕是在真空中。
 \begin{theorem}[\keyindex{库仑定律}{Coulomb's law}{}]
     真空中两个静止点电荷之间的相互作用力称作\keyindex{静电力}{electrostatic force}{}
     或\keyindex{库仑力}{Coulomb force}{}，
@@ -508,6 +497,74 @@ $\mathrm{i}=\sqrt{-1}$.
     其中$\epsilon_0$为真空电容率。
 \end{theorem}
 
+我们想象每个电荷都被称作电场的东西包围着，并假设每个电荷与它所沉浸的电场直接相互作用。
+\begin{definition}[\keyindex{电场}{electric field}{}]
+    若一个点电荷$q$受到电场的力为$\vec{\mathbf{F}}_E$，
+    则它所在位置上的电场$\vec{\mathbf{E}}$由
+    \begin{align}
+        \vec{\mathbf{F}}_E=q\cdot\vec{\mathbf{E}}
+    \end{align}
+    定义，$\vec{\mathbf{E}}$的大小称作\keyindex{电场强度}{electric field strength}{}，
+    单位为伏特/米(V/m)或牛顿/库仑(N/C)。
+\end{definition}
+
+实验表明两个实际带电体的相互作用力与其自身大小、形状以及电荷分布均有关系。
+当带电体之间的距离远大于其自身大小，以致以上因素对它们之间的作用力的影响可以忽略时，
+这样的带电体就可以看作是一个点，即\keyindex{点电荷}{point charge}{electric charge\ 电荷}。
+电场是在与电荷相互作用中表现其性质的，所以需要将电荷放入电场来研究它。
+这个放入的电荷应是电荷量和体积都很小的点电荷，以避免影响原来的电场，便于研究电场各点的性质。
+这样的电荷称作\keyindex{检验电荷}{test charge}{electric charge\ 电荷}。
+而激发电场的带电体所带的电荷称为\keyindex{源电荷}{source charge}{electric charge\ 电荷}。
+
+除了数学公式外，也可以借助图示的方法描述电场。如\reffig{08ex02-electricFieldLine}所示，\keyindex{电场线}{electric field line}{}
+是画在电场中有方向的曲线，曲线上每点的切线方向表示该点的电场方向。
+电场线不会相交，线的疏密反映电场的强弱。
+\begin{figure}[htbp]
+    \centering
+    \subfloat[电场线（蓝色）上每点的切线方向表示该点的电场方向。]{\includegraphics[width=0.65\linewidth]{chap08/FieldLineConstruction.eps}}\\
+    \subfloat[正点电荷电场线。]{\includegraphics[width=0.27\linewidth]{chap08/electricFieldLinePlusThumb.eps}}\qquad%
+    \subfloat[负点电荷电场线。]{\includegraphics[width=0.27\linewidth]{chap08/electricFieldLineMinusThumb.eps}}\\%
+    \subfloat[两个等量同种点电荷和等量异种点电荷之间的电场线。]{\includegraphics[width=\linewidth]{chap08/electricFieldLine.eps}}\quad%
+    \caption{电场线的构建。}
+    \label{fig:08ex02-electricFieldLine}
+\end{figure}
+
+电场中的电荷具有势能，称作\keyindex{电势能}{electric potential energy}{}。
+电势能的数值没有绝对意义，只有相对意义，即需要设定一个电势能为零的参考点，一般取无穷远处的电势能为零。
+这样，一个电荷系统的电势能就是其所有电荷被外部作用力从无穷远处移动到现有位置分布且无任何变速过程时所做的总功。
+用$W_{AB}$表示检验电荷$q$在电场$\vec{\mathbf{E}}$中沿着路径$C$从点$A$运动到点$B$过程中静电力所做的功，
+$E_{pA}$和$E_{pB}$分别表示电荷在点$A$和点$B$处的电势能，则有
+\begin{align}
+    W_{AB}=\int\limits_{C}q\vec{\mathbf{E}}\cdot\mathrm{d}\vec{\mathbf{\ell}}=E_{pA}-E_{pB}\, .
+\end{align}
+后文我们将看到，这个功$W_{AB}$与路径$C$无关；而电势能与电荷量之比保持一定，
+该比例由电场的性质决定，与检验电荷无关。由此我们定义
+\begin{definition}[\keyindex{电势}{electric potential}{}]
+    电荷在电场中某点具有的电势$\varphi$等于它在此处的电势能$E_p$与其电荷量$q$的比值：
+    \begin{align}
+        \label{eq:08ex02-electricPotential}
+        \varphi=\frac{E_p}{q}\, .
+    \end{align}
+\end{definition}
+两点之间电势的差值称为\keyindex{电势差}{electrical potential difference}{}
+或\keyindex{电压}{voltage}{}。
+电势、电势差的单位均为\keyindex{伏特}{volt}{}
+(伏，V)\begin{marginfigure}
+    \includegraphics[width=\linewidth]{chap08/AlessandroVolta.jpg}
+\end{marginfigure}\sidenote{意大利物理学家
+    亚历山德罗·朱塞佩·安东尼奥·阿纳斯塔西奥·伏特
+    (Alessandro Giuseppe Antonio Anastasio Volta, 1745-1827)。}。
+分别记点$A$和点$B$处的电势为$\varphi_{A}$和$\varphi_{B}$，则它们之间的电势差可表示为
+\begin{align}
+    \label{eq:08ex02-voltage}
+    U_{AB}&=\varphi_{A}-\varphi_{B}\, ,\\
+    U_{BA}&=\varphi_{B}-\varphi_{A}\, .
+\end{align}
+因此检验电荷$q$从点$A$运动到点$B$静电力所做的功也即
+\begin{align}
+    W_{AB}=qU_{AB}\, .
+\end{align}
+
 此外，一个运动的电荷还会受到另一个力$\vec{\mathbf{F}}_M$，
 称作\keyindex{洛伦兹力}{Lorentz force}{}，
 它与运动电荷的速度$\vec{\mathbf{v}}$成正比。
@@ -521,7 +578,6 @@ $\mathrm{i}=\sqrt{-1}$.
     强度，单位为\keyindex{特斯拉}{tesla}{}
     (T)。
 \end{definition}
-
 磁感应强度单位得名于物理学家特斯拉\begin{marginfigure}
     \includegraphics[width=\linewidth]{chap08/TeslaCirca1890.jpg}
 \end{marginfigure}\sidenote{塞尔维亚裔美国物理学家
@@ -534,10 +590,11 @@ $\mathrm{i}=\sqrt{-1}$.
 两者的互相依赖性是描述光的关键。
 
 \subsubsection*{法拉第感应定律}
-法拉第\begin{marginfigure}
+1822年，法拉第\begin{marginfigure}
     \includegraphics[width=\linewidth]{chap08/MichaelFaraday.jpg}
 \end{marginfigure}\sidenote{英国物理学家迈克尔·法拉第
-    (Michael Faraday, 1791-1867)。}在线圈实验中发现了\keyindex{电磁感应}{electromagnetic induction}{}
+    (Michael Faraday, 1791-1867)。}在日记中写下“把磁转换为电”的设想。
+1831年，他在线圈实验中发现了\keyindex{电磁感应}{electromagnetic induction}{}
 现象，而“变化”是其最实质性的因素。
 
 \begin{figure}[htbp]
@@ -553,8 +610,8 @@ $\mathrm{i}=\sqrt{-1}$.
 
 将一根磁铁插进线圈时，
 线圈两端会有电压，称作\keyindex{感生电动势}{induced electromotive force}{}
-(emf)\sidenote{作者强调，尽管英文中感生电动势被称作“force”，
-    但它并不是力，而是电压，所以会尽量用简称emf来避免误解。}。
+(emf)\sidenote{作者强调，尽管感生电动势的英文是“force”，
+    但它并非力而是电压，故尽量用简称emf来避免误解。}。
 该电动势的振幅依赖于磁铁运动速度，或者说依赖于穿过线圈的$B$的变化率，而不是$B$本身。
 \reffig{08ex02.0302}中，同一变化的$B$场穿过两个不同导线环路，
 大的环路两端有更大的感生电动势，即它正比于$B$场垂直穿过的环路面积$A$.
@@ -876,7 +933,7 @@ $\vec{\mathbf{J}}$在截面面积上的积分：
     可微标量函数$f(x,y,z)$的\keyindex{梯度场}{gradient field}{}
     即为梯度向量构成的场：
     \begin{align}
-        \vec{\nabla} f=\frac{\partial f}{\partial x}\hat{\text{\sffamily\bfseries i}}
+        \vec{\nabla} f=\text{grad}\ f =\frac{\partial f}{\partial x}\hat{\text{\sffamily\bfseries i}}
         +\frac{\partial f}{\partial y}\hat{\text{\sffamily\bfseries j}}
         +\frac{\partial f}{\partial z}\hat{\text{\sffamily\bfseries k}}\, ,
     \end{align}
@@ -921,7 +978,55 @@ $\vec{\nabla}$算符能让我们后续的表示更加方便。
 \end{definition}
 形式上看，旋度像是$\vec{\nabla}$算符与向量场叉乘得到的。
 
-关于散度和旋度，有以下两个重要定理。
+借助以上定义与符号，我们接着介绍以下数学背景知识。
+\begin{definition}
+    设向量场$\vec{\mathbf{F}}$定义在开区域$D$上，且对于$D$内的任意两点$A$和$B$，
+    曲线积分$\displaystyle\int\limits_C\vec{\mathbf{F}}\cdot\mathrm{d}\vec{\mathbf{\ell}}$
+    对所有从$A$到$B$的路径$C$都取值相等，则我们称该积分在$D$上是\keyindex{路径无关的}{path independent}{}，
+    称$\vec{\mathbf{F}}$在$D$上是\keyindex{保守的}{conservative}{}。
+\end{definition}
+\begin{definition}
+    若定义在区域$D$上的向量场$\vec{\mathbf{F}}$和某个$D$上的标量函数$f$之间满足
+    $\vec{\mathbf{F}}=\vec{\nabla} f$，则$f$称作$\vec{\mathbf{F}}$的\keyindex{势函数}{potential function}{}。
+\end{definition}
+
+在接下来的相关结论中，我们都约定所讨论的向量场$\vec{\mathbf{F}}$的各分量均有一阶连续偏导数；
+曲线是\keyindex{分段光滑}{piecewise smooth}{}
+的，它可以计算长度和切向量（除至多有限个点外）；
+区域$D$是\keyindex{连通的}{connected}{}，
+个别结论则额外要求它是\keyindex{单连通的}{simply connected}{}。
+注意连通和单连通不能相互推出。
+\begin{theorem}
+    \label{theorem:08ex02-FundamentalTheoremOfLineIntegrals}
+    设$C$是空间中从点$A$连接到点$B$的光滑曲线，
+    $f$是在包含$C$的区域$D$上定义的可微函数，
+    且$f$有连续的梯度场$\vec{\mathbf{F}}=\vec{\nabla} f$，则
+    \begin{align}
+        \int\limits_C\vec{\mathbf{F}}\cdot\mathrm{d}\vec{\mathbf{\ell}}=f(B)-f(A)\, .
+    \end{align}
+\end{theorem}
+\begin{theorem}
+    \label{theorem:08ex02-ConservativeFieldsAreGradientFields}
+    设向量场$\vec{\mathbf{F}}$的各分量在整个开连通区域$D$上都连续，
+    则当且仅当$\vec{\mathbf{F}}$是某个可微函数$f$的梯度场$\vec{\nabla} f$时，
+    $\vec{\mathbf{F}}$是保守的。
+\end{theorem}
+\begin{theorem}
+    \label{theorem:08ex02-LoopPropertyConservativeFields}
+    向量场$\vec{\mathbf{F}}$在$D$上是保守的等价于环路积分
+    $\displaystyle\oint\limits_C\vec{\mathbf{F}}\cdot\mathrm{d}\vec{\mathbf{\ell}}=0$
+    对$D$内的任意闭合曲线$C$恒成立。
+\end{theorem}
+\begin{theorem}
+    \label{theorem:08ex02-ComponentTestForConservativeFields}
+    设定义在简单连通开区域上的向量场$\vec{\mathbf{F}}(x,y,z)=M(x,y,z)\hat{\text{\sffamily\bfseries i}}+N(x,y,z)\hat{\text{\sffamily\bfseries j}}+P(x,y,z)\hat{\text{\sffamily\bfseries k}}$
+    的各分量均有一阶连续偏导数，则当且仅当以下条件均成立时，$\vec{\mathbf{F}}$是保守的：
+    \begin{align}
+        \frac{\partial P}{\partial y}=\frac{\partial N}{\partial z}\, ,\quad
+        \frac{\partial M}{\partial z}=\frac{\partial P}{\partial x}\, ,\quad
+        \frac{\partial N}{\partial x}=\frac{\partial M}{\partial y}\, .
+    \end{align}
+\end{theorem}
 \begin{theorem}[\keyindex{散度定理}{divergence theorem}{}]
     设向量场$\vec{\mathbf{F}}$的各分量均有连续一阶偏导数，
     $S$为有向分片光滑封闭曲面；则$\vec{\mathbf{F}}$沿着$S$曲面上
@@ -932,7 +1037,6 @@ $\vec{\nabla}$算符能让我们后续的表示更加方便。
         =\iiint\limits_D\vec{\nabla}\cdot\vec{\mathbf{F}}\mathrm{d}V\, .
     \end{align}
 \end{theorem}
-
 \begin{theorem}[\keyindex{斯托克斯定理}{Stokes' theorem}{}]
     设$S$为有向分片光滑曲面，且有分段光滑边界曲线$C$，向量场$\vec{\mathbf{F}}$的各分量
     在一包含$S$的开区域内有连续一阶偏导数；则$\vec{\mathbf{F}}$沿着
@@ -943,7 +1047,6 @@ $\vec{\nabla}$算符能让我们后续的表示更加方便。
         =\iint\limits_A(\vec{\nabla}\times\vec{\mathbf{F}})\cdot\mathrm{d}\vec{\mathbf{S}}\, .
     \end{align}
 \end{theorem}
-
 \begin{corollary}
     梯度场的散度恒为零，即
     \begin{align}
@@ -956,8 +1059,61 @@ $\vec{\nabla}$算符能让我们后续的表示更加方便。
         \text{div}\ (\text{curl}\ \vec{\mathbf{F}})=\vec{\nabla}\cdot(\vec{\nabla}\times\vec{\mathbf{F}})=0\, .
     \end{align}
 \end{corollary}
+\begin{theorem}
+    设向量场$\vec{\mathbf{F}}$在简单连通开区域$D$内的任意一点均有
+    $\vec{\nabla}\times\vec{\mathbf{F}}=\vec{0}$，
+    则它在$D$内的任意分段光滑闭合曲线$C$上的曲线积分恒为0，即
+    \begin{align}
+        \oint\limits_C\vec{\mathbf{F}}\cdot\mathrm{d}\vec{\mathbf{\ell}}=0\, .
+    \end{align}
+\end{theorem}
 
-利用散度定理和斯托克斯定理，我们可以把麦克斯韦方程组重新写为微分形式：
+根据电势能、电势的定义以及以上数学知识，我们能推导出：
+\begin{theorem}
+    当电场$\vec{\mathbf{E}}$是\keyindex{静电场}{electrostatic field}{}
+    时，它是保守场，且是电势$\varphi$的逆梯度场
+    \begin{align}
+        \vec{\mathbf{E}}=-\vec{\nabla}\varphi\, .
+    \end{align}
+\end{theorem}
+\begin{prove}
+    当电场$\vec{\mathbf{E}}$是静电场时，没有磁场参与作用。
+    根据法拉第电磁感应定律，即\refeq{08ex02-FaradayLaw}，
+    $\vec{\mathbf{E}}$对任意闭合曲线$C$的环路积分恒为零，即
+    \begin{align}
+        \oint\limits_C\vec{\mathbf{E}}\cdot\mathrm{d}\vec{\mathbf{\ell}}=0\, .
+    \end{align}
+    根据定理\ref{theorem:08ex02-LoopPropertyConservativeFields}，
+    $\vec{\mathbf{E}}$是保守场。根据定理\ref{theorem:08ex02-ConservativeFieldsAreGradientFields}，
+    必存在一个函数$f$满足
+    \begin{align}
+        \vec{\mathbf{E}}=\vec{\nabla}f\, .
+    \end{align}
+    于是根据定理\ref{theorem:08ex02-FundamentalTheoremOfLineIntegrals}，
+    对于从任意点$A$到任意点$B$的任意路径$C'$，都有
+    \begin{align}\label{eq:08ex02-ElectrostaticConservative}
+        \int\limits_{C'}\vec{\mathbf{E}}\cdot\mathrm{d}\vec{\mathbf{\ell}}=f(B)-f(A)\, .
+    \end{align}
+    而根据电势能和电势的定义，若检验电荷$q$沿着该路径$C'$移动，静电场力对其做功为$W_{AB}$，
+    并记点$A$和点$B$的电势分别为$\varphi_{A}$和$\varphi_{B}$，
+    电势能分别为$E_{pA}$和$E_{pB}$，则
+    \begin{align}
+        \int\limits_{C'}\vec{\mathbf{E}}\cdot\mathrm{d}\vec{\mathbf{\ell}}
+        =\frac{1}{q}\int\limits_{C'}q\vec{\mathbf{E}}\cdot\mathrm{d}\vec{\mathbf{\ell}}
+        =\frac{1}{q}W_{AB}=\frac{1}{q}(E_{pA}-E_{pB})
+        =\varphi_{A}-\varphi_{B}\, .
+    \end{align}
+    对比上式和\refeq{08ex02-ElectrostaticConservative}，由任意性，可知
+    \begin{align}
+        \varphi=-f\, .
+    \end{align}
+    所以电场就是电势的逆梯度场：
+    \begin{align}
+        \vec{\mathbf{E}}=-\vec{\nabla}\varphi\, .
+    \end{align}
+\end{prove}
+
+利用散度定理和斯托克斯定理，麦克斯韦方程组可重新写为微分形式：
 \begin{theorem}[\keyindex{麦克斯韦方程组}{Maxwell's equations}{}]
     \begin{align}
         \label{eq:08ex02-MaxwellFaraday}\text{法拉第电磁感应定律：} &  & \vec{\nabla}\times\vec{\mathbf{E}} & =-\frac{\partial \vec{\mathbf{B}}}{\partial t}\, ,                                             \\
@@ -1004,8 +1160,7 @@ $\vec{\nabla}$算符能让我们后续的表示更加方便。
 
 现在习惯上用$c$表示真空中的光速，它取自拉丁文“celer”，意思是“快”。
 1983年在巴黎召开的第17届国际计量大会\sidenote{the 17th Conférence Générale des Poids et Mesures}
-采用了长度单位“米”的新定义，
-由此将真空中的光速精确设定为\sidenote{即常数被用来定义国际单位制中的长度单位“米”。}
+规定了长度单位“米”的新定义，即把真空中的光速精确设定为
 \begin{align}
     c=2.99792458\times10^8\text{m}/\text{s}\, .
 \end{align}
@@ -1119,7 +1274,8 @@ $\vec{\mathbf{E}}$和$\vec{\mathbf{B}}$在空间中所有位置上同相。
 \begin{align}
     u_E=u_B\, ,
 \end{align}
-这意味着，以电磁波形式流过空间的能量，由构成该电磁波的电场和磁场等量分享，所以
+这意味着，以电磁波形式流过空间的能量，由构成该电磁波的电场和磁场等量分享，
+所以总能量密度为
 \begin{align}
     u=u_E+u_B=\epsilon_0 E^2=\frac{1}{\mu_0}B^2\, .
 \end{align}
@@ -1171,6 +1327,7 @@ $\vec{\mathbf{S}}$的大小是穿过与$\vec{\mathbf{S}}$垂直的表面单位�
 它表明辐射照度或辐射出射度与电场振幅的平方$E_0$成正比。
 
 \subsubsection*{光子}
+
 1900年普朗克\begin{marginfigure}
     \includegraphics[width=\linewidth]{chap08/MaxPlanckbyHugoErfurth1938.jpg}
 \end{marginfigure}\sidenote{德国物理学家马克斯·卡尔·恩斯特·路德维希·普朗克 (Max Karl Ernst Ludwig Planck, 1858-1947)。}
@@ -1265,26 +1422,72 @@ $\mathcal{P}$等于电磁波的能量密度。
 \end{align}
 其中$\lambda$为波长；对应的动量矢量为
 \begin{align}
-    \vec{\mathbf{p}}=\hbar\vec{\mathbf{k}}\, ,
+    \vec{\mathbf{p}}=\hslash\vec{\mathbf{k}}\, ,
 \end{align}
 其中$\vec{\mathbf{k}}$为传播向量，
-$\hbar$为\keyindex{约化普朗克常数}{reduced Planck constant}{}
+$\hslash$为\keyindex{约化普朗克常数}{reduced Planck constant}{}
 \begin{align}
-    \hbar=\frac{h}{2\pi}\, .
+    \hslash=\frac{h}{2\pi}\, .
 \end{align}
-狭义相对论把一个粒子的质量$m$、能量$\mathcal{E}$和动量$p$联系起来：
+狭义相对论把一个粒子的静止质量$m_0$、能量$\mathcal{E}$和动量$p$联系起来：
 \begin{align}
-    \mathcal{E}^2=(cp)^2+(mc^2)^2\, ,
+    \mathcal{E}^2=(pc)^2+(m_0c^2)^2\, ,
 \end{align}
-对于光子$m=0$，有$\mathcal{E}=cp$，前面的结果与狭义相对论符合得很好。
+对于光子$m_0=0$，有$\mathcal{E}=pc$，前面的结果与狭义相对论符合得很好。
 这些量子力学观点已经被1923年实验中的\keyindex{康普顿效应}{Compton effect}{}
 证实\begin{marginfigure}
     \includegraphics[width=\linewidth]{chap08/ArthurCompton1927.jpg}
 \end{marginfigure}\sidenote{美国物理学家阿瑟·霍利·康普顿 (Arthur Holly Compton, 1892-1962)。}
-——单个X射线光子与电子相互作用时将能量转给了电子，且总动量守恒。
+——单个X射线光子与电子相互作用时将能量转给了电子并发生频移，且总动量守恒。
 
 太阳垂直入射到紧贴地球大气层的面上的平均辐射照度约为$1400\text{W}/\text{m}^2$，
 若被完全吸收，则产生的压强约$4.7\times10^{-6}\text{N}/\text{m}^2$，
 对整个地球的压力总共约为10吨。这与大气压强约$10^5\text{N}/\text{m}^2$相比几乎可以忽略不计。
 早在1901年，光压就被俄国实验物理学家彼得·尼古拉耶维奇·列别捷夫
 (Pyotr Nikolaevich Lebedev, 1866-1912)测量到了。
+
+\subsubsection*{电偶极辐射}
+若一个电荷进行变速运动，它就会辐射。
+在垂直于引起辐射的加速度方向上，辐射能量最强。
+辐射的能量是某个外部动力对电荷做功使其变速运动而供给的。
+最简单直观的电磁波产生机制是振荡的\keyindex{电偶极子}{electric dipole}{}，
+它由一正一负两个电荷组成，沿直线做往复运动。
+实物系统辐射能量虽然是量子力学过程，但可以用经典的振荡电偶极子来设想其能量发射速率。
+\reffig{08ex02.0332}示意地画出了一个电偶极子的电场分布，
+其中一个负电荷在一个静止且大小相等的正电荷旁做直线简谐运动。
+若振动的角频率为$\omega$，则关于时间$t$的\keyindex{偶极矩}{dipole moment}{}
+有标量形式
+\begin{align}
+    \srcp(t)=\srcp_0\cos(\omega t)\, ,
+\end{align}
+这里$\srcp(t)$可以代表原子尺度上振荡电荷分布的总体偶极矩，
+也甚至可以代表直线电视天线中的振荡电流。
+如\reffig{08ex02.0332}(a)，在$t=0$时，$\srcp=\srcp_0=qd$，
+其中$d$是两个电荷中心间的初始最大间距。偶极矩实际上是一个向量，
+方向是从$-q$指向$+q$；随着时间推移，偶极矩减小直到零然后反向，如此循环。
+当两个电荷重合时，$\srcp=0$，电场线自身必定闭合。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=\linewidth]{Pictures/chap08/OscillatingElectricDipole.eps}
+    \caption{振荡的电偶极子的电场$\vec{\mathbf{E}}$.}
+    \label{fig:08ex02.0332}
+\end{figure}
+
+在靠近偶极子的地方，电场的形状接近静止的电偶极子电场；
+而在稍微远离的地方形成的闭环区域内，则没有明确的波长，其构成项非常复杂；
+而更加远离的地方则称为波区或辐射区，那里场的构型则简单了许多，建立起固定的波长。
+如\reffig{08ex02.0333}，电场和磁场都是横波且相互正交同相，
+磁力线是一些同心圆，圆心在偶极子轴上，圆所在平面垂直于偶极子轴。
+坡印廷矢量则总是沿径向$\vec{\mathbf{r}}$向外。电场具体形式为
+\begin{align}
+    E=\frac{\srcp_0k^2\sin\theta\cos(kr-\omega t)}{4\pi\epsilon_0r}\, ,
+\end{align}
+其中$\theta$为径向与偶极子轴的夹角，从源向外的径向辐射的辐射照度为
+\begin{align}
+    \langle S\rangle_T(\theta)=\frac{\srcp_0^2\omega^4\sin^2\theta}{32\pi^2c^3\epsilon_0r^2}\, .
+\end{align}
+注意其中的$\omega^4$项，说明频率越高，辐射越强；而$r^2$项说明其对距离遵循平方反比定律。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.4\linewidth]{Pictures/chap08/FieldOrientationsElectricDipole.eps}
+    \caption{振荡的电偶极子中场的朝向。}
+    \label{fig:08ex02.0333}
+\end{figure}

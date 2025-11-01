@@ -61,11 +61,12 @@
 %\usepackage{times} % Use the Times font for headings
 \usepackage{mathptmx} % Use the Adobe Times Roman as the default text font together with math symbols from the Sym­bol, Chancery and Com­puter Modern fonts
 \usepackage{microtype} % Slightly tweak font spacing for aesthetics
+\usepackage{calligra} % For "p" in calligra font
 \usepackage[utf8]{inputenc} % Required for including letters with accents
 \usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
 % To make \epsilon differs to \varepsilon, set font cambria.ttc for \epsilon
-\usepackage{fontspec}
-\renewcommand{\epsilon}{\ensuremath{\textit{\fontspec{cambria.ttc}[Path=fonts/]ϵ}}}
+\renewcommand{\epsilon}{\ensuremath{\textit{\fontspec{cambria.ttc}[Path=fonts/,ItalicFeatures={FakeSlant=0.18}]ϵ}}} % For \epsilon
+\newcommand{\srcp}{\ensuremath{\text{\calligra p}}} % For "p" in calligra font
 
 %---------------------------------------------------------------------------------------
 % use sidenotes but fix its bug to change font size

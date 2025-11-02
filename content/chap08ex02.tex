@@ -215,10 +215,10 @@ $v$满足\sidenote{注意$v$是英语字母，$\nu$是希腊字母。}
 
 利用以上定义，我们可以写出以下常见而等价的谐波表达式：
 \begin{align}
-    \psi= & A\sin k(x\mp vt)\, ,                                          \\
-    \psi= & A\sin (kx\mp\omega t)\, ,                                     \\
-    \psi= & A\sin 2\pi\left(\frac{x}{\lambda}\mp\frac{t}{\tau}\right)\, , \\
-    \psi= & A\sin 2\pi(\kappa x\mp\nu t)\, ,                              \\
+    \psi= & A\sin k(x\mp vt)\, ,                                                                           \\
+    \psi= & A\sin (kx\mp\omega t)\, ,                                                                      \\
+    \psi= & A\sin 2\pi\left(\frac{x}{\lambda}\mp\frac{t}{\tau}\right)\, , \label{eq:08ex02-HarmonicWave03} \\
+    \psi= & A\sin 2\pi(\kappa x\mp\nu t)\, ,                                                               \\
     \psi= & A\sin 2\pi\nu\left(\frac{x}{v}\mp t\right)\, ,
 \end{align}
 其中前两个最为常用，你甚至可以改用余弦函数来表示（后文就有）。
@@ -227,6 +227,33 @@ $v$满足\sidenote{注意$v$是英语字母，$\nu$是希腊字母。}
 或\keyindex{单能量的}{monoenergetic}{}。
 但真实的波无法无限回溯到$t=-\infty$，所以不会是严格的单色波，而是含有一个频率范围。
 若这个频段很窄，则称该波是\keyindex{准单色的}{quasimonochromatic}{}。
+
+\begin{example}
+    以国际单位制下的如下函数为例：
+    \begin{align}
+        \psi(y,t)=0.040\times\sin 2\pi\left(\frac{y}{6.0\times10^{-7}}+\frac{t}{2.0\times10^{-15}}\right)\, .
+    \end{align}
+    它与\refeq{08ex02-HarmonicWave03}形式一致，所以表示的是谐波，沿着$y$的负方向传播。其周期为
+    \begin{align}
+        \tau=2.0\times10^{-15}\text{s}\, .
+    \end{align}
+    频率为
+    \begin{align}
+        \nu=\frac{1}{\tau}=5.0\times10^{14}\text{Hz}\, .
+    \end{align}
+    波长为
+    \begin{align}
+        \lambda=6.0\times10^{-7}\text{m}\, .
+    \end{align}
+    振幅为
+    \begin{align}
+        A=0.040\, .
+    \end{align}
+    速度为
+    \begin{align}
+        v=\nu\lambda=(5.0\times10^{14})\times(6.0\times10^{-7})=3.0\times10^8\text{m/s}\, .
+    \end{align}
+\end{example}
 
 \subsubsection*{相位与相速度}
 考察任一谐波，如
@@ -437,6 +464,29 @@ $\mathrm{i}=\sqrt{-1}$.
     \alpha^2+\beta^2+\gamma^2=1\, .
 \end{align}
 
+\begin{example}
+    试写出平面波$E$的标量表达式：它的振幅为$E_0$，角频率为$\omega$，波长为$\lambda$，
+    其传播方向上的单位向量（注意不要混淆为单位基向量$\hat{\text{\sffamily\bfseries k}}$）为
+    \begin{align}
+        \hat{\mathbf{k}}=\frac{1}{\sqrt{20}}(4\hat{\text{\sffamily\bfseries i}}+2\hat{\text{\sffamily\bfseries j}})\, .
+    \end{align}
+    我们将该平面波的形式确定为
+    \begin{align}
+        E(x,y,z,t)=E_0\mathrm{e}^{\mathrm{i}(\vec{\mathbf{k}}\cdot\vec{\mathbf{r}}-\omega t)}\, .
+    \end{align}
+    这里传播向量$\vec{\mathbf{k}}$满足
+    \begin{align}
+        \vec{\mathbf{k}}=\frac{\vec{\mathbf{k}}}{|\vec{\mathbf{k}}|}\cdot|\vec{\mathbf{k}}|
+        =\hat{\mathbf{k}}\cdot\frac{2\pi}{\lambda}
+        =\frac{1}{\sqrt{20}}(4\hat{\text{\sffamily\bfseries i}}+2\hat{\text{\sffamily\bfseries j}})\cdot\frac{2\pi}{\lambda}
+        =\frac{\pi}{\sqrt{5}\lambda}(4\hat{\text{\sffamily\bfseries i}}+2\hat{\text{\sffamily\bfseries j}})\, .
+    \end{align}
+    于是得到$E$的表达式为
+    \begin{align}
+        E=E_0\mathrm{e}^{\mathrm{i}\left(\displaystyle\frac{\pi}{\sqrt{5}\lambda}(4x+2y)-\omega t\right)}\, .
+    \end{align}
+\end{example}
+
 \subsubsection*{三维波动微分方程}
 像前文推导一维波动微分方程那样，我们可以
 类似地用\refeq{08ex02.DirectionCosines}推导出
@@ -464,12 +514,174 @@ $\mathrm{i}=\sqrt{-1}$.
 （不一定为简谐函数），$C_1$和$C_2$是常数。
 
 \subsection{电磁理论}\label{sub:电磁理论}
+物理学自19世纪初期以来的发展已经证明了光的是一种电磁波。
 在\keyindex{经典电动力学}{classical electrodynamics}{}
 的图像中，电磁波是连续传递能量的。但更现代的\keyindex{量子电动力学}{quantum electrodynamics}{}
 则用一种质量为零的基本“粒子”来描述电磁相互作用和能量传递，这种粒子称作\keyindex{光子}{photon}{}。
-光以波的形式在空间中传播，但在发射和吸收时又显出粒子性，即二象性。
+事实证明，光以波的形式在空间中传播，但在发射和吸收时又显出粒子性，即二象性。
 平均而言，我们可以把大量光子流的平均作用看作是经典电磁波，
-但要清楚电磁波的表观连续性只是宏观世界的假象，事情并不简单。
+但请记住电磁波的表观连续性只是宏观层面的假象——事情并不简单，
+存在一些情况会使这种描述方法失效。
+
+\subsubsection*{向量场及其积分}
+在介绍后续内容前，我们回忆一些关于向量场及其积分的知识。
+
+\keyindex{向量场}{vector field}{}，也称\keyindex{矢量场}{}{}，
+是给其定义域内的每个点都赋有一个向量的函数。
+直角坐标系下，一个三维空间上的向量场通常形如
+\begin{align}
+    \vec{\mathbf{F}}(x,y,z)=
+    M(x,y,z)\hat{\text{\sffamily\bfseries i}}+
+    N(x,y,z)\hat{\text{\sffamily\bfseries j}}+
+    P(x,y,z)\hat{\text{\sffamily\bfseries k}}\, ,
+\end{align}
+其中$M$、$N$和$P$为分量函数；当所有分量函数都连续、可微时，
+我们对应称向量场连续、可微。电场和磁场都是向量场。
+
+可微标量函数的梯度给出了该函数在给定点处函数值增长最快的方向，
+即每个点都有一个向量与之对应，于是我们定义
+\begin{definition}
+    可微标量函数$f(x,y,z)$的\keyindex{梯度场}{gradient field}{}
+    即为梯度向量构成的场：
+    \begin{align}
+        \vec{\nabla} f=\text{grad}\ f =\frac{\partial f}{\partial x}\hat{\text{\sffamily\bfseries i}}
+        +\frac{\partial f}{\partial y}\hat{\text{\sffamily\bfseries j}}
+        +\frac{\partial f}{\partial z}\hat{\text{\sffamily\bfseries k}}\, ,
+    \end{align}
+    其中$\vec{\nabla}$表示向量微分算符，读作“del”，直角坐标系下为
+    \begin{align}
+        \vec{\nabla}=\hat{\text{\sffamily\bfseries i}}\frac{\partial }{\partial x}
+        +\hat{\text{\sffamily\bfseries j}}\frac{\partial }{\partial y}
+        +\hat{\text{\sffamily\bfseries k}}\frac{\partial }{\partial z}\, .
+    \end{align}
+\end{definition}
+$\vec{\nabla}$算符能让我们后续的表示更加方便。
+
+\begin{definition}
+    向量场$\vec{\mathbf{F}}(x,y,z)=M(x,y,z)\hat{\text{\sffamily\bfseries i}}+N(x,y,z)\hat{\text{\sffamily\bfseries j}}+P(x,y,z)\hat{\text{\sffamily\bfseries k}}$
+    的\keyindex{散度}{divergence}{}
+    是标量函数
+    \begin{align}
+        \text{div}\ \vec{\mathbf{F}}=\vec{\nabla}\cdot\vec{\mathbf{F}}
+        =\frac{\partial M}{\partial x}+\frac{\partial N}{\partial y}+\frac{\partial P}{\partial z}\, ,
+    \end{align}
+\end{definition}
+形式上看，散度像是$\vec{\nabla}$算符与向量场点乘得到的。
+
+\begin{definition}
+    向量场$\vec{\mathbf{F}}(x,y,z)=M(x,y,z)\hat{\text{\sffamily\bfseries i}}+N(x,y,z)\hat{\text{\sffamily\bfseries j}}+P(x,y,z)\hat{\text{\sffamily\bfseries k}}$
+    的\keyindex{旋度}{curl}{}
+    向量为
+    \begin{align}
+        \text{curl}\ \vec{\mathbf{F}}
+         & =\vec{\nabla}\times\vec{\mathbf{F}}\nonumber                                                                          \\
+         & =\left|
+        \begin{array}{ccc}
+            \hat{\text{\sffamily\bfseries i}}         & \hat{\text{\sffamily\bfseries j}}         & \hat{\text{\sffamily\bfseries k}}         \\
+            \displaystyle\frac{\partial }{\partial x} & \displaystyle\frac{\partial }{\partial y} & \displaystyle\frac{\partial }{\partial z} \\
+            M                                         & N                                         & P
+        \end{array}
+        \right|                                                                                                        \nonumber \\
+         & =\left(\frac{\partial P}{\partial y}-\frac{\partial N}{\partial z}\right)\hat{\text{\sffamily\bfseries i}}+
+        \left(\frac{\partial M}{\partial z}-\frac{\partial P}{\partial x}\right)\hat{\text{\sffamily\bfseries j}}+
+        \left(\frac{\partial N}{\partial x}-\frac{\partial M}{\partial y}\right)\hat{\text{\sffamily\bfseries k}}\, .
+    \end{align}
+\end{definition}
+形式上看，旋度像是$\vec{\nabla}$算符与向量场叉乘得到的。
+
+借助以上定义与符号，我们接着介绍以下数学背景知识。
+\begin{definition}
+    设向量场$\vec{\mathbf{F}}$定义在开区域$D$上，且对于$D$内的任意两点$A$和$B$，
+    曲线积分$\displaystyle\int\limits_C\vec{\mathbf{F}}\cdot\mathrm{d}\vec{\mathbf{\ell}}$
+    对所有从$A$到$B$的路径$C$都取值相等，则我们称该积分在$D$上是\keyindex{路径无关的}{path independent}{}，
+    称$\vec{\mathbf{F}}$在$D$上是\keyindex{保守的}{conservative}{}。
+\end{definition}
+\begin{definition}
+    若定义在区域$D$上的向量场$\vec{\mathbf{F}}$和某个$D$上的标量函数$f$之间满足
+    $\vec{\mathbf{F}}=\vec{\nabla} f$，则$f$称作$\vec{\mathbf{F}}$的\keyindex{势函数}{potential function}{}。
+\end{definition}
+
+在接下来的相关结论中，我们都约定所讨论的向量场$\vec{\mathbf{F}}$的各分量均有一阶连续偏导数；
+曲线是\keyindex{分段光滑}{piecewise smooth}{}
+的，它可以计算长度和切向量（除至多有限个点外）；
+区域$D$是\keyindex{连通的}{connected}{}，
+个别结论则额外要求它是\keyindex{单连通的}{simply connected}{}。
+注意连通和单连通不能相互推出。
+\begin{theorem}
+    \label{theorem:08ex02-FundamentalTheoremOfLineIntegrals}
+    设$C$是空间中从点$A$连接到点$B$的光滑曲线，
+    $f$是在包含$C$的区域$D$上定义的可微函数，
+    且$f$有连续的梯度场$\vec{\mathbf{F}}=\vec{\nabla} f$，则
+    \begin{align}
+        \int\limits_C\vec{\mathbf{F}}\cdot\mathrm{d}\vec{\mathbf{\ell}}=f(B)-f(A)\, .
+    \end{align}
+\end{theorem}
+\begin{theorem}
+    \label{theorem:08ex02-ConservativeFieldsAreGradientFields}
+    设向量场$\vec{\mathbf{F}}$的各分量在整个开连通区域$D$上都连续，
+    则当且仅当$\vec{\mathbf{F}}$是某个可微函数$f$的梯度场$\vec{\nabla} f$时，
+    $\vec{\mathbf{F}}$是保守的。
+\end{theorem}
+\begin{theorem}
+    \label{theorem:08ex02-LoopPropertyConservativeFields}
+    向量场$\vec{\mathbf{F}}$在$D$上是保守的等价于环路积分
+    $\displaystyle\oint\limits_C\vec{\mathbf{F}}\cdot\mathrm{d}\vec{\mathbf{\ell}}=0$
+    对$D$内的任意闭合曲线$C$恒成立。
+\end{theorem}
+\begin{theorem}
+    \label{theorem:08ex02-ComponentTestForConservativeFields}
+    设定义在简单连通开区域上的向量场
+    $\vec{\mathbf{F}}(x,y,z)
+    =M(x,y,z)\hat{\text{\sffamily\bfseries i}}$\\
+    $+N(x,y,z)\hat{\text{\sffamily\bfseries j}}
+    +P(x,y,z)\hat{\text{\sffamily\bfseries k}}$
+    的各分量均有一阶连续偏导数，则当且仅当以下条件均成立时，$\vec{\mathbf{F}}$是保守的：
+    \begin{align}
+        \frac{\partial P}{\partial y}&=\frac{\partial N}{\partial z}\, ,\\
+        \frac{\partial M}{\partial z}&=\frac{\partial P}{\partial x}\, ,\\
+        \frac{\partial N}{\partial x}&=\frac{\partial M}{\partial y}\, .
+    \end{align}
+\end{theorem}
+\begin{theorem}[\keyindex{散度定理}{divergence theorem}{}]
+    设向量场$\vec{\mathbf{F}}$的各分量均有连续一阶偏导数，
+    $S$为有向分片光滑封闭曲面；则$\vec{\mathbf{F}}$沿着$S$曲面上
+    朝外的单位法向量场的方向通过曲面的通量等于
+    散度$\vec{\nabla}\cdot\vec{\mathbf{F}}$在曲面包围的实区域$D$内的三重积分：
+    \begin{align}
+        \oiint\limits_S\vec{\mathbf{F}}\cdot\mathrm{d}\vec{\mathbf{S}}
+        =\iiint\limits_D\vec{\nabla}\cdot\vec{\mathbf{F}}\mathrm{d}V\, .
+    \end{align}
+\end{theorem}
+\begin{theorem}[\keyindex{斯托克斯定理}{Stokes' theorem}{}]
+    设$S$为有向分片光滑曲面，且有分段光滑边界曲线$C$，向量场$\vec{\mathbf{F}}$的各分量
+    在一包含$S$的开区域内有连续一阶偏导数；则$\vec{\mathbf{F}}$沿着
+    关于曲面单位法向量逆时针的方向绕$C$的环路积分
+    等于旋度向量场$\vec{\nabla}\times\vec{\mathbf{F}}$在$S$上的积分：
+    \begin{align}
+        \oint\limits_C\vec{\mathbf{F}}\cdot\mathrm{d}\vec{\mathbf{\ell}}
+        =\iint\limits_A(\vec{\nabla}\times\vec{\mathbf{F}})\cdot\mathrm{d}\vec{\mathbf{S}}\, .
+    \end{align}
+\end{theorem}
+\begin{corollary}
+    梯度场的散度恒为零，即
+    \begin{align}
+        \text{curl}\ \text{grad}\ f=\vec{\nabla}\times\vec{\nabla}f=\vec{0}\, .
+    \end{align}
+\end{corollary}
+\begin{corollary}
+    若向量场$\vec{\mathbf{F}}$有连续二阶偏导数，则旋度场的散度恒为零，即
+    \begin{align}
+        \text{div}\ (\text{curl}\ \vec{\mathbf{F}})=\vec{\nabla}\cdot(\vec{\nabla}\times\vec{\mathbf{F}})=0\, .
+    \end{align}
+\end{corollary}
+\begin{theorem}
+    设向量场$\vec{\mathbf{F}}$在简单连通开区域$D$内的任意一点均有
+    $\vec{\nabla}\times\vec{\mathbf{F}}=\vec{0}$，
+    则它在$D$内的任意分段光滑闭合曲线$C$上的曲线积分恒为0，即
+    \begin{align}
+        \oint\limits_C\vec{\mathbf{F}}\cdot\mathrm{d}\vec{\mathbf{\ell}}=0\, .
+    \end{align}
+\end{theorem}
 
 \subsubsection*{电磁理论基本定律}
 \keyindex{电荷}{electric charge}{}
@@ -487,6 +699,7 @@ $\mathrm{i}=\sqrt{-1}$.
     与它们距离$r$的平方成反比，作用力的方向在它们的连线上；
     同性电荷相斥，异性电荷相吸。该定律的标量形式为
     \begin{align}
+        \label{eq:08ex02-CoulombLaw}
         F=k_e\frac{q_1q_2}{r^2}\,
     \end{align}
     其中比例系数$k_e$称作\keyindex{静电力常量}{electrostatic force constant}{}
@@ -518,7 +731,8 @@ $\mathrm{i}=\sqrt{-1}$.
 
 除了数学公式外，也可以借助图示的方法描述电场。如\reffig{08ex02-electricFieldLine}所示，\keyindex{电场线}{electric field line}{}
 是画在电场中有方向的曲线，曲线上每点的切线方向表示该点的电场方向。
-电场线不会相交，线的疏密反映电场的强弱。
+因为每点的电场只有一个方向，所以电场线不会相交；线的疏密则反映电场的强弱。
+根据电场的定义，它显然满足叠加原理，具有一定分布的电荷各自建立的电场的向量和就是总电场。
 \begin{figure}[htbp]
     \centering
     \subfloat[电场线（蓝色）上每点的切线方向表示该点的电场方向。]{\includegraphics[width=0.65\linewidth]{chap08/FieldLineConstruction.eps}}\\
@@ -557,13 +771,58 @@ $E_{pA}$和$E_{pB}$分别表示电荷在点$A$和点$B$处的电势能，则有
 分别记点$A$和点$B$处的电势为$\varphi_{A}$和$\varphi_{B}$，则它们之间的电势差可表示为
 \begin{align}
     \label{eq:08ex02-voltage}
-    U_{AB}&=\varphi_{A}-\varphi_{B}\, ,\\
-    U_{BA}&=\varphi_{B}-\varphi_{A}\, .
+    U_{AB} & =\varphi_{A}-\varphi_{B}\, , \\
+    U_{BA} & =\varphi_{B}-\varphi_{A}\, .
 \end{align}
 因此检验电荷$q$从点$A$运动到点$B$静电力所做的功也即
 \begin{align}
     W_{AB}=qU_{AB}\, .
 \end{align}
+
+根据以上定义，我们能推导出：
+\begin{theorem}
+    当电场$\vec{\mathbf{E}}$是\keyindex{静电场}{electrostatic field}{}
+    时，它是保守场，且是电势$\varphi$的逆梯度场
+    \begin{align}
+        \vec{\mathbf{E}}=-\vec{\nabla}\varphi\, .
+    \end{align}
+\end{theorem}
+\begin{prove}
+    当电场$\vec{\mathbf{E}}$是静电场时，所有电场均为电荷建立的。
+    因为电场满足叠加原理，所以我们不失一般性地只考虑单个点电荷$q$，
+    并将其位置设为坐标原点。根据库仑定律，即\refeq{08ex02-CoulombLaw}，
+    该电荷在非原点位置$\vec{\mathbf{r}}=x\hat{\text{\sffamily\bfseries i}}+y\hat{\text{\sffamily\bfseries j}}+z\hat{\text{\sffamily\bfseries k}}$处的电场为
+    \begin{align}
+        \vec{\mathbf{E}}=k_e\frac{q}{|\vec{\mathbf{r}}|^3}\vec{\mathbf{r}}
+        =\frac{k_eq}{(x^2+y^2+z^2)^{\frac{3}{2}}}(x\hat{\text{\sffamily\bfseries i}}+y\hat{\text{\sffamily\bfseries j}}+z\hat{\text{\sffamily\bfseries k}})\, .
+    \end{align}
+    可以验证上式满足定理\ref{theorem:08ex02-ComponentTestForConservativeFields}，
+    所以$\vec{\mathbf{E}}$是保守场。根据定理\ref{theorem:08ex02-ConservativeFieldsAreGradientFields}，
+    必存在一个函数$f$满足
+    \begin{align}
+        \vec{\mathbf{E}}=\vec{\nabla}f\, .
+    \end{align}
+    于是根据定理\ref{theorem:08ex02-FundamentalTheoremOfLineIntegrals}，
+    对于从任意点$A$到任意点$B$的任意路径$C$，都有
+    \begin{align}\label{eq:08ex02-ElectrostaticConservative}
+        \int\limits_{C}\vec{\mathbf{E}}\cdot\mathrm{d}\vec{\mathbf{\ell}}=f(B)-f(A)\, .
+    \end{align}
+    而根据前文电势能和电势的内容，有
+    \begin{align}
+        \int\limits_{C}\vec{\mathbf{E}}\cdot\mathrm{d}\vec{\mathbf{\ell}}
+        =\frac{1}{q}\int\limits_{C}q\vec{\mathbf{E}}\cdot\mathrm{d}\vec{\mathbf{\ell}}
+        =\frac{1}{q}W_{AB}=\frac{1}{q}(E_{pA}-E_{pB})
+        =\varphi_{A}-\varphi_{B}\, .
+    \end{align}
+    对比上式和\refeq{08ex02-ElectrostaticConservative}，由$A$、$B$和$C$任意性，可知必须有
+    \begin{align}
+        \varphi=-f\, .
+    \end{align}
+    所以电场就是电势的逆梯度场：
+    \begin{align}
+        \vec{\mathbf{E}}=-\vec{\nabla}\varphi\, .
+    \end{align}
+\end{prove}
 
 此外，一个运动的电荷还会受到另一个力$\vec{\mathbf{F}}_M$，
 称作\keyindex{洛伦兹力}{Lorentz force}{}，
@@ -913,206 +1172,6 @@ $\vec{\mathbf{J}}$在截面面积上的积分：
 从中可以看到，除了相乘的标量因子外，电场和磁场在上面的方程中具有明显的对称性。
 电场怎样影响磁场，磁场也怎样反过来影响电场。
 
-在介绍后续内容前，我们回忆一些数学知识。
-
-\keyindex{向量场}{vector field}{}，也称\keyindex{矢量场}{}{}，
-是给其定义域内的每个点都赋有一个向量的函数。
-直角坐标系下，一个三维空间上的向量场通常形如
-\begin{align}
-    \vec{\mathbf{F}}(x,y,z)=
-    M(x,y,z)\hat{\text{\sffamily\bfseries i}}+
-    N(x,y,z)\hat{\text{\sffamily\bfseries j}}+
-    P(x,y,z)\hat{\text{\sffamily\bfseries k}}\, ,
-\end{align}
-其中$M$、$N$和$P$为分量函数；当所有分量函数都连续、可微时，
-我们对应称向量场连续、可微。电场和磁场都是向量场。
-
-可微标量函数的梯度给出了该函数在给定点处函数值增长最快的方向，
-即每个点都有一个向量与之对应，于是我们定义
-\begin{definition}
-    可微标量函数$f(x,y,z)$的\keyindex{梯度场}{gradient field}{}
-    即为梯度向量构成的场：
-    \begin{align}
-        \vec{\nabla} f=\text{grad}\ f =\frac{\partial f}{\partial x}\hat{\text{\sffamily\bfseries i}}
-        +\frac{\partial f}{\partial y}\hat{\text{\sffamily\bfseries j}}
-        +\frac{\partial f}{\partial z}\hat{\text{\sffamily\bfseries k}}\, ,
-    \end{align}
-    其中$\vec{\nabla}$表示向量微分算符，读作“del”，直角坐标系下为
-    \begin{align}
-        \vec{\nabla}=\hat{\text{\sffamily\bfseries i}}\frac{\partial }{\partial x}
-        +\hat{\text{\sffamily\bfseries j}}\frac{\partial }{\partial y}
-        +\hat{\text{\sffamily\bfseries k}}\frac{\partial }{\partial z}\, .
-    \end{align}
-\end{definition}
-$\vec{\nabla}$算符能让我们后续的表示更加方便。
-
-\begin{definition}
-    向量场$\vec{\mathbf{F}}(x,y,z)=M(x,y,z)\hat{\text{\sffamily\bfseries i}}+N(x,y,z)\hat{\text{\sffamily\bfseries j}}+P(x,y,z)\hat{\text{\sffamily\bfseries k}}$
-    的\keyindex{散度}{divergence}{}
-    是标量函数
-    \begin{align}
-        \text{div}\ \vec{\mathbf{F}}=\vec{\nabla}\cdot\vec{\mathbf{F}}
-        =\frac{\partial M}{\partial x}+\frac{\partial N}{\partial y}+\frac{\partial P}{\partial z}\, ,
-    \end{align}
-\end{definition}
-形式上看，散度像是$\vec{\nabla}$算符与向量场点乘得到的。
-
-\begin{definition}
-    向量场$\vec{\mathbf{F}}(x,y,z)=M(x,y,z)\hat{\text{\sffamily\bfseries i}}+N(x,y,z)\hat{\text{\sffamily\bfseries j}}+P(x,y,z)\hat{\text{\sffamily\bfseries k}}$
-    的\keyindex{旋度}{curl}{}
-    向量为
-    \begin{align}
-        \text{curl}\ \vec{\mathbf{F}}
-         & =\vec{\nabla}\times\vec{\mathbf{F}}\nonumber                                                                          \\
-         & =\left|
-        \begin{array}{ccc}
-            \hat{\text{\sffamily\bfseries i}}         & \hat{\text{\sffamily\bfseries j}}         & \hat{\text{\sffamily\bfseries k}}         \\
-            \displaystyle\frac{\partial }{\partial x} & \displaystyle\frac{\partial }{\partial y} & \displaystyle\frac{\partial }{\partial z} \\
-            M                                         & N                                         & P
-        \end{array}
-        \right|                                                                                                        \nonumber \\
-         & =\left(\frac{\partial P}{\partial y}-\frac{\partial N}{\partial z}\right)\hat{\text{\sffamily\bfseries i}}+
-        \left(\frac{\partial M}{\partial z}-\frac{\partial P}{\partial x}\right)\hat{\text{\sffamily\bfseries j}}+
-        \left(\frac{\partial N}{\partial x}-\frac{\partial M}{\partial y}\right)\hat{\text{\sffamily\bfseries k}}\, .
-    \end{align}
-\end{definition}
-形式上看，旋度像是$\vec{\nabla}$算符与向量场叉乘得到的。
-
-借助以上定义与符号，我们接着介绍以下数学背景知识。
-\begin{definition}
-    设向量场$\vec{\mathbf{F}}$定义在开区域$D$上，且对于$D$内的任意两点$A$和$B$，
-    曲线积分$\displaystyle\int\limits_C\vec{\mathbf{F}}\cdot\mathrm{d}\vec{\mathbf{\ell}}$
-    对所有从$A$到$B$的路径$C$都取值相等，则我们称该积分在$D$上是\keyindex{路径无关的}{path independent}{}，
-    称$\vec{\mathbf{F}}$在$D$上是\keyindex{保守的}{conservative}{}。
-\end{definition}
-\begin{definition}
-    若定义在区域$D$上的向量场$\vec{\mathbf{F}}$和某个$D$上的标量函数$f$之间满足
-    $\vec{\mathbf{F}}=\vec{\nabla} f$，则$f$称作$\vec{\mathbf{F}}$的\keyindex{势函数}{potential function}{}。
-\end{definition}
-
-在接下来的相关结论中，我们都约定所讨论的向量场$\vec{\mathbf{F}}$的各分量均有一阶连续偏导数；
-曲线是\keyindex{分段光滑}{piecewise smooth}{}
-的，它可以计算长度和切向量（除至多有限个点外）；
-区域$D$是\keyindex{连通的}{connected}{}，
-个别结论则额外要求它是\keyindex{单连通的}{simply connected}{}。
-注意连通和单连通不能相互推出。
-\begin{theorem}
-    \label{theorem:08ex02-FundamentalTheoremOfLineIntegrals}
-    设$C$是空间中从点$A$连接到点$B$的光滑曲线，
-    $f$是在包含$C$的区域$D$上定义的可微函数，
-    且$f$有连续的梯度场$\vec{\mathbf{F}}=\vec{\nabla} f$，则
-    \begin{align}
-        \int\limits_C\vec{\mathbf{F}}\cdot\mathrm{d}\vec{\mathbf{\ell}}=f(B)-f(A)\, .
-    \end{align}
-\end{theorem}
-\begin{theorem}
-    \label{theorem:08ex02-ConservativeFieldsAreGradientFields}
-    设向量场$\vec{\mathbf{F}}$的各分量在整个开连通区域$D$上都连续，
-    则当且仅当$\vec{\mathbf{F}}$是某个可微函数$f$的梯度场$\vec{\nabla} f$时，
-    $\vec{\mathbf{F}}$是保守的。
-\end{theorem}
-\begin{theorem}
-    \label{theorem:08ex02-LoopPropertyConservativeFields}
-    向量场$\vec{\mathbf{F}}$在$D$上是保守的等价于环路积分
-    $\displaystyle\oint\limits_C\vec{\mathbf{F}}\cdot\mathrm{d}\vec{\mathbf{\ell}}=0$
-    对$D$内的任意闭合曲线$C$恒成立。
-\end{theorem}
-\begin{theorem}
-    \label{theorem:08ex02-ComponentTestForConservativeFields}
-    设定义在简单连通开区域上的向量场$\vec{\mathbf{F}}(x,y,z)=M(x,y,z)\hat{\text{\sffamily\bfseries i}}+N(x,y,z)\hat{\text{\sffamily\bfseries j}}+P(x,y,z)\hat{\text{\sffamily\bfseries k}}$
-    的各分量均有一阶连续偏导数，则当且仅当以下条件均成立时，$\vec{\mathbf{F}}$是保守的：
-    \begin{align}
-        \frac{\partial P}{\partial y}=\frac{\partial N}{\partial z}\, ,\quad
-        \frac{\partial M}{\partial z}=\frac{\partial P}{\partial x}\, ,\quad
-        \frac{\partial N}{\partial x}=\frac{\partial M}{\partial y}\, .
-    \end{align}
-\end{theorem}
-\begin{theorem}[\keyindex{散度定理}{divergence theorem}{}]
-    设向量场$\vec{\mathbf{F}}$的各分量均有连续一阶偏导数，
-    $S$为有向分片光滑封闭曲面；则$\vec{\mathbf{F}}$沿着$S$曲面上
-    朝外的单位法向量场的方向通过曲面的通量等于
-    散度$\vec{\nabla}\cdot\vec{\mathbf{F}}$在曲面包围的实区域$D$内的三重积分：
-    \begin{align}
-        \oiint\limits_S\vec{\mathbf{F}}\cdot\mathrm{d}\vec{\mathbf{S}}
-        =\iiint\limits_D\vec{\nabla}\cdot\vec{\mathbf{F}}\mathrm{d}V\, .
-    \end{align}
-\end{theorem}
-\begin{theorem}[\keyindex{斯托克斯定理}{Stokes' theorem}{}]
-    设$S$为有向分片光滑曲面，且有分段光滑边界曲线$C$，向量场$\vec{\mathbf{F}}$的各分量
-    在一包含$S$的开区域内有连续一阶偏导数；则$\vec{\mathbf{F}}$沿着
-    关于曲面单位法向量逆时针的方向绕$C$的环路积分
-    等于旋度向量场$\vec{\nabla}\times\vec{\mathbf{F}}$在$S$上的积分：
-    \begin{align}
-        \oint\limits_C\vec{\mathbf{F}}\cdot\mathrm{d}\vec{\mathbf{\ell}}
-        =\iint\limits_A(\vec{\nabla}\times\vec{\mathbf{F}})\cdot\mathrm{d}\vec{\mathbf{S}}\, .
-    \end{align}
-\end{theorem}
-\begin{corollary}
-    梯度场的散度恒为零，即
-    \begin{align}
-        \text{curl}\ \text{grad}\ f=\vec{\nabla}\times\vec{\nabla}f=\vec{0}\, .
-    \end{align}
-\end{corollary}
-\begin{corollary}
-    若向量场$\vec{\mathbf{F}}$有连续二阶偏导数，则旋度场的散度恒为零，即
-    \begin{align}
-        \text{div}\ (\text{curl}\ \vec{\mathbf{F}})=\vec{\nabla}\cdot(\vec{\nabla}\times\vec{\mathbf{F}})=0\, .
-    \end{align}
-\end{corollary}
-\begin{theorem}
-    设向量场$\vec{\mathbf{F}}$在简单连通开区域$D$内的任意一点均有
-    $\vec{\nabla}\times\vec{\mathbf{F}}=\vec{0}$，
-    则它在$D$内的任意分段光滑闭合曲线$C$上的曲线积分恒为0，即
-    \begin{align}
-        \oint\limits_C\vec{\mathbf{F}}\cdot\mathrm{d}\vec{\mathbf{\ell}}=0\, .
-    \end{align}
-\end{theorem}
-
-根据电势能、电势的定义以及以上数学知识，我们能推导出：
-\begin{theorem}
-    当电场$\vec{\mathbf{E}}$是\keyindex{静电场}{electrostatic field}{}
-    时，它是保守场，且是电势$\varphi$的逆梯度场
-    \begin{align}
-        \vec{\mathbf{E}}=-\vec{\nabla}\varphi\, .
-    \end{align}
-\end{theorem}
-\begin{prove}
-    当电场$\vec{\mathbf{E}}$是静电场时，没有磁场参与作用。
-    根据法拉第电磁感应定律，即\refeq{08ex02-FaradayLaw}，
-    $\vec{\mathbf{E}}$对任意闭合曲线$C$的环路积分恒为零，即
-    \begin{align}
-        \oint\limits_C\vec{\mathbf{E}}\cdot\mathrm{d}\vec{\mathbf{\ell}}=0\, .
-    \end{align}
-    根据定理\ref{theorem:08ex02-LoopPropertyConservativeFields}，
-    $\vec{\mathbf{E}}$是保守场。根据定理\ref{theorem:08ex02-ConservativeFieldsAreGradientFields}，
-    必存在一个函数$f$满足
-    \begin{align}
-        \vec{\mathbf{E}}=\vec{\nabla}f\, .
-    \end{align}
-    于是根据定理\ref{theorem:08ex02-FundamentalTheoremOfLineIntegrals}，
-    对于从任意点$A$到任意点$B$的任意路径$C'$，都有
-    \begin{align}\label{eq:08ex02-ElectrostaticConservative}
-        \int\limits_{C'}\vec{\mathbf{E}}\cdot\mathrm{d}\vec{\mathbf{\ell}}=f(B)-f(A)\, .
-    \end{align}
-    而根据电势能和电势的定义，若检验电荷$q$沿着该路径$C'$移动，静电场力对其做功为$W_{AB}$，
-    并记点$A$和点$B$的电势分别为$\varphi_{A}$和$\varphi_{B}$，
-    电势能分别为$E_{pA}$和$E_{pB}$，则
-    \begin{align}
-        \int\limits_{C'}\vec{\mathbf{E}}\cdot\mathrm{d}\vec{\mathbf{\ell}}
-        =\frac{1}{q}\int\limits_{C'}q\vec{\mathbf{E}}\cdot\mathrm{d}\vec{\mathbf{\ell}}
-        =\frac{1}{q}W_{AB}=\frac{1}{q}(E_{pA}-E_{pB})
-        =\varphi_{A}-\varphi_{B}\, .
-    \end{align}
-    对比上式和\refeq{08ex02-ElectrostaticConservative}，由任意性，可知
-    \begin{align}
-        \varphi=-f\, .
-    \end{align}
-    所以电场就是电势的逆梯度场：
-    \begin{align}
-        \vec{\mathbf{E}}=-\vec{\nabla}\varphi\, .
-    \end{align}
-\end{prove}
-
 利用散度定理和斯托克斯定理，麦克斯韦方程组可重新写为微分形式：
 \begin{theorem}[\keyindex{麦克斯韦方程组}{Maxwell's equations}{}]
     \begin{align}
@@ -1327,7 +1386,6 @@ $\vec{\mathbf{S}}$的大小是穿过与$\vec{\mathbf{S}}$垂直的表面单位�
 它表明辐射照度或辐射出射度与电场振幅的平方$E_0$成正比。
 
 \subsubsection*{光子}
-
 1900年普朗克\begin{marginfigure}
     \includegraphics[width=\linewidth]{chap08/MaxPlanckbyHugoErfurth1938.jpg}
 \end{marginfigure}\sidenote{德国物理学家马克斯·卡尔·恩斯特·路德维希·普朗克 (Max Karl Ernst Ludwig Planck, 1858-1947)。}

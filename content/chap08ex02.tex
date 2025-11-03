@@ -518,16 +518,18 @@ $\mathrm{i}=\sqrt{-1}$.
 在\keyindex{经典电动力学}{classical electrodynamics}{}
 的图像中，电磁波是连续传递能量的。但更现代的\keyindex{量子电动力学}{quantum electrodynamics}{}
 则用一种质量为零的基本“粒子”来描述电磁相互作用和能量传递，这种粒子称作\keyindex{光子}{photon}{}。
-事实证明，光以波的形式在空间中传播，但在发射和吸收时又显出粒子性，即二象性。
+事实证明，光以波的形式在空间中传播，但在发射和吸收时又显出粒子性，即\keyindex{波粒二象性}{wave-particle duality}{}。
+电磁辐射的生灭过程是量子化的，但它穿过透镜、小孔等的运动又受波动特性支配。
 平均而言，我们可以把大量光子流的平均作用看作是经典电磁波，
-但请记住电磁波的表观连续性只是宏观层面的假象——事情并不简单，
+这对于\keyindex{物理光学}{physical optics}{optics\ 光学}
+而言已经足够处理许多问题了。但请记住电磁波的表观连续性只是宏观层面的假象——事情并不简单，
 存在一些情况会使这种描述方法失效。
 
 \subsubsection*{向量场及其积分}
 在介绍后续内容前，我们回忆一些关于向量场及其积分的知识。
 
 \keyindex{向量场}{vector field}{}，也称\keyindex{矢量场}{}{}，
-是给其定义域内的每个点都赋有一个向量的函数。
+是给其定义域内的每个点都赋有一个向量的函数（如\reffig{08ex02.VelocityVectors}）。
 直角坐标系下，一个三维空间上的向量场通常形如
 \begin{align}
     \vec{\mathbf{F}}(x,y,z)=
@@ -537,6 +539,11 @@ $\mathrm{i}=\sqrt{-1}$.
 \end{align}
 其中$M$、$N$和$P$为分量函数；当所有分量函数都连续、可微时，
 我们对应称向量场连续、可微。电场和磁场都是向量场。
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.4\linewidth]{chap08/VelocityVectors.eps}
+    \caption{向量场示例：机翼周围气流的速度场。}
+    \label{fig:08ex02.VelocityVectors}
+\end{figure}
 
 可微标量函数的梯度给出了该函数在给定点处函数值增长最快的方向，
 即每个点都有一个向量与之对应，于是我们定义
@@ -632,14 +639,14 @@ $\vec{\nabla}$算符能让我们后续的表示更加方便。
     \label{theorem:08ex02-ComponentTestForConservativeFields}
     设定义在简单连通开区域上的向量场
     $\vec{\mathbf{F}}(x,y,z)
-    =M(x,y,z)\hat{\text{\sffamily\bfseries i}}$\\
+        =M(x,y,z)\hat{\text{\sffamily\bfseries i}}$\\
     $+N(x,y,z)\hat{\text{\sffamily\bfseries j}}
-    +P(x,y,z)\hat{\text{\sffamily\bfseries k}}$
+        +P(x,y,z)\hat{\text{\sffamily\bfseries k}}$
     的各分量均有一阶连续偏导数，则当且仅当以下条件均成立时，$\vec{\mathbf{F}}$是保守的：
     \begin{align}
-        \frac{\partial P}{\partial y}&=\frac{\partial N}{\partial z}\, ,\\
-        \frac{\partial M}{\partial z}&=\frac{\partial P}{\partial x}\, ,\\
-        \frac{\partial N}{\partial x}&=\frac{\partial M}{\partial y}\, .
+        \frac{\partial P}{\partial y}=\frac{\partial N}{\partial z}\, ,\quad
+        \frac{\partial M}{\partial z}=\frac{\partial P}{\partial x}\, ,\quad
+        \frac{\partial N}{\partial x}=\frac{\partial M}{\partial y}\, .
     \end{align}
 \end{theorem}
 \begin{theorem}[\keyindex{散度定理}{divergence theorem}{}]
@@ -824,7 +831,7 @@ $E_{pA}$和$E_{pB}$分别表示电荷在点$A$和点$B$处的电势能，则有
     \end{align}
 \end{prove}
 
-此外，一个运动的电荷还会受到另一个力$\vec{\mathbf{F}}_M$，
+此外，一个运动的电荷还会受到另一种力$\vec{\mathbf{F}}_M$，
 称作\keyindex{洛伦兹力}{Lorentz force}{}，
 它与运动电荷的速度$\vec{\mathbf{v}}$成正比。
 为此我们定义另一个场$\vec{\mathbf{B}}$：
@@ -840,7 +847,7 @@ $E_{pA}$和$E_{pB}$分别表示电荷在点$A$和点$B$处的电势能，则有
 磁感应强度单位得名于物理学家特斯拉\begin{marginfigure}
     \includegraphics[width=\linewidth]{chap08/TeslaCirca1890.jpg}
 \end{marginfigure}\sidenote{塞尔维亚裔美国物理学家
-    尼古拉·特斯拉(Nikola Tesla, 1856-1943)。}。
+    尼古拉·特斯拉 (Nikola Tesla, 1856-1943)。}。
 
 若电荷在既有电场又有磁场的空间区域内运动，
 则会同时受到$\vec{\mathbf{F}}_E$和$\vec{\mathbf{F}}_M$两个力，
@@ -869,8 +876,8 @@ $E_{pA}$和$E_{pB}$分别表示电荷在点$A$和点$B$处的电势能，则有
 
 将一根磁铁插进线圈时，
 线圈两端会有电压，称作\keyindex{感生电动势}{induced electromotive force}{}
-(emf)\sidenote{作者强调，尽管感生电动势的英文是“force”，
-    但它并非力而是电压，故尽量用简称emf来避免误解。}。
+(emf)\sidenote{尽管感生电动势的英文是“force”，
+    但它不是力而是电压，故用简称emf避免误解。}。
 该电动势的振幅依赖于磁铁运动速度，或者说依赖于穿过线圈的$B$的变化率，而不是$B$本身。
 \reffig{08ex02.0302}中，同一变化的$B$场穿过两个不同导线环路，
 大的环路两端有更大的感生电动势，即它正比于$B$场垂直穿过的环路面积$A$.
@@ -907,7 +914,10 @@ $E_{pA}$和$E_{pB}$分别表示电荷在点$A$和点$B$处的电势能，则有
 \begin{align}
     \mathrm{emf}=-\frac{\mathrm{d}\varPhi_M}{\mathrm{d}t}\, ,
 \end{align}
-其中负号说明
+其中负号说明\begin{marginfigure}
+    \includegraphics[width=\linewidth]{chap08/HeinrichFriedrichEmilLenz.jpg}
+\end{marginfigure}\sidenote{俄国物理学家
+    海因里希·弗里德里希·埃米尔·楞次 (Heinrich Friedrich Emil Lenz, 1804-1865)。}
 \begin{theorem}[\keyindex{楞次定律}{Lenz's law}{}]
     感生电动势想要驱动的感生电流，其对应的感生磁场总是想阻碍原先引发它的磁通量的变化。
 \end{theorem}

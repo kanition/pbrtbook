@@ -141,7 +141,7 @@
 \titlecontents{section}
 [1.25cm] % Left indentation
 {\addvspace{3pt}\sffamily\bfseries} % Spacing and font options for sections
-{\contentslabel[\thecontentslabel]{1.25cm}} % Formatting of numbered sections of this type
+{\hypertarget{toc:section.\thecontentslabel}{}\contentslabel[\thecontentslabel]{1.25cm}} % Formatting of numbered sections of this type
 {} % Formatting of numberless sections of this type
 {\hfill\color{black}\thecontentspage} % Formatting of the filler to the right of the heading and the page number
 
@@ -149,7 +149,7 @@
 \titlecontents{subsection}
 [1.25cm] % Left indentation
 {\addvspace{1pt}\sffamily\small} % Spacing and font options for subsections
-{\contentslabel[\thecontentslabel]{1.25cm}} % Formatting of numbered sections of this type
+{\hypertarget{toc:subsection.\thecontentslabel}{}\contentslabel[\thecontentslabel]{1.25cm}} % Formatting of numbered sections of this type
 {} % Formatting of numberless sections of this type
 {\ \titlerule*[.5pc]{.}\;\thecontentspage} % Formatting of the filler to the right of the heading and the page number
 
@@ -408,11 +408,11 @@
 \renewcommand{\section}{\@startsection{section}{1}{\z@}
     {-4ex \@plus -1ex \@minus -.4ex}
     {1ex \@plus.2ex }
-    {\normalfont\large\sffamily\bfseries}}
+    {\normalfont\large\sffamily\bfseries\protect\hyperlink{toc:section.\thesection}}}
 \renewcommand{\subsection}{\@startsection {subsection}{2}{\z@}
     {-3ex \@plus -0.1ex \@minus -.4ex}
     {0.5ex \@plus.2ex }
-    {\normalfont\sffamily\bfseries}}
+    {\normalfont\sffamily\bfseries\protect\hyperlink{toc:subsection.\thesubsection}}}
 \renewcommand{\subsubsection}{\@startsection {subsubsection}{3}{\z@}
     {-2ex \@plus -0.1ex \@minus -.2ex}
     {.2ex \@plus.2ex }

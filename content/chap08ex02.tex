@@ -789,45 +789,33 @@ $E_{pA}$和$E_{pB}$分别表示电荷在点$A$和点$B$处的电势能，则有
 根据以上定义，我们能推导出：
 \begin{theorem}
     当电场$\vec{\mathbf{E}}$是\keyindex{静电场}{electrostatic field}{}
-    时，它是保守场，且是电势$\varphi$的逆梯度场
+    时，它是保守场，且是电势$\varphi$的负梯度场
     \begin{align}
         \vec{\mathbf{E}}=-\vec{\nabla}\varphi\, .
     \end{align}
 \end{theorem}
 \begin{prove}
-    当电场$\vec{\mathbf{E}}$是静电场时，所有电场均为电荷建立的。
+    当电场$\vec{\mathbf{E}}$是静电场时，所有电场均由电荷建立。
     因为电场满足叠加原理，所以我们不失一般性地只考虑单个点电荷$q$，
-    并将其位置设为坐标原点。根据库仑定律，即\refeq{08ex02-CoulombLaw}，
+    并将其位置设为坐标原点。根据库仑定律\refeq{08ex02-CoulombLaw}，
     该电荷在非原点位置$\vec{\mathbf{r}}=x\hat{\text{\sffamily\bfseries i}}+y\hat{\text{\sffamily\bfseries j}}+z\hat{\text{\sffamily\bfseries k}}$处的电场为
-    \begin{align}
+    \begin{align}\label{eq:08ex02-DistrubitionElectrostaticField}
         \vec{\mathbf{E}}=k_e\frac{q}{|\vec{\mathbf{r}}|^3}\vec{\mathbf{r}}
         =\frac{k_eq}{(x^2+y^2+z^2)^{\frac{3}{2}}}(x\hat{\text{\sffamily\bfseries i}}+y\hat{\text{\sffamily\bfseries j}}+z\hat{\text{\sffamily\bfseries k}})\, .
     \end{align}
     可以验证上式满足定理\ref{theorem:08ex02-ComponentTestForConservativeFields}，
-    所以$\vec{\mathbf{E}}$是保守场。根据定理\ref{theorem:08ex02-ConservativeFieldsAreGradientFields}，
-    必存在一个函数$f$满足
-    \begin{align}
-        \vec{\mathbf{E}}=\vec{\nabla}f\, .
-    \end{align}
-    于是根据定理\ref{theorem:08ex02-FundamentalTheoremOfLineIntegrals}，
-    对于从任意点$A$到任意点$B$的任意路径$C$，都有
-    \begin{align}\label{eq:08ex02-ElectrostaticConservative}
-        \int\limits_{C}\vec{\mathbf{E}}\cdot\mathrm{d}\vec{\mathbf{\ell}}=f(B)-f(A)\, .
-    \end{align}
-    而根据前文电势能和电势的内容，有
+    所以$\vec{\mathbf{E}}$是保守场，它有一个势函数。
+    另一方面，根据前文电势能和电势的内容，有
     \begin{align}
         \int\limits_{C}\vec{\mathbf{E}}\cdot\mathrm{d}\vec{\mathbf{\ell}}
         =\frac{1}{q}\int\limits_{C}q\vec{\mathbf{E}}\cdot\mathrm{d}\vec{\mathbf{\ell}}
         =\frac{1}{q}W_{AB}=\frac{1}{q}(E_{pA}-E_{pB})
         =\varphi_{A}-\varphi_{B}\, .
     \end{align}
-    对比上式和\refeq{08ex02-ElectrostaticConservative}，由$A$、$B$和$C$任意性，可知必须有
-    \begin{align}
-        \varphi=-f\, .
-    \end{align}
-    所以电场就是电势的逆梯度场：
-    \begin{align}
-        \vec{\mathbf{E}}=-\vec{\nabla}\varphi\, .
+    由$A$、$B$和$C$的任意性，对照定理\ref{theorem:08ex02-FundamentalTheoremOfLineIntegrals}，
+    可知电势取负即$-\varphi$就是电场$\vec{\mathbf{E}}$的势函数。例如，在单个点电荷的电场中，电势为
+    \begin{align}\label{eq:08ex02-DistrubitionElectricPotential}
+        \varphi(\vec{\mathbf{r}})=\frac{k_eq}{|\vec{\mathbf{r}}|}\, .
     \end{align}
 \end{prove}
 
@@ -877,7 +865,7 @@ $E_{pA}$和$E_{pB}$分别表示电荷在点$A$和点$B$处的电势能，则有
 将一根磁铁插进线圈时，
 线圈两端会有电压，称作\keyindex{感生电动势}{induced electromotive force}{}
 (emf)\sidenote{尽管感生电动势的英文是“force”，
-    但它不是力而是电压，故用简称emf避免误解。}。
+    但它不是力而是电压，故原作者用简称emf避免误解。}。
 该电动势的振幅依赖于磁铁运动速度，或者说依赖于穿过线圈的$B$的变化率，而不是$B$本身。
 \reffig{08ex02.0302}中，同一变化的$B$场穿过两个不同导线环路，
 大的环路两端有更大的感生电动势，即它正比于$B$场垂直穿过的环路面积$A$.

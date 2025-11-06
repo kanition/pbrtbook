@@ -692,13 +692,17 @@ $\vec{\nabla}$算符能让我们后续的表示更加方便。
 
 \subsubsection*{电磁理论基本定律}
 \keyindex{电荷}{electric charge}{}
-是构成物质的基本粒子的一种物理属性，
-其单位为\keyindex{库仑}{coulomb}{}
+是构成物质的基本粒子的一种物理属性，有正负之分，单位为\keyindex{库仑}{coulomb}{}
 (库，C)\begin{marginfigure}
     \includegraphics[width=\linewidth]{chap08/CharlesDeCoulomb.jpg}
 \end{marginfigure}\sidenote{法国物理学家夏尔·奥古斯丁·德·库仑
     (Charles-Augustin de Coulomb, 1736-1806)。}。
-电荷之间会对彼此施加作用力，哪怕是在真空中。
+一个\keyindex{质子}{proton}{}
+所带的正电荷，或一个\keyindex{电子}{electron}{}
+所带的负电荷为\keyindex{基本电荷}{elementary charge}{electric charge\ 电荷}，
+其值定义为
+$e=1.602176634\times10^{-19}\text{C}$.
+即便在真空中，电荷也会对彼此施加作用力。
 \begin{theorem}[\keyindex{库仑定律}{Coulomb's law}{}]
     真空中两个静止点电荷之间的相互作用力称作\keyindex{静电力}{electrostatic force}{}
     或\keyindex{库仑力}{Coulomb force}{}，
@@ -707,14 +711,17 @@ $\vec{\nabla}$算符能让我们后续的表示更加方便。
     同性电荷相斥，异性电荷相吸。该定律的标量形式为
     \begin{align}
         \label{eq:08ex02-CoulombLaw}
-        F=k_e\frac{q_1q_2}{r^2}\,
+        F=\frac{q_1q_2}{4\pi\epsilon_0r^2}\,
     \end{align}
-    其中比例系数$k_e$称作\keyindex{静电力常量}{electrostatic force constant}{}
-    或\keyindex{库仑常量}{Coulomb's constant}{}，取值为
+    其中$\epsilon_0$为\keyindex{真空电容率}{vacuum electric permittivity}{permittivity\ 电容率}，
     \begin{align}
-        k_e=\frac{1}{4\pi\epsilon_0}=8.9875517862\times10^9\text{N}\cdot \text{m}^2/\text{C}^2\, ,
+        \epsilon_0\approx8.85418782\times10^{-12}\text{C}^2/(\text{N}\cdot\text{m}^2)\, ,
     \end{align}
-    其中$\epsilon_0$为真空电容率。
+    把系数$k_e$称作\keyindex{静电力常量}{electrostatic force constant}{}
+    或\keyindex{库仑常量}{Coulomb's constant}{}：
+    \begin{align}
+        k_e=\displaystyle\frac{1}{4\pi\epsilon_0}\approx8.9875518\times10^9\text{N}\cdot\text{m}^2/\text{C}^2\, .
+    \end{align}
 \end{theorem}
 
 我们想象每个电荷都被称作电场的东西包围着，并假设每个电荷与它所沉浸的电场直接相互作用。
@@ -736,7 +743,7 @@ $\vec{\nabla}$算符能让我们后续的表示更加方便。
 这样的电荷称作\keyindex{检验电荷}{test charge}{electric charge\ 电荷}。
 而激发电场的带电体所带的电荷称为\keyindex{源电荷}{source charge}{electric charge\ 电荷}。
 
-除了数学公式外，也可以借助图示的方法描述电场。如\reffig{08ex02-electricFieldLine}所示，\keyindex{电场线}{electric field line}{}
+除了数学公式，也可以借助图示的方法描述电场。如\reffig{08ex02-electricFieldLine}所示，\keyindex{电场线}{electric field line}{}
 是画在电场中有方向的曲线，曲线上每点的切线方向表示该点的电场方向。
 因为每点的电场只有一个方向，所以电场线不会相交；线的疏密则反映电场的强弱。
 根据电场的定义，它显然满足叠加原理，具有一定分布的电荷各自建立的电场的向量和就是总电场。
@@ -800,8 +807,8 @@ $E_{pA}$和$E_{pB}$分别表示电荷在点$A$和点$B$处的电势能，则有
     并将其位置设为坐标原点。根据库仑定律\refeq{08ex02-CoulombLaw}，
     该电荷在非原点位置$\vec{\mathbf{r}}=x\hat{\text{\sffamily\bfseries i}}+y\hat{\text{\sffamily\bfseries j}}+z\hat{\text{\sffamily\bfseries k}}$处的电场为
     \begin{align}\label{eq:08ex02-DistrubitionElectrostaticField}
-        \vec{\mathbf{E}}=k_e\frac{q}{|\vec{\mathbf{r}}|^3}\vec{\mathbf{r}}
-        =\frac{k_eq}{(x^2+y^2+z^2)^{\frac{3}{2}}}(x\hat{\text{\sffamily\bfseries i}}+y\hat{\text{\sffamily\bfseries j}}+z\hat{\text{\sffamily\bfseries k}})\, .
+        \vec{\mathbf{E}}=\frac{q}{4\pi\epsilon_0|\vec{\mathbf{r}}|^3}\vec{\mathbf{r}}
+        =\frac{q}{4\pi\epsilon_0(x^2+y^2+z^2)^{\frac{3}{2}}}(x\hat{\text{\sffamily\bfseries i}}+y\hat{\text{\sffamily\bfseries j}}+z\hat{\text{\sffamily\bfseries k}})\, .
     \end{align}
     可以验证上式满足定理\ref{theorem:08ex02-ComponentTestForConservativeFields}，
     所以$\vec{\mathbf{E}}$是保守场，它有一个势函数。
@@ -815,7 +822,7 @@ $E_{pA}$和$E_{pB}$分别表示电荷在点$A$和点$B$处的电势能，则有
     由$A$、$B$和$C$的任意性，对照定理\ref{theorem:08ex02-FundamentalTheoremOfLineIntegrals}，
     可知电势取负即$-\varphi$就是电场$\vec{\mathbf{E}}$的势函数。例如，在单个点电荷的电场中，电势为
     \begin{align}\label{eq:08ex02-DistrubitionElectricPotential}
-        \varphi(\vec{\mathbf{r}})=\frac{k_eq}{|\vec{\mathbf{r}}|}\, .
+        \varphi(\vec{\mathbf{r}})=\frac{q}{4\pi\epsilon_0|\vec{\mathbf{r}}|}\, .
     \end{align}
 \end{prove}
 
@@ -830,7 +837,7 @@ $E_{pA}$和$E_{pB}$分别表示电荷在点$A$和点$B$处的电势能，则有
     \end{align}
     $\vec{\mathbf{B}}$的大小称作\keyindex{磁感应}{magnetic induction}{}
     强度，单位为\keyindex{特斯拉}{tesla}{}
-    (T)。
+    (特，T)。
 \end{definition}
 磁感应强度单位得名于物理学家特斯拉\begin{marginfigure}
     \includegraphics[width=\linewidth]{chap08/TeslaCirca1890.jpg}
@@ -977,7 +984,7 @@ $C$对于是否选在导体内外或附近也没有任何要求。
     =\oiint\limits_A E_\perp\mathrm{d}S
     =E\oiint\limits_A\mathrm{d}S=4\pi r^2E=\frac{q}{\epsilon_0}\, .
 \end{align}
-推广到区域内的多个电荷时，将上式累加即可：
+以上推导也适用于负电荷，推广到区域内的多个电荷时，将上式累加即可：
 \begin{align}
     \varPhi_E=\frac{1}{\epsilon_0}\sum q\, .
 \end{align}
@@ -991,14 +998,14 @@ $C$对于是否选在导体内外或附近也没有任何要求。
     \end{align}
 \end{theorem}
 
-真空中，自由空间的电容率为$\epsilon_0=8.85418782\times10^{-12}\text{C}^2/(\text{N}\cdot\text{m}^2)$，
-这个值取决于其定义和相关物理量的单位选择，并不反映真空的本质属性。
-若电荷嵌在某种实物介质中，则须用该介质的
-电容率$\epsilon$替代\refeq{08ex02.GausssLawElectric}中的$\epsilon_0$；
+\refeq{08ex02.GausssLawElectric}使用了\keyindex{自由空间}{free space}{}
+的真空电容率$\epsilon_0$，若电荷嵌在某种实物介质中，
+则须用该介质的\keyindex{电容率}{permittivity}{}
+$\epsilon$替代$\epsilon_0$；
 然而电容率又是描述平行板电容器的的基础概念，单位制的差异
 引发了$\epsilon$的取值问题。为了避免这些麻烦，
 我们定义一个与单位制无关的新物理量，即\keyindex{相对电容率}{relative permittivity}{permittivity\ 电容率}
-$K_E$，旧称\keyindex{相对介电常数}{relative dielectric constant}{}：
+$K_E$，也称\keyindex{相对介电常数}{relative dielectric constant}{}：
 \begin{align}\label{eq:08ex02-relativepermittivity}
     K_E=\frac{\epsilon}{\epsilon_0}\, ,
 \end{align}
@@ -1081,11 +1088,13 @@ $\vec{\mathbf{J}}$在截面面积上的积分：
     =\mu_0\iint\limits_A\vec{\mathbf{J}}\cdot\mathrm{d}\vec{\mathbf{S}}\, ,
 \end{align}
 其中非封闭区域$A$以$C$为边界（如\reffig{08ex02.0310}），
-常数$\mu_0$称作\keyindex{自由空间的磁导率}{permeability of free space}{permeability\ 磁导率}，
-它的定义值为$4\pi\times10^{-7}\text{N}\cdot\text{s}^2/\text{C}^2$；
+常数$\mu_0$称作\keyindex{真空磁导率}{vacuum magnetic permeability}{permeability\ 磁导率}：
+\begin{align}
+    \mu_0\approx4\pi\times10^{-7}\approx1.256637061\times10^{-6}\text{N}\cdot\text{s}^2/\text{C}^2
+\end{align}
 若在实物介质中，则换成对应介质的\keyindex{磁导率}{permeability}{} $\mu$.
-类似于\refeq{08ex02-relativepermittivity}，我们定义无量纲的
-\keyindex{相对磁导率}{relative permeability}{permeability\ 磁导率}
+类似于\refeq{08ex02-relativepermittivity}，
+我们定义无量纲的\keyindex{相对磁导率}{relative permeability}{permeability\ 磁导率}
 为
 \begin{align}
     K_M=\frac{\mu}{\mu_0}\, .
@@ -1171,7 +1180,7 @@ $\vec{\mathbf{J}}$在截面面积上的积分：
 电场怎样影响磁场，磁场也怎样反过来影响电场。
 
 利用散度定理和斯托克斯定理，麦克斯韦方程组可重新写为微分形式：
-\begin{theorem}[\keyindex{麦克斯韦方程组}{Maxwell's equations}{}]
+\begin{theorem}[真空中的\keyindex{麦克斯韦方程组}{Maxwell's equations}{}]
     \begin{align}
         \label{eq:08ex02-MaxwellFaraday}\text{法拉第电磁感应定律：} &  & \vec{\nabla}\times\vec{\mathbf{E}} & =-\frac{\partial \vec{\mathbf{B}}}{\partial t}\, ,                                             \\
         \label{eq:08ex02-MaxwellAmpere}\text{安培环路定律：}        &  & \vec{\nabla}\times\vec{\mathbf{B}} & =\mu_0\left(\vec{\mathbf{J}}+\epsilon_0\frac{\partial \vec{\mathbf{E}}}{\partial t}\right)\, , \\
@@ -1221,6 +1230,8 @@ $\vec{\mathbf{J}}$在截面面积上的积分：
 \begin{align}
     c=2.99792458\times10^8\text{m}/\text{s}\, .
 \end{align}
+2019年5月20日起新生效的国际单位制基本单位已要求\refeq{08ex02-speedOfLight}严格成立，
+重要常数$\epsilon_0$和$\mu_0$的测定值由此绑定。
 注意\refeq{08ex02-speedOfLight}给出的光速与光源和观察者的运动无关，
 这很不平常，但却没人注意，直到1905年爱因斯坦提出\keyindex{狭义相对论}{special relativity}{}。
 

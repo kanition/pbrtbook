@@ -1,8 +1,8 @@
 \section{译者补充：经典电磁理论下的光学基础}\label{sec:译者补充：经典电磁理论下的光学基础}
 \begin{remark}
-    本节内容不是原书内容，而是译者根据《\citetitle{hecht2016optics}》\citep{hecht2016optics}、
-    \citet{hass2023}、\citet{0471680575}、\citet{9780199573363}和\citet{0-486-64290-9}
-    补充并参考《\citetitle{OpticsChinese}》\citep{OpticsChinese}翻译的，请酌情参考和斧正。
+    本节内容不是原书内容，而是译者根据\citet{hecht2016optics}、
+    \citet{hass2023}、\citet{978-0471021988}、\citet{enwiki:1320467269,enwiki:1307793858}
+    补充并参考\citet{OpticsChinese}翻译的，请酌情参考和斧正。
     本节内容只简要介绍相关基础概念和结论，
     并不像正式的物理和光学教材那样严谨，请读者批判性地看待本节内容。
     本节要求读者具备较好的微积分与电磁理论知识储备。
@@ -797,7 +797,7 @@ $E_{pA}$和$E_{pB}$分别表示电荷在点$A$和点$B$处的电势能，则有
 \begin{theorem}
     当电场$\vec{\mathbf{E}}$是\keyindex{静电场}{electrostatic field}{}
     时，它是保守场，且是电势$\varphi$的负梯度场
-    \begin{align}
+    \begin{align}\label{eq:08ex02-conservativePotential}
         \vec{\mathbf{E}}=-\vec{\nabla}\varphi\, .
     \end{align}
 \end{theorem}
@@ -825,6 +825,15 @@ $E_{pA}$和$E_{pB}$分别表示电荷在点$A$和点$B$处的电势能，则有
         \varphi(\vec{\mathbf{r}})=\frac{q}{4\pi\epsilon_0|\vec{\mathbf{r}}|}\, .
     \end{align}
 \end{prove}
+
+电势也可以像电场线那样用图示表示。
+
+\begin{definition}
+    电场中电势相同的各点构成的面称作\keyindex{等势面}{equipotential surface}{}。
+\end{definition}
+\begin{corollary}
+    电场线与等势面垂直，并且由电势高的等势面指向电势低的等势面。
+\end{corollary}
 
 此外，一个运动的电荷还会受到另一种力$\vec{\mathbf{F}}_M$，
 称作\keyindex{洛伦兹力}{Lorentz force}{}，
@@ -957,8 +966,8 @@ $C$对于是否选在导体内外或附近也没有任何要求。
 此时全部表面上相加的流体净流量为零。
 但如果有细针插进其中注入或吸走流体，即存在源或汇，则净流量将不再为零。
 这种概念同样适用于电场。如\reffig{08ex02.0307}所示，
-考虑任意某电场中想象的封闭曲面$A$，则穿过$A$的
-\keyindex{电场通量}{flux of the electric field}{flux\ 通量}
+考虑任意某电场中想象的封闭曲面$A$，
+则穿过$A$的\keyindex{电场通量}{flux of the electric field}{flux\ 通量}
 为
 \begin{align}
     \varPhi_E=\oiint\limits_A\vec{\mathbf{E}}\cdot\mathrm{d}\vec{\mathbf{S}}\, ,
@@ -988,8 +997,8 @@ $C$对于是否选在导体内外或附近也没有任何要求。
 \begin{align}
     \varPhi_E=\frac{1}{\epsilon_0}\sum q\, .
 \end{align}
-把电荷分布近似为连续分布，在$A$所包围的体积$V$内，
-记电荷分布密度为$\rho$，则我们最终得到
+把电荷分布近似为连续分布，在$A$所包围的体积$V$内，记电荷分布体密度为$\rho$
+（在线上分布的线密度或在面上分布的面密度也同理），则最终得到
 \begin{theorem}[电场的\keyindex{高斯定律}{Gauss's Law}{}]
     穿过任意封闭曲面的净电场通量正比于它包围的净电荷量。
     \begin{align}\label{eq:08ex02.GausssLawElectric}
@@ -1027,6 +1036,82 @@ $K_E$，也称\keyindex{相对介电常数}{relative dielectric constant}{}：
     \caption{穿过封闭区域$A$的磁场$\vec{\mathbf{B}}$.}
     \label{fig:08ex02.0308}
 \end{figure}
+
+\begin{example}
+    如\reffig{08ex02-sphereField}，若自由空间中一个半径为$R$的实心球体均匀带电，总电荷量为$Q$，求相应的电场分布。
+    \begin{figure}[htbp]
+        \centering
+        \includegraphics[width=0.4\linewidth]{chap08/sphereElectricField.eps}
+        \caption{均匀带电实心球体的电场。}
+        \label{fig:08ex02-sphereField}
+    \end{figure}
+
+    首先，容易求得该球体的电荷体密度为
+    \begin{align}
+        \rho=\frac{Q}{\displaystyle\frac{4}{3}\pi R^3}\, .
+    \end{align}
+    以该球体的球心为原点，记任一位置的位移矢量为$\vec{\mathbf{r}}$，对应电场为$\vec{\mathbf{E}}$.
+    显然由本问题的几何对称性，当$Q$为正或负时，$\vec{\mathbf{E}}$的方向与$\vec{\mathbf{r}}$同向或反向。
+    把$\vec{\mathbf{E}}$带符号的大小记作$E_r$，作一个与带电球体同心且半径为$r$的封闭球面$A$（图中黄色或红色），
+    则根据高斯定律\refeq{08ex02.GausssLawElectric}有
+    \begin{align}
+        \oiint\limits_A\vec{\mathbf{E}}\cdot\mathrm{d}\vec{\mathbf{S}}
+        =4\pi r^2E_r
+        =\left\{\begin{array}{ll}
+            \displaystyle\frac{4}{3\epsilon_0}\pi r^3\rho=\left(\frac{r}{R}\right)^3\frac{Q}{\epsilon_0}, & \text{当}r<R,    \\
+            \displaystyle\frac{4}{3\epsilon_0}\pi R^3\rho=\frac{Q}{\epsilon_0},                           & \text{当}r\ge R.
+        \end{array}\right.
+    \end{align}
+    整理得到
+    \begin{align}
+        E_r=\left\{\begin{array}{ll}
+            \displaystyle\frac{Qr}{4\pi\epsilon_0R^3}, & \text{当}r<R,    \\
+            \displaystyle\frac{Q}{4\pi\epsilon_0r^2},  & \text{当}r\ge R.
+        \end{array}\right.
+    \end{align}
+    所以电场分布为
+    \begin{align}
+        \vec{\mathbf{E}}=\left\{\begin{array}{ll}
+            \displaystyle\frac{Q}{4\pi\epsilon_0R^3}\vec{\mathbf{r}}, & \text{当}r<R,    \\
+            \displaystyle\frac{Q}{4\pi\epsilon_0r^3}\vec{\mathbf{r}}, & \text{当}r\ge R.
+        \end{array}\right.
+    \end{align}
+\end{example}
+
+\begin{example}
+    自由空间中，两块无限大的均匀带电平板平行放置，形成理想平行板电容器。
+    其中一块平板的电荷面密度为$+\sigma>0$，另一块的为$-\sigma$，
+    忽略平板厚度和边缘效应，求空间中的电场分布。
+    \begin{figure}[htbp]
+        \centering
+        \subfloat[单块无限大均匀带电板的电场。]{\includegraphics[width=0.45\linewidth]{chap08/SingleSheets.eps}}\quad%
+        \subfloat[两块无限大均匀带电板的电场。]{\includegraphics[width=0.45\linewidth]{chap08/ParallelSheets.eps}}%
+        \caption{理想平行板电容器的电场。}
+        \label{fig:08ex02-ParallelSheets}
+    \end{figure}
+
+    如\reffig{08ex02-ParallelSheets}(a)，先考虑单块均匀带电平板的电场$\vec{\mathbf{E}}_0$.
+    由几何对称性，电场的方向应处处垂直于平板，当平板带正电或负电时，平板两侧电场的方向均远离或接近平板。
+    以带正电为例，任取一个极小圆柱体$A$与平板相交，圆柱体底面与平板平行，截面积为$S$，则圆柱体包围的电荷为$\sigma S$.
+    根据高斯定律\refeq{08ex02.GausssLawElectric}有
+    \begin{align}
+        \oiint\limits_A\vec{\mathbf{E}}_0\cdot\mathrm{d}\vec{\mathbf{S}}
+        =2E_0S=\frac{\sigma S}{\epsilon_0}\, .
+    \end{align}
+    所以
+    \begin{align}
+        E_0=\frac{\sigma}{2\epsilon_0}\, .
+    \end{align}
+    以上结论对带负电的情况也适用。如\reffig{08ex02-ParallelSheets}(b)，
+    同时考虑两块带相反电荷的平板时，将二者的电场叠加即可。易得两板之间的电场为
+    \begin{align}\label{eq:08ex02-ParallelSheets}
+        E=E_0+E_0=\frac{\sigma}{\epsilon_0}\, .
+    \end{align}
+    其方向从正电板指向负电板，且与之垂直；而两板外侧的电场则抵消为
+    \begin{align}
+        E=E_0+(-E_0)=0\, .
+    \end{align}
+\end{example}
 
 \subsubsection*{安培环路定律}
 如\reffig{08ex02.0309}所示，一根电流为$i$的载流直导线形成了环绕它的磁场$\vec{\mathbf{B}}$，
@@ -1189,6 +1274,28 @@ $\vec{\mathbf{J}}$在截面面积上的积分：
     \end{align}
 \end{theorem}
 
+特别地，在静电场中，导电物体表面的电势受外部源的约束，
+其表面电荷分布及其引发的部分电场难以直接求得。
+而电荷分布和电场分布又相互影响，所以求解的结果应保证自洽性。
+但要用上述积分定律做到这点有时会比较难算，而改用场的微分形式则更简单——
+将\refeq{08ex02-MaxwellGaussE}代入\refeq{08ex02-conservativePotential}得电势$\varphi$满足\begin{marginfigure}
+    \includegraphics[width=\linewidth]{chap08/SimeonDenisPoisson.jpg}
+\end{marginfigure}\sidenote{法国数学家、物理学家西梅翁·德尼·泊松 (Siméon Denis Poisson, 1781-1840)。}
+\begin{theorem}[\keyindex{泊松方程}{Poisson's equation}{}]
+    \begin{align}
+        \vec{\nabla}\cdot(\vec{\nabla}\varphi)=\nabla^2\varphi=-\frac{\rho}{\epsilon_0}\, .
+    \end{align}
+\end{theorem}
+其中$\nabla^2$是拉普拉斯算符；特别地，在零电荷区域内，泊松方程化为
+\begin{marginfigure}
+    \includegraphics[width=\linewidth]{chap08/Laplace.jpg}
+\end{marginfigure}\sidenote{法国数学家皮埃尔-西蒙·拉普拉斯 (Pierre-Simon, Marquis de Laplace, 1749-1827)。}
+\begin{theorem}[\keyindex{拉普拉斯方程}{Laplace's equation}{}]
+    \begin{align}
+        \nabla^2\varphi=0\, .
+    \end{align}
+\end{theorem}
+
 有了以上知识，我们就能理解电磁波的传播了。
 在该过程中，电场和磁场不可分割地耦合在一起并相互维持，
 作为一个整体在空间中传播，不依赖电荷、电流、实物介质或以太。
@@ -1211,7 +1318,7 @@ $\vec{\mathbf{J}}$在截面面积上的积分：
     \nabla^2\vec{\mathbf{E}} & =\epsilon_0\mu_0\frac{\partial^2\vec{\mathbf{E}}}{\partial t^2}\, , \\
     \nabla^2\vec{\mathbf{B}} & =\epsilon_0\mu_0\frac{\partial^2\vec{\mathbf{B}}}{\partial t^2}\, .
 \end{align}
-其中$\nabla^2$是拉普拉斯算符，这里它作用于向量场表示分别作用于其每个分量；
+这里它作用于向量场表示分别作用于其每个分量；
 偏微分算符同理（故上面两式总共可拆为六个分量方程）。
 注意与\refeq{08ex02-WaveEquation}比较，
 可发现电磁场服从波动方程，同时还预言了自由空间里所有电磁波的波速为
@@ -1222,7 +1329,7 @@ $\vec{\mathbf{J}}$在截面面积上的积分：
     \includegraphics[width=\linewidth]{chap08/ArmandHippolyteLouisFizeau.jpg}
 \end{marginfigure}\sidenote{法国物理学家阿尔芒·伊波利特·路易·斐索 (Armand Hippolyte Louis Fizeau, 1819-1896)。}
 用旋转齿轮法测到的光速值（315300km/s）符合得很好。麦克斯韦由此断定：光就是一种电磁波！
-这是物理学上划时代的卓越发现！
+1887年，赫兹首次用实验证明了电磁波的存在。这是物理学上划时代的卓越发现！
 
 现在习惯上用$c$表示真空中的光速，它取自拉丁文“celer”，意思是“快”。
 1983年在巴黎召开的第17届国际计量大会\sidenote{the 17th Conférence Générale des Poids et Mesures}
@@ -1257,7 +1364,7 @@ $\vec{\mathbf{J}}$在截面面积上的积分：
 
 电场是横波意味着，我们如果要完备描述电磁波，就须规定各个时刻$\vec{\mathbf{E}}$的方向，
 这对应了光的\keyindex{偏振}{polarization}{}。不失一般性地，
-这里主要讨论平面波或线偏振波\sidenote{原文：linearly polarized wave。}，
+这里主要讨论平面波或线性偏振波，
 此时$\vec{\mathbf{E}}$的震动方向是固定的。
 我们不妨取定坐标轴方向使得电场平行于$y$轴（如\reffig{08ex02.0313}），于是
 \begin{align}

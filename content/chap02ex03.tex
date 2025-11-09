@@ -195,6 +195,9 @@
 \end{definition}
 
 \subsection{牛顿迭代法}\label{sub:牛顿迭代法}
+以下定理得名于英国数学家泰勒\begin{marginfigure}
+    \includegraphics[width=\linewidth]{chap02/Brook_Taylor.jpg}
+\end{marginfigure}\sidenote{英国数学家布鲁克·泰勒 (Brook Taylor, 1685-1731)。}。
 \begin{theorem}[\keyindex{泰勒中值定理}{Taylor mean value theorem}{}]
     若函数$f(x)$在含$x_0$的开区间$(a,b)$上有直到$(n+1)$阶导数，则对任意$x\in(a,b)$有
     \begin{align}\label{eq:02ex0325.1}
@@ -209,9 +212,6 @@
     \refeq{02ex0325.1}称为$f(x)$按$(x-x_0)$的幂展开的
     带有拉格朗日型余项的$n$阶\keyindex{泰勒公式}{Taylor formula}{}。
 \end{theorem}
-以上定理得名于英国数学家泰勒\begin{marginfigure}
-    \includegraphics[width=\linewidth]{chap02/Brook_Taylor.jpg}
-\end{marginfigure}\sidenote{英国数学家布鲁克·泰勒 (Brook Taylor, 1685-1731)。}。
 
 求解非线性方程$f(x)=0$时，将简单迭代法中的迭代函数取为
 \begin{align}\label{eq:02ex0325}

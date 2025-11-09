@@ -826,6 +826,19 @@ $E_{pA}$和$E_{pB}$分别表示电荷在点$A$和点$B$处的电势能，则有
     \end{align}
 \end{prove}
 
+利用\refeq{08ex02-DistrubitionElectricPotential}还能得到：
+若是有多个电荷$q_i$各自分布在位置$\vec{\mathbf{r}}_i$，
+则从无穷远处将电荷搬运到形成对应分布需要做的功，也即相应电场分布的电势能为
+\begin{align}
+    W=\sum\limits_{j>1}q_j\left(\sum\limits_{i=1}^{j-1}\frac{q_i}{4\pi\epsilon_0|\vec{\mathbf{r}}_i-\vec{\mathbf{r}}_j|}\right)
+    =\frac{1}{2}\sum\limits_{i\neq j}\frac{q_iq_j}{4\pi\epsilon_0|\vec{\mathbf{r}}_i-\vec{\mathbf{r}}_j|}
+    =\frac{1}{2}\sum\limits_{i}q_i\varphi_i\, .
+\end{align}
+其中$\varphi_i$是电荷$q_i$相对于其他所有电荷的电势。上式对于连续电荷分布也适用：
+\begin{align}\label{eq:08ex02-PotentialEnergy}
+    W=\frac{1}{2}\int\varphi\mathrm{d}q\, .
+\end{align}
+
 电势也可以像电场线那样用图示表示。
 
 \begin{definition}
@@ -1092,11 +1105,10 @@ $K_E$，也称\keyindex{相对介电常数}{relative dielectric constant}{}：
 
     如\reffig{08ex02-ParallelSheets}(a)，先考虑单块均匀带电平板的电场$\vec{\mathbf{E}}_0$.
     由几何对称性，电场的方向应处处垂直于平板，当平板带正电或负电时，平板两侧电场的方向均远离或接近平板。
-    以带正电为例，任取一个极小圆柱体$A$与平板相交，圆柱体底面与平板平行，截面积为$S$，则圆柱体包围的电荷为$\sigma S$.
+    以带正电为例，任取一个极小圆柱体与平板相交，圆柱体底面与平板平行，截面积为$S$，则圆柱体包围的电荷为$\sigma S$.
     根据高斯定律\refeq{08ex02.GausssLawElectric}有
     \begin{align}
-        \oiint\limits_A\vec{\mathbf{E}}_0\cdot\mathrm{d}\vec{\mathbf{S}}
-        =2E_0S=\frac{\sigma S}{\epsilon_0}\, .
+        2E_0S=\frac{\sigma S}{\epsilon_0}\, .
     \end{align}
     所以
     \begin{align}
@@ -1110,6 +1122,21 @@ $K_E$，也称\keyindex{相对介电常数}{relative dielectric constant}{}：
     其方向从正电板指向负电板，且与之垂直；而两板外侧的电场则抵消为
     \begin{align}
         E=E_0+(-E_0)=0\, .
+    \end{align}
+
+    对于面积有限的平行板电容器，适当条件下可类比以上情况作近似处理。
+    记每块平板面积为$A$，板间介电质材料的电容率为$\epsilon$，
+    充电后的电压为$U$，板间距离为$d$，则它的\keyindex{电容}{capacitance}{}
+    为
+    \begin{align}\label{eq:08ex02-capacitanceParallel}
+        C=\frac{\sigma A}{U}=\frac{\sigma A}{Ed}=\frac{\sigma A}{\displaystyle\frac{\sigma}{\epsilon}d}=\frac{\epsilon A}{d}\, .
+    \end{align}
+    结合\refeq{08ex02-PotentialEnergy}，我们还能得到电容器存储的能量为
+    \begin{align}\label{eq:08ex02-ParallelEnergy}
+        W=\frac{1}{2}\sigma AU=\frac{1}{2}\frac{\sigma A}{U}U^2
+        =\frac{1}{2}\frac{\sigma A}{Ed}U^2
+        =\frac{1}{2}\frac{\sigma A}{\displaystyle\frac{\sigma}{\epsilon}d}U^2
+        =\frac{1}{2}CU^2\, .
     \end{align}
 \end{example}
 
@@ -1278,10 +1305,11 @@ $\vec{\mathbf{J}}$在截面面积上的积分：
 其表面电荷分布及其引发的部分电场难以直接求得。
 而电荷分布和电场分布又相互影响，所以求解的结果应保证自洽性。
 但要用上述积分定律做到这点有时会比较难算，而改用场的微分形式则更简单——
-将\refeq{08ex02-MaxwellGaussE}代入\refeq{08ex02-conservativePotential}得电势$\varphi$满足\begin{marginfigure}
+将\refeq{08ex02-MaxwellGaussE}代入\refeq{08ex02-conservativePotential}得\begin{marginfigure}
     \includegraphics[width=\linewidth]{chap08/SimeonDenisPoisson.jpg}
 \end{marginfigure}\sidenote{法国数学家、物理学家西梅翁·德尼·泊松 (Siméon Denis Poisson, 1781-1840)。}
 \begin{theorem}[\keyindex{泊松方程}{Poisson's equation}{}]
+    静电场的电势$\varphi$满足
     \begin{align}
         \vec{\nabla}\cdot(\vec{\nabla}\varphi)=\nabla^2\varphi=-\frac{\rho}{\epsilon_0}\, .
     \end{align}
@@ -1421,15 +1449,11 @@ $\vec{\mathbf{E}}$和$\vec{\mathbf{B}}$在空间中所有位置上同相。
 这意味着我们认为电磁场能存储能量，赋予了它实实在在的物理属性。
 我们依然在经典的连续场框架下讨论该问题。
 
-我们知道电容为$C$的理想平行板电容器被充电到电压$V$时，
-其电荷因相互作用而存储的能量为$\displaystyle\frac{1}{2}CV^2$，分布在平行板之间的电场中。
-设平行板面积为$A$，板间距离为$d$，则有
+从\refeq{08ex02-ParallelEnergy}，我们知道了电容为$C$的理想平行板电容器被充电到电压$U$时，
+其电荷因相互作用而分布在电场中的能量。设平行板面积为$A$，板间距离为$d$，
+结合平行板电容器的电容计算\refeq{08ex02-capacitanceParallel}，可得板间单位体积的能量为
 \begin{align}
-    C=\frac{\epsilon_0 A}{d}\, ,
-\end{align}
-于是板间单位体积的能量为
-\begin{align}
-    u_E=\frac{\displaystyle\frac{1}{2}CV^2}{Ad}=\frac{\displaystyle\frac{\epsilon_0 A}{2d}(Ed)^2}{Ad}=\frac{\epsilon_0}{2}E^2\, .
+    u_E=\frac{\displaystyle\frac{1}{2}CU^2}{Ad}=\frac{\displaystyle\frac{\epsilon_0 A}{2d}(Ed)^2}{Ad}=\frac{\epsilon_0}{2}E^2\, .
 \end{align}
 
 类似地，考虑电流为$I$电感为$L$的理想空心螺线管中的磁场，

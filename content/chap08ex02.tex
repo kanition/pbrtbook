@@ -1,7 +1,7 @@
 \section{译者补充：经典电磁理论下的光学基础}\label{sec:译者补充：经典电磁理论下的光学基础}
 \begin{remark}
     本节内容不是原书内容，而是译者根据\citet{hecht2016optics}、
-    \citet{hass2023}、\citet{978-0471021988}、\citet{enwiki:1320467269,enwiki:1307793858}
+    \citet{hass2023}、\citet{9780199573363}、\citet{978-0471021988}、\citet{enwiki:1320467269,enwiki:1307793858}
     补充并参考\citet{OpticsChinese}翻译的，请酌情参考和斧正。
     本节内容只简要介绍相关基础概念和结论，
     并不像正式的物理和光学教材那样严谨，请读者批判性地看待本节内容。
@@ -1065,11 +1065,10 @@ $K_E$，也称\keyindex{相对介电常数}{relative dielectric constant}{}：
     \end{align}
     以该球体的球心为原点，记任一位置的位移矢量为$\vec{\mathbf{r}}$，对应电场为$\vec{\mathbf{E}}$.
     显然由本问题的几何对称性，当$Q$为正或负时，$\vec{\mathbf{E}}$的方向与$\vec{\mathbf{r}}$同向或反向。
-    把$\vec{\mathbf{E}}$带符号的大小记作$E_r$，作一个与带电球体同心且半径为$r$的封闭球面$A$（图中黄色或红色），
+    把$\vec{\mathbf{E}}$带符号的大小记作$E_r$，作一个与带电球体同心且半径为$r$的封闭球面（图中黄色或红色球），
     则根据高斯定律\refeq{08ex02.GausssLawElectric}有
     \begin{align}
-        \oiint\limits_A\vec{\mathbf{E}}\cdot\mathrm{d}\vec{\mathbf{S}}
-        =4\pi r^2E_r
+        4\pi r^2E_r
         =\left\{\begin{array}{ll}
             \displaystyle\frac{4}{3\epsilon_0}\pi r^3\rho=\left(\frac{r}{R}\right)^3\frac{Q}{\epsilon_0}, & \text{当}r<R,    \\
             \displaystyle\frac{4}{3\epsilon_0}\pi R^3\rho=\frac{Q}{\epsilon_0},                           & \text{当}r\ge R.
@@ -1115,11 +1114,11 @@ $K_E$，也称\keyindex{相对介电常数}{relative dielectric constant}{}：
         E_0=\frac{\sigma}{2\epsilon_0}\, .
     \end{align}
     以上结论对带负电的情况也适用。如\reffig{08ex02-ParallelSheets}(b)，
-    同时考虑两块带相反电荷的平板时，将二者的电场叠加即可。易得两板之间的电场为
+    同时考虑两块带相反等量电荷的平板时，将二者的电场叠加即可。易得两板之间的电场同向叠加为
     \begin{align}\label{eq:08ex02-ParallelSheets}
         E=E_0+E_0=\frac{\sigma}{\epsilon_0}\, .
     \end{align}
-    其方向从正电板指向负电板，且与之垂直；而两板外侧的电场则抵消为
+    其方向从正电板指向负电板，且与之垂直；而两板外侧的电场则反向抵消为
     \begin{align}
         E=E_0+(-E_0)=0\, .
     \end{align}
@@ -1131,7 +1130,9 @@ $K_E$，也称\keyindex{相对介电常数}{relative dielectric constant}{}：
     \begin{align}\label{eq:08ex02-capacitanceParallel}
         C=\frac{\sigma A}{U}=\frac{\sigma A}{Ed}=\frac{\sigma A}{\displaystyle\frac{\sigma}{\epsilon}d}=\frac{\epsilon A}{d}\, .
     \end{align}
-    结合\refeq{08ex02-PotentialEnergy}，我们还能得到电容器存储的能量为
+    其单位为\keyindex{法拉}{farad}{}
+    (法，F)\sidenote{得名于法拉第。}。结合\refeq{08ex02-PotentialEnergy}，
+    还能得到电容器存储的能量为
     \begin{align}\label{eq:08ex02-ParallelEnergy}
         W=\frac{1}{2}\sigma AU=\frac{1}{2}\frac{\sigma A}{U}U^2
         =\frac{1}{2}\frac{\sigma A}{Ed}U^2
@@ -1366,7 +1367,7 @@ $\vec{\mathbf{J}}$在截面面积上的积分：
     c=2.99792458\times10^8\text{m}/\text{s}\, .
 \end{align}
 2019年5月20日起新生效的国际单位制基本单位已要求\refeq{08ex02-speedOfLight}严格成立，
-重要常数$\epsilon_0$和$\mu_0$的测定值由此绑定。
+真空电容率$\epsilon_0$和真空磁导率$\mu_0$的测定值由此绑定。
 注意\refeq{08ex02-speedOfLight}给出的光速与光源和观察者的运动无关，
 这很不平常，但却没人注意，直到1905年爱因斯坦提出\keyindex{狭义相对论}{special relativity}{}。
 
@@ -1551,7 +1552,9 @@ $\vec{\mathbf{S}}$的大小是穿过与$\vec{\mathbf{S}}$垂直的表面单位�
 1932年，苏联科学家Evgenii M. Brumberg和Sergei I. Vavilov通过实验证明了光的基本量子本性。
 
 不像普通物体，光子无法被直接看见，我们是通过光子的生成和湮灭来认识它的。
-光子属于\keyindex{玻色子}{boson}{}，
+光子属于\keyindex{玻色子}{boson}{}\begin{marginfigure}
+    \includegraphics[width=\linewidth]{chap08/SatyenBose.jpg}
+\end{marginfigure}\sidenote{印度物理学家萨特延德拉·纳特·玻色 (Satyendra Nath Bose, 1894-1974)。}，
 是\keyindex{自旋}{spin}{}
 为1的粒子，其集群方式服从\keyindex{玻色-爱因斯坦统计}{Bose-Einstein statistics}{}，
 允许大量光子占据同一状态。但我们无法准确预言每个光子会在何时到达何处，
@@ -1644,17 +1647,129 @@ $\hslash$为\keyindex{约化普朗克常数}{reduced Planck constant}{}
 早在1901年，光压就被俄国实验物理学家彼得·尼古拉耶维奇·列别捷夫
 (Pyotr Nikolaevich Lebedev, 1866-1912)测量到了。
 
+\subsubsection*{电偶极子与电极化}
+宏观物质置于电场中时，构成它的微观粒子会在电场作用下发生运动产生位移，
+这种现象称为\keyindex{极化}{polarization}{}。
+这些带电粒子分布的变化又会重新影响物质内部的电场分布。
+因此在讨论电场对物质的作用时应考虑极化的影响。
+
+电极化的有多种产生机制。在称为\keyindex{介电质}{dielectric}{}
+的一大类绝缘材料中，电子被紧密束缚在\keyindex{原子核}{nucleus}{}
+附近。虽然电子不能随意挪走，但在电场作用下，
+带负电的电子云会相对于带正电的原子核产生微小位移与形变（如\reffig{08ex02-electronCloud}），
+于是材料发生\keyindex{电子极化}{electronic polarization}{polarization\ 极化}。
+
+此外，在\keyindex{极性分子}{polar molecule}{molecule\ 分子}
+材料中，\keyindex{分子}{molecule}{}
+的各原子不均等地分享\keyindex{价电子}{valence electron}{electron\ 电子}，
+所以正负电荷中心是永久分离的（\reffig{08ex02-moleculesDipole}），
+在电场作用下，这种分子会因正负电荷受力方向相反而被牵拉朝着外加电场方向发生偏转，
+发生\keyindex{取向极化}{orientational polarization}{polarization\ 极化}。
+
+还一种情况是，对于NaCl那样的离子晶体，外加电场会使其正负离子发生相对位移，
+发生\keyindex{离子极化}{ionic polarization}{polarization\ 极化}，
+也称\keyindex{原子极化}{atomic polarization}{polarization\ 极化}。
+另外，还有非均质材料的结构界面阻挡带电粒子在外加电场下迁移而在分界面上累积电荷发生的\keyindex{界面极化}{interfacial polarization}{polarization\ 极化}
+等其他情况。
+
+这些电极化机制之间并不排斥，它们的综合效应带来了总的极化现象：
+尽管材料整体呈电中性，但正负电荷轻微的分离产生了\keyindex{电偶极子}{electric dipole}{}，
+哪怕每个电偶极子含有等量的正负电荷，
+其分布的不均衡也会累积出可观的净\keyindex{极化电荷}{polarization charge}{electric charge\ 电荷}，
+成为\keyindex{自由电荷}{free charge}{electric charge\ 电荷}
+外又一电场来源。
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.5\linewidth]{chap08/electronCloud.eps}
+    \caption{电场作用下的电子云发生微小位移与形变。}
+    \label{fig:08ex02-electronCloud}
+\end{figure}
+
+最简单的电偶极子模型是一正一负含等量电荷$q$的分离点电荷，
+记从负电荷指向正电荷的相对位移矢量为$\vec{\mathbf{d}}$.
+我们定义该电偶极子的\keyindex{偶极矩}{dipole moment}{}
+为
+\begin{align}
+    \vec{\mathbf{\srcp}}=q\vec{\mathbf{d}}\, .
+\end{align}
+其单位为$\text{C}\cdot\text{m}$.
+对于更复杂的电偶极子，上述定义可推广为：
+若电偶极子在区域$V$内关于位置矢量$\vec{\mathbf{r}}$的电荷分布体密度为$\rho(\vec{\mathbf{r}})$，
+则其相应偶极矩为
+\begin{align}
+    \vec{\mathbf{\srcp}}=\iiint\limits_V\rho(\vec{\mathbf{r}})\vec{\mathbf{r}}\mathrm{d}V\, .
+\end{align}
+可以证明当电偶极子整体呈电中性时，其偶极矩具有平移不变性。
+\begin{prove}
+    把电偶极子原来整体所在位置设为原点，设其分布区域为$V$，
+    然后平移到新位置$\vec{\mathbf{r}}_0$处，对应分布区域$V'$，则平移后的偶极矩为
+    \begin{align}
+        \vec{\mathbf{\srcp}}'
+         & =\iiint\limits_{V'}\rho(\vec{\mathbf{r}}-\vec{\mathbf{r}}_0)\vec{\mathbf{r}}\mathrm{d}V'
+        =\iiint\limits_{V'}\rho(\vec{\mathbf{r}}-\vec{\mathbf{r}}_0)(\vec{\mathbf{r}}-\vec{\mathbf{r}}_0+\vec{\mathbf{r}}_0)\mathrm{d}V'\nonumber \\
+         & =\iiint\limits_{V'}\rho(\vec{\mathbf{r}}-\vec{\mathbf{r}}_0)(\vec{\mathbf{r}}-\vec{\mathbf{r}}_0)\mathrm{d}V'
+        +\iiint\limits_{V'}\rho(\vec{\mathbf{r}}-\vec{\mathbf{r}}_0)\vec{\mathbf{r}}_0\mathrm{d}V'\nonumber                                       \\
+         & =\iiint\limits_V\rho(\vec{\mathbf{r}})\vec{\mathbf{r}}\mathrm{d}V
+        +\vec{\mathbf{r}}_0\iiint\limits_{V'}\rho(\vec{\mathbf{r}}-\vec{\mathbf{r}}_0)\mathrm{d}V'\nonumber                                       \\
+         & =\vec{\mathbf{\srcp}}+\vec{\mathbf{r}}_0\cdot0\nonumber                                                                                \\
+         & =\vec{\mathbf{\srcp}}\, .
+    \end{align}
+\end{prove}
+
+\reffig{08ex02-moleculesDipole}展示了四种常见物质分子的偶极矩。
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\linewidth]{chap08/moleculesDipole.eps}
+    \caption{四种分子的偶极矩大小与方向，其中只有$\text{CO}_2$是非极性分子。}
+    \label{fig:08ex02-moleculesDipole}
+\end{figure}
+
+接下来我们讨论最简电偶极子模型的电场和电势分布。
+后面的推导中我们将经常用到以下两个关于矢量$\vec{\mathbf{r}}$的常见恒等式，
+其中$\hat{\mathbf{r}}$是$\vec{\mathbf{r}}$方向上的单位向量，读者可自行验证：
+\begin{align}
+    \vec{\nabla}|\vec{\mathbf{r}}|           & =\frac{\vec{\mathbf{r}}}{|\vec{\mathbf{r}}|}=\hat{\mathbf{r}}\, ,                                  \\
+    \vec{\nabla}\frac{1}{|\vec{\mathbf{r}}|} & =-\frac{\vec{\mathbf{r}}}{|\vec{\mathbf{r}}|^3}=-\frac{\hat{\mathbf{r}}}{|\vec{\mathbf{r}}|^2}\, .
+\end{align}
+我们取模型中两个点电荷连线的中点为原点，
+并且正点电荷在$\displaystyle\frac{1}{2}\vec{\mathbf{d}}$处，
+负点电荷在$-\displaystyle\frac{1}{2}\vec{\mathbf{d}}$处。
+根据\refeq{08ex02-DistrubitionElectricPotential}，
+任意位置$\vec{\mathbf{r}}$处（$r\gg d$）的电势为
+\begin{align}
+    \varphi(\vec{\mathbf{r}})=\frac{q}{4\pi\epsilon_0\left|\vec{\mathbf{r}}-\displaystyle\frac{1}{2}\vec{\mathbf{d}}\right|}
+    +\frac{-q}{4\pi\epsilon_0\left|\vec{\mathbf{r}}-\left(-\displaystyle\frac{1}{2}\vec{\mathbf{d}}\right)\right|}\, .
+\end{align}
+考虑到$r\gg d$，我们只保留上式关于$d$的一次项，忽略高次项：
+\begin{align}
+    \varphi(\vec{\mathbf{r}})
+     & =\frac{q}{4\pi\epsilon_0\left|\vec{\mathbf{r}}-\displaystyle\frac{1}{2}\vec{\mathbf{d}}\right|}
+    -\frac{q}{4\pi\epsilon_0\left|\vec{\mathbf{r}}+\displaystyle\frac{1}{2}\vec{\mathbf{d}}\right|}\nonumber                            \\
+     & \approx\frac{q}{4\pi\epsilon_0}\left(-\vec{\mathbf{d}}\cdot\vec{\nabla}\displaystyle\frac{1}{|\vec{\mathbf{r}}|}\right)\nonumber \\
+     & =\frac{-q\vec{\mathbf{d}}}{4\pi\epsilon_0}\cdot\frac{-\hat{\mathbf{r}}}{|\vec{\mathbf{r}}|^2}\nonumber                           \\
+     & =\frac{\vec{\mathbf{\srcp}}\cdot\hat{\mathbf{r}}}{4\pi\epsilon_0 r^2}\, ,
+\end{align}
+相应的电场为
+\begin{align}
+    \vec{\mathbf{E}}(\vec{\mathbf{r}})
+     & =-\vec{\nabla}\varphi(\vec{\mathbf{r}})
+    \approx-\vec{\nabla}\frac{\vec{\mathbf{\srcp}}\cdot\hat{\mathbf{r}}}{4\pi\epsilon_0 r^2}\nonumber                                                                              \\
+     & =-\frac{1}{4\pi\epsilon_0}\vec{\nabla}\frac{\vec{\mathbf{\srcp}}\cdot\vec{\mathbf{r}}}{r^3}\nonumber                                                                        \\
+     & =-\frac{1}{4\pi\epsilon_0 r^6}((\vec{\nabla}(\vec{\mathbf{\srcp}}\cdot\vec{\mathbf{r}}))\cdot r^3-(\vec{\mathbf{\srcp}}\cdot\vec{\mathbf{r}})\cdot\vec{\nabla}r^3)\nonumber \\
+     & =-\frac{1}{4\pi\epsilon_0 r^6}(\vec{\mathbf{\srcp}}\cdot r^3-(\vec{\mathbf{\srcp}}\cdot\vec{\mathbf{r}})\cdot3r^2\cdot\frac{\vec{\mathbf{r}}}{|\vec{\mathbf{r}}|})\nonumber \\
+     & =\frac{3(\vec{\mathbf{\srcp}}\cdot\hat{\mathbf{r}})\hat{\mathbf{r}}-\vec{\mathbf{\srcp}}}{4\pi\epsilon_0 r^3}\, .
+\end{align}
+
 \subsubsection*{电偶极辐射}
 若一个电荷进行变速运动，它就会辐射。
 在垂直于引起辐射的加速度方向上，辐射能量最强。
 辐射的能量是某个外部动力对电荷做功使其变速运动而供给的。
-最简单直观的电磁波产生机制是振荡的\keyindex{电偶极子}{electric dipole}{}，
+最简单直观的电磁波产生机制是振荡的电偶极子，
 它由一正一负两个电荷组成，沿直线做往复运动。
 实物系统辐射能量虽然是量子力学过程，但可以用经典的振荡电偶极子来设想其能量发射速率。
 \reffig{08ex02.0332}示意地画出了一个电偶极子的电场分布，
 其中一个负电荷在一个静止且大小相等的正电荷旁做直线简谐运动。
-若振动的角频率为$\omega$，则关于时间$t$的\keyindex{偶极矩}{dipole moment}{}
-有标量形式
+若振动的角频率为$\omega$，则关于时间$t$的偶极矩有标量形式
 \begin{align}
     \srcp(t)=\srcp_0\cos(\omega t)\, ,
 \end{align}

@@ -1083,7 +1083,7 @@ $K_E$，也称\keyindex{相对介电常数}{relative dielectric constant}{}：
         \end{array}\right.
     \end{align}
     所以电场分布为
-    \begin{align}
+    \begin{align}\label{eq:08ex02-sphericalEfieldStrength}
         \vec{\mathbf{E}}=\left\{\begin{array}{ll}
             \displaystyle\frac{Q}{4\pi\epsilon_0R^3}\vec{\mathbf{r}}, & \text{当}r<R,    \\
             \displaystyle\frac{Q}{4\pi\epsilon_0r^3}\vec{\mathbf{r}}, & \text{当}r\ge R.
@@ -1833,6 +1833,17 @@ $\rho_p$为：
     =-\iiint\limits_V\vec{\nabla}\cdot\vec{\mathbf{P}}\mathrm{d}V
     =-\oiint\limits_S\vec{\mathbf{P}}\cdot\mathrm{d}\vec{\mathbf{S}}\, .
 \end{align}
+从上式我们还能推出累积在介质外表面附近的\keyindex{表面束缚电荷面密度}{bound surface charge density}{}
+$\sigma_p$为
+\begin{align}
+    \sigma_p=-\frac{\mathrm{d}q_p}{\mathrm{d}S}
+    =\frac{\mathrm{d}}{\mathrm{d}S}\oiint\limits_S\vec{\mathbf{P}}\cdot\mathrm{d}\vec{\mathbf{S}}
+    =\vec{\mathbf{P}}\cdot\vec{\mathbf{n}}\, ,
+\end{align}
+其中$\vec{\mathbf{n}}$为介质表面朝外的法向量；
+注意上式第一步带负号是因为前文$q_p$统计的是分界面之内的束缚电荷，
+而$\sigma_p$统计的是外部的束缚电荷。
+
 我们通常难以直接把握极化电荷量，所以把高斯定律改写为关于自由电荷量的形式会更方便。
 由此定义\keyindex{电位移场}{electric displacement field}{}
 $\vec{\mathbf{D}}$为
@@ -1859,11 +1870,33 @@ $\vec{\mathbf{D}}$为
 尽管精确的讨论需要用到量子力学，但它超出了本书范围，
 我们以简化的经典模型定性地讨论线性介电质这一简单情况。
 
-我们把原子视作这样的模型：带正电$Q$的原子核位置固定在中心，
+我们把原子视作这样的模型：带正电$Q$的原子核处在中心，
 其周围弥漫着带等量负电荷$-Q$且均匀分布的球形电子云，整个原子构成一个偶极子。
 当没有外加电场作用时，其正负电荷中心重合，易知偶极矩为零。
 当施加外加电场时，原子核和电子云朝着相反方向发生位移，
 相对位置矢量为$\vec{\mathbf{d}}$，但二者之间的库伦吸引力维持着它们不再远离。
+以电子云球心为原点，设其半径为$R_0$，
+根据\refeq{08ex02-sphericalEfieldStrength}，电子云内部产生的电场为
+\begin{align}
+    \vec{\mathbf{E}}_r=-\frac{Q}{4\pi\epsilon_0R_0^3}\vec{\mathbf{r}}\, .
+\end{align}
+注意到平衡状态下对正电荷的合力$\vec{\mathbf{F}}$为零：
+\begin{align}
+    \vec{\mathbf{F}}=Q(\vec{\mathbf{E}}_l-\frac{Q}{4\pi\epsilon_0R_0^3}\vec{\mathbf{d}})=\vec{\mathbf{0}}\, .
+\end{align}
+其中$\vec{\mathbf{E}}_l$为周围其他偶极子作用于该偶极子的局部电场。
+从上式解得平衡状态下的偶极子间距为
+\begin{align}
+    \vec{\mathbf{d}}=\frac{4\pi\epsilon_0R_0^3}{Q}\vec{\mathbf{E}}_l\, .
+\end{align}
+因此偶极矩为
+\begin{align}
+    \vec{\mathbf{\srcp}}=Q\vec{\mathbf{d}}=\alpha\vec{\mathbf{E}}_l\, ,
+\end{align}
+其中系数$\alpha$为\keyindex{极化度}{polarizability}{}：
+\begin{align}
+    \alpha=4\pi\epsilon_0R_0^3\, .
+\end{align}
 
 \subsubsection*{电偶极辐射}
 若一个电荷进行变速运动，它就会辐射。

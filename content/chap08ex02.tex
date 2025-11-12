@@ -650,6 +650,7 @@ $\vec{\nabla}$算符能让我们后续的表示更加方便。
     \end{align}
 \end{theorem}
 \begin{theorem}[\keyindex{散度定理}{divergence theorem}{}]
+    \label{theorem:08ex-divergenceTheorem}
     设向量场$\vec{\mathbf{F}}$的各分量均有连续一阶偏导数，
     $S$为有向分片光滑封闭曲面；则$\vec{\mathbf{F}}$沿着$S$曲面上
     朝外的单位法向量场的方向通过曲面的通量等于
@@ -1661,7 +1662,8 @@ $\hslash$为\keyindex{约化普朗克常数}{reduced Planck constant}{}
 
 此外，在\keyindex{极性分子}{polar molecule}{molecule\ 分子}
 材料中，\keyindex{分子}{molecule}{}
-的各原子不均等地分享\keyindex{价电子}{valence electron}{electron\ 电子}，
+的各\keyindex{原子}{atom}{}
+不均等地分享\keyindex{价电子}{valence electron}{electron\ 电子}，
 所以正负电荷中心是永久分离的（\reffig{08ex02-moleculesDipole}），
 在电场作用下，这种分子会因正负电荷受力方向相反而被牵拉朝着外加电场方向发生偏转，
 发生\keyindex{取向极化}{orientational polarization}{polarization\ 极化}。
@@ -1685,7 +1687,14 @@ $\hslash$为\keyindex{约化普朗克常数}{reduced Planck constant}{}
     \label{fig:08ex02-electronCloud}
 \end{figure}
 
-最简单的电偶极子模型是一正一负含等量电荷$q$的分离点电荷，
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.6\linewidth]{chap08/SimpleElectricDipole.eps}
+    \caption{最简电偶极子模型。}
+    \label{fig:08ex02-SimpleElectricDipole}
+\end{figure}
+
+如\reffig{08ex02-SimpleElectricDipole}，最简单的电偶极子模型是一正一负含等量电荷$q$的分离点电荷，
 记从负电荷指向正电荷的相对位移矢量为$\vec{\mathbf{d}}$.
 我们定义该电偶极子的\keyindex{偶极矩}{dipole moment}{}
 为
@@ -1753,12 +1762,108 @@ $\hslash$为\keyindex{约化普朗克常数}{reduced Planck constant}{}
 \begin{align}
     \vec{\mathbf{E}}(\vec{\mathbf{r}})
      & =-\vec{\nabla}\varphi(\vec{\mathbf{r}})
-    \approx-\vec{\nabla}\frac{\vec{\mathbf{\srcp}}\cdot\hat{\mathbf{r}}}{4\pi\epsilon_0 r^2}\nonumber                                                                              \\
-     & =-\frac{1}{4\pi\epsilon_0}\vec{\nabla}\frac{\vec{\mathbf{\srcp}}\cdot\vec{\mathbf{r}}}{r^3}\nonumber                                                                        \\
-     & =-\frac{1}{4\pi\epsilon_0 r^6}((\vec{\nabla}(\vec{\mathbf{\srcp}}\cdot\vec{\mathbf{r}}))\cdot r^3-(\vec{\mathbf{\srcp}}\cdot\vec{\mathbf{r}})\cdot\vec{\nabla}r^3)\nonumber \\
-     & =-\frac{1}{4\pi\epsilon_0 r^6}(\vec{\mathbf{\srcp}}\cdot r^3-(\vec{\mathbf{\srcp}}\cdot\vec{\mathbf{r}})\cdot3r^2\cdot\frac{\vec{\mathbf{r}}}{|\vec{\mathbf{r}}|})\nonumber \\
+    \approx-\vec{\nabla}\frac{\vec{\mathbf{\srcp}}\cdot\hat{\mathbf{r}}}{4\pi\epsilon_0 r^2}\nonumber                                                                                         \\
+     & =-\frac{1}{4\pi\epsilon_0}\vec{\nabla}\frac{\vec{\mathbf{\srcp}}\cdot\vec{\mathbf{r}}}{r^3}\nonumber                                                                                   \\
+     & =-\frac{1}{4\pi\epsilon_0 r^6}((\vec{\nabla}(\vec{\mathbf{\srcp}}\cdot\vec{\mathbf{r}}))\cdot r^3-(\vec{\mathbf{\srcp}}\cdot\vec{\mathbf{r}})\cdot\vec{\nabla}r^3)\nonumber            \\
+     & =-\frac{1}{4\pi\epsilon_0 r^6}\left(\vec{\mathbf{\srcp}}\cdot r^3-(\vec{\mathbf{\srcp}}\cdot\vec{\mathbf{r}})\cdot3r^2\cdot\frac{\vec{\mathbf{r}}}{|\vec{\mathbf{r}}|}\right)\nonumber \\
      & =\frac{3(\vec{\mathbf{\srcp}}\cdot\hat{\mathbf{r}})\hat{\mathbf{r}}-\vec{\mathbf{\srcp}}}{4\pi\epsilon_0 r^3}\, .
 \end{align}
+
+如\reffig{08ex02-polarizationDensity}，
+我们任取一个体积为$\Delta x\Delta y\Delta z$的立方体微分体积元，
+里面包含了很多电偶极子，红蓝色分别表示偶极子的正负电荷端。
+显然完全被体积元包裹住的偶极子整体呈电中性，
+只有穿过体积元表面被它截断的偶极子才会对体积元贡献净电荷。
+我们记单位体积内偶极子的个数为$N$，
+每个偶极子的偶极矩为$\vec{\mathbf{\srcp}}=q\vec{\mathbf{d}}$，
+其中$\vec{\mathbf{d}}=d_x\hat{\text{\sffamily\bfseries i}}+d_y\hat{\text{\sffamily\bfseries j}}+d_z\hat{\text{\sffamily\bfseries k}}$，
+则\keyindex{电极化强度}{polarization density}{}
+矢量$\vec{\mathbf{P}}=P_x\hat{\text{\sffamily\bfseries i}}+P_y\hat{\text{\sffamily\bfseries j}}+P_z\hat{\text{\sffamily\bfseries k}}$
+表示了单位体积内偶极矩的大小：
+\begin{align}
+    \vec{\mathbf{P}}=N\vec{\mathbf{\srcp}}=Nq\vec{\mathbf{d}}\, .
+\end{align}
+而体积元垂直于$x$轴的表面$S_1$和$S_2$附近的偶极子被包进去的净电荷量分别为
+\begin{align}
+    \mathrm{d}q_1 & =(Nqd_x)\bigg|_{x}\Delta y\Delta z           = P_x(x)\Delta y\Delta z\, ,           \\
+    \mathrm{d}q_2 & =-(Nqd_x)\bigg|_{x+\Delta x}\Delta y\Delta z = -P_x(x+\Delta x)\Delta y\Delta z\, .
+\end{align}
+其中$d_x\bigg|_{x}$和$P_x(x)$分别表示$\vec{\mathbf{d}}$和$\vec{\mathbf{P}}$在$x$处沿$x$轴的分量，
+$d_x\bigg|_{x+\Delta x}$和$P_x(x+\Delta x)$分别表示$\vec{\mathbf{d}}$和$\vec{\mathbf{P}}$在$x+\Delta x$处沿$x$轴的分量。
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.5\linewidth]{chap08/polarizationDensity.eps}
+    \caption{微分体积元内的电偶极矩累积的净电荷只与穿过界面的偶极子有关。}
+    \label{fig:08ex02-polarizationDensity}
+\end{figure}
+
+同理，体积元其余四个面附近被包围的净电荷量分别为
+\begin{align}
+    \mathrm{d}q_3 & =(Nqd_y)\bigg|_{y}\Delta x\Delta z           = P_y(y)\Delta x\Delta z\, ,           \\
+    \mathrm{d}q_4 & =-(Nqd_y)\bigg|_{y+\Delta y}\Delta x\Delta z = -P_y(y+\Delta y)\Delta x\Delta z\, , \\
+    \mathrm{d}q_5 & =(Nqd_z)\bigg|_{z}\Delta x\Delta y           = P_z(z)\Delta x\Delta y\, ,           \\
+    \mathrm{d}q_6 & =-(Nqd_z)\bigg|_{z+\Delta z}\Delta x\Delta y = -P_z(z+\Delta z)\Delta x\Delta y\, .
+\end{align}
+对上面六式求和，可得体积元内包围的净电荷总量为
+\begin{align}
+    \mathrm{d}q
+     & =\mathrm{d}q_1+\mathrm{d}q_2+\mathrm{d}q_3+\mathrm{d}q_4+\mathrm{d}q_5+\mathrm{d}q_6\nonumber \\
+     & =\left(\frac{P_x(x)-P_x(x+\Delta x)}{\Delta x}
+    +\frac{P_y(y)-P_y(y+\Delta y)}{\Delta y}
+    +\frac{P_z(z)-P_z(z+\Delta z)}{\Delta z}\right)\Delta x\Delta y\Delta z\, .
+\end{align}
+令体积$\Delta x\Delta y\Delta z$趋于零，
+便得到\keyindex{极化电荷体密度}{polarization volume charge density}{}
+$\rho_p$为：
+\begin{align}
+    \rho_p=\lim\limits_{\Delta x\Delta y\Delta z\rightarrow0}\frac{\mathrm{d}q}{\Delta x\Delta y\Delta z}
+    =-\left(\frac{\partial P_x}{\partial x}+\frac{\partial P_y}{\partial y}+\frac{\partial P_z}{\partial z}\right)
+    =-\vec{\nabla}\cdot\vec{\mathbf{P}}\, .
+\end{align}
+这些\keyindex{束缚电荷}{bound charge}{charge\ 电荷}
+也是电场的源，所以需要代入高斯定律\refeq{08ex02-MaxwellGaussE}：
+\begin{align}\label{eq:08ex02-DensityPolarization}
+    \vec{\nabla}\cdot(\epsilon_0\vec{\mathbf{E}})=\rho_f+\rho_p=\rho_f-\vec{\nabla}\cdot\vec{\mathbf{P}}\, .
+\end{align}
+其中$\rho_f$是自由电荷的体密度（不含束缚电荷）；结合散度定理\ref{theorem:08ex-divergenceTheorem}，
+可得区域内极化电荷总量$q_p$为
+\begin{align}
+    q_p=\iiint\limits_V\rho_p\mathrm{d}V
+    =-\iiint\limits_V\vec{\nabla}\cdot\vec{\mathbf{P}}\mathrm{d}V
+    =-\oiint\limits_S\vec{\mathbf{P}}\cdot\mathrm{d}\vec{\mathbf{S}}\, .
+\end{align}
+我们通常难以直接把握极化电荷量，所以把高斯定律改写为关于自由电荷量的形式会更方便。
+由此定义\keyindex{电位移场}{electric displacement field}{}
+$\vec{\mathbf{D}}$为
+\begin{align}
+    \vec{\mathbf{D}}=\epsilon_0\vec{\mathbf{E}}+\vec{\mathbf{P}}\, .
+\end{align}
+可见$\vec{\mathbf{D}}$因为偶极子中电荷的位移而与$\epsilon_0\vec{\mathbf{E}}$有所不同。
+于是\refeq{08ex02-DensityPolarization}可重写为
+\begin{align}
+    \vec{\nabla}\cdot(\epsilon_0\vec{\mathbf{E}}+\vec{\mathbf{P}})
+    =\vec{\nabla}\cdot\vec{\mathbf{D}}=\rho_f\, .
+\end{align}
+利用散度定理\ref{theorem:08ex-divergenceTheorem}，
+便得到高斯定律的新积分形式
+\begin{align}\label{eq:08ex02-MaxwellGaussD}
+    \iiint\limits_V\vec{\nabla}\cdot\vec{\mathbf{D}}\mathrm{d}V
+    =\oiint\limits_S\vec{\mathbf{D}}\cdot\mathrm{d}\vec{\mathbf{S}}
+    =\iiint\limits_V\rho_f\mathrm{d}V\, .
+\end{align}
+特别地，当电极化强度$\vec{\mathbf{P}}$为零时，
+上式特化为前文介绍的自由空间下电场的高斯定律。
+
+接下来我们寻求电极化强度和外加电场之间的关系。
+尽管精确的讨论需要用到量子力学，但它超出了本书范围，
+我们以简化的经典模型定性地讨论线性介电质这一简单情况。
+
+我们把原子视作这样的模型：带正电$Q$的原子核位置固定在中心，
+其周围弥漫着带等量负电荷$-Q$且均匀分布的球形电子云，整个原子构成一个偶极子。
+当没有外加电场作用时，其正负电荷中心重合，易知偶极矩为零。
+当施加外加电场时，原子核和电子云朝着相反方向发生位移，
+相对位置矢量为$\vec{\mathbf{d}}$，但二者之间的库伦吸引力维持着它们不再远离。
 
 \subsubsection*{电偶极辐射}
 若一个电荷进行变速运动，它就会辐射。

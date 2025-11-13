@@ -1740,7 +1740,7 @@ $\hslash$为\keyindex{约化普朗克常数}{reduced Planck constant}{}
     \vec{\nabla}|\vec{\mathbf{r}}|           & =\frac{\vec{\mathbf{r}}}{|\vec{\mathbf{r}}|}=\hat{\mathbf{r}}\, ,                                  \\
     \vec{\nabla}\frac{1}{|\vec{\mathbf{r}}|} & =-\frac{\vec{\mathbf{r}}}{|\vec{\mathbf{r}}|^3}=-\frac{\hat{\mathbf{r}}}{|\vec{\mathbf{r}}|^2}\, .
 \end{align}
-我们取模型中两个点电荷连线的中点为原点，
+如\reffig{08ex02-SimpleElectricDipole}，我们取模型中两个点电荷连线的中点为原点，
 并且正点电荷在$\displaystyle\frac{1}{2}\vec{\mathbf{d}}$处，
 负点电荷在$-\displaystyle\frac{1}{2}\vec{\mathbf{d}}$处。
 根据\refeq{08ex02-DistrubitionElectricPotential}，
@@ -1870,7 +1870,15 @@ $\vec{\mathbf{D}}$为
 尽管精确的讨论需要用到量子力学，但它超出了本书范围，
 我们以简化的经典模型定性地讨论线性介电质这一简单情况。
 
-我们把原子视作这样的模型：带正电$Q$的原子核处在中心，
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.75\linewidth]{Pictures/chap08/AtomicClassicalModel.eps}
+    \caption{左图：在外加电场作用下，原子中的原子核不再处于半径为$R_0$的球形电子云的中心，原子发生极化。
+        右图：取原子的偶极矩方向为$z$轴，原子核在$z$轴上点$M$处，
+        求一半径为$R$的球形空间内$(R\gg R_0)$原子核和电子云分别引发的平均电场。}
+    \label{fig:08ex02-AtomicClassicalModel}
+\end{figure}
+
+如\reffig{08ex02-AtomicClassicalModel}左图，我们把原子视作这样的模型：带正电$Q$的原子核处在中心，
 其周围弥漫着带等量负电荷$-Q$且均匀分布的球形电子云，整个原子构成一个偶极子。
 当没有外加电场作用时，其正负电荷中心重合，易知偶极矩为零。
 当施加外加电场时，原子核和电子云朝着相反方向发生位移，
@@ -1878,13 +1886,13 @@ $\vec{\mathbf{D}}$为
 以电子云球心为原点，设其半径为$R_0$，
 根据\refeq{08ex02-sphericalEfieldStrength}，电子云内部产生的电场为
 \begin{align}
-    \vec{\mathbf{E}}_r=-\frac{Q}{4\pi\epsilon_0R_0^3}\vec{\mathbf{r}}\, .
+    \vec{\mathbf{E}}_r=\frac{-Q}{4\pi\epsilon_0R_0^3}\vec{\mathbf{r}}\, .
 \end{align}
-注意到平衡状态下对正电荷的合力$\vec{\mathbf{F}}$为零：
+设作用于该偶极子的局部电场为$\vec{\mathbf{E}}_l$，
+注意平衡状态下对正电荷的合力$\vec{\mathbf{F}}$为零：
 \begin{align}
-    \vec{\mathbf{F}}=Q(\vec{\mathbf{E}}_l-\frac{Q}{4\pi\epsilon_0R_0^3}\vec{\mathbf{d}})=\vec{\mathbf{0}}\, .
+    \vec{\mathbf{F}}=Q\left(\vec{\mathbf{E}}_l+\frac{-Q}{4\pi\epsilon_0R_0^3}\vec{\mathbf{d}}\right)=\vec{\mathbf{0}}\, .
 \end{align}
-其中$\vec{\mathbf{E}}_l$为周围其他偶极子作用于该偶极子的局部电场。
 从上式解得平衡状态下的偶极子间距为
 \begin{align}
     \vec{\mathbf{d}}=\frac{4\pi\epsilon_0R_0^3}{Q}\vec{\mathbf{E}}_l\, .
@@ -1893,9 +1901,79 @@ $\vec{\mathbf{D}}$为
 \begin{align}
     \vec{\mathbf{\srcp}}=Q\vec{\mathbf{d}}=\alpha\vec{\mathbf{E}}_l\, ,
 \end{align}
-其中系数$\alpha$为\keyindex{极化度}{polarizability}{}：
+其中系数$\alpha$为原子（或分子）的\keyindex{极化率}{polarizability}{}：
 \begin{align}
     \alpha=4\pi\epsilon_0R_0^3\, .
+\end{align}
+
+接着如\reffig{08ex02-AtomicClassicalModel}右图，
+设$z$轴方向为原子的偶极矩方向，原子核就在$z$轴上点$M$处，坐标为$z=a>0$，
+我们讨论球心为原点$O$、半径为$R$且$R\gg R_0$的球体空间内该原子核的电场平均值。
+对于球体空间内任意一点$P$，设其位移矢量为$\vec{\mathbf{r}}$，与$z$轴正向的夹角为$\theta$，
+并记沿$z$轴正向的单位向量为$\vec{\mathbf{i}}_z$.
+由此结合\refeq{08ex02-DistrubitionElectrostaticField}，用球坐标表达出空间内的平均电场为
+\begin{align}
+    \langle\vec{\mathbf{E}}\rangle=\frac{1}{\displaystyle\frac{4}{3}\pi R^3}
+    \int_{r=0}^{R}\int_{\theta=0}^{\pi}\int_{\varphi=0}^{2\pi}
+    \frac{Q(\vec{\mathbf{r}}-a\vec{\mathbf{i}}_z)}
+    {4\pi\epsilon_0|\vec{\mathbf{r}}-a\vec{\mathbf{i}}_z|^3}
+    r^2\sin\theta\mathrm{d}r\mathrm{d}\theta\mathrm{d}\varphi\, ,
+\end{align}
+其中利用余弦定理有
+\begin{align}
+    |\vec{\mathbf{r}}-a\vec{\mathbf{i}}_z|^2=a^2+r^2-2ar\cos\theta\, .
+\end{align}
+注意本问题在几何上关于$z$轴对称，故易知$\langle\vec{\mathbf{E}}\rangle$的$x$和$y$分量为零，
+只有$z$分量待求，完成对$\varphi$的积分后为：
+\begin{align}
+    \langle E\rangle_z=\frac{Q}{\displaystyle\frac{4}{3}\pi R^3}
+    \frac{2\pi}{4\pi\epsilon_0}\int_{\theta=0}^{\pi}\int_{r=0}^{R}
+    \frac{r^2(r\cos\theta-a)\sin\theta}{(a^2+r^2-2ar\cos\theta)^{\frac{3}{2}}}\mathrm{d}r\mathrm{d}\theta\, .
+\end{align}
+将$\theta$换元为$u$：
+\begin{align}
+    u=a^2+r^2-2ar\cos\theta\, ,
+\end{align}
+于是有
+\begin{align}
+    \mathrm{d}u=2ar\sin\theta\mathrm{d}\theta\, .
+\end{align}
+继续代入得
+\begin{align}
+    \langle E\rangle_z
+     & =\frac{3Q}{8\pi\epsilon_0R^3}\int_{r=0}^{R}\int_{u=(r-a)^2}^{(r+a)^2}
+    \frac{r^2\left(r\displaystyle\frac{a^2+r^2-u}{2ar}-a\right)}{u^{\frac{3}{2}}}
+    \frac{1}{2ar}\mathrm{d}u\mathrm{d}r\nonumber                                                             \\
+     & =\frac{3Q}{8\pi\epsilon_0R^3}\int_{r=0}^{R}\int_{u=(r-a)^2}^{(r+a)^2}
+    \frac{r(r^2-a^2-u)}{4a^2u^{\frac{3}{2}}}\mathrm{d}u\mathrm{d}r\nonumber                                  \\
+     & =\frac{3Q}{8\pi\epsilon_0R^3}\int_{r=0}^{R}\int_{u=(r-a)^2}^{(r+a)^2}
+    \frac{-2r}{4a^2}(r^2-a^2-u)\mathrm{d}u^{-\frac{1}{2}}\mathrm{d}r\nonumber                                \\
+     & =\frac{3Q}{8\pi\epsilon_0R^3}\int_{r=0}^{R}
+    \frac{-2r}{4a^2}\left(u^{-\frac{1}{2}}(r^2-a^2-u)\bigg|_{u=(r-a)^2}^{(r+a)^2}
+    -\int_{u=(r-a)^2}^{(r+a)^2}u^{-\frac{1}{2}}\mathrm{d}(r^2-a^2-u)\right)\mathrm{d}r\nonumber              \\
+     & =\frac{3Q}{8\pi\epsilon_0R^3}\int_{r=0}^{R}
+    \frac{-2r}{4a^2}\left(u^{-\frac{1}{2}}(r^2-a^2-u)+2u^{\frac{1}{2}}\right)
+    \bigg|_{u=(r-a)^2}^{(r+a)^2}\mathrm{d}r\nonumber                                                         \\
+     & =\frac{3Q}{8\pi\epsilon_0R^3}\int_{r=0}^{R}
+    \frac{-2r}{4a^2}\left(u^{-\frac{1}{2}}(r^2-a^2+u)\right)\bigg|_{u=(r-a)^2}^{(r+a)^2}\mathrm{d}r\nonumber \\
+     & =\frac{3Q}{8\pi\epsilon_0R^3}\int_{r=0}^{R}
+    -\frac{r^2}{a^2}\left(1-\frac{r-a}{|r-a|}\right)\mathrm{d}r\nonumber                                     \\
+     & =-\frac{3Q}{8\pi\epsilon_0a^2R^3}\int_{r=0}^{a}2r^2\mathrm{d}r\nonumber                               \\
+     & =-\frac{3Q}{8\pi\epsilon_0a^2R^3}\frac{2}{3}r^3\bigg|_{r=0}^{a}\nonumber                              \\
+     & =\frac{-Qa}{4\pi\epsilon_0R^3}\, .
+\end{align}
+同理，我们把中心位于$z=a-d$处的电子云也纳入考虑，
+则它与原子核形成的合电场即是各自形成的电场的向量和，
+两者形式相似。于是球空间内的电场均值沿$z$轴的分量为
+\begin{align}
+    \langle E\rangle_z=\frac{-Qa}{4\pi\epsilon_0R^3}+\frac{Q(a-d)}{4\pi\epsilon_0R^3}
+    =\frac{-Qd}{4\pi\epsilon_0R^3}=\frac{-\srcp}{4\pi\epsilon_0R^3}\, .
+\end{align}
+设该球体单位体积内像这样的偶极子数目为$N$，
+则所有偶极子共同作用下的平均电场为
+\begin{align}
+    \langle\vec{\mathbf{E}}\rangle=\frac{4}{3}\pi R^3N\frac{-\vec{\mathbf{\srcp}}}{4\pi\epsilon_0R^3}
+    =-\frac{N\vec{\mathbf{\srcp}}}{3\epsilon_0}=-\frac{\vec{\mathbf{P}}}{3\epsilon_0}\, .
 \end{align}
 
 \subsubsection*{电偶极辐射}

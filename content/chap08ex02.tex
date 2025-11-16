@@ -661,6 +661,7 @@ $\vec{\nabla}$算符能让我们后续的表示更加方便。
     \end{align}
 \end{theorem}
 \begin{theorem}[\keyindex{斯托克斯定理}{Stokes' theorem}{}]
+    \label{theorem:08ex02-StokesTheorem}
     设$S$为有向分片光滑曲面，且有分段光滑边界曲线$C$，向量场$\vec{\mathbf{F}}$的各分量
     在一包含$S$的开区域内有连续一阶偏导数；则$\vec{\mathbf{F}}$沿着
     关于曲面单位法向量逆时针的方向绕$C$的环路积分
@@ -670,8 +671,8 @@ $\vec{\nabla}$算符能让我们后续的表示更加方便。
         =\iint\limits_A(\vec{\nabla}\times\vec{\mathbf{F}})\cdot\mathrm{d}\vec{\mathbf{S}}\, .
     \end{align}
 \end{theorem}
-\begin{corollary}
-    梯度场的散度恒为零，即
+\begin{corollary}\label{corollary:08ex02-zeroCurlOfGrad}
+    梯度场的旋度恒为零，即
     \begin{align}
         \text{curl}\ \text{grad}\ f=\vec{\nabla}\times\vec{\nabla}f=\vec{0}\, .
     \end{align}
@@ -705,7 +706,7 @@ $\vec{\nabla}$算符能让我们后续的表示更加方便。
 
 带正电的玻璃棒靠近可自由移动的金属小球时，球中的电子会被吸引到小球接近玻璃棒的那侧表面，
 而背后那侧则留下正电荷，小球整体被玻璃棒吸引。
-这种物体内的电荷因受外界电荷影响而重新分布现象称作\keyindex{静电感应}{electrostatic induction}{}。
+这种物体内的电荷因受外界电荷影响而重新分布的现象称作\keyindex{静电感应}{electrostatic induction}{}。
 
 玻璃棒与小球接触后，小球的负电荷被玻璃棒的正电荷\keyindex{中和}{neutralize}{}，
 它们的组合还留有净正电荷，这种电荷的转移称作\keyindex{导电}{conduction}{}。
@@ -753,7 +754,7 @@ $\vec{\nabla}$算符能让我们后续的表示更加方便。
 \subsubsection*{静止电荷间的库仑定律}
 实验表明，无论是否处于介质中，电荷之间都会有静电力。
 两个实际带电体之间的静电力与其自身大小、形状以及电荷分布均有关系。
-当带电体之间的距离远大于其自身大小，以致以上因素对它们之间的作用力的影响可以忽略时，
+当带电体之间的距离远大于其自身大小，因而以上因素对它们之间的作用力的影响可以忽略时，
 这样的带电体就可以看作是一个点，即\keyindex{点电荷}{point charge}{electric charge\ 电荷}。
 
 1785年，库仑通过扭秤实验定量描述了静电力的规律，如今被概括为：
@@ -802,14 +803,14 @@ $\vec{\nabla}$算符能让我们后续的表示更加方便。
 以避免发生感应改变原来的电场，便于研究原电场各点的性质。
 这样的电荷称作\keyindex{检验电荷}{test charge}{electric charge\ 电荷}。
 而原本激发电场的电荷称为\keyindex{源电荷}{source charge}{electric charge\ 电荷}。
-例如真空中的静止点电荷$q$在相对它的位置$\vec{\mathbf{r}}$处建立的电场为
+例如，真空中的静止点电荷$q$在相对它的位置$\vec{\mathbf{r}}$处建立的电场为
 \begin{align}\label{eq:08ex02-pointField}
     \vec{\mathbf{E}}=\frac{q}{4\pi\epsilon_0|\vec{\mathbf{r}}|^2}\hat{\mathbf{r}}\, .
 \end{align}
 
 从电场的定义易知，电场满足叠加原理。当同时存在大量电荷$q_i$时，
 总电场就是每个电荷建立的分电场的矢量和：
-\begin{align}
+\begin{align}\label{eq:08ex02-discreteSumField}
     \vec{\mathbf{E}}=\frac{1}{4\pi\epsilon_0}\sum\limits_{i}
     \frac{q_i}{|\vec{\mathbf{r}}_i|^2}\hat{\mathbf{r}}_i\, ,
 \end{align}
@@ -825,7 +826,7 @@ $\vec{\nabla}$算符能让我们后续的表示更加方便。
     \rho    & =\frac{\mathrm{d}q}{\mathrm{d}V}\, .
 \end{align}
 这样连续分布的电荷建立的电场为
-\begin{align}
+\begin{align}\label{eq:08ex02-continuousSumField}
     \vec{\mathbf{E}}=\int\limits_{q}\frac{1}{4\pi\epsilon_0|\vec{\mathbf{r}}|^2}\hat{\mathbf{r}}\mathrm{d}q
 \end{align}
 其中$\vec{\mathbf{r}}$为积分过程中检验电荷相对于$\mathrm{d}q$的位移，$\hat{\mathbf{r}}$为对应的单位向量。
@@ -872,7 +873,7 @@ $\vec{\nabla}$算符能让我们后续的表示更加方便。
 
 当$q$在曲面$A$的内部时，我们再考虑一个同样包围$q$的封闭曲面$A'$，
 且$A'$是从$A$任意缩小而来的，包围区域为$V'$.
-在被缩减的区域$V-V'$内，上面的推导已经说明它的电场通量为零，结合散度定理有
+在被缩减的区域$V-V'$内，上面的推导已经说明它的电场通量为零。于是结合散度定理有
 \begin{align}
     \varPhi_E
      & =\oiint\limits_A\vec{\mathbf{E}}\cdot\mathrm{d}\vec{\mathbf{S}}
@@ -894,28 +895,29 @@ $\vec{\nabla}$算符能让我们后续的表示更加方便。
     穿过任意封闭曲面的净电场通量正比于它包围的净电荷量：
     \begin{align}\label{eq:08ex02.GausssLawElectric}
         \oiint\limits_A\epsilon_0\vec{\mathbf{E}}\cdot\mathrm{d}\vec{\mathbf{S}}
-        =\sum\limits_{A\text{内}}q_i+\int_{A\text{内}}\mathrm{d}q\, .
+        =\sum\limits_{A\text{内}}q_i+\int\limits_{A\text{内}}\mathrm{d}q\, .
     \end{align}
     其中上式右边只计算封闭曲面之内的电荷。
 \end{theorem}
 
-当只有电荷的体密度分布时，我们把散度定理代入\refeq{08ex02.GausssLawElectric}得到
+当电荷只有体密度分布时，我们把散度定理代入\refeq{08ex02.GausssLawElectric}得到
 \begin{align}
-    \oiint\limits_A\epsilon_0\vec{\mathbf{E}}\cdot\mathrm{d}\vec{\mathbf{S}}
-    =\iiint\limits_V\vec{\nabla}\cdot(\epsilon_0\vec{\mathbf{E}})\mathrm{d}V
+    \iiint\limits_V\vec{\nabla}\cdot(\epsilon_0\vec{\mathbf{E}})\mathrm{d}V
+    =\oiint\limits_A\epsilon_0\vec{\mathbf{E}}\cdot\mathrm{d}\vec{\mathbf{S}}
     =\iiint\limits_V\rho\mathrm{d}V\, .
 \end{align}
 由封闭曲面的任意性，得到\begin{marginfigure}
     \includegraphics[width=\linewidth]{chap08/CarlFriedrichGauss1840.jpg}
 \end{marginfigure}\sidenote{德国数学家卡尔·弗里德里希·高斯 (Carl Friedrich Gauss, 1777-1855)。}：
 \begin{theorem}[微分形式的电场高斯定律]
-    \begin{align}
+    \begin{align}\label{eq:08ex02-differentialGausssLawElectric}
         \vec{\nabla}\cdot(\epsilon_0\vec{\mathbf{E}})=\rho\, .
     \end{align}
 \end{theorem}
 
 \begin{example}
-    如\reffig{08ex02-sphereField}，若自由空间中总量$Q$的电荷均匀分布在半径为$R$的球体空间内，求相应的电场分布。
+    如\reffig{08ex02-sphereField}，若自由空间中总量$Q$的电荷均匀分布在半径为$R$的球体空间内
+    （图中蓝色球），求相应的电场分布。
     \begin{figure}[htbp]
         \centering
         \includegraphics[width=0.4\linewidth]{chap08/sphereElectricField.eps}
@@ -929,7 +931,7 @@ $\vec{\nabla}$算符能让我们后续的表示更加方便。
     \end{align}
     以该球体的球心为原点，记任一位置的位移矢量为$\vec{\mathbf{r}}$，对应电场为$\vec{\mathbf{E}}$.
     显然由本问题的几何对称性，当$Q$为正或负时，$\vec{\mathbf{E}}$的方向与$\vec{\mathbf{r}}$同向或反向。
-    把$\vec{\mathbf{E}}$带符号的大小记作$E_r$，作一个与带电球体同心且半径为$r$的封闭球面（图中黄色或红色球），
+    把$\vec{\mathbf{E}}$带符号的大小记作$E_r$，作一个与电荷球体同心且半径为$r$的封闭球面（图中黄色或红色球），
     则根据高斯定律\refeq{08ex02.GausssLawElectric}有
     \begin{align}
         \epsilon_0E_r\cdot4\pi r^2
@@ -992,23 +994,156 @@ $\vec{\nabla}$算符能让我们后续的表示更加方便。
 设物体表面朝外的单位法向量为$\vec{\mathbf{n}}$，
 表面的电荷面密度为$\sigma$，表面附近物体内部的电场为$\vec{\mathbf{E}}_1$，
 物体外部的电场为$\vec{\mathbf{E}}_2$.
-我们任取一个横截面积很小的、高度几乎为零且穿过物体表面的圆柱体$S$，
+我们仿照上例任取一个横截面积很小的、高度几乎为零且穿过物体表面的圆柱体$S$，
 并使它的底面平行于物体表面。对这个圆柱体使用高斯定律得
 \begin{align}
     (\epsilon_0\vec{\mathbf{E}}_2-\epsilon_0\vec{\mathbf{E}}_1)\cdot\mathrm{d}\vec{\mathbf{S}}=\sigma\mathrm{d}S\, .
 \end{align}
-由此得到物体表面电荷面密度正比于电场在表面法线方向的突变程度：
+由此得到，物体表面电荷面密度正比于电场在表面法线方向的突变程度：
 \begin{align}
     \sigma=\epsilon_0(\vec{\mathbf{E}}_2-\vec{\mathbf{E}}_1)\cdot\vec{\mathbf{n}}\, .
 \end{align}
 
 \subsubsection*{电势}
-{\noindent\hfil$=========$\hfil{\color{red}{施工分割线}}\hfil$=========$\ }
+在单个静止点电荷$q_0$建立的电场$\vec{\mathbf{E}}$中，以$q_0$为原点，我们放入检验电荷$q$，
+并对$q$施加力$\vec{\mathbf{F}}=-q\vec{\mathbf{E}}$使其刚好克服$q$受到的静电力，
+让$q$从任一位置$\vec{\mathbf{r}}_A$沿路径$C$移动到位置$\vec{\mathbf{r}}_B$处。
+整个过程中力$\vec{\mathbf{F}}$所做的功为
+\begin{align}
+    W_{AB}
+    =\int\limits_{C}\vec{\mathbf{F}}\cdot\mathrm{d}\vec{\mathbf{\ell}}
+    =-\int\limits_{C}\frac{q_0q}{4\pi\epsilon_0r^2}\hat{\mathbf{r}}\cdot\mathrm{d}\vec{\mathbf{\ell}}
+    =\frac{q_0q}{4\pi\epsilon_0}\int\limits_{C}\vec{\nabla}\frac{1}{|\vec{\mathbf{r}}|}\cdot\mathrm{d}\vec{\mathbf{\ell}}\, .
+\end{align}
+根据定理\ref{theorem:08ex02-ConservativeFieldsAreGradientFields}，
+上式中$\vec{\mathbf{F}}$是保守的，进而电场$\vec{\mathbf{E}}$是保守场，
+再根据定理\ref{theorem:08ex02-FundamentalTheoremOfLineIntegrals}可知
+$W_{AB}$的结果与路径$C$本身无关，而只与起点和终点位置有关，即
+\begin{align}
+    W_{AB}=\frac{q_0q}{4\pi\epsilon_0}\left(\frac{1}{r_B}-\frac{1}{r_A}\right)\, .
+\end{align}
+
+由电场的可叠加性即\refeq{08ex02-discreteSumField}和\refeq{08ex02-continuousSumField}，
+上述结论对于更复杂的电荷分布建立的\keyindex{静电场}{electrostatic field}{}
+也成立。特别地，对于起点和终点相同的任意闭合路径$C$，相应的总功恒为零：
+\begin{align}
+    W=-\oint\limits_{C}q\vec{\mathbf{E}}\cdot\mathrm{d}\vec{\mathbf{\ell}}=0\, .
+\end{align}
+
+\begin{theorem}\label{theorem:08ex02-ConservativeElectrostatic}
+    静电场是保守场。
+\end{theorem}
+
+既然电场$\vec{\mathbf{E}}$是保守场，根据定理\ref{theorem:08ex02-ConservativeFieldsAreGradientFields}，
+它必然是某函数（势函数）的梯度场，且与检验电荷无关，反映了空间中的电学性质。
+我们按照物理学界惯例对它取相反数，定义为电势：
+\begin{definition}[\keyindex{电势}{electric potential}{}]
+    电场$\vec{\mathbf{E}}$中的电势$\varphi$定义为：
+    \begin{align}
+        \label{eq:08ex02-electricPotential}
+        \vec{\mathbf{E}}=-\vec{\nabla}\varphi\, .
+    \end{align}
+\end{definition}
+因为满足\refeq{08ex02-electricPotential}的$\varphi$是一簇相差常数值的函数，
+所以电势的数值没有绝对意义，只有相对意义。
+为了唯一确定电势$\varphi$，我们通常要规定一个参考点的电势，通常取无穷远处的电势为零。
+由电场的可叠加性，电势按标量的方式可叠加。
+
+两点之间电势的差值称为\keyindex{电势差}{electrical potential difference}{}，
+也称\keyindex{电压}{voltage}{}。
+电势、电势差的单位均为\keyindex{伏特}{volt}{}
+(伏，V)\begin{marginfigure}
+    \includegraphics[width=\linewidth]{chap08/AlessandroVolta.jpg}
+\end{marginfigure}\sidenote{意大利物理学家
+    亚历山德罗·朱塞佩·安东尼奥·阿纳斯塔西奥·伏特
+    (Alessandro Giuseppe Antonio Anastasio Volta, 1745-1827)。}。
+分别记点$A$和点$B$处的电势为$\varphi_{A}$和$\varphi_{B}$，则它们之间的电势差可表示为
+\begin{align}
+    \label{eq:08ex02-voltage}
+    U=\varphi_{B}-\varphi_{A}\, .
+\end{align}
+因此检验电荷$q$从点$A$运动到点$B$克服静电力所做的功也即
+\begin{align}
+    W_{AB}=qU=q\varphi_{B}-q\varphi_{A}\, .
+\end{align}
+由此我们说电场中具有电势$\varphi$的电荷$q$具有势能$\mathcal{E}$，
+称作\keyindex{电势能}{electric potential energy}{}：
+\begin{align}
+    \mathcal{E}=q\varphi\, .
+\end{align}
+它和电势一样主要谈论其相对意义。克服电场对电荷的力所做的功就是电势能的变化量：
+\begin{align}
+    W_{AB}=\mathcal{E}_B-\mathcal{E}_A\, .
+\end{align}
+
+\begin{corollary}
+    一个电荷系统的电势能就是其所有电荷被刚好克服静电力的外力从无穷远处移动到现有位置分布且无任何变速过程时所做的总功。
+\end{corollary}
+
+\begin{example}
+    单个静止点电荷$q$建立的电场中，相应的电势为：
+    \begin{align}\label{eq:08ex02-DistrubitionElectricPotential}
+        \varphi(\vec{\mathbf{r}})=\frac{q}{4\pi\epsilon_0|\vec{\mathbf{r}}|}\, .
+    \end{align}
+    其中$\vec{\mathbf{r}}$为相对于$q$的位置。
+    推广到复杂的连续电荷分布建立的静电场中，则为
+    \begin{align}
+        \varphi=\int\limits_{q}\frac{1}{4\pi\epsilon_0|\vec{\mathbf{r}}|}\mathrm{d}q\, .
+    \end{align}
+    其中$\vec{\mathbf{r}}$为积分过程中相对于电荷$\mathrm{d}q$的位置。
+\end{example}
+
+\begin{example}
+    若是有多个电荷$q_i$各自分布在位置$\vec{\mathbf{r}}_i$，
+    则从无穷远处将电荷搬运到形成对应分布需要做的功，也即相应电场分布的电势能为
+    \begin{align}
+        \mathcal{E}=\sum\limits_{i>1}q_i\left(\sum\limits_{j=1}^{i-1}\frac{q_j}{4\pi\epsilon_0|\vec{\mathbf{r}}_i-\vec{\mathbf{r}}_j|}\right)
+        =\frac{1}{2}\sum\limits_iq_i\sum\limits_{j\neq i}\frac{q_j}{4\pi\epsilon_0|\vec{\mathbf{r}}_i-\vec{\mathbf{r}}_j|}
+        =\frac{1}{2}\sum\limits_{i}q_i\varphi_i\, .
+    \end{align}
+    其中$\varphi_i$是电荷$q_i$相对于其他所有电荷的电势。上式对于连续电荷分布也适用：
+    \begin{align}\label{eq:08ex02-PotentialEnergy}
+        \mathcal{E}=\frac{1}{2}\int\varphi\mathrm{d}q\, .
+    \end{align}
+\end{example}
+
+根据定理\ref{theorem:08ex02-ConservativeElectrostatic}和\ref{corollary:08ex02-zeroCurlOfGrad}，
+我们还能得到
+\begin{theorem}
+    静电场$\vec{\mathbf{E}}$是\keyindex{无旋场}{irrotational field}{}，即恒有
+    \begin{align}
+        \vec{\nabla}\times\vec{\mathbf{E}}=\vec{\mathbf{0}}\, .
+    \end{align}
+\end{theorem}
+
+在静电场中，物体的电荷分布受到外部电场的作用而产生变化，
+而变化后的电荷分布又引发了新的电场，如此电荷分布和电场分布相互影响，
+给计算带来困难。为了保证求得的结果是自洽的并简化计算，我们可以改用场的微分形式来描述。
+自由空间中，将\refeq{08ex02-electricPotential}代入\refeq{08ex02-differentialGausssLawElectric}得到
+\begin{theorem}[\keyindex{泊松方程}{Poisson's equation}{}]
+    静电场的电势$\varphi$满足
+    \begin{align}
+        \vec{\nabla}\cdot(\vec{\nabla}\varphi)=\nabla^2\varphi=-\frac{\rho}{\epsilon_0}\, .
+    \end{align}
+\end{theorem}
+其中$\nabla^2$是拉普拉斯算符\begin{marginfigure}
+    \includegraphics[width=\linewidth]{chap08/Laplace.jpg}
+\end{marginfigure}\sidenote{法国数学家皮埃尔-西蒙·拉普拉斯 (Pierre-Simon, Marquis de Laplace, 1749-1827)。}；
+事实上上式也适用于宏观形式下的均匀线性各向同性介电质。
+另外，当在零电荷区域内时，泊松方程\begin{marginfigure}
+    \includegraphics[width=\linewidth]{chap08/SimeonDenisPoisson.jpg}
+\end{marginfigure}\sidenote{法国数学家、物理学家西梅翁·德尼·泊松 (Siméon Denis Poisson, 1781-1840)。}将化为
+\begin{theorem}[\keyindex{拉普拉斯方程}{Laplace's equation}{}]
+    \begin{align}
+        \nabla^2\varphi=0\, .
+    \end{align}
+\end{theorem}
 
 除了数学公式，也可以借助图示的方法描述电场。如\reffig{08ex02-electricFieldLine}所示，\keyindex{电场线}{electric field line}{}
 是画在电场中有方向的曲线，曲线上每点的切线方向表示该点的电场方向。
 因为每点的电场只有一个方向，所以电场线不会相交；线的疏密则反映电场的强弱。
-根据电场的定义，它显然满足叠加原理，具有一定分布的电荷各自建立的电场的向量和就是总电场。
+此外，电势也可以像电场线那样用图示表示：电场中电势相同的各点构成的面称作\keyindex{等势面}{equipotential surface}{}。
+从\refeq{08ex02-electricPotential}可知，电场线与等势面垂直，并且由电势高的等势面指向电势低的等势面。
 \begin{figure}[htbp]
     \centering
     \subfloat[电场线（蓝色）上每点的切线方向表示该点的电场方向。]{\includegraphics[width=0.65\linewidth]{chap08/FieldLineConstruction.eps}}\\
@@ -1019,96 +1154,387 @@ $\vec{\nabla}$算符能让我们后续的表示更加方便。
     \label{fig:08ex02-electricFieldLine}
 \end{figure}
 
-电场中的电荷具有势能，称作\keyindex{电势能}{electric potential energy}{}。
-电势能的数值没有绝对意义，只有相对意义，即需要设定一个电势能为零的参考点，一般取无穷远处的电势能为零。
-这样，一个电荷系统的电势能就是其所有电荷被外部作用力从无穷远处移动到现有位置分布且无任何变速过程时所做的总功。
-用$W_{AB}$表示检验电荷$q$在电场$\vec{\mathbf{E}}$中沿着路径$C$从点$A$运动到点$B$过程中静电力所做的功，
-$\mathcal{E}_{pA}$和$\mathcal{E}_{pB}$分别表示电荷在点$A$和点$B$处的电势能，则有
-\begin{align}
-    W_{AB}=\int\limits_{C}q\vec{\mathbf{E}}\cdot\mathrm{d}\vec{\mathbf{\ell}}=\mathcal{E}_{pA}-\mathcal{E}_{pB}\, .
-\end{align}
-后文我们将看到，这个功$W_{AB}$与路径$C$无关；而电势能与电荷量之比保持一定，
-该比例由电场的性质决定，与检验电荷无关。由此我们定义
-\begin{definition}[\keyindex{电势}{electric potential}{}]
-    电荷在电场中某点具有的电势$\varphi$等于它在此处的电势能$\mathcal{E}_p$与其电荷量$q$的比值：
-    \begin{align}
-        \label{eq:08ex02-electricPotential}
-        \varphi=\frac{\mathcal{E}_p}{q}\, .
-    \end{align}
-\end{definition}
-两点之间电势的差值称为\keyindex{电势差}{electrical potential difference}{}
-或\keyindex{电压}{voltage}{}。
-电势、电势差的单位均为\keyindex{伏特}{volt}{}
-(伏，V)\begin{marginfigure}
-    \includegraphics[width=\linewidth]{chap08/AlessandroVolta.jpg}
-\end{marginfigure}\sidenote{意大利物理学家
-    亚历山德罗·朱塞佩·安东尼奥·阿纳斯塔西奥·伏特
-    (Alessandro Giuseppe Antonio Anastasio Volta, 1745-1827)。}。
-分别记点$A$和点$B$处的电势为$\varphi_{A}$和$\varphi_{B}$，则它们之间的电势差可表示为
-\begin{align}
-    \label{eq:08ex02-voltage}
-    U_{AB} & =\varphi_{A}-\varphi_{B}\, , \\
-    U_{BA} & =\varphi_{B}-\varphi_{A}\, .
-\end{align}
-因此检验电荷$q$从点$A$运动到点$B$静电力所做的功也即
-\begin{align}
-    W_{AB}=qU_{AB}\, .
-\end{align}
+\subsubsection*{电偶极子与电极化}
+宏观物质置于电场中时，构成它的微观粒子会在电场作用下发生运动产生位移，
+这种现象称为\keyindex{极化}{polarization}{}。
+这些带电粒子分布的变化又会重新影响物质内部的电场分布。
+因此在讨论电场对物质的作用时应考虑极化的影响。
 
-根据以上定义，我们能推导出：
-\begin{theorem}
-    当电场$\vec{\mathbf{E}}$是\keyindex{静电场}{electrostatic field}{}
-    时，它是保守场，且是电势$\varphi$的负梯度场
-    \begin{align}\label{eq:08ex02-conservativePotential}
-        \vec{\mathbf{E}}=-\vec{\nabla}\varphi\, .
-    \end{align}
-\end{theorem}
+电极化的有多种产生机制。在称为\keyindex{介电质}{dielectric}{}
+的一大类绝缘材料中，电子被紧密束缚在\keyindex{原子核}{nucleus}{}
+附近。虽然电子不能随意挪走，但在电场作用下，
+带负电的电子云会相对于带正电的原子核产生微小位移与形变（如\reffig{08ex02-electronCloud}），
+于是材料发生\keyindex{电子极化}{electronic polarization}{polarization\ 极化}。
+
+此外，在\keyindex{极性分子}{polar molecule}{molecule\ 分子}
+材料中，\keyindex{分子}{molecule}{}
+的各\keyindex{原子}{atom}{}
+不均等地分享\keyindex{价电子}{valence electron}{electron\ 电子}，
+所以正负电荷中心是永久分离的（\reffig{08ex02-moleculesDipole}），
+在电场作用下，这种分子会因正负电荷受力方向相反而被牵拉朝着外加电场方向发生偏转，
+发生\keyindex{取向极化}{orientational polarization}{polarization\ 极化}。
+
+还一种情况是，对于NaCl那样的离子晶体，外加电场会使其正负离子发生相对位移，
+发生\keyindex{离子极化}{ionic polarization}{polarization\ 极化}，
+也称\keyindex{原子极化}{atomic polarization}{polarization\ 极化}。
+另外，还有非均质材料的结构界面阻挡带电粒子在外加电场下迁移而在分界面上累积电荷发生的\keyindex{界面极化}{interfacial polarization}{polarization\ 极化}
+等其他情况。
+
+这些电极化机制之间并不排斥，它们的综合效应带来了总的极化现象：
+尽管材料整体呈电中性，但正负电荷轻微的分离产生了\keyindex{电偶极子}{electric dipole}{}，
+哪怕每个电偶极子含有等量的正负电荷，
+其分布的不均衡也会累积出可观的净\keyindex{极化电荷}{polarization charge}{electric charge\ 电荷}，
+成为\keyindex{自由电荷}{free charge}{electric charge\ 电荷}
+之外又一电场来源。
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.5\linewidth]{chap08/electronCloud.eps}
+    \caption{电场作用下的电子云发生微小位移与形变。}
+    \label{fig:08ex02-electronCloud}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.6\linewidth]{chap08/SimpleElectricDipole.eps}
+    \caption{最简电偶极子模型。}
+    \label{fig:08ex02-SimpleElectricDipole}
+\end{figure}
+
+如\reffig{08ex02-SimpleElectricDipole}，最简单的电偶极子模型是一正一负含等量电荷$q$的分离点电荷，
+记从负电荷指向正电荷的相对位移矢量为$\vec{\mathbf{d}}$.
+我们定义该电偶极子的\keyindex{偶极矩}{dipole moment}{}
+为
+\begin{align}
+    \vec{\mathbf{\srcp}}=q\vec{\mathbf{d}}\, .
+\end{align}
+其单位为$\text{C}\cdot\text{m}$.
+对于更复杂的电偶极子，在电荷离散或连续分布的情况下，上述定义可推广为：
+\begin{align}
+    \vec{\mathbf{\srcp}}=\sum\limits_iq_i\vec{\mathbf{r}}_i=\int\limits_q\vec{\mathbf{r}}\mathrm{d}q\, .
+\end{align}
+其中$\vec{\mathbf{r}}_i$和$\vec{\mathbf{r}}$分别为$q_i$和$\mathrm{d}q$的位置矢量。
+
+可以证明当电偶极子整体呈电中性时，其偶极矩具有平移不变性。
 \begin{prove}
-    当电场$\vec{\mathbf{E}}$是静电场时，所有电场均由电荷建立。
-    因为电场满足叠加原理，所以我们不失一般性地只考虑单个点电荷$q$，
-    并将其位置设为坐标原点。根据库仑定律\refeq{08ex02-CoulombLaw}，
-    该电荷在非原点位置$\vec{\mathbf{r}}=x\hat{\text{\sffamily\bfseries i}}+y\hat{\text{\sffamily\bfseries j}}+z\hat{\text{\sffamily\bfseries k}}$处的电场为
-    \begin{align}\label{eq:08ex02-DistrubitionElectrostaticField}
-        \vec{\mathbf{E}}=\frac{q}{4\pi\epsilon_0|\vec{\mathbf{r}}|^3}\vec{\mathbf{r}}
-        =\frac{q}{4\pi\epsilon_0(x^2+y^2+z^2)^{\frac{3}{2}}}(x\hat{\text{\sffamily\bfseries i}}+y\hat{\text{\sffamily\bfseries j}}+z\hat{\text{\sffamily\bfseries k}})\, .
-    \end{align}
-    可以验证上式满足定理\ref{theorem:08ex02-ComponentTestForConservativeFields}，
-    所以$\vec{\mathbf{E}}$是保守场，它有一个势函数。
-    另一方面，根据前文电势能和电势的内容，有
+    设电偶极子沿着矢量$\vec{\mathbf{r}}_0$进行了平移，则平移后的偶极矩为
     \begin{align}
-        \int\limits_{C}\vec{\mathbf{E}}\cdot\mathrm{d}\vec{\mathbf{\ell}}
-        =\frac{1}{q}\int\limits_{C}q\vec{\mathbf{E}}\cdot\mathrm{d}\vec{\mathbf{\ell}}
-        =\frac{1}{q}W_{AB}=\frac{1}{q}(\mathcal{E}_{pA}-\mathcal{E}_{pB})
-        =\varphi_{A}-\varphi_{B}\, .
+        \vec{\mathbf{\srcp}}'
+        =\sum\limits_iq_i(\vec{\mathbf{r}}_i+\vec{\mathbf{r}}_0)
+        =\sum\limits_iq_i\vec{\mathbf{r}}_i+\vec{\mathbf{r}}_0\sum\limits_iq_i
+        =\vec{\mathbf{\srcp}}+\vec{\mathbf{r}}_0\cdot0
+        =\vec{\mathbf{\srcp}}\, .
     \end{align}
-    由$A$、$B$和$C$的任意性，对照定理\ref{theorem:08ex02-FundamentalTheoremOfLineIntegrals}，
-    可知电势取负即$-\varphi$就是电场$\vec{\mathbf{E}}$的势函数。例如，在真空中单个点电荷的电场中，电势为
-    \begin{align}\label{eq:08ex02-DistrubitionElectricPotential}
-        \varphi(\vec{\mathbf{r}})=\frac{q}{4\pi\epsilon_0|\vec{\mathbf{r}}|}\, .
-    \end{align}
+    连续分布的情况同理也成立。
 \end{prove}
 
-利用\refeq{08ex02-DistrubitionElectricPotential}还能得到：
-若是有多个电荷$q_i$各自分布在位置$\vec{\mathbf{r}}_i$，
-则从无穷远处将电荷搬运到形成对应分布需要做的功，也即相应电场分布的电势能为
+\reffig{08ex02-moleculesDipole}展示了四种常见物质分子的偶极矩。
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\linewidth]{chap08/moleculesDipole.eps}
+    \caption{四种分子的偶极矩大小与方向，其中只有$\text{CO}_2$是非极性分子。}
+    \label{fig:08ex02-moleculesDipole}
+\end{figure}
+
+接下来我们讨论最简电偶极子模型的电场和电势分布。
+如\reffig{08ex02-SimpleElectricDipole}，我们取模型中两个点电荷连线的中点为原点，
+并且正点电荷在$\displaystyle\frac{1}{2}\vec{\mathbf{d}}$处，
+负点电荷在$-\displaystyle\frac{1}{2}\vec{\mathbf{d}}$处。
+根据\refeq{08ex02-DistrubitionElectricPotential}，
+任意位置$\vec{\mathbf{r}}$处（$r\gg d$）的电势为
 \begin{align}
-    W=\sum\limits_{j>1}q_j\left(\sum\limits_{i=1}^{j-1}\frac{q_i}{4\pi\epsilon_0|\vec{\mathbf{r}}_i-\vec{\mathbf{r}}_j|}\right)
-    =\frac{1}{2}\sum\limits_{i\neq j}\frac{q_iq_j}{4\pi\epsilon_0|\vec{\mathbf{r}}_i-\vec{\mathbf{r}}_j|}
-    =\frac{1}{2}\sum\limits_{i}q_i\varphi_i\, .
+    \varphi(\vec{\mathbf{r}})=\frac{q}{4\pi\epsilon_0\left|\vec{\mathbf{r}}-\displaystyle\frac{1}{2}\vec{\mathbf{d}}\right|}
+    +\frac{-q}{4\pi\epsilon_0\left|\vec{\mathbf{r}}-\left(-\displaystyle\frac{1}{2}\vec{\mathbf{d}}\right)\right|}\, .
 \end{align}
-其中$\varphi_i$是电荷$q_i$相对于其他所有电荷的电势。上式对于连续电荷分布也适用：
-\begin{align}\label{eq:08ex02-PotentialEnergy}
-    W=\frac{1}{2}\int\varphi\mathrm{d}q\, .
+考虑到$r\gg d$，我们只保留上式关于$d$的一次项，忽略高次项：
+\begin{align}
+    \varphi(\vec{\mathbf{r}})
+     & =\frac{q}{4\pi\epsilon_0\left|\vec{\mathbf{r}}-\displaystyle\frac{1}{2}\vec{\mathbf{d}}\right|}
+    -\frac{q}{4\pi\epsilon_0\left|\vec{\mathbf{r}}+\displaystyle\frac{1}{2}\vec{\mathbf{d}}\right|}\nonumber                   \\
+     & \approx\frac{q}{4\pi\epsilon_0}\left(-\vec{\mathbf{d}}\cdot\vec{\nabla}\displaystyle\frac{1}{|\vec{\mathbf{r}}|}\right)
+    =\frac{-q\vec{\mathbf{d}}}{4\pi\epsilon_0}\cdot\frac{-\hat{\mathbf{r}}}{|\vec{\mathbf{r}}|^2}
+    =\frac{\vec{\mathbf{\srcp}}\cdot\hat{\mathbf{r}}}{4\pi\epsilon_0 r^2}\, ,
+\end{align}
+相应的电场为
+\begin{align}\label{eq:08ex02-fieldDipole}
+    \vec{\mathbf{E}}(\vec{\mathbf{r}})
+     & =-\vec{\nabla}\varphi(\vec{\mathbf{r}})
+    \approx-\vec{\nabla}\frac{\vec{\mathbf{\srcp}}\cdot\hat{\mathbf{r}}}{4\pi\epsilon_0 r^2}
+    =-\frac{1}{4\pi\epsilon_0}\vec{\nabla}\frac{\vec{\mathbf{\srcp}}\cdot\vec{\mathbf{r}}}{r^3}\nonumber                                                                                      \\
+     & =-\frac{1}{4\pi\epsilon_0 r^6}((\vec{\nabla}(\vec{\mathbf{\srcp}}\cdot\vec{\mathbf{r}}))\cdot r^3-(\vec{\mathbf{\srcp}}\cdot\vec{\mathbf{r}})\cdot\vec{\nabla}r^3)\nonumber            \\
+     & =-\frac{1}{4\pi\epsilon_0 r^6}\left(\vec{\mathbf{\srcp}}\cdot r^3-(\vec{\mathbf{\srcp}}\cdot\vec{\mathbf{r}})\cdot3r^2\cdot\frac{\vec{\mathbf{r}}}{|\vec{\mathbf{r}}|}\right)\nonumber \\
+     & =\frac{3(\vec{\mathbf{\srcp}}\cdot\hat{\mathbf{r}})\hat{\mathbf{r}}-\vec{\mathbf{\srcp}}}{4\pi\epsilon_0 r^3}\, .
 \end{align}
 
-电势也可以像电场线那样用图示表示。
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.5\linewidth]{chap08/polarizationDensity.eps}
+    \caption{微分体积元内的电偶极矩累积的净电荷只与穿过界面的偶极子有关。}
+    \label{fig:08ex02-polarizationDensity}
+\end{figure}
 
-\begin{definition}
-    电场中电势相同的各点构成的面称作\keyindex{等势面}{equipotential surface}{}。
-\end{definition}
-\begin{corollary}
-    电场线与等势面垂直，并且由电势高的等势面指向电势低的等势面。
-\end{corollary}
+如\reffig{08ex02-polarizationDensity}，
+我们任取一个体积为$\Delta x\Delta y\Delta z$的立方体微分体积元，
+里面包含了很多电偶极子，红蓝色分别表示偶极子的正负电荷端。
+显然完全被体积元包裹住的偶极子整体呈电中性，
+只有穿过体积元表面被它截断的偶极子才会对体积元贡献净电荷。
+记单位体积内偶极子的个数为$N$，
+每个偶极子的偶极矩为$\vec{\mathbf{\srcp}}=q\vec{\mathbf{d}}$，
+其中$\vec{\mathbf{d}}=d_x\hat{\text{\sffamily\bfseries i}}+d_y\hat{\text{\sffamily\bfseries j}}+d_z\hat{\text{\sffamily\bfseries k}}$，
+定义电\keyindex{极化强度}{polarization density}{}
+矢量为$\vec{\mathbf{P}}=P_x\hat{\text{\sffamily\bfseries i}}+P_y\hat{\text{\sffamily\bfseries j}}+P_z\hat{\text{\sffamily\bfseries k}}$，
+它表示单位体积内偶极矩的大小：
+\begin{align}
+    \vec{\mathbf{P}}=N\vec{\mathbf{\srcp}}=Nq\vec{\mathbf{d}}\, .
+\end{align}
+而体积元垂直于$x$轴的表面$S_1$和$S_2$附近的偶极子被包进去的净电荷量分别为
+\begin{align}
+    \mathrm{d}q_1 & =(Nqd_x)\bigg|_{x}\Delta y\Delta z           = P_x(x)\Delta y\Delta z\, ,           \\
+    \mathrm{d}q_2 & =-(Nqd_x)\bigg|_{x+\Delta x}\Delta y\Delta z = -P_x(x+\Delta x)\Delta y\Delta z\, .
+\end{align}
+其中$d_x\bigg|_{x}$和$P_x(x)$分别表示$\vec{\mathbf{d}}$和$\vec{\mathbf{P}}$在$x$处沿$x$轴的分量，
+$d_x\bigg|_{x+\Delta x}$和$P_x(x+\Delta x)$分别表示$\vec{\mathbf{d}}$和$\vec{\mathbf{P}}$在$x+\Delta x$处沿$x$轴的分量。
+
+同理，体积元其余四个面附近被包围的净电荷量分别为
+\begin{align}
+    \mathrm{d}q_3 & =(Nqd_y)\bigg|_{y}\Delta x\Delta z           = P_y(y)\Delta x\Delta z\, ,           \\
+    \mathrm{d}q_4 & =-(Nqd_y)\bigg|_{y+\Delta y}\Delta x\Delta z = -P_y(y+\Delta y)\Delta x\Delta z\, , \\
+    \mathrm{d}q_5 & =(Nqd_z)\bigg|_{z}\Delta x\Delta y           = P_z(z)\Delta x\Delta y\, ,           \\
+    \mathrm{d}q_6 & =-(Nqd_z)\bigg|_{z+\Delta z}\Delta x\Delta y = -P_z(z+\Delta z)\Delta x\Delta y\, .
+\end{align}
+对上面六式求和，可得体积元内包围的净电荷总量为
+\begin{align}
+    \mathrm{d}q
+     & =\mathrm{d}q_1+\mathrm{d}q_2+\mathrm{d}q_3+\mathrm{d}q_4+\mathrm{d}q_5+\mathrm{d}q_6\nonumber \\
+     & =\left(\frac{P_x(x)-P_x(x+\Delta x)}{\Delta x}
+    +\frac{P_y(y)-P_y(y+\Delta y)}{\Delta y}
+    +\frac{P_z(z)-P_z(z+\Delta z)}{\Delta z}\right)\Delta x\Delta y\Delta z\, .
+\end{align}
+令体积$\Delta x\Delta y\Delta z$趋于零，
+便得到\keyindex{极化电荷}{polarization charge}{}
+的体密度$\rho_p$为：
+\begin{align}
+    \rho_p=\lim\limits_{\Delta x\Delta y\Delta z\rightarrow0}\frac{\mathrm{d}q}{\Delta x\Delta y\Delta z}
+    =-\left(\frac{\partial P_x}{\partial x}+\frac{\partial P_y}{\partial y}+\frac{\partial P_z}{\partial z}\right)
+    =-\vec{\nabla}\cdot\vec{\mathbf{P}}\, .
+\end{align}
+这些极化电荷都是\keyindex{束缚电荷}{bound charge}{electric charge\ 电荷}，
+也是电场的源，所以都要代入高斯定律\refeq{08ex02-differentialGausssLawElectric}：
+\begin{align}\label{eq:08ex02-DensityPolarization}
+    \vec{\nabla}\cdot(\epsilon_0\vec{\mathbf{E}})=\rho_f+\rho_p=\rho_f-\vec{\nabla}\cdot\vec{\mathbf{P}}\, .
+\end{align}
+其中$\rho_f$是自由电荷的体密度（不含束缚电荷）；结合散度定理\ref{theorem:08ex-divergenceTheorem}，
+可得区域内极化电荷总量$q_p$为
+\begin{align}
+    q_p=\iiint\limits_V\rho_p\mathrm{d}V
+    =-\iiint\limits_V\vec{\nabla}\cdot\vec{\mathbf{P}}\mathrm{d}V
+    =-\oiint\limits_S\vec{\mathbf{P}}\cdot\mathrm{d}\vec{\mathbf{S}}\, .
+\end{align}
+从上式我们还能推出累积在介质外表面附近的束缚电荷面密度
+$\sigma_p$为
+\begin{align}
+    \sigma_p=-\frac{\mathrm{d}q_p}{\mathrm{d}S}
+    =\frac{\mathrm{d}}{\mathrm{d}S}\oiint\limits_S\vec{\mathbf{P}}\cdot\mathrm{d}\vec{\mathbf{S}}
+    =\vec{\mathbf{P}}\cdot\vec{\mathbf{n}}\, ,
+\end{align}
+其中$\vec{\mathbf{n}}$为介质表面朝外的法向量；
+注意上式第一步带负号是因为前文$q_p$统计的是分界面之内的束缚电荷，
+而$\sigma_p$统计的是外部的束缚电荷。
+
+我们通常难以直接把握极化电荷量，所以把高斯定律改写为关于自由电荷量的形式会更方便。
+由此定义\keyindex{电位移}{electric displacement}{}
+矢量场$\vec{\mathbf{D}}$为
+\begin{align}
+    \vec{\mathbf{D}}=\epsilon_0\vec{\mathbf{E}}+\vec{\mathbf{P}}\, .
+\end{align}
+可见$\vec{\mathbf{D}}$因偶极子中电荷的位移而与$\epsilon_0\vec{\mathbf{E}}$不完全相等。
+于是\refeq{08ex02-DensityPolarization}可重写为
+\begin{align}
+    \vec{\nabla}\cdot(\epsilon_0\vec{\mathbf{E}}+\vec{\mathbf{P}})
+    =\vec{\nabla}\cdot\vec{\mathbf{D}}=\rho_f\, .
+\end{align}
+利用散度定理\ref{theorem:08ex-divergenceTheorem}，
+便得到高斯定律新的积分形式
+\begin{align}\label{eq:08ex02-MaxwellGaussD}
+    \iiint\limits_V\vec{\nabla}\cdot\vec{\mathbf{D}}\mathrm{d}V
+    =\oiint\limits_S\vec{\mathbf{D}}\cdot\mathrm{d}\vec{\mathbf{S}}
+    =\iiint\limits_V\rho_f\mathrm{d}V\, .
+\end{align}
+特别地，自由空间内电极化强度$\vec{\mathbf{P}}$为零，
+此时$\vec{\mathbf{D}}=\epsilon_0\vec{\mathbf{E}}$，
+上面两个式子就化为了我们此前介绍的高斯定律形式。
+
+接下来我们寻求电极化强度和电场之间的关系。
+尽管精确的讨论需要用到量子力学，但它超出了本书范围，
+我们以简化的经典模型定性地讨论均匀线性各向同性介电质这一简单情况，
+此时物体内部的极化是均匀发生的。
+
+极化发生后，我们需要区分物体内部各电场分量的来源。
+首先，宏观上物体被施加了外部电场$\vec{\mathbf{E}}_0$，
+这个电场完全由外部的源建立，也是引起物体发生极化的原因。
+然而即便物体本身是电中性的，它也会因为极化改变电荷分布，建立起新电场。
+因此物体内部的电场不再等于外加电场$\vec{\mathbf{E}}_0$，
+而是$\vec{\mathbf{E}}_0$与物体内所有电荷（包括极化电荷）产生的电场叠加后的结果。
+
+然而从微观角度看，物质中的电荷分布复杂，具体的微观电场是极不光滑的，
+前文单个偶极子的电场\refeq{08ex02-fieldDipole}就是这样微观不光滑电场的例子。
+为了便于研究，我们定义一点处的\keyindex{宏观电场}{macroscopic electric field}{}
+$\vec{\mathbf{E}}$是包含该点的一定体积范围内微观电场的平均值。
+显然宏观电场会比微观电场平滑得多，实践中也更加容易观测。
+因此在均匀极化的假设下，有
+\begin{align}
+    \vec{\mathbf{E}}=\vec{\mathbf{E}}_0+\vec{\mathbf{E}}_d\, ,
+\end{align}
+其中$\vec{\mathbf{E}}_d$是均匀极化在宏观上形成的电场，
+即\keyindex{去极化场}{depolarization field}{}。
+可以证明，去极化场的表达式与作平均时所选的体积形状有关，
+适当选取椭球、圆柱、圆盘等形状可以得到均匀的去极化场。
+后文我们将以圆球为例子推导$\vec{\mathbf{E}}_d$与电极化强度$\vec{\mathbf{P}}$之间的关系。
+
+需要指出的是，宏观电场与具体作用在某个微观粒子上的微观电场有很大不同，
+我们称后者为\keyindex{局部电场}{local electric field}{}
+$\vec{\mathbf{E}}_l$。例如，考虑电子极化中一个原子感受到的微观电场，
+并假设它的晶格结构是按立方体排布的。以它为球心，半径适当的球体空间内，
+还存在着许多其他临近原子形成的偶极子。
+设这些偶极子有完全一样的偶极矩$\vec{\mathbf{\srcp}}$，
+将其方向设为$z$轴，并记每个偶极子的位移矢量为$\vec{\mathbf{r}}_i$，
+对应坐标为$(x_i,y_i,z_i)$，单位向量为$\hat{\mathbf{r}}_i$。
+结合几何对称性可知，球心处的原子感受到的这些偶极子形成的合电场在$x$和$y$方向的分量应为零。
+而根据\refeq{08ex02-fieldDipole}，合电场在$z$方向的分量则为
+\begin{align}
+    E_z
+     & =\left(\sum\limits_i\frac{3(\vec{\mathbf{\srcp}}\cdot(-\hat{\mathbf{r}}_i))(-\hat{\mathbf{r}}_i)-\vec{\mathbf{\srcp}}}{4\pi\epsilon_0 r_i^3}\right)_z
+    =\sum\limits_i\left(\frac{3(\vec{\mathbf{\srcp}}\cdot\vec{\mathbf{r}}_i)\vec{\mathbf{r}}_i-r_i^2\vec{\mathbf{\srcp}}}{4\pi\epsilon_0 r_i^5}\right)_z\nonumber\\
+    =&\sum\limits_i\frac{3\srcp z_i^2-r_i^2\srcp}{4\pi\epsilon_0 r_i^5}
+    =\frac{\srcp}{4\pi\epsilon_0}\sum\limits_i\frac{3z_i^2-r_i^2}{r_i^5}\nonumber\\
+    =&\frac{\srcp}{4\pi\epsilon_0}\sum\limits_i\frac{3z_i^2-(x_i^2+y_i^2+z_i^2)}{r_i^5}\nonumber\\
+    =&\frac{\srcp}{4\pi\epsilon_0}\sum\limits_i\frac{2z_i^2-x_i^2-y_i^2}{r_i^5}\, .
+\end{align}
+
+因为偶极子位置坐标$x_i$、$y_i$和$z_i$的对称性，有
+\begin{align}
+    \sum\limits_i\frac{x_i^2}{r_i^5}=\sum\limits_i\frac{y_i^2}{r_i^5}=\sum\limits_i\frac{z_i^2}{r_i^5}\, ,
+\end{align}
+所以
+\begin{align}
+    E_z=0\, .
+\end{align}
+因此该原子周围球空间内偶极子对它的合电场为零，它受到的局部电场仅是外加电场，即
+\begin{align}
+    \vec{\mathbf{E}}_l=\vec{\mathbf{E}}_0\, .
+\end{align}
+这显然与宏观电场不相等。
+
+然而不管晶格如何排布，作用于某个原子的局部电场
+都可以分解为外加电场与偶极子电场（上例恰为零）两部分。
+
+{\noindent\hfil$=========$\hfil{\color{red}{施工分割线}}\hfil$=========$\ }
+
+\begin{figure}[htbp]
+    \centering\includegraphics[width=0.75\linewidth]{Pictures/chap08/AtomicClassicalModel.eps}
+    \caption{左图：在外加电场作用下，原子中的原子核不再处于半径为$R_0$的球形电子云的中心，原子发生极化。
+        右图：取原子的偶极矩方向为$z$轴，原子核在$z$轴上点$M$处，
+        求一半径为$R$的球形空间内$(R\gg R_0)$原子核和电子云分别引发的平均电场。}
+    \label{fig:08ex02-AtomicClassicalModel}
+\end{figure}
+
+如\reffig{08ex02-AtomicClassicalModel}左图，我们把原子视作这样的模型：带正电$q$的原子核处在中心，
+其周围弥漫着带等量负电荷$-q$且均匀分布的球形电子云，整个原子构成一个偶极子。
+当没有外加电场作用时，其正负电荷中心重合，易知偶极矩为零。
+当施加外加电场时，原子核和电子云朝着相反方向发生位移，
+相对位置矢量为$\vec{\mathbf{d}}$，但二者之间的库仑吸引力维持着它们不再远离。
+
+设电子云的半径为$R_0$，根据\refeq{08ex02-sphericalEfieldStrength}，
+原子核在电子云内感受到的电场为
+\begin{align}
+    \frac{-q}{4\pi\epsilon_0R_0^3}\vec{\mathbf{d}}\, .
+\end{align}
+设作用于该偶极子的局部电场为$\vec{\mathbf{E}}_l$，
+注意平衡状态下对正电荷的合力$\vec{\mathbf{F}}$为零：
+\begin{align}
+    \vec{\mathbf{F}}=q\left(\vec{\mathbf{E}}_l+\frac{-q}{4\pi\epsilon_0R_0^3}\vec{\mathbf{d}}\right)=\vec{\mathbf{0}}\, .
+\end{align}
+从上式解得平衡状态下的偶极子间距为
+\begin{align}
+    \vec{\mathbf{d}}=\frac{4\pi\epsilon_0R_0^3}{q}\vec{\mathbf{E}}_l\, .
+\end{align}
+因此偶极矩为
+\begin{align}
+    \vec{\mathbf{\srcp}}=q\vec{\mathbf{d}}=\alpha\vec{\mathbf{E}}_l\, ,
+\end{align}
+其中系数$\alpha$为原子（或分子）的\keyindex{极化率}{polarizability}{}：
+\begin{align}
+    \alpha=4\pi\epsilon_0R_0^3\, .
+\end{align}
+
+接着如\reffig{08ex02-AtomicClassicalModel}右图，
+设$z$轴方向为原子的偶极矩方向，原子核就在$z$轴上点$M$处，坐标为$z=a>0$，
+我们讨论球心为原点$O$、半径为$R$且$R\gg R_0$的球体空间内该原子核的电场平均值。
+对于球体空间内任意一点$P$，设其位移矢量为$\vec{\mathbf{r}}$，与$z$轴正向的夹角为$\theta$，
+并记沿$z$轴正向的单位向量为$\vec{\mathbf{i}}_z$.
+由此结合\refeq{08ex02-continuousSumField}，用球坐标表达出空间内的平均电场为
+\begin{align}
+    \langle\vec{\mathbf{E}}\rangle=\frac{1}{\displaystyle\frac{4}{3}\pi R^3}
+    \int_{r=0}^{R}\int_{\theta=0}^{\pi}\int_{\varphi=0}^{2\pi}
+    \frac{q(\vec{\mathbf{r}}-a\vec{\mathbf{i}}_z)}
+    {4\pi\epsilon_0|\vec{\mathbf{r}}-a\vec{\mathbf{i}}_z|^3}
+    r^2\sin\theta\mathrm{d}r\mathrm{d}\theta\mathrm{d}\varphi\, ,
+\end{align}
+其中利用余弦定理有
+\begin{align}
+    |\vec{\mathbf{r}}-a\vec{\mathbf{i}}_z|^2=a^2+r^2-2ar\cos\theta\, .
+\end{align}
+注意本问题在几何上关于$z$轴对称，故易知$\langle\vec{\mathbf{E}}\rangle$的$x$和$y$分量为零，
+只有$z$分量待求，完成对$\varphi$的积分后为：
+\begin{align}
+    \langle E\rangle_z=\frac{q}{\displaystyle\frac{4}{3}\pi R^3}
+    \frac{2\pi}{4\pi\epsilon_0}\int_{\theta=0}^{\pi}\int_{r=0}^{R}
+    \frac{r^2(r\cos\theta-a)\sin\theta}{(a^2+r^2-2ar\cos\theta)^{\frac{3}{2}}}\mathrm{d}r\mathrm{d}\theta\, .
+\end{align}
+将$\theta$换元为$u$：
+\begin{align}
+    u=a^2+r^2-2ar\cos\theta\, ,
+\end{align}
+于是有
+\begin{align}
+    \mathrm{d}u=2ar\sin\theta\mathrm{d}\theta\, .
+\end{align}
+继续代入得
+\begin{align}
+    \langle E\rangle_z
+     & =\frac{3q}{8\pi\epsilon_0R^3}\int_{r=0}^{R}\int_{u=(r-a)^2}^{(r+a)^2}
+    \frac{r^2\left(r\displaystyle\frac{a^2+r^2-u}{2ar}-a\right)}{u^{\frac{3}{2}}}
+    \frac{1}{2ar}\mathrm{d}u\mathrm{d}r\nonumber                                                             \\
+     & =\frac{3q}{8\pi\epsilon_0R^3}\int_{r=0}^{R}\int_{u=(r-a)^2}^{(r+a)^2}
+    \frac{r(r^2-a^2-u)}{4a^2u^{\frac{3}{2}}}\mathrm{d}u\mathrm{d}r\nonumber                                  \\
+     & =\frac{3q}{8\pi\epsilon_0R^3}\int_{r=0}^{R}\int_{u=(r-a)^2}^{(r+a)^2}
+    \frac{-2r}{4a^2}(r^2-a^2-u)\mathrm{d}u^{-\frac{1}{2}}\mathrm{d}r\nonumber                                \\
+     & =\frac{3q}{8\pi\epsilon_0R^3}\int_{r=0}^{R}
+    \frac{-2r}{4a^2}\left(u^{-\frac{1}{2}}(r^2-a^2-u)\bigg|_{u=(r-a)^2}^{(r+a)^2}
+    -\int_{u=(r-a)^2}^{(r+a)^2}u^{-\frac{1}{2}}\mathrm{d}(r^2-a^2-u)\right)\mathrm{d}r\nonumber              \\
+     & =\frac{3q}{8\pi\epsilon_0R^3}\int_{r=0}^{R}
+    \frac{-2r}{4a^2}\left(u^{-\frac{1}{2}}(r^2-a^2-u)+2u^{\frac{1}{2}}\right)
+    \bigg|_{u=(r-a)^2}^{(r+a)^2}\mathrm{d}r\nonumber                                                         \\
+     & =\frac{3q}{8\pi\epsilon_0R^3}\int_{r=0}^{R}
+    \frac{-2r}{4a^2}\left(u^{-\frac{1}{2}}(r^2-a^2+u)\right)\bigg|_{u=(r-a)^2}^{(r+a)^2}\mathrm{d}r\nonumber \\
+     & =\frac{3q}{8\pi\epsilon_0R^3}\int_{r=0}^{R}
+    -\frac{r^2}{a^2}\left(1-\frac{r-a}{|r-a|}\right)\mathrm{d}r\nonumber                                     \\
+     & =-\frac{3q}{8\pi\epsilon_0a^2R^3}\int_{r=0}^{a}2r^2\mathrm{d}r\nonumber                               \\
+     & =-\frac{3q}{8\pi\epsilon_0a^2R^3}\frac{2}{3}r^3\bigg|_{r=0}^{a}\nonumber                              \\
+     & =\frac{-qa}{4\pi\epsilon_0R^3}\, .
+\end{align}
+同理，我们把中心位于$z=a-d$处的电子云也纳入考虑，
+则它与原子核形成的合电场即是各自形成的电场的向量和，
+两者形式相似。于是球空间内的电场均值沿$z$轴的分量为
+\begin{align}
+    \langle E\rangle_z=\frac{-qa}{4\pi\epsilon_0R^3}+\frac{q(a-d)}{4\pi\epsilon_0R^3}
+    =\frac{-qd}{4\pi\epsilon_0R^3}=\frac{-\srcp}{4\pi\epsilon_0R^3}\, .
+\end{align}
+设该球体单位体积内均匀分布着$N$个像这样的偶极子，
+则所有偶极子共同作用下的平均电场为
+\begin{align}
+    \langle\vec{\mathbf{E}}\rangle=\frac{4}{3}\pi R^3N\frac{-\vec{\mathbf{\srcp}}}{4\pi\epsilon_0R^3}
+    =-\frac{N\vec{\mathbf{\srcp}}}{3\epsilon_0}=-\frac{\vec{\mathbf{P}}}{3\epsilon_0}\, .
+\end{align}
 
 此外，一个运动的电荷还会受到另一种力$\vec{\mathbf{F}}_M$，
 称作\keyindex{洛伦兹力}{Lorentz force}{}，
@@ -1472,30 +1898,6 @@ $\vec{\mathbf{J}}$在截面面积上的积分：
 （即仍用$\epsilon_0$、$\mu_0$），
 故也称微观麦克斯韦方程组。后文我们还会接触到其宏观形式。
 
-特别地，在静电场中，物体表面的电势受外部源的约束，
-其表面电荷分布及其引发的部分电场难以直接求得。
-而电荷分布和电场分布又相互影响，所以求解的结果应保证自洽性。
-但要用上述积分定律做到这点有时会比较难算，而改用场的微分形式则更简单。
-对于均匀线性各向同性介电质，在宏观形式下，
-将\refeq{08ex02-MaxwellGaussE}代入\refeq{08ex02-conservativePotential}得
-\begin{theorem}[\keyindex{泊松方程}{Poisson's equation}{}]
-    静电场的电势$\varphi$满足
-    \begin{align}
-        \vec{\nabla}\cdot(\vec{\nabla}\varphi)=\nabla^2\varphi=-\frac{\rho}{\epsilon}\, .
-    \end{align}
-\end{theorem}
-其中$\nabla^2$是拉普拉斯算符；另外，当在零电荷区域内时，泊松方程\begin{marginfigure}
-    \includegraphics[width=\linewidth]{chap08/SimeonDenisPoisson.jpg}
-\end{marginfigure}\sidenote{法国数学家、物理学家西梅翁·德尼·泊松 (Siméon Denis Poisson, 1781-1840)。}化为
-\begin{marginfigure}
-    \includegraphics[width=\linewidth]{chap08/Laplace.jpg}
-\end{marginfigure}\sidenote{法国数学家皮埃尔-西蒙·拉普拉斯 (Pierre-Simon, Marquis de Laplace, 1749-1827)。}
-\begin{theorem}[\keyindex{拉普拉斯方程}{Laplace's equation}{}]
-    \begin{align}
-        \nabla^2\varphi=0\, .
-    \end{align}
-\end{theorem}
-
 有了以上知识，我们就能理解电磁波的传播了。
 在该过程中，电场和磁场不可分割地耦合在一起并相互维持，
 作为一个整体在空间中传播，不依赖电荷、电流、实物介质或以太。
@@ -1817,329 +2219,6 @@ $\hslash$为\keyindex{约化普朗克常数}{reduced Planck constant}{}
 对整个地球的压力总共约为10吨。这与大气压强约$10^5\text{N}/\text{m}^2$相比几乎可以忽略不计。
 早在1901年，光压就被俄国实验物理学家彼得·尼古拉耶维奇·列别捷夫
 (Pyotr Nikolaevich Lebedev, 1866-1912)测量到了。
-
-\subsubsection*{电偶极子与电极化}
-宏观物质置于电场中时，构成它的微观粒子会在电场作用下发生运动产生位移，
-这种现象称为\keyindex{极化}{polarization}{}。
-这些带电粒子分布的变化又会重新影响物质内部的电场分布。
-因此在讨论电场对物质的作用时应考虑极化的影响。
-
-电极化的有多种产生机制。在称为\keyindex{介电质}{dielectric}{}
-的一大类绝缘材料中，电子被紧密束缚在\keyindex{原子核}{nucleus}{}
-附近。虽然电子不能随意挪走，但在电场作用下，
-带负电的电子云会相对于带正电的原子核产生微小位移与形变（如\reffig{08ex02-electronCloud}），
-于是材料发生\keyindex{电子极化}{electronic polarization}{polarization\ 极化}。
-
-此外，在\keyindex{极性分子}{polar molecule}{molecule\ 分子}
-材料中，\keyindex{分子}{molecule}{}
-的各\keyindex{原子}{atom}{}
-不均等地分享\keyindex{价电子}{valence electron}{electron\ 电子}，
-所以正负电荷中心是永久分离的（\reffig{08ex02-moleculesDipole}），
-在电场作用下，这种分子会因正负电荷受力方向相反而被牵拉朝着外加电场方向发生偏转，
-发生\keyindex{取向极化}{orientational polarization}{polarization\ 极化}。
-
-还一种情况是，对于NaCl那样的离子晶体，外加电场会使其正负离子发生相对位移，
-发生\keyindex{离子极化}{ionic polarization}{polarization\ 极化}，
-也称\keyindex{原子极化}{atomic polarization}{polarization\ 极化}。
-另外，还有非均质材料的结构界面阻挡带电粒子在外加电场下迁移而在分界面上累积电荷发生的\keyindex{界面极化}{interfacial polarization}{polarization\ 极化}
-等其他情况。
-
-这些电极化机制之间并不排斥，它们的综合效应带来了总的极化现象：
-尽管材料整体呈电中性，但正负电荷轻微的分离产生了\keyindex{电偶极子}{electric dipole}{}，
-哪怕每个电偶极子含有等量的正负电荷，
-其分布的不均衡也会累积出可观的净\keyindex{极化电荷}{polarization charge}{electric charge\ 电荷}，
-成为\keyindex{自由电荷}{free charge}{electric charge\ 电荷}
-外又一电场来源。
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=0.5\linewidth]{chap08/electronCloud.eps}
-    \caption{电场作用下的电子云发生微小位移与形变。}
-    \label{fig:08ex02-electronCloud}
-\end{figure}
-
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=0.6\linewidth]{chap08/SimpleElectricDipole.eps}
-    \caption{最简电偶极子模型。}
-    \label{fig:08ex02-SimpleElectricDipole}
-\end{figure}
-
-如\reffig{08ex02-SimpleElectricDipole}，最简单的电偶极子模型是一正一负含等量电荷$q$的分离点电荷，
-记从负电荷指向正电荷的相对位移矢量为$\vec{\mathbf{d}}$.
-我们定义该电偶极子的\keyindex{偶极矩}{dipole moment}{}
-为
-\begin{align}
-    \vec{\mathbf{\srcp}}=q\vec{\mathbf{d}}\, .
-\end{align}
-其单位为$\text{C}\cdot\text{m}$.
-对于更复杂的电偶极子，上述定义可推广为：
-若电偶极子在区域$V$内关于位置矢量$\vec{\mathbf{r}}$的电荷分布体密度为$\rho(\vec{\mathbf{r}})$，
-则其相应偶极矩为
-\begin{align}
-    \vec{\mathbf{\srcp}}=\iiint\limits_V\rho(\vec{\mathbf{r}})\vec{\mathbf{r}}\mathrm{d}V\, .
-\end{align}
-可以证明当电偶极子整体呈电中性时，其偶极矩具有平移不变性。
-\begin{prove}
-    把电偶极子原来整体所在位置设为原点，设其分布区域为$V$，
-    然后平移到新位置$\vec{\mathbf{r}}_0$处，对应分布区域$V'$，则平移后的偶极矩为
-    \begin{align}
-        \vec{\mathbf{\srcp}}'
-         & =\iiint\limits_{V'}\rho(\vec{\mathbf{r}}-\vec{\mathbf{r}}_0)\vec{\mathbf{r}}\mathrm{d}V'
-        =\iiint\limits_{V'}\rho(\vec{\mathbf{r}}-\vec{\mathbf{r}}_0)(\vec{\mathbf{r}}-\vec{\mathbf{r}}_0+\vec{\mathbf{r}}_0)\mathrm{d}V'\nonumber \\
-         & =\iiint\limits_{V'}\rho(\vec{\mathbf{r}}-\vec{\mathbf{r}}_0)(\vec{\mathbf{r}}-\vec{\mathbf{r}}_0)\mathrm{d}V'
-        +\iiint\limits_{V'}\rho(\vec{\mathbf{r}}-\vec{\mathbf{r}}_0)\vec{\mathbf{r}}_0\mathrm{d}V'\nonumber                                       \\
-         & =\iiint\limits_V\rho(\vec{\mathbf{r}})\vec{\mathbf{r}}\mathrm{d}V
-        +\vec{\mathbf{r}}_0\iiint\limits_{V'}\rho(\vec{\mathbf{r}}-\vec{\mathbf{r}}_0)\mathrm{d}V'\nonumber                                       \\
-         & =\vec{\mathbf{\srcp}}+\vec{\mathbf{r}}_0\cdot0\nonumber                                                                                \\
-         & =\vec{\mathbf{\srcp}}\, .
-    \end{align}
-\end{prove}
-
-\reffig{08ex02-moleculesDipole}展示了四种常见物质分子的偶极矩。
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=0.8\linewidth]{chap08/moleculesDipole.eps}
-    \caption{四种分子的偶极矩大小与方向，其中只有$\text{CO}_2$是非极性分子。}
-    \label{fig:08ex02-moleculesDipole}
-\end{figure}
-
-接下来我们讨论最简电偶极子模型的电场和电势分布。
-
-如\reffig{08ex02-SimpleElectricDipole}，我们取模型中两个点电荷连线的中点为原点，
-并且正点电荷在$\displaystyle\frac{1}{2}\vec{\mathbf{d}}$处，
-负点电荷在$-\displaystyle\frac{1}{2}\vec{\mathbf{d}}$处。
-根据\refeq{08ex02-DistrubitionElectricPotential}，
-任意位置$\vec{\mathbf{r}}$处（$r\gg d$）的电势为
-\begin{align}
-    \varphi(\vec{\mathbf{r}})=\frac{q}{4\pi\epsilon_0\left|\vec{\mathbf{r}}-\displaystyle\frac{1}{2}\vec{\mathbf{d}}\right|}
-    +\frac{-q}{4\pi\epsilon_0\left|\vec{\mathbf{r}}-\left(-\displaystyle\frac{1}{2}\vec{\mathbf{d}}\right)\right|}\, .
-\end{align}
-考虑到$r\gg d$，我们只保留上式关于$d$的一次项，忽略高次项：
-\begin{align}
-    \varphi(\vec{\mathbf{r}})
-     & =\frac{q}{4\pi\epsilon_0\left|\vec{\mathbf{r}}-\displaystyle\frac{1}{2}\vec{\mathbf{d}}\right|}
-    -\frac{q}{4\pi\epsilon_0\left|\vec{\mathbf{r}}+\displaystyle\frac{1}{2}\vec{\mathbf{d}}\right|}\nonumber                            \\
-     & \approx\frac{q}{4\pi\epsilon_0}\left(-\vec{\mathbf{d}}\cdot\vec{\nabla}\displaystyle\frac{1}{|\vec{\mathbf{r}}|}\right)\nonumber \\
-     & =\frac{-q\vec{\mathbf{d}}}{4\pi\epsilon_0}\cdot\frac{-\hat{\mathbf{r}}}{|\vec{\mathbf{r}}|^2}\nonumber                           \\
-     & =\frac{\vec{\mathbf{\srcp}}\cdot\hat{\mathbf{r}}}{4\pi\epsilon_0 r^2}\, ,
-\end{align}
-相应的电场为
-\begin{align}
-    \vec{\mathbf{E}}(\vec{\mathbf{r}})
-     & =-\vec{\nabla}\varphi(\vec{\mathbf{r}})
-    \approx-\vec{\nabla}\frac{\vec{\mathbf{\srcp}}\cdot\hat{\mathbf{r}}}{4\pi\epsilon_0 r^2}\nonumber                                                                                         \\
-     & =-\frac{1}{4\pi\epsilon_0}\vec{\nabla}\frac{\vec{\mathbf{\srcp}}\cdot\vec{\mathbf{r}}}{r^3}\nonumber                                                                                   \\
-     & =-\frac{1}{4\pi\epsilon_0 r^6}((\vec{\nabla}(\vec{\mathbf{\srcp}}\cdot\vec{\mathbf{r}}))\cdot r^3-(\vec{\mathbf{\srcp}}\cdot\vec{\mathbf{r}})\cdot\vec{\nabla}r^3)\nonumber            \\
-     & =-\frac{1}{4\pi\epsilon_0 r^6}\left(\vec{\mathbf{\srcp}}\cdot r^3-(\vec{\mathbf{\srcp}}\cdot\vec{\mathbf{r}})\cdot3r^2\cdot\frac{\vec{\mathbf{r}}}{|\vec{\mathbf{r}}|}\right)\nonumber \\
-     & =\frac{3(\vec{\mathbf{\srcp}}\cdot\hat{\mathbf{r}})\hat{\mathbf{r}}-\vec{\mathbf{\srcp}}}{4\pi\epsilon_0 r^3}\, .
-\end{align}
-
-如\reffig{08ex02-polarizationDensity}，
-我们任取一个体积为$\Delta x\Delta y\Delta z$的立方体微分体积元，
-里面包含了很多电偶极子，红蓝色分别表示偶极子的正负电荷端。
-显然完全被体积元包裹住的偶极子整体呈电中性，
-只有穿过体积元表面被它截断的偶极子才会对体积元贡献净电荷。
-我们记单位体积内偶极子的个数为$N$，
-每个偶极子的偶极矩为$\vec{\mathbf{\srcp}}=q\vec{\mathbf{d}}$，
-其中$\vec{\mathbf{d}}=d_x\hat{\text{\sffamily\bfseries i}}+d_y\hat{\text{\sffamily\bfseries j}}+d_z\hat{\text{\sffamily\bfseries k}}$，
-则电\keyindex{极化强度}{polarization density}{}
-矢量$\vec{\mathbf{P}}=P_x\hat{\text{\sffamily\bfseries i}}+P_y\hat{\text{\sffamily\bfseries j}}+P_z\hat{\text{\sffamily\bfseries k}}$
-表示了单位体积内偶极矩的大小：
-\begin{align}
-    \vec{\mathbf{P}}=N\vec{\mathbf{\srcp}}=Nq\vec{\mathbf{d}}\, .
-\end{align}
-而体积元垂直于$x$轴的表面$S_1$和$S_2$附近的偶极子被包进去的净电荷量分别为
-\begin{align}
-    \mathrm{d}q_1 & =(Nqd_x)\bigg|_{x}\Delta y\Delta z           = P_x(x)\Delta y\Delta z\, ,           \\
-    \mathrm{d}q_2 & =-(Nqd_x)\bigg|_{x+\Delta x}\Delta y\Delta z = -P_x(x+\Delta x)\Delta y\Delta z\, .
-\end{align}
-其中$d_x\bigg|_{x}$和$P_x(x)$分别表示$\vec{\mathbf{d}}$和$\vec{\mathbf{P}}$在$x$处沿$x$轴的分量，
-$d_x\bigg|_{x+\Delta x}$和$P_x(x+\Delta x)$分别表示$\vec{\mathbf{d}}$和$\vec{\mathbf{P}}$在$x+\Delta x$处沿$x$轴的分量。
-
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=0.5\linewidth]{chap08/polarizationDensity.eps}
-    \caption{微分体积元内的电偶极矩累积的净电荷只与穿过界面的偶极子有关。}
-    \label{fig:08ex02-polarizationDensity}
-\end{figure}
-
-同理，体积元其余四个面附近被包围的净电荷量分别为
-\begin{align}
-    \mathrm{d}q_3 & =(Nqd_y)\bigg|_{y}\Delta x\Delta z           = P_y(y)\Delta x\Delta z\, ,           \\
-    \mathrm{d}q_4 & =-(Nqd_y)\bigg|_{y+\Delta y}\Delta x\Delta z = -P_y(y+\Delta y)\Delta x\Delta z\, , \\
-    \mathrm{d}q_5 & =(Nqd_z)\bigg|_{z}\Delta x\Delta y           = P_z(z)\Delta x\Delta y\, ,           \\
-    \mathrm{d}q_6 & =-(Nqd_z)\bigg|_{z+\Delta z}\Delta x\Delta y = -P_z(z+\Delta z)\Delta x\Delta y\, .
-\end{align}
-对上面六式求和，可得体积元内包围的净电荷总量为
-\begin{align}
-    \mathrm{d}q
-     & =\mathrm{d}q_1+\mathrm{d}q_2+\mathrm{d}q_3+\mathrm{d}q_4+\mathrm{d}q_5+\mathrm{d}q_6\nonumber \\
-     & =\left(\frac{P_x(x)-P_x(x+\Delta x)}{\Delta x}
-    +\frac{P_y(y)-P_y(y+\Delta y)}{\Delta y}
-    +\frac{P_z(z)-P_z(z+\Delta z)}{\Delta z}\right)\Delta x\Delta y\Delta z\, .
-\end{align}
-令体积$\Delta x\Delta y\Delta z$趋于零，
-便得到\keyindex{极化电荷}{polarization charge}{}
-的体密度$\rho_p$为：
-\begin{align}
-    \rho_p=\lim\limits_{\Delta x\Delta y\Delta z\rightarrow0}\frac{\mathrm{d}q}{\Delta x\Delta y\Delta z}
-    =-\left(\frac{\partial P_x}{\partial x}+\frac{\partial P_y}{\partial y}+\frac{\partial P_z}{\partial z}\right)
-    =-\vec{\nabla}\cdot\vec{\mathbf{P}}\, .
-\end{align}
-这些极化电荷是\keyindex{束缚电荷}{bound charge}{charge\ 电荷}，
-也是电场的源，所以需要代入高斯定律\refeq{08ex02-MaxwellGaussE}：
-\begin{align}\label{eq:08ex02-DensityPolarization}
-    \vec{\nabla}\cdot(\epsilon_0\vec{\mathbf{E}})=\rho_f+\rho_p=\rho_f-\vec{\nabla}\cdot\vec{\mathbf{P}}\, .
-\end{align}
-其中$\rho_f$是自由电荷的体密度（不含束缚电荷）；结合散度定理\ref{theorem:08ex-divergenceTheorem}，
-可得区域内极化电荷总量$q_p$为
-\begin{align}
-    q_p=\iiint\limits_V\rho_p\mathrm{d}V
-    =-\iiint\limits_V\vec{\nabla}\cdot\vec{\mathbf{P}}\mathrm{d}V
-    =-\oiint\limits_S\vec{\mathbf{P}}\cdot\mathrm{d}\vec{\mathbf{S}}\, .
-\end{align}
-从上式我们还能推出累积在介质外表面附近的束缚电荷面密度
-$\sigma_p$为
-\begin{align}
-    \sigma_p=-\frac{\mathrm{d}q_p}{\mathrm{d}S}
-    =\frac{\mathrm{d}}{\mathrm{d}S}\oiint\limits_S\vec{\mathbf{P}}\cdot\mathrm{d}\vec{\mathbf{S}}
-    =\vec{\mathbf{P}}\cdot\vec{\mathbf{n}}\, ,
-\end{align}
-其中$\vec{\mathbf{n}}$为介质表面朝外的法向量；
-注意上式第一步带负号是因为前文$q_p$统计的是分界面之内的束缚电荷，
-而$\sigma_p$统计的是外部的束缚电荷。
-
-我们通常难以直接把握极化电荷量，所以把高斯定律改写为关于自由电荷量的形式会更方便。
-由此定义\keyindex{电位移}{electric displacement}{}
-矢量场$\vec{\mathbf{D}}$为
-\begin{align}
-    \vec{\mathbf{D}}=\epsilon_0\vec{\mathbf{E}}+\vec{\mathbf{P}}\, .
-\end{align}
-可见$\vec{\mathbf{D}}$因为偶极子中电荷的位移而与$\epsilon_0\vec{\mathbf{E}}$有所不同。
-于是\refeq{08ex02-DensityPolarization}可重写为
-\begin{align}
-    \vec{\nabla}\cdot(\epsilon_0\vec{\mathbf{E}}+\vec{\mathbf{P}})
-    =\vec{\nabla}\cdot\vec{\mathbf{D}}=\rho_f\, .
-\end{align}
-利用散度定理\ref{theorem:08ex-divergenceTheorem}，
-便得到高斯定律的新积分形式
-\begin{align}\label{eq:08ex02-MaxwellGaussD}
-    \iiint\limits_V\vec{\nabla}\cdot\vec{\mathbf{D}}\mathrm{d}V
-    =\oiint\limits_S\vec{\mathbf{D}}\cdot\mathrm{d}\vec{\mathbf{S}}
-    =\iiint\limits_V\rho_f\mathrm{d}V\, .
-\end{align}
-特别地，当电极化强度$\vec{\mathbf{P}}$为零时，
-上式特化为前文介绍的自由空间下电场的高斯定律。
-
-接下来我们寻求电极化强度和外加电场之间的关系。
-尽管精确的讨论需要用到量子力学，但它超出了本书范围，
-我们以简化的经典模型定性地讨论线性介电质这一简单情况。
-
-\begin{figure}[htbp]
-    \centering\includegraphics[width=0.75\linewidth]{Pictures/chap08/AtomicClassicalModel.eps}
-    \caption{左图：在外加电场作用下，原子中的原子核不再处于半径为$R_0$的球形电子云的中心，原子发生极化。
-        右图：取原子的偶极矩方向为$z$轴，原子核在$z$轴上点$M$处，
-        求一半径为$R$的球形空间内$(R\gg R_0)$原子核和电子云分别引发的平均电场。}
-    \label{fig:08ex02-AtomicClassicalModel}
-\end{figure}
-
-如\reffig{08ex02-AtomicClassicalModel}左图，我们把原子视作这样的模型：带正电$Q$的原子核处在中心，
-其周围弥漫着带等量负电荷$-Q$且均匀分布的球形电子云，整个原子构成一个偶极子。
-当没有外加电场作用时，其正负电荷中心重合，易知偶极矩为零。
-当施加外加电场时，原子核和电子云朝着相反方向发生位移，
-相对位置矢量为$\vec{\mathbf{d}}$，但二者之间的库仑吸引力维持着它们不再远离。
-设电子云的半径为$R_0$，根据\refeq{08ex02-sphericalEfieldStrength}，
-原子核在电子云内部感受到的电场为
-\begin{align}
-    \frac{-Q}{4\pi\epsilon_0R_0^3}\vec{\mathbf{d}}\, .
-\end{align}
-设作用于该偶极子的局部电场为$\vec{\mathbf{E}}_l$，
-注意平衡状态下对正电荷的合力$\vec{\mathbf{F}}$为零：
-\begin{align}
-    \vec{\mathbf{F}}=Q\left(\vec{\mathbf{E}}_l+\frac{-Q}{4\pi\epsilon_0R_0^3}\vec{\mathbf{d}}\right)=\vec{\mathbf{0}}\, .
-\end{align}
-从上式解得平衡状态下的偶极子间距为
-\begin{align}
-    \vec{\mathbf{d}}=\frac{4\pi\epsilon_0R_0^3}{Q}\vec{\mathbf{E}}_l\, .
-\end{align}
-因此偶极矩为
-\begin{align}
-    \vec{\mathbf{\srcp}}=Q\vec{\mathbf{d}}=\alpha\vec{\mathbf{E}}_l\, ,
-\end{align}
-其中系数$\alpha$为原子（或分子）的\keyindex{极化率}{polarizability}{}：
-\begin{align}
-    \alpha=4\pi\epsilon_0R_0^3\, .
-\end{align}
-
-接着如\reffig{08ex02-AtomicClassicalModel}右图，
-设$z$轴方向为原子的偶极矩方向，原子核就在$z$轴上点$M$处，坐标为$z=a>0$，
-我们讨论球心为原点$O$、半径为$R$且$R\gg R_0$的球体空间内该原子核的电场平均值。
-对于球体空间内任意一点$P$，设其位移矢量为$\vec{\mathbf{r}}$，与$z$轴正向的夹角为$\theta$，
-并记沿$z$轴正向的单位向量为$\vec{\mathbf{i}}_z$.
-由此结合\refeq{08ex02-DistrubitionElectrostaticField}，用球坐标表达出空间内的平均电场为
-\begin{align}
-    \langle\vec{\mathbf{E}}\rangle=\frac{1}{\displaystyle\frac{4}{3}\pi R^3}
-    \int_{r=0}^{R}\int_{\theta=0}^{\pi}\int_{\varphi=0}^{2\pi}
-    \frac{Q(\vec{\mathbf{r}}-a\vec{\mathbf{i}}_z)}
-    {4\pi\epsilon_0|\vec{\mathbf{r}}-a\vec{\mathbf{i}}_z|^3}
-    r^2\sin\theta\mathrm{d}r\mathrm{d}\theta\mathrm{d}\varphi\, ,
-\end{align}
-其中利用余弦定理有
-\begin{align}
-    |\vec{\mathbf{r}}-a\vec{\mathbf{i}}_z|^2=a^2+r^2-2ar\cos\theta\, .
-\end{align}
-注意本问题在几何上关于$z$轴对称，故易知$\langle\vec{\mathbf{E}}\rangle$的$x$和$y$分量为零，
-只有$z$分量待求，完成对$\varphi$的积分后为：
-\begin{align}
-    \langle E\rangle_z=\frac{Q}{\displaystyle\frac{4}{3}\pi R^3}
-    \frac{2\pi}{4\pi\epsilon_0}\int_{\theta=0}^{\pi}\int_{r=0}^{R}
-    \frac{r^2(r\cos\theta-a)\sin\theta}{(a^2+r^2-2ar\cos\theta)^{\frac{3}{2}}}\mathrm{d}r\mathrm{d}\theta\, .
-\end{align}
-将$\theta$换元为$u$：
-\begin{align}
-    u=a^2+r^2-2ar\cos\theta\, ,
-\end{align}
-于是有
-\begin{align}
-    \mathrm{d}u=2ar\sin\theta\mathrm{d}\theta\, .
-\end{align}
-继续代入得
-\begin{align}
-    \langle E\rangle_z
-     & =\frac{3Q}{8\pi\epsilon_0R^3}\int_{r=0}^{R}\int_{u=(r-a)^2}^{(r+a)^2}
-    \frac{r^2\left(r\displaystyle\frac{a^2+r^2-u}{2ar}-a\right)}{u^{\frac{3}{2}}}
-    \frac{1}{2ar}\mathrm{d}u\mathrm{d}r\nonumber                                                             \\
-     & =\frac{3Q}{8\pi\epsilon_0R^3}\int_{r=0}^{R}\int_{u=(r-a)^2}^{(r+a)^2}
-    \frac{r(r^2-a^2-u)}{4a^2u^{\frac{3}{2}}}\mathrm{d}u\mathrm{d}r\nonumber                                  \\
-     & =\frac{3Q}{8\pi\epsilon_0R^3}\int_{r=0}^{R}\int_{u=(r-a)^2}^{(r+a)^2}
-    \frac{-2r}{4a^2}(r^2-a^2-u)\mathrm{d}u^{-\frac{1}{2}}\mathrm{d}r\nonumber                                \\
-     & =\frac{3Q}{8\pi\epsilon_0R^3}\int_{r=0}^{R}
-    \frac{-2r}{4a^2}\left(u^{-\frac{1}{2}}(r^2-a^2-u)\bigg|_{u=(r-a)^2}^{(r+a)^2}
-    -\int_{u=(r-a)^2}^{(r+a)^2}u^{-\frac{1}{2}}\mathrm{d}(r^2-a^2-u)\right)\mathrm{d}r\nonumber              \\
-     & =\frac{3Q}{8\pi\epsilon_0R^3}\int_{r=0}^{R}
-    \frac{-2r}{4a^2}\left(u^{-\frac{1}{2}}(r^2-a^2-u)+2u^{\frac{1}{2}}\right)
-    \bigg|_{u=(r-a)^2}^{(r+a)^2}\mathrm{d}r\nonumber                                                         \\
-     & =\frac{3Q}{8\pi\epsilon_0R^3}\int_{r=0}^{R}
-    \frac{-2r}{4a^2}\left(u^{-\frac{1}{2}}(r^2-a^2+u)\right)\bigg|_{u=(r-a)^2}^{(r+a)^2}\mathrm{d}r\nonumber \\
-     & =\frac{3Q}{8\pi\epsilon_0R^3}\int_{r=0}^{R}
-    -\frac{r^2}{a^2}\left(1-\frac{r-a}{|r-a|}\right)\mathrm{d}r\nonumber                                     \\
-     & =-\frac{3Q}{8\pi\epsilon_0a^2R^3}\int_{r=0}^{a}2r^2\mathrm{d}r\nonumber                               \\
-     & =-\frac{3Q}{8\pi\epsilon_0a^2R^3}\frac{2}{3}r^3\bigg|_{r=0}^{a}\nonumber                              \\
-     & =\frac{-Qa}{4\pi\epsilon_0R^3}\, .
-\end{align}
-同理，我们把中心位于$z=a-d$处的电子云也纳入考虑，
-则它与原子核形成的合电场即是各自形成的电场的向量和，
-两者形式相似。于是球空间内的电场均值沿$z$轴的分量为
-\begin{align}
-    \langle E\rangle_z=\frac{-Qa}{4\pi\epsilon_0R^3}+\frac{Q(a-d)}{4\pi\epsilon_0R^3}
-    =\frac{-Qd}{4\pi\epsilon_0R^3}=\frac{-\srcp}{4\pi\epsilon_0R^3}\, .
-\end{align}
-设该球体单位体积内均匀分布着$N$个像这样的偶极子，
-则所有偶极子共同作用下的平均电场为
-\begin{align}
-    \langle\vec{\mathbf{E}}\rangle=\frac{4}{3}\pi R^3N\frac{-\vec{\mathbf{\srcp}}}{4\pi\epsilon_0R^3}
-    =-\frac{N\vec{\mathbf{\srcp}}}{3\epsilon_0}=-\frac{\vec{\mathbf{P}}}{3\epsilon_0}\, .
-\end{align}
 
 \subsubsection*{电偶极辐射}
 若一个电荷进行变速运动，它就会辐射。

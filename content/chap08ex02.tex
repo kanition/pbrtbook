@@ -526,7 +526,7 @@ $\mathrm{i}=\sqrt{-1}$.
 存在一些情况会使这种描述方法失效。
 
 \subsubsection*{向量场及其积分}
-在介绍后续内容前，我们回忆一些关于向量场及其积分的知识。
+在介绍后续内容前，我们回忆一些关于向量场相关的知识。
 
 \keyindex{向量场}{vector field}{}，也称\keyindex{矢量场}{}{}，
 是给其定义域内的每个点都赋有一个向量的函数（如\reffig{08ex02.VelocityVectors}）。
@@ -693,7 +693,7 @@ $\vec{\nabla}$算符能让我们后续的表示更加方便。
 \end{theorem}
 
 \subsubsection*{电荷}
-我们知道，所有物质都是靠等量的带负电的\keyindex{电子}{electron}{}
+我们如今知道，所有物质都是靠等量的带负电的\keyindex{电子}{electron}{}
 与带正电的\keyindex{质子}{proton}{}
 之间的吸引力紧密结合在一起的。
 \keyindex{电荷}{electric charge}{}
@@ -1012,7 +1012,7 @@ $\vec{\nabla}$算符能让我们后续的表示更加方便。
 \begin{align}
     W_{AB}
     =\int\limits_{C}\vec{\mathbf{F}}\cdot\mathrm{d}\vec{\mathbf{\ell}}
-    =-\int\limits_{C}\frac{q_0q}{4\pi\epsilon_0r^2}\hat{\mathbf{r}}\cdot\mathrm{d}\vec{\mathbf{\ell}}
+    =\int\limits_{C}\frac{-q_0q}{4\pi\epsilon_0r^2}\hat{\mathbf{r}}\cdot\mathrm{d}\vec{\mathbf{\ell}}
     =\frac{q_0q}{4\pi\epsilon_0}\int\limits_{C}\vec{\nabla}\frac{1}{|\vec{\mathbf{r}}|}\cdot\mathrm{d}\vec{\mathbf{\ell}}\, .
 \end{align}
 根据定理\ref{theorem:08ex02-ConservativeFieldsAreGradientFields}，
@@ -1085,7 +1085,7 @@ $W_{AB}$的结果与路径$C$本身无关，而只与起点和终点位置有关
     \begin{align}\label{eq:08ex02-DistrubitionElectricPotential}
         \varphi(\vec{\mathbf{r}})=\frac{q}{4\pi\epsilon_0|\vec{\mathbf{r}}|}\, .
     \end{align}
-    其中$\vec{\mathbf{r}}$为相对于$q$的位置。
+    其中$\vec{\mathbf{r}}$为相对于$q$的位置；
     推广到复杂的连续电荷分布建立的静电场中，则为
     \begin{align}
         \varphi=\int\limits_{q}\frac{1}{4\pi\epsilon_0|\vec{\mathbf{r}}|}\mathrm{d}q\, .
@@ -1171,7 +1171,7 @@ $W_{AB}$的结果与路径$C$本身无关，而只与起点和终点位置有关
 的各\keyindex{原子}{atom}{}
 不均等地分享\keyindex{价电子}{valence electron}{electron\ 电子}，
 所以正负电荷中心是永久分离的（\reffig{08ex02-moleculesDipole}），
-在电场作用下，这种分子会因正负电荷受力方向相反而被牵拉朝着外加电场方向发生偏转，
+在电场作用下，这种分子会因正负电荷受力方向相反而被牵拉集体朝着外加电场方向发生偏转，
 发生\keyindex{取向极化}{orientational polarization}{polarization\ 极化}。
 
 还一种情况是，对于NaCl那样的离子晶体，外加电场会使其正负离子发生相对位移，
@@ -1201,10 +1201,10 @@ $W_{AB}$的结果与路径$C$本身无关，而只与起点和终点位置有关
 \end{figure}
 
 如\reffig{08ex02-SimpleElectricDipole}，最简单的电偶极子模型是一正一负含等量电荷$q$的分离点电荷，
-记从负电荷指向正电荷的相对位移矢量为$\vec{\mathbf{d}}$.
+记负电荷指向正电荷的相对位移矢量为$\vec{\mathbf{d}}$.
 我们定义该电偶极子的\keyindex{偶极矩}{dipole moment}{}
 为
-\begin{align}
+\begin{align}\label{eq:08ex02-DipoleMoment}
     \vec{\mathbf{\srcp}}=q\vec{\mathbf{d}}\, .
 \end{align}
 其单位为$\text{C}\cdot\text{m}$.
@@ -1283,7 +1283,7 @@ $W_{AB}$的结果与路径$C$本身无关，而只与起点和终点位置有关
 定义电\keyindex{极化强度}{polarization density}{}
 矢量为$\vec{\mathbf{P}}=P_x\hat{\text{\sffamily\bfseries i}}+P_y\hat{\text{\sffamily\bfseries j}}+P_z\hat{\text{\sffamily\bfseries k}}$，
 它表示单位体积内偶极矩的大小：
-\begin{align}
+\begin{align}\label{eq:08ex02-PolarizationDensity}
     \vec{\mathbf{P}}=N\vec{\mathbf{\srcp}}=Nq\vec{\mathbf{d}}\, .
 \end{align}
 而体积元垂直于$x$轴的表面$S_1$和$S_2$附近的偶极子被包进去的净电荷量分别为
@@ -1318,7 +1318,7 @@ $d_x\bigg|_{x+\Delta x}$和$P_x(x+\Delta x)$分别表示$\vec{\mathbf{d}}$和$\v
     =-\vec{\nabla}\cdot\vec{\mathbf{P}}\, .
 \end{align}
 这些极化电荷都是\keyindex{束缚电荷}{bound charge}{electric charge\ 电荷}，
-也是电场的源，所以都要代入高斯定律\refeq{08ex02-differentialGausssLawElectric}：
+也是电场的源的一部分，所以都要代入高斯定律\refeq{08ex02-differentialGausssLawElectric}：
 \begin{align}\label{eq:08ex02-DensityPolarization}
     \vec{\nabla}\cdot(\epsilon_0\vec{\mathbf{E}})=\rho_f+\rho_p=\rho_f-\vec{\nabla}\cdot\vec{\mathbf{P}}\, .
 \end{align}
@@ -1331,7 +1331,7 @@ $d_x\bigg|_{x+\Delta x}$和$P_x(x+\Delta x)$分别表示$\vec{\mathbf{d}}$和$\v
 \end{align}
 从上式我们还能推出累积在介质外表面附近的束缚电荷面密度
 $\sigma_p$为
-\begin{align}
+\begin{align}\label{eq:08ex02-SurfacePolarizationDensity}
     \sigma_p=-\frac{\mathrm{d}q_p}{\mathrm{d}S}
     =\frac{\mathrm{d}}{\mathrm{d}S}\oiint\limits_S\vec{\mathbf{P}}\cdot\mathrm{d}\vec{\mathbf{S}}
     =\vec{\mathbf{P}}\cdot\vec{\mathbf{n}}\, ,
@@ -1343,7 +1343,7 @@ $\sigma_p$为
 我们通常难以直接把握极化电荷量，所以把高斯定律改写为关于自由电荷量的形式会更方便。
 由此定义\keyindex{电位移}{electric displacement}{}
 矢量场$\vec{\mathbf{D}}$为
-\begin{align}
+\begin{align}\label{eq:08ex02-ElectricDisplacement}
     \vec{\mathbf{D}}=\epsilon_0\vec{\mathbf{E}}+\vec{\mathbf{P}}\, .
 \end{align}
 可见$\vec{\mathbf{D}}$因偶极子中电荷的位移而与$\epsilon_0\vec{\mathbf{E}}$不完全相等。
@@ -1381,13 +1381,13 @@ $\sigma_p$为
 $\vec{\mathbf{E}}$是包含该点的一定体积范围内微观电场的平均值。
 显然宏观电场会比微观电场平滑得多，实践中也更加容易观测。
 因此在均匀极化的假设下，有
-\begin{align}
+\begin{align}\label{eq:08ex02-MacroscopicField}
     \vec{\mathbf{E}}=\vec{\mathbf{E}}_0+\vec{\mathbf{E}}_d\, ,
 \end{align}
 其中$\vec{\mathbf{E}}_d$是均匀极化在宏观上形成的电场，
 即\keyindex{去极化场}{depolarization field}{}。
-可以证明，去极化场的表达式与作平均时所选的体积形状有关，
-适当选取椭球、圆柱、圆盘等形状可以得到均匀的去极化场。
+可以证明，去极化场的表达式与晶格结构以及作平均时的体积形状有关。
+一定条件下，椭球、圆柱、圆盘等形状可以得到均匀的去极化场。
 后文我们将以圆球为例子推导$\vec{\mathbf{E}}_d$与电极化强度$\vec{\mathbf{P}}$之间的关系。
 
 需要指出的是，宏观电场与具体作用在某个微观粒子上的微观电场有很大不同，
@@ -1398,36 +1398,76 @@ $\vec{\mathbf{E}}_l$。例如，考虑电子极化中一个原子感受到的微
 设这些偶极子有完全一样的偶极矩$\vec{\mathbf{\srcp}}$，
 将其方向设为$z$轴，并记每个偶极子的位移矢量为$\vec{\mathbf{r}}_i$，
 对应坐标为$(x_i,y_i,z_i)$，单位向量为$\hat{\mathbf{r}}_i$。
-结合几何对称性可知，球心处的原子感受到的这些偶极子形成的合电场在$x$和$y$方向的分量应为零。
+结合晶格结构和球体空间的几何对称性可知，
+球心处的原子感受到的这些偶极子形成的合电场$\vec{\mathbf{E}}_s$在$x$和$y$方向的分量应为零。
 而根据\refeq{08ex02-fieldDipole}，合电场在$z$方向的分量则为
 \begin{align}
-    E_z
-     & =\left(\sum\limits_i\frac{3(\vec{\mathbf{\srcp}}\cdot(-\hat{\mathbf{r}}_i))(-\hat{\mathbf{r}}_i)-\vec{\mathbf{\srcp}}}{4\pi\epsilon_0 r_i^3}\right)_z
-    =\sum\limits_i\left(\frac{3(\vec{\mathbf{\srcp}}\cdot\vec{\mathbf{r}}_i)\vec{\mathbf{r}}_i-r_i^2\vec{\mathbf{\srcp}}}{4\pi\epsilon_0 r_i^5}\right)_z\nonumber\\
-    =&\sum\limits_i\frac{3\srcp z_i^2-r_i^2\srcp}{4\pi\epsilon_0 r_i^5}
-    =\frac{\srcp}{4\pi\epsilon_0}\sum\limits_i\frac{3z_i^2-r_i^2}{r_i^5}\nonumber\\
-    =&\frac{\srcp}{4\pi\epsilon_0}\sum\limits_i\frac{3z_i^2-(x_i^2+y_i^2+z_i^2)}{r_i^5}\nonumber\\
-    =&\frac{\srcp}{4\pi\epsilon_0}\sum\limits_i\frac{2z_i^2-x_i^2-y_i^2}{r_i^5}\, .
+    E_{sz}
+      & =\left(\sum\limits_i\frac{3(\vec{\mathbf{\srcp}}\cdot(-\hat{\mathbf{r}}_i))(-\hat{\mathbf{r}}_i)-\vec{\mathbf{\srcp}}}{4\pi\epsilon_0 r_i^3}\right)_z
+    =\sum\limits_i\left(\frac{3(\vec{\mathbf{\srcp}}\cdot\vec{\mathbf{r}}_i)\vec{\mathbf{r}}_i-r_i^2\vec{\mathbf{\srcp}}}{4\pi\epsilon_0 r_i^5}\right)_z
+    =\sum\limits_i\frac{3\srcp z_i^2-r_i^2\srcp}{4\pi\epsilon_0 r_i^5}\nonumber\\
+    &=\frac{\srcp}{4\pi\epsilon_0}\sum\limits_i\frac{3z_i^2-r_i^2}{r_i^5}
+    =\frac{\srcp}{4\pi\epsilon_0}\sum\limits_i\frac{3z_i^2-(x_i^2+y_i^2+z_i^2)}{r_i^5}
+    =\frac{\srcp}{4\pi\epsilon_0}\sum\limits_i\frac{2z_i^2-x_i^2-y_i^2}{r_i^5}\, .
 \end{align}
-
-因为偶极子位置坐标$x_i$、$y_i$和$z_i$的对称性，有
+再次利用偶极子位置坐标$x_i$、$y_i$和$z_i$的对称性，有
 \begin{align}
     \sum\limits_i\frac{x_i^2}{r_i^5}=\sum\limits_i\frac{y_i^2}{r_i^5}=\sum\limits_i\frac{z_i^2}{r_i^5}\, ,
 \end{align}
 所以
 \begin{align}
-    E_z=0\, .
+    E_{sz}=0\, .
 \end{align}
-因此该原子周围球空间内偶极子对它的合电场为零，它受到的局部电场仅是外加电场，即
-\begin{align}
+因此电场$\vec{\mathbf{E}}_s$为零，该原子受到的局部电场仅是外加电场，即
+\begin{align}\label{eq:08ex02-onlyAppliedField}
     \vec{\mathbf{E}}_l=\vec{\mathbf{E}}_0\, .
 \end{align}
-这显然与宏观电场不相等。
+这显然与宏观电场不相等。总之不管晶格如何排布，
+作用于某原子的局部电场$\vec{\mathbf{E}}_l$都可分解为
+外加电场$\vec{\mathbf{E}}_0$与偶极子合电场$\vec{\mathbf{E}}_s$（上例恰为零）两部分。
+如\reffig{08ex02-LorentzCavityField}左图，取以该原子为中心大小适当的假想球体腔，
+则$\vec{\mathbf{E}}_s$可进一步拆分：
+\begin{align}\label{eq:08ex02-localField}
+    \vec{\mathbf{E}}_l=\vec{\mathbf{E}}_0+\vec{\mathbf{E}}_s
+    =\vec{\mathbf{E}}_0+\vec{\mathbf{E}}_d+\vec{\mathbf{E}}_2+\vec{\mathbf{E}}_3\, ,
+\end{align}
+其中$\vec{\mathbf{E}}_d$是腔外偶极子因足够远离该原子而忽略自身尺度形成的宏观去极化场，
+也等同于物质极化后依据\refeq{08ex02-SurfacePolarizationDensity}在表面累积的电荷形成的电场；
+$\vec{\mathbf{E}}_2$是因腔内极化而在其假想界面上累积的电荷形成的电场，
+也称\keyindex{洛伦兹腔场}{Lorentz cavity field}{}
+\begin{marginfigure}
+    \includegraphics[width=\linewidth]{chap08/Lorentz.jpg}
+\end{marginfigure}\sidenote{荷兰物理学家
+    亨德里克·安东·洛伦兹 (Hendrik Antoon Lorentz, 1853-1928)。}，
+它同样遵循\refeq{08ex02-SurfacePolarizationDensity}；
+$\vec{\mathbf{E}}_3$是腔内原子本身形成的场，在相应对称性假设下，
+我们取$\vec{\mathbf{E}}_3=\vec{\mathbf{0}}$.
+\begin{figure}[htbp]
+    \centering\includegraphics[width=\linewidth]{chap08/LorentzCavityField.eps}
+    \caption{局部电场的构成与洛伦兹腔场。}
+    \label{fig:08ex02-LorentzCavityField}
+\end{figure}
 
-然而不管晶格如何排布，作用于某个原子的局部电场
-都可以分解为外加电场与偶极子电场（上例恰为零）两部分。
-
-{\noindent\hfil$=========$\hfil{\color{red}{施工分割线}}\hfil$=========$\ }
+如\reffig{08ex02-LorentzCavityField}右图，
+我们先计算洛伦兹腔场$\vec{\mathbf{E}}_2$.
+设腔的半径为$s$，取极化强度$\vec{\mathbf{P}}$的方向为$z$轴建立球坐标系。
+腔表面极化电荷的位移矢量$\vec{\mathbf{s}}$的天顶角为$\gamma$，方位角为$\varphi$.
+根据\refeq{08ex02-SurfacePolarizationDensity}可知
+腔表面的极化电荷面密度为$P\cos\gamma$.
+由于几何对称性，球心处的电场$\vec{\mathbf{E}}_2$显然沿$z$轴方向，
+根据\refeq{08ex02-continuousSumField}，其对应分量为
+\begin{align}
+    E_{2z}
+     & =\oiint\limits_S\frac{P\cos\gamma}{4\pi\epsilon_0s^2}\cos\gamma\mathrm{d}S
+     =\int_{0}^{2\pi}\int_{0}^{\pi}\frac{P\cos\gamma}{4\pi\epsilon_0s^2}\cos\gamma\cdot s^2\sin\gamma\mathrm{d}\gamma\mathrm{d}\varphi\nonumber \\
+     & =\frac{P}{2\epsilon_0}\int_{0}^{\pi}\cos^2\gamma\sin\gamma\mathrm{d}\gamma
+     =\frac{P}{2\epsilon_0}\cdot\frac{-\cos^3\gamma}{3}\bigg|_{\gamma=0}^{\pi}
+     =\frac{P}{3\epsilon_0}\, .
+\end{align}
+于是
+\begin{align}\label{eq:08ex02-LorentzField}
+    \vec{\mathbf{E}}_2=\frac{\vec{\mathbf{P}}}{3\epsilon_0}\, .
+\end{align}
 
 \begin{figure}[htbp]
     \centering\includegraphics[width=0.75\linewidth]{Pictures/chap08/AtomicClassicalModel.eps}
@@ -1437,43 +1477,21 @@ $\vec{\mathbf{E}}_l$。例如，考虑电子极化中一个原子感受到的微
     \label{fig:08ex02-AtomicClassicalModel}
 \end{figure}
 
-如\reffig{08ex02-AtomicClassicalModel}左图，我们把原子视作这样的模型：带正电$q$的原子核处在中心，
-其周围弥漫着带等量负电荷$-q$且均匀分布的球形电子云，整个原子构成一个偶极子。
-当没有外加电场作用时，其正负电荷中心重合，易知偶极矩为零。
+接下来我们计算$\vec{\mathbf{E}}_d$，也即宏观去极化场$\vec{\mathbf{E}}_d$.
+如\reffig{08ex02-AtomicClassicalModel}左图，我们把原子视作这样的模型：
+带正电$q$的原子核处在中心，其周围弥漫着带等量负电荷$-q$且均匀分布的球形电子云，其半径为$R_0$，
+整个原子构成一个偶极子。当没有外加电场作用时，其正负电荷中心重合，易知偶极矩为零。
 当施加外加电场时，原子核和电子云朝着相反方向发生位移，
 相对位置矢量为$\vec{\mathbf{d}}$，但二者之间的库仑吸引力维持着它们不再远离。
-
-设电子云的半径为$R_0$，根据\refeq{08ex02-sphericalEfieldStrength}，
-原子核在电子云内感受到的电场为
-\begin{align}
-    \frac{-q}{4\pi\epsilon_0R_0^3}\vec{\mathbf{d}}\, .
-\end{align}
-设作用于该偶极子的局部电场为$\vec{\mathbf{E}}_l$，
-注意平衡状态下对正电荷的合力$\vec{\mathbf{F}}$为零：
-\begin{align}
-    \vec{\mathbf{F}}=q\left(\vec{\mathbf{E}}_l+\frac{-q}{4\pi\epsilon_0R_0^3}\vec{\mathbf{d}}\right)=\vec{\mathbf{0}}\, .
-\end{align}
-从上式解得平衡状态下的偶极子间距为
-\begin{align}
-    \vec{\mathbf{d}}=\frac{4\pi\epsilon_0R_0^3}{q}\vec{\mathbf{E}}_l\, .
-\end{align}
-因此偶极矩为
-\begin{align}
-    \vec{\mathbf{\srcp}}=q\vec{\mathbf{d}}=\alpha\vec{\mathbf{E}}_l\, ,
-\end{align}
-其中系数$\alpha$为原子（或分子）的\keyindex{极化率}{polarizability}{}：
-\begin{align}
-    \alpha=4\pi\epsilon_0R_0^3\, .
-\end{align}
-
-接着如\reffig{08ex02-AtomicClassicalModel}右图，
+再如\reffig{08ex02-AtomicClassicalModel}右图，
 设$z$轴方向为原子的偶极矩方向，原子核就在$z$轴上点$M$处，坐标为$z=a>0$，
-我们讨论球心为原点$O$、半径为$R$且$R\gg R_0$的球体空间内该原子核的电场平均值。
-对于球体空间内任意一点$P$，设其位移矢量为$\vec{\mathbf{r}}$，与$z$轴正向的夹角为$\theta$，
+我们讨论球心为原点$O$、半径为$R$且$R\gg R_0$的球体空间内该原子核建立的电场平均值。
+对于球体空间内任意一点$X$，设其位移矢量为$\vec{\mathbf{r}}$，与$z$轴正向的夹角为$\theta$，
 并记沿$z$轴正向的单位向量为$\vec{\mathbf{i}}_z$.
 由此结合\refeq{08ex02-continuousSumField}，用球坐标表达出空间内的平均电场为
 \begin{align}
-    \langle\vec{\mathbf{E}}\rangle=\frac{1}{\displaystyle\frac{4}{3}\pi R^3}
+    \vec{\mathbf{E}}_d=\langle\vec{\mathbf{E}}\rangle
+    =\frac{1}{\displaystyle\frac{4}{3}\pi R^3}
     \int_{r=0}^{R}\int_{\theta=0}^{\pi}\int_{\varphi=0}^{2\pi}
     \frac{q(\vec{\mathbf{r}}-a\vec{\mathbf{i}}_z)}
     {4\pi\epsilon_0|\vec{\mathbf{r}}-a\vec{\mathbf{i}}_z|^3}
@@ -1486,7 +1504,7 @@ $\vec{\mathbf{E}}_l$。例如，考虑电子极化中一个原子感受到的微
 注意本问题在几何上关于$z$轴对称，故易知$\langle\vec{\mathbf{E}}\rangle$的$x$和$y$分量为零，
 只有$z$分量待求，完成对$\varphi$的积分后为：
 \begin{align}
-    \langle E\rangle_z=\frac{q}{\displaystyle\frac{4}{3}\pi R^3}
+    \langle E\rangle_z=\frac{3q}{4\pi R^3}
     \frac{2\pi}{4\pi\epsilon_0}\int_{\theta=0}^{\pi}\int_{r=0}^{R}
     \frac{r^2(r\cos\theta-a)\sin\theta}{(a^2+r^2-2ar\cos\theta)^{\frac{3}{2}}}\mathrm{d}r\mathrm{d}\theta\, .
 \end{align}
@@ -1529,12 +1547,85 @@ $\vec{\mathbf{E}}_l$。例如，考虑电子极化中一个原子感受到的微
     \langle E\rangle_z=\frac{-qa}{4\pi\epsilon_0R^3}+\frac{q(a-d)}{4\pi\epsilon_0R^3}
     =\frac{-qd}{4\pi\epsilon_0R^3}=\frac{-\srcp}{4\pi\epsilon_0R^3}\, .
 \end{align}
+可以看到上述结果与偶极子位置参数$a$无关；
 设该球体单位体积内均匀分布着$N$个像这样的偶极子，
-则所有偶极子共同作用下的平均电场为
-\begin{align}
-    \langle\vec{\mathbf{E}}\rangle=\frac{4}{3}\pi R^3N\frac{-\vec{\mathbf{\srcp}}}{4\pi\epsilon_0R^3}
+则所有偶极子共同作用下的平均电场即去极化场为
+\begin{align}\label{eq:08ex02-depolarizationField}
+    \vec{\mathbf{E}}_d=\langle\vec{\mathbf{E}}\rangle
+    =\frac{4}{3}\pi R^3N\frac{-\vec{\mathbf{\srcp}}}{4\pi\epsilon_0R^3}
     =-\frac{N\vec{\mathbf{\srcp}}}{3\epsilon_0}=-\frac{\vec{\mathbf{P}}}{3\epsilon_0}\, .
 \end{align}
+将\refeq{08ex02-LorentzField}和\refeq{08ex02-depolarizationField}
+以及$\vec{\mathbf{E}}_3=\vec{\mathbf{0}}$
+代入\refeq{08ex02-localField}，可发现结果与同假设下的\refeq{08ex02-onlyAppliedField}吻合；
+代入\refeq{08ex02-MacroscopicField}则得到宏观电场为
+\begin{align}\label{eq:08ex02-MacroField}
+    \vec{\mathbf{E}}=\vec{\mathbf{E}}_0-\frac{\vec{\mathbf{P}}}{3\epsilon_0}\, .
+\end{align}
+
+再如\reffig{08ex02-AtomicClassicalModel}左图，
+我们设电子云的半径为$R_0$，根据\refeq{08ex02-sphericalEfieldStrength}，
+原子核在电子云内感受到的来自该电子云的电场为
+\begin{align}
+    \frac{-q}{4\pi\epsilon_0R_0^3}\vec{\mathbf{d}}\, .
+\end{align}
+考虑到局部电场为$\vec{\mathbf{E}}_l$，
+注意到平衡状态下对正电荷的合力$\vec{\mathbf{F}}$为零，于是：
+\begin{align}
+    \vec{\mathbf{F}}=q\left(\vec{\mathbf{E}}_l+\frac{-q}{4\pi\epsilon_0R_0^3}\vec{\mathbf{d}}\right)=\vec{\mathbf{0}}\, .
+\end{align}
+从上式解得平衡状态下的偶极子间距为
+\begin{align}
+    \vec{\mathbf{d}}=\frac{4\pi\epsilon_0R_0^3}{q}\vec{\mathbf{E}}_l\, .
+\end{align}
+因此偶极矩为
+\begin{align}\label{eq:08ex02-polarizationLocalField}
+    \vec{\mathbf{\srcp}}=q\vec{\mathbf{d}}=\alpha\vec{\mathbf{E}}_l\, ,
+\end{align}
+其中系数$\alpha$定义为原子（或分子）的\keyindex{极化率}{polarizability}{}：
+\begin{align}
+    \alpha=4\pi\epsilon_0R_0^3\, .
+\end{align}
+联立\refeq{08ex02-PolarizationDensity}、\refeq{08ex02-onlyAppliedField}、
+\refeq{08ex02-MacroField}和\refeq{08ex02-polarizationLocalField}可得
+\begin{align}
+    \vec{\mathbf{P}}=N\alpha\vec{\mathbf{E}}_l
+    =N\alpha\left(\vec{\mathbf{E}}+\frac{\vec{\mathbf{P}}}{3\epsilon_0}\right)\, ,
+\end{align}
+于是极化强度与宏观电场的关系为
+\begin{align}
+    \vec{\mathbf{P}}=\frac{N\alpha}{1-\displaystyle\frac{N\alpha}{3\epsilon_0}}\vec{\mathbf{E}}
+    =\epsilon_0\chi_e\vec{\mathbf{E}}\, ,
+\end{align}
+这里\keyindex{电极化率}{electric susceptibility}{}
+$\chi_e$为：
+\begin{align}\label{eq:08ex02-chiSusceptibility}
+    \chi_e=\frac{N\alpha}{\epsilon_0-\displaystyle\frac{N\alpha}{3}}\, .
+\end{align}
+再与\refeq{08ex02-ElectricDisplacement}联立，得
+\begin{align}
+    \vec{\mathbf{D}}=\epsilon_0\vec{\mathbf{E}}+\vec{\mathbf{P}}
+    =\epsilon_0(1+\chi_e)\vec{\mathbf{E}}
+    =\epsilon_0K_E\vec{\mathbf{E}}
+    =\epsilon\vec{\mathbf{E}}\, ,
+\end{align}
+其中$K_E$是无量纲且与单位制无关的新物理量，
+称作\keyindex{相对电容率}{relative permittivity}{permittivity\ 电容率}，
+也称\keyindex{相对介电常数}{relative dielectric constant}{}；
+而$\epsilon$称为\keyindex{绝对电容率}{absolute permittivity}{permittivity\ 电容率}，
+简称\keyindex{电容率}{permittivity}{}：
+\begin{align}\label{eq:08ex02-relativepermittivity}
+    K_E=\frac{\epsilon}{\epsilon_0}=1+\chi_e\, ,
+\end{align}
+显然真空的$K_E$为1；
+联立\refeq{08ex02-chiSusceptibility}与\refeq{08ex02-relativepermittivity}可得极化率与电容率之间满足
+\begin{align}
+    \frac{N\alpha}{3\epsilon_0}=\frac{\epsilon-\epsilon_0}{\epsilon+2\epsilon_0}
+    =\frac{K_E-1}{K_E+2}\, ,
+\end{align}
+上式也称作\keyindex{克劳修斯-莫索提关系}{Clausius-Mossotti relation}{}。
+
+{\noindent\hfil$=========$\hfil{\color{red}{施工分割线}}\hfil$=========$\ }
 
 此外，一个运动的电荷还会受到另一种力$\vec{\mathbf{F}}_M$，
 称作\keyindex{洛伦兹力}{Lorentz force}{}，
@@ -1691,12 +1782,7 @@ $C$对于是否选在导体内外或附近也没有任何要求。
 $\epsilon$替代$\epsilon_0$；
 但电容率又是描述平行板电容器的的基础概念，单位制的差异
 引发了$\epsilon$的取值问题。为了避免这些麻烦，
-我们定义一个与单位制无关的新物理量，即\keyindex{相对电容率}{relative permittivity}{permittivity\ 电容率}
-$K_E$，也称\keyindex{相对介电常数}{relative dielectric constant}{}：
-\begin{align}\label{eq:08ex02-relativepermittivity}
-    K_E=\frac{\epsilon}{\epsilon_0}\, ,
-\end{align}
-显然真空的$K_E$为1，它是无量纲的。
+我们通常更多使用\refeq{08ex02-relativepermittivity}中的相对电容率$K_E$.
 
 目前物理界尚未发现与电荷对应的“磁荷”存在，没有发现过孤立的磁极（磁单极）。
 磁场$\vec{\mathbf{B}}$的磁力线总是连续和闭合的。因此对于磁场中的任何封闭曲面，

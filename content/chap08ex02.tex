@@ -1477,7 +1477,7 @@ $\vec{\mathbf{E}}_3$是腔内原子本身形成的场，在相应对称性假设
     \label{fig:08ex02-AtomicClassicalModel}
 \end{figure}
 
-接下来我们计算$\vec{\mathbf{E}}_d$，也即宏观去极化场$\vec{\mathbf{E}}_d$.
+接下来我们计算宏观去极化场$\vec{\mathbf{E}}_d$.
 如\reffig{08ex02-AtomicClassicalModel}左图，我们把原子视作这样的模型：
 带正电$q$的原子核处在中心，其周围弥漫着带等量负电荷$-q$且均匀分布的球形电子云，其半径为$R_0$，
 整个原子构成一个偶极子。当没有外加电场作用时，其正负电荷中心重合，易知偶极矩为零。
@@ -1490,7 +1490,7 @@ $\vec{\mathbf{E}}_3$是腔内原子本身形成的场，在相应对称性假设
 并记沿$z$轴正向的单位向量为$\vec{\mathbf{i}}_z$.
 由此结合\refeq{08ex02-continuousSumField}，用球坐标表达出空间内的平均电场为
 \begin{align}
-    \vec{\mathbf{E}}_d=\langle\vec{\mathbf{E}}\rangle
+    \vec{\mathbf{E}}_d
     =\frac{1}{\displaystyle\frac{4}{3}\pi R^3}
     \int_{r=0}^{R}\int_{\theta=0}^{\pi}\int_{\varphi=0}^{2\pi}
     \frac{q(\vec{\mathbf{r}}-a\vec{\mathbf{i}}_z)}
@@ -1501,10 +1501,10 @@ $\vec{\mathbf{E}}_3$是腔内原子本身形成的场，在相应对称性假设
 \begin{align}
     |\vec{\mathbf{r}}-a\vec{\mathbf{i}}_z|^2=a^2+r^2-2ar\cos\theta\, .
 \end{align}
-注意本问题在几何上关于$z$轴对称，故易知$\langle\vec{\mathbf{E}}\rangle$的$x$和$y$分量为零，
+注意本问题在几何上关于$z$轴对称，故易知$\vec{\mathbf{E}}_d$的$x$和$y$分量为零，
 只有$z$分量待求，完成对$\varphi$的积分后为：
 \begin{align}
-    \langle E\rangle_z=\frac{3q}{4\pi R^3}
+    E_{dz}=\frac{3q}{4\pi R^3}
     \frac{2\pi}{4\pi\epsilon_0}\int_{\theta=0}^{\pi}\int_{r=0}^{R}
     \frac{r^2(r\cos\theta-a)\sin\theta}{(a^2+r^2-2ar\cos\theta)^{\frac{3}{2}}}\mathrm{d}r\mathrm{d}\theta\, .
 \end{align}
@@ -1518,7 +1518,7 @@ $\vec{\mathbf{E}}_3$是腔内原子本身形成的场，在相应对称性假设
 \end{align}
 继续代入得
 \begin{align}
-    \langle E\rangle_z
+    E_{dz}
      & =\frac{3q}{8\pi\epsilon_0R^3}\int_{r=0}^{R}\int_{u=(r-a)^2}^{(r+a)^2}
     \frac{r^2\left(r\displaystyle\frac{a^2+r^2-u}{2ar}-a\right)}{u^{\frac{3}{2}}}
     \frac{1}{2ar}\mathrm{d}u\mathrm{d}r\nonumber                                                             \\
@@ -1544,14 +1544,14 @@ $\vec{\mathbf{E}}_3$是腔内原子本身形成的场，在相应对称性假设
 则它与原子核形成的合电场即是各自形成的电场的向量和，
 两者形式相似。于是球空间内的电场均值沿$z$轴的分量为
 \begin{align}
-    \langle E\rangle_z=\frac{-qa}{4\pi\epsilon_0R^3}+\frac{q(a-d)}{4\pi\epsilon_0R^3}
+    E_{dz}=\frac{-qa}{4\pi\epsilon_0R^3}+\frac{q(a-d)}{4\pi\epsilon_0R^3}
     =\frac{-qd}{4\pi\epsilon_0R^3}=\frac{-\srcp}{4\pi\epsilon_0R^3}\, .
 \end{align}
 可以看到上述结果与偶极子位置参数$a$无关；
 设该球体单位体积内均匀分布着$N$个像这样的偶极子，
 则所有偶极子共同作用下的平均电场即去极化场为
 \begin{align}\label{eq:08ex02-depolarizationField}
-    \vec{\mathbf{E}}_d=\langle\vec{\mathbf{E}}\rangle
+    \vec{\mathbf{E}}_d
     =\frac{4}{3}\pi R^3N\frac{-\vec{\mathbf{\srcp}}}{4\pi\epsilon_0R^3}
     =-\frac{N\vec{\mathbf{\srcp}}}{3\epsilon_0}=-\frac{\vec{\mathbf{P}}}{3\epsilon_0}\, .
 \end{align}

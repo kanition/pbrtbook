@@ -1348,7 +1348,7 @@ $\sigma_p$为
 \end{align}
 可见$\vec{\mathbf{D}}$因偶极子中电荷的位移而与$\epsilon_0\vec{\mathbf{E}}$不完全相等。
 于是\refeq{08ex02-DensityPolarization}可重写为
-\begin{align}
+\begin{align}\label{eq:08ex02-FreeDensityDisplacement}
     \vec{\nabla}\cdot(\epsilon_0\vec{\mathbf{E}}+\vec{\mathbf{P}})
     =\vec{\nabla}\cdot\vec{\mathbf{D}}=\rho_f\, .
 \end{align}
@@ -1625,6 +1625,85 @@ $\chi_e$为：
 \end{align}
 上式也称作\keyindex{克劳修斯-莫索提关系}{Clausius-Mossotti relation}{}。
 
+\subsubsection*{电流}
+与介电质相反，金属的最外层电子通常与原子核结合很弱，
+它们很容易在外加电场作用下自由移动；
+在电解质溶液中，正负离子也能做到这点。
+\begin{definition}[\keyindex{电流}{electric current}{}]
+    电荷移动形成的流称为电流，其方向取正电荷移动方向。
+\end{definition}
+电流强度定义为单位时间内通过某一截面的净电荷量，单位为\keyindex{安培}{ampere}{}
+(安，A)
+\begin{marginfigure}
+    \includegraphics[width=\linewidth]{chap08/AmpereAndre1825.jpg}
+\end{marginfigure}\sidenote{法国物理学家安德烈-马里·安培 (André-Marie Ampère, 1775-1836)。}，
+规定$1\text{C}=1\text{A}\cdot\text{s}$且使得基本电荷取值按\refeq{08ex02-elementaryCharge}固定。
+
+设有多种带电粒子运动形成电流，其中第$i$种对应的自由电荷密度为$\rho_{fi}$，
+以速度$\vec{\mathbf{v}}_i$流过微分面元$\mathrm{d}\vec{\mathbf{S}}$，
+则在时间$\Delta t$内该种粒子携带通过面元的电荷量为
+\begin{align}
+    \Delta Q_i=\rho_{fi}\Delta t\vec{\mathbf{v}}_i\cdot\mathrm{d}\vec{\mathbf{S}}\, .
+\end{align}
+对应的微分电流即为
+\begin{align}
+    \mathrm{d}I_i=\frac{\Delta Q_i}{\Delta t}
+    =\rho_{fi}\vec{\mathbf{v}}_i\cdot\mathrm{d}\vec{\mathbf{S}}
+    =\vec{\mathbf{J}}_{fi}\cdot\mathrm{d}\vec{\mathbf{S}}\, ,
+\end{align}
+其中向量
+\begin{align}
+    \vec{\mathbf{J}}_{fi}=\rho_{fi}\vec{\mathbf{v}}_i
+\end{align}
+是这些自由电荷形成的\keyindex{电流密度}{current density}{}，单位为$\text{A}/\text{m}^2$.
+在多种带电粒子的运动下，总的电荷密度是各种粒子电荷密度的算术和：
+\begin{align}
+    \rho_f=\sum\limits_i\rho_{fi}\, ,
+\end{align}
+而总的电流密度就是各种粒子电流密度的矢量和：
+\begin{align}
+    \vec{\mathbf{J}}_f=\sum\limits_i\rho_{fi}\vec{\mathbf{v}}_i\, .
+\end{align}
+因此，即便物质整体呈电中性即$\rho_f=0$，
+仍有可能因为不同带电粒子的运动速度差异而形成不为零的总电流密度。
+总的电流即为电流密度在截面上的积分
+\begin{align}
+    I=\iint\limits_S\vec{\mathbf{J}}_f\cdot\mathrm{d}\vec{\mathbf{S}}\, .
+\end{align}
+
+现在考虑一个由封闭曲面$S$包围的空间$V$，其内的电荷密度为$\rho_f$，
+并且在其表面$S$附近，各种带电粒子正在进出空间$V$形成电流。
+于是从$t$时刻到$t+\Delta t$时刻，$V$内总电荷的变化量为
+\begin{align}
+    \Delta Q=\iiint\limits_V(\rho_f(t+\Delta t)-\rho_f(t))\mathrm{d}V
+    =-\oiint\limits_S\sum\limits_i\rho_{fi}\vec{\mathbf{v}}_i\Delta t\cdot\mathrm{d}\vec{\mathbf{S}}
+    =-\oiint\limits_S\vec{\mathbf{J}}_f\Delta t\cdot\mathrm{d}\vec{\mathbf{S}}\, .
+\end{align}
+将上式两边同除以$\Delta t$并令$\Delta t\to0$，可得
+\begin{align}
+    \oiint\limits_S\vec{\mathbf{J}}_f\cdot\mathrm{d}\vec{\mathbf{S}}
+    +\iiint\limits_V\frac{\partial \rho_f}{\partial t}\mathrm{d}V=0\, .
+\end{align}
+还能利用散度定理\ref{theorem:08ex-divergenceTheorem}，将上式写作微分形式：
+\begin{align}
+    \vec{\nabla}\cdot\vec{\mathbf{J}}_f+\frac{\partial \rho_f}{\partial t}=0\, .
+\end{align}
+结合高斯定律的\refeq{08ex02-FreeDensityDisplacement}和\refeq{08ex02-MaxwellGaussD}，
+上面两式还能分别写作
+\begin{align}
+    \oiint\limits_S\left(\vec{\mathbf{J}}_f+\frac{\partial\vec{\mathbf{D}}}{\partial t}\right)\mathrm{d}\vec{\mathbf{S}}&=0\, ,\\
+    \vec{\nabla}\cdot\left(\vec{\mathbf{J}}_f+\frac{\partial\vec{\mathbf{D}}}{\partial t}\right)&=0\, ,
+\end{align}
+因此$\vec{\mathbf{J}}_f$也称为\keyindex{传导电流密度}{conduction current density}{current density\ 电流密度}，
+而$\displaystyle\frac{\partial\vec{\mathbf{D}}}{\partial t}$称为\keyindex{位移电流密度}{displacement current density}{current density\ 电流密度}。
+上式实际上是\keyindex{基尔霍夫电流定律}{Kirchhoff's current law}{}
+的场形式：一个节点的电流代数和必为零。
+传导和位移电流总的净通量必为零，进入曲面的电流必将离开曲面。
+因为位移电流不涉及电荷输运，所以时变的电流可以不借助电荷载流子而在空间中传输。
+在静态条件下，位移电流则为零。
+
+\subsubsection*{电场的边界条件}
+
 {\noindent\hfil$=========$\hfil{\color{red}{施工分割线}}\hfil$=========$\ }
 
 此外，一个运动的电荷还会受到另一种力$\vec{\mathbf{F}}_M$，
@@ -1867,12 +1946,10 @@ $\epsilon$替代$\epsilon_0$；
 \begin{align}
     \oint\limits_C\vec{\mathbf{B}}\cdot\mathrm{d}\vec{\mathbf{\ell}}=\mu_0\sum i\, ,
 \end{align}
-这就是安培定律\begin{marginfigure}
-    \includegraphics[width=\linewidth]{chap08/AmpereAndre1825.jpg}
-\end{marginfigure}\sidenote{法国物理学家安德烈-马里·安培 (André-Marie Ampère, 1775-1836)。}。
+这就是安培定律。
 它将$\vec{\mathbf{B}}$沿着闭合曲线$C$切向的线积分
 与$C$包围区域内的电流联系起来。当电流不均匀地流过截面时，
-安培定律右边可改写成\keyindex{电流密度}{current density}{}
+安培定律右边可改写成电流密度
 $\vec{\mathbf{J}}$在截面面积上的积分：
 \begin{align}
     \oint\limits_C\vec{\mathbf{B}}\cdot\mathrm{d}\vec{\mathbf{\ell}}
@@ -1925,13 +2002,12 @@ $\vec{\mathbf{J}}$在截面面积上的积分：
 麦克斯韦\begin{marginfigure}
     \includegraphics[width=\linewidth]{chap08/James-Clerk-Maxwell-1831-1879.jpg}
 \end{marginfigure}\sidenote{英国物理学家詹姆斯·克拉克·麦克斯韦(James Clerk Maxwell, 1831-1879)。}
-提出该概念，并称作\keyindex{位移电流密度}{displacement current density}{current density\ 电流密度}，
-定义为
+提出该概念，并称作位移电流密度，定义为
 \begin{align}
     \vec{\mathbf{J}}_D=\epsilon\frac{\partial\vec{\mathbf{E}}}{\partial t}\, .
 \end{align}
 于是我们将以上结论重新表述为
-\begin{theorem}[\keyindex{Ampère's Circuital Law}{安培环路定律}{}]
+\begin{theorem}[\keyindex{安培环路定律}{Ampère's Circuital Law}{}]
     对于以闭合路径$C$为边界的任意非封闭曲面$A$，有
     \begin{align}\label{eq:08ex02-AmpereLaw}
         \oint\limits_C\vec{\mathbf{B}}\cdot\mathrm{d}\vec{\mathbf{\ell}}

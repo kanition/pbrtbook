@@ -744,8 +744,8 @@ $\vec{\nabla}$算符能让我们后续的表示更加方便。
     或者从物体的一部分转移到另一部分；在转移过程中，电荷的总量保持不变。
 \end{theorem}
 
-国际单位制中，电荷量的单位为\keyindex{库仑}{coulomb}{}(库，C)。
-一个质子所带的正电荷，或一个电子所带的负电荷为\keyindex{基本电荷}{elementary charge}{electric charge\ 电荷}，
+国际单位制中电荷量的单位为\keyindex{库仑}{coulomb}{}
+(库，C)。一个质子所带的正电荷，或一个电子所带的负电荷为\keyindex{基本电荷}{elementary charge}{electric charge\ 电荷}，
 其值定义为
 \begin{align}\label{eq:08ex02-elementaryCharge}
     e=1.602176634\times10^{-19}\text{C}\, .
@@ -916,7 +916,7 @@ $\vec{\nabla}$算符能让我们后续的表示更加方便。
 \end{theorem}
 
 \begin{example}
-    如\reffig{08ex02-sphereField}，若自由空间中总量$Q$的电荷均匀分布在半径为$R$的球体空间内
+    如\reffig{08ex02-sphereField}，若自由空间中总量为$Q$的静止电荷均匀分布在半径为$R$的球体空间内
     （图中蓝色球），求相应的电场分布。
     \begin{figure}[htbp]
         \centering
@@ -968,10 +968,12 @@ $\vec{\nabla}$算符能让我们后续的表示更加方便。
         \label{fig:08ex02-ParallelSheets}
     \end{figure}
 
-    如\reffig{08ex02-ParallelSheets}(a)，先考虑单块均匀带电平板的电场$\vec{\mathbf{E}}_0$.
-    由几何对称性，电场的方向应处处垂直于平板，当平板带正电或负电时，平板两侧电场的方向均远离或接近平板。
-    以带正电为例，任取一个极小圆柱体与平板相交，圆柱体底面与平板平行，截面积为$S$，则圆柱体包围的电荷为$\sigma S$.
-    根据高斯定律\refeq{08ex02.GausssLawElectric}有
+    如\reffig{08ex02-ParallelSheets}(a)，先考虑单块均匀带电平板的电场。
+    由几何对称性，电场方向应处处垂直于平板，当平板带正电或负电时，平板两侧电场的方向均远离或接近平板。
+    以带正电为例，设一侧电场为$\vec{\mathbf{E}}_0$，则另一侧为$-\vec{\mathbf{E}}_0$，大小均为$E_0$.
+    任取一个极小圆柱体与平板相交，圆柱体底面与平板平行，截面积为$S$，则圆柱体包围的电荷为$\sigma S$.
+    且因为电场平行于圆柱侧面，所以圆柱的电场通量仅来自于两个底面，
+    根据高斯定律\refeq{08ex02.GausssLawElectric}，有
     \begin{align}
         2\epsilon_0E_0S=\sigma S\, .
     \end{align}
@@ -1120,6 +1122,7 @@ $W_{AB}$的结果与路径$C$本身无关，而只与起点和终点位置有关
 而变化后的电荷分布又引发了新的电场，如此电荷分布和电场分布相互影响，
 给计算带来困难。为了保证求得的结果是自洽的并简化计算，我们可以改用场的微分形式来描述。
 自由空间中，将\refeq{08ex02-electricPotential}代入\refeq{08ex02-differentialGausssLawElectric}得到
+\sidenote{若介质的电容率不均匀，则更一般的形式是$\vec{\nabla}\cdot(\epsilon\vec{\nabla}\varphi)=-\rho$.}
 \begin{theorem}[\keyindex{泊松方程}{Poisson's equation}{}]
     静电场的电势$\varphi$满足
     \begin{align}
@@ -1348,7 +1351,7 @@ $\sigma_p$为
 \end{align}
 可见$\vec{\mathbf{D}}$因偶极子中电荷的位移而与$\epsilon_0\vec{\mathbf{E}}$不完全相等。
 于是\refeq{08ex02-DensityPolarization}可重写为
-\begin{align}
+\begin{align}\label{eq:08ex02-FreeDensityDisplacement}
     \vec{\nabla}\cdot(\epsilon_0\vec{\mathbf{E}}+\vec{\mathbf{P}})
     =\vec{\nabla}\cdot\vec{\mathbf{D}}=\rho_f\, .
 \end{align}
@@ -1477,7 +1480,7 @@ $\vec{\mathbf{E}}_3$是腔内原子本身形成的场，在相应对称性假设
     \label{fig:08ex02-AtomicClassicalModel}
 \end{figure}
 
-接下来我们计算$\vec{\mathbf{E}}_d$，也即宏观去极化场$\vec{\mathbf{E}}_d$.
+接下来我们计算宏观去极化场$\vec{\mathbf{E}}_d$.
 如\reffig{08ex02-AtomicClassicalModel}左图，我们把原子视作这样的模型：
 带正电$q$的原子核处在中心，其周围弥漫着带等量负电荷$-q$且均匀分布的球形电子云，其半径为$R_0$，
 整个原子构成一个偶极子。当没有外加电场作用时，其正负电荷中心重合，易知偶极矩为零。
@@ -1490,7 +1493,7 @@ $\vec{\mathbf{E}}_3$是腔内原子本身形成的场，在相应对称性假设
 并记沿$z$轴正向的单位向量为$\vec{\mathbf{i}}_z$.
 由此结合\refeq{08ex02-continuousSumField}，用球坐标表达出空间内的平均电场为
 \begin{align}
-    \vec{\mathbf{E}}_d=\langle\vec{\mathbf{E}}\rangle
+    \vec{\mathbf{E}}_d
     =\frac{1}{\displaystyle\frac{4}{3}\pi R^3}
     \int_{r=0}^{R}\int_{\theta=0}^{\pi}\int_{\varphi=0}^{2\pi}
     \frac{q(\vec{\mathbf{r}}-a\vec{\mathbf{i}}_z)}
@@ -1501,10 +1504,10 @@ $\vec{\mathbf{E}}_3$是腔内原子本身形成的场，在相应对称性假设
 \begin{align}
     |\vec{\mathbf{r}}-a\vec{\mathbf{i}}_z|^2=a^2+r^2-2ar\cos\theta\, .
 \end{align}
-注意本问题在几何上关于$z$轴对称，故易知$\langle\vec{\mathbf{E}}\rangle$的$x$和$y$分量为零，
+注意本问题在几何上关于$z$轴对称，故易知$\vec{\mathbf{E}}_d$的$x$和$y$分量为零，
 只有$z$分量待求，完成对$\varphi$的积分后为：
 \begin{align}
-    \langle E\rangle_z=\frac{3q}{4\pi R^3}
+    E_{dz}=\frac{3q}{4\pi R^3}
     \frac{2\pi}{4\pi\epsilon_0}\int_{\theta=0}^{\pi}\int_{r=0}^{R}
     \frac{r^2(r\cos\theta-a)\sin\theta}{(a^2+r^2-2ar\cos\theta)^{\frac{3}{2}}}\mathrm{d}r\mathrm{d}\theta\, .
 \end{align}
@@ -1518,7 +1521,7 @@ $\vec{\mathbf{E}}_3$是腔内原子本身形成的场，在相应对称性假设
 \end{align}
 继续代入得
 \begin{align}
-    \langle E\rangle_z
+    E_{dz}
      & =\frac{3q}{8\pi\epsilon_0R^3}\int_{r=0}^{R}\int_{u=(r-a)^2}^{(r+a)^2}
     \frac{r^2\left(r\displaystyle\frac{a^2+r^2-u}{2ar}-a\right)}{u^{\frac{3}{2}}}
     \frac{1}{2ar}\mathrm{d}u\mathrm{d}r\nonumber                                                             \\
@@ -1544,14 +1547,14 @@ $\vec{\mathbf{E}}_3$是腔内原子本身形成的场，在相应对称性假设
 则它与原子核形成的合电场即是各自形成的电场的向量和，
 两者形式相似。于是球空间内的电场均值沿$z$轴的分量为
 \begin{align}
-    \langle E\rangle_z=\frac{-qa}{4\pi\epsilon_0R^3}+\frac{q(a-d)}{4\pi\epsilon_0R^3}
+    E_{dz}=\frac{-qa}{4\pi\epsilon_0R^3}+\frac{q(a-d)}{4\pi\epsilon_0R^3}
     =\frac{-qd}{4\pi\epsilon_0R^3}=\frac{-\srcp}{4\pi\epsilon_0R^3}\, .
 \end{align}
-可以看到上述结果与偶极子位置参数$a$无关；
+可以看到上述结果与偶极子位置参数$a$无关，对于$a<0$的情况也可成立；
 设该球体单位体积内均匀分布着$N$个像这样的偶极子，
 则所有偶极子共同作用下的平均电场即去极化场为
 \begin{align}\label{eq:08ex02-depolarizationField}
-    \vec{\mathbf{E}}_d=\langle\vec{\mathbf{E}}\rangle
+    \vec{\mathbf{E}}_d
     =\frac{4}{3}\pi R^3N\frac{-\vec{\mathbf{\srcp}}}{4\pi\epsilon_0R^3}
     =-\frac{N\vec{\mathbf{\srcp}}}{3\epsilon_0}=-\frac{\vec{\mathbf{P}}}{3\epsilon_0}\, .
 \end{align}
@@ -1624,6 +1627,85 @@ $\chi_e$为：
     =\frac{K_E-1}{K_E+2}\, ,
 \end{align}
 上式也称作\keyindex{克劳修斯-莫索提关系}{Clausius-Mossotti relation}{}。
+
+\subsubsection*{电流}
+与介电质相反，金属的最外层电子通常与原子核结合很弱，
+它们很容易在外加电场作用下自由移动；
+在电解质溶液中，正负离子也能做到这点。
+\begin{definition}[\keyindex{电流}{electric current}{}]
+    电荷移动形成的流称为电流，其方向取正电荷移动方向。
+\end{definition}
+电流强度定义为单位时间内通过某一截面的净电荷量，单位为\keyindex{安培}{ampere}{}
+(安，A)
+\begin{marginfigure}
+    \includegraphics[width=\linewidth]{chap08/AmpereAndre1825.jpg}
+\end{marginfigure}\sidenote{法国物理学家安德烈-马里·安培 (André-Marie Ampère, 1775-1836)。}，
+规定$1\text{C}=1\text{A}\cdot\text{s}$且使得基本电荷取值按\refeq{08ex02-elementaryCharge}固定。
+
+设有多种带电粒子运动形成电流，其中第$i$种对应的自由电荷密度为$\rho_{fi}$，
+以速度$\vec{\mathbf{v}}_i$流过微分面元$\mathrm{d}\vec{\mathbf{S}}$，
+则在时间$\Delta t$内该种粒子携带通过面元的电荷量为
+\begin{align}
+    \Delta Q_i=\rho_{fi}\Delta t\vec{\mathbf{v}}_i\cdot\mathrm{d}\vec{\mathbf{S}}\, .
+\end{align}
+对应的微分电流即为
+\begin{align}
+    \mathrm{d}I_i=\frac{\Delta Q_i}{\Delta t}
+    =\rho_{fi}\vec{\mathbf{v}}_i\cdot\mathrm{d}\vec{\mathbf{S}}
+    =\vec{\mathbf{J}}_{fi}\cdot\mathrm{d}\vec{\mathbf{S}}\, ,
+\end{align}
+其中向量
+\begin{align}
+    \vec{\mathbf{J}}_{fi}=\rho_{fi}\vec{\mathbf{v}}_i
+\end{align}
+是这些自由电荷形成的\keyindex{电流密度}{current density}{}，单位为$\text{A}/\text{m}^2$.
+在多种带电粒子的运动下，总的电荷密度是各种粒子电荷密度的算术和：
+\begin{align}
+    \rho_f=\sum\limits_i\rho_{fi}\, ,
+\end{align}
+而总的电流密度就是各种粒子电流密度的矢量和：
+\begin{align}
+    \vec{\mathbf{J}}_f=\sum\limits_i\rho_{fi}\vec{\mathbf{v}}_i\, .
+\end{align}
+因此，即便物质整体呈电中性即$\rho_f=0$，
+仍有可能因为不同带电粒子的运动速度差异而形成不为零的总电流密度。
+总的电流即为电流密度在截面上的积分
+\begin{align}
+    I=\iint\limits_S\vec{\mathbf{J}}_f\cdot\mathrm{d}\vec{\mathbf{S}}\, .
+\end{align}
+
+现在考虑一个由封闭曲面$S$包围的空间$V$，其内的电荷密度为$\rho_f$，
+并且在其表面$S$附近，各种带电粒子正在进出空间$V$形成电流。
+于是根据电荷守恒定律，从$t$时刻到$t+\Delta t$时刻，$V$内总电荷的变化量为
+\begin{align}
+    \Delta Q=\iiint\limits_V(\rho_f(t+\Delta t)-\rho_f(t))\mathrm{d}V
+    =-\oiint\limits_S\sum\limits_i\rho_{fi}\vec{\mathbf{v}}_i\Delta t\cdot\mathrm{d}\vec{\mathbf{S}}
+    =-\oiint\limits_S\vec{\mathbf{J}}_f\Delta t\cdot\mathrm{d}\vec{\mathbf{S}}\, .
+\end{align}
+将上式两边同除以$\Delta t$并令$\Delta t\to0$，可得
+\begin{align}
+    \oiint\limits_S\vec{\mathbf{J}}_f\cdot\mathrm{d}\vec{\mathbf{S}}
+    +\iiint\limits_V\frac{\partial \rho_f}{\partial t}\mathrm{d}V=0\, .
+\end{align}
+还能利用散度定理\ref{theorem:08ex-divergenceTheorem}，将上式写作微分形式：
+\begin{align}
+    \vec{\nabla}\cdot\vec{\mathbf{J}}_f+\frac{\partial \rho_f}{\partial t}=0\, .
+\end{align}
+结合高斯定律的\refeq{08ex02-FreeDensityDisplacement}和\refeq{08ex02-MaxwellGaussD}，
+上面两式还能分别写作
+\begin{align}
+    \oiint\limits_S\left(\vec{\mathbf{J}}_f+\frac{\partial\vec{\mathbf{D}}}{\partial t}\right)\cdot\mathrm{d}\vec{\mathbf{S}}&=0\, ,\\
+    \vec{\nabla}\cdot\left(\vec{\mathbf{J}}_f+\frac{\partial\vec{\mathbf{D}}}{\partial t}\right)&=0\, ,
+\end{align}
+因此$\vec{\mathbf{J}}_f$也称为\keyindex{传导电流密度}{conduction current density}{current density\ 电流密度}，
+而$\displaystyle\frac{\partial\vec{\mathbf{D}}}{\partial t}$称为\keyindex{位移电流密度}{displacement current density}{current density\ 电流密度}。
+上式实际上是\keyindex{基尔霍夫电流定律}{Kirchhoff's current law}{}
+的场形式：一个节点的电流代数和必为零。
+传导和位移电流总的净通量必为零，进入曲面的电流必将离开曲面。
+因为位移电流不涉及电荷输运，所以时变的电流可以不借助电荷载流子而在空间中传输。
+在静态条件下，位移电流则为零。
+
+\subsubsection*{电场的边界条件}
 
 {\noindent\hfil$=========$\hfil{\color{red}{施工分割线}}\hfil$=========$\ }
 
@@ -1867,12 +1949,10 @@ $\epsilon$替代$\epsilon_0$；
 \begin{align}
     \oint\limits_C\vec{\mathbf{B}}\cdot\mathrm{d}\vec{\mathbf{\ell}}=\mu_0\sum i\, ,
 \end{align}
-这就是安培定律\begin{marginfigure}
-    \includegraphics[width=\linewidth]{chap08/AmpereAndre1825.jpg}
-\end{marginfigure}\sidenote{法国物理学家安德烈-马里·安培 (André-Marie Ampère, 1775-1836)。}。
+这就是安培定律。
 它将$\vec{\mathbf{B}}$沿着闭合曲线$C$切向的线积分
 与$C$包围区域内的电流联系起来。当电流不均匀地流过截面时，
-安培定律右边可改写成\keyindex{电流密度}{current density}{}
+安培定律右边可改写成电流密度
 $\vec{\mathbf{J}}$在截面面积上的积分：
 \begin{align}
     \oint\limits_C\vec{\mathbf{B}}\cdot\mathrm{d}\vec{\mathbf{\ell}}
@@ -1925,13 +2005,12 @@ $\vec{\mathbf{J}}$在截面面积上的积分：
 麦克斯韦\begin{marginfigure}
     \includegraphics[width=\linewidth]{chap08/James-Clerk-Maxwell-1831-1879.jpg}
 \end{marginfigure}\sidenote{英国物理学家詹姆斯·克拉克·麦克斯韦(James Clerk Maxwell, 1831-1879)。}
-提出该概念，并称作\keyindex{位移电流密度}{displacement current density}{current density\ 电流密度}，
-定义为
+提出该概念，并称作位移电流密度，定义为
 \begin{align}
     \vec{\mathbf{J}}_D=\epsilon\frac{\partial\vec{\mathbf{E}}}{\partial t}\, .
 \end{align}
 于是我们将以上结论重新表述为
-\begin{theorem}[\keyindex{Ampère's Circuital Law}{安培环路定律}{}]
+\begin{theorem}[\keyindex{安培环路定律}{Ampère's Circuital Law}{}]
     对于以闭合路径$C$为边界的任意非封闭曲面$A$，有
     \begin{align}\label{eq:08ex02-AmpereLaw}
         \oint\limits_C\vec{\mathbf{B}}\cdot\mathrm{d}\vec{\mathbf{\ell}}

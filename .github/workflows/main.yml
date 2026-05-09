@@ -7,6 +7,10 @@ on:
     branches:
       - main
       - develop
+  workflow_dispatch:
+    branches:
+      - main
+      - develop
 jobs:
   build_pdf:
     runs-on: ubuntu-latest
